@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent" android:background="@color/list_background">
+
+	<com.fanfou.app.ui.ActionBar android:id="@id/actionbar"
+		style="@style/ActionBar" android:layout_alignParentTop="true" />
+
+	<RelativeLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:id="@id/status_top"
+		android:layout_below="@id/actionbar" android:clickable="true" android:background="@drawable/status_header">
+
+		<ImageView android:id="@id/user_head" style="@style/Image.Head"
+			android:layout_alignParentLeft="true" android:layout_margin="4dp" />
+
+		<TextView android:id="@id/user_name"
+			android:layout_marginLeft="10dp" android:layout_toRightOf="@id/user_head"
+			android:text="screen name" style="@style/Text.NameBig" />
+
+		<ImageView android:id="@id/status_action_user"
+			android:layout_alignParentRight="true" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:src="@drawable/i_goto" />
+
+	</RelativeLayout>
+
+
+	<ScrollView android:layout_width="fill_parent" android:id="@id/status_content"
+		android:layout_height="fill_parent" android:layout_below="@id/status_top"
+		android:layout_above="@id/status_line" android:scrollbars="none"
+		android:padding="5dp">
+
+		<RelativeLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+
+			<TextView android:id="@id/status_text" style="@style/Text.Content"
+				android:layout_alignParentTop="true" android:textColor="@color/status_content_text" />
+
+
+			<RelativeLayout android:layout_width="fill_parent"
+				android:id="@id/status_info" android:layout_height="wrap_content"
+				android:layout_below="@id/status_text">
+
+				<TextView android:id="@id/status_date"
+					android:layout_alignParentLeft="true" style="@style/Text.MetaBig"
+					android:textColor="@color/soft_white" />
+
+				<TextView android:id="@id/status_source" style="@style/Text.MetaBig"
+					android:layout_alignParentRight="true" android:textColor="@color/soft_white" />
+			</RelativeLayout>
+
+			<LinearLayout android:layout_below="@id/status_info"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:orientation="vertical" android:gravity="center"
+				android:layout_marginTop="15dp">
+
+				<!-- <ProgressBar android:id="@id/empty_progress" android:layout_width="20dp" -->
+				<!-- android:layout_margin="10dp" android:layout_height="20dp" android:visibility="gone" 
+					/> -->
+
+				<ImageView android:id="@id/status_photo"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:scaleType="centerInside" android:src="@drawable/photo_loading"/>
+			</LinearLayout>
+
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:orientation="vertical"
+				android:id="@id/status_thread" android:layout_below="@id/status_info"
+				android:padding="6dp" android:layout_margin="8dp"
+				android:background="@drawable/text_white_bg">
+
+				<TextView android:id="@id/status_thread_user" style="@style/Text.Name" />
+
+				<TextView android:id="@id/status_thread_text"
+					android:layout_alignParentTop="true" style="@style/Text.Status" />
+			</LinearLayout>
+
+		</RelativeLayout>
+
+	</ScrollView>
+
+	<ImageView android:id="@id/status_line" android:layout_above="@id/status_actions"
+		android:layout_width="fill_parent" android:layout_height="2dp"
+		android:background="@drawable/separator" />
+
+
+	<LinearLayout android:id="@id/status_actions"
+		android:layout_alignParentBottom="true" android:layout_width="fill_parent"
+		android:orientation="horizontal" android:layout_height="wrap_content"
+		android:layout_margin="4dp">
+
+		<ImageView android:id="@id/status_action_reply"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:layout_weight="1" android:src="@drawable/i_bar2_reply" />
+
+		<ImageView android:id="@id/status_action_retweet"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:layout_weight="1" android:src="@drawable/i_bar2_retweet" />
+
+		<ImageView android:id="@id/status_action_favorite"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:layout_weight="1" android:src="@drawable/i_bar2_favorite" />
+
+		<ImageView android:id="@id/status_action_share"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:layout_weight="1" android:src="@drawable/i_bar2_share" />
+
+	</LinearLayout>
+
+</RelativeLayout>

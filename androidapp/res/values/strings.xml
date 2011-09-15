@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">FanFou</string>
+	<string name="app_share_name">Share to FanFou</string>
+	
+	<string name="search_hint">Search on fanfou.com</string>
+
+	<string name="consumerKey">consumerKey</string>
+	<string name="consumerSecret">consumerSecret</string>
+	<string name="accessToken">accessToken</string>
+	<string name="accessTokenSecret">accessTokenSecret</string>
+
+	<string name="actionbar_activity_not_found">Failed to open intent...</string>
+
+	<string name="pull_to_refresh_pull_label">Pull to Refresh</string>
+	<string name="pull_to_refresh_release_label">Release to Refresh</string>
+	<string name="pull_to_refresh_refreshing_label">Loading...</string>
+	<string name="pull_to_refresh_tap_label">Tap to Refresh</string>
+	
+	<string name="login_signup_web">Signup via Web</string>
+	<string name="login_signup_sms">Signup via Sms</string>
+	
+	<string name="crash_toast_text">Ooooops ! I crashed, but a report will be sent to fanfou developers to help them fix the issue !</string>
+	
+	<string name="crash_mail_header">请点击发送邮件，报告以下匿名崩溃数据帮助饭否改进客户端：\n\n</string>
+	
+	<string name="support_text">意见和建议提交，问题反馈，获取版本更新信息，请关注官方技术支持帐号 @Android客户端</string>
+	<string name="introduction_text">本软件适用于Android 1.6以上系统，本软件的下载和使用完全免费，使用过程中产生的流量费用由运营商收取。</string>
+	<string name="contact_text">饭否网站： http://fanfou.com\n发送邮件：android@fanfou.com</string>
+	
+</resources>

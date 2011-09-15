@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="Theme" parent="android:style/Theme.Light">
+		<item name="android:windowNoTitle">true</item>
+		<item name="android:windowContentOverlay">@null</item>
+		<item name="android:windowBackground">@android:color/white</item>
+		<item name="android:textColorLink">@color/link_color</item>
+	</style>
+
+	<style name="Theme.AutoCompleteTextView">
+		<item name="android:dropDownItemStyle">@style/Widget.DropDownItemLight</item>
+		<item name="android:autoCompleteTextViewStyle">@style/Widget.AutoCompleteTextViewLight</item>
+	</style>
+
+	<style name="ThemeDark" parent="android:style/Theme">
+		<item name="android:windowNoTitle">true</item>
+		<item name="android:windowContentOverlay">@null</item>
+		<item name="android:windowBackground">@android:color/white</item>
+		<item name="android:textColorLink">@color/link_color</item>
+	</style>
+
+	<style name="ActionBar">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
+	<style name="ActionBarItem">
+		<item name="android:layout_width">@dimen/actionbar_item_width</item>
+		<item name="android:layout_height">@dimen/actionbar_height</item>
+		<item name="android:padding">5dp</item>
+		<item name="android:layout_marginRight">1px</item>
+		<item name="android:layout_marginLeft">1px</item>
+	</style>
+
+	<style name="ActionBarProgressBar" parent="@android:style/Widget.ProgressBar.Small">
+	</style>
+
+	<style name="ActionBarTitle">
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:gravity">center_vertical</item>
+		<item name="android:textSize">@dimen/text_size_large</item>
+		<item name="android:paddingLeft">2dp</item>
+		<item name="android:paddingRight">2dp</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:textColor">@color/actionbar_title</item>
+	</style>
+
+
+	<style name="Button">
+		<item name="android:gravity">center</item>
+	</style>
+
+	<style name="Button.Small">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">@dimen/text_size_small</item>
+	</style>
+
+	<style name="Button.Fill">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_weight">1</item>
+	</style>
+
+	<style name="Button.Fill.Small">
+		<item name="android:padding">3dp</item>
+		<item name="android:textSize">@dimen/text_size_small</item>
+	</style>
+
+	<style name="Icon"></style>
+	<style name="Icon.Mini">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_margin">2dp</item>
+	</style>
+
+	<style name="Icon.Action">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:padding">2dp</item>
+	</style>
+
+	<style name="Image" />
+
+	<style name="Image.Head">
+		<item name="android:layout_width">@dimen/item_user_head_width</item>
+		<item name="android:layout_height">@dimen/item_user_head_height</item>
+		<item name="android:gravity">center</item>
+		<item name="android:layout_margin">2dp</item>
+	</style>
+
+	<style name="About"></style>
+
+	<style name="About.Title">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">@dimen/text_size_large</item>
+		<item name="android:textColor">@color/solid_black</item>
+		<item name="android:gravity">center</item>
+		<item name="android:padding">4dp</item>
+	</style>
+
+	<style name="About.ItemName">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">@dimen/text_size_large</item>
+		<item name="android:textColor">@color/solid_black</item>
+		<item name="android:padding">4dp</item>
+	</style>
+
+
+	<style name="About.ItemText">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">@dimen/text_size_medium</item>
+		<item name="android:textColor">@color/soft_black</item>
+		<item name="android:padding">4dp</item>
+	</style>
+
+	<style name="About.Copyright">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">@dimen/text_size_small</item>
+		<item name="android:textColor">@color/soft_black</item>
+		<item name="android:padding">4dp</item>
+		<item name="android:gravity">center</item>
+	</style>
+
+	<style name="About.ItemText.Center">
+		<item name="android:gravity">center</item>
+	</style>
+
+	<style name="Text"></style>
+
+	<style name="Text.Name">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">@dimen/text_size_small</item>
+		<item name="android:textColor">@color/soft_black</item>
+	</style>
+
+	<style name="Text.NameBig">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">@dimen/text_size_large</item>
+		<item name="android:textColor">@color/soft_black</item>
+	</style>
+
+	<style name="Text.Meta">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textColor">@color/soft_white</item>
+		<item name="android:textSize">@dimen/text_size_micro</item>
+	</style>
+
+	<style name="Text.MetaBig">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textColor">@color/soft_white</item>
+		<item name="android:textSize">@dimen/text_size_tiny</item>
+	</style>
+
+	<style name="Text.Content">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">@dimen/text_size_large</item>
+		<item name="android:textColor">@color/soft_black</item>
+	</style>
+
+	<style name="Text.Info">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">@dimen/text_size_medium</item>
+		<item name="android:textColor">@color/soft_black</item>
+	</style>
+
+	<style name="Text.Count">
+		<item name="android:layout_width">120dp</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">@dimen/text_size_small</item>
+		<item name="android:textColor">@color/soft_black</item>
+	</style>
+
+	<style name="Text.Status">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">@dimen/text_size_small</item>
+		<item name="android:textColor">@color/soft_black</item>
+	</style>
+
+	<style name="Profile"></style>
+
+	<style name="Profile.Item">
+		<item name="android:orientation">horizontal</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_margin">6dp</item>
+		<item name="android:paddingRight">48dp</item>
+		<item name="android:paddingLeft">10dp</item>
+		<item name="android:gravity">center_vertical</item>
+		<item name="android:background">@drawable/item_bg</item>
+	</style>
+
+	<style name="Profile.Text">
+		<item name="android:orientation">vertical</item>
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
+
+	<style name="Box">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
+
+	<style name="Box.Vertical">
+		<item name="android:orientation">vertical</item>
+	</style>
+
+	<style name="Box.Horizontal">
+		<!-- <item name="android:padding">5dp</item> -->
+		<item name="android:orientation">horizontal</item>
+		<item name="android:gravity">center</item>
+	</style>
+
+	<style name="Text">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_margin">2dp</item>
+	</style>
+
+	<style name="Text.Micro">
+		<item name="android:textSize">@dimen/text_size_micro</item>
+	</style>
+
+	<style name="Text.Tiny">
+		<item name="android:textSize">@dimen/text_size_tiny</item>
+	</style>
+
+	<style name="Text.Small">
+		<item name="android:textSize">@dimen/text_size_small</item>
+	</style>
+
+	<style name="Text.Medium">
+		<item name="android:textSize">@dimen/text_size_medium</item>
+	</style>
+
+	<style name="Text.Large">
+		<item name="android:textSize">@dimen/text_size_large</item>
+	</style>
+
+	<style name="List">
+		<item name="android:fadingEdge">none</item>
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">fill_parent</item>
+		<item name="android:listSelector">@color/transparent</item>
+		<item name="android:drawSelectorOnTop">false</item>
+		<item name="android:cacheColorHint">@android:color/white</item>
+		<item name="android:dividerHeight">1.0px</item>
+	</style>
+
+	<style name="Widget.AutoCompleteTextViewLight" parent="@android:style/Widget.AutoCompleteTextView">
+		<item name="android:textColor">@android:color/primary_text_light</item>
+	</style>
+	<style name="Widget.DropDownItemLight" parent="@android:style/Widget.DropDownItem">
+		<item name="android:textColor">@android:color/primary_text_light</item>
+	</style>
+
+</resources>

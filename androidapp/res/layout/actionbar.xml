@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="@dimen/actionbar_height"
+	android:background="@drawable/actionbar_bg">
+
+	<ImageView android:id="@id/actionbar_left"
+		android:layout_marginLeft="3dp" android:layout_centerVertical="true"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_alignParentLeft="true" android:src="@drawable/i_logo" />
+
+	<TextView android:id="@id/actionbar_title"
+		android:layout_centerInParent="true" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:textSize="@dimen/text_size_large" android:paddingLeft="10dp" android:paddingRight="10dp" 
+		android:textColor="@color/solid_white" />
+
+	<ImageView android:id="@id/actionbar_right"
+		android:layout_alignParentRight="true" 
+		android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+</RelativeLayout>
