@@ -78,8 +78,6 @@ public abstract class BaseClient implements ResponseCode {
 			log("exec() Authorization: "
 					+ request.getFirstHeader("Authorization").getValue());
 		}
-		
-//		client.setHttpRequestRetryHandler(RetryHandler);
 		return App.me.client.execute(request);
 	}
 

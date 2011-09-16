@@ -60,6 +60,7 @@ public class CleanService extends IntentService {
 		doUpdate(Status.TYPE_MENTION);
 	}
 	
+	@SuppressWarnings("unused")
 	private void doUpdate2(int type) {
 		try {
 			String where = BasicColumns.TYPE + "=?";

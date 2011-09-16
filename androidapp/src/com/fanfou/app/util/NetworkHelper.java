@@ -12,15 +12,27 @@ import java.util.zip.GZIPInputStream;
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseInterceptor;
+import org.apache.http.HttpVersion;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.conn.params.ConnPerRoute;
+import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.conn.routing.HttpRoute;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -37,7 +49,9 @@ import android.text.format.DateUtils;
 
 import com.fanfou.app.App;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.http.GzipResponseInterceptor;
 import com.fanfou.app.http.NetworkState;
+import com.fanfou.app.http.RequestRetryHandler;
 import com.fanfou.app.http.NetworkState.Type;
 import com.fanfou.app.update.VersionInfo;
 
@@ -47,6 +61,10 @@ import com.fanfou.app.update.VersionInfo;
  * 
  */
 public final class NetworkHelper {
+	
+	public static final int SOCKET_BUFFER_SIZE = 8192;
+	public static final int CONNECTION_TIMEOUT_MS = 20000;
+	public static final int SOCKET_TIMEOUT_MS = 20000;
 
 	public static HttpURLConnection newHttpURLConnection(NetworkState state,
 			String url) throws IOException {
@@ -199,6 +217,44 @@ public final class NetworkHelper {
 		public long getContentLength() {
 			return -1;
 		}
+	}
+	
+	public static void setProxy(HttpParams params,NetworkState.Type type){
+		if (type == Type.CTWAP) {
+			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
+					"10.0.0.200", 80));
+		} else if (type == Type.WAP) {
+			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
+					"10.0.0.172", 80));
+		}
+	}
+	
+	public static DefaultHttpClient setHttpClient(){
+		ConnPerRoute connPerRoute = new ConnPerRoute() {
+			@Override
+			public int getMaxForRoute(HttpRoute route) {
+				return 10;
+			}
+		};
+		HttpParams params = new BasicHttpParams();
+		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+		ConnManagerParams.setMaxConnectionsPerRoute(params, connPerRoute);
+		HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+		HttpConnectionParams
+				.setConnectionTimeout(params, CONNECTION_TIMEOUT_MS);
+		HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT_MS);
+		HttpConnectionParams.setSocketBufferSize(params, SOCKET_BUFFER_SIZE);
+
+		SchemeRegistry schReg = new SchemeRegistry();
+		schReg.register(new Scheme("http", PlainSocketFactory
+				.getSocketFactory(), 80));
+		schReg.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+		ClientConnectionManager manager = new ThreadSafeClientConnManager(
+				params, schReg);
+		DefaultHttpClient client = new DefaultHttpClient(manager, params);
+		client.addResponseInterceptor(new GzipResponseInterceptor());
+		client.setHttpRequestRetryHandler(new RequestRetryHandler(4));
+		return client;
 	}
 
 }

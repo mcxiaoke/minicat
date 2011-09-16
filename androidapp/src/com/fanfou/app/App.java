@@ -11,6 +11,7 @@ import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpVersion;
+import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRoute;
@@ -19,6 +20,7 @@ import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
@@ -35,6 +37,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.SSLCertificateSocketFactory;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -48,8 +51,10 @@ import com.fanfou.app.config.Commons;
 import com.fanfou.app.http.GzipResponseInterceptor;
 import com.fanfou.app.http.NetworkState;
 import com.fanfou.app.http.NetworkState.Type;
+import com.fanfou.app.http.RequestRetryHandler;
 import com.fanfou.app.service.FetchService;
 import com.fanfou.app.update.AutoUpdateManager;
+import com.fanfou.app.util.NetworkHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
@@ -69,9 +74,6 @@ public class App extends Application {
 	public static final boolean DEBUG = true;
 
 	public static final int CORE_POOL_SIZE = 5;
-	public static final int SOCKET_BUFFER_SIZE = 8192;
-	public static final int CONNECTION_TIMEOUT_MS = 20000;
-	public static final int SOCKET_TIMEOUT_MS = 20000;
 
 	public static final ThreadFactory sThreadFactory = new ThreadFactory() {
 		private final AtomicInteger mCount = new AtomicInteger(1);
@@ -118,6 +120,7 @@ public class App extends Application {
 	public void onCreate() {
 		super.onCreate();
 		init();
+		initPreferences();
 		initDensity();
 		initNetworkState();
 		initHttpClient();
@@ -141,7 +144,18 @@ public class App extends Application {
 		ACRA.init(this);
 		this.imageLoader = new ImageLoader(this);
 		this.api = new ApiImpl(this);
-		// this.api=new ApiImpl2(this);
+
+		if (DEBUG) {
+			java.util.logging.Logger.getLogger("org.apache.http").setLevel(
+					java.util.logging.Level.FINEST);
+			java.util.logging.Logger.getLogger("org.apache.http.wire")
+					.setLevel(java.util.logging.Level.FINER);
+			java.util.logging.Logger.getLogger("org.apache.http.headers")
+					.setLevel(java.util.logging.Level.OFF);
+		}
+	}
+
+	private void initPreferences() {
 		this.sp = PreferenceManager.getDefaultSharedPreferences(this);
 		this.userId = OptionHelper.readString(this, Commons.KEY_USERID, null);
 		this.password = OptionHelper.readString(this, Commons.KEY_PASSWORD,
@@ -154,18 +168,7 @@ public class App extends Application {
 				Commons.KEY_OAUTH_ACCESS_TOKEN, null);
 		this.oauthAccessTokenSecret = OptionHelper.readString(this,
 				Commons.KEY_OAUTH_ACCESS_TOKEN_SECRET, null);
-
 		this.isLogin = !StringHelper.isEmpty(oauthAccessTokenSecret);
-
-		if (DEBUG) {
-			java.util.logging.Logger.getLogger("org.apache.http").setLevel(
-					java.util.logging.Level.FINEST);
-			java.util.logging.Logger.getLogger("org.apache.http.wire")
-					.setLevel(java.util.logging.Level.FINER);
-			java.util.logging.Logger.getLogger("org.apache.http.headers")
-					.setLevel(java.util.logging.Level.OFF);
-		}
-		// debuggable = (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) > 0;
 	}
 
 	private void initDensity() {
@@ -254,37 +257,8 @@ public class App extends Application {
 	}
 
 	private void initHttpClient() {
-		ConnPerRoute connPerRoute = new ConnPerRoute() {
-			@Override
-			public int getMaxForRoute(HttpRoute route) {
-				return 10;
-			}
-		};
-		HttpParams params = new BasicHttpParams();
-		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-		ConnManagerParams.setMaxConnectionsPerRoute(params, connPerRoute);
-		HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-		HttpConnectionParams
-				.setConnectionTimeout(params, CONNECTION_TIMEOUT_MS);
-		HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT_MS);
-		HttpConnectionParams.setSocketBufferSize(params, SOCKET_BUFFER_SIZE);
-
-		if (networkState.getApnType() == Type.CTWAP) {
-			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
-					"10.0.0.200", 80));
-		} else if (networkState.getApnType() == Type.WAP) {
-			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
-					"10.0.0.172", 80));
-		}
-
-		SchemeRegistry schReg = new SchemeRegistry();
-		schReg.register(new Scheme("http", PlainSocketFactory
-				.getSocketFactory(), 80));
-		ClientConnectionManager manager = new ThreadSafeClientConnManager(
-				params, schReg);
-		client = new DefaultHttpClient(manager, params);
-		client.addResponseInterceptor(new GzipResponseInterceptor());
-
+		client = NetworkHelper.setHttpClient();
+		NetworkHelper.setProxy(client.getParams(), networkState.getApnType());
 	}
 
 }

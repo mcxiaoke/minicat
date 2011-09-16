@@ -41,6 +41,7 @@ import com.fanfou.app.App;
 import com.fanfou.app.auth.OAuth;
 import com.fanfou.app.http.Response;
 import com.fanfou.app.http.ResponseCode;
+import com.fanfou.app.util.NetworkHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
 
@@ -74,31 +75,7 @@ public class ApiImpl2 implements Api, ResponseCode {
 	}
 
 	private void init() {
-		ConnPerRoute connPerRoute = new ConnPerRoute() {
-			@Override
-			public int getMaxForRoute(HttpRoute route) {
-				return 10;
-			}
-		};
-		HttpParams params = new BasicHttpParams();
-		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-		HttpProtocolParams.setUseExpectContinue(params, true);
-		ConnManagerParams.setMaxTotalConnections(params, 10);
-		ConnManagerParams.setMaxConnectionsPerRoute(params, connPerRoute);
-		HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-		HttpProtocolParams.setUseExpectContinue(params, false);
-		HttpConnectionParams.setTcpNoDelay(params, true);
-		HttpConnectionParams.setConnectionTimeout(params,
-				App.CONNECTION_TIMEOUT_MS);
-		HttpConnectionParams.setSoTimeout(params, App.SOCKET_TIMEOUT_MS);
-		HttpConnectionParams
-				.setSocketBufferSize(params, App.SOCKET_BUFFER_SIZE);
-		SchemeRegistry schReg = new SchemeRegistry();
-		schReg.register(new Scheme("http", PlainSocketFactory
-				.getSocketFactory(), 80));
-		ClientConnectionManager manager = new ThreadSafeClientConnManager(
-				params, schReg);
-		mClient = new DefaultHttpClient(manager, params);
+		mClient = NetworkHelper.setHttpClient();
 
 //		mConsumer = new CommonsHttpOAuthConsumer(ApiConfig.CONSUMER_KEY,
 //				ApiConfig.CONSUMER_SECRET);
