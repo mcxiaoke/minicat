@@ -1,15 +1,16 @@
 package com.fanfou.app.receiver;
 
 import com.fanfou.app.App;
+import com.fanfou.app.http.NetworkState.Type;
+import com.fanfou.app.util.NetworkHelper;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.NetworkInfo.State;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 
 public class NetworkReceiver extends BroadcastReceiver {
@@ -20,52 +21,40 @@ public class NetworkReceiver extends BroadcastReceiver {
 		String action = intent.getAction();
 		if (App.DEBUG)
 			Log.d(TAG, "Action Received: " + action + " From intent: " + intent);
-		if(action.equals(ConnectivityManager.CONNECTIVITY_ACTION)){	
+		if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
 			App.me.connected = !intent.getBooleanExtra(
 					ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
-//		if (isConnectedIntent(intent)) {
-//		} else if (isDisconnectedIntent(intent)) {
-//			if (App.DEBUG)
-//				Log.d(TAG, "Disconnected");
-//		}
-		}
-	}
+			if (App.DEBUG) {
+				logIntent(intent);
+			}
+			NetworkInfo info = (NetworkInfo) intent
+					.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+			if (info != null && info.isAvailable()) {
+				Type apnType = Type.NET;
+				App.me.connected=true;
+				if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
+					String apnTypeName = info.getExtraInfo();
+					if (!TextUtils.isEmpty(apnTypeName)) {
+						if (apnTypeName.equals("ctwap")) {
+							apnType = Type.CTWAP;
+							NetworkHelper.setProxy(App.me.client.getParams(),
+									apnType);
+						} else if (apnTypeName.contains("wap")) {
+							apnType = Type.WAP;
 
-	private boolean isConnectedIntent(Intent intent) {
-		logIntent(intent);
-		NetworkInfo networkInfo = (NetworkInfo) intent
-				.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);	
-		return (networkInfo != null && networkInfo.isConnected() && networkInfo
-				.getType() == ConnectivityManager.TYPE_WIFI);
-	}
-
-	private boolean isDisconnectedIntent(Intent intent) {
-		logIntent(intent);
-		boolean res = false;
-		NetworkInfo networkInfo = (NetworkInfo) intent
-				.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-		if (networkInfo != null) {
-			State state = networkInfo.getState();
-			res = (state.equals(NetworkInfo.State.DISCONNECTING) || state
-					.equals(NetworkInfo.State.DISCONNECTED))
-					&& (networkInfo.getType() == ConnectivityManager.TYPE_WIFI);
-		} else {
-			int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE,
-					WifiManager.WIFI_STATE_UNKNOWN);
-			if (wifiState == WifiManager.WIFI_STATE_DISABLED
-					|| wifiState == WifiManager.WIFI_STATE_DISABLING) {
-				res = true;
+						}
+					}
+				}
+				NetworkHelper.setProxy(App.me.client.getParams(), apnType);
 			}
 		}
-
-		return res;
 	}
 
 	protected void logIntent(Intent intent) {
 		if (App.DEBUG) {
-			StringBuffer sb=new StringBuffer();
+			StringBuffer sb = new StringBuffer();
 			sb.append(" intent.getAction():" + intent.getAction());
-			sb.append( " intent.getData():" + intent.getData());
+			sb.append(" intent.getData():" + intent.getData());
 			sb.append(" intent.getDataString():" + intent.getDataString());
 			sb.append(" intent.getScheme():" + intent.getScheme());
 			sb.append(" intent.getType():" + intent.getType());
@@ -78,7 +67,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 			} else {
 				sb.append(" NO EXTRAS");
 			}
-			
+
 			Log.d(TAG, sb.toString());
 		}
 	}

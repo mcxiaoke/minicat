@@ -193,7 +193,7 @@ public final class Utils {
 	public static void addCleanTask(Context context){
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		am.setRepeating(AlarmManager.RTC_WAKEUP, Utils.setAlarmTime(),
-				6 * 3600 * 1000, getCleanPendingIntent(context));
+				8 * 3600 * 1000, getCleanPendingIntent(context));
 	}
 	
 	public static void removeCleanTask(Context context){

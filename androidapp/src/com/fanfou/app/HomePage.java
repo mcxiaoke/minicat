@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -29,6 +30,7 @@ import android.widget.BaseAdapter;
 import android.widget.CursorAdapter;
 import android.widget.RelativeLayout.LayoutParams;
 
+import com.fanfou.app.adapter.BaseCursorAdapter;
 import com.fanfou.app.adapter.MessageCursorAdapter;
 import com.fanfou.app.adapter.StatusCursorAdapter;
 import com.fanfou.app.api.DirectMessage;
@@ -71,7 +73,7 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 
 	private EndlessListView[] views = new EndlessListView[PAGE_COUNT_MAX];
 	private Cursor[] cursors = new Cursor[PAGE_COUNT_MAX];
-	private CursorAdapter[] adapters = new CursorAdapter[PAGE_COUNT_MAX];
+	private BaseCursorAdapter[] adapters = new BaseCursorAdapter[PAGE_COUNT_MAX];
 	private static final String[] titles = new String[] { "我的主页", "提到我的",
 			"我的私信", "随便看看" };
 
@@ -187,6 +189,7 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 
 		for (int i = 0; i < adapters.length; i++) {
 			views[i].setAdapter(adapters[i]);
+			views[i].setOnScrollListener(adapters[i]);
 			if (cursors[i].getCount() == 0) {
 				if (App.DEBUG)
 					log("cursors[" + i

@@ -8,6 +8,8 @@ import android.text.TextPaint;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +28,17 @@ import com.fanfou.app.util.StringHelper;
  * 
  */
 public class StatusCursorAdapter extends BaseCursorAdapter {
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		if(scrollState==SCROLL_STATE_FLING){
+			fling=true;
+		}else{
+			fling=false;		
+		}
+		
+		
+	}
+
 	private static final int ITEM_TYPE_MENTION = 0;
 	private static final int ITEM_TYPE_NONE = 1;
 	private static final int[] viewTypes = new int[] { ITEM_TYPE_MENTION,
@@ -41,7 +54,9 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 		}
 		final Status s = Status.parse(c);
 		if (s == null || s.isNull()) {
-			log("getItemViewType(" + position + ") is null.");
+			if (App.DEBUG) {
+				log("getItemViewType(" + position + ") is null.");
+			}
 			return ITEM_TYPE_NONE;
 		}
 		if (s.text.contains("@" + App.me.userScreenName)) {
@@ -111,8 +126,10 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 			row.setBackgroundColor(0x33999999);
 		}
 
-		mLoader.setHeadImage(s.userProfileImageUrl, holder.headIcon);
-		
+//		if (!fling) {
+			mLoader.setHeadImage(s.userProfileImageUrl, holder.headIcon);
+//		}
+
 		if (StringHelper.isEmpty(s.inReplyToStatusId)) {
 			holder.replyIcon.setVisibility(View.GONE);
 		} else {

@@ -1,5 +1,7 @@
 package com.fanfou.app.http;
 
+import com.fanfou.app.App;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -20,14 +22,12 @@ public class NetworkState {
 	 * 字符串标志，是否为WAP接入点
 	 */
 	private static final String tag = NetworkState.class.getSimpleName();
-
-	private Context context;
 	private ConnectivityManager cm;
 
-	private boolean connected = true;
+	public boolean connected = true;
 
-	private String apnTypeName = "cmnet";
-	private Type apnType = Type.NET;
+	public String apnTypeName = "cmnet";
+	public Type apnType = Type.NET;
 
 	/**
 	 * 记录调试信息
@@ -44,8 +44,7 @@ public class NetworkState {
 	 * 
 	 * @param c
 	 */
-	public NetworkState(Context c) {
-		this.context = c;
+	public NetworkState(Context context) {
 		this.cm = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		initState();
@@ -56,14 +55,18 @@ public class NetworkState {
 			NetworkInfo info = cm.getActiveNetworkInfo();
 			if (info != null && info.isAvailable()) {
 				connected = true;
-				log(info.toString());
+				if (App.DEBUG) {
+					log(info.toString());
+				}
 				if (info.getType() == ConnectivityManager.TYPE_WIFI) {
 					apnType = Type.WIFI;
 					apnTypeName = "wifi";
 				} else if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
 					apnTypeName = info.getExtraInfo();
 					if (!TextUtils.isEmpty(apnTypeName)) {
-						if (apnTypeName.equals("ctwap")) {
+						if (apnTypeName.equals("3gnet")) {
+							apnType = Type.HSDPA;
+						} else if (apnTypeName.equals("ctwap")) {
 							apnType = Type.CTWAP;
 						} else if (apnTypeName.contains("wap")) {
 							apnType = Type.WAP;
@@ -114,11 +117,37 @@ public class NetworkState {
 		return result;
 	}
 
+	public boolean is3G() {
+		boolean result = false;
+		try {
+			NetworkInfo info = cm.getActiveNetworkInfo();
+			if (info != null && info.isAvailable()) {
+				connected = true;
+				log(info.toString());
+				if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
+					apnTypeName = info.getExtraInfo();
+					if (!TextUtils.isEmpty(apnTypeName)) {
+						if (apnTypeName.equals("3gnet")) {
+							result = true;
+						}
+					}
+				}
+			} else {
+				connected = false;
+			}
+		} catch (Exception e) {
+			if (App.DEBUG) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+
 	/**
 	 * 网络连接类型
 	 */
 	public static enum Type {
-		WIFI, NET, WAP, CTWAP, ;
+		WIFI, HSDPA, NET, WAP, CTWAP, ;
 	}
 
 }

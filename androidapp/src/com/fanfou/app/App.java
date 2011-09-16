@@ -123,19 +123,18 @@ public class App extends Application {
 		initPreferences();
 		initDensity();
 		initNetworkState();
+		initScreenMode();
 		initHttpClient();
 		initAlarm();
 		initAppInfo();
 
-		if (isLogin && networkState.isWIFI()) {
-			initUserInfo();
-			initAutoUpdate();
-			initAutoComplete();
+		if (isLogin) {
+			if(networkState.apnType==Type.WIFI||networkState.apnType==Type.HSDPA){	
+				initUserInfo();
+				initAutoUpdate();
+				initAutoComplete();
+			}
 		}
-
-		ACRA.getErrorReporter().putCustomData("USERNAME", userId);
-		ACRA.getErrorReporter().putCustomData("TIMESTAMP",
-				new Date().toString());
 
 	}
 
@@ -170,11 +169,14 @@ public class App extends Application {
 				Commons.KEY_OAUTH_ACCESS_TOKEN_SECRET, null);
 		this.isLogin = !StringHelper.isEmpty(oauthAccessTokenSecret);
 	}
+	
+	private void initScreenMode(){
+	}
 
 	private void initDensity() {
 		DisplayMetrics dm = getResources().getDisplayMetrics();
 		if (DEBUG) {
-			Log.e("App", dm.toString());
+			Log.i("App", dm.toString());
 		}
 		density = dm.density;
 	}

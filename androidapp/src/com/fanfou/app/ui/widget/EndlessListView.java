@@ -18,8 +18,7 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AbsListView.OnScrollListener;
 
-public class EndlessListView extends ListView implements OnItemClickListener,
-		OnScrollListener {
+public class EndlessListView extends ListView implements OnItemClickListener{
 	private static final String TAG = EndlessListView.class.getSimpleName();
 
 	protected static final int FOOTER_NONE = 0;
@@ -314,8 +313,8 @@ public class EndlessListView extends ListView implements OnItemClickListener,
 		}
 	}
 
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
+//	@Override
+//	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		// if(Build.VERSION.SDK_INT<9){
 		// return;
 		// }
@@ -347,15 +346,15 @@ public class EndlessListView extends ListView implements OnItemClickListener,
 		// default:
 		// break;
 		// }
-	}
+//	}
 
-	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem,
-			int visibleItemCount, int totalItemCount) {
+//	@Override
+//	public void onScroll(AbsListView view, int firstVisibleItem,
+//			int visibleItemCount, int totalItemCount) {
 		// mFirstVisible = firstVisibleItem;
 		// mVisibleItemCount = visibleItemCount;
 		// mTotalItemCount = totalItemCount;
-	}
+//	}
 
 	// @Override
 	// protected boolean overScrollBy(int deltaX, int deltaY, int scrollX,

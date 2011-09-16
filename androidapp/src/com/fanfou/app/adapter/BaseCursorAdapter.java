@@ -13,6 +13,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.CursorAdapter;
 import android.widget.FilterQueryProvider;
 import android.widget.ImageView;
@@ -23,7 +26,35 @@ import android.widget.ImageView;
  * 
  */
 public abstract class BaseCursorAdapter extends CursorAdapter implements
-		FilterQueryProvider {
+		FilterQueryProvider,OnScrollListener {
+	boolean fling;
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		if(scrollState==SCROLL_STATE_FLING){
+			fling=true;
+		}else{
+			fling=false;
+		}
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+		
+	}
+
+	@Override
+	public View newView(Context context, Cursor cursor, ViewGroup parent) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void bindView(View view, Context context, Cursor cursor) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	Context mContext;
 	LayoutInflater mInflater;

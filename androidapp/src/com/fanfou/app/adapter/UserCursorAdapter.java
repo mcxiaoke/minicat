@@ -73,8 +73,9 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 		View row = view;
 		final ViewHolder holder = (ViewHolder) row.getTag();
 		User u=User.parse(cursor);
-		
-		mLoader.setHeadImage(u.profileImageUrl, holder.headIcon);
+		if(!fling){	
+			mLoader.setHeadImage(u.profileImageUrl, holder.headIcon);
+		}
 		if(u.protect){
 			holder.lockIcon.setVisibility(View.VISIBLE);
 		}else{

@@ -100,7 +100,7 @@ public class ImageLoader {
 
 					imageView.setImageBitmap(ImageHelper
 							.getRoundedCornerBitmap(bitmap, 6));
-					imageView.invalidate();
+					imageView.postInvalidate();
 				}
 
 				@Override
@@ -136,13 +136,13 @@ public class ImageLoader {
 				@Override
 				public void onFinish(String key, final Bitmap bitmap) {
 					imageView.setImageBitmap(bitmap);
-					imageView.invalidate();
+					imageView.postInvalidate();
 				}
 
 				@Override
 				public void onError(String message) {
 					imageView.setImageResource(R.drawable.photo_icon);
-					imageView.invalidate();
+					imageView.postInvalidate();
 				}
 			};
 			loaded.put(key, callback);
@@ -208,10 +208,6 @@ public class ImageLoader {
 	}
 
 	private Bitmap downloadImage(String url) {
-		// Request request = new Request(url);
-		// NoAuthClient client = new NoAuthClient();
-		// OAuthClient client=new OAuthClient();
-//		HttpClient client = new DefaultHttpClient();
 		HttpClient client=App.me.client;
 		try {
 			HttpGet request = new HttpGet(url);

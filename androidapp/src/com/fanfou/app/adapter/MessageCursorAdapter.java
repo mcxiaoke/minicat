@@ -6,6 +6,8 @@ import android.text.TextPaint;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,7 +22,7 @@ import com.fanfou.app.util.OptionHelper;
  * @version 1.0 2011.06.09
  * 
  */
-public class MessageCursorAdapter extends BaseCursorAdapter {
+public class MessageCursorAdapter extends BaseCursorAdapter{
 
 	public static final String TAG = "MessageAdapter";
 
@@ -54,7 +56,9 @@ public class MessageCursorAdapter extends BaseCursorAdapter {
 
 		DirectMessage dm = DirectMessage.parse(cursor);
 
-		mLoader.setHeadImage(dm.senderProfileImageUrl, holder.headIcon);
+		if(!fling){
+			mLoader.setHeadImage(dm.senderProfileImageUrl, holder.headIcon);
+		}
 		// Bitmap bitmap=mLoader.get(dm.senderProfileImageUrl,
 		// getImageCallback(holder.headIcon));
 		// if(bitmap!=null){

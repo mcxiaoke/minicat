@@ -5,9 +5,11 @@ import java.util.List;
 
 import android.app.IntentService;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.PowerManager;
 import android.util.Log;
 
 import com.fanfou.app.App;
@@ -19,21 +21,34 @@ import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.util.Utils;
 
 public class CleanService extends IntentService {
+
 	private static final String TAG = CleanService.class.getSimpleName();
+	private PowerManager.WakeLock lock;
 
 	public CleanService() {
 		super("CleanService");
 	}
-
+	
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		if ((flags & START_FLAG_REDELIVERY)!=0) {
+			PowerManager mgr = (PowerManager) getSystemService(Context.POWER_SERVICE);
+			lock = mgr.newWakeLock(
+					PowerManager.PARTIAL_WAKE_LOCK, "com.fanfou.app.service.CleanService");
+			lock.acquire();
+		}
+		super.onStartCommand(intent, flags, startId);
+		return START_REDELIVER_INTENT;
+	}
+	
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		if(!App.me.isLogin){
-			return;
-		}
 		doUpdateHome();
 		doUpdateMention();
 		doClean();
-		// OptionHelper.saveBoolean(this, R.string.option_cleandb, false);
+		if(lock!=null){
+			lock.release();
+		}
 	}
 
 	private void doClean() {
@@ -59,7 +74,7 @@ public class CleanService extends IntentService {
 		}
 		doUpdate(Status.TYPE_MENTION);
 	}
-	
+
 	@SuppressWarnings("unused")
 	private void doUpdate2(int type) {
 		try {
@@ -112,6 +127,9 @@ public class CleanService extends IntentService {
 		} catch (ApiException e) {
 			if (App.DEBUG)
 				e.printStackTrace();
+		} catch (Exception e) {
+			if (App.DEBUG)
+				e.printStackTrace();
 		}
 	}
 
@@ -127,25 +145,27 @@ public class CleanService extends IntentService {
 			if (App.DEBUG) {
 				Log.d(TAG, "doUpdate sinceId=" + sinceId);
 			}
-				List<Status> result = null;
-				if (type == Status.TYPE_HOME) {
-					result = App.me.api.homeTimeline(20, 0, sinceId, null,
-							true);
-				} else if (type == Status.TYPE_MENTION) {
-					result = App.me.api.mentions(20, 0, sinceId, null, true);
-				}
+			List<Status> result = null;
+			if (type == Status.TYPE_HOME) {
+				result = App.me.api.homeTimeline(20, 0, sinceId, null, true);
+			} else if (type == Status.TYPE_MENTION) {
+				result = App.me.api.mentions(20, 0, sinceId, null, true);
+			}
 
-				if (result != null) {
-					int size = result.size();
-					if (App.DEBUG) {
-						Log.d(TAG, "doUpdate result.size=" + size);
-					}
-					if(size>0){					
-						getContentResolver().bulkInsert(uri,
+			if (result != null) {
+				int size = result.size();
+				if (App.DEBUG) {
+					Log.d(TAG, "doUpdate result.size=" + size);
+				}
+				if (size > 0) {
+					getContentResolver().bulkInsert(uri,
 							Parser.toContentValuesArray(result));
-					}
-				} 
+				}
+			}
 		} catch (ApiException e) {
+			if (App.DEBUG)
+				e.printStackTrace();
+		} catch (Exception e) {
 			if (App.DEBUG)
 				e.printStackTrace();
 		}

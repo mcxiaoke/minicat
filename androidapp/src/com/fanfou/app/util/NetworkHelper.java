@@ -226,6 +226,8 @@ public final class NetworkHelper {
 		} else if (type == Type.WAP) {
 			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
 					"10.0.0.172", 80));
+		}else{
+			params.removeParameter(ConnRoutePNames.DEFAULT_PROXY);
 		}
 	}
 	
