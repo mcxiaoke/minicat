@@ -23,8 +23,8 @@
 		<item>1</item>
 		<item>0</item>
 	</string-array>
-	
-		<string-array name="write_icon">
+
+	<string-array name="write_icon">
 		<item>显示在左下角</item>
 		<item>显示在右下角</item>
 		<item>不显示</item>
@@ -51,6 +51,22 @@
 		<item>18</item>
 		<item>20</item>
 		<item>22</item>
+	</string-array>
+	<string-array name="notification_interval">
+		<item>5分钟</item>
+		<item>10分钟</item>
+		<item>15分钟</item>
+		<item>30分钟</item>
+		<item>1小时</item>
+		<item>2小时</item>
+	</string-array>
+	<string-array name="notification_interval_values">
+		<item>5</item>
+		<item>10</item>
+		<item>15</item>
+		<item>30</item>
+		<item>60</item>
+		<item>120</item>
 	</string-array>
 
 </resources>

@@ -1,6 +1,8 @@
 package com.fanfou.app;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
@@ -8,12 +10,14 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.receiver.NetworkReceiver;
+import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.Utils;
 
@@ -32,23 +36,42 @@ public abstract class BaseActivity extends Activity {
 	LayoutInflater mInflater;
 	boolean isActive = false;
 //	NetworkReceiver mNetworkReceiver;
+	BroadcastReceiver mNotificationReceiver;
+	IntentFilter mNotificationFilter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.mContext = this;
 		this.mInflater = LayoutInflater.from(this);
+		this.mNotificationReceiver=new NotifyReceiver();
+		this.mNotificationFilter=new IntentFilter(NotificationService.ACTION_NOTIFICATION);
+		mNotificationFilter.setPriority(1000);
 //		this.mNetworkReceiver=new NetworkReceiver();
+	}
+	
+	static class NotifyReceiver extends BroadcastReceiver{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if(App.DEBUG){
+				Log.d("NotificationReceiver", "active, broadcast received: "+intent.toString());
+			}
+			abortBroadcast();
+		}
+		
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		isActive = true;
+		App.me.active=true;
 //		IntentFilter filter = new IntentFilter();
 //		filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
 //		filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
 //		registerReceiver(mNetworkReceiver, filter);
+		registerReceiver(mNotificationReceiver, mNotificationFilter);
 	}
 
 	//
@@ -56,7 +79,9 @@ public abstract class BaseActivity extends Activity {
 	protected void onPause() {
 		super.onPause();
 		isActive = false;
+		App.me.active=false;
 //		unregisterReceiver(mNetworkReceiver);
+		unregisterReceiver(mNotificationReceiver);
 	}
 
 	@Override

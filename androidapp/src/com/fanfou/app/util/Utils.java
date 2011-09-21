@@ -45,6 +45,7 @@ import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.receiver.AlarmReceiver;
 import com.fanfou.app.service.CleanService;
 import com.fanfou.app.service.FetchService;
+import com.fanfou.app.service.NotificationService;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 /**
@@ -189,21 +190,76 @@ public final class Utils {
 		return PendingIntent.getService(context, 0, new Intent(context,
 				CleanService.class), 0);
 	}
-	
-	public static void addCleanTask(Context context){
-		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+	public static void addCleanTask(Context context) {
+		AlarmManager am = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
 		am.setRepeating(AlarmManager.RTC_WAKEUP, Utils.setAlarmTime(),
 				8 * 3600 * 1000, getCleanPendingIntent(context));
 	}
-	
-	public static void removeCleanTask(Context context){
+
+	public static void removeCleanTask(Context context) {
 		AlarmManager am = (AlarmManager) context
-		.getSystemService(Context.ALARM_SERVICE);
+				.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(getCleanPendingIntent(context));
 	}
 
+	public static void notifyOn(Context context) {
+		if (App.DEBUG) {
+			if (App.DEBUG) {
+				Log.i("NotificationService", "NotificationService On");
+			}
+		}
+		boolean notificationOn = OptionHelper.readBoolean(context,
+				R.string.option_notification, true);
+		if (notificationOn) {
+			int interval = OptionHelper.parseInt(context,
+					R.string.option_notification_interval, "5");
+			
+			if (App.DEBUG) {
+//				interval=1;
+				Log.i("NotificationService", "interval=" + interval);
+			}
+
+			Calendar c = Calendar.getInstance();
+			c.add(Calendar.MINUTE, interval);
+			if (c.getTimeInMillis() < System.currentTimeMillis()) {
+				c.add(Calendar.DAY_OF_YEAR, 1);
+			}
+			AlarmManager am = (AlarmManager) context
+			.getSystemService(Context.ALARM_SERVICE);
+			PendingIntent pi = getNotificationPendingIntent(context);
+			am.cancel(pi);
+			am.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
+					interval * 60 * 1000, pi);
+		} else {
+			AlarmManager am = (AlarmManager) context
+					.getSystemService(Context.ALARM_SERVICE);
+			PendingIntent pi = getNotificationPendingIntent(context);
+			am.cancel(pi);
+			pi.cancel();
+		}
+	}
+
+	public static void notifyOff(Context context) {
+		if (App.DEBUG) {
+			Log.i("NotificationService", "NotificationService Off");
+		}
+		AlarmManager am = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		PendingIntent pi = getNotificationPendingIntent(context);
+		am.cancel(pi);
+		pi.cancel();
+	}
+
+	public static PendingIntent getNotificationPendingIntent(Context context) {
+		Intent intent = new Intent(context, NotificationService.class);
+		PendingIntent pi = PendingIntent.getService(context, 0, intent, 0);
+		return pi;
+	}
+
 	public static long setAlarmTime() {
-		int hour = 7;
+		int hour = 6;
 		int minute = 0;
 		Calendar c = Calendar.getInstance();
 		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),

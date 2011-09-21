@@ -18,5 +18,11 @@
 	<string name="option_logout">logout</string>
 	<string name="option_cleanpic">cleanpic</string>
 	<string name="option_cleandb">cleandb</string>
+	
+	<string name="option_notification">notification</string>
+	<string name="option_notification_interval">notification_interval</string>
+	<string name="option_notification_dm">notification_dm</string>
+	<string name="option_notification_mention">notification_mention</string>
+	<string name="option_notification_home">notification_home</string>
 
 </resources>

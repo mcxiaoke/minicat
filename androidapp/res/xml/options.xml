@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<PreferenceCategory android:title="通知">
+		<CheckBoxPreference android:title="新消息通知"
+			android:summary="自动更新，有新消息时通知" android:key="@string/option_notification"
+			android:summaryOff="关闭自动更新和新消息通知" android:defaultValue="true"
+			android:summaryOn="启用自动更新和新消息通知" />
+
+		<ListPreference android:entries="@array/notification_interval"
+			android:entryValues="@array/notification_interval_values"
+			android:summary="设置自动更新的时间间隔" android:dialogTitle="设置自动更新时间间隔"
+			android:title="自动更新频率" android:key="@string/option_notification_interval"
+			android:defaultValue="5" android:dependency="@string/option_notification" />
+
+	</PreferenceCategory>
+
 	<PreferenceCategory android:title="外观">
 
 		<ListPreference android:entries="@array/font_size"
@@ -29,6 +44,8 @@
 
 	</PreferenceCategory>
 
+
+
 	<PreferenceCategory android:title="功能">
 
 		<com.fanfou.app.preferences.ClearDataDialogPreference
@@ -48,30 +65,33 @@
 			android:summaryOff="启动时不获取新消息" android:defaultValue="false"
 			android:summaryOn="启动时自动获取新消息" />
 
-		<CheckBoxPreference android:title="启动时检查新版本"
-			android:summary="设置启动时检查新版本" android:key="@string/option_autoupdate"
-			android:summaryOff="启动时不检查新版本" android:defaultValue="true"
-			android:summaryOn="启动时自动检查新版本" />
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="其它">
+		<CheckBoxPreference android:title="启动时检测更新"
+			android:summary="设置启动时检测新版本" android:key="@string/option_autoupdate"
+			android:summaryOff="启动时不检测新版本" android:defaultValue="true"
+			android:summaryOn="启动时自动检测新版本" />
 
 		<com.fanfou.app.preferences.LogoutDialogPreference
 			android:key="@string/option_logout" android:title="注销登录"
 			android:dialogTitle="注销登录" android:summary="注销当前帐号，重新登录"
 			android:dialogMessage="是否要注销当前帐号，重新登录？" android:positiveButtonText="确定"
 			android:negativeButtonText="取消" />
-
 	</PreferenceCategory>
 
 	<PreferenceCategory android:title="信息">
-	
-			<Preference android:title="软件升级" android:summary="联网检测是否有升级版本"
+
+		<Preference android:title="软件升级" android:summary="联网检测是否有升级版本"
 			android:key="@string/option_check_update" />
 
 		<Preference android:title="意见反馈" android:summary="通过邮件发送意见和建议"
 			android:key="@string/option_feedback" />
 		<Preference android:title="访问网站" android:summary="访问饭否网站获取更多信息"
-			android:key="@string/option_website" >
-			<intent android:action="android.intent.action.VIEW" android:data="http://fanfou.com/" />
-			</Preference>
+			android:key="@string/option_website">
+			<intent android:action="android.intent.action.VIEW"
+				android:data="http://fanfou.com/" />
+		</Preference>
 	</PreferenceCategory>
 
 

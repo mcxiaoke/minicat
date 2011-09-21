@@ -15,6 +15,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -66,6 +67,11 @@ public class OptionsPage extends PreferenceActivity implements
 
 		ListPreference writeIcon = (ListPreference) findPreference(getText(R.string.option_write_icon));
 		writeIcon.setSummary(writeIcon.getEntry());
+		
+		Preference notification=findPreference(getText(R.string.option_notification));
+		
+		ListPreference interval=(ListPreference) findPreference(getText(R.string.option_notification_interval));
+		interval.setSummary(interval.getEntry());
 
 		Preference checkUpdate = findPreference(getText(R.string.option_check_update));
 		checkUpdate.setOnPreferenceClickListener(this);
@@ -109,7 +115,15 @@ public class OptionsPage extends PreferenceActivity implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 		Preference p = findPreference(key);
-		if (p instanceof ListPreference) {
+		if(key.equals(getString(R.string.option_notification))){
+			CheckBoxPreference cp=(CheckBoxPreference) p;
+			if(cp.isChecked()){
+				Utils.notifyOn(this);
+			}else{
+				Utils.notifyOff(this);
+			}
+		}
+		else if (p instanceof ListPreference) {
 			ListPreference lp = (ListPreference) p;
 			lp.setSummary(lp.getEntry());
 		}

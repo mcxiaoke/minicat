@@ -1,11 +1,5 @@
 package com.fanfou.app;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -13,21 +7,17 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Process;
 import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.RemoteViews;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
-import android.widget.CursorAdapter;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
 import com.fanfou.app.adapter.BaseCursorAdapter;
@@ -39,7 +29,6 @@ import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
-import com.fanfou.app.service.DownloadService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.Action;
 import com.fanfou.app.ui.UIManager;
@@ -91,12 +80,11 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 		mHandler = new Handler();
 		setContentView(R.layout.home);
 		setActionBar();
-		setViewFlow();
 		setWriteBottom();
 		setListViews();
 		setCursors();
 		setAdapters();
-
+		setViewFlow();
 	}
 
 	/**
@@ -114,11 +102,12 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 	}
 
 	private void setViewFlow() {
+		int initPage=getIntent().getIntExtra(Commons.EXTRA_PAGE, 0);
 		mViewFlow = (ViewFlow) findViewById(R.id.viewflow);
 		mIndicator = (FlowIndicator) findViewById(R.id.viewflow_indicator);
 		mViewFlow.setFlowIndicator(mIndicator);
 		mViewFlow.setOnViewSwitchListener(this);
-
+		mViewFlow.setAdapter(new ViewAdapter(this, views),initPage);
 	}
 
 	private void setWriteBottom() {
@@ -157,8 +146,6 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 				views[i].setOnItemLongClickListener(this);
 			}
 		}
-		mViewFlow.setAdapter(new ViewAdapter(this, views));
-
 	}
 
 	private Cursor initCursor(int type) {
@@ -189,7 +176,7 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 
 		for (int i = 0; i < adapters.length; i++) {
 			views[i].setAdapter(adapters[i]);
-			views[i].setOnScrollListener(adapters[i]);
+//			views[i].setOnScrollListener(adapters[i]);
 			if (cursors[i].getCount() == 0) {
 				if (App.DEBUG)
 					log("cursors[" + i

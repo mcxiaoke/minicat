@@ -18,6 +18,7 @@ public class BootReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
+			Utils.notifyOn(context);
 			OptionHelper.saveBoolean(context, R.string.option_cleandb, true);
 			Utils.removeCleanTask(context);
 			Utils.addCleanTask(context);

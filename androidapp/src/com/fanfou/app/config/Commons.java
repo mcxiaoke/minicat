@@ -28,8 +28,7 @@ public interface Commons {
 	public static final String KEY_VERIFIED="verified";
 	public static final String KEY_OAUTH_ACCESS_TOKEN="oauth_token";
 	public static final String KEY_OAUTH_ACCESS_TOKEN_SECRET="oauth_token_secret";
-	public static final String KEY_LOCATION_ENABLE="location_enable";
-	
+	public static final String KEY_LOCATION_ENABLE="location_enable";	
 
 	public static final String EXTRA_DOWNLOAD_URL="extra_download_url";
 	public static final String EXTRA_DOWNLOAD_FILENAME="extra_download_filename";

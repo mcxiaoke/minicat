@@ -23,22 +23,32 @@ import com.fanfou.app.util.Utils;
 public class CleanService extends IntentService {
 
 	private static final String TAG = CleanService.class.getSimpleName();
-	private PowerManager.WakeLock lock;
+	private PowerManager.WakeLock mWakeLock;
 
 	public CleanService() {
 		super("CleanService");
 	}
 	
 	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		if ((flags & START_FLAG_REDELIVERY)!=0) {
-			PowerManager mgr = (PowerManager) getSystemService(Context.POWER_SERVICE);
-			lock = mgr.newWakeLock(
-					PowerManager.PARTIAL_WAKE_LOCK, "com.fanfou.app.service.CleanService");
-			lock.acquire();
+	public void onCreate() {
+		super.onCreate();
+		PowerManager mgr = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		mWakeLock = mgr.newWakeLock(
+				PowerManager.PARTIAL_WAKE_LOCK, TAG);
+		mWakeLock.acquire();
+	}
+
+	@Override
+	public void onDestroy() {
+		if(mWakeLock!=null){
+			mWakeLock.release();
 		}
-		super.onStartCommand(intent, flags, startId);
-		return START_REDELIVER_INTENT;
+		super.onDestroy();
+	}
+	
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		return super.onStartCommand(intent, flags, startId);
 	}
 	
 	@Override
@@ -46,9 +56,6 @@ public class CleanService extends IntentService {
 		doUpdateHome();
 		doUpdateMention();
 		doClean();
-		if(lock!=null){
-			lock.release();
-		}
 	}
 
 	private void doClean() {

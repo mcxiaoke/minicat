@@ -53,6 +53,7 @@ import com.fanfou.app.http.NetworkState;
 import com.fanfou.app.http.NetworkState.Type;
 import com.fanfou.app.http.RequestRetryHandler;
 import com.fanfou.app.service.FetchService;
+import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.update.AutoUpdateManager;
 import com.fanfou.app.util.NetworkHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -97,6 +98,7 @@ public class App extends Application {
 	public boolean isLogin;
 	public boolean autoComplete;
 	public boolean connected = true;
+	public boolean active;
 
 	public User user;
 	public String userId;
@@ -134,6 +136,8 @@ public class App extends Application {
 				initAutoUpdate();
 				initAutoComplete();
 			}
+			
+			Utils.notifyOn(this);
 		}
 
 	}
@@ -186,6 +190,7 @@ public class App extends Application {
 				R.string.option_cleandb, false);
 		if (!noAlarmSet) {
 			OptionHelper.saveBoolean(this, R.string.option_cleandb, true);
+			Utils.removeCleanTask(this);
 			Utils.addCleanTask(this);
 		}
 	}
