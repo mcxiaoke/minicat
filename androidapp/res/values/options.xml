@@ -20,7 +20,14 @@
 	<string name="option_cleandb">cleandb</string>
 	
 	<string name="option_notification">notification</string>
+	<string name="option_notification_switch">notification_switch</string>
 	<string name="option_notification_interval">notification_interval</string>
+	
+	<string name="option_notification_sound">notification_sound</string>
+	<string name="option_notification_vibrate">notification_vibrate</string>
+	<string name="option_notification_ringtone">notification_ringtone</string>
+	
+	
 	<string name="option_notification_dm">notification_dm</string>
 	<string name="option_notification_mention">notification_mention</string>
 	<string name="option_notification_home">notification_home</string>

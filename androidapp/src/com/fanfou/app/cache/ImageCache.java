@@ -23,7 +23,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.0 2011.06.01
  * 
  */
-class ImageCacheManager implements CacheManager<Bitmap> {
+public class ImageCache implements ICache<Bitmap> {
 
 	public static final int IMAGE_QUALITY = 100;
 
@@ -31,7 +31,7 @@ class ImageCacheManager implements CacheManager<Bitmap> {
 
 	Context mContext;
 
-	public ImageCacheManager(Context context) {
+	public ImageCache(Context context) {
 		this.mContext = context;
 		this.memoryCache = new HashMap<String, SoftReference<Bitmap>>();
 	}

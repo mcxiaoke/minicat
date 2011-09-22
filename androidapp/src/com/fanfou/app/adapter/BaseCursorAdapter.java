@@ -63,10 +63,7 @@ public abstract class BaseCursorAdapter extends CursorAdapter implements
 	int fontSize;
 	
 	private void initFontSize(){
-		fontSize=OptionHelper.parseInt(mContext, R.string.option_fontsize);
-		if(fontSize<0){
-			fontSize=Commons.FONT_SIZE_DEFAULT;
-		}
+		fontSize=OptionHelper.parseInt(mContext, R.string.option_fontsize,String.valueOf(Commons.FONT_SIZE_DEFAULT));
 	}
 	
 	protected void setHeadImage(ImageView headIcon) {

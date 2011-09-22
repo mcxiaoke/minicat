@@ -252,14 +252,12 @@ public class StatusPage extends BaseActivity implements OnClickListener,
 		ImageLoaderCallback callback = new ImageLoaderCallback() {
 
 			@Override
-			public void onFinish(String key, Bitmap bitmap) {
-				if (App.DEBUG) {
-					log("onFinish key=" + key + " bitmap.width="
-							+ bitmap.getWidth());
-				}
+			public void onFinish(String key) {
 				iPhoto.setOnClickListener(null);
-				iPhoto.setImageBitmap(bitmap);
-				// iPhoto.invalidate();
+				Bitmap bitmap=App.me.imageLoader.cache.get(key);
+				if(bitmap!=null){
+					iPhoto.setImageBitmap(bitmap);
+				}
 				iPhoto.postInvalidate();
 			}
 

@@ -33,7 +33,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 	public static final String tag = DirectMessage.class.getSimpleName();
 
 	private static void log(String message) {
-		Log.e(tag, message);
+		Log.i(tag, message);
 	}
 
 	private static final long serialVersionUID = 7135927428287533074L;

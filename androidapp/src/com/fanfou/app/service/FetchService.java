@@ -37,7 +37,7 @@ public class FetchService extends BaseIntentService {
 	ResultReceiver receiver;
 
 	public void log(String message) {
-		Log.e(tag, message);
+		Log.i(tag, message);
 	}
 
 	private int mType;
@@ -94,6 +94,9 @@ public class FetchService extends BaseIntentService {
 	}
 
 	private void doFetchAutoComplete() {
+		if(!App.me.isLogin){
+			return;
+		}
 		if (App.DEBUG)
 			log("doFetchAutoComplete");
 		Api api = App.me.api;

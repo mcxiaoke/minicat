@@ -1,6 +1,5 @@
 package com.fanfou.app;
 
-import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -9,27 +8,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.params.ConnManagerParams;
-import org.apache.http.conn.params.ConnPerRoute;
-import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.conn.routing.HttpRoute;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HTTP;
 
-import android.app.AlarmManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -37,7 +17,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.SSLCertificateSocketFactory;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -48,28 +27,25 @@ import com.fanfou.app.api.ApiImpl;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.http.GzipResponseInterceptor;
 import com.fanfou.app.http.NetworkState;
 import com.fanfou.app.http.NetworkState.Type;
-import com.fanfou.app.http.RequestRetryHandler;
 import com.fanfou.app.service.FetchService;
-import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.update.AutoUpdateManager;
+import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.NetworkHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.05.25
  * @version 2.0 2011.07.28
- * @version 3.0 20110829
+ * @version 3.0 2011.08.29
+ * @version 4.0 2011.09.22
  * 
  */
 
-@ReportsCrashes(formKey = "", // will not be used
-// mailTo = "android@fanfou.com",
+@ReportsCrashes(formKey = "",
 formUri = "http://apps.fanfou.com/andstat/cr/", mode = ReportingInteractionMode.TOAST, resToastText = R.string.crash_toast_text)
 public class App extends Application {
 	public static final boolean DEBUG = true;
@@ -100,6 +76,8 @@ public class App extends Application {
 	public boolean connected = true;
 	public boolean active;
 
+	public static int notificationCount;
+
 	public User user;
 	public String userId;
 	public String password;
@@ -122,22 +100,21 @@ public class App extends Application {
 	public void onCreate() {
 		super.onCreate();
 		init();
+		initAppInfo();
 		initPreferences();
 		initDensity();
 		initNetworkState();
 		initScreenMode();
 		initHttpClient();
-		initAlarm();
-		initAppInfo();
-
+		initAutoClean(this);
+		initAutoComplete(this);
+		initAutoNotification(this);
+		initAutoUpdate();
 		if (isLogin) {
-			if(networkState.apnType==Type.WIFI||networkState.apnType==Type.HSDPA){	
+			if (networkState.apnType == Type.WIFI
+					|| networkState.apnType == Type.HSDPA) {
 				initUserInfo();
-				initAutoUpdate();
-				initAutoComplete();
 			}
-			
-			Utils.notifyOn(this);
 		}
 
 	}
@@ -173,8 +150,8 @@ public class App extends Application {
 				Commons.KEY_OAUTH_ACCESS_TOKEN_SECRET, null);
 		this.isLogin = !StringHelper.isEmpty(oauthAccessTokenSecret);
 	}
-	
-	private void initScreenMode(){
+
+	private void initScreenMode() {
 	}
 
 	private void initDensity() {
@@ -185,13 +162,36 @@ public class App extends Application {
 		density = dm.density;
 	}
 
-	private void initAlarm() {
-		boolean noAlarmSet = OptionHelper.readBoolean(this,
-				R.string.option_cleandb, false);
-		if (!noAlarmSet) {
-			OptionHelper.saveBoolean(this, R.string.option_cleandb, true);
-			Utils.removeCleanTask(this);
-			Utils.addCleanTask(this);
+	private static void initAutoClean(Context context) {
+		boolean isSet = OptionHelper.readBoolean(context,
+				Commons.KEY_SET_AUTO_CLEAN, false);
+		if (!isSet) {
+			AlarmHelper.setCleanTask(context);
+			OptionHelper.saveBoolean(context, Commons.KEY_SET_AUTO_CLEAN, true);
+		}
+	}
+
+	private static void initAutoComplete(Context context) {
+		boolean isSet = OptionHelper.readBoolean(context,
+				Commons.KEY_SET_AUTO_COMPLETE, false);
+		if (!isSet) {
+			Intent intent = new Intent(context, FetchService.class);
+			intent.putExtra(Commons.EXTRA_TYPE, User.AUTO_COMPLETE);
+			context.startService(intent);
+			
+			AlarmHelper.setAutoCompleteTask(context);
+			OptionHelper.saveBoolean(context, Commons.KEY_SET_AUTO_COMPLETE,
+					true);
+		}
+	}
+
+	private static void initAutoNotification(Context context) {
+		boolean isSet = OptionHelper.readBoolean(context,
+				Commons.KEY_SET_NOTIFICATION, false);
+		if (!isSet) {
+			AlarmHelper.setNotificationTaskOn(context);
+			OptionHelper.saveBoolean(context, Commons.KEY_SET_NOTIFICATION,
+					true);
 		}
 	}
 
@@ -203,7 +203,7 @@ public class App extends Application {
 		} catch (NameNotFoundException e) {
 			pi = new PackageInfo();
 			pi.versionName = "1.0";
-			pi.versionCode = 1;
+			pi.versionCode = 20110901;
 		}
 		appVersionCode = pi.versionCode;
 		appVersionName = pi.versionName;
@@ -234,22 +234,15 @@ public class App extends Application {
 	public void initAutoUpdate() {
 		boolean autoUpdate = OptionHelper.readBoolean(this,
 				R.string.option_autoupdate, true);
-		if (!autoUpdate) {
-			return;
+		if (autoUpdate) {
+			Thread task = new Thread() {
+				@Override
+				public void run() {
+					AutoUpdateManager.checkUpdate(App.me);
+				}
+			};
+			executor.submit(task);
 		}
-		Thread task = new Thread() {
-			@Override
-			public void run() {
-				AutoUpdateManager.checkUpdate(App.me);
-			}
-		};
-		executor.submit(task);
-	}
-
-	public void initAutoComplete() {
-		Intent intent = new Intent(this, FetchService.class);
-		intent.putExtra(Commons.EXTRA_TYPE, User.AUTO_COMPLETE);
-		startService(intent);
 	}
 
 	public synchronized void updateUserInfo(User u) {

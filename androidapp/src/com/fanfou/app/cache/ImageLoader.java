@@ -44,14 +44,14 @@ public class ImageLoader {
 
 	private final ExecutorService executor;
 	private final BlockingQueue<String> queue = new LinkedBlockingQueue<String>();
-	private ImageCacheManager cache;
+	public ImageCache cache;
 	private Handler handler;
 	private ImageLoaded loaded;
 
 	private QueueRunnable queuePool;
 
 	public ImageLoader(Context context) {
-		this.cache = new ImageCacheManager(context);
+		this.cache = new ImageCache(context);
 		this.loaded = new ImageLoaded();
 		this.handler = new ImageDownloadHandler();
 		this.queuePool = new QueueRunnable();
@@ -81,9 +81,9 @@ public class ImageLoader {
 				throw new NullPointerException("图片URL不能为空");
 			return;
 		}
-//		if (App.DEBUG) {
-//			Log.e(TAG, "setHeadImage key=" + key);
-//		}
+		// if (App.DEBUG) {
+		// Log.e(TAG, "setHeadImage key=" + key);
+		// }
 		Bitmap bitmap = null;
 		if (cache.containsKey(key)) {
 			bitmap = cache.get(key);
@@ -96,10 +96,13 @@ public class ImageLoader {
 			ImageLoaderCallback callback = new ImageLoaderCallback() {
 
 				@Override
-				public void onFinish(String key, final Bitmap bitmap) {
-
-					imageView.setImageBitmap(ImageHelper
-							.getRoundedCornerBitmap(bitmap, 6));
+				public void onFinish(String key) {
+					
+					Bitmap bitmap=cache.get(key);
+					if(bitmap!=null){
+						imageView.setImageBitmap(ImageHelper
+								.getRoundedCornerBitmap(bitmap, 6));	
+					}
 					imageView.postInvalidate();
 				}
 
@@ -134,8 +137,14 @@ public class ImageLoader {
 			ImageLoaderCallback callback = new ImageLoaderCallback() {
 
 				@Override
-				public void onFinish(String key, final Bitmap bitmap) {
-					imageView.setImageBitmap(bitmap);
+				public void onFinish(String key) {
+					
+					Bitmap bitmap=cache.get(key);
+					if(bitmap!=null){	
+						imageView.setImageBitmap(bitmap);
+					}else{
+						imageView.setImageResource(R.drawable.photo_icon);
+					}
 					imageView.postInvalidate();
 				}
 
@@ -173,8 +182,9 @@ public class ImageLoader {
 				String url = null;
 				try {
 					url = queue.take();
-					if(App.DEBUG){
-						Log.e(TAG, "take a url fro queue: "+url+", add to download queue");
+					if (App.DEBUG) {
+						Log.e(TAG, "take a url fro queue: " + url
+								+ ", add to download queue");
 					}
 					executor.submit(new ImageDownloadThread(url));
 				} catch (InterruptedException e) {
@@ -208,7 +218,7 @@ public class ImageLoader {
 	}
 
 	private Bitmap downloadImage(String url) {
-		HttpClient client=App.me.client;
+		HttpClient client = App.me.client;
 		try {
 			HttpGet request = new HttpGet(url);
 			HttpResponse response = client.execute(request);
@@ -240,7 +250,7 @@ public class ImageLoader {
 			case MESSAGE_FINISH:
 				Bitmap bitmap = bundle.getParcelable(PARAM_BITMAP);
 				cache.put(url, bitmap);
-				loaded.call(url, bitmap);
+				loaded.call(url);
 				break;
 			case MESSAGE_ERROR:
 				break;
@@ -253,12 +263,14 @@ public class ImageLoader {
 	}
 
 	public interface ImageLoaderCallback {
-		void onFinish(String key, Bitmap bitmap);
+//		void onFinish(String key, Bitmap bitmap);
+		
+		void onFinish(String key);
 
 		void onError(String message);
 	}
 
-	static class ImageLoaded {
+	private static class ImageLoaded {
 		private static final String TAG = "ImageLoaded";
 		private ConcurrentHashMap<String, List<ImageLoaderCallback>> mCallbackMap;
 
@@ -267,30 +279,31 @@ public class ImageLoader {
 		}
 
 		public void put(String url, ImageLoaderCallback callback) {
-			if(StringHelper.isEmpty(url)||callback==null){
-				if(App.DEBUG)
+			if (StringHelper.isEmpty(url) || callback == null) {
+				if (App.DEBUG)
 					Log.d(TAG, "url or callback is null");
 				return;
 			}
-			if (App.DEBUG)
-				 Log.d(TAG, "CallbackManager.put url=" + url);
-				if (!mCallbackMap.containsKey(url)) {
-					mCallbackMap.put(url, new ArrayList<ImageLoaderCallback>());
-				}
+			if (App.DEBUG) {
+				Log.d(TAG, "ImageLoaded.put url=" + url);
+			}
+			if (!mCallbackMap.containsKey(url)) {
+				mCallbackMap.put(url, new ArrayList<ImageLoaderCallback>());
+			}
 
-			List<ImageLoaderCallback> callbacks=mCallbackMap.get(url);
-			if(callbacks!=null){
+			List<ImageLoaderCallback> callbacks = mCallbackMap.get(url);
+			if (callbacks != null) {
 				callbacks.add(callback);
 			}
 		}
 
-		public void call(String url, Bitmap bitmap) {
+		public void call(String url) {
 			List<ImageLoaderCallback> callbackList = mCallbackMap.get(url);
 			if (callbackList != null) {
 				for (ImageLoaderCallback callback : callbackList) {
 					if (callback != null) {
-						if (url != null && bitmap != null) {
-							callback.onFinish(url, bitmap);
+						if (url != null) {
+							callback.onFinish(url);
 						} else {
 							callback.onError("load image error.");
 						}

@@ -7,7 +7,7 @@ package com.fanfou.app.cache;
  * @param <T>
  *
  */
-public interface CacheManager<T> {
+public interface ICache<T> {
 	
 	int getCount();
 	

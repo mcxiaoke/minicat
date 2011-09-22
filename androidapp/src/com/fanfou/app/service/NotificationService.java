@@ -1,7 +1,5 @@
 package com.fanfou.app.service;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import com.fanfou.app.App;
@@ -16,15 +14,10 @@ import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.Utils;
-
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.PowerManager;
 import android.util.Log;
 
@@ -37,10 +30,9 @@ public class NotificationService extends BaseIntentService {
 	private static final String TAG = NotificationService.class.getSimpleName();
 
 	public static final String ACTION_NOTIFICATION = "com.fanfou.app.action.NOTIFICATION";
-	public static final int NOTIFICATION_TYPE_HOME = 3;
-	public static final int NOTIFICATION_TYPE_ALL = 2;// 私信和@消息
-	public static final int NOTIFICATION_TYPE_MENTION = 1; // @消息
-	public static final int NOTIFICATION_TYPE_DM = 0; // 私信
+	public static final int NOTIFICATION_TYPE_HOME = Status.TYPE_HOME;
+	public static final int NOTIFICATION_TYPE_MENTION = Status.TYPE_MENTION; // @消息
+	public static final int NOTIFICATION_TYPE_DM = DirectMessage.TYPE_NONE; // 私信
 
 	private PowerManager.WakeLock mWakeLock;
 
@@ -72,8 +64,33 @@ public class NotificationService extends BaseIntentService {
 		if (App.DEBUG) {
 			Log.i(TAG, "onHandleIntent");
 		}
+		boolean dm = OptionHelper.readBoolean(this,
+				R.string.option_notification_dm, false);
+		boolean mention = OptionHelper.readBoolean(this,
+				R.string.option_notification_mention, false);
+		boolean home = OptionHelper.readBoolean(this,
+				R.string.option_notification_home, false);
+
 		try {
-			handleStatus();
+
+			if (home) {
+				handleHome();
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+				}
+			}
+			if (mention) {
+				handleMention();
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+				}
+			}
+			if (dm) {
+				handleDm();
+			}
+
 		} catch (ApiException e) {
 			if (App.DEBUG) {
 				Log.e(TAG, "error code=" + e.statusCode + " error message="
@@ -83,7 +100,23 @@ public class NotificationService extends BaseIntentService {
 		}
 	}
 
-	private void handleStatus() throws ApiException {
+	private void handleDm() throws ApiException {
+		Cursor mc = initCursor(DirectMessage.TYPE_NONE);
+		List<DirectMessage> dms = App.me.api.messagesInbox(0, 0,
+				Utils.getDmSinceId(mc), null);
+		if (dms != null) {
+			int size = dms.size();
+			if (size > 0) {
+				getContentResolver().bulkInsert(DirectMessageInfo.CONTENT_URI,
+						Parser.toContentValuesArray(dms));
+				notifyDmList(DirectMessage.TYPE_NONE, size);
+
+			}
+		}
+		// mc.close();
+	}
+
+	private void handleMention() throws ApiException {
 		Cursor mc = initCursor(Status.TYPE_MENTION);
 		List<Status> ss = App.me.api.mentions(0, 0, Utils.getSinceId(mc), null,
 				true);
@@ -92,30 +125,49 @@ public class NotificationService extends BaseIntentService {
 			if (size > 0) {
 				getContentResolver().bulkInsert(StatusInfo.CONTENT_URI,
 						Parser.toContentValuesArray(ss));
-				if(size==1){
-					notifyStatusOne(NOTIFICATION_TYPE_MENTION,ss.get(0));
-				}else{
-					notifyStatusList(NOTIFICATION_TYPE_MENTION,size);
+				if (size == 1) {
+					notifyStatusOne(NOTIFICATION_TYPE_MENTION, ss.get(0));
+				} else {
+					notifyStatusList(NOTIFICATION_TYPE_MENTION, size);
 				}
 			}
 		}
-		mc.close();
+		// mc.close();
 	}
-	
-	private void notifyStatusOne(int type, Status status){
+
+	private void handleHome() throws ApiException {
+		Cursor mc = initCursor(Status.TYPE_HOME);
+		List<Status> ss = App.me.api.homeTimeline(0, 0, Utils.getSinceId(mc),
+				null, true);
+		if (ss != null) {
+			int size = ss.size();
+			if (size > 0) {
+				getContentResolver().bulkInsert(StatusInfo.CONTENT_URI,
+						Parser.toContentValuesArray(ss));
+				if (size == 1) {
+					notifyStatusOne(NOTIFICATION_TYPE_HOME, ss.get(0));
+				} else {
+					notifyStatusList(NOTIFICATION_TYPE_HOME, size);
+				}
+			}
+		}
+		// mc.close();
+	}
+
+	private void notifyStatusOne(int type, Status status) {
 		sendStatusNotification(type, 1, status);
 	}
-	
-	private void notifyStatusList(int type, int count){
+
+	private void notifyStatusList(int type, int count) {
 		sendStatusNotification(type, count, null);
 	}
-	
-	private void notifyDmOne(){
-		
+
+	private void notifyDmOne() {
+
 	}
-	
-	private void notifyDmList(){
-		
+
+	private void notifyDmList(int type, int count) {
+		sendMessageNotification(type, count);
 	}
 
 	private Cursor initCursor(int type) {
@@ -130,9 +182,14 @@ public class NotificationService extends BaseIntentService {
 		return getContentResolver().query(uri, columns, where, whereArgs, null);
 	}
 
-	private void sendStatusNotification(int type, int count ,Status status) {
+	private void sendStatusNotification(int type, int count, Status status) {
+		boolean needNotification=OptionHelper.readBoolean(this, R.string.option_notification_switch, false);
+		if(!needNotification){
+			return;
+		}
 		if (App.DEBUG) {
-			Log.i(TAG, "sendStatusNotification type="+type+" count="+count+" status="+(status==null?"null":status));
+			Log.i(TAG, "sendStatusNotification type=" + type + " count="
+					+ count + " status=" + (status == null ? "null" : status));
 		}
 		Intent intent = new Intent();
 		intent.putExtra(Commons.EXTRA_TYPE, type);
@@ -141,12 +198,19 @@ public class NotificationService extends BaseIntentService {
 		intent.setAction(ACTION_NOTIFICATION);
 		sendOrderedBroadcast(intent, null);
 	}
-	
-	private void sendMessageNotification(int type, int count ,DirectMessage dm) {
+
+	private void sendMessageNotification(int type, int count) {
+		boolean needNotification=OptionHelper.readBoolean(this, R.string.option_notification_switch, false);
+		if(!needNotification){
+			return;
+		}
 		if (App.DEBUG) {
-			Log.i(TAG, "sendNotificationBroadcast");
+			Log.i(TAG, "sendMessageNotification type=" + type + " count="
+					+ count);
 		}
 		Intent intent = new Intent();
+		intent.putExtra(Commons.EXTRA_TYPE, type);
+		intent.putExtra(Commons.EXTRA_COUNT, count);
 		intent.setAction(ACTION_NOTIFICATION);
 		sendOrderedBroadcast(intent, null);
 	}

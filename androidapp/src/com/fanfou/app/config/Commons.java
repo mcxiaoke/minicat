@@ -29,6 +29,11 @@ public interface Commons {
 	public static final String KEY_OAUTH_ACCESS_TOKEN="oauth_token";
 	public static final String KEY_OAUTH_ACCESS_TOKEN_SECRET="oauth_token_secret";
 	public static final String KEY_LOCATION_ENABLE="location_enable";	
+	
+	public static final String KEY_SET_AUTO_COMPLETE="set_auto_complete";
+	public static final String KEY_SET_AUTO_CLEAN="set_auto_clean";
+	public static final String KEY_SET_NOTIFICATION="set_notification";
+	public static final String KEY_SET_AUTO_UPDATE="set_auto_update";
 
 	public static final String EXTRA_DOWNLOAD_URL="extra_download_url";
 	public static final String EXTRA_DOWNLOAD_FILENAME="extra_download_filename";

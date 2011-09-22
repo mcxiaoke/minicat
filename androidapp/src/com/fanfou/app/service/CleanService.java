@@ -53,6 +53,9 @@ public class CleanService extends IntentService {
 	
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		if(App.me.active){
+			return;
+		}
 		doUpdateHome();
 		doUpdateMention();
 		doClean();
@@ -154,9 +157,9 @@ public class CleanService extends IntentService {
 			}
 			List<Status> result = null;
 			if (type == Status.TYPE_HOME) {
-				result = App.me.api.homeTimeline(20, 0, sinceId, null, true);
+				result = App.me.api.homeTimeline(0, 0, sinceId, null, true);
 			} else if (type == Status.TYPE_MENTION) {
-				result = App.me.api.mentions(20, 0, sinceId, null, true);
+				result = App.me.api.mentions(0, 0, sinceId, null, true);
 			}
 
 			if (result != null) {

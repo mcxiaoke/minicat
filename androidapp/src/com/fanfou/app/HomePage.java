@@ -56,6 +56,7 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 	private Handler mHandler;
 
 	private ViewFlow mViewFlow;
+	private ViewAdapter mViewAdapter;
 	private FlowIndicator mIndicator;
 
 	private ImageView iWriteBottom;
@@ -82,9 +83,9 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 		setActionBar();
 		setWriteBottom();
 		setListViews();
+		setViewFlow();
 		setCursors();
 		setAdapters();
-		setViewFlow();
 	}
 
 	/**
@@ -102,37 +103,41 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 	}
 
 	private void setViewFlow() {
-		int initPage=getIntent().getIntExtra(Commons.EXTRA_PAGE, 0);
+		int initPage = getIntent().getIntExtra(Commons.EXTRA_PAGE, 0);
+		if (App.DEBUG) {
+			log("setViewFlow page=" + initPage);
+		}
+		mViewAdapter = new ViewAdapter(this, views);
 		mViewFlow = (ViewFlow) findViewById(R.id.viewflow);
 		mIndicator = (FlowIndicator) findViewById(R.id.viewflow_indicator);
 		mViewFlow.setFlowIndicator(mIndicator);
 		mViewFlow.setOnViewSwitchListener(this);
-		mViewFlow.setAdapter(new ViewAdapter(this, views),initPage);
+		mViewFlow.setAdapter(mViewAdapter, initPage);
 	}
 
 	private void setWriteBottom() {
 		iWriteBottom = (ImageView) findViewById(R.id.write_bottom);
 		iWriteBottom.setOnClickListener(this);
 
-		 RelativeLayout.LayoutParams lp=new
-		 RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-		 LayoutParams.WRAP_CONTENT);
-		 final Float f=new Float(8*App.me.density);
-		 final int m=f.intValue();
-		 lp.setMargins(m, m, m, m); 
-		 String position=OptionHelper.readString(this, R.string.option_write_icon, "right");
-		 if(position.equals("left")){
-			 lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-			 lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-			 iWriteBottom.setLayoutParams(lp);
-		 }else if(position.equals("right")){
-			 lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-			 lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-			 iWriteBottom.setLayoutParams(lp);
-		 }else{
-			 iWriteBottom.setVisibility(View.GONE);
-		 } 
-		 
+		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		final Float f = new Float(8 * App.me.density);
+		final int m = f.intValue();
+		lp.setMargins(m, m, m, m);
+		String position = OptionHelper.readString(this,
+				R.string.option_write_icon, "right");
+		if (position.equals("left")) {
+			lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+			lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+			iWriteBottom.setLayoutParams(lp);
+		} else if (position.equals("right")) {
+			lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+			lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+			iWriteBottom.setLayoutParams(lp);
+		} else {
+			iWriteBottom.setVisibility(View.GONE);
+		}
+
 	}
 
 	/**
@@ -176,7 +181,7 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 
 		for (int i = 0; i < adapters.length; i++) {
 			views[i].setAdapter(adapters[i]);
-//			views[i].setOnScrollListener(adapters[i]);
+			// views[i].setOnScrollListener(adapters[i]);
 			if (cursors[i].getCount() == 0) {
 				if (App.DEBUG)
 					log("cursors[" + i
@@ -185,9 +190,10 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 			}
 		}
 		views[3].removeFooter();
-		
-		boolean refresh =OptionHelper.readBoolean(this, R.string.option_refresh_on_open, false);
-		if(cursors[0].getCount() == 0||refresh){
+
+		boolean refresh = OptionHelper.readBoolean(this,
+				R.string.option_refresh_on_open, false);
+		if (cursors[0].getCount() == 0 || refresh) {
 			views[0].setRefreshing();
 		}
 	}
@@ -287,9 +293,14 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 	 * 刷新，载入更新的消息
 	 */
 	private void doRefresh() {
-		// int index = views[0].getFirstVisiblePosition();
 		int page = mViewFlow.getCurrentScreen();
 		doRetrieve(page, false);
+	}
+
+	@Override
+	protected void onReceived(Intent intent) {
+		// int type = intent.getIntExtra(Commons.EXTRA_TYPE,-1);
+		// int count = intent.getIntExtra(Commons.EXTRA_COUNT, 1);
 	}
 
 	@Override
@@ -340,16 +351,12 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		// setIntent(intent);
-		// log("onNewIntent() intent.extras=" + intent.getExtras());
-		// for (int i = 0; i < cursors.length; i++) {
-		// cursors[i].requery();
-		// if (cursors[i].getCount() == 0) {
-		// log("cursors[" + i + "] is empty, remove footer and refresh.");
-		// views[i].removeFooter();
-		// } else {
-		// }
-		// }
+		setIntent(intent);
+		int page = getIntent().getIntExtra(Commons.EXTRA_PAGE, 0);
+		if (App.DEBUG) {
+			log("onNewIntent page=" + page);
+		}
+		mViewFlow.setAdapter(mViewAdapter, page);
 	}
 
 	@Override

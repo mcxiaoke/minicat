@@ -38,13 +38,17 @@ public class OAuth {
 	private static final String tag = OAuth.class.getSimpleName();
 
 	void log(String message) {
-		Log.e(tag, message);
+		Log.i(tag, message);
 	}
-	
-	public static final String REQUEST_TOKEN_URL = ApiConfig.HOST+"oauth/request_token";
-	public static final String AUTHENTICATE_URL = ApiConfig.HOST+"oauth/authenticate";
-	public static final String AUTHORIZE_URL = ApiConfig.HOST+"oauth/authorize";
-	public static final String ACCESS_TOKEN_URL = ApiConfig.HOST+"oauth/access_token";
+
+	public static final String REQUEST_TOKEN_URL = ApiConfig.HOST
+			+ "oauth/request_token";
+	public static final String AUTHENTICATE_URL = ApiConfig.HOST
+			+ "oauth/authenticate";
+	public static final String AUTHORIZE_URL = ApiConfig.HOST
+			+ "oauth/authorize";
+	public static final String ACCESS_TOKEN_URL = ApiConfig.HOST
+			+ "oauth/access_token";
 
 	public static final String X_AUTH_USERNAME = "x_auth_username";
 	public static final String X_AUTH_PASSWORD = "x_auth_password";
@@ -58,56 +62,54 @@ public class OAuth {
 	private OAuthToken oauthToken = null;
 
 	public OAuth() {
-		
+
 	}
-	
-	public OAuth(String token, String tokenSecret){
-		this.oauthToken=new OAuthToken(token, tokenSecret);
+
+	public OAuth(String token, String tokenSecret) {
+		this.oauthToken = new OAuthToken(token, tokenSecret);
 	}
-	
-	public void signRequest(HttpUriRequest request,List<Parameter> params){
-		String authorization=getOAuthHeader(request.getMethod(), request.getURI().toString(), params, oauthToken);
+
+	public void signRequest(HttpUriRequest request, List<Parameter> params) {
+		String authorization = getOAuthHeader(request.getMethod(), request
+				.getURI().toString(), params, oauthToken);
 		request.addHeader(new BasicHeader("Authorization", authorization));
 	}
 
-	public OAuthToken getOAuthAccessToken(String username, String password) throws ApiException,ClientProtocolException, IOException{
-if(App.DEBUG)
-		log("==========getOAuthAccessToken===========");
+	public OAuthToken getOAuthAccessToken(String username, String password)
+			throws ApiException, ClientProtocolException, IOException {
 		HttpGet request = new HttpGet(ACCESS_TOKEN_URL);
-		String authorization = getXAuthHeader(username, password, request.getMethod(),
-				ACCESS_TOKEN_URL);
-		if(App.DEBUG)
-		log("xauth authorization=" + authorization);
+		String authorization = getXAuthHeader(username, password,
+				request.getMethod(), ACCESS_TOKEN_URL);
+		if (App.DEBUG)
+			log("xauth authorization=" + authorization);
 		request.addHeader(new BasicHeader("Authorization", authorization));
 		HttpClient client = new DefaultHttpClient();
-			HttpResponse response = client.execute(request);
-			int statusCode = response.getStatusLine().getStatusCode();
-			String content = EntityUtils.toString(response.getEntity(),
-					HTTP.UTF_8);
-			if(App.DEBUG)
+		HttpResponse response = client.execute(request);
+		int statusCode = response.getStatusLine().getStatusCode();
+		String content = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
+		if (App.DEBUG)
 			log("getOAuthAccessToken() code=" + statusCode + " response="
 					+ content);
-			if(statusCode==200){
-				return new OAuthToken(content);		
-			}
-			else{
-				if(App.DEBUG)
-					log("getOAuthAccessToken content="+content);
-				throw new ApiException(statusCode, "帐号或密码不正确，登录失败");
-			}
+		if (statusCode == 200) {
+			return new OAuthToken(content);
+		} else {
+			if (App.DEBUG)
+				log("getOAuthAccessToken content=" + content);
+			throw new ApiException(statusCode, "帐号或密码不正确，登录失败");
+		}
 	}
 
 	public void setAccessToken(OAuthToken accessToken) {
 		this.oauthToken = accessToken;
 	}
 
-	private String getXAuthHeader(String username, String password, String method,
-			String url) {
+	private String getXAuthHeader(String username, String password,
+			String method, String url) {
 		long timestamp = System.currentTimeMillis() / 1000;
 		long nonce = System.nanoTime() + RAND.nextInt();
 		List<Parameter> oauthHeaderParams = new ArrayList<Parameter>();
-		oauthHeaderParams
-				.add(new Parameter("oauth_consumer_key", ApiConfig.CONSUMER_KEY));
+		oauthHeaderParams.add(new Parameter("oauth_consumer_key",
+				ApiConfig.CONSUMER_KEY));
 		oauthHeaderParams.add(OAUTH_SIGNATURE_METHOD);
 		oauthHeaderParams.add(new Parameter("oauth_timestamp", timestamp));
 		oauthHeaderParams.add(new Parameter("oauth_nonce", nonce));
@@ -115,7 +117,7 @@ if(App.DEBUG)
 		oauthHeaderParams.add(new Parameter("x_auth_username", username));
 		oauthHeaderParams.add(new Parameter("x_auth_password", password));
 		oauthHeaderParams.add(new Parameter("x_auth_mode", "client_auth"));
-//		parseGetParams(url, oauthHeaderParams);
+		// parseGetParams(url, oauthHeaderParams);
 		StringBuffer base = new StringBuffer(method).append("&")
 				.append(Parameter.encode(constructRequestURL(url))).append("&");
 		base.append(Parameter.encode(alignParams(oauthHeaderParams)));
@@ -125,8 +127,7 @@ if(App.DEBUG)
 		return "OAuth " + encodeParameters(oauthHeaderParams, ",", true);
 	}
 
-	private void parseGetParams(String url,
-			List<Parameter> signatureBaseParams) {
+	private void parseGetParams(String url, List<Parameter> signatureBaseParams) {
 		int queryStart = url.indexOf("?");
 		if (-1 != queryStart) {
 			String[] queryStrs = url.substring(queryStart + 1).split("&");
@@ -153,28 +154,30 @@ if(App.DEBUG)
 
 	public String getOAuthHeader(String method, String url,
 			List<Parameter> params, OAuthToken otoken) {
-		if(params==null){
-			params=new ArrayList<Parameter>();
+		if (params == null) {
+			params = new ArrayList<Parameter>();
 		}
 		long timestamp = System.currentTimeMillis() / 1000;
 		long nonce = timestamp + RAND.nextInt();
 		List<Parameter> oauthHeaderParams = new ArrayList<Parameter>();
-		oauthHeaderParams
-				.add(new Parameter("oauth_consumer_key", ApiConfig.CONSUMER_KEY));
+		oauthHeaderParams.add(new Parameter("oauth_consumer_key",
+				ApiConfig.CONSUMER_KEY));
 		oauthHeaderParams.add(OAUTH_SIGNATURE_METHOD);
 		oauthHeaderParams.add(new Parameter("oauth_timestamp", timestamp));
 		oauthHeaderParams.add(new Parameter("oauth_nonce", nonce));
 		oauthHeaderParams.add(new Parameter("oauth_version", "1.0"));
 		if (null != otoken) {
-			if(App.DEBUG)
-			log("add oauth token to header: oauth_token="+otoken.getToken());
+			if (App.DEBUG)
+				log("add oauth token to header: oauth_token="
+						+ otoken.getToken());
 			oauthHeaderParams.add(new Parameter("oauth_token", otoken
 					.getToken()));
 		}
 		List<Parameter> signatureBaseParams = new ArrayList<Parameter>(
 				oauthHeaderParams.size() + params.size());
 		signatureBaseParams.addAll(oauthHeaderParams);
-		if (method!=HttpGet.METHOD_NAME&&params != null && !Parameter.containsFile(params)) {
+		if (method != HttpGet.METHOD_NAME && params != null
+				&& !Parameter.containsFile(params)) {
 			signatureBaseParams.addAll(params);
 		}
 		parseGetParams(url, signatureBaseParams);
@@ -192,8 +195,8 @@ if(App.DEBUG)
 		long nonce = System.nanoTime() + RAND.nextInt();
 
 		List<Parameter> oauthHeaderParams = new ArrayList<Parameter>(5);
-		oauthHeaderParams
-				.add(new Parameter("oauth_consumer_key", ApiConfig.CONSUMER_KEY));
+		oauthHeaderParams.add(new Parameter("oauth_consumer_key",
+				ApiConfig.CONSUMER_KEY));
 		oauthHeaderParams.add(OAUTH_SIGNATURE_METHOD);
 		oauthHeaderParams.add(new Parameter("oauth_timestamp", timestamp));
 		oauthHeaderParams.add(new Parameter("oauth_nonce", nonce));
@@ -207,11 +210,12 @@ if(App.DEBUG)
 				oauthHeaderParams.size());
 		signatureBaseParams.addAll(oauthHeaderParams);
 
-//		log("=========createOAuthSignatureParams========");
-		if(App.DEBUG){
-		for (Parameter parameter : signatureBaseParams) {
-			log(parameter.toString());
-		}}
+		// log("=========createOAuthSignatureParams========");
+		if (App.DEBUG) {
+			for (Parameter parameter : signatureBaseParams) {
+				log(parameter.toString());
+			}
+		}
 
 		parseGetParams(url, signatureBaseParams);
 
@@ -228,20 +232,23 @@ if(App.DEBUG)
 	}
 
 	String signature(String data, OAuthToken token) {
-//		log("createSignature baseString=" + data + " token="
-//				+ (token == null ? "null" : token.getToken()));
+		// log("createSignature baseString=" + data + " token="
+		// + (token == null ? "null" : token.getToken()));
 		byte[] byteHMAC = null;
 		try {
 			Mac mac = Mac.getInstance(HMAC_SHA1);
 			SecretKeySpec spec;
 			if (null == token) {
-				String oauthSignature = Parameter.encode(ApiConfig.CONSUMER_SECRET) + "&";
+				String oauthSignature = Parameter
+						.encode(ApiConfig.CONSUMER_SECRET) + "&";
 				spec = new SecretKeySpec(oauthSignature.getBytes(), HMAC_SHA1);
 			} else {
 				spec = token.getSecretKeySpec();
 				if (null == spec) {
-					String oauthSignature = Parameter.encode(ApiConfig.CONSUMER_SECRET)
-							+ "&" + Parameter.encode(token.getTokenSecret());
+					String oauthSignature = Parameter
+							.encode(ApiConfig.CONSUMER_SECRET)
+							+ "&"
+							+ Parameter.encode(token.getTokenSecret());
 					spec = new SecretKeySpec(oauthSignature.getBytes(),
 							HMAC_SHA1);
 					token.setSecretKeySpec(spec);

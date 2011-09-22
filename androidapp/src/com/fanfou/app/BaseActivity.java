@@ -50,17 +50,20 @@ public abstract class BaseActivity extends Activity {
 //		this.mNetworkReceiver=new NetworkReceiver();
 	}
 	
-	static class NotifyReceiver extends BroadcastReceiver{
+	private class NotifyReceiver extends BroadcastReceiver{
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if(App.DEBUG){
 				Log.d("NotificationReceiver", "active, broadcast received: "+intent.toString());
 			}
+			onReceived(intent);
 			abortBroadcast();
 		}
 		
 	}
+	
+	protected void onReceived(Intent intent){};
 
 	@Override
 	protected void onResume() {
@@ -129,11 +132,11 @@ public abstract class BaseActivity extends Activity {
 	}
 
 	protected static final int MENU_ID_OPTION = 0; // 设置
-	protected static final int MENU_ID_PROFILE = 1; // 意见反馈
+	protected static final int MENU_ID_PROFILE = 1; // 
 	protected static final int MENU_ID_SEARCH = 2;
-	protected static final int MENU_ID_EXIT = 3; // 注销，切换帐号
+	protected static final int MENU_ID_FEEDBACK = 3; // 
 	protected static final int MENU_ID_ABOUT = 4; // 关于
-	protected static final int MENU_ID_FEEDBACK = 5; // 意见反馈
+	protected static final int MENU_ID_EXIT = 5; // 退出
 	protected static final int MENU_ID_HOME = 6; // 返回首页
 
 	@Override
@@ -233,31 +236,31 @@ public abstract class BaseActivity extends Activity {
 		return true;
 	}
 
-	private void goBackHome() {
+	protected void goBackHome() {
 		Intent intent = new Intent(mContext, HomePage.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
 
-	private void goOptionPage() {
+	protected void goOptionPage() {
 		Intent intent = new Intent(this, OptionsPage.class);
 		startActivity(intent);
 	}
 
-	private void goProfilePage() {
+	protected void goProfilePage() {
 		ActionManager.doMyProfile(this);
 	}
 
-	private void goSearchPage() {
+	protected void goSearchPage() {
 		Intent intent = new Intent(this, SearchPage.class);
 		startActivity(intent);
 	}
 
-	private void goAboutPage() {
+	protected void goAboutPage() {
 		Utils.goAboutPage(this);
 	}
 
-	private void doFeedback() {
+	protected void doFeedback() {
 //		IntentHelper.sendFeedback(this, "");
 		
 		Intent intent=new Intent(this, WritePage.class);

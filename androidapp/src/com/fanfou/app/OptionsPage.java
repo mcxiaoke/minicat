@@ -2,6 +2,7 @@ package com.fanfou.app;
 
 import com.fanfou.app.update.AutoUpdateManager;
 import com.fanfou.app.update.VersionInfo;
+import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.DeviceHelper;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.IntentHelper;
@@ -118,9 +119,9 @@ public class OptionsPage extends PreferenceActivity implements
 		if(key.equals(getString(R.string.option_notification))){
 			CheckBoxPreference cp=(CheckBoxPreference) p;
 			if(cp.isChecked()){
-				Utils.notifyOn(this);
+				AlarmHelper.setNotificationTaskOn(this);
 			}else{
-				Utils.notifyOff(this);
+				AlarmHelper.setNotificationTaskOff(this);
 			}
 		}
 		else if (p instanceof ListPreference) {

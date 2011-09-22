@@ -13,8 +13,8 @@
 	</string-array>
 
 	<string-array name="pic_level">
-		<item>显示原始图片</item>
-		<item>显示缩略图</item>
+		<item>原始图片</item>
+		<item>缩略图</item>
 		<item>不显示图片</item>
 	</string-array>
 
@@ -53,20 +53,20 @@
 		<item>22</item>
 	</string-array>
 	<string-array name="notification_interval">
-		<item>5分钟</item>
+		<item>1分钟</item>
+		<item>5分钟(推荐)</item>
 		<item>10分钟</item>
 		<item>15分钟</item>
 		<item>30分钟</item>
 		<item>1小时</item>
-		<item>2小时</item>
 	</string-array>
 	<string-array name="notification_interval_values">
+		<item>1</item>
 		<item>5</item>
 		<item>10</item>
 		<item>15</item>
 		<item>30</item>
 		<item>60</item>
-		<item>120</item>
 	</string-array>
 
 </resources>

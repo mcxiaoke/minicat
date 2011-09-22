@@ -109,11 +109,11 @@ public class PostService extends BaseIntentService {
 			}
 			nm.cancel(0);
 			if (result == null || result.isNull()) {
-				showFailedNotification("饭否消息未发送，内容重复", "消息内容重复，发送不成功，点击重新编辑");
+//				showFailedNotification("饭否消息未发送，内容重复", "消息内容重复，发送不成功，点击重新编辑");
+				//重复消息不要显示错误提示
 				res = false;
 			}
 		} catch (ApiException e) {
-			nm.cancel(0);
 			if (App.DEBUG) {
 				Log.e(TAG,
 						"error: code=" + e.statusCode + " msg="
@@ -122,13 +122,14 @@ public class PostService extends BaseIntentService {
 			}
 			showFailedNotification("饭否消息发送失败,点击重新编辑", e.getMessage());
 		} finally {
+			nm.cancel(0);
 		}
 		return res;
 	}
 
 	private int showSendingNotification() {
 		int id = 0;
-		Notification notification = new Notification(R.drawable.icon,
+		Notification notification = new Notification(R.drawable.statusbar_icon,
 				"饭否消息正在发送...", System.currentTimeMillis());
 		PendingIntent contentIntent = PendingIntent
 				.getService(this, 0, null, 0);
@@ -162,7 +163,7 @@ public class PostService extends BaseIntentService {
 			intent.putExtra(Commons.EXTRA_STATUS, src);
 		}
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-				intent, 0);
+				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		notification.setLatestEventInfo(this, title, message, contentIntent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		nm.notify(id, notification);

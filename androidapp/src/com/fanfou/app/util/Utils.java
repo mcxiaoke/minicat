@@ -9,16 +9,20 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
@@ -148,6 +152,17 @@ public final class Utils {
 		return p;
 	}
 
+	public static String getDmSinceId(Cursor c) {
+		if (c != null && c.getCount() > 0) {
+			c.moveToFirst();
+			final DirectMessage first = DirectMessage.parse(c);
+			if (first != null) {
+				return first.id;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * 获取SinceId
 	 * 
@@ -184,102 +199,6 @@ public final class Utils {
 
 	public static void notify(Context context, String text) {
 		Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
-	}
-
-	public static PendingIntent getCleanPendingIntent(Context context) {
-		return PendingIntent.getService(context, 0, new Intent(context,
-				CleanService.class), 0);
-	}
-
-	public static void addCleanTask(Context context) {
-		AlarmManager am = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
-		am.setRepeating(AlarmManager.RTC_WAKEUP, Utils.setAlarmTime(),
-				8 * 3600 * 1000, getCleanPendingIntent(context));
-	}
-
-	public static void removeCleanTask(Context context) {
-		AlarmManager am = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
-		am.cancel(getCleanPendingIntent(context));
-	}
-
-	public static void notifyOn(Context context) {
-		if (App.DEBUG) {
-			if (App.DEBUG) {
-				Log.i("NotificationService", "NotificationService On");
-			}
-		}
-		boolean notificationOn = OptionHelper.readBoolean(context,
-				R.string.option_notification, true);
-		if (notificationOn) {
-			int interval = OptionHelper.parseInt(context,
-					R.string.option_notification_interval, "5");
-			
-			if (App.DEBUG) {
-//				interval=1;
-				Log.i("NotificationService", "interval=" + interval);
-			}
-
-			Calendar c = Calendar.getInstance();
-			c.add(Calendar.MINUTE, interval);
-			if (c.getTimeInMillis() < System.currentTimeMillis()) {
-				c.add(Calendar.DAY_OF_YEAR, 1);
-			}
-			AlarmManager am = (AlarmManager) context
-			.getSystemService(Context.ALARM_SERVICE);
-			PendingIntent pi = getNotificationPendingIntent(context);
-			am.cancel(pi);
-			am.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
-					interval * 60 * 1000, pi);
-		} else {
-			AlarmManager am = (AlarmManager) context
-					.getSystemService(Context.ALARM_SERVICE);
-			PendingIntent pi = getNotificationPendingIntent(context);
-			am.cancel(pi);
-			pi.cancel();
-		}
-	}
-
-	public static void notifyOff(Context context) {
-		if (App.DEBUG) {
-			Log.i("NotificationService", "NotificationService Off");
-		}
-		AlarmManager am = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
-		PendingIntent pi = getNotificationPendingIntent(context);
-		am.cancel(pi);
-		pi.cancel();
-	}
-
-	public static PendingIntent getNotificationPendingIntent(Context context) {
-		Intent intent = new Intent(context, NotificationService.class);
-		PendingIntent pi = PendingIntent.getService(context, 0, intent, 0);
-		return pi;
-	}
-
-	public static long setAlarmTime() {
-		int hour = 6;
-		int minute = 0;
-		Calendar c = Calendar.getInstance();
-		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
-				c.get(Calendar.DAY_OF_MONTH), hour, minute);
-		c.add(Calendar.DATE, 1);
-		long result = c.getTimeInMillis();
-		if (App.DEBUG)
-			Log.d("setAlarmTime()",
-					"Alarm Time:" + DateTimeHelper.formatDate(new Date(result)));
-		return result;
-	}
-
-	public static long setTestTime() {
-		Calendar c = Calendar.getInstance();
-		c.add(Calendar.SECOND, 10);
-		long result = c.getTimeInMillis();
-		if (App.DEBUG)
-			Log.e("setTestTime()",
-					"Alarm Time:" + DateTimeHelper.formatDate(new Date(result)));
-		return result;
 	}
 
 	public static void open(Context context, final String fileName) {

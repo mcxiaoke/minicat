@@ -116,7 +116,7 @@ public class MessageService extends BaseIntentService {
 
 	private int showSuccessNotification() {
 		int id = 2;
-		Notification notification = new Notification(R.drawable.icon, "私信发送成功",
+		Notification notification = new Notification(R.drawable.statusbar_icon, "私信发送成功",
 				System.currentTimeMillis());
 		PendingIntent contentIntent = PendingIntent
 				.getService(this, 0, null, 0);
@@ -132,7 +132,7 @@ public class MessageService extends BaseIntentService {
 		Notification notification = new Notification(R.drawable.statusbar_icon,
 				"网络异常，私信发送失败", System.currentTimeMillis());
 		PendingIntent contentIntent = PendingIntent.getService(this, 0,
-				mIntent, 0);
+				mIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		notification.setLatestEventInfo(this, "网络异常，私信发送失败", "私信发送失败，点击重新发送",
 				contentIntent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
