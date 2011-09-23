@@ -118,7 +118,7 @@ public final class AutoUpdateManager {
 		StringBuffer sb = new StringBuffer();
 		sb.append("安装版本： ").append(App.me.appVersionName).append("(Build")
 				.append(App.me.appVersionCode).append(")");
-		sb.append("\n最新版本： ").append(info.versionCode).append("(Build")
+		sb.append("\n最新版本： ").append(info.versionName).append("(Build")
 				.append(info.versionCode).append(")");
 		sb.append("\n更新日期：").append(info.releaseDate);
 		sb.append("\n更新级别：").append(

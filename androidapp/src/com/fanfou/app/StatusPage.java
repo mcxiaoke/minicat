@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.provider.MediaStore.Images.ImageColumns;
 import android.text.TextPaint;
 import android.util.Log;
 import android.view.View;
@@ -15,8 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fanfou.app.api.Status;
-import com.fanfou.app.cache.ImageLoader;
-import com.fanfou.app.cache.ImageLoader.ImageLoaderCallback;
+import com.fanfou.app.cache.ImageLoaderInterface;
+import com.fanfou.app.cache.ImageLoaderListener;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.service.ActionService;
 import com.fanfou.app.ui.ActionBar;
@@ -54,7 +53,7 @@ public class StatusPage extends BaseActivity implements OnClickListener,
 
 	private ActionBar mActionBar;
 
-	private ImageLoader imageLoader = null;
+	private ImageLoaderInterface imageLoader = null;
 
 	private Status status;
 	private Status thread;
@@ -103,7 +102,7 @@ public class StatusPage extends BaseActivity implements OnClickListener,
 		vUser.setOnClickListener(this);
 
 		iUserHead = (ImageView) findViewById(R.id.user_head);
-		imageLoader.setHeadImage(status.userProfileImageUrl, iUserHead);
+		imageLoader.set(status.userProfileImageUrl, iUserHead,R.drawable.default_head);
 
 		tUserName = (TextView) findViewById(R.id.user_name);
 		tUserName.setText(status.userScreenName);
@@ -125,9 +124,9 @@ public class StatusPage extends BaseActivity implements OnClickListener,
 			if (App.DEBUG)
 				log("level=" + photoLevel);
 			if (photoLevel == 2) {
-				imageLoader.setPhoto(status.photoLargeUrl, iPhoto);
+				imageLoader.set(status.photoLargeUrl, iPhoto);
 			} else if (photoLevel == 1) {
-				imageLoader.setPhoto(status.photoThumbUrl, iPhoto);
+				imageLoader.set(status.photoThumbUrl, iPhoto);
 				iPhoto.setOnClickListener(this);
 			} else if (photoLevel == 0) {
 				iPhoto.setImageResource(R.drawable.photo_icon);
@@ -249,12 +248,12 @@ public class StatusPage extends BaseActivity implements OnClickListener,
 	}
 
 	private void doShowBigPicture() {
-		ImageLoaderCallback callback = new ImageLoaderCallback() {
+		ImageLoaderListener callback = new ImageLoaderListener() {
 
 			@Override
 			public void onFinish(String key) {
 				iPhoto.setOnClickListener(null);
-				Bitmap bitmap=App.me.imageLoader.cache.get(key);
+				Bitmap bitmap=App.me.imageLoader.load(key);
 				if(bitmap!=null){
 					iPhoto.setImageBitmap(bitmap);
 				}
@@ -270,7 +269,7 @@ public class StatusPage extends BaseActivity implements OnClickListener,
 			}
 		};
 		iPhoto.setImageResource(R.drawable.photo_loading);
-		Bitmap bitmap = App.me.imageLoader.getImage(status.photoLargeUrl,
+		Bitmap bitmap = App.me.imageLoader.load(status.photoLargeUrl,
 				callback);
 		if (bitmap != null) {
 			iPhoto.setImageBitmap(bitmap);

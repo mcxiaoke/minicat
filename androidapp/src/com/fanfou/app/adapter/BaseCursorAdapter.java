@@ -4,7 +4,7 @@ import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.adapter.MessageCursorAdapter.ViewHolder;
 import com.fanfou.app.cache.ImageLoader;
-import com.fanfou.app.cache.ImageLoader.ImageLoaderCallback;
+import com.fanfou.app.cache.ImageLoaderInterface;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.util.OptionHelper;
 
@@ -46,20 +46,18 @@ public abstract class BaseCursorAdapter extends CursorAdapter implements
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	Context mContext;
 	LayoutInflater mInflater;
 	Cursor mCursor;
-	ImageLoader mLoader;
+	ImageLoaderInterface mLoader;
 	int fontSize;
 	
 	private void initFontSize(){

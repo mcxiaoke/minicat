@@ -185,6 +185,7 @@ public final class LoginPage extends BaseActivity implements
 	}
 
 	private void goHome() {
+		if(App.DEBUG)
 		log("goHome()");
 		if (g != null) {
 			g.dispatch();
@@ -196,6 +197,7 @@ public final class LoginPage extends BaseActivity implements
 	}
 
 	private void clearDB() {
+		if(App.DEBUG)
 		log("clearDB()");
 		ContentResolver cr = getContentResolver();
 		cr.delete(StatusInfo.CONTENT_URI, null, null);

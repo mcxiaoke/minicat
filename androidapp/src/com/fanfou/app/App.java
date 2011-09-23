@@ -26,6 +26,8 @@ import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.ApiImpl;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.ImageLoader;
+import com.fanfou.app.cache.ImageLoader2;
+import com.fanfou.app.cache.ImageLoaderInterface;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.http.NetworkState;
 import com.fanfou.app.http.NetworkState.Type;
@@ -45,10 +47,9 @@ import com.fanfou.app.util.StringHelper;
  * 
  */
 
-@ReportsCrashes(formKey = "",
-formUri = "http://apps.fanfou.com/andstat/cr/", mode = ReportingInteractionMode.TOAST, resToastText = R.string.crash_toast_text)
+@ReportsCrashes(formKey = "", formUri = "http://apps.fanfou.com/andstat/cr/", mode = ReportingInteractionMode.TOAST, resToastText = R.string.crash_toast_text)
 public class App extends Application {
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	public static final int CORE_POOL_SIZE = 5;
 
@@ -66,7 +67,7 @@ public class App extends Application {
 
 	public static App me;
 
-	public ImageLoader imageLoader;
+	public ImageLoaderInterface imageLoader;
 	public DefaultHttpClient client;
 	public float density;
 
@@ -178,7 +179,7 @@ public class App extends Application {
 			Intent intent = new Intent(context, FetchService.class);
 			intent.putExtra(Commons.EXTRA_TYPE, User.AUTO_COMPLETE);
 			context.startService(intent);
-			
+
 			AlarmHelper.setAutoCompleteTask(context);
 			OptionHelper.saveBoolean(context, Commons.KEY_SET_AUTO_COMPLETE,
 					true);

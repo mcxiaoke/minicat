@@ -57,7 +57,7 @@ public class MessageCursorAdapter extends BaseCursorAdapter{
 		DirectMessage dm = DirectMessage.parse(cursor);
 
 //		if(!fling){
-			mLoader.setHeadImage(dm.senderProfileImageUrl, holder.headIcon);
+			mLoader.set(dm.senderProfileImageUrl, holder.headIcon,R.drawable.default_head);
 //		}
 		// Bitmap bitmap=mLoader.get(dm.senderProfileImageUrl,
 		// getImageCallback(holder.headIcon));

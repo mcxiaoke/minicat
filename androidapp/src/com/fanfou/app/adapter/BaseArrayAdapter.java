@@ -5,7 +5,7 @@ import java.util.List;
 import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.cache.ImageLoader;
-import com.fanfou.app.cache.ImageLoader.ImageLoaderCallback;
+import com.fanfou.app.cache.ImageLoaderInterface;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.util.OptionHelper;
 
@@ -20,7 +20,7 @@ import android.widget.ImageView;
 public abstract class BaseArrayAdapter<T> extends BaseAdapter {
 	Context mContext;
 	LayoutInflater mInflater;
-	ImageLoader mLoader;
+	ImageLoaderInterface mLoader;
 	int fontSize;
 
 	public BaseArrayAdapter(Context context, List<T> t) {

@@ -1,6 +1,7 @@
 package com.fanfou.app.util;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,12 +31,10 @@ import android.view.View;
 import com.fanfou.app.App;
 
 /**
- * 
- * @author meinside@gmail.com
- * @since 09.10.12.
- * 
- *        last update 10.11.05.
- * 
+ * @author mcxiaoke
+ * @version 1.0 2011.06.05
+ * @version 2.0 2011.09.23
+ *
  */
 final public class ImageHelper {
 	private static final String TAG = ImageHelper.class.getSimpleName();
@@ -308,6 +307,35 @@ final public class ImageHelper {
 		return false;
 	}
 
+	public static boolean writeToFile(String filePath, Bitmap bitmap) {
+		if (bitmap == null||StringHelper.isEmpty(filePath)) {
+			return false;
+		}
+		File file=new File(filePath);
+		return writeToFile(file, bitmap);
+	}
+	
+	public static boolean writeToFile(File file, Bitmap bitmap) {
+		if (bitmap == null) {
+			return false;
+		}
+		boolean result = false;
+		BufferedOutputStream bos = null;
+		try {
+			if (!file.exists()) {
+				bos = new BufferedOutputStream(new FileOutputStream(file));
+				bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+			}
+			result = true;
+		} catch (IOException e) {
+			if (App.DEBUG)
+				e.printStackTrace();
+		} finally {
+			IOHelper.forceClose(bos);
+		}
+		return result;
+	}
+
 	public static File prepareUploadFile(Context context, File file, int quality) {
 		File destFile = new File(IOHelper.getCacheDir(context),
 				"fanfouupload.jpg");
@@ -330,12 +358,13 @@ final public class ImageHelper {
 			int outWidth = opt.outWidth;
 			int outHeight = opt.outHeight;
 			int sampleSize = 1;
-			if (outWidth > IMAGE_MAX_WIDTH*2 ) {
-				sampleSize=outWidth/IMAGE_MAX_WIDTH;
+			if (outWidth > IMAGE_MAX_WIDTH * 2) {
+				sampleSize = outWidth / IMAGE_MAX_WIDTH;
 			}
 			if (App.DEBUG) {
 				Log.d(TAG, "getResizedBitmapFile() srcFile.width=" + outWidth
-						+ " srcFile.height=" + outHeight+" inSampleSize="+sampleSize);
+						+ " srcFile.height=" + outHeight + " inSampleSize="
+						+ sampleSize);
 			}
 			opt.inJustDecodeBounds = false;
 			opt.inSampleSize = sampleSize;

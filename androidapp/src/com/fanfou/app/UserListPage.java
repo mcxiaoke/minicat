@@ -51,7 +51,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	private static final String tag = UserListPage.class.getSimpleName();
 
 	private void log(String message) {
-		Log.e(tag, message);
+		Log.i(tag, message);
 	}
 
 	@Override
@@ -97,7 +97,9 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	private void showContent() {
-		log("showContent()");
+		if (App.DEBUG) {
+			log("showContent()");
+		}
 		isInitialized = true;
 		mEmptyView.setVisibility(View.GONE);
 		mListView.setVisibility(View.VISIBLE);
@@ -128,9 +130,9 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 			title = userName + "的";
 		}
 		if (type == User.TYPE_FRIENDS) {
-			mActionBar.setTitle(title + "好友");
+			mActionBar.setTitle(title + "关注的人");
 		} else if (type == User.TYPE_FOLLOWERS) {
-			mActionBar.setTitle(title + "关注者");
+			mActionBar.setTitle("关注"+title + "的人");
 		}
 		mActionBar.setRightAction(this);
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));

@@ -68,7 +68,7 @@ public class UserArrayAdapter extends BaseArrayAdapter<User> {
 		
 		final User u=mUsers.get(position);
 		
-		mLoader.setHeadImage(u.profileImageUrl, holder.headIcon);
+		mLoader.set(u.profileImageUrl, holder.headIcon,R.drawable.default_head);
 		if(u.protect){
 			holder.lockIcon.setVisibility(View.VISIBLE);
 		}else{

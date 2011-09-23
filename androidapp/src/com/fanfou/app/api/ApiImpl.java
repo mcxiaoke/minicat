@@ -89,10 +89,11 @@ public class ApiImpl implements Api, ResponseCode {
 	 */
 	private Response fetch(Request request) throws ApiException {
 		try {
-			long startTime = System.currentTimeMillis();
+//			long startTime = System.currentTimeMillis();
 			HttpResponse response = mClient.exec(request);
-			long reqTime = System.currentTimeMillis() - startTime;
-			Utils.logTime("fetch", reqTime);
+//			if(App.DEBUG){
+//				long reqTime = System.currentTimeMillis() - startTime;
+//			Utils.logTime("fetch", reqTime);}
 			int statusCode=response.getStatusLine().getStatusCode();
 			if (statusCode == HTTP_OK) {
 				return new Response(response);

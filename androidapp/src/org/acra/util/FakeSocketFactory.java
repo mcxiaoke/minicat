@@ -28,7 +28,7 @@ public class FakeSocketFactory implements SocketFactory, LayeredSocketFactory {
             context.init(null, new TrustManager[] { new NaiveTrustManager() }, null);
             return context;
         } catch (GeneralSecurityException e) {
-            throw new IOException(e);
+            throw new IOException();
         }
     }
 

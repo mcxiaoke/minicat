@@ -3,6 +3,7 @@ package com.fanfou.app;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.ImageLoader;
+import com.fanfou.app.cache.ImageLoaderInterface;
 import com.fanfou.app.config.ACTION;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.service.ActionService;
@@ -76,7 +77,7 @@ public class ProfilePage extends BaseActivity implements OnClickListener,
 	private User user;
 
 	private Handler mHandler;
-	private ImageLoader mLoader;
+	private ImageLoaderInterface mLoader;
 
 	private boolean isInitialized = false;
 	private boolean noPermission = false;// noPermission=user.protect&&!user.following
@@ -216,7 +217,7 @@ public class ProfilePage extends BaseActivity implements OnClickListener,
 		if (App.DEBUG)
 			log("updateUI user.name=" + user.screenName);
 
-		mLoader.setHeadImage(user.profileImageUrl, mHead);
+		mLoader.set(user.profileImageUrl, mHead,R.drawable.default_head);
 		mName.setText(user.screenName);
 
 		mStatusesInfo.setText("" + user.statusesCount);

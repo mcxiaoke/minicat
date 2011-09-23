@@ -13,7 +13,6 @@ import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.adapter.StatusCursorAdapter.ViewHolder;
 import com.fanfou.app.api.User;
-import com.fanfou.app.cache.ImageLoader.ImageLoaderCallback;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -74,7 +73,7 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 		final ViewHolder holder = (ViewHolder) row.getTag();
 		User u=User.parse(cursor);
 //		if(!fling){	
-			mLoader.setHeadImage(u.profileImageUrl, holder.headIcon);
+			mLoader.set(u.profileImageUrl, holder.headIcon,R.drawable.default_head);
 //		}
 		if(u.protect){
 			holder.lockIcon.setVisibility(View.VISIBLE);

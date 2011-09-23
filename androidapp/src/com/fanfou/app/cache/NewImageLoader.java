@@ -30,15 +30,14 @@ import com.fanfou.app.util.StringHelper;
 
 /**
  * @author mcxiaoke
- * @version 1.0 20110601
+ * @version 1.0 2011.09.23
  * 
  */
-public class ImageLoader implements ImageLoaderInterface{
+public class NewImageLoader {
 
-	public static final String TAG = ImageLoader.class.getSimpleName();
+	public static final String TAG = NewImageLoader.class.getSimpleName();
 
 	private static final String PARAM_URL = "url";
-	private static final String PARAM_BITMAP = "image";
 	private static final int MESSAGE_FINISH = 0;
 	private static final int MESSAGE_ERROR = 1;
 
@@ -50,7 +49,13 @@ public class ImageLoader implements ImageLoaderInterface{
 
 	private QueueRunnable queuePool;
 
-	public ImageLoader(Context context) {
+	public interface LoaderCallback {
+		void onFinish(String url, Bitmap bitmap);
+
+		void onError(String message);
+	}
+
+	public NewImageLoader(Context context) {
 		this.cache = new ImageCache(context);
 		this.callbacks = new Callbacks();
 		this.handler = new ImageDownloadHandler(cache, callbacks);
@@ -59,8 +64,8 @@ public class ImageLoader implements ImageLoaderInterface{
 		this.executor.submit(queuePool);
 	}
 
-	@Override
-	public Bitmap load(String key, ImageLoaderListener callback) {
+	// @Override
+	public Bitmap load(String key, LoaderCallback callback) {
 		if (key != null) {
 			return loadAndFetch(key, callback);
 		}
@@ -68,18 +73,19 @@ public class ImageLoader implements ImageLoaderInterface{
 
 	}
 
-	private Bitmap loadAndFetch(String key, ImageLoaderListener callback) {
+	private Bitmap loadAndFetch(String key, LoaderCallback callback) {
 		Bitmap bitmap = null;
 		if (cache.containsKey(key)) {
 			bitmap = cache.get(key);
-		} else {
-			callbacks.put(key, callback);
-			addToQueue(key);
+			if (bitmap == null) {
+				callbacks.put(key, callback);
+				addToQueue(key);
+			}
 		}
 		return bitmap;
 	}
 
-	@Override
+	// @Override
 	public Bitmap load(String key) {
 		if (key != null) {
 			return loadFromLocal(key);
@@ -96,37 +102,39 @@ public class ImageLoader implements ImageLoaderInterface{
 		return bitmap;
 	}
 
-	@Override
-	public void set(String key, final ImageView imageView, int iconId) {
-		if (key != null) {
+	public void set(final ImageLoaderTask task, final int iconId) {
+		if (task != null) {
 			Bitmap bitmap = null;
-			if (cache.containsKey(key)) {
-				bitmap = cache.get(key);
+			if (cache.containsKey(task.url)) {
+				bitmap = cache.get(task.url);
 			}
 			if (bitmap != null) {
-				imageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(
-						bitmap, 6));
+				task.imageView.setImageBitmap(ImageHelper
+						.getRoundedCornerBitmap(bitmap, 6));
 			} else {
-				imageView.setImageResource(iconId);
-				ImageLoaderListener callback = new ImageLoaderListener() {
+				task.imageView.setImageResource(iconId);
+				LoaderCallback callback = new LoaderCallback() {
 
 					@Override
-					public void onFinish(String key) {
-
-						Bitmap bitmap = cache.get(key);
+					public void onFinish(String url, Bitmap bitmap) {
 						if (bitmap != null) {
-							imageView.setImageBitmap(ImageHelper
-									.getRoundedCornerBitmap(bitmap, 6));
+							String tag = (String) task.imageView.getTag();
+							if (tag != null && tag.equals(url)) {
+								task.imageView.setImageBitmap(ImageHelper
+										.getRoundedCornerBitmap(bitmap, 6));
+							}
+						} else {
+							task.imageView.setImageResource(iconId);
 						}
-						imageView.postInvalidate();
+						task.imageView.postInvalidate();
 					}
 
 					@Override
 					public void onError(String message) {
 					}
 				};
-				callbacks.put(key, callback);
-				addToQueue(key);
+				callbacks.put(task.url, callback);
+				addToQueue(task.url);
 			}
 		} else {
 			Log.d(TAG, "set() key is null.");
@@ -140,38 +148,40 @@ public class ImageLoader implements ImageLoaderInterface{
 	 * @param key
 	 * @param imageView
 	 */
-	@Override
-	public void set(String key, final ImageView imageView) {
-		if (key != null) {
+	// @Override
+	public void set(final ImageLoaderTask task) {
+		if (task != null) {
 			Bitmap bitmap = null;
-			if (cache.containsKey(key)) {
-				bitmap = cache.get(key);
+			if (cache.containsKey(task.url)) {
+				bitmap = cache.get(task.url);
 			}
 			if (bitmap != null) {
-				imageView.setImageBitmap(bitmap);
+				task.imageView.setImageBitmap(bitmap);
 			} else {
-				ImageLoaderListener callback = new ImageLoaderListener() {
+				LoaderCallback callback = new LoaderCallback() {
 
 					@Override
-					public void onFinish(String key) {
-
-						Bitmap bitmap = cache.get(key);
+					public void onFinish(String url, Bitmap bitmap) {
 						if (bitmap != null) {
-							imageView.setImageBitmap(bitmap);
+							String tag = (String) task.imageView.getTag();
+							if (tag != null && tag.equals(url)) {
+								task.imageView.setImageBitmap(bitmap);
+							}
 						} else {
-							imageView.setImageResource(R.drawable.photo_icon);
+							task.imageView
+									.setImageResource(R.drawable.photo_icon);
 						}
-						imageView.postInvalidate();
+						task.imageView.postInvalidate();
 					}
 
 					@Override
 					public void onError(String message) {
-						imageView.setImageResource(R.drawable.photo_icon);
-						imageView.postInvalidate();
+						task.imageView.setImageResource(R.drawable.photo_icon);
+						task.imageView.postInvalidate();
 					}
 				};
-				callbacks.put(key, callback);
-				addToQueue(key);
+				callbacks.put(task.url, callback);
+				addToQueue(task.url);
 			}
 		} else {
 			Log.d(TAG, "set() key is null.");
@@ -212,11 +222,14 @@ public class ImageLoader implements ImageLoaderInterface{
 				String url = null;
 				try {
 					url = queue.take();
-					if (App.DEBUG) {
-						Log.e(TAG, "take a url fro queue: " + url
-								+ ", add to download queue");
+					if (url != null) {
+
+						if (App.DEBUG) {
+							Log.e(TAG, "take a url fro queue: " + url
+									+ ", add to download queue");
+						}
+						executor.submit(new ImageDownloadThread(url, handler));
 					}
-					executor.submit(new ImageDownloadThread(url, handler));
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} finally {
@@ -242,7 +255,7 @@ public class ImageLoader implements ImageLoaderInterface{
 				Bitmap bitmap = downloadImage(url);
 				final Message message = handler.obtainMessage(MESSAGE_FINISH);
 				message.getData().putString(PARAM_URL, url);
-				message.obj=bitmap;
+				message.obj = bitmap;
 				handler.sendMessage(message);
 			} else {
 			}
@@ -262,12 +275,10 @@ public class ImageLoader implements ImageLoaderInterface{
 					return BitmapFactory.decodeStream(response.getEntity()
 							.getContent());
 				}
-			} catch (ClientProtocolException e) {
-				if (App.DEBUG)
-					e.printStackTrace();
 			} catch (IOException e) {
-				if (App.DEBUG)
-					e.printStackTrace();
+				if (App.DEBUG) {
+					Log.d(TAG, e.getMessage());
+				}
 			}
 			return null;
 		}
@@ -290,7 +301,7 @@ public class ImageLoader implements ImageLoaderInterface{
 			case MESSAGE_FINISH:
 				Bitmap bitmap = (Bitmap) msg.obj;
 				cache.put(url, bitmap);
-				callbacks.call(url);
+				callbacks.call(url, bitmap);
 				break;
 			case MESSAGE_ERROR:
 				break;
@@ -304,13 +315,13 @@ public class ImageLoader implements ImageLoaderInterface{
 
 	static class Callbacks {
 		private static final String TAG = "ImageLoaded";
-		private ConcurrentHashMap<String, List<ImageLoaderListener>> mCallbackMap;
+		private ConcurrentHashMap<String, LoaderCallback> mCallbackMap;
 
 		public Callbacks() {
-			mCallbackMap = new ConcurrentHashMap<String, List<ImageLoaderListener>>();
+			mCallbackMap = new ConcurrentHashMap<String, LoaderCallback>();
 		}
 
-		public void put(String url, ImageLoaderListener callback) {
+		public void put(String url, LoaderCallback callback) {
 			if (StringHelper.isEmpty(url) || callback == null) {
 				if (App.DEBUG)
 					Log.d(TAG, "url or callback is null");
@@ -319,37 +330,20 @@ public class ImageLoader implements ImageLoaderInterface{
 			if (App.DEBUG) {
 				Log.d(TAG, "ImageLoaded.put url=" + url);
 			}
-			if (!mCallbackMap.containsKey(url)) {
-				mCallbackMap.put(url, new ArrayList<ImageLoaderListener>());
-			}
-
-			List<ImageLoaderListener> callbacks = mCallbackMap.get(url);
-			if (callbacks != null) {
-				callbacks.add(callback);
-			}
+			mCallbackMap.put(url, callback);
 		}
 
-		public void call(String url) {
-			List<ImageLoaderListener> callbackList = mCallbackMap.get(url);
-			if (callbackList != null) {
-				for (ImageLoaderListener callback : callbackList) {
-					if (callback != null) {
-						if (url != null) {
-							callback.onFinish(url);
-						} else {
-							callback.onError("load image error.");
-						}
-					}
-				}
-				callbackList.clear();
-				mCallbackMap.remove(url);
-			} else {
-				if (App.DEBUG) {
-					Log.d(TAG, "callbackList is null");
+		public void call(String url, Bitmap bitmap) {
+			LoaderCallback callback = mCallbackMap.get(url);
+			if (callback != null) {
+				if (url != null) {
+					callback.onFinish(url, bitmap);
+				} else {
+					callback.onError("load image error.");
 				}
 			}
+			mCallbackMap.remove(url);
 		}
-
 	}
 
 }

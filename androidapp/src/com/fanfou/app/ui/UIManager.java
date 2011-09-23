@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
-import com.fanfou.app.cache.ImageLoader.ImageLoaderCallback;
 import com.fanfou.app.config.Commons;
 
 /**

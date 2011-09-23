@@ -16,6 +16,18 @@
 				android:defaultValue="5" android:dependency="@string/option_notification" />
 		</PreferenceCategory>
 
+		<PreferenceCategory android:title="通知类型">
+			<CheckBoxPreference android:title="好友消息"
+				android:key="@string/option_notification_home" android:defaultValue="false"
+				android:dependency="@string/option_notification_switch" />
+			<CheckBoxPreference android:title="提及我的消息"
+				android:key="@string/option_notification_mention"
+				android:defaultValue="true" android:dependency="@string/option_notification_switch" />
+			<CheckBoxPreference android:title="私信"
+				android:key="@string/option_notification_dm" android:defaultValue="true"
+				android:dependency="@string/option_notification_switch" />
+		</PreferenceCategory>
+
 		<PreferenceCategory android:title="通知设置">
 
 			<CheckBoxPreference android:title="通知"
@@ -35,18 +47,6 @@
 				android:key="@string/option_notification_vibrate"
 				android:defaultValue="true" android:dependency="@string/option_notification_switch" />
 
-		</PreferenceCategory>
-
-		<PreferenceCategory android:title="通知类型">
-			<CheckBoxPreference android:title="好友消息"
-				android:key="@string/option_notification_home" android:defaultValue="false"
-				android:dependency="@string/option_notification_switch" />
-			<CheckBoxPreference android:title="提及我的消息"
-				android:key="@string/option_notification_mention"
-				android:defaultValue="true" android:dependency="@string/option_notification_switch" />
-			<CheckBoxPreference android:title="私信"
-				android:key="@string/option_notification_dm" android:defaultValue="true"
-				android:dependency="@string/option_notification_switch" />
 		</PreferenceCategory>
 
 	</PreferenceScreen>
@@ -106,12 +106,6 @@
 
 	</PreferenceScreen>
 
-	<com.fanfou.app.preferences.LogoutDialogPreference
-		android:key="@string/option_logout" android:title="注销登录"
-		android:dialogTitle="注销登录" android:summary="注销当前帐号，重新登录"
-		android:dialogMessage="是否要注销当前帐号，重新登录？" android:positiveButtonText="确定"
-		android:negativeButtonText="取消" />
-
 	<PreferenceCategory android:title="信息">
 
 		<Preference android:title="软件升级" android:summary="联网检测是否有升级版本"
@@ -125,6 +119,12 @@
 			<intent android:action="android.intent.action.VIEW"
 				android:data="http://fanfou.com/" />
 		</Preference>
+
+		<com.fanfou.app.preferences.LogoutDialogPreference
+			android:key="@string/option_logout" android:title="注销登录"
+			android:dialogTitle="注销登录" android:summary="注销当前帐号，重新登录"
+			android:dialogMessage="是否要注销当前帐号，重新登录？" android:positiveButtonText="确定"
+			android:negativeButtonText="取消" />
 
 	</PreferenceCategory>
 

@@ -16,12 +16,11 @@ package com.fanfou.app.ui.widget;
  * limitations under the License.
  */
 
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import com.fanfou.app.App;
 import com.fanfou.app.R;
-
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -96,7 +95,8 @@ public class ViewFlow extends AdapterView<Adapter> {
 		 * @param view
 		 *            the {@link View} currently in focus.
 		 * @param position
-		 *            The position in the adapter of the {@link View} currently in focus.
+		 *            The position in the adapter of the {@link View} currently
+		 *            in focus.
 		 */
 		void onSwitched(View view, int position);
 
@@ -136,7 +136,8 @@ public class ViewFlow extends AdapterView<Adapter> {
 	public void onConfigurationChanged(Configuration newConfig) {
 		if (newConfig.orientation != mLastOrientation) {
 			mLastOrientation = newConfig.orientation;
-			getViewTreeObserver().addOnGlobalLayoutListener(orientationChangeListener);
+			getViewTreeObserver().addOnGlobalLayoutListener(
+					orientationChangeListener);
 		}
 	}
 
@@ -147,7 +148,7 @@ public class ViewFlow extends AdapterView<Adapter> {
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		
+
 		final int width = MeasureSpec.getSize(widthMeasureSpec);
 		final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
 		if (widthMode != MeasureSpec.EXACTLY && !isInEditMode()) {
@@ -392,7 +393,7 @@ public class ViewFlow extends AdapterView<Adapter> {
 			int hPerceived = h + (mCurrentAdapterIndex - mCurrentBufferIndex)
 					* getWidth();
 			mIndicator.onScrolled(hPerceived, v, oldh, oldv);
-			
+
 			// add by mcxiaoke
 			if (mViewSwitchListener != null) {
 				int width = getWidth();
@@ -461,8 +462,9 @@ public class ViewFlow extends AdapterView<Adapter> {
 		int dx = (mCurrentScreen * getWidth()) - mScroller.getCurrX();
 		mScroller.startScroll(mScroller.getCurrX(), mScroller.getCurrY(), dx,
 				0, 0);
-		if(dx == 0)
-			onScrollChanged(mScroller.getCurrX() + dx, mScroller.getCurrY(), mScroller.getCurrX() + dx, mScroller.getCurrY());
+		if (dx == 0)
+			onScrollChanged(mScroller.getCurrX() + dx, mScroller.getCurrY(),
+					mScroller.getCurrX() + dx, mScroller.getCurrY());
 		if (uiThread)
 			invalidate();
 		else
@@ -489,7 +491,7 @@ public class ViewFlow extends AdapterView<Adapter> {
 	public void setAdapter(Adapter adapter) {
 		setAdapter(adapter, 0);
 	}
-	
+
 	public void setAdapter(Adapter adapter, int initialPosition) {
 		if (mAdapter != null) {
 			mAdapter.unregisterDataSetObserver(mDataSetObserver);
@@ -504,29 +506,30 @@ public class ViewFlow extends AdapterView<Adapter> {
 		}
 		if (mAdapter == null || mAdapter.getCount() == 0)
 			return;
-		
-		setSelection(initialPosition);		
+
+		setSelection(initialPosition);
 	}
-	
+
 	@Override
 	public View getSelectedView() {
 		return (mCurrentBufferIndex < mLoadedViews.size() ? mLoadedViews
 				.get(mCurrentBufferIndex) : null);
 	}
 
-    @Override
-    public int getSelectedItemPosition() {
-        return mCurrentAdapterIndex;
-    }
-    
-    /**
-     * add by mcxiaoke
-     * @return current screen
-     * 
-     */
-    public int getCurrentScreen(){
-    	return mCurrentScreen;
-    }
+	@Override
+	public int getSelectedItemPosition() {
+		return mCurrentAdapterIndex;
+	}
+
+	/**
+	 * add by mcxiaoke
+	 * 
+	 * @return current screen
+	 * 
+	 */
+	public int getCurrentScreen() {
+		return mCurrentScreen;
+	}
 
 	/**
 	 * Set the FlowIndicator
@@ -544,9 +547,9 @@ public class ViewFlow extends AdapterView<Adapter> {
 		mScroller.forceFinished(true);
 		if (mAdapter == null)
 			return;
-		
+
 		position = Math.max(position, 0);
-		position =  Math.min(position, mAdapter.getCount()-1);
+		position = Math.min(position, mAdapter.getCount() - 1);
 
 		ArrayList<View> recycleViews = new ArrayList<View>();
 		View recycleView;
@@ -558,16 +561,21 @@ public class ViewFlow extends AdapterView<Adapter> {
 		View currentView = makeAndAddView(position, true,
 				(recycleViews.isEmpty() ? null : recycleViews.remove(0)));
 		mLoadedViews.addLast(currentView);
-		
-		for(int offset = 1; mSideBuffer - offset >= 0; offset++) {
+
+		for (int offset = 1; mSideBuffer - offset >= 0; offset++) {
 			int leftIndex = position - offset;
 			int rightIndex = position + offset;
-			if(leftIndex >= 0)
-				mLoadedViews.addFirst(makeAndAddView(leftIndex, false,
-						(recycleViews.isEmpty() ? null : recycleViews.remove(0))));
-			if(rightIndex < mAdapter.getCount())
-				mLoadedViews.addLast(makeAndAddView(rightIndex, true,
-						(recycleViews.isEmpty() ? null : recycleViews.remove(0))));
+			if (leftIndex >= 0)
+				mLoadedViews
+						.addFirst(makeAndAddView(
+								leftIndex,
+								false,
+								(recycleViews.isEmpty() ? null : recycleViews
+										.remove(0))));
+			if (rightIndex < mAdapter.getCount())
+				mLoadedViews
+						.addLast(makeAndAddView(rightIndex, true, (recycleViews
+								.isEmpty() ? null : recycleViews.remove(0))));
 		}
 
 		mCurrentBufferIndex = mLoadedViews.indexOf(currentView);
@@ -590,7 +598,8 @@ public class ViewFlow extends AdapterView<Adapter> {
 	}
 
 	private void resetFocus() {
-		logBuffer();
+		if (App.DEBUG)
+			logBuffer();
 		mLoadedViews.clear();
 		removeAllViewsInLayout();
 
@@ -661,7 +670,8 @@ public class ViewFlow extends AdapterView<Adapter> {
 					.onSwitched(mLoadedViews.get(mCurrentBufferIndex),
 							mCurrentAdapterIndex);
 		}
-		logBuffer();
+		if (App.DEBUG)
+			logBuffer();
 	}
 
 	private View setupChild(View child, boolean addToEnd, boolean recycle) {
@@ -709,8 +719,8 @@ public class ViewFlow extends AdapterView<Adapter> {
 
 	private void logBuffer() {
 
-		Log.d("viewflow", "Size of mLoadedViews: " + mLoadedViews.size() +
-				"X: " + mScroller.getCurrX() + ", Y: " + mScroller.getCurrY());
+		Log.d("viewflow", "Size of mLoadedViews: " + mLoadedViews.size()
+				+ "X: " + mScroller.getCurrX() + ", Y: " + mScroller.getCurrY());
 		Log.d("viewflow", "IndexInAdapter: " + mCurrentAdapterIndex
 				+ ", IndexInBuffer: " + mCurrentBufferIndex);
 	}

@@ -29,6 +29,7 @@ import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
+import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.Action;
 import com.fanfou.app.ui.UIManager;
@@ -299,8 +300,28 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 
 	@Override
 	protected void onReceived(Intent intent) {
-		// int type = intent.getIntExtra(Commons.EXTRA_TYPE,-1);
-		// int count = intent.getIntExtra(Commons.EXTRA_COUNT, 1);
+		 int type = intent.getIntExtra(Commons.EXTRA_TYPE,-1);
+		 int count = intent.getIntExtra(Commons.EXTRA_COUNT, 1);
+//		 int page=mViewFlow.getCurrentScreen();
+		 switch (type) {
+		case NotificationService.NOTIFICATION_TYPE_HOME:
+			if(cursors[0]!=null){
+				cursors[0].requery();
+			}
+			break;
+		case NotificationService.NOTIFICATION_TYPE_MENTION:
+			if(cursors[1]!=null){
+				cursors[1].requery();
+			}
+			break;
+		case NotificationService.NOTIFICATION_TYPE_DM:
+			if(cursors[2]!=null){
+				cursors[2].requery();
+			}
+			break;
+		default:
+			break;
+		}
 	}
 
 	@Override

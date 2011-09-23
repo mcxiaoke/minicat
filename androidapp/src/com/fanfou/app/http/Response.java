@@ -57,13 +57,13 @@ public class Response implements ResponseCode {
 //			InputStream stream = null;
 //			ByteArrayOutputStream bas=new ByteArrayOutputStream();
 			try {
-				long st = System.currentTimeMillis();
+//				long st = System.currentTimeMillis();
 //				entity.writeTo(bas);
 //				content=bas.toString(HTTP.UTF_8);
 				content=EntityUtils.toString(entity, HTTP.UTF_8);
-				if(App.DEBUG){
-					Utils.logTime("getContent", System.currentTimeMillis() - st);
-				}
+//				if(App.DEBUG){
+//					Utils.logTime("getContent", System.currentTimeMillis() - st);
+//				}
 //				stream = response.getEntity().getContent();
 //				if (null == stream) {
 //					return null;

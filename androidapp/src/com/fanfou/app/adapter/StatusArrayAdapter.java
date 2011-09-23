@@ -88,9 +88,7 @@ public class StatusArrayAdapter extends BaseArrayAdapter<Status> {
 
 		final Status s = mStatus.get(position);
 
-		mLoader.setHeadImage(s.userProfileImageUrl, holder.headIcon);
-		
-		mLoader.setHeadImage(s.userProfileImageUrl, holder.headIcon);
+		mLoader.set(s.userProfileImageUrl, holder.headIcon,R.drawable.default_head);
 		
 		if (StringHelper.isEmpty(s.inReplyToStatusId)) {
 			holder.replyIcon.setVisibility(View.GONE);

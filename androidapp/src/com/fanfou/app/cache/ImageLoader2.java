@@ -30,15 +30,14 @@ import com.fanfou.app.util.StringHelper;
 
 /**
  * @author mcxiaoke
- * @version 1.0 20110601
+ * @version 1.0 2011.09.23
  * 
  */
-public class ImageLoader implements ImageLoaderInterface{
+public class ImageLoader2 implements ImageLoaderInterface {
 
-	public static final String TAG = ImageLoader.class.getSimpleName();
+	public static final String TAG = ImageLoader2.class.getSimpleName();
 
 	private static final String PARAM_URL = "url";
-	private static final String PARAM_BITMAP = "image";
 	private static final int MESSAGE_FINISH = 0;
 	private static final int MESSAGE_ERROR = 1;
 
@@ -50,7 +49,7 @@ public class ImageLoader implements ImageLoaderInterface{
 
 	private QueueRunnable queuePool;
 
-	public ImageLoader(Context context) {
+	public ImageLoader2(Context context) {
 		this.cache = new ImageCache(context);
 		this.callbacks = new Callbacks();
 		this.handler = new ImageDownloadHandler(cache, callbacks);
@@ -96,7 +95,6 @@ public class ImageLoader implements ImageLoaderInterface{
 		return bitmap;
 	}
 
-	@Override
 	public void set(String key, final ImageView imageView, int iconId) {
 		if (key != null) {
 			Bitmap bitmap = null;
@@ -157,7 +155,10 @@ public class ImageLoader implements ImageLoaderInterface{
 
 						Bitmap bitmap = cache.get(key);
 						if (bitmap != null) {
-							imageView.setImageBitmap(bitmap);
+							String tag=(String) imageView.getTag();
+							if(tag!=null&&tag.equals(key)){
+								imageView.setImageBitmap(bitmap);
+							}
 						} else {
 							imageView.setImageResource(R.drawable.photo_icon);
 						}
@@ -242,7 +243,7 @@ public class ImageLoader implements ImageLoaderInterface{
 				Bitmap bitmap = downloadImage(url);
 				final Message message = handler.obtainMessage(MESSAGE_FINISH);
 				message.getData().putString(PARAM_URL, url);
-				message.obj=bitmap;
+				message.obj = bitmap;
 				handler.sendMessage(message);
 			} else {
 			}
@@ -262,12 +263,10 @@ public class ImageLoader implements ImageLoaderInterface{
 					return BitmapFactory.decodeStream(response.getEntity()
 							.getContent());
 				}
-			} catch (ClientProtocolException e) {
-				if (App.DEBUG)
-					e.printStackTrace();
-			} catch (IOException e) {
-				if (App.DEBUG)
-					e.printStackTrace();
+			}catch (IOException e) {
+				if (App.DEBUG){
+					Log.d(TAG, e.getMessage());
+				}
 			}
 			return null;
 		}
@@ -304,13 +303,13 @@ public class ImageLoader implements ImageLoaderInterface{
 
 	static class Callbacks {
 		private static final String TAG = "ImageLoaded";
-		private ConcurrentHashMap<String, List<ImageLoaderListener>> mCallbackMap;
+		private ConcurrentHashMap<String, ImageLoaderListener> mCallbackMap;
 
 		public Callbacks() {
-			mCallbackMap = new ConcurrentHashMap<String, List<ImageLoaderListener>>();
+			mCallbackMap = new ConcurrentHashMap<String, ImageLoaderListener>();
 		}
 
-		public void put(String url, ImageLoaderListener callback) {
+		public void put(String url,ImageLoaderListener callback) {
 			if (StringHelper.isEmpty(url) || callback == null) {
 				if (App.DEBUG)
 					Log.d(TAG, "url or callback is null");
@@ -319,20 +318,11 @@ public class ImageLoader implements ImageLoaderInterface{
 			if (App.DEBUG) {
 				Log.d(TAG, "ImageLoaded.put url=" + url);
 			}
-			if (!mCallbackMap.containsKey(url)) {
-				mCallbackMap.put(url, new ArrayList<ImageLoaderListener>());
-			}
-
-			List<ImageLoaderListener> callbacks = mCallbackMap.get(url);
-			if (callbacks != null) {
-				callbacks.add(callback);
-			}
+			mCallbackMap.put(url, callback);
 		}
 
 		public void call(String url) {
-			List<ImageLoaderListener> callbackList = mCallbackMap.get(url);
-			if (callbackList != null) {
-				for (ImageLoaderListener callback : callbackList) {
+			ImageLoaderListener callback=mCallbackMap.get(url);
 					if (callback != null) {
 						if (url != null) {
 							callback.onFinish(url);
@@ -340,16 +330,8 @@ public class ImageLoader implements ImageLoaderInterface{
 							callback.onError("load image error.");
 						}
 					}
-				}
-				callbackList.clear();
 				mCallbackMap.remove(url);
-			} else {
-				if (App.DEBUG) {
-					Log.d(TAG, "callbackList is null");
-				}
 			}
 		}
-
-	}
 
 }

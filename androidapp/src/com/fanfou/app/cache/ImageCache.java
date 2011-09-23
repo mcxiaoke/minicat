@@ -1,11 +1,8 @@
 package com.fanfou.app.cache;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,17 +10,21 @@ import java.util.Map;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import com.fanfou.app.R;
+import android.util.Log;
+
+import com.fanfou.app.App;
 import com.fanfou.app.util.IOHelper;
+import com.fanfou.app.util.ImageHelper;
 import com.fanfou.app.util.StringHelper;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.06.01
+ * @version 1.1 2011.09.23
  * 
  */
 public class ImageCache implements ICache<Bitmap> {
+	private static final String TAG=ImageCache.class.getSimpleName();
 
 	public static final int IMAGE_QUALITY = 100;
 
@@ -43,6 +44,9 @@ public class ImageCache implements ICache<Bitmap> {
 
 	@Override
 	public Bitmap get(String key) {
+		if (StringHelper.isEmpty(key)) {
+			return null;
+		}
 		Bitmap bitmap = null;
 
 		final SoftReference<Bitmap> reference = memoryCache.get(key);
@@ -103,11 +107,18 @@ public class ImageCache implements ICache<Bitmap> {
 		Bitmap bitmap = null;
 		String filename = StringHelper.md5(key) + ".jpg";
 		File file = new File(IOHelper.getCacheDir(mContext), filename);
+		if(!file.exists()){
+			return null;
+		}
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(file);
 			bitmap = BitmapFactory.decodeStream(fis);
 		} catch (FileNotFoundException e) {
+			if(App.DEBUG){
+				Log.e(TAG, e.getMessage());
+			}
+			memoryCache.remove(key);
 		} finally {
 			IOHelper.forceClose(fis);
 		}
@@ -115,26 +126,12 @@ public class ImageCache implements ICache<Bitmap> {
 	}
 
 	private boolean writeToFile(String key, Bitmap bitmap) {
-		if (bitmap == null) {
+		if (bitmap == null||StringHelper.isEmpty(key)) {
 			return false;
 		}
-		boolean result = false;
-
-		BufferedOutputStream bos = null;
-		try {
-			String filename = StringHelper.md5(key) + ".jpg";
-			File file = new File(IOHelper.getCacheDir(mContext), filename);
-			if (!file.exists()) {
-				bos = new BufferedOutputStream(new FileOutputStream(file));
-				bitmap.compress(Bitmap.CompressFormat.JPEG, IMAGE_QUALITY, bos);
-			}
-			result = true;
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			IOHelper.forceClose(bos);
-		}
-		return result;
+		String filename = StringHelper.md5(key) + ".jpg";
+		File file = new File(IOHelper.getCacheDir(mContext), filename);
+		return ImageHelper.writeToFile(file, bitmap);
 	}
 
 }
