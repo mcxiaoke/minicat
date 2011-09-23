@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:padding="2dp" >
+
+	<ImageView android:id="@id/item_message_head"
+		android:layout_alignParentLeft="true" style="@style/Image.Head" />
+
+	<LinearLayout android:layout_alignParentTop="true"
+		android:layout_toRightOf="@id/item_message_head" android:orientation="vertical"
+		android:layout_width="fill_parent" android:layout_height="wrap_content">
+
+		<RelativeLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+
+			<TextView android:id="@id/item_message_user"
+				android:layout_alignParentLeft="true" style="@style/Text.Name" android:text="UserName"
+				android:textStyle="bold" />
+
+		</RelativeLayout>
+
+		<TextView android:id="@id/item_message_text" style="@style/Text.Status"
+			android:text=" message content is here " />
+
+		<RelativeLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+			<TextView android:id="@id/item_message_date"
+				android:layout_alignParentRight="true" style="@style/Text.Meta"/>
+		</RelativeLayout>
+
+	</LinearLayout>
+
+</RelativeLayout>

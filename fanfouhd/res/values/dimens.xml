@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<dimen name="titlebar_height">44.0dip</dimen>
+	<dimen name="top_clouds_height">50.0dip</dimen>
+	<dimen name="inline_map_height">100.0dip</dimen>
+	<dimen name="map_height">150.0dip</dimen>
+	<dimen name="pill_side_padding">5.0dip</dimen>
+	<dimen name="badge_height">80.0dip</dimen>
+	<dimen name="toolbar_button_width">160.0dip</dimen>
+
+	<!-- UI elements -->
+
+	<!-- body content -->
+	<dimen name="text_size_micro">10sp</dimen>
+	<dimen name="text_size_tiny">12sp</dimen>
+	<dimen name="text_size_small">14sp</dimen>
+	<dimen name="text_size_medium">16sp</dimen>
+	<dimen name="text_size_large">18sp</dimen>
+	<dimen name="text_size_xlarge">20sp</dimen>
+
+
+
+	<dimen name="actionbar_height">44dp</dimen>
+	<dimen name="actionbar_item_height">40dp</dimen>
+	<dimen name="actionbar_item_width">40dp</dimen>
+
+	<dimen name="item_user_head_width">48dp</dimen>
+	<dimen name="item_user_head_height">48dp</dimen>
+
+	<dimen name="write_minheight">100dp</dimen>
+	<dimen name="write_maxheight">180dp</dimen>
+	<dimen name="write_image_height">60dp</dimen>
+	<dimen name="write_actions_height">48dp</dimen>
+</resources>

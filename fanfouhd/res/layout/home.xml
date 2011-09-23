@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res/com.fanfou.app"
+	android:layout_width="fill_parent" android:id="@+id/home"
+	android:layout_height="fill_parent" android:orientation="vertical">
+
+	<com.fanfou.app.ui.ActionBar android:id="@id/actionbar"
+		style="@style/ActionBar" android:layout_alignParentTop="true" />
+
+	<RelativeLayout android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:layout_below="@id/actionbar">
+
+		<com.fanfou.app.ui.widget.ViewFlow
+			android:layout_alignParentTop="true" android:duplicateParentState="true"
+			android:id="@+id/viewflow" android:layout_width="fill_parent"
+			android:layout_height="fill_parent" />
+
+		<com.fanfou.app.ui.widget.CircleFlowIndicator
+			android:layout_alignParentTop="true" android:padding="4dp"
+			android:layout_width="wrap_content" android:layout_alignParentRight="true"
+			android:layout_height="wrap_content" android:id="@+id/viewflow_indicator"
+			android:background="#00000000" />
+
+		<ImageView android:id="@+id/write_bottom" style="@style/Icon.Action"
+			android:src="@drawable/i_write_bottom" android:layout_margin="8dp" />
+
+	</RelativeLayout>
+
+</LinearLayout>

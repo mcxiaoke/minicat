@@ -1,0 +1,1 @@
+{"versionCode":"20110923","versionName":"1.2.1","releaseDate":"2011.09.23","changelog":"1.添加后台更新，添加新消息和私信通知功能，此功能使用系统定时功能实现，没有常驻内存的后台服务，省电；\n2. 修改MENU菜单顺序，修改部分设置项；\n3. 修改网络部分，修复接入点切换和WIFI切换时偶尔不能获取消息的问题；\n4. 其它细节修改，BUG修复","downloadUrl":"http://apps.fanfou.com/android/fanfou_20110923.apk","versionType":"major","packageName":"fanfou_20110923.apk","forceUpdate":"true"}

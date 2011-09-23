@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:background="@color/login_background">
+
+	<ImageView android:layout_width="wrap_content" android:id="@+id/login_logo"
+		android:layout_height="wrap_content" android:src="@drawable/login_logo"
+		android:layout_marginBottom="5dp" android:layout_marginTop="5dp"
+		android:layout_alignParentTop="true" android:layout_centerHorizontal="true" />
+
+	<EditText android:id="@+id/login_username"
+		android:layout_below="@id/login_logo" android:paddingLeft="15dp"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:singleLine="true" android:textSize="20sp" android:hint="饭否帐号"
+		android:background="@drawable/bg_login_input" android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
+		android:layout_marginBottom="5dp" android:layout_centerHorizontal="true" />
+
+	<EditText android:id="@+id/login_password"
+		android:layout_below="@id/login_username" android:paddingLeft="15dp"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:singleLine="true" android:password="true" android:inputType="textPassword"
+		android:layout_marginBottom="10dp" android:textSize="20sp"  android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
+		android:hint="饭否密码" android:background="@drawable/bg_login_input"
+		android:layout_centerHorizontal="true" />
+
+	<ImageView android:id="@+id/login_dologin" android:background="@drawable/btn_login"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_below="@id/login_password" android:layout_marginBottom="15dp"  android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
+		android:layout_centerHorizontal="true" />
+
+	<LinearLayout android:id="@+id/login_signup"
+		android:layout_centerHorizontal="true" android:layout_below="@id/login_dologin"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:orientation="horizontal" android:gravity="center">
+		
+		<TextView android:id="@+id/login_signup_web"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:textSize="18sp" android:textColor="@android:color/white"
+			android:text="@string/login_signup_web" android:layout_marginRight="20dp"/>
+
+		<TextView android:id="@+id/login_signup_sms"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:textSize="18sp" android:textColor="@android:color/white"
+			android:text="@string/login_signup_sms" />
+
+	</LinearLayout>
+
+</RelativeLayout>
