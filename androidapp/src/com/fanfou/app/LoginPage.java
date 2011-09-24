@@ -57,6 +57,8 @@ public final class LoginPage extends BaseActivity implements
 	private ImageView buttonLogin;
 	private TextView textSignupWeb;
 	private TextView textSignupSms;
+	
+	private ProgressDialog mProgressDialog;
 
 	private String username;
 	private String password;
@@ -109,9 +111,16 @@ public final class LoginPage extends BaseActivity implements
 
 		textSignupSms = (TextView) findViewById(R.id.login_signup_sms);
 		textSignupSms.setOnClickListener(this);
+		
+		mProgressDialog = new ProgressDialog(mContext);
+		mProgressDialog.setMessage("验证中...");
+		mProgressDialog.setIndeterminate(true);
 
 	}
 
+	
+
+	
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -121,6 +130,8 @@ public final class LoginPage extends BaseActivity implements
 			} else {
 				g.setCustomVar(1, "username", username);
 				g.trackEvent("Action", "onClick", "Login", 1);
+
+				mProgressDialog.show();
 				new LoginTask().execute();
 			}
 			break;
@@ -220,7 +231,7 @@ public final class LoginPage extends BaseActivity implements
 		static final int LOGIN_NEW_AUTH_SUCCESS = 2; // 首次验证成功
 		static final int LOGIN_RE_AUTH_SUCCESS = 3; // 重新验证成功
 
-		ProgressDialog dialog=null;
+		
 
 		@Override
 		protected ResultInfo doInBackground(Void... params) {
@@ -291,16 +302,13 @@ public final class LoginPage extends BaseActivity implements
 
 		@Override
 		protected void onPreExecute() {
-			this.dialog = new ProgressDialog(mContext);
-			this.dialog.setMessage("验证中...");
-			this.dialog.setIndeterminate(true);
-			this.dialog.show();
+
 		}
 
 		@Override
 		protected void onPostExecute(ResultInfo result) {
-			if(dialog!=null){
-				dialog.dismiss();
+			if(mProgressDialog!=null&&mProgressDialog.isShowing()){
+				mProgressDialog.dismiss();
 			}
 			switch (result.code) {
 			case LOGIN_IO_ERROR:

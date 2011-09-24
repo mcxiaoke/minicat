@@ -57,12 +57,10 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 		}
 		final Status s = Status.parse(c);
 		if (s == null || s.isNull()) {
-			if (App.DEBUG) {
-				log("getItemViewType(" + position + ") is null.");
-			}
 			return ITEM_TYPE_NONE;
 		}
-		if (s.text.contains("@" + App.me.userScreenName)) {
+		if (StatusHelper.getSimpifiedText(s.text).contains(
+				"@" + App.me.userScreenName)) {
 			return ITEM_TYPE_MENTION;
 		} else {
 			return ITEM_TYPE_NONE;

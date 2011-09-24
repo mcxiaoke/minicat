@@ -1,7 +1,9 @@
 package com.fanfou.app.fragment;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
@@ -15,11 +17,12 @@ public abstract class BaseCursorListFragment extends BaseListFragment implements
 	protected CursorAdapter mAdapter;
 	protected ViewGroup mHeaderView;
 	protected ViewGroup mFooterView;
+//	Observable a;
+//	Observer b;
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		return new CursorLoader(getActivity(), getUri(), getProjection(),
-				getSelection(), getSelectionArgs(), getSortOrder());
+		return getCursorLoader();
 	}
 
 	@Override
@@ -53,14 +56,6 @@ public abstract class BaseCursorListFragment extends BaseListFragment implements
 
 	protected abstract CursorAdapter getCursorAdapter();
 
-	protected abstract Uri getUri();
-
-	protected abstract String[] getProjection();
-
-	protected abstract String getSelection();
-
-	protected abstract String[] getSelectionArgs();
-
-	protected abstract String getSortOrder();
+	protected abstract CursorLoader getCursorLoader();
 
 }

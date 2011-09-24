@@ -26,7 +26,6 @@ import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.ApiImpl;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.ImageLoader;
-import com.fanfou.app.cache.ImageLoader2;
 import com.fanfou.app.cache.ImageLoaderInterface;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.http.NetworkState;
@@ -49,6 +48,40 @@ import com.fanfou.app.util.StringHelper;
 
 @ReportsCrashes(formKey = "", formUri = "http://apps.fanfou.com/andstat/cr/", mode = ReportingInteractionMode.TOAST, resToastText = R.string.crash_toast_text)
 public class App extends Application {
+	
+	// TODO direct message chat ui
+	// TODO direct message send entry
+	// TODO item delete confirm
+	// TODO common confirm dialog ui
+	// TODO register and ui
+	// TODO draft feature and ui
+	// TODO status conversation threads and ui
+	// TODO c2dm activities feature and ui
+	// TODO home page new status notification and ui
+	// TODO contacts scan and invite friends and ui
+	// TODO new image cache and loader
+	// TODO new common status/messages/users info cache
+	// TODO new page indicator ui
+	// TODO new list fragment for home page
+	// TODO new tabs ui for home page
+	// TODO new layout and ui for pad
+	// TODO username auto complete feature and ui
+	// TODO new image view ui in status page
+	// TODO standalone image viewer
+	// TODO user photo album and ui
+	// TODO timeline filter and local search
+	// TODO keywords highlight in searsh page
+	// TODO standalone trends page
+	// TODO edit profile feature and ui
+	// TODO widgets support
+	// TODO standalone camera shot and share feature, ui
+	// TODO timeline: read and unread flag and ui
+	// TODO timeline gap and load
+	// TODO contentprovider need modify use sqlite
+	// TODO add some flags to status model in db
+	// TODO cache and store user info data
+	
+	
 	public static final boolean DEBUG = true;
 
 	public static final int CORE_POOL_SIZE = 5;

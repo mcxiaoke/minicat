@@ -124,7 +124,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 					+ count);
 		}
 		String title = "饭否消息";
-		String message = "收到"+count + "条提及你的消息";
+		String message = "收到"+count + "条提到你的消息";
 		Intent intent = new Intent(context, HomePage.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
 		intent.putExtra(Commons.EXTRA_PAGE, 1);

@@ -10,8 +10,12 @@ import android.os.ResultReceiver;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
@@ -33,7 +37,6 @@ import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.Action;
 import com.fanfou.app.ui.UIManager;
 import com.fanfou.app.ui.viewpager.CirclePageIndicator;
-import com.fanfou.app.ui.viewpager.TitlePageIndicator.IndicatorStyle;
 import com.fanfou.app.ui.widget.EndlessListView;
 import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
 import com.fanfou.app.util.OptionHelper;
@@ -66,6 +69,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	private BaseCursorAdapter[] adapters = new BaseCursorAdapter[PAGE_NUMS];
 	private static final String[] titles = new String[] { "我的主页", "提到我的",
 			"我的私信", "随便看看" };
+	
+	private GestureDetector mGestureDetector;
 
 	public static final String TAG = "HomePage";
 
@@ -78,7 +83,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		super.onCreate(savedInstanceState);
 		if (App.DEBUG)
 			log("onCreate()");
-		mHandler = new Handler();
+
+		init();
 		setContentView(R.layout.home);
 		setActionBar();
 		setWriteBottom();
@@ -86,6 +92,11 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		setViewPager();
 		setCursors();
 		setAdapters();
+	}
+	
+	private void init(){
+		mHandler = new Handler();
+		mGestureDetector=new GestureDetector(mContext, new GestureListener(this));
 	}
 
 	/**
@@ -103,9 +114,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	private void setViewPager() {
-		int initPage = getIntent().getIntExtra(Commons.EXTRA_PAGE, 0);
 		if (App.DEBUG) {
-			log("setViewFlow page=" + initPage);
+			log("setViewFlow page=" + mCurrentPage);
 		}
 		mViewAdapter = new ViewsAdapter(views);
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -115,8 +125,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		mPageIndicator = (CirclePageIndicator) findViewById(R.id.viewindicator);
 		mPageIndicator.setViewPager(mViewPager);
 
-		mViewPager.setCurrentItem(initPage);
-		mPageIndicator.setCurrentItem(initPage);
+		int page=getIntent().getIntExtra(Commons.EXTRA_PAGE, 0);
+		mViewPager.setCurrentItem(page);
+		mPageIndicator.setCurrentItem(page);
 	}
 
 	private void setWriteBottom() {
@@ -155,6 +166,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				views[i].setOnItemLongClickListener(this);
 			}
 		}
+//		views[3].setOnTouchListener(this);
 	}
 
 	private Cursor initCursor(int type) {
@@ -174,7 +186,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		cursors[1] = initCursor(Status.TYPE_MENTION);
 		cursors[2] = initCursor(DirectMessage.TYPE_NONE);
 		cursors[3] = initCursor(Status.TYPE_PUBLIC);
-
 	}
 
 	private void setAdapters() {
@@ -363,6 +374,12 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			log("onNewIntent page=" + page);
 		}
 		mViewPager.setCurrentItem(page);
+		mPageIndicator.setCurrentItem(page);
+
+		if (page==0) {
+			cursors[page].requery();
+			views[page].setRefreshing();
+		}
 	}
 
 	@Override
@@ -534,6 +551,54 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	@Override
 	public void onPageScrollStateChanged(int state) {
+	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent ev) {
+		return mGestureDetector.onTouchEvent(ev);
+	}
+	
+	protected void onSwipe(boolean next){
+		if(App.DEBUG){
+			Log.e("GestureListener", "swipe to "+(next?"next":"prev"));
+		}
+//		if(mCurrentPage==3&&next){
+//			mViewPager.setCurrentItem(0);
+//		}
+	}
+
+	private static class GestureListener extends SimpleOnGestureListener{
+		private HomePage mHomePage;
+		
+		static final int SWIPE_MIN_DISTANCE =200;
+		static final int SWIPE_THRESHOLD_VELOCITY =80;
+		
+		public GestureListener(HomePage homePage){
+			this.mHomePage=homePage;
+		}
+
+		@Override
+		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+				float velocityY) {
+			float x1=e1.getX();
+			float y1=e1.getY();
+			float x2=e2.getX();
+			float y2=e2.getY();
+			float hvalue=x2-x1;
+			float vvalue=y2-y1;
+			float hdistance=Math.abs(hvalue);
+			float vdistance=Math.abs(vvalue);
+			if(App.DEBUG){
+				Log.e("GestureListener", "hdistance="+hvalue);
+				Log.e("GestureListener", "vdistance="+vdistance);
+			}
+			if(hdistance>SWIPE_MIN_DISTANCE &&vdistance<SWIPE_THRESHOLD_VELOCITY ){
+				mHomePage.onSwipe(hvalue<0);
+				return true;
+			}
+			return super.onFling(e1, e2, velocityX, velocityY);
+		}
+		
 	}
 
 }
