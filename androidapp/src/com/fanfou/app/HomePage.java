@@ -1,6 +1,5 @@
 package com.fanfou.app;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -8,14 +7,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -23,6 +21,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import com.fanfou.app.adapter.BaseCursorAdapter;
 import com.fanfou.app.adapter.MessageCursorAdapter;
 import com.fanfou.app.adapter.StatusCursorAdapter;
+import com.fanfou.app.adapter.ViewsAdapter;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Commons;
@@ -33,11 +32,10 @@ import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.Action;
 import com.fanfou.app.ui.UIManager;
+import com.fanfou.app.ui.viewpager.CirclePageIndicator;
+import com.fanfou.app.ui.viewpager.TitlePageIndicator.IndicatorStyle;
 import com.fanfou.app.ui.widget.EndlessListView;
 import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
-import com.fanfou.app.ui.widget.FlowIndicator;
-import com.fanfou.app.ui.widget.ViewFlow;
-import com.fanfou.app.ui.widget.ViewFlow.ViewSwitchListener;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.Utils;
 
@@ -45,26 +43,27 @@ import com.fanfou.app.util.Utils;
  * @author mcxiaoke
  * @version 1.0 2011.05.31
  * @version 2.0 2011.07.16
+ * @version 3.0 2011.09.24
  * 
  */
-public class HomePage extends BaseActivity implements ViewSwitchListener,
+public class HomePage extends BaseActivity implements OnPageChangeListener,
 		OnRefreshListener, OnItemLongClickListener, OnClickListener {
 
-	private static final int PAGE_COUNT_MAX = 4;
+	public static final int PAGE_NUMS = 4;
 
 	private ActionBar mActionBar;
 
 	private Handler mHandler;
-
-	private ViewFlow mViewFlow;
-	private ViewAdapter mViewAdapter;
-	private FlowIndicator mIndicator;
-
+	private ViewPager mViewPager;
+	private ViewsAdapter mViewAdapter;
+	private CirclePageIndicator mPageIndicator;
 	private ImageView iWriteBottom;
 
-	private EndlessListView[] views = new EndlessListView[PAGE_COUNT_MAX];
-	private Cursor[] cursors = new Cursor[PAGE_COUNT_MAX];
-	private BaseCursorAdapter[] adapters = new BaseCursorAdapter[PAGE_COUNT_MAX];
+	private int mCurrentPage;
+
+	private EndlessListView[] views = new EndlessListView[PAGE_NUMS];
+	private Cursor[] cursors = new Cursor[PAGE_NUMS];
+	private BaseCursorAdapter[] adapters = new BaseCursorAdapter[PAGE_NUMS];
 	private static final String[] titles = new String[] { "我的主页", "提到我的",
 			"我的私信", "随便看看" };
 
@@ -84,7 +83,7 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 		setActionBar();
 		setWriteBottom();
 		setListViews();
-		setViewFlow();
+		setViewPager();
 		setCursors();
 		setAdapters();
 	}
@@ -103,17 +102,21 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 
 	}
 
-	private void setViewFlow() {
+	private void setViewPager() {
 		int initPage = getIntent().getIntExtra(Commons.EXTRA_PAGE, 0);
 		if (App.DEBUG) {
 			log("setViewFlow page=" + initPage);
 		}
-		mViewAdapter = new ViewAdapter(this, views);
-		mViewFlow = (ViewFlow) findViewById(R.id.viewflow);
-		mIndicator = (FlowIndicator) findViewById(R.id.viewflow_indicator);
-		mViewFlow.setFlowIndicator(mIndicator);
-		mViewFlow.setOnViewSwitchListener(this);
-		mViewFlow.setAdapter(mViewAdapter, initPage);
+		mViewAdapter = new ViewsAdapter(views);
+		mViewPager = (ViewPager) findViewById(R.id.viewpager);
+		mViewPager.setOnPageChangeListener(this);
+		mViewPager.setAdapter(mViewAdapter);
+
+		mPageIndicator = (CirclePageIndicator) findViewById(R.id.viewindicator);
+		mPageIndicator.setViewPager(mViewPager);
+
+		mViewPager.setCurrentItem(initPage);
+		mPageIndicator.setCurrentItem(initPage);
 	}
 
 	private void setWriteBottom() {
@@ -286,52 +289,40 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 	 * 载入更多，获取较旧的消息
 	 */
 	private void doGetMore() {
-		int page = mViewFlow.getCurrentScreen();
-		doRetrieve(page, true);
+		doRetrieve(mCurrentPage, true);
 	}
 
 	/**
 	 * 刷新，载入更新的消息
 	 */
 	private void doRefresh() {
-		int page = mViewFlow.getCurrentScreen();
-		doRetrieve(page, false);
+		doRetrieve(mCurrentPage, false);
 	}
 
 	@Override
 	protected void onReceived(Intent intent) {
-		 int type = intent.getIntExtra(Commons.EXTRA_TYPE,-1);
-		 int count = intent.getIntExtra(Commons.EXTRA_COUNT, 1);
-//		 int page=mViewFlow.getCurrentScreen();
-		 switch (type) {
+		int type = intent.getIntExtra(Commons.EXTRA_TYPE, -1);
+		int count = intent.getIntExtra(Commons.EXTRA_COUNT, 1);
+		// int page=mViewFlow.getCurrentScreen();
+		switch (type) {
 		case NotificationService.NOTIFICATION_TYPE_HOME:
-			if(cursors[0]!=null){
+			if (cursors[0] != null) {
 				cursors[0].requery();
 			}
 			break;
 		case NotificationService.NOTIFICATION_TYPE_MENTION:
-			if(cursors[1]!=null){
+			if (cursors[1] != null) {
 				cursors[1].requery();
 			}
 			break;
 		case NotificationService.NOTIFICATION_TYPE_DM:
-			if(cursors[2]!=null){
+			if (cursors[2] != null) {
 				cursors[2].requery();
 			}
 			break;
 		default:
 			break;
 		}
-	}
-
-	@Override
-	public void onSwitched(View view, int position) {
-		mActionBar.setTitle(titles[position]);
-	}
-
-	@Override
-	public void onScrollTo(int position) {
-		mActionBar.setTitle(titles[position]);
 	}
 
 	@Override
@@ -354,12 +345,6 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 	}
 
 	@Override
-	public void onBackPressed() {
-		// doBackPress();
-		super.onBackPressed();
-	}
-
-	@Override
 	protected int getPageType() {
 		return PAGE_HOME;
 	}
@@ -377,7 +362,7 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 		if (App.DEBUG) {
 			log("onNewIntent page=" + page);
 		}
-		mViewFlow.setAdapter(mViewAdapter, page);
+		mViewPager.setCurrentItem(page);
 	}
 
 	@Override
@@ -395,12 +380,11 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 		if (App.DEBUG)
 			log("onConfigurationChanged() ");
 		super.onConfigurationChanged(newConfig);
-		mViewFlow.onConfigurationChanged(newConfig);
-
 	}
 
 	private long lastPressTime = 0;
 
+	@SuppressWarnings("unused")
 	private boolean doBackPress() {
 		if (System.currentTimeMillis() - lastPressTime < 2000) {
 			finish();
@@ -464,39 +448,6 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 
 	}
 
-	private static class ViewAdapter extends BaseAdapter {
-		private AbsListView[] views;
-
-		public ViewAdapter(Context context, AbsListView[] views) {
-			super();
-			this.views = views;
-		}
-
-		@Override
-		public int getCount() {
-			return views.length;
-		}
-
-		@Override
-		public AbsListView getItem(int position) {
-			return views[position];
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			if (convertView == null) {
-				convertView = views[position];
-			}
-			return convertView;
-		}
-
-	}
-
 	@Override
 	public void onRefresh(EndlessListView view) {
 		doRefresh();
@@ -513,8 +464,7 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 		if (c == null) {
 			return;
 		}
-		int page = mViewFlow.getCurrentScreen();
-		if (page == 2) {
+		if (mCurrentPage == 2) {
 			Utils.goSendPage(this, c);
 		} else {
 			final Status s = Status.parse(c);
@@ -527,8 +477,7 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		int page = mViewFlow.getCurrentScreen();
-		if (page == 2) {
+		if (mCurrentPage == 2) {
 			return true;
 		}
 		final Cursor c = (Cursor) parent.getItemAtPosition(position);
@@ -564,10 +513,27 @@ public class HomePage extends BaseActivity implements ViewSwitchListener,
 	}
 
 	private void goTop() {
-		int page = mViewFlow.getCurrentScreen();
-		if (views[page] != null) {
-			views[page].setSelection(0);
+		if (views[mCurrentPage] != null) {
+			views[mCurrentPage].setSelection(0);
 		}
+	}
+
+	@Override
+	public void onPageScrolled(int position, float positionOffset,
+			int positionOffsetPixels) {
+		mPageIndicator.onPageScrolled(position, positionOffset,
+				positionOffsetPixels);
+	}
+
+	@Override
+	public void onPageSelected(int position) {
+		mCurrentPage = position;
+		mPageIndicator.onPageSelected(position);
+		mActionBar.setTitle(titles[position]);
+	}
+
+	@Override
+	public void onPageScrollStateChanged(int state) {
 	}
 
 }

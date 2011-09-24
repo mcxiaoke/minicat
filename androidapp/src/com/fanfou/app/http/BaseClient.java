@@ -58,7 +58,7 @@ public abstract class BaseClient implements ResponseCode {
 	}
 
 	public HttpResponse exec(Request rc) throws IOException, ApiException {
-		HttpRequestBase request=null;
+		HttpRequestBase request = null;
 		if (rc.isPostMethod()) {
 			request = new HttpPost(rc.getURL());
 			if (rc.getEntity() != null) {
@@ -67,7 +67,7 @@ public abstract class BaseClient implements ResponseCode {
 		} else {
 			request = new HttpGet(rc.getURL());
 		}
-		setHeaders(rc,request);
+		setHeaders(rc, request);
 		setAuthorization(request, rc.getParams());
 		if (App.DEBUG) {
 			Header[] headers = request.getAllHeaders();
@@ -78,10 +78,14 @@ public abstract class BaseClient implements ResponseCode {
 			log("exec() Authorization: "
 					+ request.getFirstHeader("Authorization").getValue());
 		}
-		return App.me.client.execute(request);
+		DefaultHttpClient client = App.me.client;
+		if (client == null) {
+			App.me.initHttpClient();
+		}
+		return client.execute(request);
 	}
 
-	static void setHeaders(Request rc,HttpRequestBase request) {
+	static void setHeaders(Request rc, HttpRequestBase request) {
 		List<Header> headers = rc.getHeaders();
 		if (headers != null) {
 			for (Header header : headers) {

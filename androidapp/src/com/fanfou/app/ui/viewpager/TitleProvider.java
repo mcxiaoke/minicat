@@ -1,8 +1,6 @@
-package com.fanfou.app.ui.widget;
-
 /*
- * Copyright (C) 2011 Patrik kerfeldt
- * 
+ * Copyright (C) 2011 Patrik Akerfeldt
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,18 +13,16 @@ package com.fanfou.app.ui.widget;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+package com.fanfou.app.ui.viewpager;
 
 /**
  * A TitleProvider provides the title to display according to a view.
  */
 public interface TitleProvider {
-
-	/**
-	 * Returns the title of the view at position
-	 * @param position
-	 * @return
-	 */
-	public String getTitle(int position);
-	
+    /**
+     * Returns the title of the view at position
+     * @param position
+     * @return
+     */
+    public String getTitle(int position);
 }

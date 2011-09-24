@@ -55,11 +55,6 @@ public class NotificationService extends BaseIntentService {
 	}
 
 	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		return super.onStartCommand(intent, flags, startId);
-	}
-
-	@Override
 	protected void onHandleIntent(Intent intent) {
 		if (App.DEBUG) {
 			Log.i(TAG, "onHandleIntent");

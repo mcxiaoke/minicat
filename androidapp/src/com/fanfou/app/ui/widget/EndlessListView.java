@@ -79,6 +79,9 @@ public class EndlessListView extends ListView implements OnItemClickListener{
 		// Float y=App.me.density*MAX_OVERSCROLL_Y;
 		// mMaxOverScrollY=y.intValue();
 		// setOnScrollListener(this);
+		setFastScrollEnabled(true);
+		setHorizontalScrollBarEnabled(false);
+		setVerticalScrollBarEnabled(false);
 		setOnItemClickListener(this);
 		initHeaderAndFooter();
 	}

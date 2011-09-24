@@ -49,7 +49,7 @@ import com.fanfou.app.util.StringHelper;
 
 @ReportsCrashes(formKey = "", formUri = "http://apps.fanfou.com/andstat/cr/", mode = ReportingInteractionMode.TOAST, resToastText = R.string.crash_toast_text)
 public class App extends Application {
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 
 	public static final int CORE_POOL_SIZE = 5;
 
@@ -257,7 +257,7 @@ public class App extends Application {
 				u.profileImageUrl);
 	}
 
-	private void initHttpClient() {
+	public synchronized void initHttpClient() {
 		client = NetworkHelper.setHttpClient();
 		NetworkHelper.setProxy(client.getParams(), networkState.getApnType());
 	}
