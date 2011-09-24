@@ -543,3 +543,14 @@
 20110923
 继续测试和完善后台更新和提醒功能，预计今天发布一个新版本
 图片缓存部分修改未完成
+
+20110924
+添加Compatibility V4兼容库，开始使用Fragment和Loader等新API
+使用ViewPager和ViewPagerIndicator替换原来的ViewFlow，基本没有滑动误操作的问题了
+同时为了使用首页标题切换，修改了原来的PageIndicator
+修复使用不兼容的API造成的问题
+修复登录界面对话框取消时报错的问题
+修复时间线回复消息没有高亮显示的问题
+修复了HttpClient没有初始化完成的问题
+在App里面添加了很多TODO项
+
