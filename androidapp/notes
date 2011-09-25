@@ -554,3 +554,12 @@
 修复了HttpClient没有初始化完成的问题
 在App里面添加了很多TODO项
 
+20110925
+修复了HttpClient没有初始化的问题，重写初始化方法
+修复自定义通知铃声失效的问题
+修改了设置界面的一些文字
+修改和添加了ActionBarSherlock库
+添加了兼容库的一个Patch，支持1.6版本
+移动drawalbe-mdpi的通知栏图标到默认的drawable文件夹
+修改图片缓存接口的名字
+

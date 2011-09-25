@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fanfou.app.api.Status;
-import com.fanfou.app.cache.ImageLoaderInterface;
+import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.cache.ImageLoaderListener;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.service.ActionService;
@@ -53,7 +53,7 @@ public class StatusPage extends BaseActivity implements OnClickListener,
 
 	private ActionBar mActionBar;
 
-	private ImageLoaderInterface imageLoader = null;
+	private IImageLoader imageLoader = null;
 
 	private Status status;
 	private Status thread;

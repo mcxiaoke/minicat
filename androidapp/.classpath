@@ -6,6 +6,6 @@
 	<classpathentry kind="lib" path="libs/httpmime-4.1.1.jar"/>
 	<classpathentry kind="lib" path="libs/libGoogleAnalytics.jar"/>
 	<classpathentry kind="src" path="QuickAction3D_src"/>
-	<classpathentry kind="lib" path="libs/android-support-v4.jar" sourcepath="libs/supportv4.zip"/>
+	<classpathentry kind="lib" path="libs/android-support-v4_patched.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

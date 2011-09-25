@@ -33,7 +33,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.0 20110601
  * 
  */
-public class ImageLoader implements ImageLoaderInterface{
+public class ImageLoader implements IImageLoader{
 
 	public static final String TAG = ImageLoader.class.getSimpleName();
 
@@ -249,7 +249,7 @@ public class ImageLoader implements ImageLoaderInterface{
 		}
 
 		private Bitmap downloadImage(String url) {
-			HttpClient client = App.me.client;
+			HttpClient client = App.me.getHttpClient();
 			try {
 				HttpGet request = new HttpGet(url);
 				HttpResponse response = client.execute(request);

@@ -4,7 +4,7 @@ import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.adapter.MessageCursorAdapter.ViewHolder;
 import com.fanfou.app.cache.ImageLoader;
-import com.fanfou.app.cache.ImageLoaderInterface;
+import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.util.OptionHelper;
 
@@ -57,7 +57,7 @@ public abstract class BaseCursorAdapter extends CursorAdapter implements
 	Context mContext;
 	LayoutInflater mInflater;
 	Cursor mCursor;
-	ImageLoaderInterface mLoader;
+	IImageLoader mLoader;
 	int fontSize;
 	
 	private void initFontSize(){

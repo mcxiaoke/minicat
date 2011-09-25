@@ -262,7 +262,7 @@ public class NewImageLoader {
 		}
 
 		private Bitmap downloadImage(String url) {
-			HttpClient client = App.me.client;
+			HttpClient client = App.me.getHttpClient();
 			try {
 				HttpGet request = new HttpGet(url);
 				HttpResponse response = client.execute(request);

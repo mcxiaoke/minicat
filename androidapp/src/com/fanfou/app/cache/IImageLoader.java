@@ -11,7 +11,7 @@ import android.widget.ImageView;
  * @version 1.0 2011.09.23
  *
  */
-public interface ImageLoaderInterface {
+public interface IImageLoader {
 	
 	Bitmap load(String key);
 	

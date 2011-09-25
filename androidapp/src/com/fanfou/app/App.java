@@ -26,7 +26,7 @@ import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.ApiImpl;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.ImageLoader;
-import com.fanfou.app.cache.ImageLoaderInterface;
+import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.http.NetworkState;
 import com.fanfou.app.http.NetworkState.Type;
@@ -91,7 +91,7 @@ public class App extends Application {
 
 		@Override
 		public Thread newThread(Runnable r) {
-			return new Thread(r, "fanfou thread #" + mCount.getAndIncrement());
+			return new Thread(r, "fanfouapp thread #" + mCount.getAndIncrement());
 		}
 	};
 
@@ -100,8 +100,8 @@ public class App extends Application {
 
 	public static App me;
 
-	public ImageLoaderInterface imageLoader;
-	public DefaultHttpClient client;
+	public IImageLoader imageLoader;
+	private DefaultHttpClient client;
 	public float density;
 
 	public boolean verified;
@@ -138,8 +138,7 @@ public class App extends Application {
 		initPreferences();
 		initDensity();
 		initNetworkState();
-		initScreenMode();
-		initHttpClient();
+		getHttpClient();
 		initAutoClean(this);
 		initAutoComplete(this);
 		initAutoNotification(this);
@@ -183,9 +182,6 @@ public class App extends Application {
 		this.oauthAccessTokenSecret = OptionHelper.readString(this,
 				Commons.KEY_OAUTH_ACCESS_TOKEN_SECRET, null);
 		this.isLogin = !StringHelper.isEmpty(oauthAccessTokenSecret);
-	}
-
-	private void initScreenMode() {
 	}
 
 	private void initDensity() {
@@ -290,9 +286,12 @@ public class App extends Application {
 				u.profileImageUrl);
 	}
 
-	public synchronized void initHttpClient() {
-		client = NetworkHelper.setHttpClient();
-		NetworkHelper.setProxy(client.getParams(), networkState.getApnType());
+	public synchronized DefaultHttpClient getHttpClient() {
+		if(client==null){
+			client = NetworkHelper.setHttpClient();
+			NetworkHelper.setProxy(client.getParams(), networkState.getApnType());
+		}
+		return client;
 	}
 
 }

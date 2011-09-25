@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -57,8 +58,6 @@ public final class LoginPage extends BaseActivity implements
 	private ImageView buttonLogin;
 	private TextView textSignupWeb;
 	private TextView textSignupSms;
-	
-	private ProgressDialog mProgressDialog;
 
 	private String username;
 	private String password;
@@ -111,16 +110,11 @@ public final class LoginPage extends BaseActivity implements
 
 		textSignupSms = (TextView) findViewById(R.id.login_signup_sms);
 		textSignupSms.setOnClickListener(this);
-		
-		mProgressDialog = new ProgressDialog(mContext);
-		mProgressDialog.setMessage("验证中...");
-		mProgressDialog.setIndeterminate(true);
 
 	}
 
-	
+	private LoginTask mLoginTask;
 
-	
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -130,9 +124,8 @@ public final class LoginPage extends BaseActivity implements
 			} else {
 				g.setCustomVar(1, "username", username);
 				g.trackEvent("Action", "onClick", "Login", 1);
-
-				mProgressDialog.show();
-				new LoginTask().execute();
+				mLoginTask = new LoginTask();
+				mLoginTask.execute();
 			}
 			break;
 		case R.id.login_signup_web:
@@ -174,6 +167,16 @@ public final class LoginPage extends BaseActivity implements
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+	}
+
+	@Override
 	protected void onRestoreInstanceState(Bundle state) {
 		super.onRestoreInstanceState(state);
 		editUsername.setText(state.getString(USERNAME));
@@ -196,8 +199,8 @@ public final class LoginPage extends BaseActivity implements
 	}
 
 	private void goHome() {
-		if(App.DEBUG)
-		log("goHome()");
+		if (App.DEBUG)
+			log("goHome()");
 		if (g != null) {
 			g.dispatch();
 		}
@@ -208,8 +211,8 @@ public final class LoginPage extends BaseActivity implements
 	}
 
 	private void clearDB() {
-		if(App.DEBUG)
-		log("clearDB()");
+		if (App.DEBUG)
+			log("clearDB()");
 		ContentResolver cr = getContentResolver();
 		cr.delete(StatusInfo.CONTENT_URI, null, null);
 		cr.delete(UserInfo.CONTENT_URI, null, null);
@@ -231,7 +234,7 @@ public final class LoginPage extends BaseActivity implements
 		static final int LOGIN_NEW_AUTH_SUCCESS = 2; // 首次验证成功
 		static final int LOGIN_RE_AUTH_SUCCESS = 3; // 重新验证成功
 
-		
+		ProgressDialog progressDialog;
 
 		@Override
 		protected ResultInfo doInBackground(Void... params) {
@@ -242,8 +245,8 @@ public final class LoginPage extends BaseActivity implements
 				OAuth oauth = new OAuth();
 				OAuthToken token = oauth
 						.getOAuthAccessToken(username, password);
-				if(App.DEBUG)
-				log("xauth token=" + token);
+				if (App.DEBUG)
+					log("xauth token=" + token);
 
 				if (token != null) {
 
@@ -263,8 +266,8 @@ public final class LoginPage extends BaseActivity implements
 
 					User u = App.me.api.verifyAccount();
 					if (u != null && !u.isNull()) {
-						if(App.DEBUG)
-						log("xauth successful! ");
+						if (App.DEBUG)
+							log("xauth successful! ");
 						App.me.updateUserInfo(u);
 
 						if (StringHelper.isEmpty(savedUserId)) {
@@ -277,8 +280,8 @@ public final class LoginPage extends BaseActivity implements
 							return new ResultInfo(LOGIN_RE_AUTH_SUCCESS);
 						}
 					} else {
-						if(App.DEBUG)
-						log("xauth failed.");
+						if (App.DEBUG)
+							log("xauth failed.");
 						return new ResultInfo(LOGIN_AUTH_FAILED,
 								"XAuth successful, but verifyAccount failed. ");
 					}
@@ -287,7 +290,7 @@ public final class LoginPage extends BaseActivity implements
 							"username or password is incorrect, XAuth failed.");
 				}
 
-			}catch (IOException e) {
+			} catch (IOException e) {
 				if (App.DEBUG)
 					e.printStackTrace();
 				return new ResultInfo(LOGIN_IO_ERROR, "Connection error: "
@@ -302,20 +305,27 @@ public final class LoginPage extends BaseActivity implements
 
 		@Override
 		protected void onPreExecute() {
-
+			progressDialog = new ProgressDialog(mContext);
+			progressDialog.setMessage("验证中...");
+			progressDialog.setIndeterminate(true);
+			progressDialog.show();
 		}
 
 		@Override
 		protected void onPostExecute(ResultInfo result) {
-			if(mProgressDialog!=null&&mProgressDialog.isShowing()){
-				mProgressDialog.dismiss();
+			try {
+				if (progressDialog != null && progressDialog.isShowing()) {
+					progressDialog.dismiss();
+				}
+			} catch (Exception e) {
 			}
+
 			switch (result.code) {
 			case LOGIN_IO_ERROR:
 				showToast(result.message);
 				break;
 			case LOGIN_AUTH_FAILED:
-//				g.trackEvent("Action", "LoginFailed", "AUTH_FAILED", 1);
+				// g.trackEvent("Action", "LoginFailed", "AUTH_FAILED", 1);
 				showToast(result.message);
 				break;
 			case LOGIN_NEW_AUTH_SUCCESS:
@@ -324,7 +334,7 @@ public final class LoginPage extends BaseActivity implements
 				g.setCustomVar(2, "api", String.valueOf(Build.VERSION.SDK_INT));
 				g.setCustomVar(2, "device", Build.MODEL);
 				g.setCustomVar(2, "uuid", DeviceHelper.uuid(mContext));
-//				g.trackEvent("Action", "LoginSuccess", "AUTH_SUCCESS", 1);
+				// g.trackEvent("Action", "LoginSuccess", "AUTH_SUCCESS", 1);
 				goHome();
 				break;
 			default:

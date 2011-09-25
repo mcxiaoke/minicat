@@ -127,7 +127,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 		int page=getIntent().getIntExtra(Commons.EXTRA_PAGE, 0);
 		mViewPager.setCurrentItem(page);
-		mPageIndicator.setCurrentItem(page);
+
 	}
 
 	private void setWriteBottom() {
@@ -374,7 +374,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			log("onNewIntent page=" + page);
 		}
 		mViewPager.setCurrentItem(page);
-		mPageIndicator.setCurrentItem(page);
 
 		if (page==0) {
 			cursors[page].requery();
@@ -565,6 +564,15 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 //		if(mCurrentPage==3&&next){
 //			mViewPager.setCurrentItem(0);
 //		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		if(mCurrentPage==0){
+			super.onBackPressed();
+		}else{
+			mViewPager.setCurrentItem(mCurrentPage-1);
+		}
 	}
 
 	private static class GestureListener extends SimpleOnGestureListener{

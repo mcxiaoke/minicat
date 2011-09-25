@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.PowerManager;
 import android.util.Log;
 
@@ -178,8 +179,9 @@ public class NotificationService extends BaseIntentService {
 	}
 
 	private void sendStatusNotification(int type, int count, Status status) {
-		boolean needNotification=OptionHelper.readBoolean(this, R.string.option_notification_switch, false);
-		if(!needNotification){
+		boolean needNotification = OptionHelper.readBoolean(this,
+				R.string.option_notification_switch, false);
+		if (!needNotification) {
 			return;
 		}
 		if (App.DEBUG) {
@@ -191,12 +193,13 @@ public class NotificationService extends BaseIntentService {
 		intent.putExtra(Commons.EXTRA_COUNT, count);
 		intent.putExtra(Commons.EXTRA_STATUS, status);
 		intent.setAction(ACTION_NOTIFICATION);
-		sendOrderedBroadcast(intent, null);
+		broadcast(intent);
 	}
 
 	private void sendMessageNotification(int type, int count) {
-		boolean needNotification=OptionHelper.readBoolean(this, R.string.option_notification_switch, false);
-		if(!needNotification){
+		boolean needNotification = OptionHelper.readBoolean(this,
+				R.string.option_notification_switch, false);
+		if (!needNotification) {
 			return;
 		}
 		if (App.DEBUG) {
@@ -207,6 +210,11 @@ public class NotificationService extends BaseIntentService {
 		intent.putExtra(Commons.EXTRA_TYPE, type);
 		intent.putExtra(Commons.EXTRA_COUNT, count);
 		intent.setAction(ACTION_NOTIFICATION);
+		broadcast(intent);
+	}
+
+	private void broadcast(Intent intent) {
+		intent.setPackage(getPackageName());
 		sendOrderedBroadcast(intent, null);
 	}
 

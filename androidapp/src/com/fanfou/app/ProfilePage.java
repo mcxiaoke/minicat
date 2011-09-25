@@ -3,7 +3,7 @@ package com.fanfou.app;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.ImageLoader;
-import com.fanfou.app.cache.ImageLoaderInterface;
+import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.config.ACTION;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.service.ActionService;
@@ -77,7 +77,7 @@ public class ProfilePage extends BaseActivity implements OnClickListener,
 	private User user;
 
 	private Handler mHandler;
-	private ImageLoaderInterface mLoader;
+	private IImageLoader mLoader;
 
 	private boolean isInitialized = false;
 	private boolean noPermission = false;// noPermission=user.protect&&!user.following

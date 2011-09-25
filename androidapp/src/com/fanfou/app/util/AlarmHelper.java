@@ -63,8 +63,8 @@ public final class AlarmHelper {
 					.getSystemService(Context.ALARM_SERVICE);
 			PendingIntent pi = getNotificationPendingIntent(context);
 			am.cancel(pi);
-			am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
-					interval * 60 * 1000, pi);
+			am.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+					c.getTimeInMillis(), interval * 60 * 1000, pi);
 		} else {
 			AlarmManager am = (AlarmManager) context
 					.getSystemService(Context.ALARM_SERVICE);
@@ -98,8 +98,8 @@ public final class AlarmHelper {
 				.getSystemService(Context.ALARM_SERVICE);
 		PendingIntent pi = getAutoCompletePendingIntent(context);
 		am.cancel(pi);
-		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), interval,
-				pi);
+		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
+				interval, pi);
 	}
 
 	private static PendingIntent getAutoCompletePendingIntent(Context context) {
@@ -149,42 +149,23 @@ public final class AlarmHelper {
 
 	public static void setNotificationType(Context context,
 			Notification notification) {
-		AudioManager audioManager = (AudioManager) context
+		AudioManager am = (AudioManager) context
 				.getSystemService(Context.AUDIO_SERVICE);
-		switch (audioManager.getRingerMode()) {// 获取系统设置的铃声模式
-		case AudioManager.RINGER_MODE_SILENT:// 静音模式，值为0，这时候不震动，不响铃
-			notification.sound = null;
-			notification.vibrate = null;
-			break;
-		case AudioManager.RINGER_MODE_VIBRATE:// 震动模式，值为1，这时候震动，不响铃
-			notification.sound = null;
-			notification.defaults |= Notification.DEFAULT_VIBRATE;
-			break;
-		case AudioManager.RINGER_MODE_NORMAL:
-			notification.defaults |= Notification.DEFAULT_VIBRATE;
-			notification.defaults |= Notification.DEFAULT_SOUND;
-
-			Uri ringTone = null;
+		if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
 			String ringFile = OptionHelper.readString(context,
 					R.string.option_notification_ringtone, null);
+			Uri ringTone = null;
 			if (!TextUtils.isEmpty(ringFile)) {
 				ringTone = Uri.parse(ringFile);
+				notification.sound = ringTone;
 			}
-			notification.sound = ringTone;
-
-			boolean vibrate = OptionHelper.readBoolean(context,
-					R.string.option_notification_vibrate, false);
-			if (vibrate
-					&& audioManager
-							.getVibrateSetting(AudioManager.VIBRATE_TYPE_RINGER) == AudioManager.VIBRATE_SETTING_ON) {
-				notification.defaults |= Notification.DEFAULT_VIBRATE;
-			} else {
-				notification.vibrate = null;
-			}
-
-			break;
-		default:
-			break;
+		}
+		boolean vibrate = OptionHelper.readBoolean(context,
+				R.string.option_notification_vibrate, false);
+		if (vibrate) {
+			notification.defaults |= Notification.DEFAULT_VIBRATE;
+		} else {
+			notification.vibrate = null;
 		}
 	}
 

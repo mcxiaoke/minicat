@@ -37,15 +37,13 @@ public class NetworkReceiver extends BroadcastReceiver {
 					if (!TextUtils.isEmpty(apnTypeName)) {
 						if (apnTypeName.equals("ctwap")) {
 							apnType = Type.CTWAP;
-							NetworkHelper.setProxy(App.me.client.getParams(),
-									apnType);
 						} else if (apnTypeName.contains("wap")) {
 							apnType = Type.WAP;
 
 						}
 					}
 				}
-				NetworkHelper.setProxy(App.me.client.getParams(), apnType);
+				NetworkHelper.setProxy(App.me.getHttpClient().getParams(), apnType);
 			}
 		}
 	}

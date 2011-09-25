@@ -78,10 +78,7 @@ public abstract class BaseClient implements ResponseCode {
 			log("exec() Authorization: "
 					+ request.getFirstHeader("Authorization").getValue());
 		}
-		DefaultHttpClient client = App.me.client;
-		if (client == null) {
-			App.me.initHttpClient();
-		}
+		DefaultHttpClient client = App.me.getHttpClient();
 		return client.execute(request);
 	}
 

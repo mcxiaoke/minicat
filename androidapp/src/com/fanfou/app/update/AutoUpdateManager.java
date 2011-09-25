@@ -43,7 +43,7 @@ public final class AutoUpdateManager {
 	// APP_UPDATE_CODE="http://apps.fanfou.com/android/update.txt";
 
 	public static VersionInfo fetchVersionInfo() {
-		HttpClient client = App.me.client;
+		HttpClient client = App.me.getHttpClient();
 		HttpGet request = new HttpGet(APP_UPDATE_SITE);
 		try {
 			HttpResponse response = client.execute(request);
