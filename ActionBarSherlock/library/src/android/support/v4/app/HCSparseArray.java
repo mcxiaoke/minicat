@@ -16,6 +16,8 @@
 
 package android.support.v4.app;
 
+import android.util.Log;
+
 /**
  * A copy of Honeycomb's SparseArray, only so we can have the removeAt() method.
  */
@@ -55,7 +57,6 @@ public class HCSparseArray<E> {
      * Gets the Object mapped from the specified key, or the specified Object
      * if no such mapping has been made.
      */
-    @SuppressWarnings("unchecked")
     public E get(int key, E valueIfKeyNotFound) {
         int i = binarySearch(mKeys, 0, mSize, key);
 
@@ -96,7 +97,7 @@ public class HCSparseArray<E> {
             mGarbage = true;
         }
     }
-
+    
     private void gc() {
         // Log.e("SparseArray", "gc start with " + mSize);
 
@@ -191,7 +192,7 @@ public class HCSparseArray<E> {
     /**
      * Given an index in the range <code>0...size()-1</code>, returns
      * the key from the <code>index</code>th key-value mapping that this
-     * SparseArray stores.
+     * SparseArray stores.  
      */
     public int keyAt(int index) {
         if (mGarbage) {
@@ -200,13 +201,12 @@ public class HCSparseArray<E> {
 
         return mKeys[index];
     }
-
+    
     /**
      * Given an index in the range <code>0...size()-1</code>, returns
      * the value from the <code>index</code>th key-value mapping that this
-     * SparseArray stores.
+     * SparseArray stores.  
      */
-    @SuppressWarnings("unchecked")
     public E valueAt(int index) {
         if (mGarbage) {
             gc();
@@ -218,7 +218,7 @@ public class HCSparseArray<E> {
     /**
      * Given an index in the range <code>0...size()-1</code>, sets a new
      * value for the <code>index</code>th key-value mapping that this
-     * SparseArray stores.
+     * SparseArray stores.  
      */
     public void setValueAt(int index, E value) {
         if (mGarbage) {
@@ -227,7 +227,7 @@ public class HCSparseArray<E> {
 
         mValues[index] = value;
     }
-
+    
     /**
      * Returns the index for which {@link #keyAt} would return the
      * specified key, or a negative number if the specified
@@ -309,7 +309,7 @@ public class HCSparseArray<E> {
         mValues[pos] = value;
         mSize = pos + 1;
     }
-
+    
     private static int binarySearch(int[] a, int start, int len, int key) {
         int high = start + len, low = start - 1, guess;
 
@@ -330,7 +330,7 @@ public class HCSparseArray<E> {
             return ~high;
     }
 
-    /*private void checkIntegrity() {
+    private void checkIntegrity() {
         for (int i = 1; i < mSize; i++) {
             if (mKeys[i] <= mKeys[i - 1]) {
                 for (int j = 0; j < mSize; j++) {
@@ -340,7 +340,7 @@ public class HCSparseArray<E> {
                 throw new RuntimeException();
             }
         }
-    }*/
+    }
 
     static int idealByteArraySize(int need) {
         for (int i = 4; i < 32; i++)
@@ -349,11 +349,11 @@ public class HCSparseArray<E> {
 
         return need;
     }
-
+    
     static int idealIntArraySize(int need) {
         return idealByteArraySize(need * 4) / 4;
     }
-
+    
     private int[] mKeys;
     private Object[] mValues;
     private int mSize;

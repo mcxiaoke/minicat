@@ -16,15 +16,14 @@
 
 package android.support.v4.app;
 
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
+
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import com.actionbarsherlock.R;
 
 final class BackStackState implements Parcelable {
     final int[] mOps;
@@ -162,8 +161,6 @@ final class BackStackRecord extends FragmentTransaction implements
         FragmentManager.BackStackEntry, Runnable {
     static final String TAG = "BackStackEntry";
 
-    private static final boolean IS_HONEYCOMB = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
-
     final FragmentManagerImpl mManager;
 
     static final int OP_NULL = 0;
@@ -254,7 +251,7 @@ final class BackStackRecord extends FragmentTransaction implements
                         } else {
                             writer.println("Removed:");
                             writer.print(innerPrefix); writer.print("  #"); writer.print(num);
-                                    writer.print(": ");
+                                    writer.print(": "); 
                         }
                         writer.println(op.removed.get(i));
                     }
@@ -339,12 +336,6 @@ final class BackStackRecord extends FragmentTransaction implements
         }
 
         if (containerViewId != 0) {
-            //This will change the target container ID to be the content view
-            //of our custom action bar implementation when the entire activity
-            //view is selected as the target and we are pre-honeycomb
-            if (!IS_HONEYCOMB && (containerViewId == android.R.id.content)) {
-                containerViewId = R.id.abs__content;
-            }
             if (fragment.mFragmentId != 0 && fragment.mFragmentId != containerViewId) {
                 throw new IllegalStateException("Can't change container ID of fragment "
                         + fragment + ": was " + fragment.mFragmentId
@@ -531,7 +522,7 @@ final class BackStackRecord extends FragmentTransaction implements
     public int commitAllowingStateLoss() {
         return commitInternal(true);
     }
-
+    
     int commitInternal(boolean allowStateLoss) {
         if (mCommitted) throw new IllegalStateException("commit already called");
         if (FragmentManagerImpl.DEBUG) Log.v(TAG, "Commit: " + this);
@@ -544,7 +535,7 @@ final class BackStackRecord extends FragmentTransaction implements
         mManager.enqueueAction(this, allowStateLoss);
         return mIndex;
     }
-
+    
     public void run() {
         if (FragmentManagerImpl.DEBUG) Log.v(TAG, "Run: " + this);
 

@@ -42,15 +42,18 @@ public class MotionEventCompat {
         }
         @Override
         public int getPointerId(MotionEvent event, int pointerIndex) {
-            return -1;
+        	return -1;
+            //throw new IndexOutOfBoundsException("Pre-Eclair does not support pointers");
         }
         @Override
         public float getX(MotionEvent event, int pointerIndex) {
-            return event.getX();
+        	return event.getX();
+            //throw new IndexOutOfBoundsException("Pre-Eclair does not support pointers");
         }
         @Override
         public float getY(MotionEvent event, int pointerIndex) {
-            return event.getY();
+        	return event.getY();
+            //throw new IndexOutOfBoundsException("Pre-Eclair does not support pointers");
         }
     }
 

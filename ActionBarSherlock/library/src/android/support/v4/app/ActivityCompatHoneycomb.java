@@ -16,10 +16,21 @@
 
 package android.support.v4.app;
 
-import android.util.AndroidRuntimeException;
+import android.app.Activity;
 
-final class SuperNotCalledException extends AndroidRuntimeException {
-    public SuperNotCalledException(String msg) {
-        super(msg);
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
+
+/**
+ * Implementation of activity compatibility that can call Honeycomb APIs.
+ */
+class ActivityCompatHoneycomb {
+    static void invalidateOptionsMenu(Activity activity) {
+        activity.invalidateOptionsMenu();
+    }
+
+    static void dump(Activity activity, String prefix, FileDescriptor fd,
+            PrintWriter writer, String[] args) {
+        activity.dump(prefix, fd, writer, args);
     }
 }

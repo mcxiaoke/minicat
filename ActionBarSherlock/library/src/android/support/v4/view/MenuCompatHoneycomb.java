@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package android.support.v4.app;
+package android.support.v4.view;
 
-import android.util.AndroidRuntimeException;
+import android.view.MenuItem;
 
-final class SuperNotCalledException extends AndroidRuntimeException {
-    public SuperNotCalledException(String msg) {
-        super(msg);
+/**
+ * Implementation of menu compatibility that can call Honeycomb APIs.
+ */
+class MenuCompatHoneycomb {
+    public static void setShowAsAction(MenuItem item, int actionEnum) {
+        item.setShowAsAction(actionEnum);
     }
 }
