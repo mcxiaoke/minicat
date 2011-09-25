@@ -19,13 +19,13 @@
 		<PreferenceCategory android:title="通知类型">
 			<CheckBoxPreference android:title="好友消息"
 				android:key="@string/option_notification_home" android:defaultValue="false"
-				android:dependency="@string/option_notification_switch" />
+				android:dependency="@string/option_notification" />
 			<CheckBoxPreference android:title="提及我的消息"
 				android:key="@string/option_notification_mention"
-				android:defaultValue="true" android:dependency="@string/option_notification_switch" />
+				android:defaultValue="true" android:dependency="@string/option_notification" />
 			<CheckBoxPreference android:title="私信"
 				android:key="@string/option_notification_dm" android:defaultValue="true"
-				android:dependency="@string/option_notification_switch" />
+				android:dependency="@string/option_notification" />
 		</PreferenceCategory>
 
 		<PreferenceCategory android:title="通知设置">
@@ -82,7 +82,7 @@
 			android:dialogTitle="选择上传照片的质量" android:title="上传照片质量"
 			android:key="@string/option_photo_quality" android:defaultValue="80" />
 
-		<CheckBoxPreference android:title="启动时刷新"
+		<CheckBoxPreference android:title="启动时更新消息"
 			android:summary="设置启动时是否自动获取新消息" android:key="@string/option_refresh_on_open"
 			android:summaryOff="启动时不获取新消息" android:defaultValue="false"
 			android:summaryOn="启动时自动获取新消息" />
@@ -99,7 +99,7 @@
 			android:dialogMessage="是否要清空存储卡中缓存的用户头像和消息图片？（提示：头像缓存在存储卡上，占用空间很小，不建议手动清空）"
 			android:positiveButtonText="确定" android:negativeButtonText="取消" />
 
-		<CheckBoxPreference android:title="启动时检测更新"
+		<CheckBoxPreference android:title="启动时检测升级"
 			android:summary="设置启动时检测新版本" android:key="@string/option_autoupdate"
 			android:summaryOff="启动时不检测新版本" android:defaultValue="true"
 			android:summaryOn="启动时自动检测新版本" />
