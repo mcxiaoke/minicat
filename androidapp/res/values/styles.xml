@@ -266,4 +266,28 @@
 		<item name="android:textColor">@android:color/primary_text_light</item>
 	</style>
 
+	<style name="StyledIndicators" parent="@android:style/Theme.Light">
+		<item name="circlePageIndicatorStyle">@style/CustomCirclePageIndicator</item>
+		<item name="titlePageIndicatorStyle">@style/CustomTitlePageIndicator</item>
+	</style>
+
+	<style name="CustomTitlePageIndicator">
+		<item name="android:background">#FFDDDDDD</item>
+		<item name="footerColor">#FFEE3333</item>
+		<item name="footerLineHeight">2dp</item>
+		<item name="footerIndicatorStyle">none</item>
+		<item name="textColor">#FF999999</item>
+		<item name="selectedColor">#FF000000</item>
+		<item name="selectedBold">false</item>
+	</style>
+
+	<style name="CustomCirclePageIndicator">
+		<item name="android:background">#FFCCCCCC</item>
+		<item name="fillColor">#FF888888</item>
+		<item name="strokeColor">#FF000000</item>
+		<item name="strokeWidth">2dp</item>
+		<item name="radius">10dp</item>
+		<item name="centered">true</item>
+	</style>
+
 </resources>

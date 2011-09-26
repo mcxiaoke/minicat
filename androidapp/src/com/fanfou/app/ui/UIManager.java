@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fanfou.app.ui;
 
 import java.util.List;

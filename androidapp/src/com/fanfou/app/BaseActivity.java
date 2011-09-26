@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.receiver.NetworkReceiver;
 import com.fanfou.app.service.NotificationService;
+import com.fanfou.app.ui.ActionBar.OnRefreshClickListener;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.Utils;
 
@@ -28,7 +29,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.0 2011.09.25
  * 
  */
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends Activity implements OnRefreshClickListener {
 
 	public static final int STATE_INIT = 0;
 	public static final int STATE_NORMAL = 1;
@@ -254,6 +255,10 @@ public abstract class BaseActivity extends Activity {
 		home.setIcon(R.drawable.i_menu_home);
 
 		return true;
+	}
+
+	@Override
+	public void onRefreshClick() {
 	}
 
 	protected void goBackHome() {

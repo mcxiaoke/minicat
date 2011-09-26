@@ -10,7 +10,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -27,10 +26,15 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 	private LayoutInflater mInflater;
 	private RelativeLayout mActionBar;// 标题栏
 	private ImageView mLeftButton;// 饭否标志
-//	private ProgressBar mProgressView;// 最右边的动作图标
-	private ImageView mRightButton;// 次右边的动作图标
+	private ImageView mRightButton;// 右边的动作图标
+	private ImageView mRefreshButton;// 右侧第二个图标，刷新
+	private ProgressBar mProgressView;// 最右边的动作图标
 	private TextView mTitle;// 居中标题
+	
+	private OnRefreshClickListener mOnRefreshClickListener=null;
+//	private boolean mRefreshable=false;
 
+	
 	public ActionBar(Context context) {
 		super(context);
 		initViews(context);
@@ -70,7 +74,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 		mRightButton.setImageResource(action.getDrawable());
 		mRightButton.setTag(action);
 	}
-	
+
 	public void hideLeftIcon(){
 		mLeftButton.setVisibility(View.INVISIBLE);
 	}
@@ -78,14 +82,43 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 	public void hideRightIcon(){
 		mRightButton.setVisibility(View.INVISIBLE);
 	}
+	
+	private void setRefreshAction(Action action) {
+		mRefreshButton.setImageResource(action.getDrawable());
+		mRefreshButton.setTag(action);
+	}
+	
+	public void setRefreshEnabled(OnRefreshClickListener onRefreshClickListener){
+		if(onRefreshClickListener!=null){
+			mOnRefreshClickListener=onRefreshClickListener;
+			setRefreshAction(new RefreshAction(this));
+		}
+	}
+	
+	public void setRefreshFinished(){
+		hideProgress();
+	}
+	
+	private void onRefreshClick(){
+		if(mOnRefreshClickListener!=null){
+			mOnRefreshClickListener.onRefreshClick();
+			showProgress();
+		}
+	}
 
-//	public void showProgress() {
-//		mProgressView.setVisibility(View.VISIBLE);
-//	}
-//
-//	public void hideProgress() {
-//		mProgressView.setVisibility(View.GONE);
-//	}
+	private void showProgress() {
+		mRefreshButton.setVisibility(View.GONE);
+		mProgressView.setVisibility(View.VISIBLE);
+	}
+
+	private void hideProgress() {
+		mProgressView.setVisibility(View.GONE);
+		mRefreshButton.setVisibility(View.VISIBLE);
+	}
+	
+
+	
+
 
 	@Override
 	public void onClick(View view) {
@@ -111,19 +144,24 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 				.findViewById(R.id.actionbar_left);
 		this.mRightButton = (ImageView) mActionBar
 				.findViewById(R.id.actionbar_right);
-//		this.mProgressView = (ProgressBar) mActionBar
-//				.findViewById(R.id.actionbar_progress);
+		this.mRefreshButton=(ImageView) findViewById(R.id.actionbar_refresh);
+		this.mProgressView = (ProgressBar) mActionBar
+				.findViewById(R.id.actionbar_progress);
 		this.mTitle = (TextView) mActionBar.findViewById(R.id.actionbar_title);
 
 		mLeftButton.setOnClickListener(this);
 		mRightButton.setOnClickListener(this);
-//		hideProgress();
+		mRefreshButton.setOnClickListener(this);
 	}
 
 	public interface Action {
 		public int getDrawable();
 
 		public void performAction(View view);
+	}
+	
+	public interface OnRefreshClickListener{
+		public void onRefreshClick();
 	}
 
 	public static abstract class AbstractAction implements Action {
@@ -137,6 +175,21 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 		public int getDrawable() {
 			return mDrawable;
 		}
+	}
+	
+	public static class RefreshAction extends AbstractAction{
+		private ActionBar ab;
+
+		public RefreshAction(ActionBar ab) {
+			super(R.drawable.i_refresh);
+			this.ab=ab;
+		}
+
+		@Override
+		public void performAction(View view) {
+			ab.onRefreshClick();
+		}
+		
 	}
 
 	public static class BackAction extends AbstractAction {

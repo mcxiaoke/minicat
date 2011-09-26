@@ -546,13 +546,7 @@ public class TitlePageIndicator extends View implements PageIndicator {
 			throw new IllegalStateException(
 					"ViewPager does not have adapter instance.");
 		}
-		if (!(view.getAdapter() instanceof TitleProvider)) {
-			throw new IllegalStateException(
-					"ViewPager adapter must implement TitleProvider to be used with TitlePageIndicator.");
-		}
 		mViewPager = view;
-		// mViewPager.setOnPageChangeListener(this);
-		mTitleProvider = (TitleProvider) mViewPager.getAdapter();
 		invalidate();
 	}
 
@@ -561,23 +555,20 @@ public class TitlePageIndicator extends View implements PageIndicator {
 		setViewPager(view);
 		setCurrentItem(initialPosition);
 	}
+	
+	public void setTitleProvider(TitleProvider provider){
+		mTitleProvider=provider;
+	}
 
 	@Override
 	public void setCurrentItem(int item) {
 		if (mViewPager == null) {
 			throw new IllegalStateException("ViewPager has not been bound.");
 		}
-		mViewPager.setCurrentItem(item);
+//		mViewPager.setCurrentItem(item);
 		mCurrentPage = item;
 		invalidate();
 	}
-
-	// @Override
-	// public void onPageScrollStateChanged(int state) {
-	// if (mListener != null) {
-	// mListener.onPageScrollStateChanged(state);
-	// }
-	// }
 
 	@Override
 	public void onPageScrolled(int position, float positionOffset,
@@ -589,13 +580,9 @@ public class TitlePageIndicator extends View implements PageIndicator {
 
 	@Override
 	public void onPageSelected(int position) {
+		mCurrentPage = position;
+		invalidate();
 	}
-
-	// @Override
-	// public void setOnPageChangeListener(ViewPager.OnPageChangeListener
-	// listener) {
-	// mListener = listener;
-	// }
 
 	/*
 	 * (non-Javadoc)

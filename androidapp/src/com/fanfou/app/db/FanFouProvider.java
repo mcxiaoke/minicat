@@ -45,7 +45,6 @@ public class FanFouProvider extends ContentProvider implements Contents {
 	public static final int USER_ITEM = 3;
 	public static final int USER_TYPE = 4;
 	public static final int USER_ID = 5;
-
 	public static final int USER_FRIENDS = 6;
 	public static final int USER_FOLLOWERS = 7;
 
@@ -53,21 +52,17 @@ public class FanFouProvider extends ContentProvider implements Contents {
 	public static final int STATUS_SEARCH_LOCAL = 22;
 	public static final int STATUS_USER = 23;
 	public static final int STATUS_ITEM = 24;
-
-	public static final int STATUS_ACTION_CLEAN = 25;
-
-	// public timeline cache, individual table
-	// public static final int PUBLIC = 27;
-
-	public static final int STATUS_SEARCH = 28;
-
-	public static final int STATUS_TYPE = 30;
-	public static final int STATUS_ACTION_COUNT = 31;
-	public static final int STATUS_ID = 32;
+	public static final int STATUS_ID = 25;
+	public static final int STATUS_SEARCH = 26;
+	public static final int STATUS_TYPE = 27;
+	public static final int STATUS_ACTION_CLEAN = 28;
+	public static final int STATUS_ACTION_COUNT = 29;
 
 	public static final int MESSAGES = 41;
 	public static final int MESSAGE_ITEM = 42;
 	public static final int MESSAGE_ID = 43;
+	public static final int MESSAGE_LIST = 44;// 对话列表，每个人最新的一条，收件箱为准
+	public static final int MESSAGE_USER = 45;// 每个人的私信对话列表
 
 	private static final UriMatcher sUriMatcher;
 	// private static HashMap<String, String> sUserProjectionMap;
@@ -108,6 +103,11 @@ public class FanFouProvider extends ContentProvider implements Contents {
 				MESSAGE_ITEM);
 		sUriMatcher.addURI(AUTHORITY, DirectMessageInfo.URI_PATH + "/id/#",
 				MESSAGE_ID);
+
+		sUriMatcher.addURI(AUTHORITY, DirectMessageInfo.URI_PATH + "/list",
+				MESSAGE_LIST);
+		sUriMatcher.addURI(AUTHORITY, DirectMessageInfo.URI_PATH + "/user/*",
+				MESSAGE_USER);
 	}
 
 	@Override
@@ -120,6 +120,8 @@ public class FanFouProvider extends ContentProvider implements Contents {
 	public String getType(Uri uri) {
 		switch (sUriMatcher.match(uri)) {
 		case USERS:
+		case USER_FRIENDS:
+		case USER_FOLLOWERS:
 			return UserInfo.CONTENT_TYPE;
 		case USER_ITEM:
 		case USER_ID:
@@ -136,6 +138,8 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		case STATUS_ACTION_CLEAN:
 			return StatusInfo.CONTENT_ITEM_TYPE;
 		case MESSAGES:
+		case MESSAGE_LIST:
+		case MESSAGE_USER:
 			return DirectMessageInfo.CONTENT_TYPE;
 		case MESSAGE_ITEM:
 		case MESSAGE_ID:
@@ -148,26 +152,20 @@ public class FanFouProvider extends ContentProvider implements Contents {
 	@Override
 	public Cursor query(Uri uri, String[] columns, String where,
 			String[] whereArgs, String orderBy) {
-		// log("query() uri = " + uri + " where= (" + where + ") whereArgs = "
-		// + StringHelper.toString(whereArgs));
-		// SQLiteDatabase db = dbHelper.getWritableDatabase();
+		if (App.DEBUG) {
+			log("query() uri = " + uri + " where= (" + where + ") whereArgs = "
+					+ StringHelper.toString(whereArgs));
+		}
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 		String order = null;
-		// Cursor c;
+		String selection = where;
+		String[] selectionArgs = whereArgs;
 		switch (sUriMatcher.match(uri)) {
 		case USERS:
-			// c=db.query(UserInfo.TABLE_NAME, columns, where, whereArgs, null,
-			// null, orderBy);
 			qb.setTables(UserInfo.TABLE_NAME);
 			break;
 		case USER_ITEM:
-			// {
-			// String userId=uri.getPathSegments().get(1);
-			// String whereClause=UserInfo.ID + "=" + userId +
-			// (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : "");
-			// c=db.query(UserInfo.TABLE_NAME, columns, whereClause, whereArgs,
-			// null, null, orderBy);
-			// }
 			qb.setTables(UserInfo.TABLE_NAME);
 			qb.appendWhere(BasicColumns.ID + "=");
 			qb.appendWhere("'" + uri.getPathSegments().get(2) + "'");
@@ -178,27 +176,13 @@ public class FanFouProvider extends ContentProvider implements Contents {
 			qb.appendWhere(uri.getPathSegments().get(2));
 			break;
 		case STATUSES:
-			// c=db.query(StatusInfo.TABLE_NAME, columns, where, whereArgs,
-			// null, null, orderBy);
 			qb.setTables(StatusInfo.TABLE_NAME);
 			order = ORDERBY_DATE_DESC;
 			break;
-		// case PUBLIC:
-		// qb.setTables(StatusInfo.PUBLIC_TABLE_NAME);
-		// break;
-		// case STATUS_COUNT:
-		// break;
 		case STATUS_SEARCH:
 			order = ORDERBY_DATE_DESC;
 			break;
 		case STATUS_ITEM:
-			// {
-			// String statusId=uri.getPathSegments().get(1);
-			// String whereClause=StatusInfo.ID + "=" + statusId +
-			// (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : "");
-			// c=db.query(StatusInfo.TABLE_NAME, columns, whereClause,
-			// whereArgs, null, null, orderBy);
-			// }
 			qb.setTables(StatusInfo.TABLE_NAME);
 			qb.appendWhere(BasicColumns.ID + "=");
 			qb.appendWhere("'" + uri.getPathSegments().get(2) + "'");
@@ -210,24 +194,18 @@ public class FanFouProvider extends ContentProvider implements Contents {
 			break;
 		case STATUS_ACTION_COUNT:
 			return countStatus(uri);
-			// qb.setTables(StatusInfo.TABLE_NAME);
-			// qb.appendWhere(StatusInfo.TYPE+"=");
-			// qb.appendWhere(uri.getPathSegments().get(3));
-			// break;
 		case MESSAGES:
-			// c=db.query(DirectMessageInfo.TABLE_NAME, columns, where,
-			// whereArgs, null, null, orderBy);
 			qb.setTables(DirectMessageInfo.TABLE_NAME);
 			order = ORDERBY_DATE_DESC;
 			break;
+		case MESSAGE_LIST:
+			// TODO need implement query;
+			qb.setTables(DirectMessageInfo.TABLE_NAME);
+			String sql="select created_at, id, sender_id, sender_screen_name from message m1 where created_at = (select max(created_at) from message m2 where m1.sender_id = m2.sender_id group by (sender_id));";
+			break;
+		case MESSAGE_USER:
+			break;
 		case MESSAGE_ITEM:
-			// {
-			// String messageId=uri.getPathSegments().get(1);
-			// String whereClause=DirectMessageInfo.ID + "=" + messageId +
-			// (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : "");
-			// c=db.query(DirectMessageInfo.TABLE_NAME, columns, whereClause,
-			// whereArgs, null, null, orderBy);
-			// }
 			qb.setTables(DirectMessageInfo.TABLE_NAME);
 			qb.appendWhere(BasicColumns.ID + "=");
 			qb.appendWhere("'" + uri.getPathSegments().get(2) + "'");
@@ -241,11 +219,13 @@ public class FanFouProvider extends ContentProvider implements Contents {
 			throw new IllegalArgumentException("query() Unknown URI " + uri);
 		}
 
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		Cursor c = qb.query(db, columns, where, whereArgs, null, null, order);
+		Cursor c = qb.query(db, columns, selection, selectionArgs, null, null,
+				order);
 
 		if (c == null) {
-			// log("query() uri " + uri + " failed.");
+			if (App.DEBUG) {
+				log("query() uri " + uri + " failed.");
+			}
 		} else {
 			c.setNotificationUri(getContext().getContentResolver(), uri);
 		}
@@ -376,47 +356,48 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		return numInserted;
 
 	}
-	
-	private int bulkInsertUsers(ContentValues[] values){
+
+	private int bulkInsertUsers(ContentValues[] values) {
 		if (App.DEBUG) {
 			log("bulkInsertUsers()");
 		}
-		
+
 		int numInserted = 0;
 		final SQLiteDatabase db = dbHelper.getWritableDatabase();
 		InsertHelper ih = new InsertHelper(db, UserInfo.TABLE_NAME);
 
 		int id = ih.getColumnIndex(UserInfo.ID);
 		int ownerId = ih.getColumnIndex(UserInfo.OWNER_ID);
-		int name=ih.getColumnIndex(UserInfo.NAME);
-		
-		int screenName=ih.getColumnIndex(UserInfo.SCREEN_NAME);
-		int location=ih.getColumnIndex(UserInfo.LOCATION);
-		int gender=ih.getColumnIndex(UserInfo.GENDER);
-		int birthday=ih.getColumnIndex(UserInfo.BIRTHDAY);
-		
-		int description=ih.getColumnIndex(UserInfo.DESCRIPTION);
-		int profileImageUrl=ih.getColumnIndex(UserInfo.PROFILE_IMAGE_URL);
-		int url=ih.getColumnIndex(UserInfo.URL);
-		int protect=ih.getColumnIndex(UserInfo.PROTECTED);
-		
-		int followersCount=ih.getColumnIndex(UserInfo.FOLLOWERS_COUNT);
-		int friendsCount=ih.getColumnIndex(UserInfo.FRIENDS_COUNT);
-		int favoritesCount=ih.getColumnIndex(UserInfo.FAVORITES_COUNT);
-		int statusesCount=ih.getColumnIndex(UserInfo.STATUSES_COUNT);
-		
-		int following=ih.getColumnIndex(UserInfo.FOLLOWING);
-		int notifications=ih.getColumnIndex(UserInfo.NOTIFICATIONS);
+		int name = ih.getColumnIndex(UserInfo.NAME);
+
+		int screenName = ih.getColumnIndex(UserInfo.SCREEN_NAME);
+		int location = ih.getColumnIndex(UserInfo.LOCATION);
+		int gender = ih.getColumnIndex(UserInfo.GENDER);
+		int birthday = ih.getColumnIndex(UserInfo.BIRTHDAY);
+
+		int description = ih.getColumnIndex(UserInfo.DESCRIPTION);
+		int profileImageUrl = ih.getColumnIndex(UserInfo.PROFILE_IMAGE_URL);
+		int url = ih.getColumnIndex(UserInfo.URL);
+		int protect = ih.getColumnIndex(UserInfo.PROTECTED);
+
+		int followersCount = ih.getColumnIndex(UserInfo.FOLLOWERS_COUNT);
+		int friendsCount = ih.getColumnIndex(UserInfo.FRIENDS_COUNT);
+		int favoritesCount = ih.getColumnIndex(UserInfo.FAVORITES_COUNT);
+		int statusesCount = ih.getColumnIndex(UserInfo.STATUSES_COUNT);
+
+		int following = ih.getColumnIndex(UserInfo.FOLLOWING);
+		int notifications = ih.getColumnIndex(UserInfo.NOTIFICATIONS);
 		int createdAt = ih.getColumnIndex(UserInfo.CREATED_AT);
-		int utcOffset=ih.getColumnIndex(UserInfo.UTC_OFFSET);
-		
-		int lastStatusId=ih.getColumnIndex(UserInfo.LAST_STATUS_ID);
-		int lastStatusText=ih.getColumnIndex(UserInfo.LAST_STATUS_TEXT);
-		int lastStatusCreatedAt=ih.getColumnIndex(UserInfo.LAST_STATUS_CREATED_AT);
-		
-		int type=ih.getColumnIndex(UserInfo.TYPE);
-		int timestamp=ih.getColumnIndex(UserInfo.TIMESTAMP);
-		
+		int utcOffset = ih.getColumnIndex(UserInfo.UTC_OFFSET);
+
+		int lastStatusId = ih.getColumnIndex(UserInfo.LAST_STATUS_ID);
+		int lastStatusText = ih.getColumnIndex(UserInfo.LAST_STATUS_TEXT);
+		int lastStatusCreatedAt = ih
+				.getColumnIndex(UserInfo.LAST_STATUS_CREATED_AT);
+
+		int type = ih.getColumnIndex(UserInfo.TYPE);
+		int timestamp = ih.getColumnIndex(UserInfo.TIMESTAMP);
+
 		try {
 			db.beginTransaction();
 			for (ContentValues value : values) {
@@ -424,31 +405,40 @@ public class FanFouProvider extends ContentProvider implements Contents {
 
 				ih.bind(id, value.getAsString(UserInfo.ID));
 				ih.bind(ownerId, value.getAsString(UserInfo.OWNER_ID));
-				
+
 				ih.bind(screenName, value.getAsString(UserInfo.SCREEN_NAME));
 				ih.bind(location, value.getAsString(UserInfo.LOCATION));
 				ih.bind(gender, value.getAsString(UserInfo.GENDER));
 				ih.bind(birthday, value.getAsString(UserInfo.BIRTHDAY));
-				
+
 				ih.bind(description, value.getAsString(UserInfo.DESCRIPTION));
-				ih.bind(profileImageUrl, value.getAsString(UserInfo.PROFILE_IMAGE_URL));
+				ih.bind(profileImageUrl,
+						value.getAsString(UserInfo.PROFILE_IMAGE_URL));
 				ih.bind(url, value.getAsString(UserInfo.URL));
 				ih.bind(protect, value.getAsBoolean(UserInfo.PROTECTED));
-				
-				ih.bind(followersCount, value.getAsInteger(UserInfo.FOLLOWERS_COUNT));
-				ih.bind(friendsCount, value.getAsInteger(UserInfo.FRIENDS_COUNT));
-				ih.bind(favoritesCount, value.getAsInteger(UserInfo.FAVORITES_COUNT));
-				ih.bind(statusesCount, value.getAsInteger(UserInfo.STATUSES_COUNT));
-				
+
+				ih.bind(followersCount,
+						value.getAsInteger(UserInfo.FOLLOWERS_COUNT));
+				ih.bind(friendsCount,
+						value.getAsInteger(UserInfo.FRIENDS_COUNT));
+				ih.bind(favoritesCount,
+						value.getAsInteger(UserInfo.FAVORITES_COUNT));
+				ih.bind(statusesCount,
+						value.getAsInteger(UserInfo.STATUSES_COUNT));
+
 				ih.bind(following, value.getAsBoolean(UserInfo.FOLLOWING));
-				ih.bind(notifications, value.getAsBoolean(UserInfo.NOTIFICATIONS));
+				ih.bind(notifications,
+						value.getAsBoolean(UserInfo.NOTIFICATIONS));
 				ih.bind(createdAt, value.getAsLong(UserInfo.CREATED_AT));
 				ih.bind(utcOffset, value.getAsInteger(UserInfo.UTC_OFFSET));
-				
-				if(value.containsKey(UserInfo.LAST_STATUS_CREATED_AT)){
-					ih.bind(lastStatusId, value.getAsString(UserInfo.LAST_STATUS_ID));
-					ih.bind(lastStatusText, value.getAsString(UserInfo.LAST_STATUS_TEXT));
-					ih.bind(lastStatusCreatedAt, value.getAsLong(UserInfo.LAST_STATUS_CREATED_AT));
+
+				if (value.containsKey(UserInfo.LAST_STATUS_CREATED_AT)) {
+					ih.bind(lastStatusId,
+							value.getAsString(UserInfo.LAST_STATUS_ID));
+					ih.bind(lastStatusText,
+							value.getAsString(UserInfo.LAST_STATUS_TEXT));
+					ih.bind(lastStatusCreatedAt,
+							value.getAsLong(UserInfo.LAST_STATUS_CREATED_AT));
 				}
 
 				ih.bind(type, value.getAsInteger(UserInfo.TYPE));
@@ -465,7 +455,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 			db.setTransactionSuccessful();
 			numInserted = values.length;
 		} catch (Exception e) {
-			if(App.DEBUG){
+			if (App.DEBUG) {
 				e.printStackTrace();
 			}
 		} finally {
@@ -561,7 +551,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 			db.setTransactionSuccessful();
 			numInserted = values.length;
 		} catch (Exception e) {
-			if(App.DEBUG){
+			if (App.DEBUG) {
 				e.printStackTrace();
 			}
 		} finally {

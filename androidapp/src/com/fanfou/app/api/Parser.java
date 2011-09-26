@@ -375,7 +375,7 @@ public final class Parser implements ResponseCode {
 	}
 
 	public static boolean parseBoolean(Cursor c, String columnName) {
-		return c.getInt(c.getColumnIndex(columnName)) > 0;
+		return c.getInt(c.getColumnIndex(columnName)) == 1;
 	}
 
 	public static Date parseDate(Cursor c, String columnName) {

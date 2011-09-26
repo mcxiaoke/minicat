@@ -106,7 +106,7 @@ public class EndlessListView extends ListView implements OnItemClickListener{
 		addFooterView(mLoadMoreView);
 
 		setCacheColorHint(0);
-		setBackgroundResource(R.drawable.bg);
+//		setBackgroundResource(R.drawable.bg);
 		setSelector(getResources().getDrawable(R.drawable.list_selector));
 		setDivider(getResources().getDrawable(R.drawable.separator));
 

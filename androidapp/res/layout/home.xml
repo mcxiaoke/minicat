@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res/com.fanfou.app"
 	android:layout_width="fill_parent" android:id="@+id/home"
-	android:layout_height="fill_parent" android:orientation="vertical">
+	android:layout_height="fill_parent" android:orientation="vertical" android:background="@drawable/bg">
 
 	<com.fanfou.app.ui.ActionBar android:id="@id/actionbar"
 		style="@style/ActionBar" android:layout_alignParentTop="true" />
@@ -10,15 +10,19 @@
 	<RelativeLayout android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:layout_below="@id/actionbar">
 
+		<com.fanfou.app.ui.viewpager.TitlePageIndicator
+			android:layout_alignParentTop="true" android:padding="10dp"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:id="@+id/viewindicator" 
+			android:background="#00000000"
+			app:textSize="12sp"
+			app:footerColor="@color/sky_blue" app:footerLineHeight="2dp"
+			app:footerIndicatorStyle="triangle" app:textColor="#FF999999"
+			app:selectedColor="#FF000000" app:selectedBold="false" />
+
 		<android.support.v4.view.ViewPager
 			android:layout_width="match_parent" android:layout_height="match_parent"
-			android:id="@+id/viewpager" />
-
-		<com.fanfou.app.ui.viewpager.CirclePageIndicator
-			android:layout_alignParentTop="true" android:padding="4dp"
-			android:layout_width="wrap_content" android:layout_alignParentRight="true"
-			android:layout_height="wrap_content" android:id="@+id/viewindicator"
-			app:radius="4dp" app:fillColor="#ff58caff" app:strokeColor="#FF999999" />
+			android:id="@+id/viewpager" android:layout_below="@id/viewindicator" />
 
 		<ImageView android:id="@+id/write_bottom" style="@style/Icon.Action"
 			android:src="@drawable/i_write_bottom" android:layout_margin="8dp" />

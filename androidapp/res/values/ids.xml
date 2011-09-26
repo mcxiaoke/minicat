@@ -5,6 +5,8 @@
 	<item type="id" name="actionbar_title" />
 	<item type="id" name="actionbar_left" />
 	<item type="id" name="actionbar_right" />
+	<item type="id" name="actionbar_refresh" />
+	<item type="id" name="actionbar_progress" />
 	<item type="id" name="actionbar_actions" />
 
 	<item type="id" name="item_user" />
