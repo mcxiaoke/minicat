@@ -5,8 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
@@ -15,9 +13,10 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.receiver.NetworkReceiver;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionBar.OnRefreshClickListener;
 import com.fanfou.app.ui.ActionManager;
@@ -29,7 +28,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.0 2011.09.25
  * 
  */
-public abstract class BaseActivity extends Activity implements OnRefreshClickListener {
+public abstract class BaseActivity extends Activity implements OnRefreshClickListener,OnClickListener {
 
 	public static final int STATE_INIT = 0;
 	public static final int STATE_NORMAL = 1;
@@ -261,6 +260,10 @@ public abstract class BaseActivity extends Activity implements OnRefreshClickLis
 	public void onRefreshClick() {
 	}
 
+	@Override
+	public void onClick(View v) {
+	}
+
 	protected void goBackHome() {
 		Intent intent = new Intent(mContext, HomePage.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -298,5 +301,9 @@ public abstract class BaseActivity extends Activity implements OnRefreshClickLis
 	private void doExit() {
 		Process.killProcess(Process.myPid());
 	}
+	
+	protected void startRefreshAnimation(){}
+	
+	protected void stopRefreshAnimation(){}
 
 }

@@ -19,10 +19,8 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.R;
-import com.fanfou.app.WritePage;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.service.DownloadService;
-import com.fanfou.app.util.DeviceHelper;
 
 /**
  * @author mcxiaoke

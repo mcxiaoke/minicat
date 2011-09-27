@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fanfou.app.R;
-import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.User;
 import com.fanfou.app.util.DateTimeHelper;
 

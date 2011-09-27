@@ -4,14 +4,11 @@ import java.util.List;
 
 import com.fanfou.app.App;
 import com.fanfou.app.R;
-import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.util.OptionHelper;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.BaseAdapter;

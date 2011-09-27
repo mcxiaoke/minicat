@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.ParseException;
-
 import android.content.Context;
 import android.util.Log;
 
@@ -20,7 +18,6 @@ import com.fanfou.app.http.Request;
 import com.fanfou.app.http.Response;
 import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke

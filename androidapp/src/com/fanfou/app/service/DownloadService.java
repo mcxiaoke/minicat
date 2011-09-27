@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -17,13 +15,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.RemoteViews;
-import android.widget.RemoteViews.RemoteView;
-
 import com.fanfou.app.App;
 import com.fanfou.app.HomePage;
 import com.fanfou.app.R;

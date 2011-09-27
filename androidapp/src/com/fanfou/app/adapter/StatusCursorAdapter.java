@@ -3,24 +3,18 @@ package com.fanfou.app.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-import android.text.Html;
 import android.text.TextPaint;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
-import com.fanfou.app.cache.ImageLoaderTask;
-import com.fanfou.app.cache.NewImageLoader;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.util.DateTimeHelper;
-import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StatusHelper;
 import com.fanfou.app.util.StringHelper;
 
@@ -30,7 +24,6 @@ import com.fanfou.app.util.StringHelper;
  * 
  */
 public class StatusCursorAdapter extends BaseCursorAdapter {
-	// private NewImageLoader tempLoader;
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -85,18 +78,15 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 
 	public StatusCursorAdapter(Context context, Cursor c) {
 		super(context, c, false);
-		// this.tempLoader = new NewImageLoader(context);
 	}
 
 	public StatusCursorAdapter(boolean colored, Context context, Cursor c) {
 		super(context, c, false);
 		this.colored = colored;
-		// this.tempLoader = new NewImageLoader(context);
 	}
 
 	public StatusCursorAdapter(Activity context, Cursor c, boolean autoRequery) {
 		super(context, c, autoRequery);
-		// this.tempLoader = new NewImageLoader(context);
 	}
 
 	private void setTextStyle(ViewHolder holder) {
@@ -130,16 +120,9 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 				row.setBackgroundColor(0x33999999);
 			}
 		}
-
-		// if (!fling) {
 		holder.headIcon.setTag(s.userProfileImageUrl);
 		mLoader.set(s.userProfileImageUrl, holder.headIcon,
 				R.drawable.default_head);
-
-		// ImageLoaderTask task=new ImageLoaderTask(s.userProfileImageUrl,
-		// holder.headIcon);
-		// tempLoader.set(task, R.drawable.default_head);
-		// }
 
 		if (StringHelper.isEmpty(s.inReplyToStatusId)) {
 			holder.replyIcon.setVisibility(View.GONE);

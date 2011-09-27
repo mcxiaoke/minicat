@@ -7,38 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
-import org.apache.http.ParseException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.params.ConnManagerParams;
-import org.apache.http.conn.params.ConnPerRoute;
-import org.apache.http.conn.routing.HttpRoute;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HTTP;
-
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
 import com.fanfou.app.App;
-import com.fanfou.app.auth.OAuth;
 import com.fanfou.app.http.Response;
 import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.NetworkHelper;

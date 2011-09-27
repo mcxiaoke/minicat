@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
@@ -31,12 +30,11 @@ import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.Action;
-import com.fanfou.app.ui.ActionBar.OnRefreshClickListener;
 import com.fanfou.app.ui.UIManager;
 import com.fanfou.app.ui.viewpager.TitlePageIndicator;
 import com.fanfou.app.ui.viewpager.TitleProvider;
-import com.fanfou.app.ui.widget.EndlessListView;
-import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
+import com.fanfou.app.ui.widget.EndlessListViewNoHeader;
+import com.fanfou.app.ui.widget.EndlessListViewNoHeader.OnLoadDataListener;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.Utils;
 
@@ -48,8 +46,7 @@ import com.fanfou.app.util.Utils;
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
-		OnRefreshListener, OnItemLongClickListener, OnClickListener,
-		TitleProvider {
+		OnLoadDataListener, OnItemLongClickListener,TitleProvider {
 
 	public static final int PAGE_NUMS = 4;
 
@@ -65,7 +62,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	private int mCurrentPage;
 
-	private EndlessListView[] views = new EndlessListView[PAGE_NUMS];
+	private EndlessListViewNoHeader[] views = new EndlessListViewNoHeader[PAGE_NUMS];
 	private Cursor[] cursors = new Cursor[PAGE_NUMS];
 	private BaseCursorAdapter[] adapters = new BaseCursorAdapter[PAGE_NUMS];
 	private static final String[] PAGE_TITLES = new String[] { "我的主页", "提到我的",
@@ -102,20 +99,38 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	 */
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setTitle(PAGE_TITLES[0]);
-		mActionBar.setTitleClickListener(this);
 		Intent intent = new Intent(mContext, WritePage.class);
 		Action action = new ActionBar.IntentAction(mContext, intent,
 				R.drawable.i_write);
+		mActionBar.setLeftAction(new HomeAction());
 		mActionBar.setRightAction(action);
-//		mActionBar.setRefreshEnabled(new OnRefreshClickListener() {
-//			
-//			@Override
-//			public void onRefreshClick() {
-//				
-//			}
-//		});
+		mActionBar.setRefreshEnabled(this);
 
+	}
+	
+	private class HomeAction extends ActionBar.AbstractAction{
+
+		public HomeAction() {
+			super(R.drawable.i_logo);
+		}
+
+		@Override
+		public void performAction(View view) {
+			goTop();
+		}
+		
+	}
+
+	@Override
+	protected void startRefreshAnimation() {
+		setBusy(true);
+		mActionBar.startAnimation();
+	}
+
+	@Override
+	protected void stopRefreshAnimation() {
+		setBusy(false);
+		mActionBar.stopAnimation();
 	}
 
 	private void setViewPager() {
@@ -139,7 +154,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		iWriteBottom.setOnClickListener(this);
 
 		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+				android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		final Float f = new Float(8 * App.me.density);
 		final int m = f.intValue();
 		lp.setMargins(m, m, m, m);
@@ -164,7 +179,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	 */
 	private void setListViews() {
 		for (int i = 0; i < views.length; i++) {
-			views[i] = new EndlessListView(this);
+			views[i] = new EndlessListViewNoHeader(this);
 			views[i].setOnRefreshListener(this);
 			if (i != 2) {
 				views[i].setOnItemLongClickListener(this);
@@ -212,8 +227,10 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 		boolean refresh = OptionHelper.readBoolean(this,
 				R.string.option_refresh_on_open, false);
+
 		if (cursors[0].getCount() == 0 || refresh) {
-			views[0].setRefreshing();
+			doRefresh();
+			startRefreshAnimation();
 		}
 	}
 
@@ -226,10 +243,18 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		}
 	}
 
+	private void restorePosition(int page) {
+		views[page].restorePosition();
+	}
+
 	private void savePosition() {
 		for (int i = 0; i < views.length; i++) {
 			views[i].savePosition();
 		}
+	}
+
+	private void savePosition(int page) {
+		views[page].savePosition();
 	}
 
 	private synchronized void setBusy(boolean busy) {
@@ -243,7 +268,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	 *            类型参数：Home/Mention/Message/Public
 	 */
 	private void doRetrieve(final int page, boolean doGetMore) {
-		setBusy(true);
 		Bundle b = new Bundle();
 		b.putInt(Commons.EXTRA_COUNT, 0);
 		b.putInt(Commons.EXTRA_PAGE, 0);
@@ -386,7 +410,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 		if (page == 0) {
 			cursors[page].requery();
-			views[page].setRefreshing();
 		}
 	}
 
@@ -436,35 +459,30 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 		@Override
 		protected void onReceiveResult(int resultCode, Bundle resultData) {
-			setBusy(false);	
+			setBusy(false);
 			switch (resultCode) {
 			case Commons.RESULT_CODE_FINISH:
 				if (doGetMore) {
-					if (i < 3) {
-						// int count = resultData.getInt(Commons.EXTRA_COUNT);
+					if (i < PAGE_NUMS - 1) {
 						views[i].onLoadMoreComplete();
-						// if (count < 20) {
-						// views[i].onNoLoadMore();
-						// } else {
-						// views[i].onLoadMoreComplete();
-						// }
 					}
 				} else {
-					views[i].onRefreshComplete();
-					if (i < 3) {
+					stopRefreshAnimation();
+					if (i < PAGE_NUMS - 1) {
 						views[i].addFooter();
 					}
 				}
 				cursors[i].requery();
 				break;
 			case Commons.RESULT_CODE_ERROR:
+
 				String errorMessage = resultData
 						.getString(Commons.EXTRA_ERROR_MESSAGE);
 				Utils.notify(mContext, errorMessage);
 				if (doGetMore) {
 					views[i].onLoadMoreComplete();
 				} else {
-					views[i].onRefreshComplete();
+					stopRefreshAnimation();
 				}
 				break;
 			default:
@@ -475,17 +493,12 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	@Override
-	public void onRefresh(EndlessListView view) {
-		doRefresh();
-	}
-
-	@Override
-	public void onLoadMore(EndlessListView view) {
+	public void onLoadMore(EndlessListViewNoHeader view) {
 		doGetMore();
 	}
 
 	@Override
-	public void onItemClick(EndlessListView view, int position) {
+	public void onItemClick(EndlessListViewNoHeader view, int position) {
 		final Cursor c = (Cursor) view.getItemAtPosition(position);
 		if (c == null) {
 			return;
@@ -555,7 +568,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	public void onPageSelected(int position) {
 		mCurrentPage = position;
 		mPageIndicator.onPageSelected(position);
-		mActionBar.setTitle(PAGE_TITLES[position]);
+		// mActionBar.setTitle(PAGE_TITLES[position]);
 	}
 
 	@Override
@@ -564,9 +577,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	@Override
 	public void onBackPressed() {
-		 super.onBackPressed();
+		super.onBackPressed();
 		// if(mCurrentPage==0){
-//		 super.onBackPressed();
+		// super.onBackPressed();
 		// }else{
 		// mViewPager.setCurrentItem(mCurrentPage-1);
 		// }
@@ -579,6 +592,13 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	@Override
 	public void onRefreshClick() {
+		if (App.DEBUG) {
+			log("onRefreshClick page=" + mCurrentPage);
+		}
+		if (isBusy) {
+			return;
+		}
+		startRefreshAnimation();
 		doRefresh();
 	}
 

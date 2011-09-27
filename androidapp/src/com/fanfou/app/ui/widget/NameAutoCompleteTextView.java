@@ -1,11 +1,8 @@
 package com.fanfou.app.ui.widget;
 
-import com.fanfou.app.App;
-
 import android.content.Context;
 import android.text.Editable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.MultiAutoCompleteTextView;
 
 /**

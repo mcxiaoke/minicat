@@ -7,20 +7,17 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.ResultReceiver;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.CursorAdapter;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 import com.fanfou.app.adapter.StatusCursorAdapter;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.UIManager;
@@ -30,8 +27,12 @@ import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
 
+/**
+ * @author mcxiaoke
+ *
+ */
 public class TimelinePage extends BaseActivity implements OnRefreshListener,
-		Action, OnItemLongClickListener, OnClickListener {
+		Action, OnItemLongClickListener {
 
 	protected ActionBar mActionBar;
 	protected EndlessListView mListView;
@@ -80,13 +81,13 @@ public class TimelinePage extends BaseActivity implements OnRefreshListener,
 
 	protected void initCursor() {
 		if (type == Status.TYPE_USER) {
-			String where = StatusInfo.TYPE + "=? AND " + StatusInfo.USER_ID
+			String where = BasicColumns.TYPE + "=? AND " + StatusInfo.USER_ID
 					+ "=?";
 			String[] whereArgs = new String[] { String.valueOf(type), userId };
 			mCursor = managedQuery(StatusInfo.CONTENT_URI, StatusInfo.COLUMNS,
 					where, whereArgs, null);
 		} else if (type == Status.TYPE_FAVORITES) {
-			String where = StatusInfo.TYPE + "=? AND " + StatusInfo.OWNER_ID
+			String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
 					+ "=?";
 			String[] whereArgs = new String[] { String.valueOf(type), userId };
 			mCursor = managedQuery(StatusInfo.CONTENT_URI, StatusInfo.COLUMNS,

@@ -7,11 +7,8 @@ import net.londatiga.android.QuickAction;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-
 import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Status;

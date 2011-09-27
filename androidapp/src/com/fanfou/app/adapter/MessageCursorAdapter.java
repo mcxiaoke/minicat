@@ -6,16 +6,12 @@ import android.text.TextPaint;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fanfou.app.R;
-import com.fanfou.app.adapter.StatusCursorAdapter.ViewHolder;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.util.DateTimeHelper;
-import com.fanfou.app.util.OptionHelper;
 
 /**
  * @author mcxiaoke

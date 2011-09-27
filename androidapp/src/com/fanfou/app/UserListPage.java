@@ -16,8 +16,8 @@ import com.fanfou.app.adapter.UserCursorAdapter;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
-import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.ActionBar.Action;
@@ -26,6 +26,10 @@ import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
 
+/**
+ * @author mcxiaoke
+ *
+ */
 public class UserListPage extends BaseActivity implements OnRefreshListener,
 		Action {
 
@@ -76,7 +80,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected void initCursor() {
-		String where = UserInfo.TYPE + "=? AND " + UserInfo.OWNER_ID + "=?";
+		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID + "=?";
 		String[] whereArgs = new String[] { String.valueOf(type), userId };
 		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				whereArgs, null);

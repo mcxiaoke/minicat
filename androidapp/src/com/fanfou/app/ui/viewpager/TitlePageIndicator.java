@@ -310,12 +310,13 @@ public class TitlePageIndicator extends View implements PageIndicator {
 
 		int page = mCurrentPage;
 		float offsetPercent;
-		if (mCurrentOffset <= halfWidth) {
+//		if (mCurrentOffset <= halfWidth) {
 			offsetPercent = 1.0f * mCurrentOffset / width;
-		} else {
-			page += 1;
-			offsetPercent = 1.0f * (width - mCurrentOffset) / width;
-		}
+//		} 
+//		else {
+//			page += 1;
+//			offsetPercent = 1.0f * (width - mCurrentOffset) / width;
+//		}
 		final boolean currentSelected = (offsetPercent <= SELECTION_FADE_PERCENTAGE);
 		final boolean currentBold = (offsetPercent <= BOLD_FADE_PERCENTAGE);
 		final float selectedPercent = (SELECTION_FADE_PERCENTAGE - offsetPercent)

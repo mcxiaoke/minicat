@@ -1,28 +1,9 @@
 package com.fanfou.app;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextPaint;
-import android.util.Log;
 import android.widget.TextView;
 
-import com.fanfou.app.api.ApiConfig;
-import com.fanfou.app.api.ApiException;
-import com.fanfou.app.api.Status;
-import com.fanfou.app.http.BasicClient;
-import com.fanfou.app.http.Request;
-import com.fanfou.app.http.Response;
-import com.fanfou.app.service.DownloadService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.util.StatusHelper;
 import com.fanfou.app.util.Utils;

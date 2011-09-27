@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -117,7 +116,7 @@ public class ViewPagerIndicator extends RelativeLayout implements PageIndicator 
 		this.mNextArrow = new ImageView(getContext());
 		this.mNextArrow.setImageDrawable(next);
 		
-		LinearLayout.LayoutParams arrowLayoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		LinearLayout.LayoutParams arrowLayoutParams = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		arrowLayoutParams.gravity = Gravity.CENTER;
 		
 		mPreviousGroup.removeAllViews();
@@ -145,13 +144,13 @@ public class ViewPagerIndicator extends RelativeLayout implements PageIndicator 
 		mCurrent = new TextView(getContext());
 		mNext = new TextView(getContext());
 		
-		RelativeLayout.LayoutParams previousParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		RelativeLayout.LayoutParams previousParams = new RelativeLayout.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		previousParams.addRule(RelativeLayout.ALIGN_LEFT);
 		
-		RelativeLayout.LayoutParams currentParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		RelativeLayout.LayoutParams currentParams = new RelativeLayout.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		currentParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
 		
-		RelativeLayout.LayoutParams nextParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		RelativeLayout.LayoutParams nextParams = new RelativeLayout.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		nextParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		
 		// Groups holding text and arrows
@@ -160,8 +159,8 @@ public class ViewPagerIndicator extends RelativeLayout implements PageIndicator 
 		mNextGroup = new LinearLayout(getContext());
 		mNextGroup.setOrientation(LinearLayout.HORIZONTAL);
 		
-		mPreviousGroup.addView(mPrevious, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		mNextGroup.addView(mNext, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		mPreviousGroup.addView(mPrevious, new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
+		mNextGroup.addView(mNext, new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 		
 		addView(mPreviousGroup, previousParams);
 		addView(mCurrent, currentParams);
@@ -263,7 +262,7 @@ public class ViewPagerIndicator extends RelativeLayout implements PageIndicator 
 		offset = Math.abs(offset);
 		// Initial condition: offset is always 0, this.getWidth is also 0! 0/0 = NaN
 		int width = this.getWidth();
-		float fraction = width == 0 ? 0 : offset / ((float)width / 4.0f);
+		float fraction = width == 0 ? 0 : offset / (width / 4.0f);
 		fraction = Math.min(1, fraction);
 		int r = (int)(mUnfocusedTextColor[0] * fraction + mFocusedTextColor[0] * (1 - fraction));
 		int g = (int)(mUnfocusedTextColor[1] * fraction + mFocusedTextColor[1] * (1 - fraction));

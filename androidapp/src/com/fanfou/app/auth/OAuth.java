@@ -28,9 +28,7 @@ import android.util.Log;
 import com.fanfou.app.App;
 import com.fanfou.app.api.ApiConfig;
 import com.fanfou.app.api.ApiException;
-import com.fanfou.app.api.Parser;
 import com.fanfou.app.http.Parameter;
-import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.Base64;
 
 public class OAuth {

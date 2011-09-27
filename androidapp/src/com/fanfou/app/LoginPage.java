@@ -1,13 +1,10 @@
 package com.fanfou.app;
 
 import java.io.IOException;
-import java.util.Date;
-
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -31,16 +28,12 @@ import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.ui.TextChangeListener;
-import com.fanfou.app.util.Base64;
-import com.fanfou.app.util.CryptoHelper;
-import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.DeviceHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
-public final class LoginPage extends BaseActivity implements
-		View.OnClickListener {
+public final class LoginPage extends BaseActivity {
 
 	private GoogleAnalyticsTracker g;
 

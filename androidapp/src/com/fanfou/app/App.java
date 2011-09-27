@@ -1,10 +1,5 @@
 package com.fanfou.app;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
@@ -25,8 +20,8 @@ import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.ApiImpl;
 import com.fanfou.app.api.User;
-import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.cache.IImageLoader;
+import com.fanfou.app.cache.NewImageLoader;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.http.NetworkState;
 import com.fanfou.app.http.NetworkState.Type;
@@ -83,20 +78,6 @@ public class App extends Application {
 	
 	
 	public static final boolean DEBUG = true;
-
-	public static final int CORE_POOL_SIZE = 5;
-
-	public static final ThreadFactory sThreadFactory = new ThreadFactory() {
-		private final AtomicInteger mCount = new AtomicInteger(1);
-
-		@Override
-		public Thread newThread(Runnable r) {
-			return new Thread(r, "fanfouapp thread #" + mCount.getAndIncrement());
-		}
-	};
-
-	public final ExecutorService executor = Executors.newFixedThreadPool(
-			CORE_POOL_SIZE, sThreadFactory);
 
 	public static App me;
 
@@ -155,7 +136,7 @@ public class App extends Application {
 	private void init() {
 		App.me = this;
 		ACRA.init(this);
-		this.imageLoader = new ImageLoader(this);
+		this.imageLoader = new NewImageLoader(this);
 		this.api = new ApiImpl(this);
 
 		if (DEBUG) {
@@ -258,7 +239,7 @@ public class App extends Application {
 				}
 			}
 		};
-		executor.submit(task);
+		task.start();
 	}
 
 	public void initAutoUpdate() {
@@ -271,7 +252,7 @@ public class App extends Application {
 					AutoUpdateManager.checkUpdate(App.me);
 				}
 			};
-			executor.submit(task);
+			task.start();
 		}
 	}
 

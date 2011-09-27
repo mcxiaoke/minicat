@@ -1,28 +1,15 @@
 ﻿package com.fanfou.app.util;
 
 import java.io.File;
-import java.net.URL;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
-import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
@@ -34,23 +21,13 @@ import android.widget.RelativeLayout.LayoutParams;
 
 import com.fanfou.app.AboutPage;
 import com.fanfou.app.App;
-import com.fanfou.app.MyProfilePage;
 import com.fanfou.app.PhotoViewPage;
-import com.fanfou.app.R;
 import com.fanfou.app.SendPage;
 import com.fanfou.app.StatusPage;
-import com.fanfou.app.ProfilePage;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
-import com.fanfou.app.api.User;
-import com.fanfou.app.config.ACTION;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.db.Contents.UserInfo;
-import com.fanfou.app.receiver.AlarmReceiver;
-import com.fanfou.app.service.CleanService;
 import com.fanfou.app.service.FetchService;
-import com.fanfou.app.service.NotificationService;
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 /**
  * 

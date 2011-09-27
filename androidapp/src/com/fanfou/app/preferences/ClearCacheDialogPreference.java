@@ -1,14 +1,10 @@
 package com.fanfou.app.preferences;
 
 import com.fanfou.app.App;
-import com.fanfou.app.db.Contents.DirectMessageInfo;
-import com.fanfou.app.db.Contents.StatusInfo;
-import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.Utils;
 
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -75,6 +71,7 @@ public class ClearCacheDialogPreference extends DialogPreference {
 
 		private void clean(Context context) {
 			IOHelper.ClearCache(context);
+			// TODO : clear memory cache
 		}
 	}
 

@@ -5,15 +5,11 @@ import java.util.List;
 
 import android.app.SearchManager;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -21,18 +17,21 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import com.fanfou.app.adapter.StatusArrayAdapter;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Status;
-import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.UIManager;
 import com.fanfou.app.ui.ActionBar.Action;
+import com.fanfou.app.ui.UIManager;
 import com.fanfou.app.ui.widget.EndlessListView;
 import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
 
+/**
+ * @author mcxiaoke
+ *
+ */
 public class SearchResultsPage extends BaseActivity implements
-		OnRefreshListener, Action,OnItemLongClickListener,OnClickListener {
+		OnRefreshListener, Action,OnItemLongClickListener {
 
 	protected ActionBar mActionBar;
 	protected EndlessListView mListView;
@@ -192,6 +191,7 @@ public class SearchResultsPage extends BaseActivity implements
 		protected void onPreExecute() {
 		}
 
+		@Override
 		protected void onPostExecute(List<com.fanfou.app.api.Status> result) {
 			if (!showListView) {
 				showContent();

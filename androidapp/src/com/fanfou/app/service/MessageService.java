@@ -1,7 +1,5 @@
 package com.fanfou.app.service;
 
-import java.io.File;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,19 +9,12 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.R;
-import com.fanfou.app.SendPage;
-import com.fanfou.app.WritePage;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
-import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.http.Response;
 import com.fanfou.app.http.ResponseCode;
-import com.fanfou.app.util.ImageHelper;
-import com.fanfou.app.util.OptionHelper;
-import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -91,7 +82,7 @@ public class MessageService extends BaseIntentService {
 						+ e.getMessage());
 				e.printStackTrace();
 			}		
-			if(e.statusCode>=500||e.statusCode==Response.ERROR_NOT_CONNECTED){
+			if(e.statusCode>=500||e.statusCode==ResponseCode.ERROR_NOT_CONNECTED){
 				showRetryNotification("错误：" + e.getMessage());
 			}else{
 				showFailedNotification("私信发送失败", e.getMessage());

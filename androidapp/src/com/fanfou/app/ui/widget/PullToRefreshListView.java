@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.AbsListView;
@@ -75,14 +76,14 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     private void init(Context context) {
         // Load all of the animations we need in code rather than through XML
         mFlipAnimation = new RotateAnimation(0, -180,
-                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
-                RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
         mFlipAnimation.setInterpolator(new LinearInterpolator());
         mFlipAnimation.setDuration(250);
         mFlipAnimation.setFillAfter(true);
         mReverseFlipAnimation = new RotateAnimation(-180, 0,
-                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
-                RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
         mReverseFlipAnimation.setInterpolator(new LinearInterpolator());
         mReverseFlipAnimation.setDuration(250);
         mReverseFlipAnimation.setFillAfter(true);

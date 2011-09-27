@@ -3,7 +3,6 @@ package com.fanfou.app.adapter;
 import java.util.List;
 
 import com.fanfou.app.R;
-import com.fanfou.app.adapter.StatusArrayAdapter.ViewHolder;
 import com.fanfou.app.api.Search;
 
 import android.content.Context;

@@ -5,9 +5,8 @@
 
 	<ImageView android:id="@id/actionbar_left"
 		android:layout_marginLeft="3dp" android:layout_centerVertical="true"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentLeft="true" android:src="@drawable/i_logo" />
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_alignParentLeft="true" />
 
 	<TextView android:id="@id/actionbar_title"
 		android:layout_centerInParent="true" android:layout_width="wrap_content"
@@ -15,18 +14,9 @@
 		android:paddingLeft="10dp" android:paddingRight="10dp"
 		android:textColor="@color/solid_white" />
 
-	<LinearLayout android:layout_width="wrap_content"
-		android:layout_height="@dimen/actionbar_height" android:orientation="horizontal"
-		android:layout_toLeftOf="@id/actionbar_right" android:gravity="center" >
-
-		<ProgressBar android:id="@id/actionbar_progress"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			style="@android:style/Widget.ProgressBar.Small" android:visibility="gone" android:layout_marginRight="10dp" />
-
-		<ImageView android:id="@id/actionbar_refresh" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:scaleType="centerInside"/>
-
-	</LinearLayout>
+	<ImageView android:id="@id/actionbar_refresh"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_toLeftOf="@id/actionbar_right" />
 
 	<ImageView android:id="@id/actionbar_right"
 		android:layout_alignParentRight="true" android:layout_width="wrap_content"

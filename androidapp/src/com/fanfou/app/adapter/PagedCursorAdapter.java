@@ -16,13 +16,10 @@
 
 package com.fanfou.app.adapter;
 
-import java.util.Arrays;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FilterQueryProvider;
@@ -65,6 +62,7 @@ public class PagedCursorAdapter extends SimpleCursorAdapter implements FilterQue
 		return super.getView(position, convertView, parent);
 	}
 
+	@Override
 	public Cursor runQuery(CharSequence constraint) {
 		if (constraint != null) {
 			if (mSortOrder.indexOf("LIMIT 0,") > 0) {

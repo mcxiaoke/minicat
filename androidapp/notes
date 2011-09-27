@@ -563,3 +563,10 @@
 移动drawalbe-mdpi的通知栏图标到默认的drawable文件夹
 修改图片缓存接口的名字
 
+20110926
+修改ActionBar，未完成
+
+20110927
+修改ActionBar，添加新的导航栏，使用通用刷新按钮和动画
+修改ListView去掉了Header刷新，修改对应的刷新逻辑
+添加通用刷新机制，目前只有HomePage实现了

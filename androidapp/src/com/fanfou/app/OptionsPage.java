@@ -3,27 +3,26 @@ package com.fanfou.app;
 import com.fanfou.app.update.AutoUpdateManager;
 import com.fanfou.app.update.VersionInfo;
 import com.fanfou.app.util.AlarmHelper;
-import com.fanfou.app.util.DeviceHelper;
-import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.Utils;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.util.Log;
 
+/**
+ * @author mcxiaoke
+ *
+ */
 public class OptionsPage extends PreferenceActivity implements
 		OnPreferenceClickListener, OnSharedPreferenceChangeListener {
 	public static final String TAG="OptionsPage";

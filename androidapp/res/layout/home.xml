@@ -2,23 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res/com.fanfou.app"
 	android:layout_width="fill_parent" android:id="@+id/home"
-	android:layout_height="fill_parent" android:orientation="vertical" android:background="@drawable/bg">
+	android:layout_height="fill_parent" android:orientation="vertical" >
 
 	<com.fanfou.app.ui.ActionBar android:id="@id/actionbar"
 		style="@style/ActionBar" android:layout_alignParentTop="true" />
 
 	<RelativeLayout android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:layout_below="@id/actionbar">
+		android:layout_height="fill_parent" android:layout_below="@id/actionbar" >
 
 		<com.fanfou.app.ui.viewpager.TitlePageIndicator
-			android:layout_alignParentTop="true" android:padding="10dp"
-			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_alignParentTop="true" android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:id="@+id/viewindicator" 
-			android:background="#00000000"
+			android:background="@drawable/navbar_bg"
 			app:textSize="12sp"
-			app:footerColor="@color/sky_blue" app:footerLineHeight="2dp"
-			app:footerIndicatorStyle="triangle" app:textColor="#FF999999"
-			app:selectedColor="#FF000000" app:selectedBold="false" />
+			app:footerColor="@color/sky_blue" 
+			app:footerLineHeight="0dp"
+			app:footerIndicatorHeight="2dp" 
+			app:footerIndicatorStyle="underline" 
+			app:textColor="#FF999999"
+			app:selectedColor="#FF333333" 
+			app:selectedBold="false" />
 
 		<android.support.v4.view.ViewPager
 			android:layout_width="match_parent" android:layout_height="match_parent"

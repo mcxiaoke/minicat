@@ -11,13 +11,10 @@ import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
-import com.fanfou.app.util.OptionHelper;
-import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.Utils;
-
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
@@ -85,7 +82,7 @@ public class FetchService extends BaseIntentService {
 
 	private void cleanUsers(String userId, int type) {
 		ContentResolver cr = getContentResolver();
-		String where = UserInfo.OWNER_ID + "=? AND " + UserInfo.TYPE + "=? ";
+		String where = BasicColumns.OWNER_ID + "=? AND " + BasicColumns.TYPE + "=? ";
 		String[] whereArgs = new String[] { userId, String.valueOf(type) };
 		int result = cr.delete(UserInfo.CONTENT_URI, where, whereArgs);
 		if (App.DEBUG)
@@ -133,7 +130,7 @@ public class FetchService extends BaseIntentService {
 	private void insertAutoComplete(List<User> users) {
 		if (users != null && users.size() > 0) {
 			ContentResolver cr = getContentResolver();
-			String where = UserInfo.TYPE + "='" + User.AUTO_COMPLETE + "'";
+			String where = BasicColumns.TYPE + "='" + User.AUTO_COMPLETE + "'";
 			int size = users.size();
 			if (App.DEBUG)
 				log("doFetchAutoComplete size=" + size);
@@ -238,7 +235,7 @@ public class FetchService extends BaseIntentService {
 			where = StatusInfo.USER_ID + "=?";
 			whereArgs = new String[] { userId };
 		} else if (mType == Status.TYPE_FAVORITES) {
-			where = StatusInfo.OWNER_ID + "=?";
+			where = BasicColumns.OWNER_ID + "=?";
 			whereArgs = new String[] { userId };
 		}
 		int result = getContentResolver().delete(cleanUri, where, whereArgs);

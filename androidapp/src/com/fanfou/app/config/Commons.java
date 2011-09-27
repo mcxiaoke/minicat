@@ -3,8 +3,6 @@
  */
 package com.fanfou.app.config;
 
-import com.fanfou.app.api.ApiConfig;
-
 /**
  *  Common Constants
  * @author mcxiaoke

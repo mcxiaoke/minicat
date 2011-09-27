@@ -11,19 +11,14 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.provider.MediaStore;
-import android.provider.MediaStore.MediaColumns;
 import android.text.Selection;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AutoCompleteTextView;
 import android.widget.CursorAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 
 import com.fanfou.app.adapter.AutoCompleteCursorAdapter;
@@ -31,6 +26,7 @@ import com.fanfou.app.adapter.SpaceTokenizer;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.service.PostService;
 import com.fanfou.app.ui.ActionBar;
@@ -44,7 +40,11 @@ import com.fanfou.app.util.StatusHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
 
-public class WritePage extends BaseActivity implements OnClickListener {
+/**
+ * @author mcxiaoke
+ *
+ */
+public class WritePage extends BaseActivity {
 
 	private static final String tag = WritePage.class.getSimpleName();
 
@@ -264,9 +264,9 @@ public class WritePage extends BaseActivity implements OnClickListener {
 		mAutoCompleteTextView.setThreshold(1);
 		mAutoCompleteTextView.setDropDownBackgroundResource(R.drawable.bg);
 		mAutoCompleteTextView.setDropDownAnchor(R.id.write_text);
-		String[] projection = new String[] { UserInfo._ID, UserInfo.ID,
+		String[] projection = new String[] { BaseColumns._ID, BasicColumns.ID,
 				UserInfo.SCREEN_NAME };
-		String where = UserInfo.TYPE + " = '" + User.AUTO_COMPLETE + "'";
+		String where = BasicColumns.TYPE + " = '" + User.AUTO_COMPLETE + "'";
 		Cursor c = managedQuery(UserInfo.CONTENT_URI, projection, where, null,
 				null);
 		mAdapter = new AutoCompleteCursorAdapter(this, c);

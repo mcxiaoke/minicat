@@ -1,8 +1,5 @@
 package com.fanfou.app.fragment;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;

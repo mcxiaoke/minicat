@@ -1,7 +1,6 @@
 package com.fanfou.app;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import com.fanfou.app.adapter.SearchAdapter;
@@ -17,12 +16,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 

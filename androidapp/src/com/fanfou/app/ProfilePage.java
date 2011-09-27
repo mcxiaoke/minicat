@@ -1,8 +1,6 @@
 package com.fanfou.app;
 
-import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
-import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.config.ACTION;
 import com.fanfou.app.config.Commons;
@@ -14,7 +12,6 @@ import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,9 +22,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.view.ViewStub;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -40,8 +34,7 @@ import android.widget.Toast;
  * @version 1.0 2011.07.18
  * 
  */
-public class ProfilePage extends BaseActivity implements OnClickListener,
-		Action {
+public class ProfilePage extends BaseActivity implements Action {
 
 	private ScrollView mScrollView;
 	private View mEmptyView;

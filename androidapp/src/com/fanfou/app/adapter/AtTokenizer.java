@@ -10,6 +10,7 @@ import android.widget.MultiAutoCompleteTextView.Tokenizer;
  */
 public class AtTokenizer implements Tokenizer {
 
+	@Override
 	public int findTokenStart(CharSequence text, int cursor) {
 		int i = cursor;
 		while (i > 0 && text.charAt(i - 1) != '@')
@@ -19,6 +20,7 @@ public class AtTokenizer implements Tokenizer {
 		return i;
 	}
 
+	@Override
 	public int findTokenEnd(CharSequence text, int cursor) {
 		int i = cursor;
 		int len = text.length();
@@ -35,6 +37,7 @@ public class AtTokenizer implements Tokenizer {
 	/**
 	 * @see android.widget.MultiAutoCompleteTextView.Tokenizer#terminateToken(java.lang.CharSequence)
 	 */
+	@Override
 	public CharSequence terminateToken(CharSequence text) {
 		int i = text.length();
 		while (i > 0 && text.charAt(i - 1) == ' ')

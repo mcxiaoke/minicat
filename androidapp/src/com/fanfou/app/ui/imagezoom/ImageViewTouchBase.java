@@ -101,6 +101,7 @@ public class ImageViewTouchBase extends ImageView implements IDisposable {
 		if ( viewWidth <= 0 ) {
 			mOnLayoutRunnable = new Runnable() {
 				
+				@Override
 				public void run()
 				{
 					setImageBitmapReset( bitmap.getBitmap(), bitmap.getRotation(), reset );
@@ -345,6 +346,7 @@ public class ImageViewTouchBase extends ImageView implements IDisposable {
 			float	old_x	= 0;
 			float	old_y	= 0;
 			
+			@Override
 			public void run()
 			{
 				long now = System.currentTimeMillis();
@@ -372,6 +374,7 @@ public class ImageViewTouchBase extends ImageView implements IDisposable {
 		final float oldScale = getScale();
 		mHandler.post( new Runnable() {
 			
+			@Override
 			public void run()
 			{
 				long now = System.currentTimeMillis();
@@ -387,6 +390,7 @@ public class ImageViewTouchBase extends ImageView implements IDisposable {
 		} );
 	}
 	
+	@Override
 	public void dispose()
 	{
 		if ( mBitmapDisplayed.getBitmap() != null ) {

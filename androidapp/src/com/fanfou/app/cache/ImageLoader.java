@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -33,16 +36,29 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.0 20110601
  * 
  */
-public class ImageLoader implements IImageLoader{
+public class ImageLoader implements IImageLoader {
 
 	public static final String TAG = ImageLoader.class.getSimpleName();
 
 	private static final String PARAM_URL = "url";
-	private static final String PARAM_BITMAP = "image";
 	private static final int MESSAGE_FINISH = 0;
 	private static final int MESSAGE_ERROR = 1;
 
-	private final ExecutorService executor;
+	public static final int CORE_POOL_SIZE = 5;
+
+	public static final ThreadFactory sThreadFactory = new ThreadFactory() {
+		private final AtomicInteger mCount = new AtomicInteger(1);
+
+		@Override
+		public Thread newThread(Runnable r) {
+			return new Thread(r, "fanfouapp thread #"
+					+ mCount.getAndIncrement());
+		}
+	};
+
+	public final ExecutorService mExecutorService = Executors
+			.newFixedThreadPool(CORE_POOL_SIZE, sThreadFactory);
+	
 	private final BlockingQueue<String> queue = new LinkedBlockingQueue<String>();
 	public ImageCache cache;
 	private Handler handler;
@@ -54,13 +70,12 @@ public class ImageLoader implements IImageLoader{
 		this.cache = new ImageCache(context);
 		this.callbacks = new Callbacks();
 		this.handler = new ImageDownloadHandler(cache, callbacks);
-		this.executor = App.me.executor;
-		this.queuePool = new QueueRunnable(queue, executor, handler);
-		this.executor.submit(queuePool);
+		this.queuePool = new QueueRunnable(queue, mExecutorService, handler);
+		this.mExecutorService.submit(queuePool);
 	}
 
 	@Override
-	public Bitmap load(String key, ImageLoaderListener callback) {
+	public Bitmap load(String key, ImageLoaderCallback callback) {
 		if (key != null) {
 			return loadAndFetch(key, callback);
 		}
@@ -68,7 +83,7 @@ public class ImageLoader implements IImageLoader{
 
 	}
 
-	private Bitmap loadAndFetch(String key, ImageLoaderListener callback) {
+	private Bitmap loadAndFetch(String key, ImageLoaderCallback callback) {
 		Bitmap bitmap = null;
 		if (cache.containsKey(key)) {
 			bitmap = cache.get(key);
@@ -108,12 +123,10 @@ public class ImageLoader implements IImageLoader{
 						bitmap, 6));
 			} else {
 				imageView.setImageResource(iconId);
-				ImageLoaderListener callback = new ImageLoaderListener() {
+				ImageLoaderCallback callback = new ImageLoaderCallback() {
 
 					@Override
-					public void onFinish(String key) {
-
-						Bitmap bitmap = cache.get(key);
+					public void onFinish(String key, Bitmap bitmap) {
 						if (bitmap != null) {
 							imageView.setImageBitmap(ImageHelper
 									.getRoundedCornerBitmap(bitmap, 6));
@@ -150,12 +163,10 @@ public class ImageLoader implements IImageLoader{
 			if (bitmap != null) {
 				imageView.setImageBitmap(bitmap);
 			} else {
-				ImageLoaderListener callback = new ImageLoaderListener() {
+				ImageLoaderCallback callback = new ImageLoaderCallback() {
 
 					@Override
-					public void onFinish(String key) {
-
-						Bitmap bitmap = cache.get(key);
+					public void onFinish(String key, Bitmap bitmap) {
 						if (bitmap != null) {
 							imageView.setImageBitmap(bitmap);
 						} else {
@@ -242,7 +253,7 @@ public class ImageLoader implements IImageLoader{
 				Bitmap bitmap = downloadImage(url);
 				final Message message = handler.obtainMessage(MESSAGE_FINISH);
 				message.getData().putString(PARAM_URL, url);
-				message.obj=bitmap;
+				message.obj = bitmap;
 				handler.sendMessage(message);
 			} else {
 			}
@@ -290,7 +301,7 @@ public class ImageLoader implements IImageLoader{
 			case MESSAGE_FINISH:
 				Bitmap bitmap = (Bitmap) msg.obj;
 				cache.put(url, bitmap);
-				callbacks.call(url);
+				callbacks.call(url, bitmap);
 				break;
 			case MESSAGE_ERROR:
 				break;
@@ -304,13 +315,13 @@ public class ImageLoader implements IImageLoader{
 
 	static class Callbacks {
 		private static final String TAG = "ImageLoaded";
-		private ConcurrentHashMap<String, List<ImageLoaderListener>> mCallbackMap;
+		private ConcurrentHashMap<String, List<ImageLoaderCallback>> mCallbackMap;
 
 		public Callbacks() {
-			mCallbackMap = new ConcurrentHashMap<String, List<ImageLoaderListener>>();
+			mCallbackMap = new ConcurrentHashMap<String, List<ImageLoaderCallback>>();
 		}
 
-		public void put(String url, ImageLoaderListener callback) {
+		public void put(String url, ImageLoaderCallback callback) {
 			if (StringHelper.isEmpty(url) || callback == null) {
 				if (App.DEBUG)
 					Log.d(TAG, "url or callback is null");
@@ -320,22 +331,22 @@ public class ImageLoader implements IImageLoader{
 				Log.d(TAG, "ImageLoaded.put url=" + url);
 			}
 			if (!mCallbackMap.containsKey(url)) {
-				mCallbackMap.put(url, new ArrayList<ImageLoaderListener>());
+				mCallbackMap.put(url, new ArrayList<ImageLoaderCallback>());
 			}
 
-			List<ImageLoaderListener> callbacks = mCallbackMap.get(url);
+			List<ImageLoaderCallback> callbacks = mCallbackMap.get(url);
 			if (callbacks != null) {
 				callbacks.add(callback);
 			}
 		}
 
-		public void call(String url) {
-			List<ImageLoaderListener> callbackList = mCallbackMap.get(url);
+		public void call(String url, Bitmap bitmap) {
+			List<ImageLoaderCallback> callbackList = mCallbackMap.get(url);
 			if (callbackList != null) {
-				for (ImageLoaderListener callback : callbackList) {
+				for (ImageLoaderCallback callback : callbackList) {
 					if (callback != null) {
 						if (url != null) {
-							callback.onFinish(url);
+							callback.onFinish(url,bitmap);
 						} else {
 							callback.onError("load image error.");
 						}

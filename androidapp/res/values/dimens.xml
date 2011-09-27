@@ -20,7 +20,7 @@
 
 
 
-	<dimen name="actionbar_height">44dp</dimen>
+	<dimen name="actionbar_height">40dp</dimen>
 	<dimen name="actionbar_item_height">40dp</dimen>
 	<dimen name="actionbar_item_width">40dp</dimen>
 

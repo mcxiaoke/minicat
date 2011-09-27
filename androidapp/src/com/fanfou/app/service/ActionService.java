@@ -183,7 +183,7 @@ public class ActionService extends BaseIntentService {
 				} else {
 					u.type = User.TYPE_NONE;
 					ContentResolver cr = getContentResolver();
-					cr.delete(UserInfo.CONTENT_URI, UserInfo.ID+"=?", new String[]{id});
+					cr.delete(UserInfo.CONTENT_URI, BasicColumns.ID+"=?", new String[]{id});
 					
 //					ContentValues values = new ContentValues();
 //					values.put(UserInfo.FOLLOWING, u.following);

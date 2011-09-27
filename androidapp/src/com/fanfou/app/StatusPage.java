@@ -8,14 +8,13 @@ import android.os.ResultReceiver;
 import android.text.TextPaint;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fanfou.app.api.Status;
 import com.fanfou.app.cache.IImageLoader;
-import com.fanfou.app.cache.ImageLoaderListener;
+import com.fanfou.app.cache.IImageLoader.ImageLoaderCallback;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.service.ActionService;
 import com.fanfou.app.ui.ActionBar;
@@ -32,8 +31,7 @@ import com.fanfou.app.util.Utils;
  * @author mcxiaoke
  * 
  */
-public class StatusPage extends BaseActivity implements OnClickListener,
-		ActionManager.ResultListener {
+public class StatusPage extends BaseActivity implements ActionManager.ResultListener {
 
 	@Override
 	protected void onResume() {
@@ -248,12 +246,11 @@ public class StatusPage extends BaseActivity implements OnClickListener,
 	}
 
 	private void doShowBigPicture() {
-		ImageLoaderListener callback = new ImageLoaderListener() {
+		ImageLoaderCallback callback = new ImageLoaderCallback() {
 
 			@Override
-			public void onFinish(String key) {
+			public void onFinish(String key, Bitmap bitmap) {
 				iPhoto.setOnClickListener(null);
-				Bitmap bitmap=App.me.imageLoader.load(key);
 				if(bitmap!=null){
 					iPhoto.setImageBitmap(bitmap);
 				}

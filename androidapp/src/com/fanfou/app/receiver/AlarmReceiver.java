@@ -2,8 +2,6 @@ package com.fanfou.app.receiver;
 
 import com.fanfou.app.App;
 import com.fanfou.app.R;
-import com.fanfou.app.R.string;
-import com.fanfou.app.service.CleanService;
 import com.fanfou.app.util.OptionHelper;
 
 import android.content.BroadcastReceiver;

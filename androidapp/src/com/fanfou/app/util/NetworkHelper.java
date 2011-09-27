@@ -18,9 +18,7 @@ import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.HttpVersion;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRoute;
@@ -39,21 +37,18 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
-
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.text.format.DateUtils;
+import android.util.Log;
 
 import com.fanfou.app.App;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.http.GzipResponseInterceptor;
 import com.fanfou.app.http.NetworkState;
 import com.fanfou.app.http.RequestRetryHandler;
 import com.fanfou.app.http.NetworkState.Type;
-import com.fanfou.app.update.VersionInfo;
 
 /**
  * @author mcxiaoke
@@ -61,7 +56,7 @@ import com.fanfou.app.update.VersionInfo;
  * 
  */
 public final class NetworkHelper {
-	
+
 	public static final int SOCKET_BUFFER_SIZE = 8192;
 	public static final int CONNECTION_TIMEOUT_MS = 20000;
 	public static final int SOCKET_TIMEOUT_MS = 20000;
@@ -218,20 +213,29 @@ public final class NetworkHelper {
 			return -1;
 		}
 	}
-	
-	public static void setProxy(HttpParams params,NetworkState.Type type){
+
+	public static void setProxy(HttpParams params, NetworkState.Type type) {
 		if (type == Type.CTWAP) {
+			if (App.DEBUG) {
+				Log.d("setProxy", "set proxy for ctwap");
+			}
 			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
 					"10.0.0.200", 80));
 		} else if (type == Type.WAP) {
+			if (App.DEBUG) {
+				Log.d("setProxy", "set proxy for wap");
+			}
 			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
 					"10.0.0.172", 80));
-		}else{
+		} else {
+			if (App.DEBUG) {
+				Log.d("setProxy", "set no proxy");
+			}
 			params.removeParameter(ConnRoutePNames.DEFAULT_PROXY);
 		}
 	}
-	
-	public static DefaultHttpClient setHttpClient(){
+
+	public static DefaultHttpClient setHttpClient() {
 		ConnPerRoute connPerRoute = new ConnPerRoute() {
 			@Override
 			public int getMaxForRoute(HttpRoute route) {
@@ -250,7 +254,8 @@ public final class NetworkHelper {
 		SchemeRegistry schReg = new SchemeRegistry();
 		schReg.register(new Scheme("http", PlainSocketFactory
 				.getSocketFactory(), 80));
-		schReg.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+		schReg.register(new Scheme("https",
+				SSLSocketFactory.getSocketFactory(), 443));
 		ClientConnectionManager manager = new ThreadSafeClientConnManager(
 				params, schReg);
 		DefaultHttpClient client = new DefaultHttpClient(manager, params);

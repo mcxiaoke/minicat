@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,7 +23,11 @@ import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.util.Utils;
 
-public class SendPage extends BaseActivity implements OnClickListener {
+/**
+ * @author mcxiaoke
+ *
+ */
+public class SendPage extends BaseActivity {
 
 	private static final String TAG = SendPage.class.getSimpleName();
 

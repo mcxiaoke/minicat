@@ -9,14 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.fanfou.app.App;
 import com.fanfou.app.R;
-import com.fanfou.app.adapter.StatusCursorAdapter.ViewHolder;
 import com.fanfou.app.api.User;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.util.DateTimeHelper;
-import com.fanfou.app.util.OptionHelper;
-import com.fanfou.app.util.StringHelper;
 
 /**
  * @author mcxiaoke

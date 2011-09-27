@@ -1,31 +1,14 @@
 ﻿package com.fanfou.app.http;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.nio.ByteOrder;
-
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.ParseException;
 import org.apache.http.StatusLine;
 import org.apache.http.protocol.HTTP;
-import org.apache.http.util.CharArrayBuffer;
 import org.apache.http.util.EntityUtils;
-
-import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.api.ApiException;
-import com.fanfou.app.util.IOHelper;
-import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke

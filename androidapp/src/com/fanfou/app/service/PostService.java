@@ -16,11 +16,9 @@ import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.ImageHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke

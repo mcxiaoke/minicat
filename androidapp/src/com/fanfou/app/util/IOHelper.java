@@ -54,7 +54,7 @@ public final class IOHelper {
 		if (Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
 			cacheDir = new File(Environment.getExternalStorageDirectory(),
-					"/Android/data/com.fanfou.app/photocache");
+					"/Android/data/"+context.getPackageName()+"/photocache");
 		} else {
 			cacheDir = context.getCacheDir();
 		}
@@ -172,7 +172,7 @@ public final class IOHelper {
 		}
 	}
 
-	public static void copy(InputStream in, OutputStream out)
+	public static void copyStream(InputStream in, OutputStream out)
 			throws IOException {
 		byte[] b = new byte[8 * 1024];
 		int read;

@@ -212,8 +212,8 @@ public class User implements Storable<User> {
 		User u = this;
 		ContentValues cv = new ContentValues();
 		
-		cv.put(UserInfo.ID, u.id);
-		cv.put(UserInfo.OWNER_ID, u.ownerId);
+		cv.put(BasicColumns.ID, u.id);
+		cv.put(BasicColumns.OWNER_ID, u.ownerId);
 		cv.put(UserInfo.NAME, u.name);
 		
 		cv.put(UserInfo.SCREEN_NAME, u.screenName);
@@ -242,15 +242,15 @@ public class User implements Storable<User> {
 			cv.put(UserInfo.LAST_STATUS_ID, u.lastStatusId);
 			cv.put(UserInfo.LAST_STATUS_TEXT, u.lastStatusText);
 		}
-		cv.put(UserInfo.TYPE, u.type);
-		cv.put(UserInfo.TIMESTAMP, new Date().getTime());
+		cv.put(BasicColumns.TYPE, u.type);
+		cv.put(BasicColumns.TIMESTAMP, new Date().getTime());
 		return cv;
 	}
 
 	@Override
 	public String toString() {
 		// return toContentValues().toString();
-		return "[User] " + UserInfo.ID + "=" + id + " "
+		return "[User] " + BasicColumns.ID + "=" + id + " "
 				+ UserInfo.SCREEN_NAME + "=" + screenName + " ";
 		// +UserInfo.NAME+"="+name+" "
 		// +UserInfo.LOCATION+"="+location+" "

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fanfou.app.R;
-import com.fanfou.app.adapter.StatusCursorAdapter.ViewHolder;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.StatusHelper;
