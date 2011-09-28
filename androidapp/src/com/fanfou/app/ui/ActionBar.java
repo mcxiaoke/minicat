@@ -97,15 +97,13 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 	private void onRefreshClick() {
 		if (mOnRefreshClickListener != null) {
 			mOnRefreshClickListener.onRefreshClick();
-			// showProgress();
 		}
 	}
 
 	public void startAnimation() {
 		mRefreshButton.setOnClickListener(null);
-//		mRefreshButton.setClickable(false);
 		mRefreshButton.setImageDrawable(null);
-		mRefreshButton.setBackgroundResource(R.drawable.ani_refresh);
+		mRefreshButton.setBackgroundResource(R.drawable.animation_refresh);
 		AnimationDrawable frameAnimation = (AnimationDrawable) mRefreshButton
 				.getBackground();
 		frameAnimation.start();
@@ -114,11 +112,12 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 	public void stopAnimation(){
 		AnimationDrawable frameAnimation = (AnimationDrawable) mRefreshButton
 		.getBackground();
-		frameAnimation.stop();
-		mRefreshButton.setBackgroundDrawable(null);
-		mRefreshButton.setImageResource(R.drawable.i_refresh);
-//		mRefreshButton.setClickable(true);
-		mRefreshButton.setOnClickListener(this);
+		if(frameAnimation!=null){
+			frameAnimation.stop();
+			mRefreshButton.setBackgroundDrawable(null);
+			mRefreshButton.setImageResource(R.drawable.i_refresh);
+			mRefreshButton.setOnClickListener(this);
+		}
 	}
 
 	@Override

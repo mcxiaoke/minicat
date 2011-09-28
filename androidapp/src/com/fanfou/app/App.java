@@ -43,7 +43,7 @@ import com.fanfou.app.util.StringHelper;
 
 @ReportsCrashes(formKey = "", formUri = "http://apps.fanfou.com/andstat/cr/", mode = ReportingInteractionMode.TOAST, resToastText = R.string.crash_toast_text)
 public class App extends Application {
-	
+
 	// TODO direct message chat ui
 	// TODO direct message send entry
 	// TODO item delete confirm
@@ -75,15 +75,14 @@ public class App extends Application {
 	// TODO contentprovider need modify use sqlite
 	// TODO add some flags to status model in db
 	// TODO cache and store user info data
-	
-	
+
 	public static final boolean DEBUG = true;
 
 	public static App me;
 
-	public IImageLoader imageLoader;
+	private IImageLoader imageLoader;
 	private DefaultHttpClient client;
-	public float density;
+	private float density;
 
 	public boolean verified;
 	public boolean isLogin;
@@ -117,7 +116,7 @@ public class App extends Application {
 		init();
 		initAppInfo();
 		initPreferences();
-		initDensity();
+		getDensity();
 		initNetworkState();
 		getHttpClient();
 		initAutoClean(this);
@@ -131,6 +130,14 @@ public class App extends Application {
 			}
 		}
 
+	}
+
+	@Override
+	public void onLowMemory() {
+		super.onLowMemory();
+		if (imageLoader != null) {
+			imageLoader.clearCache();
+		}
 	}
 
 	private void init() {
@@ -165,12 +172,15 @@ public class App extends Application {
 		this.isLogin = !StringHelper.isEmpty(oauthAccessTokenSecret);
 	}
 
-	private void initDensity() {
-		DisplayMetrics dm = getResources().getDisplayMetrics();
-		if (DEBUG) {
-			Log.i("App", dm.toString());
+	public float getDensity() {
+		if(density==0f){
+			DisplayMetrics dm = getResources().getDisplayMetrics();
+			if (DEBUG) {
+				Log.i("App", dm.toString());
+			}
+			density = dm.density;
 		}
-		density = dm.density;
+		return density;
 	}
 
 	private static void initAutoClean(Context context) {
@@ -267,10 +277,24 @@ public class App extends Application {
 				u.profileImageUrl);
 	}
 
+	public IImageLoader getImageLoader() {
+		if (imageLoader == null) {
+			imageLoader = new NewImageLoader(this);
+		}
+		return imageLoader;
+	}
+
+	public synchronized void shutdownImageLoader() {
+		if (imageLoader != null) {
+			imageLoader.shutdown();
+		}
+	}
+
 	public synchronized DefaultHttpClient getHttpClient() {
-		if(client==null){
+		if (client == null) {
 			client = NetworkHelper.setHttpClient();
-			NetworkHelper.setProxy(client.getParams(), networkState.getApnType());
+			NetworkHelper.setProxy(client.getParams(),
+					networkState.getApnType());
 		}
 		return client;
 	}

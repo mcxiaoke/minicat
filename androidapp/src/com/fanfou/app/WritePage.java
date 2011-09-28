@@ -157,7 +157,7 @@ public class WritePage extends BaseActivity {
 
 	private void showPreview() {
 		iPicturePrieview.setImageBitmap(ImageHelper.getRoundedCornerBitmap(
-				ImageHelper.getThumb(this, photoUri, 80), 6));
+				ImageHelper.getThumb(this, photoUri, 48,48), 6));
 		iPicturePrieview.setVisibility(View.VISIBLE);
 		iPictureRemove.setVisibility(View.VISIBLE);
 	}

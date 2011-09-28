@@ -1,64 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:orientation="vertical" android:background="@drawable/bg">
 
 	<com.fanfou.app.ui.ActionBar android:id="@id/actionbar"
 		style="@style/ActionBar" android:layout_alignParentTop="true" />
 
-	<LinearLayout android:layout_width="fill_parent" android:id="@id/write_target"
-		android:layout_height="wrap_content" android:layout_marginLeft="4dp" android:layout_marginRight="4dp"
-		android:orientation="vertical" android:layout_below="@id/actionbar">
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:id="@+id/send_origin"
+		android:layout_weight="1" android:padding="4dp" android:layout_below="@id/actionbar">
 
-		<TextView android:id="@id/write_target_name" style="@style/Text.Content"
-			android:padding="6dp" android:background="@drawable/text_white_bg"
-			android:layout_marginBottom="6dp" />
-			
-		<TextView android:id="@id/write_target_content" style="@style/Text.Status"
-			android:padding="6dp" android:background="@drawable/text_white_bg" android:layout_marginBottom="6dp" />
-			
+		<ImageView android:id="@+id/send_origin_head"
+			android:layout_alignParentLeft="true" style="@style/Image.Head"
+			android:src="@drawable/default_head" />
+
+		<RelativeLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:padding="4dp"
+			android:background="@drawable/text_white_bg">
+
+			<TextView android:id="@+id/send_origin_name" style="@style/Text.NameBig"
+				android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
+				android:textStyle="bold" />
+
+			<TextView android:id="@+id/send_origin_date" style="@style/Text.MetaBig"
+				android:layout_alignParentTop="true"
+				android:layout_alignParentRight="true" />
+
+			<TextView android:id="@+id/send_origin_text" style="@style/Text.Status"
+				android:layout_below="@id/send_origin_name" />
+		</RelativeLayout>
 	</LinearLayout>
 
+	<EditText android:id="@+id/send_text" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:minLines="2"
+		android:background="@drawable/input" android:layout_margin="4dp"
+		android:padding="6dp" android:singleLine="false"
+		android:layout_alignParentBottom="true" />
 
-	<EditText android:id="@id/write_text" android:layout_width="fill_parent"
-		android:layout_below="@id/write_target" android:minHeight="@dimen/write_minheight"
-		android:maxHeight="@dimen/write_maxheight" android:layout_height="wrap_content" android:background="@drawable/input"
-		android:gravity="top|left" android:layout_margin="4dp" android:padding="6dp" android:singleLine="false"/>
-
-	<RelativeLayout android:id="@id/write_extras"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:layout_below="@id/write_text" android:layout_marginRight="6dp">
-
-		<TextView android:id="@id/write_extra_words"
-			android:layout_alignParentRight="true" style="@style/Text.Count"
-			android:gravity="right|center_vertical" android:padding="2dp"
-			android:text="Count" />
-
-	</RelativeLayout>
-
-	<ImageView android:layout_above="@id/write_actions"
-		android:layout_width="fill_parent" android:layout_height="2dp"
-		android:background="@drawable/separator" />
-
-	<LinearLayout android:id="@id/write_buttons"
-		android:orientation="horizontal" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:layout_alignParentBottom="true"
-		android:padding="6dp">
-
-		<ImageView android:id="@id/write_button_cancel"
-			android:layout_alignParentLeft="true" android:layout_width="fill_parent"
-			android:layout_weight="1" android:layout_height="wrap_content"
-			android:src="@drawable/btn_cancel" />
-
-		<View android:layout_width="fill_parent" android:layout_height="0dp"
-			android:layout_weight="2" />
-
-		<ImageView android:id="@id/write_button_ok"
-			android:layout_alignParentRight="true" android:layout_width="fill_parent"
-			android:layout_weight="1" android:layout_height="wrap_content"
-			android:src="@drawable/btn_send" />
-
-	</LinearLayout>
-
-
-</RelativeLayout>
+</LinearLayout>

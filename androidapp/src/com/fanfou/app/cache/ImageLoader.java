@@ -58,7 +58,7 @@ public class ImageLoader implements IImageLoader {
 
 	public final ExecutorService mExecutorService = Executors
 			.newFixedThreadPool(CORE_POOL_SIZE, sThreadFactory);
-	
+
 	private final BlockingQueue<String> queue = new LinkedBlockingQueue<String>();
 	public ImageCache cache;
 	private Handler handler;
@@ -320,6 +320,10 @@ public class ImageLoader implements IImageLoader {
 		public Callbacks() {
 			mCallbackMap = new ConcurrentHashMap<String, List<ImageLoaderCallback>>();
 		}
+		
+		public void clear(){
+			mCallbackMap.clear();
+		}
 
 		public void put(String url, ImageLoaderCallback callback) {
 			if (StringHelper.isEmpty(url) || callback == null) {
@@ -346,7 +350,7 @@ public class ImageLoader implements IImageLoader {
 				for (ImageLoaderCallback callback : callbackList) {
 					if (callback != null) {
 						if (url != null) {
-							callback.onFinish(url,bitmap);
+							callback.onFinish(url, bitmap);
 						} else {
 							callback.onError("load image error.");
 						}
@@ -361,6 +365,19 @@ public class ImageLoader implements IImageLoader {
 			}
 		}
 
+	}
+
+	@Override
+	public void shutdown() {
+		mExecutorService.shutdown();
+		queue.clear();
+		callbacks.clear();
+		cache.clear();
+	}
+
+	@Override
+	public void clearCache() {
+		cache.clear();
 	}
 
 }

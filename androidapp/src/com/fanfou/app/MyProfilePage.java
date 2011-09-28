@@ -91,7 +91,7 @@ public class MyProfilePage extends BaseActivity implements Action {
 
 	private void initialize() {
 		mHandler = new Handler();
-		mLoader = App.me.imageLoader;
+		mLoader = App.me.getImageLoader();
 	}
 
 	private void setLayout() {

@@ -33,6 +33,8 @@ public abstract class BaseActivity extends Activity implements OnRefreshClickLis
 	public static final int STATE_INIT = 0;
 	public static final int STATE_NORMAL = 1;
 	public static final int STATE_EMPTY = 2;
+	
+	protected static final int REQUEST_CODE_OPTION=0;
 
 	Activity mContext;
 	LayoutInflater mInflater;
@@ -151,11 +153,11 @@ public abstract class BaseActivity extends Activity implements OnRefreshClickLis
 		}
 	}
 
-	protected static final int MENU_ID_OPTION = 0; // 设置
-	protected static final int MENU_ID_PROFILE = 1; //
+	protected static final int MENU_ID_PROFILE = 0; //
+	protected static final int MENU_ID_OPTION = 1; // 设置
 	protected static final int MENU_ID_SEARCH = 2;
-	protected static final int MENU_ID_FEEDBACK = 3; //
-	protected static final int MENU_ID_ABOUT = 4; // 关于
+	protected static final int MENU_ID_ABOUT = 3; // 关于
+	protected static final int MENU_ID_FEEDBACK = 4; //
 	protected static final int MENU_ID_EXIT = 5; // 退出
 	protected static final int MENU_ID_HOME = 6; // 返回首页
 
@@ -273,6 +275,7 @@ public abstract class BaseActivity extends Activity implements OnRefreshClickLis
 	protected void goOptionPage() {
 		Intent intent = new Intent(this, OptionsPage.class);
 		startActivity(intent);
+//		startActivityForResult(intent, REQUEST_CODE_OPTION);
 	}
 
 	protected void goProfilePage() {

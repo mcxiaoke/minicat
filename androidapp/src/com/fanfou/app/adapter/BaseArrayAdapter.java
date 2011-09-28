@@ -24,7 +24,7 @@ public abstract class BaseArrayAdapter<T> extends BaseAdapter {
 		super();
 		this.mContext=context;
 		this.mInflater=LayoutInflater.from(mContext);
-		this.mLoader=App.me.imageLoader;
+		this.mLoader=App.me.getImageLoader();
 		initFontSize();
 	}
 	

@@ -51,7 +51,7 @@
 
 	</PreferenceScreen>
 
-	<PreferenceScreen android:title="显示设置">
+	<PreferenceScreen android:title="界面设置">
 
 		<ListPreference android:entries="@array/font_size"
 			android:entryValues="@array/font_size_values" android:summary="设置消息字体大小"
@@ -68,10 +68,10 @@
 			android:summaryOff="时间线不显示用户头像" android:defaultValue="true"
 			android:summaryOn="时间线显示用户头像" />
 
-		<ListPreference android:entries="@array/write_icon"
-			android:entryValues="@array/write_icon_values" android:summary="设置底部发送图标"
-			android:dialogTitle="选择底部发送图标显示方式" android:title="底部发送图标"
-			android:key="@string/option_write_icon" android:defaultValue="right" />
+		<ListPreference android:entries="@array/bottom_icon"
+			android:entryValues="@array/bottom_icon_values" android:summary="设置底部图标位置"
+			android:dialogTitle="选择底部图标显示方式" android:title="底部图标"
+			android:key="@string/option_bottom_icon" android:defaultValue="right" />
 
 	</PreferenceScreen>
 
@@ -82,10 +82,15 @@
 			android:dialogTitle="选择上传照片的质量" android:title="上传照片质量"
 			android:key="@string/option_photo_quality" android:defaultValue="80" />
 
-		<CheckBoxPreference android:title="启动时更新消息"
+		<CheckBoxPreference android:title="启动时刷新"
 			android:summary="设置启动时是否自动获取新消息" android:key="@string/option_refresh_on_open"
 			android:summaryOff="启动时不获取新消息" android:defaultValue="false"
 			android:summaryOn="启动时自动获取新消息" />
+
+		<CheckBoxPreference android:title="自动检测升级"
+			android:summary="设置启动时检测新版本" android:key="@string/option_autoupdate"
+			android:summaryOff="启动时不检测新版本" android:defaultValue="true"
+			android:summaryOn="启动时自动检测新版本" />
 
 		<com.fanfou.app.preferences.ClearDataDialogPreference
 			android:key="@string/option_cleandb" android:title="清空消息缓存"
@@ -96,17 +101,12 @@
 		<com.fanfou.app.preferences.ClearCacheDialogPreference
 			android:key="@string/option_cleanpic" android:title="清空图片缓存"
 			android:dialogTitle="清空图片缓存" android:summary="清空存储卡中缓存的图片"
-			android:dialogMessage="是否要清空存储卡中缓存的用户头像和消息图片？（提示：头像缓存在存储卡上，占用空间很小，不建议手动清空）"
+			android:dialogMessage="是否要清空存储卡中缓存的用户头像和消息图片？（提示：图片缓存在存储卡上，占用空间很小，不建议手动清空）"
 			android:positiveButtonText="确定" android:negativeButtonText="取消" />
-
-		<CheckBoxPreference android:title="启动时检测升级"
-			android:summary="设置启动时检测新版本" android:key="@string/option_autoupdate"
-			android:summaryOff="启动时不检测新版本" android:defaultValue="true"
-			android:summaryOn="启动时自动检测新版本" />
 
 	</PreferenceScreen>
 
-	<PreferenceCategory android:title="信息">
+	<PreferenceScreen android:title="软件信息">
 
 		<Preference android:title="软件升级" android:summary="联网检测是否有升级版本"
 			android:key="@string/option_check_update" />
@@ -120,12 +120,12 @@
 				android:data="http://fanfou.com/" />
 		</Preference>
 
-		<com.fanfou.app.preferences.LogoutDialogPreference
-			android:key="@string/option_logout" android:title="注销登录"
-			android:dialogTitle="注销登录" android:summary="注销当前帐号，重新登录"
-			android:dialogMessage="是否要注销当前帐号，重新登录？" android:positiveButtonText="确定"
-			android:negativeButtonText="取消" />
+	</PreferenceScreen>
 
-	</PreferenceCategory>
+	<com.fanfou.app.preferences.LogoutDialogPreference
+		android:key="@string/option_logout" android:title="注销登录"
+		android:dialogTitle="注销登录" android:summary="注销当前帐号，重新登录"
+		android:dialogMessage="是否要注销当前帐号，重新登录？" android:positiveButtonText="确定"
+		android:negativeButtonText="取消" />
 
 </PreferenceScreen>

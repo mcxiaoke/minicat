@@ -1,5 +1,6 @@
 package com.fanfou.app;
 
+import com.fanfou.app.config.Commons;
 import com.fanfou.app.update.AutoUpdateManager;
 import com.fanfou.app.update.VersionInfo;
 import com.fanfou.app.util.AlarmHelper;
@@ -65,8 +66,8 @@ public class OptionsPage extends PreferenceActivity implements
 		ListPreference picLevel = (ListPreference) findPreference(getText(R.string.option_pic_level));
 		picLevel.setSummary(picLevel.getEntry());
 
-		ListPreference writeIcon = (ListPreference) findPreference(getText(R.string.option_write_icon));
-		writeIcon.setSummary(writeIcon.getEntry());
+		ListPreference bottomIcon = (ListPreference) findPreference(getText(R.string.option_bottom_icon));
+		bottomIcon.setSummary(bottomIcon.getEntry());
 		
 		Preference notification=findPreference(getText(R.string.option_notification));
 		
@@ -126,6 +127,7 @@ public class OptionsPage extends PreferenceActivity implements
 		else if (p instanceof ListPreference) {
 			ListPreference lp = (ListPreference) p;
 			lp.setSummary(lp.getEntry());
+			setResult(RESULT_OK, getIntent().putExtra(Commons.EXTRA_BOOLEAN, true));
 		}
 
 	}

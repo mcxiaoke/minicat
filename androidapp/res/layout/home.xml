@@ -2,33 +2,38 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res/com.fanfou.app"
 	android:layout_width="fill_parent" android:id="@+id/home"
-	android:layout_height="fill_parent" android:orientation="vertical" >
+	android:layout_height="fill_parent" android:orientation="vertical">
 
 	<com.fanfou.app.ui.ActionBar android:id="@id/actionbar"
 		style="@style/ActionBar" android:layout_alignParentTop="true" />
 
 	<RelativeLayout android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:layout_below="@id/actionbar" >
+		android:layout_height="fill_parent" android:layout_below="@id/actionbar">
 
 		<com.fanfou.app.ui.viewpager.TitlePageIndicator
-			android:layout_alignParentTop="true" android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:id="@+id/viewindicator" 
-			android:background="@drawable/navbar_bg"
-			app:textSize="12sp"
-			app:footerColor="@color/sky_blue" 
-			app:footerLineHeight="0dp"
-			app:footerIndicatorHeight="2dp" 
-			app:footerIndicatorStyle="underline" 
-			app:textColor="#FF999999"
-			app:selectedColor="#FF333333" 
+			android:layout_alignParentTop="true" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:id="@+id/viewindicator"
+			android:background="@drawable/navbar_bg" app:textSize="12sp"
+			app:footerColor="@color/sky_blue" app:footerLineHeight="0dp"
+			app:footerIndicatorHeight="2dp" app:footerIndicatorStyle="underline"
+			app:textColor="#FF999999" app:selectedColor="#FF333333"
 			app:selectedBold="false" />
 
 		<android.support.v4.view.ViewPager
 			android:layout_width="match_parent" android:layout_height="match_parent"
 			android:id="@+id/viewpager" android:layout_below="@id/viewindicator" />
 
-		<ImageView android:id="@+id/write_bottom" style="@style/Icon.Action"
-			android:src="@drawable/i_write_bottom" android:layout_margin="8dp" />
+		<RelativeLayout android:id="@id/buttons"
+			android:layout_width="fill_parent" android:layout_height="wrap_content">
+			<ImageView android:id="@+id/write_bottom" style="@style/Icon.Fixed"
+				android:layout_alignParentLeft="true" android:src="@drawable/i_write_bottom" />
+
+			<ImageView android:id="@+id/refresh_bottom" style="@style/Icon.Fixed"
+				android:layout_alignParentRight="true" android:src="@drawable/i_refresh_bottom" />
+
+		</RelativeLayout>
+
+
 
 	</RelativeLayout>
 

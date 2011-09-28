@@ -185,7 +185,8 @@ public class NewImageLoader implements Runnable, IImageLoader {
 		HttpResponse response = client.execute(request);
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (App.DEBUG) {
-			Log.d(TAG, "downloadImage() statusCode="+statusCode+" [" + url+"]");
+			Log.d(TAG, "downloadImage() statusCode=" + statusCode + " [" + url
+					+ "]");
 		}
 		return BitmapFactory.decodeStream(response.getEntity().getContent());
 	}
@@ -253,6 +254,19 @@ public class NewImageLoader implements Runnable, IImageLoader {
 			this.imageView = imageView;
 		}
 
+	}
+
+	@Override
+	public void shutdown() {
+		mExecutorService.shutdown();
+		mTaskQueue.clear();
+		mCallbackMap.clear();
+		mCache.clear();
+	}
+
+	@Override
+	public void clearCache() {
+		mCache.clear();
 	}
 
 }

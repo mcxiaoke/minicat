@@ -7,7 +7,7 @@
 	<string name="option_photo_quality">photo_quality</string>
 	<string name="option_show_head">show_head</string>
 	<string name="option_pic_level">pic_level</string>
-	<string name="option_write_icon">write_icon</string>
+	<string name="option_bottom_icon">bottom_icon</string>
 	<string name="option_version">app_version</string>
 	<string name="option_refresh_on_open">refresh_on_open</string>
 	<string name="option_feedback">feedback</string>

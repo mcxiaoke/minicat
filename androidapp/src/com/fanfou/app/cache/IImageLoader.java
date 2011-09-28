@@ -21,6 +21,10 @@ public interface IImageLoader {
 	void set(String key, ImageView imageView);
 
 	void set(String key, ImageView imageView, int defaultImageResId);
+	
+	void shutdown();
+	
+	void clearCache();
 
 	public interface ImageLoaderCallback {
 		void onFinish(String url, Bitmap bitmap);

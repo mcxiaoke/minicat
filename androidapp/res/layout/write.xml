@@ -8,13 +8,13 @@
 
 	<com.fanfou.app.ui.widget.NameAutoCompleteTextView
 		android:id="@id/write_text" android:layout_width="fill_parent"
-		android:layout_below="@id/actionbar" android:minHeight="@dimen/write_minheight"
-		android:maxHeight="@dimen/write_maxheight" android:layout_height="wrap_content"
-		android:background="@drawable/input" android:gravity="top|left"
-		android:padding="6dp" android:singleLine="false"/>
+		android:layout_below="@id/actionbar" android:layout_height="fill_parent"
+		android:minHeight="@dimen/write_minheight" android:background="@drawable/input"
+		android:gravity="top|left" android:padding="6dp" android:singleLine="false"
+		android:layout_weight="1" />
 
 	<RelativeLayout android:id="@id/write_extras"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_width="fill_parent" android:layout_height="@dimen/write_extra_height"
 		android:layout_below="@id/write_text" android:paddingTop="2dp"
 		android:layout_marginLeft="6dp" android:layout_marginRight="6dp">
 
@@ -24,10 +24,11 @@
 			android:layout_centerVertical="true" android:visibility="invisible" />
 
 		<ImageView android:id="@id/write_extra_picture_remove"
-			android:src="@drawable/i_bar2_delete" android:layout_toRightOf="@id/write_extra_picture_prieview"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:src="@drawable/i_close" android:layout_toRightOf="@id/write_extra_picture_prieview"
+			android:layout_width="@dimen/photo_preview_width"
+			android:layout_height="@dimen/photo_preview_height"
 			android:layout_centerVertical="true" android:visibility="invisible"
-			android:layout_marginLeft="8dp" />
+			android:layout_marginLeft="8dp" android:scaleType="centerCrop" />
 
 		<TextView android:id="@id/write_extra_words"
 			android:layout_alignParentRight="true" style="@style/Text.Count"

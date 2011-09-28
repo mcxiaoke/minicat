@@ -11,20 +11,25 @@ import java.io.InputStream;
 import java.util.Random;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.BitmapRegionDecoder;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.net.Uri;
+import android.provider.MediaStore.Images;
 import android.util.Log;
 import android.view.View;
 
@@ -34,7 +39,7 @@ import com.fanfou.app.App;
  * @author mcxiaoke
  * @version 1.0 2011.06.05
  * @version 2.0 2011.09.23
- *
+ * 
  */
 final public class ImageHelper {
 	private static final String TAG = ImageHelper.class.getSimpleName();
@@ -229,9 +234,9 @@ final public class ImageHelper {
 		}
 	}
 
-	public static Bitmap getThumb(Context context, Uri uri, int size) {
+	public static Bitmap getThumb(Context context, Uri uri, int width,
+			int height) {
 		InputStream input = null;
-
 		try {
 			input = context.getContentResolver().openInputStream(uri);
 			BitmapFactory.Options options = new BitmapFactory.Options();
@@ -239,24 +244,22 @@ final public class ImageHelper {
 			BitmapFactory.decodeStream(input, null, options);
 			input.close();
 			int scale = 1;
-			while ((options.outHeight / scale > size)) {
+			while ((options.outHeight / scale > height)) {
 				scale *= 2;
 			}
 			options.inJustDecodeBounds = false;
 			options.inSampleSize = scale;
-
 			input = context.getContentResolver().openInputStream(uri);
 
-			return BitmapFactory.decodeStream(input, null, options);
+			Bitmap src = BitmapFactory.decodeStream(input, null, options);
+			Bitmap bitmap = Bitmap
+					.createScaledBitmap(src, width, height, false);
+			src.recycle();
+			return bitmap;
 		} catch (IOException e) {
 			return null;
 		} finally {
-			if (input != null) {
-				try {
-					input.close();
-				} catch (IOException e) {
-				}
-			}
+			IOHelper.forceClose(input);
 		}
 	}
 
@@ -308,13 +311,13 @@ final public class ImageHelper {
 	}
 
 	public static boolean writeToFile(String filePath, Bitmap bitmap) {
-		if (bitmap == null||StringHelper.isEmpty(filePath)) {
+		if (bitmap == null || StringHelper.isEmpty(filePath)) {
 			return false;
 		}
-		File file=new File(filePath);
+		File file = new File(filePath);
 		return writeToFile(file, bitmap);
 	}
-	
+
 	public static boolean writeToFile(File file, Bitmap bitmap) {
 		if (bitmap == null) {
 			return false;
@@ -675,5 +678,93 @@ final public class ImageHelper {
 		int sampleSize = (int) Math.ceil(Math.max(w / maxW, h / maxH));
 		return sampleSize;
 	}
+
+	/**
+	 * Store a picture that has just been saved to disk in the MediaStore.
+	 * 
+	 * @param imageFile
+	 *            The File of the picture
+	 * @return The Uri provided by the MediaStore.
+	 */
+	public static Uri storePicture(Context ctx, File imageFile, String imageName) {
+		ContentResolver cr = ctx.getContentResolver();
+		imageName = imageName.substring(imageName.lastIndexOf('/') + 1);
+		ContentValues values = new ContentValues(7);
+		values.put(Images.Media.TITLE, imageName);
+		values.put(Images.Media.DISPLAY_NAME, imageName);
+		values.put(Images.Media.DESCRIPTION, "");
+		values.put(Images.Media.DATE_TAKEN, System.currentTimeMillis());
+		values.put(Images.Media.MIME_TYPE, "image/jpeg");
+		values.put(Images.Media.ORIENTATION, 0);
+		File parentFile = imageFile.getParentFile();
+		String path = parentFile.toString().toLowerCase();
+		String name = parentFile.getName().toLowerCase();
+		values.put(Images.ImageColumns.BUCKET_ID, path.hashCode());
+		values.put(Images.ImageColumns.BUCKET_DISPLAY_NAME, name);
+		values.put("_data", imageFile.toString());
+
+		Uri uri = cr.insert(Images.Media.EXTERNAL_CONTENT_URI, values);
+
+		return uri;
+	}
+
+	public static Uri getContentUriFromFile(Context ctx, File imageFile) {
+		Uri uri = null;
+		ContentResolver cr = ctx.getContentResolver();
+		// Columns to return
+		String[] projection = { Images.Media._ID, Images.Media.DATA };
+		// Look for a picture which matches with the requested path
+		// (MediaStore stores the path in column Images.Media.DATA)
+		String selection = Images.Media.DATA + " = ?";
+		String[] selArgs = { imageFile.toString() };
+
+		Cursor cursor = cr.query(Images.Media.EXTERNAL_CONTENT_URI, projection,
+				selection, selArgs, null);
+
+		if (cursor.moveToFirst()) {
+
+			String id;
+			int idColumn = cursor.getColumnIndex(Images.Media._ID);
+			id = cursor.getString(idColumn);
+			uri = Uri.withAppendedPath(Images.Media.EXTERNAL_CONTENT_URI, id);
+		}
+		cursor.close();
+		if (uri != null) {
+			Log.d(TAG, "Found picture in MediaStore : " + imageFile.toString()
+					+ " is " + uri.toString());
+		} else {
+			Log.d(TAG,
+					"Did not find picture in MediaStore : "
+							+ imageFile.toString());
+		}
+		return uri;
+	}
+	
+    /**
+     * Rotate a bitmap.
+     * 
+     * @param bmp
+     *            A Bitmap of the picture.
+     * @param degrees
+     *            Angle of the rotation, in degrees.
+     * @return The rotated bitmap, constrained in the source bitmap dimensions.
+     */
+    public static Bitmap rotate(Bitmap bmp, float degrees) {
+        if (degrees % 360 != 0) {
+            Log.d(TAG, "Rotating bitmap " + degrees + "°");
+            Matrix rotMat = new Matrix();
+            rotMat.postRotate(degrees);
+
+            if (bmp != null) {
+                Bitmap dst = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp
+                        .getHeight(), rotMat, false);
+
+                return dst;
+            }
+        } else {
+            return bmp;
+        }
+        return null;
+    }
 
 }

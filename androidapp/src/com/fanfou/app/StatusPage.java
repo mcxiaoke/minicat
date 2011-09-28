@@ -90,7 +90,7 @@ public class StatusPage extends BaseActivity implements ActionManager.ResultList
 		super.onCreate(savedInstanceState);
 		parseIntent();
 
-		imageLoader = App.me.imageLoader;
+		imageLoader = App.me.getImageLoader();
 		mHandler = new Handler();
 
 		setContentView(R.layout.status);
@@ -266,7 +266,7 @@ public class StatusPage extends BaseActivity implements ActionManager.ResultList
 			}
 		};
 		iPhoto.setImageResource(R.drawable.photo_loading);
-		Bitmap bitmap = App.me.imageLoader.load(status.photoLargeUrl,
+		Bitmap bitmap = imageLoader.load(status.photoLargeUrl,
 				callback);
 		if (bitmap != null) {
 			iPhoto.setImageBitmap(bitmap);

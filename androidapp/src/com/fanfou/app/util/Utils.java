@@ -5,9 +5,13 @@ import java.util.Collection;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
@@ -130,8 +134,7 @@ public final class Utils {
 	}
 
 	public static String getDmSinceId(Cursor c) {
-		if (c != null && c.getCount() > 0) {
-			c.moveToFirst();
+		if (c != null && c.moveToFirst()) {
 			final DirectMessage first = DirectMessage.parse(c);
 			if (first != null) {
 				return first.id;
@@ -147,8 +150,7 @@ public final class Utils {
 	 * @return
 	 */
 	public static String getSinceId(Cursor c) {
-		if (c != null && c.getCount() > 0) {
-			c.moveToFirst();
+		if (c != null && c.moveToFirst()) {
 			Status first = Status.parse(c);
 			if (first != null) {
 				return first.id;
@@ -164,8 +166,7 @@ public final class Utils {
 	 * @return
 	 */
 	public static String getMaxId(Cursor c) {
-		if (c != null && c.getCount() > 0) {
-			c.moveToLast();
+		if (c != null && c.moveToLast()) {
 			Status first = Status.parse(c);
 			if (first != null) {
 				return first.id;
@@ -212,6 +213,15 @@ public final class Utils {
 	public static float easeOut(float time, float start, float end,
 			float duration) {
 		return end * ((time = time / duration - 1) * time * time + 1) + start;
+	}
+
+	public static boolean checkMultiTouch(Context context) {
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.DONUT) {
+			return context.getPackageManager().hasSystemFeature(
+					PackageManager.FEATURE_TOUCHSCREEN_MULTITOUCH);
+		} else {
+			return false;
+		}
 	}
 
 }

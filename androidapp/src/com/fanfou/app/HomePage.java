@@ -2,7 +2,9 @@ package com.fanfou.app;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,10 +12,13 @@ import android.os.ResultReceiver;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
@@ -46,7 +51,7 @@ import com.fanfou.app.util.Utils;
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
-		OnLoadDataListener, OnItemLongClickListener,TitleProvider {
+		OnLoadDataListener, OnItemLongClickListener, TitleProvider {
 
 	public static final int PAGE_NUMS = 4;
 
@@ -56,6 +61,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	private ViewPager mViewPager;
 	private ViewsAdapter mViewAdapter;
 	private TitlePageIndicator mPageIndicator;
+
+	private ViewGroup vBottom;
+	private ImageView iRefreshBottom;
 	private ImageView iWriteBottom;
 
 	private boolean isBusy;
@@ -83,7 +91,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		init();
 		setContentView(R.layout.home);
 		setActionBar();
-		setWriteBottom();
+		setBottom();
 		setListViews();
 		setViewPager();
 		setCursors();
@@ -107,8 +115,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		mActionBar.setRefreshEnabled(this);
 
 	}
-	
-	private class HomeAction extends ActionBar.AbstractAction{
+
+	private class HomeAction extends ActionBar.AbstractAction {
 
 		public HomeAction() {
 			super(R.drawable.i_logo);
@@ -118,19 +126,41 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		public void performAction(View view) {
 			goTop();
 		}
-		
+
 	}
 
 	@Override
 	protected void startRefreshAnimation() {
 		setBusy(true);
 		mActionBar.startAnimation();
+		startBottomAnimation();
 	}
 
 	@Override
 	protected void stopRefreshAnimation() {
 		setBusy(false);
 		mActionBar.stopAnimation();
+		stopBottomAnimation();
+	}
+
+	private void startBottomAnimation() {
+		iRefreshBottom.setOnClickListener(null);
+		iRefreshBottom.setImageDrawable(null);
+		iRefreshBottom.setBackgroundResource(R.drawable.animation_refresh);
+		AnimationDrawable frameAnimation = (AnimationDrawable) iRefreshBottom
+				.getBackground();
+		frameAnimation.start();
+	}
+
+	private void stopBottomAnimation() {
+		AnimationDrawable frameAnimation = (AnimationDrawable) iRefreshBottom
+				.getBackground();
+		if (frameAnimation != null) {
+			frameAnimation.stop();
+			iRefreshBottom.setBackgroundDrawable(null);
+			iRefreshBottom.setImageResource(R.drawable.i_refresh_bottom);
+			iRefreshBottom.setOnClickListener(this);
+		}
 	}
 
 	private void setViewPager() {
@@ -149,27 +179,51 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	}
 
-	private void setWriteBottom() {
+	private void setBottom() {
+		vBottom = (ViewGroup) findViewById(R.id.buttons);
+
 		iWriteBottom = (ImageView) findViewById(R.id.write_bottom);
 		iWriteBottom.setOnClickListener(this);
 
-		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-				android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-		final Float f = new Float(8 * App.me.density);
-		final int m = f.intValue();
-		lp.setMargins(m, m, m, m);
+		iRefreshBottom = (ImageView) findViewById(R.id.refresh_bottom);
+		iRefreshBottom.setOnClickListener(this);
+
+		final Resources res = getResources();
+		final int size = new Float(res.getDimension(R.dimen.icon_width))
+				.intValue();
+		final int margin = new Float(res.getDimension(R.dimen.bottom_margin))
+				.intValue();
+
+		if (App.DEBUG) {
+			log("setBottom size=" + size + " margin=" + margin);
+		}
+
+		RelativeLayout.LayoutParams onBottom = new RelativeLayout.LayoutParams(
+				android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+				android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+		onBottom.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		onBottom.setMargins(margin, margin, margin, margin);
+		vBottom.setLayoutParams(onBottom);
+
+		RelativeLayout.LayoutParams onLeft = new RelativeLayout.LayoutParams(
+				size, size);
+		onLeft.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+
+		RelativeLayout.LayoutParams onRight = new RelativeLayout.LayoutParams(
+				size, size);
+		onRight.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
 		String position = OptionHelper.readString(this,
-				R.string.option_write_icon, "right");
+				R.string.option_bottom_icon, "right");
 		if (position.equals("left")) {
-			lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-			lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-			iWriteBottom.setLayoutParams(lp);
+			iWriteBottom.setLayoutParams(onLeft);
+			iRefreshBottom.setLayoutParams(onRight);
+			vBottom.setLayoutParams(onBottom);
 		} else if (position.equals("right")) {
-			lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-			lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-			iWriteBottom.setLayoutParams(lp);
+			iRefreshBottom.setLayoutParams(onLeft);
+			iWriteBottom.setLayoutParams(onRight);
 		} else {
-			iWriteBottom.setVisibility(View.GONE);
+			vBottom.setVisibility(View.GONE);
 		}
 
 	}
@@ -180,6 +234,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	private void setListViews() {
 		for (int i = 0; i < views.length; i++) {
 			views[i] = new EndlessListViewNoHeader(this);
+			views[i].setBackgroundResource(R.drawable.bg);
 			views[i].setOnRefreshListener(this);
 			if (i != 2) {
 				views[i].setOnItemLongClickListener(this);
@@ -207,12 +262,15 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		cursors[3] = initCursor(Status.TYPE_PUBLIC);
 	}
 
-	private void setAdapters() {
+	private void initAdapters() {
 		adapters[0] = new StatusCursorAdapter(true, this, cursors[0]);
-		adapters[2] = new MessageCursorAdapter(this, cursors[2]);
 		adapters[1] = new StatusCursorAdapter(this, cursors[1]);
+		adapters[2] = new MessageCursorAdapter(this, cursors[2]);
 		adapters[3] = new StatusCursorAdapter(this, cursors[3]);
+	}
 
+	private void setAdapters() {
+		initAdapters();
 		for (int i = 0; i < adapters.length; i++) {
 			views[i].setAdapter(adapters[i]);
 			// views[i].setOnScrollListener(adapters[i]);
@@ -385,6 +443,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	@Override
 	protected void onDestroy() {
+		App.me.shutdownImageLoader();
 		super.onDestroy();
 	}
 
@@ -408,9 +467,26 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		}
 		mViewPager.setCurrentItem(page);
 
-		if (page == 0) {
-			cursors[page].requery();
-		}
+		// if (page == 0) {
+		// onRefreshClick();
+		// }
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_OPTION) {
+		// if (App.DEBUG) {
+		// log("onActivityResult resultCode=OK requestCode=REQUEST_CODE_OPTION");
+		// }
+		// if (data.getBooleanExtra(Commons.EXTRA_BOOLEAN, false)) {
+		// initAdapters();
+		// for (int i = 0; i < views.length; i++) {
+		// if (views[i] != null && adapters[i] != null) {
+		// views[i].setAdapter(adapters[i]);
+		// }
+		// }
+		// }
+		// }
 	}
 
 	@Override
@@ -541,6 +617,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		case R.id.actionbar_title:
 			goTop();
 			break;
+		case R.id.refresh_bottom:
+			onRefreshClick();
+			break;
 		case R.id.write_bottom:
 			Intent intent = new Intent(this, WritePage.class);
 			intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
@@ -549,6 +628,12 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public boolean onTrackballEvent(MotionEvent event) {
+		// TODO Auto-generated method stub
+		return super.onTrackballEvent(event);
 	}
 
 	private void goTop() {

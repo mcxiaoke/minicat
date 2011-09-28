@@ -9,6 +9,10 @@
 	<item type="id" name="actionbar_progress" />
 	<item type="id" name="actionbar_actions" />
 
+	<item type="id" name="buttons" />
+	<item type="id" name="button_cancel" />
+	<item type="id" name="button_ok" />
+
 	<item type="id" name="item_user" />
 	<item type="id" name="item_user_id" />
 	<item type="id" name="item_user_name" />
@@ -45,29 +49,22 @@
 
 	<item type="id" name="write_title" />
 	<item type="id" name="write_info" />
-
-	<item type="id" name="write_target" />
-	<item type="id" name="write_target_name" />
-	<item type="id" name="write_target_content" />
-
+	<item type="id" name="write_text" />
+	
 	<item type="id" name="write_actions" />
 	<item type="id" name="write_action_back" />
 	<item type="id" name="write_action_at" />
 	<item type="id" name="write_action_location" />
 	<item type="id" name="write_action_gallery" />
 	<item type="id" name="write_action_camera" />
-
-	<item type="id" name="write_text" />
+	
+	<item type="id" name="write_origin" />
 
 	<item type="id" name="write_extras" />
 	<item type="id" name="write_extra_picture" />
 	<item type="id" name="write_extra_picture_prieview" />
 	<item type="id" name="write_extra_picture_remove" />
 	<item type="id" name="write_extra_words" />
-
-	<item type="id" name="write_buttons" />
-	<item type="id" name="write_button_cancel" />
-	<item type="id" name="write_button_ok" />
 
 	<item type="id" name="status_top" />
 	<item type="id" name="status_content" />

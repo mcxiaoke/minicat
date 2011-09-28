@@ -18,16 +18,21 @@
 	<dimen name="text_size_large">18sp</dimen>
 	<dimen name="text_size_xlarge">20sp</dimen>
 
-
+	<dimen name="bottom_margin">6dp</dimen>
 
 	<dimen name="actionbar_height">40dp</dimen>
-	<dimen name="actionbar_item_height">40dp</dimen>
-	<dimen name="actionbar_item_width">40dp</dimen>
+	<dimen name="icon_height">40dp</dimen>
+	<dimen name="icon_width">40dp</dimen>
 
 	<dimen name="item_user_head_width">48dp</dimen>
 	<dimen name="item_user_head_height">48dp</dimen>
 
-	<dimen name="write_minheight">100dp</dimen>
+	<dimen name="photo_preview_width">48dp</dimen>
+	<dimen name="photo_preview_height">48dp</dimen>
+
+	<dimen name="write_extra_height">52dp</dimen>
+
+	<dimen name="write_minheight">60dp</dimen>
 	<dimen name="write_maxheight">180dp</dimen>
 	<dimen name="write_image_height">60dp</dimen>
 	<dimen name="write_actions_height">48dp</dimen>

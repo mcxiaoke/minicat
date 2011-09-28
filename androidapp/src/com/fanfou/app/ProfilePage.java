@@ -74,6 +74,7 @@ public class ProfilePage extends BaseActivity implements Action {
 
 	private boolean isInitialized = false;
 	private boolean noPermission = false;// noPermission=user.protect&&!user.following
+	private boolean isBusy = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +118,7 @@ public class ProfilePage extends BaseActivity implements Action {
 
 	private void initialize() {
 		mHandler = new Handler();
-		mLoader = App.me.imageLoader;
+		mLoader = App.me.getImageLoader();
 	}
 
 	private void setLayout() {
@@ -173,6 +174,7 @@ public class ProfilePage extends BaseActivity implements Action {
 		// mActionBar.setTitle("个人资料");
 		mActionBar.setRightAction(this);
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
+		mActionBar.setRefreshEnabled(this);
 	}
 
 	protected void initCheckState() {
@@ -210,7 +212,7 @@ public class ProfilePage extends BaseActivity implements Action {
 		if (App.DEBUG)
 			log("updateUI user.name=" + user.screenName);
 
-		mLoader.set(user.profileImageUrl, mHead,R.drawable.default_head);
+		mLoader.set(user.profileImageUrl, mHead, R.drawable.default_head);
 		mName.setText(user.screenName);
 
 		mStatusesInfo.setText("" + user.statusesCount);
@@ -267,6 +269,9 @@ public class ProfilePage extends BaseActivity implements Action {
 	}
 
 	private void doRefresh() {
+		if (isInitialized) {
+			startRefreshAnimation();
+		}
 		ResultReceiver receiver = new MyResultReceiver();
 		Intent intent = new Intent(this, ActionService.class);
 		intent.putExtra(Commons.EXTRA_TYPE, Commons.ACTION_USER_SHOW);
@@ -339,6 +344,30 @@ public class ProfilePage extends BaseActivity implements Action {
 
 	}
 
+	@Override
+	public void onRefreshClick() {
+		if (isBusy) {
+			return;
+		}
+		doRefresh();
+	}
+
+	private synchronized void setBusy(boolean busy) {
+		isBusy = busy;
+	}
+
+	@Override
+	protected void startRefreshAnimation() {
+		setBusy(true);
+		mActionBar.startAnimation();
+	}
+
+	@Override
+	protected void stopRefreshAnimation() {
+		setBusy(false);
+		mActionBar.stopAnimation();
+	}
+
 	private boolean hasPermission() {
 		if (noPermission) {
 			Utils.notify(this, "你没有通过这个用户的验证");
@@ -379,6 +408,9 @@ public class ProfilePage extends BaseActivity implements Action {
 						if (App.DEBUG)
 							log("show result=" + user.id);
 						updateUI();
+						if (isInitialized) {
+							stopRefreshAnimation();
+						}
 					} else if (type == Commons.ACTION_USER_FOLLOW
 							|| type == Commons.ACTION_USER_UNFOLLOW) {
 						if (App.DEBUG)
@@ -390,14 +422,14 @@ public class ProfilePage extends BaseActivity implements Action {
 				}
 				break;
 			case Commons.RESULT_CODE_ERROR:
-				// int type=resultData.getInt(Commons.EXTRA_TYPE);
-				// if(type!=Commons.ACTION_USER_RELATION){
+				stopRefreshAnimation();
 				String msg = resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
 				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
-				if(!isInitialized){
+				if (!isInitialized) {
 					finish();
+				} else {
+
 				}
-				// }
 				if (App.DEBUG)
 					log("result error");
 				break;

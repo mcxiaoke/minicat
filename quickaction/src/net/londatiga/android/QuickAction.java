@@ -1,5 +1,4 @@
 package net.londatiga.android;
-
 import android.content.Context;
 
 import android.graphics.Rect;
@@ -30,11 +29,11 @@ public class QuickAction extends PopupWindows {
 	private ScrollView mScroller;
 	private OnActionItemClickListener mListener;
 	
-	protected static final int ANIM_GROW_FROM_LEFT = 1;
-	protected static final int ANIM_GROW_FROM_RIGHT = 2;
-	protected static final int ANIM_GROW_FROM_CENTER = 3;
-	protected static final int ANIM_REFLECT = 4;
-	protected static final int ANIM_AUTO = 5;
+	public static final int ANIM_GROW_FROM_LEFT = 1;
+	public static final int ANIM_GROW_FROM_RIGHT = 2;
+	public static final int ANIM_GROW_FROM_CENTER = 3;
+	public static final int ANIM_REFLECT = 4;
+	public static final int ANIM_AUTO = 5;
 	
 	private int mChildPos;
 	private int animStyle;
@@ -185,6 +184,8 @@ public class QuickAction extends PopupWindows {
 			} else {
 				yPos = anchorRect.top - rootHeight;
 			}
+			// add by mcxiaoke
+			yPos+=anchorRect.height()/2;
 		} else {
 			yPos = anchorRect.bottom;
 			
@@ -192,6 +193,8 @@ public class QuickAction extends PopupWindows {
 				LayoutParams l 	= mScroller.getLayoutParams();
 				l.height		= dyBottom;
 			}
+			// add by mcxiaoke
+			yPos-=anchorRect.height()/2;
 		}
 		
 		showArrow(((onTop) ? R.id.arrow_down : R.id.arrow_up), anchorRect.centerX()-xPos);
