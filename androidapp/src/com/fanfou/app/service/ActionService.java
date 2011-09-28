@@ -29,7 +29,7 @@ public class ActionService extends BaseIntentService {
 	protected void onHandleIntent(Intent intent) {
 		int type = intent.getIntExtra(Commons.EXTRA_TYPE, -1);
 		receiver = intent.getParcelableExtra(Commons.EXTRA_RECEIVER);
-		if(receiver!=null){
+		if (receiver != null) {
 			receiver.send(Commons.RESULT_CODE_START, null);
 		}
 		String userA = intent.getStringExtra("user_a");
@@ -164,18 +164,18 @@ public class ActionService extends BaseIntentService {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
 					u.type = User.TYPE_FRIENDS;
-					 ContentResolver cr = getContentResolver();
-					 ContentValues values = new ContentValues();
-					 values.put(UserInfo.FOLLOWING, u.following);
-					 Uri uri = Uri.parse(UserInfo.CONTENT_URI + "/item/" +
-					 id);
-					 int result = cr.update(uri, values, null, null);
+					ContentResolver cr = getContentResolver();
+					ContentValues values = new ContentValues();
+					values.put(UserInfo.FOLLOWING, u.following);
+					Uri uri = Uri.parse(UserInfo.CONTENT_URI + "/item/" + id);
+					int result = cr.update(uri, values, null, null);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
 					data.putSerializable(Commons.EXTRA_USER, u);
 					receiver.send(Commons.RESULT_CODE_FINISH, data);
+				}
+				break;
 			}
-				break;}
 			case Commons.ACTION_USER_UNFOLLOW: {
 				User u = api.userUnfollow(id);
 				if (u == null || u.isNull()) {
@@ -183,19 +183,21 @@ public class ActionService extends BaseIntentService {
 				} else {
 					u.type = User.TYPE_NONE;
 					ContentResolver cr = getContentResolver();
-					cr.delete(UserInfo.CONTENT_URI, BasicColumns.ID+"=?", new String[]{id});
-					
-//					ContentValues values = new ContentValues();
-//					values.put(UserInfo.FOLLOWING, u.following);
-//					Uri uri = Uri.withAppendedPath(UserInfo.CONTENT_URI,
-//							"item/" + id);
-//					int result = cr.update(uri, values, null, null);
+					cr.delete(UserInfo.CONTENT_URI, BasicColumns.ID + "=?",
+							new String[] { id });
+
+					// ContentValues values = new ContentValues();
+					// values.put(UserInfo.FOLLOWING, u.following);
+					// Uri uri = Uri.withAppendedPath(UserInfo.CONTENT_URI,
+					// "item/" + id);
+					// int result = cr.update(uri, values, null, null);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
 					data.putSerializable(Commons.EXTRA_USER, u);
 					receiver.send(Commons.RESULT_CODE_FINISH, data);
-					//取消关注后要清空该用户名下的消息
-					cr.delete(StatusInfo.CONTENT_URI, StatusInfo.USER_ID+"=?", new String[]{id});
+					// 取消关注后要清空该用户名下的消息
+					cr.delete(StatusInfo.CONTENT_URI,
+							StatusInfo.USER_ID + "=?", new String[] { id });
 				}
 			}
 				break;
@@ -230,6 +232,9 @@ public class ActionService extends BaseIntentService {
 			}
 
 		} catch (ApiException e) {
+			if (App.DEBUG) {
+				e.printStackTrace();
+			}
 			Bundle error = new Bundle();
 			error.putInt(Commons.EXTRA_TYPE, type);
 			error.putSerializable(Commons.EXTRA_ERROR, e);

@@ -71,7 +71,7 @@
 		<ListPreference android:entries="@array/bottom_icon"
 			android:entryValues="@array/bottom_icon_values" android:summary="设置底部图标位置"
 			android:dialogTitle="选择底部图标显示方式" android:title="底部图标"
-			android:key="@string/option_bottom_icon" android:defaultValue="right" />
+			android:key="@string/option_bottom_icon" android:defaultValue="left" />
 
 	</PreferenceScreen>
 

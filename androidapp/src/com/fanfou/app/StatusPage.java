@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.text.TextPaint;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
@@ -31,7 +32,8 @@ import com.fanfou.app.util.Utils;
  * @author mcxiaoke
  * 
  */
-public class StatusPage extends BaseActivity implements ActionManager.ResultListener {
+public class StatusPage extends BaseActivity implements
+		ActionManager.ResultListener {
 
 	@Override
 	protected void onResume() {
@@ -95,88 +97,8 @@ public class StatusPage extends BaseActivity implements ActionManager.ResultList
 
 		setContentView(R.layout.status);
 		setActionBar();
-
-		vUser = findViewById(R.id.status_top);
-		vUser.setOnClickListener(this);
-
-		iUserHead = (ImageView) findViewById(R.id.user_head);
-		imageLoader.set(status.userProfileImageUrl, iUserHead,R.drawable.default_head);
-
-		tUserName = (TextView) findViewById(R.id.user_name);
-		tUserName.setText(status.userScreenName);
-		TextPaint tp = tUserName.getPaint();
-		tp.setFakeBoldText(true);
-
-		iShowUser = (ImageView) findViewById(R.id.status_action_user);
-
-		tContent = (TextView) findViewById(R.id.status_text);
-		StatusHelper.setStatus(tContent, status.text);
-
-		iPhoto = (ImageView) findViewById(R.id.status_photo);
-
-		if (!StringHelper.isEmpty(status.photoLargeUrl)) {
-			photoLevel = OptionHelper.parseInt(this, R.string.option_pic_level);
-			if (photoLevel < 0) {
-				photoLevel = 0;
-			}
-			if (App.DEBUG)
-				log("level=" + photoLevel);
-			if (photoLevel == 2) {
-				imageLoader.set(status.photoLargeUrl, iPhoto);
-			} else if (photoLevel == 1) {
-				imageLoader.set(status.photoThumbUrl, iPhoto);
-				iPhoto.setOnClickListener(this);
-			} else if (photoLevel == 0) {
-				iPhoto.setImageResource(R.drawable.photo_icon);
-				iPhoto.setOnClickListener(this);
-				// iPhoto.setVisibility(View.GONE);
-			}
-		} else {
-			iPhoto.setVisibility(View.GONE);
-		}
-
-		tDate = (TextView) findViewById(R.id.status_date);
-		tDate.setText("时间：" + DateTimeHelper.getInterval(status.createdAt));
-
-		tSource = (TextView) findViewById(R.id.status_source);
-		tSource.setText("来源：" + status.source);
-
-		vThread = findViewById(R.id.status_thread);
-		tThreadName = (TextView) findViewById(R.id.status_thread_user);
-		TextPaint tp2 = tThreadName.getPaint();
-		tp2.setFakeBoldText(true);
-		tThreadText = (TextView) findViewById(R.id.status_thread_text);
-		vThread.setVisibility(View.GONE);
-
-		bReply = (ImageView) findViewById(R.id.status_action_reply);
-		if (isMe) {
-			bReply.setImageResource(R.drawable.i_bar2_delete);
-		} else {
-			bReply.setImageResource(R.drawable.i_bar2_reply);
-		}
-
-		bRepost = (ImageView) findViewById(R.id.status_action_retweet);
-		bFavorite = (ImageView) findViewById(R.id.status_action_favorite);
-		bShare = (ImageView) findViewById(R.id.status_action_share);
-
-		bReply.setOnClickListener(this);
-		bRepost.setOnClickListener(this);
-		bFavorite.setOnClickListener(this);
-		bShare.setOnClickListener(this);
-
-		tContent.setOnLongClickListener(new OnLongClickListener() {
-
-			@Override
-			public boolean onLongClick(View v) {
-				doCopy(StatusHelper.getSimpifiedText(tContent.getText()
-						.toString()));
-				return true;
-			}
-		});
-
-		updateFavoriteButton();
-
-		doFetchThread();
+		setLayout();
+		updateUI();
 
 	}
 
@@ -209,6 +131,98 @@ public class StatusPage extends BaseActivity implements ActionManager.ResultList
 				R.drawable.i_write);
 		mActionBar.setRightAction(action);
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
+	}
+
+	private void setLayout() {
+
+		vUser = findViewById(R.id.status_top);
+		vUser.setOnClickListener(this);
+		iUserHead = (ImageView) findViewById(R.id.user_head);
+		tUserName = (TextView) findViewById(R.id.user_name);
+		TextPaint tp = tUserName.getPaint();
+		tp.setFakeBoldText(true);
+		tUserName.setText(status.userScreenName);
+		iShowUser = (ImageView) findViewById(R.id.status_action_user);
+		tContent = (TextView) findViewById(R.id.status_text);
+		iPhoto = (ImageView) findViewById(R.id.status_photo);
+		tDate = (TextView) findViewById(R.id.status_date);
+		tSource = (TextView) findViewById(R.id.status_source);
+		vThread = findViewById(R.id.status_thread);
+//		vThread.setVisibility(View.GONE);
+		tThreadName = (TextView) findViewById(R.id.status_thread_user);
+		TextPaint tp2 = tThreadName.getPaint();
+		tp2.setFakeBoldText(true);
+		tThreadText = (TextView) findViewById(R.id.status_thread_text);
+
+		bReply = (ImageView) findViewById(R.id.status_action_reply);
+		bRepost = (ImageView) findViewById(R.id.status_action_retweet);
+		bFavorite = (ImageView) findViewById(R.id.status_action_favorite);
+		bShare = (ImageView) findViewById(R.id.status_action_share);
+
+		bReply.setOnClickListener(this);
+		bRepost.setOnClickListener(this);
+		bFavorite.setOnClickListener(this);
+		bShare.setOnClickListener(this);
+
+		tContent.setOnLongClickListener(new OnLongClickListener() {
+
+			@Override
+			public boolean onLongClick(View v) {
+				doCopy(StatusHelper.getSimpifiedText(tContent.getText()
+						.toString()));
+				return true;
+			}
+		});
+	}
+
+	private void updateUI() {
+		if (status != null) {
+			imageLoader.set(status.userProfileImageUrl, iUserHead,
+					R.drawable.default_head);
+
+			StatusHelper.setStatus(tContent, status.text);
+
+			if (!StringHelper.isEmpty(status.photoLargeUrl)) {
+				photoLevel = OptionHelper.parseInt(this,
+						R.string.option_pic_level);
+				if (photoLevel < 0) {
+					photoLevel = 0;
+				}
+				if (App.DEBUG)
+					log("level=" + photoLevel);
+				if (photoLevel == 2) {
+					imageLoader.set(status.photoLargeUrl, iPhoto);
+				} else if (photoLevel == 1) {
+					imageLoader.set(status.photoThumbUrl, iPhoto);
+					iPhoto.setOnClickListener(this);
+				} else if (photoLevel == 0) {
+					iPhoto.setImageResource(R.drawable.photo_icon);
+					iPhoto.setOnClickListener(this);
+					// iPhoto.setVisibility(View.GONE);
+				}
+			} else {
+				iPhoto.setVisibility(View.GONE);
+			}
+
+			tDate.setText("时间：" + DateTimeHelper.getInterval(status.createdAt));
+
+			tSource.setText("来源：" + status.source);
+
+			if (isMe) {
+				bReply.setImageResource(R.drawable.i_bar2_delete);
+			} else {
+				bReply.setImageResource(R.drawable.i_bar2_reply);
+			}
+
+			updateFavoriteButton();
+			
+			if(!StringHelper.isEmpty(status.inReplyToStatusId)){
+				tThreadName.setVisibility(View.GONE);
+				tThreadText.setGravity(Gravity.CENTER);
+				tThreadText.setText("正在加载对话消息...");
+				doFetchThread();
+			}
+		}
 	}
 
 	@Override
@@ -251,7 +265,7 @@ public class StatusPage extends BaseActivity implements ActionManager.ResultList
 			@Override
 			public void onFinish(String key, Bitmap bitmap) {
 				iPhoto.setOnClickListener(null);
-				if(bitmap!=null){
+				if (bitmap != null) {
 					iPhoto.setImageBitmap(bitmap);
 				}
 				iPhoto.postInvalidate();
@@ -266,8 +280,7 @@ public class StatusPage extends BaseActivity implements ActionManager.ResultList
 			}
 		};
 		iPhoto.setImageResource(R.drawable.photo_loading);
-		Bitmap bitmap = imageLoader.load(status.photoLargeUrl,
-				callback);
+		Bitmap bitmap = imageLoader.load(status.photoLargeUrl, callback);
 		if (bitmap != null) {
 			iPhoto.setImageBitmap(bitmap);
 			iPhoto.setOnClickListener(null);
@@ -313,6 +326,8 @@ public class StatusPage extends BaseActivity implements ActionManager.ResultList
 		thread = result;
 		tThreadName.setText(thread.userScreenName);
 		tThreadText.setText(thread.text);
+		tThreadText.setGravity(Gravity.LEFT);
+		tThreadName.setVisibility(View.VISIBLE);
 		vThread.setVisibility(View.VISIBLE);
 		vThread.setOnClickListener(new View.OnClickListener() {
 
@@ -321,6 +336,17 @@ public class StatusPage extends BaseActivity implements ActionManager.ResultList
 				Utils.goStatusPage(mContext, thread);
 			}
 		});
+
+	}
+	
+	private void showThreadError(String text) {
+		if(status==null){
+			return;
+		}
+		if (App.DEBUG)
+			log("showThreadError() " + text);
+		tThreadText.setText("无法查看用户"+status.inReplyToScreenName+"的消息："+text);
+		vThread.setVisibility(View.VISIBLE);
 
 	}
 
@@ -340,6 +366,8 @@ public class StatusPage extends BaseActivity implements ActionManager.ResultList
 					}
 					break;
 				case Commons.RESULT_CODE_ERROR:
+					String errorMessage=resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
+					showThreadError(errorMessage);
 					break;
 				default:
 					break;

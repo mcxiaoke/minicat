@@ -12,6 +12,7 @@ import android.os.ResultReceiver;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -630,12 +631,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		}
 	}
 
-	@Override
-	public boolean onTrackballEvent(MotionEvent event) {
-		// TODO Auto-generated method stub
-		return super.onTrackballEvent(event);
-	}
-
 	private void goTop() {
 		if (views[mCurrentPage] != null) {
 			views[mCurrentPage].setSelection(0);
@@ -663,11 +658,20 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		// if(mCurrentPage==0){
-		// super.onBackPressed();
-		// }else{
-		// mViewPager.setCurrentItem(mCurrentPage-1);
-		// }
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+//		if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+//			if (mCurrentPage > 0) {
+//				mViewPager.setCurrentItem(mCurrentPage - 1);
+//			}
+//		} else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+//			if (mCurrentPage < mViewPager.getWidth()-1) {
+//				mViewPager.setCurrentItem(mCurrentPage + 1);
+//			}
+//		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
