@@ -131,7 +131,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 
 		String title = "";
 		if (!StringHelper.isEmpty(userName)) {
-			title = userName + "的";
+			title = userName;
 		}
 		if (type == User.TYPE_FRIENDS) {
 			mActionBar.setTitle(title + "关注的人");

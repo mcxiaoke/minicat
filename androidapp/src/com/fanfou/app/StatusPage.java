@@ -53,7 +53,7 @@ public class StatusPage extends BaseActivity implements
 
 	private ActionBar mActionBar;
 
-	private IImageLoader imageLoader = null;
+	private IImageLoader mLoader;
 
 	private Status status;
 	private Status thread;
@@ -92,7 +92,7 @@ public class StatusPage extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		parseIntent();
 
-		imageLoader = App.me.getImageLoader();
+		mLoader = App.me.getImageLoader();
 		mHandler = new Handler();
 
 		setContentView(R.layout.status);
@@ -177,7 +177,7 @@ public class StatusPage extends BaseActivity implements
 
 	private void updateUI() {
 		if (status != null) {
-			imageLoader.set(status.userProfileImageUrl, iUserHead,
+			mLoader.set(status.userProfileImageUrl, iUserHead,
 					R.drawable.default_head);
 
 			StatusHelper.setStatus(tContent, status.text);
@@ -191,14 +191,15 @@ public class StatusPage extends BaseActivity implements
 				if (App.DEBUG)
 					log("level=" + photoLevel);
 				if (photoLevel == 2) {
-					imageLoader.set(status.photoLargeUrl, iPhoto);
+					iPhoto.setTag(status.photoLargeUrl);
+					mLoader.set(status.photoLargeUrl, iPhoto,R.drawable.photo_loading);
 				} else if (photoLevel == 1) {
-					imageLoader.set(status.photoThumbUrl, iPhoto);
+					iPhoto.setTag(status.photoThumbUrl);
+					mLoader.set(status.photoThumbUrl, iPhoto,R.drawable.photo_loading);
 					iPhoto.setOnClickListener(this);
 				} else if (photoLevel == 0) {
 					iPhoto.setImageResource(R.drawable.photo_icon);
 					iPhoto.setOnClickListener(this);
-					// iPhoto.setVisibility(View.GONE);
 				}
 			} else {
 				iPhoto.setVisibility(View.GONE);
@@ -274,14 +275,21 @@ public class StatusPage extends BaseActivity implements
 				if (App.DEBUG) {
 					log("onError message=" + message);
 				}
-				iPhoto.setOnClickListener(StatusPage.this);
+				iPhoto.setImageDrawable(null);
 			}
 		};
-		iPhoto.setImageResource(R.drawable.photo_loading);
-		Bitmap bitmap = imageLoader.load(status.photoLargeUrl, callback);
+		if (App.DEBUG) {
+			log("doShowBigPicture init");
+		}
+		
+		iPhoto.setTag(status.photoLargeUrl);
+		Bitmap bitmap = mLoader.load(status.photoLargeUrl, callback);
 		if (bitmap != null) {
 			iPhoto.setImageBitmap(bitmap);
 			iPhoto.setOnClickListener(null);
+		}else{
+			
+			iPhoto.setImageResource(R.drawable.photo_loading);
 		}
 	}
 

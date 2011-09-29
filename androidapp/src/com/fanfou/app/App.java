@@ -23,6 +23,7 @@ import com.fanfou.app.api.ApiImpl;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.cache.ImageLoader;
+import com.fanfou.app.cache.ImageLoaderOld;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.http.NetworkState;
 import com.fanfou.app.http.NetworkState.Type;
@@ -78,7 +79,7 @@ public class App extends Application {
 	// TODO add some flags to status model in db
 	// TODO cache and store user info data
 
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	public static App me;
 

@@ -57,6 +57,11 @@ public class ImageLoader implements Runnable, IImageLoader {
 	@Override
 	public Bitmap load(String key, ImageLoaderCallback callback) {
 		if (key != null) {
+			if (App.DEBUG) {
+				Log.d(TAG,
+						"load() key=" + key + " callback="
+								+ callback.hashCode());
+			}
 			return loadAndFetch(key, callback);
 		}
 		return null;
@@ -68,10 +73,17 @@ public class ImageLoader implements Runnable, IImageLoader {
 		if (mCache.containsKey(key)) {
 			bitmap = mCache.get(key);
 			if (bitmap == null) {
-				ImageLoaderTask task = new ImageLoaderTask(key, null);
-				addToQueue(task, callback);
+				if (App.DEBUG) {
+					Log.d(TAG, "loadAndFetch() key=" + key + " callback="
+							+ callback.hashCode());
+				}
 			}
 		}
+		if (bitmap == null) {
+			ImageLoaderTask task = new ImageLoaderTask(key, null);
+			addToQueue(task, callback);
+		}
+
 		return bitmap;
 	}
 
@@ -231,9 +243,13 @@ public class ImageLoader implements Runnable, IImageLoader {
 		public void onFinish(String url, Bitmap bitmap) {
 			if (bitmap != null) {
 				String tag = (String) imageView.getTag();
+				if(App.DEBUG){
+					Log.i(TAG,"InternelCallback.onFinish() tag="+tag);
+					Log.i(TAG,"InternelCallback.onFinish() url="+url);
+				}
 				if (tag != null && tag.equals(url)) {
 					imageView.setImageBitmap(bitmap);
-					imageView.invalidate();
+					imageView.postInvalidate();
 				}
 			}
 		}

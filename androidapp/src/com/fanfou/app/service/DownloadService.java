@@ -15,6 +15,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.RemoteViews;
@@ -36,6 +37,7 @@ public class DownloadService extends BaseIntentService {
 	private NotificationManager nm;
 	private Notification notification;
 	private RemoteViews remoteViews;
+	private Handler mHandler;
 	
 	private void log(String message){
 		Log.d("DownloadService", message);
@@ -48,6 +50,7 @@ public class DownloadService extends BaseIntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		nm=(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		mHandler=new Handler();
 		String url=intent.getStringExtra(Commons.EXTRA_URL);
 		if(!StringHelper.isEmpty(url)){
 			download(url);
@@ -70,7 +73,7 @@ public class DownloadService extends BaseIntentService {
 				is=entity.getContent();
 				File file=new File(IOHelper.getDownloadDir(this),"fanfou.apk");
 				fos=new FileOutputStream(file);
-				byte[] buffer=new byte[8196];
+				byte[] buffer=new byte[20480];
 				int read=-1;
 				
 				while((read=is.read(buffer))!=-1){
@@ -116,12 +119,13 @@ public class DownloadService extends BaseIntentService {
 			
 	}
 	
-	private void updateProgress(int progress,String fileName){
-		if(progress<=100){
-			notification.contentView.setTextViewText(R.id.download_notification_text, "正在下载饭否客户端 "+progress+"%");
-			notification.contentView.setInt(R.id.download_notification_progress, "setProgress", progress);
-			nm.notify(NOTIFICATION_PROGRESS_ID, notification);	
-		}
+	private void updateProgress(final int progress,String fileName){
+				if(progress<=100){
+					notification.contentView.setTextViewText(R.id.download_notification_text, "正在下载饭否客户端 "+progress+"%");
+					notification.contentView.setInt(R.id.download_notification_progress, "setProgress", progress);
+					nm.notify(NOTIFICATION_PROGRESS_ID, notification);	
+				}
+
 		
 //		if(progress<100){
 //			notification.contentView.setTextViewText(R.id.download_notification_text, "正在下载更新 "+progress+"%");

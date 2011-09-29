@@ -182,6 +182,12 @@ public class OptionsPage extends PreferenceActivity implements
 		@Override
 		protected void onPostExecute(VersionInfo info) {
 			pd.dismiss();
+			if(App.DEBUG){
+				if (info != null) {
+					AutoUpdateManager.showUpdateConfirmDialog(c, info);
+				}
+				return;
+			}
 			if (info != null && info.versionCode > App.me.appVersionCode) {
 				AutoUpdateManager.showUpdateConfirmDialog(c, info);
 			} else {
