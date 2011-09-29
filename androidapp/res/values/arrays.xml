@@ -24,13 +24,13 @@
 		<item>0</item>
 	</string-array>
 
-	<string-array name="bottom_icon">
-		<item>左边发送，右边刷新</item>
-		<item>左边刷新，右边发送</item>
-		<item>不显示底部图标</item>
+	<string-array name="bottom_icon_position">
+		<item>左下角</item>
+		<item>右下角</item>
+		<item>不显示</item>
 	</string-array>
 
-	<string-array name="bottom_icon_values">
+	<string-array name="bottom_icon_position_values">
 		<item>left</item>
 		<item>right</item>
 		<item>none</item>

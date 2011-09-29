@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
+import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.StatusHelper;
 import com.fanfou.app.util.StringHelper;
@@ -113,16 +114,27 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 		View row = view;
 		final ViewHolder holder = (ViewHolder) row.getTag();
 
-		Status s = Status.parse(cursor);
+		final Status s = Status.parse(cursor);
 
 		if (colored) {
 			if (getItemViewType(cursor.getPosition()) == ITEM_TYPE_MENTION) {
 				row.setBackgroundColor(0x33999999);
 			}
 		}
+		
+		
 		holder.headIcon.setTag(s.userProfileImageUrl);
 		mLoader.set(s.userProfileImageUrl, holder.headIcon,
 				R.drawable.default_head);
+		holder.headIcon.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(s!=null){
+					ActionManager.doProfile(mContext, s);
+				}
+			}
+		});
 
 		if (StringHelper.isEmpty(s.inReplyToStatusId)) {
 			holder.replyIcon.setVisibility(View.GONE);
@@ -135,6 +147,8 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 		} else {
 			holder.photoIcon.setVisibility(View.VISIBLE);
 		}
+		
+
 
 		holder.nameText.setText(s.userScreenName);
 		StatusHelper.setSimpifiedText(holder.contentText, s.text);

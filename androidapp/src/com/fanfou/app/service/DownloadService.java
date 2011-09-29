@@ -85,8 +85,8 @@ public class DownloadService extends BaseIntentService {
 				}
 				fos.flush();
 				if(download>=total){
-//					nm.cancel(NOTIFICATION_PROGRESS_ID);
-//					Utils.open(this, file.getAbsolutePath());
+					nm.cancel(NOTIFICATION_PROGRESS_ID);
+					Utils.open(this, file.getAbsolutePath());
 				}
 			}
 		} catch (IOException e) {
@@ -100,11 +100,11 @@ public class DownloadService extends BaseIntentService {
 	}
 	
 	private void showProgress(){
-		notification=new Notification(R.drawable.statusbar_icon,"正在下载更新",System.currentTimeMillis());
+		notification=new Notification(R.drawable.statusbar_icon,"正在下载饭否客户端",System.currentTimeMillis());
 		notification.flags|=Notification.FLAG_ONGOING_EVENT;
 		notification.flags|=Notification.FLAG_AUTO_CANCEL;
 		remoteViews=new RemoteViews(getPackageName(), R.layout.download_notification);
-		remoteViews.setTextViewText(R.id.download_notification_text, "正在下载更新 0%");
+		remoteViews.setTextViewText(R.id.download_notification_text, "正在下载饭否客户端 0%");
 		remoteViews.setProgressBar(R.id.download_notification_progress, 100, 0, false);
 		notification.contentView=remoteViews;
 		
@@ -117,19 +117,26 @@ public class DownloadService extends BaseIntentService {
 	}
 	
 	private void updateProgress(int progress,String fileName){
-		if(progress<100){
-			notification.contentView.setTextViewText(R.id.download_notification_text, "正在下载更新 "+progress+"%");
+		if(progress<=100){
+			notification.contentView.setTextViewText(R.id.download_notification_text, "正在下载饭否客户端 "+progress+"%");
 			notification.contentView.setInt(R.id.download_notification_progress, "setProgress", progress);
 			nm.notify(NOTIFICATION_PROGRESS_ID, notification);	
-		}else{
-			notification.contentView.setTextViewText(R.id.download_notification_text, "新版本下载完成，点击安装");
-			notification.contentView.setInt(R.id.download_notification_progress, "setProgress", 100);
-			notification.contentIntent=getInstallIntent(fileName);
-			nm.notify(NOTIFICATION_PROGRESS_ID, notification);	
 		}
+		
+//		if(progress<100){
+//			notification.contentView.setTextViewText(R.id.download_notification_text, "正在下载更新 "+progress+"%");
+//			notification.contentView.setInt(R.id.download_notification_progress, "setProgress", progress);
+//			nm.notify(NOTIFICATION_PROGRESS_ID, notification);	
+//		}else{
+//			notification.contentView.setTextViewText(R.id.download_notification_text, "饭否客户端新版本下载完成，点击安装");
+//			notification.contentView.setInt(R.id.download_notification_progress, "setProgress", 100);
+//			notification.contentIntent=getInstallPendingIntent(fileName);
+//			nm.notify(NOTIFICATION_PROGRESS_ID, notification);	
+//		}
 	}
 	
-	private PendingIntent getInstallIntent(String fileName){
+	@SuppressWarnings("unused")
+	private PendingIntent getInstallPendingIntent(String fileName){
 		String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
 				Utils.getExtension(fileName));
 		if (mimeType != null) {

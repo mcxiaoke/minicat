@@ -30,6 +30,7 @@ import com.fanfou.app.SendPage;
 import com.fanfou.app.StatusPage;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
+import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.service.FetchService;
 
@@ -221,6 +222,40 @@ public final class Utils {
 					PackageManager.FEATURE_TOUCHSCREEN_MULTITOUCH);
 		} else {
 			return false;
+		}
+	}
+	
+
+	public static void setAutoClean(Context context) {
+		boolean isSet = OptionHelper.readBoolean(context,
+				Commons.KEY_SET_AUTO_CLEAN, false);
+		if (!isSet) {
+			AlarmHelper.setCleanTask(context);
+			OptionHelper.saveBoolean(context, Commons.KEY_SET_AUTO_CLEAN, true);
+		}
+	}
+
+	public static void setAutoComplete(Context context) {
+		boolean isSet = OptionHelper.readBoolean(context,
+				Commons.KEY_SET_AUTO_COMPLETE, false);
+		if (!isSet) {
+			Intent intent = new Intent(context, FetchService.class);
+			intent.putExtra(Commons.EXTRA_TYPE, User.AUTO_COMPLETE);
+			context.startService(intent);
+
+			AlarmHelper.setAutoCompleteTask(context);
+			OptionHelper.saveBoolean(context, Commons.KEY_SET_AUTO_COMPLETE,
+					true);
+		}
+	}
+
+	public static void setAutoNotification(Context context) {
+		boolean isSet = OptionHelper.readBoolean(context,
+				Commons.KEY_SET_NOTIFICATION, false);
+		if (!isSet) {
+			AlarmHelper.setNotificationTaskOn(context);
+			OptionHelper.saveBoolean(context, Commons.KEY_SET_NOTIFICATION,
+					true);
 		}
 	}
 

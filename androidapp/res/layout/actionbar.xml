@@ -5,7 +5,7 @@
 
 	<ImageView android:id="@id/actionbar_left"
 		android:layout_marginLeft="3dp" android:layout_centerVertical="true"
-		android:layout_width="@dimen/icon_width" android:layout_height="@dimen/icon_height"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:layout_alignParentLeft="true" />
 
 	<TextView android:id="@id/actionbar_title"
@@ -15,11 +15,11 @@
 		android:textColor="@color/solid_white" />
 
 	<ImageView android:id="@id/actionbar_refresh"
-		android:layout_width="@dimen/icon_width" android:layout_height="@dimen/icon_height"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:layout_toLeftOf="@id/actionbar_right" />
 
 	<ImageView android:id="@id/actionbar_right"
-		android:layout_alignParentRight="true" android:layout_width="@dimen/icon_width"
-		android:layout_height="@dimen/icon_height" />
+		android:layout_alignParentRight="true" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
 
 </RelativeLayout>

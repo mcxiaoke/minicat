@@ -5,6 +5,7 @@ import com.fanfou.app.update.AutoUpdateManager;
 import com.fanfou.app.update.VersionInfo;
 import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.IntentHelper;
+import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.Utils;
 
 import android.app.ProgressDialog;
@@ -22,11 +23,11 @@ import android.util.Log;
 
 /**
  * @author mcxiaoke
- *
+ * 
  */
 public class OptionsPage extends PreferenceActivity implements
 		OnPreferenceClickListener, OnSharedPreferenceChangeListener {
-	public static final String TAG="OptionsPage";
+	public static final String TAG = "OptionsPage";
 
 	@Override
 	protected void onStop() {
@@ -66,12 +67,15 @@ public class OptionsPage extends PreferenceActivity implements
 		ListPreference picLevel = (ListPreference) findPreference(getText(R.string.option_pic_level));
 		picLevel.setSummary(picLevel.getEntry());
 
-		ListPreference bottomIcon = (ListPreference) findPreference(getText(R.string.option_bottom_icon));
-		bottomIcon.setSummary(bottomIcon.getEntry());
-		
-		Preference notification=findPreference(getText(R.string.option_notification));
-		
-		ListPreference interval=(ListPreference) findPreference(getText(R.string.option_notification_interval));
+		ListPreference bottomWriteIcon = (ListPreference) findPreference(getText(R.string.option_bottom_write_icon));
+		bottomWriteIcon.setSummary(bottomWriteIcon.getEntry());
+
+		ListPreference bottomRefreshIcon = (ListPreference) findPreference(getText(R.string.option_bottom_refresh_icon));
+		bottomRefreshIcon.setSummary(bottomRefreshIcon.getEntry());
+
+		Preference notification = findPreference(getText(R.string.option_notification));
+
+		ListPreference interval = (ListPreference) findPreference(getText(R.string.option_notification_interval));
 		interval.setSummary(interval.getEntry());
 
 		Preference checkUpdate = findPreference(getText(R.string.option_check_update));
@@ -88,7 +92,7 @@ public class OptionsPage extends PreferenceActivity implements
 	}
 
 	private void checkUpdate() {
-		if(App.DEBUG){
+		if (App.DEBUG) {
 			Log.i(TAG, "checkUpdate");
 		}
 		new CheckTask(this).execute();
@@ -100,8 +104,8 @@ public class OptionsPage extends PreferenceActivity implements
 
 	@Override
 	public boolean onPreferenceClick(Preference preference) {
-		if(App.DEBUG){
-			Log.i(TAG, "onPreferenceClick key="+preference.getKey());
+		if (App.DEBUG) {
+			Log.i(TAG, "onPreferenceClick key=" + preference.getKey());
 		}
 		if (preference.getKey().equals(getString(R.string.option_check_update))) {
 			checkUpdate();
@@ -113,21 +117,42 @@ public class OptionsPage extends PreferenceActivity implements
 	}
 
 	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+	public void onSharedPreferenceChanged(SharedPreferences sp,
 			String key) {
 		Preference p = findPreference(key);
-		if(key.equals(getString(R.string.option_notification))){
-			CheckBoxPreference cp=(CheckBoxPreference) p;
-			if(cp.isChecked()){
+		if (key.equals(getString(R.string.option_notification))) {
+			CheckBoxPreference cp = (CheckBoxPreference) p;
+			if (cp.isChecked()) {
 				AlarmHelper.setNotificationTaskOn(this);
-			}else{
+			} else {
 				AlarmHelper.setNotificationTaskOff(this);
 			}
+		} else if (key.equals(getString(R.string.option_bottom_refresh_icon))) {
+			ListPreference lp = (ListPreference) p;
+			lp.setSummary(lp.getEntry());
+			String value=lp.getValue();
+			String value2=OptionHelper.readString(this, R.string.option_bottom_write_icon, "none");
+			if(value.equals(value2) && !value.equals("none")){
+				lp.setValue("none");
+				Utils.notify(this, "请重选，刷新图标和发消息图标不能处于同一位置");
+			}
+
+		} else if (key.equals(getString(R.string.option_bottom_write_icon))) {
+			ListPreference lp = (ListPreference) p;
+			lp.setSummary(lp.getEntry());
+			String value=lp.getValue();
+			String value2=OptionHelper.readString(this, R.string.option_bottom_refresh_icon, "none");
+			if(value.equals(value2) && !value.equals("none")){
+				lp.setValue("none");
+				Utils.notify(this, "请重选，发消息图标和刷新图标不能处于同一位置");
+			}
 		}
+
 		else if (p instanceof ListPreference) {
 			ListPreference lp = (ListPreference) p;
 			lp.setSummary(lp.getEntry());
-			setResult(RESULT_OK, getIntent().putExtra(Commons.EXTRA_BOOLEAN, true));
+			setResult(RESULT_OK,
+					getIntent().putExtra(Commons.EXTRA_BOOLEAN, true));
 		}
 
 	}
@@ -138,10 +163,10 @@ public class OptionsPage extends PreferenceActivity implements
 
 		public CheckTask(Context context) {
 			this.c = context;
-			if(App.DEBUG){
+			if (App.DEBUG) {
 				Log.i(TAG, "CheckTask init");
 			}
-			
+
 		}
 
 		@Override
@@ -157,8 +182,7 @@ public class OptionsPage extends PreferenceActivity implements
 		@Override
 		protected void onPostExecute(VersionInfo info) {
 			pd.dismiss();
-			if (info != null
-					&& info.versionCode > App.me.appVersionCode) {
+			if (info != null && info.versionCode > App.me.appVersionCode) {
 				AutoUpdateManager.showUpdateConfirmDialog(c, info);
 			} else {
 				Utils.notify(c, "你使用的已经是最新版");
@@ -167,9 +191,9 @@ public class OptionsPage extends PreferenceActivity implements
 
 		@Override
 		protected VersionInfo doInBackground(Void... params) {
-			VersionInfo info= AutoUpdateManager.fetchVersionInfo();
-			if(App.DEBUG){
-				Log.i(TAG, "doInBackground "+info.toString());
+			VersionInfo info = AutoUpdateManager.fetchVersionInfo();
+			if (App.DEBUG) {
+				Log.i(TAG, "doInBackground " + info.toString());
 			}
 			return info;
 		}

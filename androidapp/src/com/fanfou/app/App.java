@@ -5,6 +5,7 @@ import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +22,7 @@ import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.ApiImpl;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.IImageLoader;
-import com.fanfou.app.cache.NewImageLoader;
+import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.http.NetworkState;
 import com.fanfou.app.http.NetworkState.Type;
@@ -31,6 +32,7 @@ import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.NetworkHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -119,10 +121,9 @@ public class App extends Application {
 		getDensity();
 		initNetworkState();
 		getHttpClient();
-		initAutoClean(this);
-		initAutoComplete(this);
-		initAutoNotification(this);
-		initAutoUpdate();
+		Utils.setAutoClean(this);
+		Utils.setAutoComplete(this);
+		Utils.setAutoNotification(this);
 		if (isLogin) {
 			if (networkState.apnType == Type.WIFI
 					|| networkState.apnType == Type.HSDPA) {
@@ -143,7 +144,7 @@ public class App extends Application {
 	private void init() {
 		App.me = this;
 		ACRA.init(this);
-		this.imageLoader = new NewImageLoader(this);
+		this.imageLoader = new ImageLoader(this);
 		this.api = new ApiImpl(this);
 
 		if (DEBUG) {
@@ -183,38 +184,6 @@ public class App extends Application {
 		return density;
 	}
 
-	private static void initAutoClean(Context context) {
-		boolean isSet = OptionHelper.readBoolean(context,
-				Commons.KEY_SET_AUTO_CLEAN, false);
-		if (!isSet) {
-			AlarmHelper.setCleanTask(context);
-			OptionHelper.saveBoolean(context, Commons.KEY_SET_AUTO_CLEAN, true);
-		}
-	}
-
-	private static void initAutoComplete(Context context) {
-		boolean isSet = OptionHelper.readBoolean(context,
-				Commons.KEY_SET_AUTO_COMPLETE, false);
-		if (!isSet) {
-			Intent intent = new Intent(context, FetchService.class);
-			intent.putExtra(Commons.EXTRA_TYPE, User.AUTO_COMPLETE);
-			context.startService(intent);
-
-			AlarmHelper.setAutoCompleteTask(context);
-			OptionHelper.saveBoolean(context, Commons.KEY_SET_AUTO_COMPLETE,
-					true);
-		}
-	}
-
-	private static void initAutoNotification(Context context) {
-		boolean isSet = OptionHelper.readBoolean(context,
-				Commons.KEY_SET_NOTIFICATION, false);
-		if (!isSet) {
-			AlarmHelper.setNotificationTaskOn(context);
-			OptionHelper.saveBoolean(context, Commons.KEY_SET_NOTIFICATION,
-					true);
-		}
-	}
 
 	private void initAppInfo() {
 		PackageManager pm = getPackageManager();
@@ -252,19 +221,14 @@ public class App extends Application {
 		task.start();
 	}
 
-	public void initAutoUpdate() {
-		boolean autoUpdate = OptionHelper.readBoolean(this,
-				R.string.option_autoupdate, true);
-		if (autoUpdate) {
-			Thread task = new Thread() {
-				@Override
-				public void run() {
-					AutoUpdateManager.checkUpdate(App.me);
-				}
-			};
-			task.start();
-		}
-	}
+//	public static App getApp(Activity activity){
+//		return (App) activity.getApplication();
+//	}
+//	
+//	public static App getApp(Context context){
+//		return (App) context.getApplicationContext();
+//	}
+
 
 	public synchronized void updateUserInfo(User u) {
 		user = u;
@@ -279,7 +243,7 @@ public class App extends Application {
 
 	public IImageLoader getImageLoader() {
 		if (imageLoader == null) {
-			imageLoader = new NewImageLoader(this);
+			imageLoader = new ImageLoader(this);
 		}
 		return imageLoader;
 	}
@@ -290,11 +254,13 @@ public class App extends Application {
 		}
 	}
 
-	public synchronized DefaultHttpClient getHttpClient() {
+	public DefaultHttpClient getHttpClient() {
 		if (client == null) {
-			client = NetworkHelper.setHttpClient();
-			NetworkHelper.setProxy(client.getParams(),
-					networkState.getApnType());
+			synchronized (this) {
+				client = NetworkHelper.setHttpClient();
+				NetworkHelper.setProxy(client.getParams(),
+						networkState.getApnType());	
+			}
 		}
 		return client;
 	}

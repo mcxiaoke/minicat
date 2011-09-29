@@ -10,6 +10,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.http.BaseClient;
 import com.fanfou.app.http.BasicClient;
 import com.fanfou.app.http.OAuthClient;
@@ -626,6 +627,7 @@ public class ApiImpl implements Api, ResponseCode {
 		User u = User.parse(response);
 		if (u != null) {
 			u.ownerId = App.me.userId;
+			CacheManager.put(u);
 		}
 		return u;
 	}

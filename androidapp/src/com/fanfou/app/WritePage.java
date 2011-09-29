@@ -49,7 +49,7 @@ public class WritePage extends BaseActivity {
 	private static final String tag = WritePage.class.getSimpleName();
 
 	private void log(String message) {
-		Log.e(tag, message);
+		Log.i(tag, message);
 	}
 
 	private ActionBar mActionBar;
@@ -156,8 +156,9 @@ public class WritePage extends BaseActivity {
 	}
 
 	private void showPreview() {
+		final int size=new Float(getResources().getDimension(R.dimen.photo_preview_width)).intValue();
 		iPicturePrieview.setImageBitmap(ImageHelper.getRoundedCornerBitmap(
-				ImageHelper.getThumb(this, photoUri, 48,48), 6));
+				ImageHelper.getThumb(this, photoUri, size,size), 6));
 		iPicturePrieview.setVisibility(View.VISIBLE);
 		iPictureRemove.setVisibility(View.VISIBLE);
 	}
@@ -461,7 +462,9 @@ public class WritePage extends BaseActivity {
 		i.putExtra(Commons.EXTRA_FILE, photo);
 		i.putExtra(Commons.EXTRA_LOCATION, mLocationString);
 		i.putExtra(Commons.EXTRA_STATUS, status);
-		log("intent=" + i);
+		if(App.DEBUG){
+			log("intent=" + i);
+		}
 		startService(i);
 	}
 

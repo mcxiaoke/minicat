@@ -47,7 +47,8 @@ public class TimelinePage extends BaseActivity implements OnRefreshListener,
 	protected String userId;
 	protected String userName;
 	protected User user;
-	protected int type;
+	protected int mType;
+	protected int page=1;
 
 	private boolean isInitialized = false;
 
@@ -80,16 +81,16 @@ public class TimelinePage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected void initCursor() {
-		if (type == Status.TYPE_USER) {
+		if (mType == Status.TYPE_USER) {
 			String where = BasicColumns.TYPE + "=? AND " + StatusInfo.USER_ID
 					+ "=?";
-			String[] whereArgs = new String[] { String.valueOf(type), userId };
+			String[] whereArgs = new String[] { String.valueOf(mType), userId };
 			mCursor = managedQuery(StatusInfo.CONTENT_URI, StatusInfo.COLUMNS,
 					where, whereArgs, null);
-		} else if (type == Status.TYPE_FAVORITES) {
+		} else if (mType == Status.TYPE_FAVORITES) {
 			String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
 					+ "=?";
-			String[] whereArgs = new String[] { String.valueOf(type), userId };
+			String[] whereArgs = new String[] { String.valueOf(mType), userId };
 			mCursor = managedQuery(StatusInfo.CONTENT_URI, StatusInfo.COLUMNS,
 					where, whereArgs, null);
 		}
@@ -136,9 +137,9 @@ public class TimelinePage extends BaseActivity implements OnRefreshListener,
 		if (!StringHelper.isEmpty(userName)) {
 			title = userName + "的";
 		}
-		if (type == Status.TYPE_USER) {
+		if (mType == Status.TYPE_USER) {
 			mActionBar.setTitle(title + "消息");
-		} else if (type == Status.TYPE_FAVORITES) {
+		} else if (mType == Status.TYPE_FAVORITES) {
 			mActionBar.setTitle(title + "收藏");
 		}
 		mActionBar.setTitleClickListener(this);
@@ -148,7 +149,7 @@ public class TimelinePage extends BaseActivity implements OnRefreshListener,
 
 	protected boolean parseIntent() {
 		Intent intent = getIntent();
-		type = intent.getIntExtra(Commons.EXTRA_TYPE, Status.TYPE_USER);
+		mType = intent.getIntExtra(Commons.EXTRA_TYPE, Status.TYPE_USER);
 		user = (User) intent.getSerializableExtra(Commons.EXTRA_USER);
 		if (user == null) {
 			userId = intent.getStringExtra(Commons.EXTRA_ID);
@@ -171,6 +172,9 @@ public class TimelinePage extends BaseActivity implements OnRefreshListener,
 		Bundle b = new Bundle();
 		b.putString(Commons.EXTRA_ID, userId);
 		b.putBoolean(Commons.EXTRA_FORMAT, false);
+		if(mType==Status.TYPE_FAVORITES){
+			b.putInt(Commons.EXTRA_PAGE, page++);
+		}
 		if (isGetMore) {
 			String maxId = Utils.getMaxId(mCursor);
 			b.putString(Commons.EXTRA_MAX_ID, maxId);
@@ -178,7 +182,7 @@ public class TimelinePage extends BaseActivity implements OnRefreshListener,
 			String sinceId = Utils.getSinceId(mCursor);
 			b.putString(Commons.EXTRA_SINCE_ID, sinceId);
 		}
-		Utils.startFetchService(this, type, mResultReceiver, b);
+		Utils.startFetchService(this, mType, mResultReceiver, b);
 	}
 
 	protected void updateUI() {

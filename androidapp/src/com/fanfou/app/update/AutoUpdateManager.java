@@ -71,6 +71,12 @@ public final class AutoUpdateManager {
 
 	public static void checkUpdate(Context context) {
 		VersionInfo info = fetchVersionInfo();
+		if(App.DEBUG){
+			if (info != null) {
+				notifyUpdate(info, context);
+			}
+			return;
+		}
 		if (info != null && info.versionCode > App.me.appVersionCode) {
 			notifyUpdate(info, context);
 		}

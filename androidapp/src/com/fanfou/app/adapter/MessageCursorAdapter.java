@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.fanfou.app.R;
 import com.fanfou.app.api.DirectMessage;
+import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
 
 /**
@@ -50,7 +51,7 @@ public class MessageCursorAdapter extends BaseCursorAdapter{
 		View row = view;
 		final ViewHolder holder = (ViewHolder) row.getTag();
 
-		DirectMessage dm = DirectMessage.parse(cursor);
+		final DirectMessage dm = DirectMessage.parse(cursor);
 
 //		if(!fling){
 			mLoader.set(dm.senderProfileImageUrl, holder.headIcon,R.drawable.default_head);
@@ -63,6 +64,15 @@ public class MessageCursorAdapter extends BaseCursorAdapter{
 		// holder.headIcon.setImageResource(R.drawable.default_head);
 		// }
 		// row.setBackgroundColor(0x44888800);
+			holder.headIcon.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if(dm!=null){
+						ActionManager.doProfile(mContext, dm);
+					}
+				}
+			});
 
 		holder.nameText.setText(dm.senderScreenName);
 		holder.dateText.setText(DateTimeHelper.getInterval(dm.createdAt));

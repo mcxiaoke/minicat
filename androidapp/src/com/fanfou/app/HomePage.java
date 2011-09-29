@@ -63,7 +63,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	private ViewsAdapter mViewAdapter;
 	private TitlePageIndicator mPageIndicator;
 
-	private ViewGroup vBottom;
 	private ImageView iRefreshBottom;
 	private ImageView iWriteBottom;
 
@@ -181,7 +180,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	private void setBottom() {
-		vBottom = (ViewGroup) findViewById(R.id.buttons);
 
 		iWriteBottom = (ImageView) findViewById(R.id.write_bottom);
 		iWriteBottom.setOnClickListener(this);
@@ -195,36 +193,43 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		final int margin = new Float(res.getDimension(R.dimen.bottom_margin))
 				.intValue();
 
-		if (App.DEBUG) {
-			log("setBottom size=" + size + " margin=" + margin);
-		}
-
-		RelativeLayout.LayoutParams onBottom = new RelativeLayout.LayoutParams(
-				android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
-				android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-		onBottom.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		onBottom.setMargins(margin, margin, margin, margin);
-		vBottom.setLayoutParams(onBottom);
-
 		RelativeLayout.LayoutParams onLeft = new RelativeLayout.LayoutParams(
 				size, size);
+		onLeft.setMargins(margin, margin, margin, margin);
+		onLeft.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		onLeft.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 
 		RelativeLayout.LayoutParams onRight = new RelativeLayout.LayoutParams(
 				size, size);
+		onRight.setMargins(margin, margin, margin, margin);
+		onRight.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		onRight.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
-		String position = OptionHelper.readString(this,
-				R.string.option_bottom_icon, "right");
-		if (position.equals("left")) {
-			iWriteBottom.setLayoutParams(onLeft);
+		String writePostion = OptionHelper.readString(this,
+				R.string.option_bottom_write_icon, "none");
+		String refreshPostion = OptionHelper.readString(this,
+				R.string.option_bottom_refresh_icon, "right");
+
+		if (writePostion.equals(refreshPostion)
+				&& !refreshPostion.equals("none")) {
 			iRefreshBottom.setLayoutParams(onRight);
-			vBottom.setLayoutParams(onBottom);
-		} else if (position.equals("right")) {
-			iRefreshBottom.setLayoutParams(onLeft);
-			iWriteBottom.setLayoutParams(onRight);
+			iWriteBottom.setVisibility(View.GONE);
 		} else {
-			vBottom.setVisibility(View.GONE);
+			if (refreshPostion.equals("left")) {
+				iRefreshBottom.setLayoutParams(onLeft);
+			} else if (refreshPostion.equals("right")) {
+				iRefreshBottom.setLayoutParams(onRight);
+			} else {
+				iRefreshBottom.setVisibility(View.GONE);
+			}
+
+			if (writePostion.equals("left")) {
+				iWriteBottom.setLayoutParams(onLeft);
+			} else if (writePostion.equals("right")) {
+				iWriteBottom.setLayoutParams(onRight);
+			} else {
+				iWriteBottom.setVisibility(View.GONE);
+			}
 		}
 
 	}
@@ -467,10 +472,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			log("onNewIntent page=" + page);
 		}
 		mViewPager.setCurrentItem(page);
-
-		// if (page == 0) {
-		// onRefreshClick();
-		// }
+//		if (page == 0) {
+//			onRefreshClick();
+//		}
 	}
 
 	@Override
@@ -662,15 +666,15 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-//		if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-//			if (mCurrentPage > 0) {
-//				mViewPager.setCurrentItem(mCurrentPage - 1);
-//			}
-//		} else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-//			if (mCurrentPage < mViewPager.getWidth()-1) {
-//				mViewPager.setCurrentItem(mCurrentPage + 1);
-//			}
-//		}
+		// if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+		// if (mCurrentPage > 0) {
+		// mViewPager.setCurrentItem(mCurrentPage - 1);
+		// }
+		// } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+		// if (mCurrentPage < mViewPager.getWidth()-1) {
+		// mViewPager.setCurrentItem(mCurrentPage + 1);
+		// }
+		// }
 		return super.onKeyDown(keyCode, event);
 	}
 

@@ -170,8 +170,9 @@ public final class Parser implements ResponseCode {
 			JSONObject o = new JSONObject(content);
 			return trends(o);
 		} catch (JSONException e) {
-			if (App.DEBUG)
-				e.printStackTrace();
+			if (App.DEBUG){
+				Log.e(TAG, e.getMessage());
+			}
 			throw new ApiException(ERROR_PARSE_FAILED, e.getMessage(),
 					e.getCause());
 		}
@@ -186,8 +187,9 @@ public final class Parser implements ResponseCode {
 				ts.add(t);
 			}
 		} catch (JSONException e) {
-			if (App.DEBUG)
-				e.printStackTrace();
+			if (App.DEBUG){
+				Log.e(TAG, e.getMessage());
+			}
 			throw new ApiException(ERROR_PARSE_FAILED, e.getMessage(),
 					e.getCause());
 		}
@@ -200,8 +202,9 @@ public final class Parser implements ResponseCode {
 			JSONObject o = new JSONObject(content);
 			return savedSearch(o);
 		} catch (JSONException e) {
-			if (App.DEBUG)
-				e.printStackTrace();
+			if (App.DEBUG){
+				Log.e(TAG, e.getMessage());
+			}
 			throw new ApiException(ERROR_PARSE_FAILED, e.getMessage(),
 					e.getCause());
 		}
@@ -214,8 +217,9 @@ public final class Parser implements ResponseCode {
 			s.query = o.getString(QUERY);
 			return s;
 		} catch (JSONException e) {
-			if (App.DEBUG)
-				e.printStackTrace();
+			if (App.DEBUG){
+				Log.e(TAG, e.getMessage());
+			}
 			throw new ApiException(ERROR_PARSE_FAILED, e.getMessage(),
 					e.getCause());
 		}
@@ -227,8 +231,9 @@ public final class Parser implements ResponseCode {
 			JSONArray a = new JSONArray(content);
 			return savedSearches(a);
 		} catch (JSONException e) {
-			if (App.DEBUG)
-				e.printStackTrace();
+			if (App.DEBUG){
+				Log.e(TAG, e.getMessage());
+			}
 			throw new ApiException(ERROR_PARSE_FAILED, e.getMessage(),
 					e.getCause());
 		}
@@ -244,8 +249,9 @@ public final class Parser implements ResponseCode {
 			}
 			return ss;
 		} catch (JSONException e) {
-			if (App.DEBUG)
-				e.printStackTrace();
+			if (App.DEBUG){
+				Log.e(TAG, e.getMessage());
+			}
 			throw new ApiException(ERROR_PARSE_FAILED, e.getMessage(),
 					e.getCause());
 		}
@@ -254,21 +260,24 @@ public final class Parser implements ResponseCode {
 	public static String error(HttpResponse response) throws ApiException {
 		try {
 			String content = EntityUtils.toString(response.getEntity());
-			if(App.DEBUG)
-			Log.d("Parser", "error() content="+content);
-			if(content==null){
+			if (App.DEBUG) {
+				Log.v("Parser", "error() content=" + content);
+			}
+			if (content == null) {
 				return null;
 			}
 			return error(content);
 		} catch (IOException e) {
-			if(App.DEBUG)
-			e.printStackTrace();
+			if (App.DEBUG)
+				e.printStackTrace();
 			return null;
 		}
 	}
 
 	public static String error(String error) {
-		Log.e(TAG, "Parser.error() error=" + error);
+		if (App.DEBUG) {
+			Log.v(TAG, "Parser.error() error=" + error);
+		}
 		String result = error;
 		try {
 			JSONObject o = new JSONObject(error);
@@ -284,10 +293,6 @@ public final class Parser implements ResponseCode {
 	}
 
 	public static String parseXMLError(String error) {
-		// DocumentBuilder
-		// builder=DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		// Document doc=builder.parse(new InputSource(new StringReader(error)));
-		// Element root=doc.getDocumentElement();
 		String result = error;
 		XmlPullParser pull;
 		String tag = null;
@@ -323,6 +328,14 @@ public final class Parser implements ResponseCode {
 		}
 
 		return result;
+	}
+	
+	public static void handleJSONException(JSONException e) throws ApiException{
+		if (App.DEBUG){
+			Log.e(TAG, e.getMessage());
+		}
+		throw new ApiException(ERROR_PARSE_FAILED, e.getMessage(),
+				e.getCause());
 	}
 
 	static final Pattern PATTERN_SOURCE = Pattern

@@ -148,7 +148,7 @@ public class StatusPage extends BaseActivity implements
 		tDate = (TextView) findViewById(R.id.status_date);
 		tSource = (TextView) findViewById(R.id.status_source);
 		vThread = findViewById(R.id.status_thread);
-//		vThread.setVisibility(View.GONE);
+		vThread.setVisibility(View.GONE);
 		tThreadName = (TextView) findViewById(R.id.status_thread_user);
 		TextPaint tp2 = tThreadName.getPaint();
 		tp2.setFakeBoldText(true);
@@ -215,11 +215,9 @@ public class StatusPage extends BaseActivity implements
 			}
 
 			updateFavoriteButton();
-			
-			if(!StringHelper.isEmpty(status.inReplyToStatusId)){
-				tThreadName.setVisibility(View.GONE);
-				tThreadText.setGravity(Gravity.CENTER);
-				tThreadText.setText("正在加载对话消息...");
+
+			if (!StringHelper.isEmpty(status.inReplyToStatusId)) {
+				showThreadLoading();
 				doFetchThread();
 			}
 		}
@@ -338,14 +336,21 @@ public class StatusPage extends BaseActivity implements
 		});
 
 	}
-	
+
+	private void showThreadLoading() {
+		vThread.setVisibility(View.VISIBLE);
+		tThreadName.setVisibility(View.GONE);
+		tThreadText.setGravity(Gravity.CENTER);
+		tThreadText.setText("正在加载对话消息...");
+	}
+
 	private void showThreadError(String text) {
-		if(status==null){
+		if (status == null) {
 			return;
 		}
 		if (App.DEBUG)
 			log("showThreadError() " + text);
-		tThreadText.setText("无法查看用户"+status.inReplyToScreenName+"的消息："+text);
+		tThreadText.setText("加载消息失败：" + text);
 		vThread.setVisibility(View.VISIBLE);
 
 	}
@@ -366,7 +371,8 @@ public class StatusPage extends BaseActivity implements
 					}
 					break;
 				case Commons.RESULT_CODE_ERROR:
-					String errorMessage=resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
+					String errorMessage = resultData
+							.getString(Commons.EXTRA_ERROR_MESSAGE);
 					showThreadError(errorMessage);
 					break;
 				default:

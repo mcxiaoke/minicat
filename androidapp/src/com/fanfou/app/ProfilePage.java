@@ -1,6 +1,7 @@
 package com.fanfou.app;
 
 import com.fanfou.app.api.User;
+import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.config.ACTION;
 import com.fanfou.app.config.Commons;
@@ -109,6 +110,11 @@ public class ProfilePage extends BaseActivity implements Action {
 				userId = data.getLastPathSegment();
 			}
 		}
+
+		if (userId != null && user == null) {
+			user = CacheManager.get(userId);
+		}
+
 		if (StringHelper.isEmpty(userId)) {
 			if (App.DEBUG)
 				log("用户ID不能为空");
@@ -205,7 +211,6 @@ public class ProfilePage extends BaseActivity implements Action {
 		if (user == null) {
 			return;
 		}
-
 		noPermission = !user.following && user.protect;
 
 		mActionBar.setTitle(user.screenName + "的资料");
@@ -232,7 +237,7 @@ public class ProfilePage extends BaseActivity implements Action {
 		mProtected.setVisibility(user.protect ? View.VISIBLE : View.GONE);
 
 		setExtraInfo(user);
-		updateFollowState(user);
+		updateFollowButton(user);
 
 		if (!noPermission) {
 			doFetchRelationshipInfo();
@@ -269,15 +274,15 @@ public class ProfilePage extends BaseActivity implements Action {
 	}
 
 	private void doRefresh() {
-		if (isInitialized) {
-			startRefreshAnimation();
-		}
 		ResultReceiver receiver = new MyResultReceiver();
 		Intent intent = new Intent(this, ActionService.class);
 		intent.putExtra(Commons.EXTRA_TYPE, Commons.ACTION_USER_SHOW);
 		intent.putExtra(Commons.EXTRA_ID, userId);// 如果只传了ID就用这个
 		intent.putExtra(Commons.EXTRA_RECEIVER, receiver);
 		startService(intent);
+		if (isInitialized) {
+			startRefreshAnimation();
+		}
 	}
 
 	private void doFetchRelationshipInfo() {
@@ -292,7 +297,7 @@ public class ProfilePage extends BaseActivity implements Action {
 		startService(intent);
 	}
 
-	private void updateFollowState(User u) {
+	private void updateFollowButton(User u) {
 		mFollowAction.setImageResource(u.following ? R.drawable.btn_unfollow
 				: R.drawable.btn_follow);
 	}
@@ -415,23 +420,27 @@ public class ProfilePage extends BaseActivity implements Action {
 							|| type == Commons.ACTION_USER_UNFOLLOW) {
 						if (App.DEBUG)
 							log("user.following=" + user.following);
-						updateFollowState(user);
+						updateFollowButton(user);
 						Utils.notify(mContext, user.following ? "关注成功"
 								: "取消关注成功");
 					}
 				}
 				break;
 			case Commons.RESULT_CODE_ERROR:
-				stopRefreshAnimation();
-				String msg = resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
-				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
-				if (!isInitialized) {
-					finish();
-				} else {
-
-				}
 				if (App.DEBUG)
 					log("result error");
+				if (!isInitialized) {
+					finish();
+				}
+				int type = resultData.getInt(Commons.EXTRA_TYPE);
+				if (type == Commons.ACTION_USER_RELATION) {
+					return;
+				}
+				if (type == Commons.ACTION_USER_SHOW) {
+					stopRefreshAnimation();
+				}
+				String msg = resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
+				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
 				break;
 			default:
 				break;
@@ -443,7 +452,7 @@ public class ProfilePage extends BaseActivity implements Action {
 	private static final String tag = ProfilePage.class.getSimpleName();
 
 	private void log(String message) {
-		Log.e(tag, message);
+		Log.i(tag, message);
 	}
 
 	@Override

@@ -45,10 +45,12 @@ import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.R;
 import com.fanfou.app.http.GzipResponseInterceptor;
 import com.fanfou.app.http.NetworkState;
 import com.fanfou.app.http.RequestRetryHandler;
 import com.fanfou.app.http.NetworkState.Type;
+import com.fanfou.app.update.AutoUpdateManager;
 
 /**
  * @author mcxiaoke
@@ -262,6 +264,20 @@ public final class NetworkHelper {
 		client.addResponseInterceptor(new GzipResponseInterceptor());
 		client.setHttpRequestRetryHandler(new RequestRetryHandler(4));
 		return client;
+	}
+	
+	public static void doAutoUpdate(Context context) {
+		boolean autoUpdate = OptionHelper.readBoolean(context,
+				R.string.option_autoupdate, true);
+		if (autoUpdate) {
+			Thread task = new Thread() {
+				@Override
+				public void run() {
+					AutoUpdateManager.checkUpdate(App.me);
+				}
+			};
+			task.start();
+		}
 	}
 
 }

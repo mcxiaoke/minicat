@@ -16,6 +16,7 @@ import com.fanfou.app.SendPage;
 import com.fanfou.app.TimelinePage;
 import com.fanfou.app.UserListPage;
 import com.fanfou.app.WritePage;
+import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
@@ -105,6 +106,24 @@ public final class ActionManager {
 		}
 		Intent intent = new Intent(context, ProfilePage.class);
 		intent.putExtra(Commons.EXTRA_ID, userId);
+		context.startActivity(intent);
+	}
+	
+	public static void doProfile(Context context, DirectMessage dm) {
+		if (dm == null || dm.isNull()) {
+			if (App.DEBUG) {
+				Log.e(TAG, "doProfile: status is null.");
+			}
+			return;
+		}
+		if(dm.senderId.equals(App.me.userId)){
+			doMyProfile(context);
+			return;
+		}
+		Intent intent = new Intent(context, ProfilePage.class);
+		intent.putExtra(Commons.EXTRA_ID, dm.senderId);
+		intent.putExtra(Commons.EXTRA_USER_NAME, dm.senderScreenName);
+		intent.putExtra(Commons.EXTRA_USER_HEAD, dm.senderProfileImageUrl);
 		context.startActivity(intent);
 	}
 

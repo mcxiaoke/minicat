@@ -249,29 +249,28 @@ public class User implements Storable<User> {
 
 	@Override
 	public String toString() {
-		// return toContentValues().toString();
 		return "[User] " + BasicColumns.ID + "=" + id + " "
-				+ UserInfo.SCREEN_NAME + "=" + screenName + " ";
-		// +UserInfo.NAME+"="+name+" "
-		// +UserInfo.LOCATION+"="+location+" "
-		// +UserInfo.GENDER+"="+gender+" "
-		// +UserInfo.BIRTHDAY+"="+birthday+" "
-		// +UserInfo.DESCRIPTION+"="+description+" "
-		// +UserInfo.PROFILE_IMAGE_URL+"="+profileImageUrl+" "
-		// +UserInfo.URL+"="+url+" "
-		// +UserInfo.PROTECTED+"="+protect+" "
-		// +UserInfo.FOLLOWERS_COUNT+"="+followersCount+" "
-		// +UserInfo.FRIENDS_COUNT+"="+friendsCount+" "
-		// +UserInfo.FAVORITES_COUNT+"="+favouritesCount+" "
-		// +UserInfo.STATUSES_COUNT+"="+statusesCount+" "
-		// +UserInfo.FOLLOWING+"="+following+" "
-		// +UserInfo.NOTIFICATIONS+"="+notifications+" "
-		// +UserInfo.CREATED_AT+"="+createdAt+" "
-		// +UserInfo.UTC_OFFSET+"="+utcOffset+" "
-		// +UserInfo.LAST_STATUS_CREATED_AT+"="+lastStatusCreatedAt+" "
-		// +UserInfo.LAST_STATUS_ID+"="+lastStatusId+" "
-		// +UserInfo.LAST_STATUS_TEXT+"="+lastStatusText+" "
-		// +UserInfo.TYPE+"="+type+" ";
+				+ UserInfo.SCREEN_NAME + "=" + screenName + " "
+		 +UserInfo.NAME+"="+name+" "
+		 +UserInfo.LOCATION+"="+location+" "
+		 +UserInfo.GENDER+"="+gender+" "
+		 +UserInfo.BIRTHDAY+"="+birthday+" "
+		 +UserInfo.DESCRIPTION+"="+description+" "
+		 +UserInfo.PROFILE_IMAGE_URL+"="+profileImageUrl+" "
+		 +UserInfo.URL+"="+url+" "
+		 +UserInfo.PROTECTED+"="+protect+" "
+		 +UserInfo.FOLLOWERS_COUNT+"="+followersCount+" "
+		 +UserInfo.FRIENDS_COUNT+"="+friendsCount+" "
+		 +UserInfo.FAVORITES_COUNT+"="+favouritesCount+" "
+		 +UserInfo.STATUSES_COUNT+"="+statusesCount+" "
+		 +UserInfo.FOLLOWING+"="+following+" "
+		 +UserInfo.NOTIFICATIONS+"="+notifications+" "
+		 +UserInfo.CREATED_AT+"="+createdAt+" "
+		 +UserInfo.UTC_OFFSET+"="+utcOffset+" "
+		 +UserInfo.LAST_STATUS_CREATED_AT+"="+lastStatusCreatedAt+" "
+		 +UserInfo.LAST_STATUS_ID+"="+lastStatusId+" "
+		 +UserInfo.LAST_STATUS_TEXT+"="+lastStatusText+" "
+		 +UserInfo.TYPE+"="+type+" ";
 	}
 
 }

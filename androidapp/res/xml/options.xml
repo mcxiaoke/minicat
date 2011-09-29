@@ -68,10 +68,24 @@
 			android:summaryOff="时间线不显示用户头像" android:defaultValue="true"
 			android:summaryOn="时间线显示用户头像" />
 
-		<ListPreference android:entries="@array/bottom_icon"
-			android:entryValues="@array/bottom_icon_values" android:summary="设置底部图标位置"
-			android:dialogTitle="选择底部图标显示方式" android:title="底部图标"
-			android:key="@string/option_bottom_icon" android:defaultValue="left" />
+		<!-- <CheckBoxPreference android:title="底部刷新图标" android:summary="设置是否显示底部刷新图标" 
+			android:key="@string/option_bottom_refresh_icon" android:summaryOff="不显示底部刷新图标" 
+			android:defaultValue="true" android:summaryOn="显示底部刷新图标" /> <CheckBoxPreference 
+			android:title="底部发消息图标" android:summary="设置是否显示底部发消息图标" android:key="@string/option_bottom_write_icon" 
+			android:summaryOff="不显示底部发消息图标" android:defaultValue="false" android:summaryOn="显示底部发消息图标" 
+			/> -->
+
+		<ListPreference android:entries="@array/bottom_icon_position"
+			android:entryValues="@array/bottom_icon_position_values"
+			android:summary="设置底部刷新图标" android:dialogTitle="设置刷新图标显示位置"
+			android:title="底部刷新图标" android:key="@string/option_bottom_refresh_icon"
+			android:defaultValue="right" />
+
+		<ListPreference android:entries="@array/bottom_icon_position"
+			android:entryValues="@array/bottom_icon_position_values"
+			android:summary="底部发消息图标" android:dialogTitle="设置发消息图标显示位置"
+			android:title="底部发消息图标" android:key="@string/option_bottom_write_icon"
+			android:defaultValue="none" />
 
 	</PreferenceScreen>
 

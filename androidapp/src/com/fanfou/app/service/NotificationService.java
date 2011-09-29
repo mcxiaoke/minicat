@@ -104,6 +104,7 @@ public class NotificationService extends BaseIntentService {
 			if (size > 0) {
 				getContentResolver().bulkInsert(DirectMessageInfo.CONTENT_URI,
 						Parser.toContentValuesArray(dms));
+				getContentResolver().notifyChange(DirectMessageInfo.CONTENT_URI, null,false);
 				notifyDmList(DirectMessage.TYPE_NONE, size);
 
 			}
@@ -120,6 +121,7 @@ public class NotificationService extends BaseIntentService {
 			if (size > 0) {
 				getContentResolver().bulkInsert(StatusInfo.CONTENT_URI,
 						Parser.toContentValuesArray(ss));
+				getContentResolver().notifyChange(DirectMessageInfo.CONTENT_URI, null,false);
 				if (size == 1) {
 					notifyStatusOne(NOTIFICATION_TYPE_MENTION, ss.get(0));
 				} else {
@@ -139,6 +141,7 @@ public class NotificationService extends BaseIntentService {
 			if (size > 0) {
 				getContentResolver().bulkInsert(StatusInfo.CONTENT_URI,
 						Parser.toContentValuesArray(ss));
+				getContentResolver().notifyChange(DirectMessageInfo.CONTENT_URI, null,false);
 				if (size == 1) {
 					notifyStatusOne(NOTIFICATION_TYPE_HOME, ss.get(0));
 				} else {

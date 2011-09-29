@@ -17,8 +17,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
+import android.util.Log;
 
 public class ActionService extends BaseIntentService {
+	private static final String TAG=ActionService.class.getSimpleName();
 	ResultReceiver receiver;
 
 	public ActionService() {
@@ -41,7 +43,10 @@ public class ActionService extends BaseIntentService {
 			if (!StringHelper.isEmpty(id)) {
 				performAction(id, type);
 			} else {
-				receiver.send(Commons.RESULT_CODE_ERROR, null);
+				Bundle error = new Bundle();
+				error.putInt(Commons.EXTRA_TYPE, type);
+				error.putString(Commons.EXTRA_ERROR_MESSAGE, "null action id.");
+				receiver.send(Commons.RESULT_CODE_ERROR, error);
 			}
 		}
 	}
@@ -55,7 +60,9 @@ public class ActionService extends BaseIntentService {
 			data.putBoolean(Commons.EXTRA_BOOLEAN, result);
 			receiver.send(Commons.RESULT_CODE_FINISH, data);
 		} catch (ApiException e) {
-			e.printStackTrace();
+			if (App.DEBUG) {
+				Log.e(TAG, "doDetectFriendships:"+e.getMessage());
+			}	
 			Bundle error = new Bundle();
 			error.putInt(Commons.EXTRA_TYPE, Commons.ACTION_USER_RELATION);
 			error.putSerializable(Commons.EXTRA_ERROR, e);
@@ -233,7 +240,7 @@ public class ActionService extends BaseIntentService {
 
 		} catch (ApiException e) {
 			if (App.DEBUG) {
-				e.printStackTrace();
+				Log.e(TAG, "performAction: id="+id+" type="+type+e.getMessage());
 			}
 			Bundle error = new Bundle();
 			error.putInt(Commons.EXTRA_TYPE, type);
