@@ -46,10 +46,10 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.R;
+import com.fanfou.app.http.ApnType;
 import com.fanfou.app.http.GzipResponseInterceptor;
 import com.fanfou.app.http.NetworkState;
 import com.fanfou.app.http.RequestRetryHandler;
-import com.fanfou.app.http.NetworkState.Type;
 import com.fanfou.app.update.AutoUpdateManager;
 
 /**
@@ -63,20 +63,19 @@ public final class NetworkHelper {
 	public static final int CONNECTION_TIMEOUT_MS = 20000;
 	public static final int SOCKET_TIMEOUT_MS = 20000;
 
-	public static HttpURLConnection newHttpURLConnection(NetworkState state,
+	public static HttpURLConnection newHttpURLConnection(ApnType apnType,
 			String url) throws IOException {
 		HttpURLConnection conn = null;
 		URL serverUrl;
 		String domain = getDomain(url);
-		NetworkState.Type apnType = state.getApnType();
-		if (apnType == Type.CTWAP) {
+		if (apnType == ApnType.CTWAP) {
 			url = "http://10.0.0.200:80/" + getUrlNoDomain(url);
 			serverUrl = new URL(url);
 			conn = (HttpURLConnection) serverUrl.openConnection();
 			conn.setRequestMethod("GET");
 			conn.setRequestProperty("X-Online-Host", domain);
 			conn.setRequestProperty("Host", domain);
-		} else if (apnType == Type.WAP) {
+		} else if (apnType == ApnType.WAP) {
 			url = "http://10.0.0.172:80/" + getUrlNoDomain(url);
 			serverUrl = new URL(url);
 			conn = (HttpURLConnection) serverUrl.openConnection();
@@ -216,14 +215,40 @@ public final class NetworkHelper {
 		}
 	}
 
-	public static void setProxy(HttpParams params, NetworkState.Type type) {
-		if (type == Type.CTWAP) {
+	public static void setProxy(HttpParams params, ApnType type) {
+		if (type == ApnType.CTWAP) {
 			if (App.DEBUG) {
 				Log.d("setProxy", "set proxy for ctwap");
 			}
 			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
 					"10.0.0.200", 80));
-		} else if (type == Type.WAP) {
+		} else if (type == ApnType.WAP) {
+			if (App.DEBUG) {
+				Log.d("setProxy", "set proxy for wap");
+			}
+			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
+					"10.0.0.172", 80));
+		} else {
+			if (App.DEBUG) {
+				Log.d("setProxy", "set no proxy");
+			}
+			params.removeParameter(ConnRoutePNames.DEFAULT_PROXY);
+		}
+	}
+	
+	private static void setProxy(HttpClient client) {
+		if(client==null){
+			return;
+		}
+		HttpParams params = client.getParams();
+		ApnType type=App.me.apnType;
+		if (type == ApnType.CTWAP) {
+			if (App.DEBUG) {
+				Log.d("setProxy", "set proxy for ctwap");
+			}
+			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
+					"10.0.0.200", 80));
+		} else if (type == ApnType.WAP) {
 			if (App.DEBUG) {
 				Log.d("setProxy", "set proxy for wap");
 			}
@@ -237,7 +262,7 @@ public final class NetworkHelper {
 		}
 	}
 
-	public static DefaultHttpClient setHttpClient() {
+	public static DefaultHttpClient newHttpClient() {
 		ConnPerRoute connPerRoute = new ConnPerRoute() {
 			@Override
 			public int getMaxForRoute(HttpRoute route) {
@@ -262,7 +287,9 @@ public final class NetworkHelper {
 				params, schReg);
 		DefaultHttpClient client = new DefaultHttpClient(manager, params);
 		client.addResponseInterceptor(new GzipResponseInterceptor());
-		client.setHttpRequestRetryHandler(new RequestRetryHandler(4));
+		client.setHttpRequestRetryHandler(new RequestRetryHandler(3));
+		
+		setProxy(client);
 		return client;
 	}
 	

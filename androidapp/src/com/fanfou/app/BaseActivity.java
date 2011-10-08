@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.http.ApnType;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionBar.OnRefreshClickListener;
 import com.fanfou.app.ui.ActionManager;
@@ -145,12 +146,13 @@ public abstract class BaseActivity extends Activity implements OnRefreshClickLis
 	}
 
 	protected boolean noConnection() {
-		if (App.me.connected) {
-			return false;
-		} else {
-			Utils.notify(this, "无可用的网络连接，请稍后重试");
-			return true;
-		}
+		return App.me.apnType!=ApnType.NONE;
+//		if (App.me.connected) {
+//			return false;
+//		} else {
+//			Utils.notify(this, "无可用的网络连接，请稍后重试");
+//			return true;
+//		}
 	}
 
 	protected static final int MENU_ID_PROFILE = 0; //

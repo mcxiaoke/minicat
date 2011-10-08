@@ -58,12 +58,7 @@ public class ApiImpl2 implements Api, ResponseCode {
 	}
 
 	private void init() {
-		mClient = NetworkHelper.setHttpClient();
-
-		// mConsumer = new CommonsHttpOAuthConsumer(ApiConfig.CONSUMER_KEY,
-		// ApiConfig.CONSUMER_SECRET);
-		// mConsumer.setTokenWithSecret(App.me.oauthAccessToken,
-		// App.me.oauthAccessTokenSecret);
+		mClient = NetworkHelper.newHttpClient();
 	}
 
 	private Response doPost(String url, ArrayList<BasicNameValuePair> params)

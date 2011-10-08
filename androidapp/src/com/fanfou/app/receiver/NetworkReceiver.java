@@ -1,8 +1,8 @@
 package com.fanfou.app.receiver;
 
 import com.fanfou.app.App;
-import com.fanfou.app.http.NetworkState.Type;
-import com.fanfou.app.util.NetworkHelper;
+import com.fanfou.app.http.ApnType;
+import com.fanfou.app.util.IntentHelper;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -22,51 +22,33 @@ public class NetworkReceiver extends BroadcastReceiver {
 		if (App.DEBUG)
 			Log.d(TAG, "Action Received: " + action + " From intent: " + intent);
 		if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-			App.me.connected = !intent.getBooleanExtra(
+			boolean disconnected = intent.getBooleanExtra(
 					ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
 			if (App.DEBUG) {
-				logIntent(intent);
+				IntentHelper.logIntent(TAG,intent);
+			}
+			if(disconnected){
+				App.me.apnType = ApnType.NONE;
+				return;
 			}
 			NetworkInfo info = (NetworkInfo) intent
 					.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
 			if (info != null && info.isAvailable()) {
-				Type apnType = Type.NET;
-				App.me.connected=true;
+				App.me.apnType = ApnType.NET;
+				disconnected=false;
 				if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
 					String apnTypeName = info.getExtraInfo();
 					if (!TextUtils.isEmpty(apnTypeName)) {
-						if (apnTypeName.equals("ctwap")) {
-							apnType = Type.CTWAP;
+						if (apnTypeName.equals("3gnet")) {
+							App.me.apnType = ApnType.HSDPA;
+						} else if (apnTypeName.equals("ctwap")) {
+							App.me.apnType = ApnType.CTWAP;
 						} else if (apnTypeName.contains("wap")) {
-							apnType = Type.WAP;
-
+							App.me.apnType = ApnType.WAP;
 						}
 					}
 				}
-				NetworkHelper.setProxy(App.me.getHttpClient().getParams(), apnType);
 			}
-		}
-	}
-
-	protected void logIntent(Intent intent) {
-		if (App.DEBUG) {
-			StringBuffer sb = new StringBuffer();
-			sb.append(" intent.getAction():" + intent.getAction());
-			sb.append(" intent.getData():" + intent.getData());
-			sb.append(" intent.getDataString():" + intent.getDataString());
-			sb.append(" intent.getScheme():" + intent.getScheme());
-			sb.append(" intent.getType():" + intent.getType());
-			Bundle extras = intent.getExtras();
-			if (extras != null && !extras.isEmpty()) {
-				for (String key : extras.keySet()) {
-					Object value = extras.get(key);
-					sb.append(" EXTRA: {" + key + "::" + value + "}");
-				}
-			} else {
-				sb.append(" NO EXTRAS");
-			}
-
-			Log.d(TAG, sb.toString());
 		}
 	}
 

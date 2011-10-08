@@ -63,7 +63,7 @@ public final class AlarmHelper {
 					.getSystemService(Context.ALARM_SERVICE);
 			PendingIntent pi = getNotificationPendingIntent(context);
 			am.cancel(pi);
-			am.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+			am.setInexactRepeating(AlarmManager.RTC,
 					c.getTimeInMillis(), interval * 60 * 1000, pi);
 		} else {
 			AlarmManager am = (AlarmManager) context
@@ -123,7 +123,7 @@ public final class AlarmHelper {
 	}
 
 	public static long setAlarmTime() {
-		int hour = 6;
+		int hour = 7;
 		int minute = 0;
 		Calendar c = Calendar.getInstance();
 		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),

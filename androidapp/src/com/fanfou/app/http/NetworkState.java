@@ -23,11 +23,8 @@ public class NetworkState {
 	 */
 	private static final String tag = NetworkState.class.getSimpleName();
 	private ConnectivityManager cm;
-
-	public boolean connected = true;
-
-	public String apnTypeName = "cmnet";
-	public Type apnType = Type.NET;
+	private String apnTypeName = "cmnet";
+	private ApnType apnType = ApnType.NET;
 
 	/**
 	 * 记录调试信息
@@ -54,39 +51,28 @@ public class NetworkState {
 		try {
 			NetworkInfo info = cm.getActiveNetworkInfo();
 			if (info != null && info.isAvailable()) {
-				connected = true;
 				if (App.DEBUG) {
 					log(info.toString());
 				}
 				if (info.getType() == ConnectivityManager.TYPE_WIFI) {
-					apnType = Type.WIFI;
+					apnType = ApnType.WIFI;
 					apnTypeName = "wifi";
 				} else if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
 					apnTypeName = info.getExtraInfo();
 					if (!TextUtils.isEmpty(apnTypeName)) {
 						if (apnTypeName.equals("3gnet")) {
-							apnType = Type.HSDPA;
+							apnType = ApnType.HSDPA;
 						} else if (apnTypeName.equals("ctwap")) {
-							apnType = Type.CTWAP;
+							apnType = ApnType.CTWAP;
 						} else if (apnTypeName.contains("wap")) {
-							apnType = Type.WAP;
+							apnType = ApnType.WAP;
 						}
 					}
 				}
 			} else {
-				connected = false;
 			}
 		} catch (Exception e) {
 		}
-	}
-
-	/**
-	 * 判断网络连接状态
-	 * 
-	 * @return 返回网络是否可用
-	 */
-	public boolean isAvailable() {
-		return connected;
 	}
 
 	/**
@@ -94,7 +80,7 @@ public class NetworkState {
 	 * 
 	 * @return 返回接入点类型
 	 */
-	public Type getApnType() {
+	public ApnType getApnType() {
 		return apnType;
 	}
 
@@ -122,7 +108,6 @@ public class NetworkState {
 		try {
 			NetworkInfo info = cm.getActiveNetworkInfo();
 			if (info != null && info.isAvailable()) {
-				connected = true;
 				log(info.toString());
 				if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
 					apnTypeName = info.getExtraInfo();
@@ -132,8 +117,6 @@ public class NetworkState {
 						}
 					}
 				}
-			} else {
-				connected = false;
 			}
 		} catch (Exception e) {
 			if (App.DEBUG) {
@@ -141,13 +124,6 @@ public class NetworkState {
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * 网络连接类型
-	 */
-	public static enum Type {
-		WIFI, HSDPA, NET, WAP, CTWAP, ;
 	}
 
 }

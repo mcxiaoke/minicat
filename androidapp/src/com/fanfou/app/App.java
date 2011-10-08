@@ -3,12 +3,8 @@ package com.fanfou.app;
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
-import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -23,14 +19,9 @@ import com.fanfou.app.api.ApiImpl;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.cache.ImageLoader;
-import com.fanfou.app.cache.ImageLoaderOld;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.http.ApnType;
 import com.fanfou.app.http.NetworkState;
-import com.fanfou.app.http.NetworkState.Type;
-import com.fanfou.app.service.FetchService;
-import com.fanfou.app.update.AutoUpdateManager;
-import com.fanfou.app.util.AlarmHelper;
-import com.fanfou.app.util.NetworkHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
@@ -79,21 +70,17 @@ public class App extends Application {
 	// TODO add some flags to status model in db
 	// TODO cache and store user info data
 
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 
 	public static App me;
+	public static boolean active=false;
 
 	private IImageLoader imageLoader;
-	private DefaultHttpClient client;
+	public Api api;
 	private float density;
 
 	public boolean verified;
 	public boolean isLogin;
-	public boolean autoComplete;
-	public boolean connected = true;
-	public boolean active;
-
-	public static int notificationCount;
 
 	public User user;
 	public String userId;
@@ -107,11 +94,9 @@ public class App extends Application {
 	public int appVersionCode;
 	public String appVersionName;
 
-	public NetworkState networkState;
+	public ApnType apnType;
 
 	public SharedPreferences sp;
-
-	public Api api;
 
 	@Override
 	public void onCreate() {
@@ -120,31 +105,23 @@ public class App extends Application {
 		initAppInfo();
 		initPreferences();
 		getDensity();
-		initNetworkState();
-		getHttpClient();
 		Utils.setAutoClean(this);
 		Utils.setAutoComplete(this);
 		Utils.setAutoNotification(this);
 		if (isLogin) {
-			if (networkState.apnType == Type.WIFI
-					|| networkState.apnType == Type.HSDPA) {
+			if (apnType == ApnType.WIFI
+					|| apnType == ApnType.HSDPA) {
 				initUserInfo();
 			}
 		}
 
 	}
 
-	@Override
-	public void onLowMemory() {
-		super.onLowMemory();
-		if (imageLoader != null) {
-			imageLoader.clearCache();
-		}
-	}
-
 	private void init() {
 		App.me = this;
 		ACRA.init(this);
+		NetworkState state=new NetworkState(this);
+		apnType=state.getApnType();
 		this.imageLoader = new ImageLoader(this);
 		this.api = new ApiImpl(this);
 
@@ -175,7 +152,7 @@ public class App extends Application {
 	}
 
 	public float getDensity() {
-		if(density==0f){
+		if(density==0.0f){
 			DisplayMetrics dm = getResources().getDisplayMetrics();
 			if (DEBUG) {
 				Log.i("App", dm.toString());
@@ -200,10 +177,6 @@ public class App extends Application {
 		appVersionName = pi.versionName;
 	}
 
-	private void initNetworkState() {
-		networkState = new NetworkState(this);
-	}
-
 	private void initUserInfo() {
 		Thread task = new Thread() {
 
@@ -221,15 +194,6 @@ public class App extends Application {
 		};
 		task.start();
 	}
-
-//	public static App getApp(Activity activity){
-//		return (App) activity.getApplication();
-//	}
-//	
-//	public static App getApp(Context context){
-//		return (App) context.getApplicationContext();
-//	}
-
 
 	public synchronized void updateUserInfo(User u) {
 		user = u;
@@ -253,17 +217,6 @@ public class App extends Application {
 		if (imageLoader != null) {
 			imageLoader.shutdown();
 		}
-	}
-
-	public DefaultHttpClient getHttpClient() {
-		if (client == null) {
-			synchronized (this) {
-				client = NetworkHelper.setHttpClient();
-				NetworkHelper.setProxy(client.getParams(),
-						networkState.getApnType());	
-			}
-		}
-		return client;
 	}
 
 }

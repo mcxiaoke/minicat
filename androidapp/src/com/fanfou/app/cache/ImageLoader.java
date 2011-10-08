@@ -12,6 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -22,7 +23,9 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.fanfou.app.App;
+import com.fanfou.app.http.NetworkState;
 import com.fanfou.app.util.ImageHelper;
+import com.fanfou.app.util.NetworkHelper;
 
 /**
  * @author mcxiaoke
@@ -47,11 +50,13 @@ public class ImageLoader implements Runnable, IImageLoader {
 	private final ConcurrentHashMap<ImageLoaderTask, ImageLoaderCallback> mCallbackMap = new ConcurrentHashMap<ImageLoaderTask, ImageLoaderCallback>();
 	public final ImageCache mCache;
 	private final Handler mHandler;
+	private final DefaultHttpClient mHttpClient;
 
 	public ImageLoader(Context context) {
 		this.mCache = new ImageCache(context);
 		this.mHandler = new ImageDownloadHandler();
 		this.mExecutorService.submit(this);
+		this.mHttpClient=NetworkHelper.newHttpClient();
 	}
 
 	@Override
@@ -191,10 +196,8 @@ public class ImageLoader implements Runnable, IImageLoader {
 	}
 
 	private Bitmap downloadImage(String url) throws IOException {
-		HttpClient client = App.me.getHttpClient();
-
 		HttpGet request = new HttpGet(url);
-		HttpResponse response = client.execute(request);
+		HttpResponse response = mHttpClient.execute(request);
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (App.DEBUG) {
 			Log.d(TAG, "downloadImage() statusCode=" + statusCode + " [" + url

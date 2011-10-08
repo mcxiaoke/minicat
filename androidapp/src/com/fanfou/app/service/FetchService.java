@@ -137,7 +137,6 @@ public class FetchService extends BaseIntentService {
 			cr.delete(UserInfo.CONTENT_URI, where, null);
 			cr.bulkInsert(UserInfo.CONTENT_URI,
 					Parser.toContentValuesArray(users));
-			App.me.autoComplete = true;
 		}
 	}
 

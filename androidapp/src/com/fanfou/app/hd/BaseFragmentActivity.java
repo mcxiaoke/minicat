@@ -21,6 +21,7 @@ import com.fanfou.app.R;
 import com.fanfou.app.SearchPage;
 import com.fanfou.app.WritePage;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.http.ApnType;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.Utils;
@@ -127,12 +128,13 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 	}
 	
 	protected boolean noConnection(){
-		if(App.me.connected){
-			return false;
-		}else{
-			Utils.notify(this, "无可用的网络连接，请稍后重试");
-			return true;
-		}
+		return App.me.apnType!=ApnType.NONE;
+//		if(App.me.connected){
+//			return false;
+//		}else{
+//			Utils.notify(this, "无可用的网络连接，请稍后重试");
+//			return true;
+//		}
 	}
 
 	protected static final int MENU_ID_OPTION = 0; // 设置

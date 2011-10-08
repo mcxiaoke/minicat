@@ -551,12 +551,16 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 					stopRefreshAnimation();
 					if (i < PAGE_NUMS - 1) {
 						views[i].addFooter();
+					}else{
+						views[i].setSelection(0);
 					}
 				}
 				cursors[i].requery();
+				if(i==PAGE_NUMS-1){
+					views[i].setSelection(0);
+				}
 				break;
 			case Commons.RESULT_CODE_ERROR:
-
 				String errorMessage = resultData
 						.getString(Commons.EXTRA_ERROR_MESSAGE);
 				Utils.notify(mContext, errorMessage);

@@ -153,10 +153,9 @@ public class EndlessListViewNoHeader extends ListView implements OnItemClickList
 	}
 
 	public void savePosition() {
-		int index = getFirstVisiblePosition();
-		View v = getChildAt(index);
+		curPos = getFirstVisiblePosition();
+		View v = getChildAt(curPos);
 		curPosTop = (v == null) ? 0 : v.getTop();
-		curPos = index;
 	}
 
 	public void restorePosition() {

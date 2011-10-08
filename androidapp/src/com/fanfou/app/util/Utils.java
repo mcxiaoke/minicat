@@ -216,15 +216,14 @@ public final class Utils {
 		return end * ((time = time / duration - 1) * time * time + 1) + start;
 	}
 
-	public static boolean checkMultiTouch(Context context) {
-		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.DONUT) {
-			return context.getPackageManager().hasSystemFeature(
-					PackageManager.FEATURE_TOUCHSCREEN_MULTITOUCH);
-		} else {
-			return false;
-		}
-	}
-	
+//	public static boolean checkMultiTouch(Context context) {
+//		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.DONUT) {
+//			return context.getPackageManager().hasSystemFeature(
+//					PackageManager.FEATURE_TOUCHSCREEN_MULTITOUCH);
+//		} else {
+//			return false;
+//		}
+//	}
 
 	public static void setAutoClean(Context context) {
 		boolean isSet = OptionHelper.readBoolean(context,

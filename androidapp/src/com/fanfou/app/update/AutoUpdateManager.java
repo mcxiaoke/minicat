@@ -21,6 +21,7 @@ import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.service.DownloadService;
+import com.fanfou.app.util.NetworkHelper;
 
 /**
  * @author mcxiaoke
@@ -41,7 +42,7 @@ public final class AutoUpdateManager {
 	// APP_UPDATE_CODE="http://apps.fanfou.com/android/update.txt";
 
 	public static VersionInfo fetchVersionInfo() {
-		HttpClient client = App.me.getHttpClient();
+		HttpClient client = NetworkHelper.newHttpClient();
 		HttpGet request = new HttpGet(APP_UPDATE_SITE);
 		try {
 			HttpResponse response = client.execute(request);
