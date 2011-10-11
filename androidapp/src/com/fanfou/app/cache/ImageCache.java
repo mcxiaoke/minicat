@@ -24,7 +24,7 @@ import com.fanfou.app.util.StringHelper;
  * 
  */
 public class ImageCache implements ICache<Bitmap> {
-	private static final String TAG=ImageCache.class.getSimpleName();
+	private static final String TAG = ImageCache.class.getSimpleName();
 
 	public static final int IMAGE_QUALITY = 100;
 
@@ -107,7 +107,7 @@ public class ImageCache implements ICache<Bitmap> {
 		Bitmap bitmap = null;
 		String filename = StringHelper.md5(key) + ".jpg";
 		File file = new File(IOHelper.getCacheDir(mContext), filename);
-		if(!file.exists()){
+		if (!file.exists()) {
 			return null;
 		}
 		FileInputStream fis = null;
@@ -115,7 +115,7 @@ public class ImageCache implements ICache<Bitmap> {
 			fis = new FileInputStream(file);
 			bitmap = BitmapFactory.decodeStream(fis);
 		} catch (FileNotFoundException e) {
-			if(App.DEBUG){
+			if (App.DEBUG) {
 				Log.e(TAG, e.getMessage());
 			}
 			memoryCache.remove(key);
@@ -126,13 +126,13 @@ public class ImageCache implements ICache<Bitmap> {
 	}
 
 	private boolean writeToFile(String key, Bitmap bitmap) {
-		if (bitmap == null||StringHelper.isEmpty(key)) {
+		if (bitmap == null || StringHelper.isEmpty(key)) {
 			return false;
 		}
 		String filename = StringHelper.md5(key) + ".jpg";
 		File file = new File(IOHelper.getCacheDir(mContext), filename);
-		if(App.DEBUG){
-			Log.i(TAG, "save image: "+filename);
+		if (App.DEBUG) {
+			Log.i(TAG, "save image: " + filename);
 		}
 		return ImageHelper.writeToFile(file, bitmap);
 	}

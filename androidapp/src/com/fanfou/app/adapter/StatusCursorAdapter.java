@@ -38,7 +38,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 
 	private static final int ITEM_TYPE_MENTION = 0;
 	private static final int ITEM_TYPE_NONE = 1;
-	private static final int[] viewTypes = new int[] { ITEM_TYPE_MENTION,
+	private static final int[] TYPES = new int[] { ITEM_TYPE_MENTION,
 			ITEM_TYPE_NONE };
 
 	private boolean colored;
@@ -63,7 +63,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 
 	@Override
 	public int getViewTypeCount() {
-		return viewTypes.length;
+		return TYPES.length;
 	}
 
 	@Override
@@ -121,16 +121,15 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 				row.setBackgroundColor(0x33999999);
 			}
 		}
-		
-		
+
 		holder.headIcon.setTag(s.userProfileImageUrl);
 		mLoader.set(s.userProfileImageUrl, holder.headIcon,
 				R.drawable.default_head);
 		holder.headIcon.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				if(s!=null){
+				if (s != null) {
 					ActionManager.doProfile(mContext, s);
 				}
 			}
@@ -147,8 +146,6 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 		} else {
 			holder.photoIcon.setVisibility(View.VISIBLE);
 		}
-		
-
 
 		holder.nameText.setText(s.userScreenName);
 		StatusHelper.setSimpifiedText(holder.contentText, s.text);

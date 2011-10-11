@@ -1,12 +1,12 @@
 package com.fanfou.app.http;
 
-import com.fanfou.app.App;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.fanfou.app.App;
 
 /**
  * 网络连接状态判断，是否连接，接入点，WIFI等，

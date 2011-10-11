@@ -20,46 +20,46 @@ package com.fanfou.app.db;
  * Add selection and it's argument (for query...)
  */
 public class SelectionAndArgs {
-  public String selection;
-  public String[] selectionArgs;
-  public int nArgs;
-  
-  public SelectionAndArgs() {
-      clear();
-  }
-  
-  public void clear() {
-      selection = "";
-      selectionArgs = new String[] {};
-      nArgs = 0;
-  }
-  
-  public int addSelection(String selectionAdd, String[] selectionArgsAdd) {
-      if (selectionAdd == null) {
-          selectionAdd = "";
-      }
-      if (selectionArgsAdd == null) {
-          selectionArgsAdd = new String[] {};
-      }
-      int nArgsAdd = selectionArgsAdd.length;
-      if (nArgsAdd > 0) {
-          if (selection.length() == 0) {
-              selection = selectionAdd;
-          } else {
-              selection = "(" + selection + ") AND (" + selectionAdd + ")";
-          }
-          
-          String[] selectionArgs2 = new String[nArgs + nArgsAdd];
-          for (int i = 0; i < nArgs; i++) {
-              selectionArgs2[i] = selectionArgs[i];
-          }
-          for (int i = nArgs; i < nArgs + nArgsAdd; i++) {
-              selectionArgs2[i] = selectionArgsAdd[i - nArgs];
-          }
-          selectionArgs = selectionArgs2;
-          
-          nArgs += nArgsAdd;
-      }
-      return nArgs;
-  }
+	public String selection;
+	public String[] selectionArgs;
+	public int nArgs;
+
+	public SelectionAndArgs() {
+		clear();
+	}
+
+	public void clear() {
+		selection = "";
+		selectionArgs = new String[] {};
+		nArgs = 0;
+	}
+
+	public int addSelection(String selectionAdd, String[] selectionArgsAdd) {
+		if (selectionAdd == null) {
+			selectionAdd = "";
+		}
+		if (selectionArgsAdd == null) {
+			selectionArgsAdd = new String[] {};
+		}
+		int nArgsAdd = selectionArgsAdd.length;
+		if (nArgsAdd > 0) {
+			if (selection.length() == 0) {
+				selection = selectionAdd;
+			} else {
+				selection = "(" + selection + ") AND (" + selectionAdd + ")";
+			}
+
+			String[] selectionArgs2 = new String[nArgs + nArgsAdd];
+			for (int i = 0; i < nArgs; i++) {
+				selectionArgs2[i] = selectionArgs[i];
+			}
+			for (int i = nArgs; i < nArgs + nArgsAdd; i++) {
+				selectionArgs2[i] = selectionArgsAdd[i - nArgs];
+			}
+			selectionArgs = selectionArgs2;
+
+			nArgs += nArgsAdd;
+		}
+		return nArgs;
+	}
 }

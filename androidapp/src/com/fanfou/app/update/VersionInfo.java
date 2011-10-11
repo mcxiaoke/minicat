@@ -30,15 +30,15 @@ public final class VersionInfo {
 	public static VersionInfo parse(String response) {
 		try {
 			JSONObject o = new JSONObject(response);
-			VersionInfo info=new VersionInfo();
-			info.versionCode=o.getInt("versionCode");
-			info.versionName=o.getString("versionName");
-			info.releaseDate=o.getString("releaseDate");
-			info.changelog=o.getString("changelog");
-			info.downloadUrl=o.getString("downloadUrl");
-			info.versionType=o.getString("versionType");
-			info.packageName=o.getString("packageName");
-			info.forceUpdate=o.getBoolean("forceUpdate");
+			VersionInfo info = new VersionInfo();
+			info.versionCode = o.getInt("versionCode");
+			info.versionName = o.getString("versionName");
+			info.releaseDate = o.getString("releaseDate");
+			info.changelog = o.getString("changelog");
+			info.downloadUrl = o.getString("downloadUrl");
+			info.versionType = o.getString("versionType");
+			info.packageName = o.getString("packageName");
+			info.forceUpdate = o.getBoolean("forceUpdate");
 			return info;
 		} catch (JSONException e) {
 			if (App.DEBUG) {
@@ -50,15 +50,15 @@ public final class VersionInfo {
 
 	@Override
 	public String toString() {
-		StringBuffer sb=new StringBuffer();
-		sb.append("[VersionInfo] versionCode="+versionCode);
-		sb.append("[VersionInfo] versionName="+versionName);
-		sb.append("[VersionInfo] releaseDate="+releaseDate);
-		sb.append("[VersionInfo] downloadUrl="+downloadUrl);
-		sb.append("[VersionInfo] versionType="+versionType);
-		sb.append("[VersionInfo] packageName="+packageName);
-		sb.append("[VersionInfo] forceUpdate="+forceUpdate);
-		sb.append("[VersionInfo] changelog=("+changelog).append(")");
+		StringBuffer sb = new StringBuffer();
+		sb.append("[VersionInfo] versionCode=" + versionCode);
+		sb.append("[VersionInfo] versionName=" + versionName);
+		sb.append("[VersionInfo] releaseDate=" + releaseDate);
+		sb.append("[VersionInfo] downloadUrl=" + downloadUrl);
+		sb.append("[VersionInfo] versionType=" + versionType);
+		sb.append("[VersionInfo] packageName=" + packageName);
+		sb.append("[VersionInfo] forceUpdate=" + forceUpdate);
+		sb.append("[VersionInfo] changelog=(" + changelog).append(")");
 		return sb.toString();
 	}
 

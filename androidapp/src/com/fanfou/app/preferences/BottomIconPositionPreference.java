@@ -9,7 +9,7 @@ public class BottomIconPositionPreference extends ListPreference {
 	public BottomIconPositionPreference(Context context) {
 		super(context);
 	}
-	
+
 	public BottomIconPositionPreference(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}

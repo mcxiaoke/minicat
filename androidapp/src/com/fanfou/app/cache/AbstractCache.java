@@ -49,7 +49,7 @@ public abstract class AbstractCache<T> implements ICache<T> {
 
 	@Override
 	public boolean put(String key, T t) {
-		if(key==null||key.equals("")||t==null){
+		if (key == null || key.equals("") || t == null) {
 			return false;
 		}
 		boolean result = true;
@@ -64,7 +64,7 @@ public abstract class AbstractCache<T> implements ICache<T> {
 
 	@Override
 	public boolean containsKey(String key) {
-		if(key==null||key.equals("")){
+		if (key == null || key.equals("")) {
 			return false;
 		}
 		if (onlyMemoryCache) {

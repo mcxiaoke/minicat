@@ -14,12 +14,10 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.fanfou.app.api.Api;
-import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.ApiImpl;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.cache.ImageLoader;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.http.ApnType;
 import com.fanfou.app.http.NetworkState;
 import com.fanfou.app.util.OptionHelper;
@@ -73,7 +71,7 @@ public class App extends Application {
 	public static final boolean DEBUG = true;
 
 	public static App me;
-	public static boolean active=false;
+	public static boolean active = false;
 
 	private IImageLoader imageLoader;
 	public Api api;
@@ -105,23 +103,20 @@ public class App extends Application {
 		initAppInfo();
 		initPreferences();
 		getDensity();
-		Utils.setAutoClean(this);
-		Utils.setAutoComplete(this);
-		Utils.setAutoNotification(this);
 		if (isLogin) {
-			if (apnType == ApnType.WIFI
-					|| apnType == ApnType.HSDPA) {
-				initUserInfo();
-			}
+			initAlarm();
+		}
+
+		if (!DEBUG) {
+			ACRA.init(this);
 		}
 
 	}
 
 	private void init() {
 		App.me = this;
-		ACRA.init(this);
-		NetworkState state=new NetworkState(this);
-		apnType=state.getApnType();
+		NetworkState state = new NetworkState(this);
+		apnType = state.getApnType();
 		this.imageLoader = new ImageLoader(this);
 		this.api = new ApiImpl(this);
 
@@ -137,22 +132,23 @@ public class App extends Application {
 
 	private void initPreferences() {
 		this.sp = PreferenceManager.getDefaultSharedPreferences(this);
-		this.userId = OptionHelper.readString(this, Commons.KEY_USERID, null);
-		this.password = OptionHelper.readString(this, Commons.KEY_PASSWORD,
+		this.userId = OptionHelper.readString(this, R.string.option_userid,
+				null);
+		this.password = OptionHelper.readString(this, R.string.option_password,
 				null);
 		this.userScreenName = OptionHelper.readString(this,
-				Commons.KEY_SCREEN_NAME, null);
+				R.string.option_username, null);
 		this.userProfileImage = OptionHelper.readString(this,
-				Commons.KEY_PROFILE_IMAGE, null);
+				R.string.option_profile_image, null);
 		this.oauthAccessToken = OptionHelper.readString(this,
-				Commons.KEY_OAUTH_ACCESS_TOKEN, null);
+				R.string.option_oauth_token, null);
 		this.oauthAccessTokenSecret = OptionHelper.readString(this,
-				Commons.KEY_OAUTH_ACCESS_TOKEN_SECRET, null);
+				R.string.option_oauth_token_secret, null);
 		this.isLogin = !StringHelper.isEmpty(oauthAccessTokenSecret);
 	}
 
 	public float getDensity() {
-		if(density==0.0f){
+		if (density == 0.0f) {
 			DisplayMetrics dm = getResources().getDisplayMetrics();
 			if (DEBUG) {
 				Log.i("App", dm.toString());
@@ -161,7 +157,6 @@ public class App extends Application {
 		}
 		return density;
 	}
-
 
 	private void initAppInfo() {
 		PackageManager pm = getPackageManager();
@@ -177,22 +172,10 @@ public class App extends Application {
 		appVersionName = pi.versionName;
 	}
 
-	private void initUserInfo() {
-		Thread task = new Thread() {
-
-			@Override
-			public void run() {
-				try {
-					User result = api.verifyAccount();
-					if (result != null) {
-						updateUserInfo(result);
-						verified = true;
-					}
-				} catch (ApiException e) {
-				}
-			}
-		};
-		task.start();
+	private void initAlarm() {
+		Utils.setAutoClean(this);
+		Utils.setAutoComplete(this);
+		Utils.setAutoNotification(this);
 	}
 
 	public synchronized void updateUserInfo(User u) {
@@ -200,9 +183,9 @@ public class App extends Application {
 		userId = u.id;
 		userScreenName = u.screenName;
 		userProfileImage = u.profileImageUrl;
-		OptionHelper.saveString(this, Commons.KEY_USERID, u.id);
-		OptionHelper.saveString(this, Commons.KEY_SCREEN_NAME, u.screenName);
-		OptionHelper.saveString(this, Commons.KEY_PROFILE_IMAGE,
+		OptionHelper.saveString(this, R.string.option_userid, u.id);
+		OptionHelper.saveString(this, R.string.option_username, u.screenName);
+		OptionHelper.saveString(this, R.string.option_profile_image,
 				u.profileImageUrl);
 	}
 

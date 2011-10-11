@@ -7,11 +7,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.TextUtils;
-import android.util.Log;
+
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
+import com.fanfou.app.config.Commons;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -62,7 +62,7 @@ public class Database implements Contents {
 		SQLiteDatabase db = mSQLiteHelper.getWritableDatabase();
 		try {
 			db.beginTransaction();
-			result = db.insert(StatusInfo.TABLE_NAME, StatusInfo.ID,
+			result = db.insert(StatusInfo.TABLE_NAME, BasicColumns.ID,
 					status.toContentValues());
 			db.setTransactionSuccessful();
 		} catch (Exception e) {
@@ -117,7 +117,7 @@ public class Database implements Contents {
 	 * @return
 	 */
 	public long statusDeleteById(String id) {
-		String where = StatusInfo.ID + "=?";
+		String where = BasicColumns.ID + "=?";
 		String[] whereArgs = new String[] { id };
 		return statusDeleteByCondition(where, whereArgs);
 	}
@@ -155,17 +155,18 @@ public class Database implements Contents {
 	 * @return
 	 */
 	private static final int STATUS_STORE_MAX = 20;
-	
+
 	/**
-	 *  压缩数据库，删除旧消息
+	 * 压缩数据库，删除旧消息
+	 * 
 	 * @param context
 	 * @param type
 	 */
-	public static void trimDB(Context context,int type){
-		Database db=Database.getInstance(context);
-		int sum=db.statusCountByType(type);
-		if(sum>Database.STATUS_STORE_MAX){
-			db.statusDeleteOld(type);	
+	public static void trimDB(Context context, int type) {
+		Database db = Database.getInstance(context);
+		int sum = db.statusCountByType(type);
+		if (sum > Database.STATUS_STORE_MAX) {
+			db.statusDeleteOld(type);
 		}
 	}
 
@@ -190,42 +191,43 @@ public class Database implements Contents {
 		log("statusDeleteOld()");
 		SQLiteDatabase db = mSQLiteHelper.getWritableDatabase();
 		try {
-//			String countSql = "SELECT id FROM "+ StatusInfo.TABLE_NAME;
-//			if (type == Status.TYPE_NONE) {
-//				countSql += " ;";
-//			} else {
-//				countSql += " WHERE " + StatusInfo.TYPE + "=" + type + ";";
-//			}
-//
-//			log("statusDeleteOld() countSql=" + countSql);
-//
-//			Cursor aaaa = db.rawQuery(countSql, null);
-//
-//			if (aaaa == null) {
-//				log("statusDeleteOld() c0=null");
-//				aaaa.close();
-//				db.close();
-//				return false;
-//			}
+			// String countSql = "SELECT id FROM "+ StatusInfo.TABLE_NAME;
+			// if (type == Status.TYPE_NONE) {
+			// countSql += " ;";
+			// } else {
+			// countSql += " WHERE " + StatusInfo.TYPE + "=" + type + ";";
+			// }
+			//
+			// log("statusDeleteOld() countSql=" + countSql);
+			//
+			// Cursor aaaa = db.rawQuery(countSql, null);
+			//
+			// if (aaaa == null) {
+			// log("statusDeleteOld() c0=null");
+			// aaaa.close();
+			// db.close();
+			// return false;
+			// }
 
-//			aaaa.moveToFirst();
-//			int bbb = aaaa.getInt(aaaa.getColumnIndex("id"));
-//			int ccc=aaaa.getCount();
-			
-//			log("statusDeleteOld() countResult=" + ccc);
-//			if (ccc <= STATUS_STORE_MAX) {
-//				aaaa.close();
-//				db.close();
-//				return false;
-//			}
-//			aaaa.close();
+			// aaaa.moveToFirst();
+			// int bbb = aaaa.getInt(aaaa.getColumnIndex("id"));
+			// int ccc=aaaa.getCount();
 
-			String where=" "+StatusInfo.CREATED_AT + " < " + " (SELECT "
-			+ StatusInfo.CREATED_AT + " FROM " + StatusInfo.TABLE_NAME;
-			
-//			String sql = "DELETE FROM " + StatusInfo.TABLE_NAME + " WHERE ";
-//					+ StatusInfo.CREATED_AT + " < " + " (SELECT "
-//					+ StatusInfo.CREATED_AT + " FROM " + StatusInfo.TABLE_NAME;
+			// log("statusDeleteOld() countResult=" + ccc);
+			// if (ccc <= STATUS_STORE_MAX) {
+			// aaaa.close();
+			// db.close();
+			// return false;
+			// }
+			// aaaa.close();
+
+			String where = " " + BasicColumns.CREATED_AT + " < " + " (SELECT "
+					+ BasicColumns.CREATED_AT + " FROM "
+					+ StatusInfo.TABLE_NAME;
+
+			// String sql = "DELETE FROM " + StatusInfo.TABLE_NAME + " WHERE ";
+			// + StatusInfo.CREATED_AT + " < " + " (SELECT "
+			// + StatusInfo.CREATED_AT + " FROM " + StatusInfo.TABLE_NAME;
 
 			// String sql = "SELECT id,created_at,text FROM " +
 			// StatusInfo.TABLE_NAME + " WHERE "
@@ -233,32 +235,32 @@ public class Database implements Contents {
 			// + " (SELECT "+ StatusInfo.CREATED_AT
 			// + " FROM " + StatusInfo.TABLE_NAME;
 
-			if (type != Status.TYPE_NONE) {
-				where += " WHERE "+ StatusInfo.TYPE + " = " + type + " ";
+			if (type != Commons.TYPE_NONE) {
+				where += " WHERE " + BasicColumns.TYPE + " = " + type + " ";
 			}
-			where += " ORDER BY " + StatusInfo.CREATED_AT
+			where += " ORDER BY " + BasicColumns.CREATED_AT
 					+ " DESC LIMIT 1 OFFSET " + STATUS_STORE_MAX + ")";
-			
-			if (type != Status.TYPE_NONE) {
-				where += " AND " + StatusInfo.TYPE + " = " + type + " ";
+
+			if (type != Commons.TYPE_NONE) {
+				where += " AND " + BasicColumns.TYPE + " = " + type + " ";
 			}
-//			sql+=where;
-//			log("statusDeleteOld() type=" + type);
-			log("statusDeleteOld() where=[" + where+"]");
-//			log("statusDeleteOld() sql=[" + sql+"]");
-//			Cursor c = db.rawQuery(sql, null);
-			int rs=db.delete(StatusInfo.TABLE_NAME, where, null);
+			// sql+=where;
+			// log("statusDeleteOld() type=" + type);
+			log("statusDeleteOld() where=[" + where + "]");
+			// log("statusDeleteOld() sql=[" + sql+"]");
+			// Cursor c = db.rawQuery(sql, null);
+			int rs = db.delete(StatusInfo.TABLE_NAME, where, null);
 			log("statusDeleteOld() deleted count=" + rs);
-//			if (c != null) {
-//				c.moveToFirst();
-//				int num = c.getCount();
-//				log("statusDeleteOld() status count=" + num);
-//				while (!c.isAfterLast()) {
-//					Status s = Status.parse(c);
-//					log("statusDeleteOld() status=" + s);
-//					c.moveToNext();
-//				}
-//			}
+			// if (c != null) {
+			// c.moveToFirst();
+			// int num = c.getCount();
+			// log("statusDeleteOld() status count=" + num);
+			// while (!c.isAfterLast()) {
+			// Status s = Status.parse(c);
+			// log("statusDeleteOld() status=" + s);
+			// c.moveToNext();
+			// }
+			// }
 		} finally {
 			db.close();
 		}
@@ -273,7 +275,7 @@ public class Database implements Contents {
 	 * @return
 	 */
 	public long statusDeleteByType(int type) {
-		String where = StatusInfo.TYPE + "=?";
+		String where = BasicColumns.TYPE + "=?";
 		String[] whereArgs = new String[] { String.valueOf(type) };
 		return statusDeleteByCondition(where, whereArgs);
 	}
@@ -284,7 +286,7 @@ public class Database implements Contents {
 	 * @return
 	 */
 	public long statusDeleteHome() {
-		String where = StatusInfo.TYPE + "=?";
+		String where = BasicColumns.TYPE + "=?";
 		String[] whereArgs = new String[] { String.valueOf(Status.TYPE_HOME) };
 		return statusDeleteByCondition(where, whereArgs);
 	}
@@ -295,7 +297,7 @@ public class Database implements Contents {
 	 * @return
 	 */
 	public long statusDeleteMention() {
-		String where = StatusInfo.TYPE + "=?";
+		String where = BasicColumns.TYPE + "=?";
 		String[] whereArgs = new String[] { String.valueOf(Status.TYPE_MENTION) };
 		return statusDeleteByCondition(where, whereArgs);
 	}
@@ -349,7 +351,7 @@ public class Database implements Contents {
 	 * @return
 	 */
 	public long statusUpdateById(String id, ContentValues values) {
-		String where = StatusInfo.ID + "=?";
+		String where = BasicColumns.ID + "=?";
 		String[] whereArgs = new String[] { id };
 		return statusUpdate(where, whereArgs, values);
 	}
@@ -429,23 +431,25 @@ public class Database implements Contents {
 	 */
 	public int statusCountByType(int type) {
 		int result = -1;
-		String sql = "SELECT COUNT(" + StatusInfo.ID+ ") FROM " + StatusInfo.TABLE_NAME;
-		if (type == Status.TYPE_NONE) {
+		String sql = "SELECT COUNT(" + BasicColumns.ID + ") FROM "
+				+ StatusInfo.TABLE_NAME;
+		if (type == Commons.TYPE_NONE) {
 			sql += " ;";
 		} else {
-			sql += " WHERE " + StatusInfo.TYPE + "=" + type + ";";
+			sql += " WHERE " + BasicColumns.TYPE + "=" + type + ";";
 		}
 		SQLiteDatabase db = mSQLiteHelper.getReadableDatabase();
 		try {
-//			String[] columns=new String[]{StatusInfo.ID};
-//			String where=null;
-//			String[] whereArgs=null;
-//			if(type!=Status.TYPE_NONE){
-//				where=StatusInfo.TYPE + "=?";
-//				whereArgs=new String[]{String.valueOf(type)};
-//			}
-//			Cursor c=db.query(StatusInfo.TABLE_NAME, columns, where, whereArgs, null, null, null);
-			log("statusCountByType() sql="+sql);
+			// String[] columns=new String[]{StatusInfo.ID};
+			// String where=null;
+			// String[] whereArgs=null;
+			// if(type!=Status.TYPE_NONE){
+			// where=StatusInfo.TYPE + "=?";
+			// whereArgs=new String[]{String.valueOf(type)};
+			// }
+			// Cursor c=db.query(StatusInfo.TABLE_NAME, columns, where,
+			// whereArgs, null, null, null);
+			log("statusCountByType() sql=" + sql);
 			Cursor c = db.rawQuery(sql, null);
 			if (c != null) {
 				c.moveToFirst();
@@ -465,7 +469,7 @@ public class Database implements Contents {
 		} finally {
 			db.close();
 		}
-		log("statusCountByType() type="+type+" result="+result);
+		log("statusCountByType() type=" + type + " result=" + result);
 		return result;
 	}
 
@@ -475,7 +479,7 @@ public class Database implements Contents {
 	 * @return
 	 */
 	public int statusCount() {
-		return statusCountByType(Status.TYPE_NONE);
+		return statusCountByType(Commons.TYPE_NONE);
 	}
 
 	public Cursor query(String table, String[] columns, String selection,
@@ -604,7 +608,7 @@ public class Database implements Contents {
 
 	public Cursor queryUser(String id) {
 		SQLiteDatabase db = mSQLiteHelper.getWritableDatabase();
-		String selection = UserInfo.ID + "=?";
+		String selection = BasicColumns.ID + "=?";
 		String[] selectionArgs = new String[] { id };
 		return db.query(UserInfo.TABLE_NAME, UserInfo.COLUMNS, selection,
 				selectionArgs, null, null, null);
@@ -633,7 +637,7 @@ public class Database implements Contents {
 		SQLiteDatabase db = mSQLiteHelper.getWritableDatabase();
 		try {
 			db.beginTransaction();
-			String whereClause = UserInfo.ID + "=?";
+			String whereClause = BasicColumns.ID + "=?";
 			String[] whereArgs = new String[] { userId };
 			result = db.update(UserInfo.TABLE_NAME, cv, whereClause, whereArgs);
 			db.setTransactionSuccessful();
@@ -652,7 +656,7 @@ public class Database implements Contents {
 		long result = -1;
 		SQLiteDatabase db = mSQLiteHelper.getWritableDatabase();
 		try {
-			String whereClause = UserInfo.ID + "=?";
+			String whereClause = BasicColumns.ID + "=?";
 			String[] whereArgs = new String[] { id };
 			result = db.delete(UserInfo.TABLE_NAME, whereClause, whereArgs);
 		} catch (Exception e) {
@@ -675,7 +679,7 @@ public class Database implements Contents {
 
 	public Cursor queryStatus(String id) {
 		SQLiteDatabase db = mSQLiteHelper.getWritableDatabase();
-		String selection = StatusInfo.ID + "=?";
+		String selection = BasicColumns.ID + "=?";
 		String[] selectionArgs = new String[] { id };
 		return db.query(StatusInfo.TABLE_NAME, StatusInfo.COLUMNS, selection,
 				selectionArgs, null, null, null);
@@ -783,8 +787,8 @@ public class Database implements Contents {
 
 		try {
 			db.beginTransaction();
-			result = db.insert(DirectMessageInfo.TABLE_NAME,
-					DirectMessageInfo.ID, message.toContentValues());
+			result = db.insert(DirectMessageInfo.TABLE_NAME, BasicColumns.ID,
+					message.toContentValues());
 			db.setTransactionSuccessful();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -837,7 +841,7 @@ public class Database implements Contents {
 
 	public Cursor queryDirectMessage(String id) {
 		SQLiteDatabase db = mSQLiteHelper.getWritableDatabase();
-		String selection = DirectMessageInfo.ID + "=?";
+		String selection = BasicColumns.ID + "=?";
 		String[] selectionArgs = new String[] { id };
 		Cursor c = db.query(DirectMessageInfo.TABLE_NAME,
 				DirectMessageInfo.COLUMNS, selection, selectionArgs, null,
@@ -868,7 +872,7 @@ public class Database implements Contents {
 		SQLiteDatabase db = mSQLiteHelper.getWritableDatabase();
 		try {
 			db.beginTransaction();
-			String whereClause = DirectMessageInfo.ID + "=?";
+			String whereClause = BasicColumns.ID + "=?";
 			String[] whereArgs = new String[] { id };
 			result = db.update(DirectMessageInfo.TABLE_NAME, cv, whereClause,
 					whereArgs);
@@ -888,7 +892,7 @@ public class Database implements Contents {
 		long result = -1;
 		SQLiteDatabase db = mSQLiteHelper.getWritableDatabase();
 		try {
-			String whereClause = DirectMessageInfo.ID + "=?";
+			String whereClause = BasicColumns.ID + "=?";
 			String[] whereArgs = new String[] { id };
 			result = db.delete(DirectMessageInfo.TABLE_NAME, whereClause,
 					whereArgs);
@@ -943,7 +947,7 @@ public class Database implements Contents {
 	}
 
 	private void log(String message) {
-//		Log.e(tag, message);
+		// Log.e(tag, message);
 	}
 
 }

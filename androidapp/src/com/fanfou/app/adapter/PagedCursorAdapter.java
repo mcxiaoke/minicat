@@ -27,11 +27,12 @@ import android.widget.SimpleCursorAdapter;
 
 /**
  * @author torgny.bjers
- *
+ * 
  */
-public class PagedCursorAdapter extends SimpleCursorAdapter implements FilterQueryProvider {
+public class PagedCursorAdapter extends SimpleCursorAdapter implements
+		FilterQueryProvider {
 
-    private static final String TAG = PagedCursorAdapter.class.getSimpleName();
+	private static final String TAG = PagedCursorAdapter.class.getSimpleName();
 
 	private ContentResolver mContentResolver;
 	private String[] mProjection;
@@ -47,14 +48,15 @@ public class PagedCursorAdapter extends SimpleCursorAdapter implements FilterQue
 	 * @param to
 	 */
 	public PagedCursorAdapter(Context context, int layout, Cursor c,
-			String[] from, int[] to, Uri uri, String[] projection, String sortOrder) {
+			String[] from, int[] to, Uri uri, String[] projection,
+			String sortOrder) {
 		super(context, layout, c, from, to);
 		mContentResolver = context.getContentResolver();
 		mProjection = projection;
 		mUri = uri;
 		mSortOrder = sortOrder;
 		setFilterQueryProvider(this);
-		//mInflater = LayoutInflater.from(context);
+		// mInflater = LayoutInflater.from(context);
 	}
 
 	@Override
@@ -66,11 +68,13 @@ public class PagedCursorAdapter extends SimpleCursorAdapter implements FilterQue
 	public Cursor runQuery(CharSequence constraint) {
 		if (constraint != null) {
 			if (mSortOrder.indexOf("LIMIT 0,") > 0) {
-				String newSortOrder = mSortOrder.substring(0, mSortOrder.indexOf("LIMIT 0,"));
+				String newSortOrder = mSortOrder.substring(0,
+						mSortOrder.indexOf("LIMIT 0,"));
 				mSortOrder = newSortOrder;
 			}
 			mSortOrder += " " + constraint.toString().trim();
 		}
-		return mContentResolver.query(mUri, mProjection, null, null, mSortOrder);
+		return mContentResolver
+				.query(mUri, mProjection, null, null, mSortOrder);
 	}
 }

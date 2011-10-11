@@ -1,6 +1,6 @@
 package com.fanfou.app.config;
 
-public interface ACTION {
+public interface Actions {
 	public static final String PACKAGE_NAME = "com.fanfou.app";
 	public static final String ACTION_PACKAGE = PACKAGE_NAME + ".action.";
 
@@ -23,4 +23,10 @@ public interface ACTION {
 	public static final String ACTION_MESSAGES = ACTION_PACKAGE + "MESSAGES";
 
 	public static final String ACTION_REPEAT = ACTION_PACKAGE + "REPEAT";
+
+	public static final String ACTION_NOTIFICATION = ACTION_PACKAGE
+			+ "NOTIFICATION";
+
+	public static final String ACTION_MESSAGE_SEND = ACTION_PACKAGE + "ACTION_MESSAGE_SEND";
+	public static final String ACTION_STATUS_SEND = ACTION_PACKAGE + "ACTION_STATUS_SEND";
 }

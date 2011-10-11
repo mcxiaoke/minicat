@@ -1,8 +1,5 @@
 package com.fanfou.app.ui.widget;
 
-import com.fanfou.app.App;
-import com.fanfou.app.R;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -10,12 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
-public class EndlessListView extends ListView implements OnItemClickListener{
+import com.fanfou.app.App;
+import com.fanfou.app.R;
+
+public class EndlessListView extends ListView implements OnItemClickListener {
 	private static final String TAG = EndlessListView.class.getSimpleName();
 
 	protected static final int FOOTER_NONE = 0;
@@ -103,7 +103,7 @@ public class EndlessListView extends ListView implements OnItemClickListener{
 		addFooterView(mLoadMoreView);
 
 		setCacheColorHint(0);
-//		setBackgroundResource(R.drawable.bg);
+		// setBackgroundResource(R.drawable.bg);
 		setSelector(getResources().getDrawable(R.drawable.list_selector));
 		setDivider(getResources().getDrawable(R.drawable.separator));
 
@@ -313,48 +313,48 @@ public class EndlessListView extends ListView implements OnItemClickListener{
 		}
 	}
 
-//	@Override
-//	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		// if(Build.VERSION.SDK_INT<9){
-		// return;
-		// }
-		// mScrollState = scrollState;
-		// switch (scrollState) {
-		// case SCROLL_STATE_FLING:
-		// if(App.DEBUG){
-		// Log.d(TAG, "FLING mFirstVisible=" + mFirstVisible);
-		// }
-		// break;
-		// case SCROLL_STATE_IDLE:
-		// if(App.DEBUG){
-		// Log.d(TAG, "IDLE mFirstVisible=" + mFirstVisible
-		// + " mLastFirstVisible=" + mLastFirstVisible);
-		// }
-		// if ( mLastFirstVisible + mVisibleItemCount>= mTotalItemCount
-		// && mFirstVisible + mVisibleItemCount>= mTotalItemCount) {
-		// reachBottom();
-		// } else if (mLastFirstVisible <3 && mFirstVisible == 0) {
-		// reachTop();
-		// }
-		// break;
-		// case SCROLL_STATE_TOUCH_SCROLL:
-		// mLastFirstVisible = mFirstVisible;
-		// if(App.DEBUG){
-		// Log.i(TAG, "TOUCH_SCROLL mFirstVisible=" + mFirstVisible);
-		// }
-		// break;
-		// default:
-		// break;
-		// }
-//	}
+	// @Override
+	// public void onScrollStateChanged(AbsListView view, int scrollState) {
+	// if(Build.VERSION.SDK_INT<9){
+	// return;
+	// }
+	// mScrollState = scrollState;
+	// switch (scrollState) {
+	// case SCROLL_STATE_FLING:
+	// if(App.DEBUG){
+	// Log.d(TAG, "FLING mFirstVisible=" + mFirstVisible);
+	// }
+	// break;
+	// case SCROLL_STATE_IDLE:
+	// if(App.DEBUG){
+	// Log.d(TAG, "IDLE mFirstVisible=" + mFirstVisible
+	// + " mLastFirstVisible=" + mLastFirstVisible);
+	// }
+	// if ( mLastFirstVisible + mVisibleItemCount>= mTotalItemCount
+	// && mFirstVisible + mVisibleItemCount>= mTotalItemCount) {
+	// reachBottom();
+	// } else if (mLastFirstVisible <3 && mFirstVisible == 0) {
+	// reachTop();
+	// }
+	// break;
+	// case SCROLL_STATE_TOUCH_SCROLL:
+	// mLastFirstVisible = mFirstVisible;
+	// if(App.DEBUG){
+	// Log.i(TAG, "TOUCH_SCROLL mFirstVisible=" + mFirstVisible);
+	// }
+	// break;
+	// default:
+	// break;
+	// }
+	// }
 
-//	@Override
-//	public void onScroll(AbsListView view, int firstVisibleItem,
-//			int visibleItemCount, int totalItemCount) {
-		// mFirstVisible = firstVisibleItem;
-		// mVisibleItemCount = visibleItemCount;
-		// mTotalItemCount = totalItemCount;
-//	}
+	// @Override
+	// public void onScroll(AbsListView view, int firstVisibleItem,
+	// int visibleItemCount, int totalItemCount) {
+	// mFirstVisible = firstVisibleItem;
+	// mVisibleItemCount = visibleItemCount;
+	// mTotalItemCount = totalItemCount;
+	// }
 
 	// @Override
 	// protected boolean overScrollBy(int deltaX, int deltaY, int scrollX,

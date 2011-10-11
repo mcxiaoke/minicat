@@ -3,6 +3,14 @@ package com.fanfou.app.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.ResultReceiver;
+import android.util.Log;
+
 import com.fanfou.app.App;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
@@ -15,17 +23,13 @@ import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
-import android.content.ContentResolver;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.ResultReceiver;
-import android.util.Log;
+import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
  * @version 1.0 20110602
  * @version 2.0 20110714
+ * @version 2.1 2011.10.10
  * 
  */
 public class FetchService extends BaseIntentService {
@@ -61,19 +65,18 @@ public class FetchService extends BaseIntentService {
 		case Status.TYPE_PUBLIC:
 			doFetchStatuses();
 			break;
-		// case Status.TYPE_SEARCH:
-		// doFetchSearch(mBundle);
-		// break;
-		case DirectMessage.TYPE_NONE:
-			// case DirectMessage.TYPE_OUT:
+		case DirectMessage.TYPE_IN:
 			doFetchMessages();
+			break;
+		case DirectMessage.TYPE_OUT:
+			doFetchMessages();
+			break;
+		case DirectMessage.TYPE_ALL:
+			doFetchMessagesAll();
 			break;
 		case User.TYPE_FRIENDS:
 		case User.TYPE_FOLLOWERS:
 			doFetchUsers(mBundle);
-			break;
-		case User.AUTO_COMPLETE:
-			doFetchAutoComplete();
 			break;
 		default:
 			break;
@@ -82,62 +85,13 @@ public class FetchService extends BaseIntentService {
 
 	private void cleanUsers(String userId, int type) {
 		ContentResolver cr = getContentResolver();
-		String where = BasicColumns.OWNER_ID + "=? AND " + BasicColumns.TYPE + "=? ";
+		String where = BasicColumns.OWNER_ID + "=? AND " + BasicColumns.TYPE
+				+ "=? ";
 		String[] whereArgs = new String[] { userId, String.valueOf(type) };
 		int result = cr.delete(UserInfo.CONTENT_URI, where, whereArgs);
 		if (App.DEBUG)
 			log("cleanUsers ownerId=" + userId + " type=" + mType + " result="
 					+ result);
-	}
-
-	private void doFetchAutoComplete() {
-		if(!App.me.isLogin){
-			return;
-		}
-		if (App.DEBUG)
-			log("doFetchAutoComplete");
-		Api api = App.me.api;
-		try {
-			List<User> users = new ArrayList<User>();
-			boolean hasNext = true;
-			for (int page = 1; hasNext; page++) {
-				List<User> result = api.usersFriends(null, page);
-				if (result != null && result.size() > 0) {
-					for (User u : result) {
-						u.type = User.AUTO_COMPLETE;
-						u.id = "@" + u.id;
-						u.screenName = "@" + u.screenName;
-					}
-					if (App.DEBUG)
-						log("doFetchAutoComplete page==" + page
-								+ " result.size=" + result.size());
-					users.addAll(result);
-					if (page > 4) {
-						hasNext = false;
-					}
-				} else {
-					hasNext = false;
-				}
-			}
-			insertAutoComplete(users);
-		} catch (ApiException e) {
-			if (App.DEBUG) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	private void insertAutoComplete(List<User> users) {
-		if (users != null && users.size() > 0) {
-			ContentResolver cr = getContentResolver();
-			String where = BasicColumns.TYPE + "='" + User.AUTO_COMPLETE + "'";
-			int size = users.size();
-			if (App.DEBUG)
-				log("doFetchAutoComplete size=" + size);
-			cr.delete(UserInfo.CONTENT_URI, where, null);
-			cr.bulkInsert(UserInfo.CONTENT_URI,
-					Parser.toContentValuesArray(users));
-		}
 	}
 
 	private void doFetchUsers(Bundle bundle) {
@@ -186,34 +140,53 @@ public class FetchService extends BaseIntentService {
 	}
 
 	private void doFetchMessages() {
-		int count = mBundle.getInt(Commons.EXTRA_COUNT);
-		int page = mBundle.getInt(Commons.EXTRA_PAGE);
-		String sinceId = mBundle.getString(Commons.EXTRA_SINCE_ID);
-		String maxId = mBundle.getString(Commons.EXTRA_MAX_ID);
-		if (App.DEBUG) {
-			log("doFetchMessages() sinceId="
-					+ (sinceId == null ? "null" : sinceId));
-			log("doFetchMessages() maxId=" + (maxId == null ? "null" : maxId));
+		boolean doGetMore = mBundle.getBoolean(Commons.EXTRA_BOOLEAN);
+		if (doGetMore) {
+			sendCountMessage(doFetchMessagesMore(mType));
+		} else {
+			sendCountMessage(doFetchMessagesRefresh(mType));
+		}
+	}
+
+	private void doFetchMessagesAll() {
+		boolean doGetMore = mBundle.getBoolean(Commons.EXTRA_BOOLEAN);
+		Cursor c = getContentResolver().query(DirectMessageInfo.CONTENT_URI,
+				DirectMessageInfo.COLUMNS, null, null, null);
+		String maxId = null;
+		String sinceId = null;
+		Api api = App.me.api;
+
+		if (doGetMore) {
+			maxId = Utils.getDmMaxId(c);
+		} else {
+			sinceId = Utils.getDmSinceId(c);
 		}
 
-		Api api = App.me.api;
-		try {
-			List<DirectMessage> messages = null;
-			if (mType == DirectMessage.TYPE_NONE) {
-				messages = api.messagesInbox(count, page, sinceId, maxId);
+		if (App.DEBUG) {
+			log("doFetchMessagesAll doGetMore=" + doGetMore + " type=" + mType
+					+ " maxId=" + (maxId == null ? "null" : maxId)
+					+ " sinceId=" + (sinceId == null ? "null" : sinceId));
+		}
 
+		try {
+			List<DirectMessage> messages = new ArrayList<DirectMessage>();
+			List<DirectMessage> in = api.messagesInbox(0, 0, sinceId, maxId);
+			if (in != null && in.size() > 0) {
+				messages.addAll(in);
 			}
-			// else if (mType == DirectMessage.TYPE_OUT) {
-			// messages = api.messagesInbox(count, page, sinceId, maxId);
-			// }
+			List<DirectMessage> out = api.messagesOutbox(0, 0, sinceId, maxId);
+			if (out != null && out.size() > 0) {
+				messages.addAll(out);
+			}
 			if (messages != null && messages.size() > 0) {
 				ContentResolver cr = getContentResolver();
 				int size = messages.size();
-				Log.e(tag, "doFetchMessages size()=" + size);
+				log("doFetchMessagesAll size()=" + size);
 				cr.bulkInsert(DirectMessageInfo.CONTENT_URI,
 						Parser.toContentValuesArray(messages));
 				sendCountMessage(size);
 			} else {
+				log("doFetchMessagesAll size()=0");
 				sendCountMessage(0);
 			}
 		} catch (ApiException e) {
@@ -222,6 +195,100 @@ public class FetchService extends BaseIntentService {
 			}
 			handleError(e);
 		}
+	}
+
+	private int doFetchMessagesMore(int type) {
+
+		int result = 0;
+
+		String[] projection = new String[] { BasicColumns.ID,
+				BasicColumns.CREATED_AT };
+		String where = BasicColumns.TYPE + "=?";
+		String[] whereArgs = new String[] { String.valueOf(type) };
+		Cursor c = getContentResolver().query(DirectMessageInfo.CONTENT_URI,
+				projection, where, whereArgs, null);
+
+		String maxId = Utils.getDmMaxId(c);
+		Api api = App.me.api;
+		try {
+
+			if (App.DEBUG) {
+				log("doFetchMessagesMore type=" + type + " maxId="
+						+ (maxId == null ? "null" : maxId));
+			}
+
+			List<DirectMessage> messages = new ArrayList<DirectMessage>();
+			if (type == DirectMessage.TYPE_IN) {
+
+				messages = api.messagesInbox(0, 0, null, maxId);
+			} else if (type == DirectMessage.TYPE_OUT) {
+				messages = api.messagesInbox(0, 0, null, maxId);
+			}
+			if (messages != null && messages.size() > 0) {
+				ContentResolver cr = getContentResolver();
+				int size = messages.size();
+				Log.d(tag, "doFetchMessagesMore size()=" + size);
+				cr.bulkInsert(DirectMessageInfo.CONTENT_URI,
+						Parser.toContentValuesArray(messages));
+				result = size;
+			} else {
+				log("doFetchMessagesMore size()=0");
+			}
+		} catch (ApiException e) {
+			if (App.DEBUG) {
+				e.printStackTrace();
+			}
+			handleError(e);
+		}
+		return result;
+	}
+
+	private int doFetchMessagesRefresh(int type) {
+		if (App.DEBUG) {
+			log("doFetchMessagesRefresh type=" + type);
+		}
+		int result = 0;
+
+		String[] projection = new String[] { BasicColumns.ID,
+				BasicColumns.CREATED_AT };
+		String where = BasicColumns.TYPE + "=?";
+		String[] whereArgs = new String[] { String.valueOf(type) };
+		Cursor c = getContentResolver().query(DirectMessageInfo.CONTENT_URI,
+				projection, where, whereArgs, null);
+
+		String sinceId = Utils.getDmSinceId(c);
+		Api api = App.me.api;
+		try {
+
+			if (App.DEBUG) {
+				log("doFetchMessagesRefresh type=" + type + " sinceId="
+						+ (sinceId == null ? "null" : sinceId));
+			}
+
+			List<DirectMessage> messages = new ArrayList<DirectMessage>();
+			if (type == DirectMessage.TYPE_IN) {
+				messages = api.messagesInbox(0, 0, sinceId, null);
+			} else if (type == DirectMessage.TYPE_OUT) {
+				messages = api.messagesInbox(0, 0, sinceId, null);
+			}
+			if (messages != null && messages.size() > 0) {
+				ContentResolver cr = getContentResolver();
+				int size = messages.size();
+				Log.d(tag, "doFetchMessagesRefresh size()=" + size);
+				cr.bulkInsert(DirectMessageInfo.CONTENT_URI,
+						Parser.toContentValuesArray(messages));
+				result = size;
+			} else {
+				Log.d(tag, "doFetchMessagesRefresh size()=0");
+			}
+
+		} catch (ApiException e) {
+			if (App.DEBUG) {
+				e.printStackTrace();
+			}
+			handleError(e);
+		}
+		return result;
 	}
 
 	@SuppressWarnings("unused")

@@ -2,24 +2,26 @@ package com.fanfou.app.service;
 
 import java.util.List;
 
-import com.fanfou.app.App;
-import com.fanfou.app.R;
-import com.fanfou.app.api.ApiException;
-import com.fanfou.app.api.DirectMessage;
-import com.fanfou.app.api.Parser;
-import com.fanfou.app.api.Status;
-import com.fanfou.app.config.Commons;
-import com.fanfou.app.db.Contents.BasicColumns;
-import com.fanfou.app.db.Contents.DirectMessageInfo;
-import com.fanfou.app.db.Contents.StatusInfo;
-import com.fanfou.app.util.OptionHelper;
-import com.fanfou.app.util.Utils;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.PowerManager;
 import android.util.Log;
+
+import com.fanfou.app.App;
+import com.fanfou.app.R;
+import com.fanfou.app.api.ApiException;
+import com.fanfou.app.api.DirectMessage;
+import com.fanfou.app.api.Parser;
+import com.fanfou.app.api.Status;
+import com.fanfou.app.config.Actions;
+import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.Contents.BasicColumns;
+import com.fanfou.app.db.Contents.DirectMessageInfo;
+import com.fanfou.app.db.Contents.StatusInfo;
+import com.fanfou.app.util.OptionHelper;
+import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -29,10 +31,9 @@ import android.util.Log;
 public class NotificationService extends BaseIntentService {
 	private static final String TAG = NotificationService.class.getSimpleName();
 
-	public static final String ACTION_NOTIFICATION = "com.fanfou.app.action.NOTIFICATION";
 	public static final int NOTIFICATION_TYPE_HOME = Status.TYPE_HOME;
 	public static final int NOTIFICATION_TYPE_MENTION = Status.TYPE_MENTION; // @消息
-	public static final int NOTIFICATION_TYPE_DM = DirectMessage.TYPE_NONE; // 私信
+	public static final int NOTIFICATION_TYPE_DM = DirectMessage.TYPE_IN; // 私信
 
 	private PowerManager.WakeLock mWakeLock;
 
@@ -96,7 +97,7 @@ public class NotificationService extends BaseIntentService {
 	}
 
 	private void handleDm() throws ApiException {
-		Cursor mc = initCursor(DirectMessage.TYPE_NONE);
+		Cursor mc = initCursor(DirectMessage.TYPE_IN);
 		List<DirectMessage> dms = App.me.api.messagesInbox(0, 0,
 				Utils.getDmSinceId(mc), null);
 		if (dms != null) {
@@ -104,8 +105,13 @@ public class NotificationService extends BaseIntentService {
 			if (size > 0) {
 				getContentResolver().bulkInsert(DirectMessageInfo.CONTENT_URI,
 						Parser.toContentValuesArray(dms));
-				getContentResolver().notifyChange(DirectMessageInfo.CONTENT_URI, null,false);
-				notifyDmList(DirectMessage.TYPE_NONE, size);
+				getContentResolver().notifyChange(
+						DirectMessageInfo.CONTENT_URI, null, false);
+				if (size == 1) {
+					notifyDmOne(NOTIFICATION_TYPE_DM, dms.get(0));
+				} else {
+					notifyDmList(NOTIFICATION_TYPE_DM, size);
+				}
 
 			}
 		}
@@ -121,7 +127,8 @@ public class NotificationService extends BaseIntentService {
 			if (size > 0) {
 				getContentResolver().bulkInsert(StatusInfo.CONTENT_URI,
 						Parser.toContentValuesArray(ss));
-				getContentResolver().notifyChange(DirectMessageInfo.CONTENT_URI, null,false);
+				getContentResolver().notifyChange(
+						DirectMessageInfo.CONTENT_URI, null, false);
 				if (size == 1) {
 					notifyStatusOne(NOTIFICATION_TYPE_MENTION, ss.get(0));
 				} else {
@@ -141,7 +148,8 @@ public class NotificationService extends BaseIntentService {
 			if (size > 0) {
 				getContentResolver().bulkInsert(StatusInfo.CONTENT_URI,
 						Parser.toContentValuesArray(ss));
-				getContentResolver().notifyChange(DirectMessageInfo.CONTENT_URI, null,false);
+				getContentResolver().notifyChange(
+						DirectMessageInfo.CONTENT_URI, null, false);
 				if (size == 1) {
 					notifyStatusOne(NOTIFICATION_TYPE_HOME, ss.get(0));
 				} else {
@@ -160,12 +168,12 @@ public class NotificationService extends BaseIntentService {
 		sendStatusNotification(type, count, null);
 	}
 
-	private void notifyDmOne() {
-
+	private void notifyDmOne(int type, DirectMessage dm) {
+		sendMessageNotification(type, 1, dm);
 	}
 
 	private void notifyDmList(int type, int count) {
-		sendMessageNotification(type, count);
+		sendMessageNotification(type, count, null);
 	}
 
 	private Cursor initCursor(int type) {
@@ -173,7 +181,7 @@ public class NotificationService extends BaseIntentService {
 		String[] whereArgs = new String[] { String.valueOf(type) };
 		Uri uri = StatusInfo.CONTENT_URI;
 		String[] columns = StatusInfo.COLUMNS;
-		if (type == DirectMessage.TYPE_NONE) {
+		if (type == DirectMessage.TYPE_IN) {
 			uri = DirectMessageInfo.CONTENT_URI;
 			columns = DirectMessageInfo.COLUMNS;
 		}
@@ -194,11 +202,11 @@ public class NotificationService extends BaseIntentService {
 		intent.putExtra(Commons.EXTRA_TYPE, type);
 		intent.putExtra(Commons.EXTRA_COUNT, count);
 		intent.putExtra(Commons.EXTRA_STATUS, status);
-		intent.setAction(ACTION_NOTIFICATION);
+		intent.setAction(Actions.ACTION_NOTIFICATION);
 		broadcast(intent);
 	}
 
-	private void sendMessageNotification(int type, int count) {
+	private void sendMessageNotification(int type, int count, DirectMessage dm) {
 		boolean needNotification = OptionHelper.readBoolean(this,
 				R.string.option_notification_switch, false);
 		if (!needNotification) {
@@ -211,7 +219,8 @@ public class NotificationService extends BaseIntentService {
 		Intent intent = new Intent();
 		intent.putExtra(Commons.EXTRA_TYPE, type);
 		intent.putExtra(Commons.EXTRA_COUNT, count);
-		intent.setAction(ACTION_NOTIFICATION);
+		intent.putExtra(Commons.EXTRA_MESSAGE, dm);
+		intent.setAction(Actions.ACTION_NOTIFICATION);
 		broadcast(intent);
 	}
 

@@ -16,8 +16,8 @@ public class BootReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		AlarmHelper.setNotificationTaskOn(context);
 		AlarmHelper.setCleanTask(context);
+		AlarmHelper.setNotificationTaskOn(context);
 		AlarmHelper.setAutoCompleteTask(context);
 	}
 }

@@ -1,18 +1,5 @@
 package com.fanfou.app;
 
-import com.fanfou.app.api.User;
-import com.fanfou.app.cache.CacheManager;
-import com.fanfou.app.cache.IImageLoader;
-import com.fanfou.app.config.ACTION;
-import com.fanfou.app.config.Commons;
-import com.fanfou.app.service.ActionService;
-import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.ActionBar.Action;
-import com.fanfou.app.ui.ActionManager;
-import com.fanfou.app.util.DateTimeHelper;
-import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.Utils;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,6 +16,19 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.fanfou.app.api.User;
+import com.fanfou.app.cache.CacheManager;
+import com.fanfou.app.cache.IImageLoader;
+import com.fanfou.app.config.Actions;
+import com.fanfou.app.config.Commons;
+import com.fanfou.app.service.ActionService;
+import com.fanfou.app.ui.ActionBar;
+import com.fanfou.app.ui.ActionBar.Action;
+import com.fanfou.app.ui.ActionManager;
+import com.fanfou.app.util.DateTimeHelper;
+import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -95,7 +95,7 @@ public class ProfilePage extends BaseActivity implements Action {
 			if (user != null) {
 				userId = user.id;
 			}
-		} else if (action.equals(ACTION.ACTION_PROFILE)) {
+		} else if (action.equals(Actions.ACTION_PROFILE)) {
 			Bundle extras = intent.getExtras();
 			if (extras != null) {
 				userId = extras.getString(Commons.EXTRA_ID);

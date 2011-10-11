@@ -170,7 +170,7 @@ public final class Parser implements ResponseCode {
 			JSONObject o = new JSONObject(content);
 			return trends(o);
 		} catch (JSONException e) {
-			if (App.DEBUG){
+			if (App.DEBUG) {
 				Log.e(TAG, e.getMessage());
 			}
 			throw new ApiException(ERROR_PARSE_FAILED, e.getMessage(),
@@ -187,7 +187,7 @@ public final class Parser implements ResponseCode {
 				ts.add(t);
 			}
 		} catch (JSONException e) {
-			if (App.DEBUG){
+			if (App.DEBUG) {
 				Log.e(TAG, e.getMessage());
 			}
 			throw new ApiException(ERROR_PARSE_FAILED, e.getMessage(),
@@ -202,7 +202,7 @@ public final class Parser implements ResponseCode {
 			JSONObject o = new JSONObject(content);
 			return savedSearch(o);
 		} catch (JSONException e) {
-			if (App.DEBUG){
+			if (App.DEBUG) {
 				Log.e(TAG, e.getMessage());
 			}
 			throw new ApiException(ERROR_PARSE_FAILED, e.getMessage(),
@@ -217,7 +217,7 @@ public final class Parser implements ResponseCode {
 			s.query = o.getString(QUERY);
 			return s;
 		} catch (JSONException e) {
-			if (App.DEBUG){
+			if (App.DEBUG) {
 				Log.e(TAG, e.getMessage());
 			}
 			throw new ApiException(ERROR_PARSE_FAILED, e.getMessage(),
@@ -231,7 +231,7 @@ public final class Parser implements ResponseCode {
 			JSONArray a = new JSONArray(content);
 			return savedSearches(a);
 		} catch (JSONException e) {
-			if (App.DEBUG){
+			if (App.DEBUG) {
 				Log.e(TAG, e.getMessage());
 			}
 			throw new ApiException(ERROR_PARSE_FAILED, e.getMessage(),
@@ -249,7 +249,7 @@ public final class Parser implements ResponseCode {
 			}
 			return ss;
 		} catch (JSONException e) {
-			if (App.DEBUG){
+			if (App.DEBUG) {
 				Log.e(TAG, e.getMessage());
 			}
 			throw new ApiException(ERROR_PARSE_FAILED, e.getMessage(),
@@ -329,13 +329,12 @@ public final class Parser implements ResponseCode {
 
 		return result;
 	}
-	
-	public static void handleJSONException(JSONException e) throws ApiException{
-		if (App.DEBUG){
+
+	public static void handleJSONException(JSONException e) throws ApiException {
+		if (App.DEBUG) {
 			Log.e(TAG, e.getMessage());
 		}
-		throw new ApiException(ERROR_PARSE_FAILED, e.getMessage(),
-				e.getCause());
+		throw new ApiException(ERROR_PARSE_FAILED, e.getMessage(), e.getCause());
 	}
 
 	static final Pattern PATTERN_SOURCE = Pattern

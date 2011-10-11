@@ -14,8 +14,9 @@ public abstract class BaseCursorListFragment extends BaseListFragment implements
 	protected CursorAdapter mAdapter;
 	protected ViewGroup mHeaderView;
 	protected ViewGroup mFooterView;
-//	Observable a;
-//	Observer b;
+
+	// Observable a;
+	// Observer b;
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {

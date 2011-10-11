@@ -1,11 +1,17 @@
 ﻿package com.fanfou.app.util;
 
-import com.fanfou.app.App;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import com.fanfou.app.App;
+
+/**
+ * @author mcxiaoke
+ * @version 1.0 2011.06.01
+ * @version 1.1 2011.10.10
+ * 
+ */
 public class OptionHelper {
 
 	public static void saveInt(Context context, String key, int value) {

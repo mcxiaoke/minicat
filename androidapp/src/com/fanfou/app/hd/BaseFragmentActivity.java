@@ -20,6 +20,7 @@ import com.fanfou.app.OptionsPage;
 import com.fanfou.app.R;
 import com.fanfou.app.SearchPage;
 import com.fanfou.app.WritePage;
+import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.http.ApnType;
 import com.fanfou.app.service.NotificationService;
@@ -40,7 +41,7 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 	Activity mContext;
 	LayoutInflater mInflater;
 	boolean isActive = false;
-//	NetworkReceiver mNetworkReceiver;
+	// NetworkReceiver mNetworkReceiver;
 	BroadcastReceiver mNotificationReceiver;
 	IntentFilter mNotificationFilter;
 
@@ -49,36 +50,39 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		this.mContext = this;
 		this.mInflater = LayoutInflater.from(this);
-		this.mNotificationReceiver=new NotifyReceiver();
-		this.mNotificationFilter=new IntentFilter(NotificationService.ACTION_NOTIFICATION);
+		this.mNotificationReceiver = new NotifyReceiver();
+		this.mNotificationFilter = new IntentFilter(
+				Actions.ACTION_NOTIFICATION);
 		mNotificationFilter.setPriority(1000);
-//		this.mNetworkReceiver=new NetworkReceiver();
+		// this.mNetworkReceiver=new NetworkReceiver();
 	}
-	
-	private class NotifyReceiver extends BroadcastReceiver{
+
+	private class NotifyReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if(App.DEBUG){
-				Log.d("NotificationReceiver", "active, broadcast received: "+intent.toString());
+			if (App.DEBUG) {
+				Log.d("NotificationReceiver", "active, broadcast received: "
+						+ intent.toString());
 			}
 			onReceived(intent);
 			abortBroadcast();
 		}
-		
+
 	}
-	
-	protected void onReceived(Intent intent){};
+
+	protected void onReceived(Intent intent) {
+	};
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		isActive = true;
-		App.me.active=true;
-//		IntentFilter filter = new IntentFilter();
-//		filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-//		filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
-//		registerReceiver(mNetworkReceiver, filter);
+		App.active = true;
+		// IntentFilter filter = new IntentFilter();
+		// filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+		// filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+		// registerReceiver(mNetworkReceiver, filter);
 		registerReceiver(mNotificationReceiver, mNotificationFilter);
 	}
 
@@ -87,8 +91,8 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 	protected void onPause() {
 		super.onPause();
 		isActive = false;
-		App.me.active=false;
-//		unregisterReceiver(mNetworkReceiver);
+		App.active = false;
+		// unregisterReceiver(mNetworkReceiver);
 		unregisterReceiver(mNotificationReceiver);
 	}
 
@@ -111,14 +115,15 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 		return isActive;
 	}
 
-	protected static final int PAGE_NORMAL=0;
-	protected static final int PAGE_HOME=1;
-	protected static final int PAGE_LOGIN=2;
-	protected static final int PAGE_STATUS=3;
-	protected static final int PAGE_USER=4;
-	protected static final int PAGE_TIMELINE=5;
-	protected static final int PAGE_FRIENDS=6;
-	protected static final int PAGE_FOLLOWERS=7;
+	protected static final int PAGE_NORMAL = 0;
+	protected static final int PAGE_HOME = 1;
+	protected static final int PAGE_LOGIN = 2;
+	protected static final int PAGE_STATUS = 3;
+	protected static final int PAGE_USER = 4;
+	protected static final int PAGE_TIMELINE = 5;
+	protected static final int PAGE_FRIENDS = 6;
+	protected static final int PAGE_FOLLOWERS = 7;
+
 	protected int getPageType() {
 		return PAGE_NORMAL;
 	}
@@ -126,21 +131,21 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 	protected boolean isRootScreen() {
 		return false;
 	}
-	
-	protected boolean noConnection(){
-		return App.me.apnType!=ApnType.NONE;
-//		if(App.me.connected){
-//			return false;
-//		}else{
-//			Utils.notify(this, "无可用的网络连接，请稍后重试");
-//			return true;
-//		}
+
+	protected boolean noConnection() {
+		return App.me.apnType != ApnType.NONE;
+		// if(App.me.connected){
+		// return false;
+		// }else{
+		// Utils.notify(this, "无可用的网络连接，请稍后重试");
+		// return true;
+		// }
 	}
 
 	protected static final int MENU_ID_OPTION = 0; // 设置
-	protected static final int MENU_ID_PROFILE = 1; // 
+	protected static final int MENU_ID_PROFILE = 1; //
 	protected static final int MENU_ID_SEARCH = 2;
-	protected static final int MENU_ID_FEEDBACK = 3; // 
+	protected static final int MENU_ID_FEEDBACK = 3; //
 	protected static final int MENU_ID_ABOUT = 4; // 关于
 	protected static final int MENU_ID_EXIT = 5; // 退出
 	protected static final int MENU_ID_HOME = 6; // 返回首页
@@ -179,7 +184,7 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		int type=getPageType();
+		int type = getPageType();
 		switch (type) {
 		case PAGE_NORMAL:
 			menu.removeItem(MENU_ID_OPTION);
@@ -267,11 +272,12 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 	}
 
 	protected void doFeedback() {
-//		IntentHelper.sendFeedback(this, "");
-		
-		Intent intent=new Intent(this, WritePage.class);
+		// IntentHelper.sendFeedback(this, "");
+
+		Intent intent = new Intent(this, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
-		intent.putExtra(Commons.EXTRA_TEXT, "@Android客户端 ("+Build.MODEL+"-"+Build.VERSION.RELEASE+") #意见反馈# ");
+		intent.putExtra(Commons.EXTRA_TEXT, "@Android客户端 (" + Build.MODEL + "-"
+				+ Build.VERSION.RELEASE + ") #意见反馈# ");
 		startActivity(intent);
 	}
 

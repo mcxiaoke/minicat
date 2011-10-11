@@ -8,8 +8,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
-import com.fanfou.app.App;
-
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -19,12 +17,14 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.fanfou.app.App;
+
 /**
  * @author mcxiaoke
  * 
  */
 public final class DeviceHelper {
-	
+
 	public synchronized static String uuid(Context context) {
 		String uuid = OptionHelper.readString(context, "uuid", null);
 		if (uuid == null) {
@@ -37,17 +37,17 @@ public final class DeviceHelper {
 	private static String generateUUID(Context context) {
 		String uuid = Settings.Secure.getString(context.getContentResolver(),
 				Settings.Secure.ANDROID_ID);
-		if(App.DEBUG)
-		Log.e("DeviceHelper", "generateUUID uuid=" + uuid);
+		if (App.DEBUG)
+			Log.e("DeviceHelper", "generateUUID uuid=" + uuid);
 		if (uuid == null || uuid.equals("9774d56d682e549c")) {
 			uuid = UUID.randomUUID().toString();
-			if(App.DEBUG)
-			Log.e("DeviceHelper", "generateUUID randomid=" + uuid);
+			if (App.DEBUG)
+				Log.e("DeviceHelper", "generateUUID randomid=" + uuid);
 		}
 		return uuid;
 	}
-	
-	private static int getAppVersionCode(Context context){
+
+	private static int getAppVersionCode(Context context) {
 		PackageManager pm = context.getPackageManager();
 		PackageInfo pi;
 		try {
@@ -59,8 +59,8 @@ public final class DeviceHelper {
 		}
 		return pi.versionCode;
 	}
-	
-	private static String getAppVersionName(Context context){
+
+	private static String getAppVersionName(Context context) {
 		PackageManager pm = context.getPackageManager();
 		PackageInfo pi;
 		try {
@@ -96,9 +96,11 @@ public final class DeviceHelper {
 		String model = Build.MODEL;
 		String product = Build.PRODUCT;
 		String device = Build.FINGERPRINT;
-		String locale = ""+context.getResources().getConfiguration().locale
-				.getDisplayName();
-		String display = ""+context.getResources().getDisplayMetrics().toString();
+		String locale = ""
+				+ context.getResources().getConfiguration().locale
+						.getDisplayName();
+		String display = ""
+				+ context.getResources().getDisplayMetrics().toString();
 		String deviceId = ""
 				+ Settings.Secure.getString(context.getContentResolver(),
 						Settings.Secure.ANDROID_ID);

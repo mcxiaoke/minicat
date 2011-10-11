@@ -66,8 +66,8 @@ public class OrientationTracker {
 		public void onOrientationChanged(int value) {
 			if (mOrientationTrackerListener != null) {
 				mOrientation = getOrientation(value);
-//				Log.e(tag, "original orientation=" + value);
-//				Log.e(tag, "round orientation=" + mOrientation);
+				// Log.e(tag, "original orientation=" + value);
+				// Log.e(tag, "round orientation=" + mOrientation);
 				mOrientationTrackerListener.onOrientationChanged(mOrientation);
 			}
 		}

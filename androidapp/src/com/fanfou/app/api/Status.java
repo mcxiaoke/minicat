@@ -13,7 +13,6 @@ import org.json.JSONObject;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcel;
-
 import android.util.Log;
 
 import com.fanfou.app.App;
@@ -49,8 +48,7 @@ public class Status implements Storable<Status> {
 	public static final int TYPE_PUBLIC = Commons.STATUS_TYPE_PUBLIC;
 	public static final int TYPE_USER = Commons.STATUS_TYPE_USER;
 	public static final int TYPE_FAVORITES = Commons.STATUS_TYPE_FAVORITES;
-	public static final int TYPE_SEARCH=Commons.STATUS_TYPE_SEARCH;
-	public static final int TYPE_NONE = Commons.STATUS_TYPE_NONE;
+	public static final int TYPE_SEARCH = Commons.STATUS_TYPE_SEARCH;
 
 	public Date createdAt;
 
@@ -95,7 +93,7 @@ public class Status implements Storable<Status> {
 
 	public static List<Status> parseStatuses(Response r, int type)
 			throws ApiException {
-		if(App.DEBUG){
+		if (App.DEBUG) {
 			log("parseStatuses response");
 		}
 		return Status.parseStatuses(r.getContent(), type);
@@ -103,17 +101,18 @@ public class Status implements Storable<Status> {
 
 	public static List<Status> parseStatuses(String content, int type)
 			throws ApiException {
-		if(App.DEBUG){
+		if (App.DEBUG) {
 			log("parseStatuses content");
 		}
 		JSONArray a;
 		try {
 			a = new JSONArray(content);
 		} catch (JSONException e) {
-			if(App.DEBUG){
+			if (App.DEBUG) {
 				e.printStackTrace();
 			}
-			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED, e.getMessage(), e);
+			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED,
+					e.getMessage(), e);
 		}
 		return parseStatuses(a, type);
 	}
@@ -123,8 +122,8 @@ public class Status implements Storable<Status> {
 		if (a == null) {
 			return null;
 		}
-		if(App.DEBUG){
-			log("parseStatuses jsonarray.size="+a.length());
+		if (App.DEBUG) {
+			log("parseStatuses jsonarray.size=" + a.length());
 		}
 		try {
 			List<Status> statuses = new ArrayList<Status>();
@@ -182,7 +181,7 @@ public class Status implements Storable<Status> {
 	}
 
 	public static Status parse(Response response, int type)
-			throws ParseException, ApiException, IOException {
+			throws ApiException {
 		return parse(response.getContent(), type);
 	}
 
@@ -191,7 +190,7 @@ public class Status implements Storable<Status> {
 	}
 
 	public static Status parse(String content) throws ApiException {
-		return parse(content, TYPE_NONE);
+		return parse(content, Commons.TYPE_NONE);
 	}
 
 	public static Status parse(String content, int type) throws ApiException {
@@ -208,7 +207,7 @@ public class Status implements Storable<Status> {
 	}
 
 	public static Status parse(JSONObject o) throws ApiException {
-		return parse(o, TYPE_NONE);
+		return parse(o, Commons.TYPE_NONE);
 	}
 
 	public static Status parse(JSONObject o, int type) throws ApiException {

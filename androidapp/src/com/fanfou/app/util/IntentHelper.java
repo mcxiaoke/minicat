@@ -1,14 +1,20 @@
 package com.fanfou.app.util;
 
-import com.fanfou.app.App;
-import com.fanfou.app.config.Commons;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.fanfou.app.R;
+
 public final class IntentHelper {
+
+	public static Intent getHomeIntent() {
+		Intent intent = new Intent(Intent.ACTION_MAIN);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.addCategory(Intent.CATEGORY_HOME);
+		return intent;
+	}
 
 	public static void sendFeedback(Context context, String content) {
 		final Intent emailIntent = new Intent(
@@ -20,7 +26,8 @@ public final class IntentHelper {
 		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
 		emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, content);
 		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
-				new String[] { Commons.FEEDBACK_EMAIL });
+				new String[] { context
+						.getString(R.string.config_feedback_email) });
 		context.startActivity(Intent.createChooser(emailIntent, "发送邮件"));
 	}
 

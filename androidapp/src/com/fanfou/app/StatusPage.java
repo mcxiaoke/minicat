@@ -192,10 +192,12 @@ public class StatusPage extends BaseActivity implements
 					log("level=" + photoLevel);
 				if (photoLevel == 2) {
 					iPhoto.setTag(status.photoLargeUrl);
-					mLoader.set(status.photoLargeUrl, iPhoto,R.drawable.photo_loading);
+					mLoader.set(status.photoLargeUrl, iPhoto,
+							R.drawable.photo_loading);
 				} else if (photoLevel == 1) {
 					iPhoto.setTag(status.photoThumbUrl);
-					mLoader.set(status.photoThumbUrl, iPhoto,R.drawable.photo_loading);
+					mLoader.set(status.photoThumbUrl, iPhoto,
+							R.drawable.photo_loading);
 					iPhoto.setOnClickListener(this);
 				} else if (photoLevel == 0) {
 					iPhoto.setImageResource(R.drawable.photo_icon);
@@ -281,14 +283,14 @@ public class StatusPage extends BaseActivity implements
 		if (App.DEBUG) {
 			log("doShowBigPicture init");
 		}
-		
+
 		iPhoto.setTag(status.photoLargeUrl);
 		Bitmap bitmap = mLoader.load(status.photoLargeUrl, callback);
 		if (bitmap != null) {
 			iPhoto.setImageBitmap(bitmap);
 			iPhoto.setOnClickListener(null);
-		}else{
-			
+		} else {
+
 			iPhoto.setImageResource(R.drawable.photo_loading);
 		}
 	}

@@ -6,11 +6,11 @@
 	<com.fanfou.app.ui.ActionBar android:id="@id/actionbar"
 		style="@style/ActionBar" android:layout_alignParentTop="true" />
 
-	<com.fanfou.app.ui.widget.NameAutoCompleteTextView
+	<MultiAutoCompleteTextView 
 		android:id="@id/write_text" android:layout_width="fill_parent"
 		android:layout_below="@id/actionbar" android:layout_height="fill_parent"
 		android:minHeight="@dimen/write_minheight" android:background="@drawable/input"
-		android:gravity="top|left" android:padding="6dp" android:singleLine="false"
+		android:gravity="top|left" android:padding="6dp" android:layout_margin="6dp" android:singleLine="false"
 		android:layout_weight="1" />
 
 	<RelativeLayout android:id="@id/write_extras"

@@ -1,10 +1,10 @@
 package com.fanfou.app.preferences;
 
-import com.fanfou.app.LoginPage;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.AttributeSet;
+
+import com.fanfou.app.LoginPage;
 
 public class LogoutDialogPreference extends DialogPreference {
 

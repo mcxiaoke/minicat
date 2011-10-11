@@ -19,8 +19,8 @@ import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.ActionBar.Action;
+import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.widget.EndlessListView;
 import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
 import com.fanfou.app.util.StringHelper;
@@ -28,7 +28,7 @@ import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
- *
+ * 
  */
 public class UserListPage extends BaseActivity implements OnRefreshListener,
 		Action {
@@ -80,7 +80,8 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected void initCursor() {
-		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID + "=?";
+		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
+				+ "=?";
 		String[] whereArgs = new String[] { String.valueOf(type), userId };
 		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				whereArgs, null);
@@ -136,7 +137,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 		if (type == User.TYPE_FRIENDS) {
 			mActionBar.setTitle(title + "关注的人");
 		} else if (type == User.TYPE_FOLLOWERS) {
-			mActionBar.setTitle("关注"+title + "的人");
+			mActionBar.setTitle("关注" + title + "的人");
 		}
 		mActionBar.setRightAction(this);
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));

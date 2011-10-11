@@ -3,6 +3,17 @@ package com.fanfou.app;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+
 import com.fanfou.app.adapter.SearchAdapter;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
@@ -11,25 +22,15 @@ import com.fanfou.app.config.Commons;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.Action;
 
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
-
 /**
  * @author mcxiaoke
  * @version 1.0 20110802
  * 
  */
-public class SearchPage extends BaseActivity implements OnItemClickListener,Action{
+public class SearchPage extends BaseActivity implements OnItemClickListener,
+		Action {
 	private ActionBar mActionBar;
-	
+
 	private ListView mListView;
 	private BaseAdapter mAdapter;
 	private ArrayList<Search> mSearches = new ArrayList<Search>(20);
@@ -60,13 +61,13 @@ public class SearchPage extends BaseActivity implements OnItemClickListener,Acti
 
 	private void parseIntent() {
 	}
-	
-	private void fetchTrends(){
+
+	private void fetchTrends() {
 		new TrendsTask().execute();
 	}
 
 	private void updateUI() {
-		mAdapter=new SearchAdapter(this, mSearches);
+		mAdapter = new SearchAdapter(this, mSearches);
 		mListView.setAdapter(mAdapter);
 	}
 
@@ -145,16 +146,16 @@ public class SearchPage extends BaseActivity implements OnItemClickListener,Acti
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		Search s=(Search) parent.getAdapter().getItem(position);
-		if(s!=null){
+		Search s = (Search) parent.getAdapter().getItem(position);
+		if (s != null) {
 			goSearch(mContext, s.query);
 		}
 	}
-	
-	private void goSearch(Context context,String query){
-		Intent intent=new Intent(context,SearchResultsPage.class);
+
+	private void goSearch(Context context, String query) {
+		Intent intent = new Intent(context, SearchResultsPage.class);
 		intent.setAction(Intent.ACTION_SEARCH);
-		intent.putExtra(SearchManager.QUERY,query);
+		intent.putExtra(SearchManager.QUERY, query);
 		startActivity(intent);
 	}
 

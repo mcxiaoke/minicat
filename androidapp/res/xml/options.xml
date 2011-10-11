@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 	android:title="设置">
 
-	<PreferenceScreen android:title="通知设置">
+	<PreferenceScreen android:title="后台更新和通知">
 
 		<PreferenceCategory android:title="后台更新">
 			<CheckBoxPreference android:title="后台更新"
@@ -20,7 +20,7 @@
 			<CheckBoxPreference android:title="好友消息"
 				android:key="@string/option_notification_home" android:defaultValue="false"
 				android:dependency="@string/option_notification" />
-			<CheckBoxPreference android:title="提及我的消息"
+			<CheckBoxPreference android:title="提到我的消息"
 				android:key="@string/option_notification_mention"
 				android:defaultValue="true" android:dependency="@string/option_notification" />
 			<CheckBoxPreference android:title="私信"
@@ -31,11 +31,11 @@
 		<PreferenceCategory android:title="通知设置">
 
 			<CheckBoxPreference android:title="通知"
-				android:summary="在状态栏显示消息和私信通知" android:key="@string/option_notification_switch"
+				android:summary="收到消息和私信时在状态栏显示通知" android:key="@string/option_notification_switch"
 				android:defaultValue="true" android:dependency="@string/option_notification" />
 
 			<CheckBoxPreference android:title="声音"
-				android:key="@string/option_notification_sound"
+				android:summary="收到消息和私信时声音提示" android:key="@string/option_notification_sound"
 				android:defaultValue="true" android:dependency="@string/option_notification_switch" />
 
 			<RingtonePreference android:key="@string/option_notification_ringtone"
@@ -44,14 +44,24 @@
 				android:dependency="@string/option_notification_sound" />
 
 			<CheckBoxPreference android:title="震动"
-				android:key="@string/option_notification_vibrate"
+				android:summary="收到消息和私信时震动提示" android:key="@string/option_notification_vibrate"
 				android:defaultValue="true" android:dependency="@string/option_notification_switch" />
 
 		</PreferenceCategory>
 
 	</PreferenceScreen>
 
-	<PreferenceScreen android:title="界面设置">
+	<PreferenceCategory android:title="显示">
+
+		<CheckBoxPreference android:title="锁定屏幕方向"
+			android:summary="设置是否锁定屏幕方向" android:key="@string/option_force_portrait"
+			android:summaryOff="自动旋转屏幕" android:defaultValue="false"
+			android:summaryOn="锁定屏幕方向(强制竖屏)" />
+
+		<CheckBoxPreference android:title="显示用户头像"
+			android:summary="设置时间线是否显示用户头像" android:key="@string/option_show_head"
+			android:summaryOff="时间线不显示用户头像" android:defaultValue="true"
+			android:summaryOn="时间线显示用户头像" />
 
 		<ListPreference android:entries="@array/font_size"
 			android:entryValues="@array/font_size_values" android:summary="设置消息字体大小"
@@ -63,18 +73,6 @@
 			android:dialogTitle="选择消息页面图片显示方式" android:title="消息图片预览"
 			android:key="@string/option_pic_level" android:defaultValue="0" />
 
-		<CheckBoxPreference android:title="显示用户头像"
-			android:summary="设置时间线是否显示用户头像" android:key="@string/option_show_head"
-			android:summaryOff="时间线不显示用户头像" android:defaultValue="true"
-			android:summaryOn="时间线显示用户头像" />
-
-		<!-- <CheckBoxPreference android:title="底部刷新图标" android:summary="设置是否显示底部刷新图标" 
-			android:key="@string/option_bottom_refresh_icon" android:summaryOff="不显示底部刷新图标" 
-			android:defaultValue="true" android:summaryOn="显示底部刷新图标" /> <CheckBoxPreference 
-			android:title="底部发消息图标" android:summary="设置是否显示底部发消息图标" android:key="@string/option_bottom_write_icon" 
-			android:summaryOff="不显示底部发消息图标" android:defaultValue="false" android:summaryOn="显示底部发消息图标" 
-			/> -->
-
 		<ListPreference android:entries="@array/bottom_icon_position"
 			android:entryValues="@array/bottom_icon_position_values"
 			android:summary="设置底部刷新图标" android:dialogTitle="设置刷新图标显示位置"
@@ -83,28 +81,23 @@
 
 		<ListPreference android:entries="@array/bottom_icon_position"
 			android:entryValues="@array/bottom_icon_position_values"
-			android:summary="底部发消息图标" android:dialogTitle="设置发消息图标显示位置"
-			android:title="底部发消息图标" android:key="@string/option_bottom_write_icon"
+			android:summary="底部编辑图标" android:dialogTitle="设置编辑图标显示位置"
+			android:title="底部编辑图标" android:key="@string/option_bottom_write_icon"
 			android:defaultValue="none" />
 
-	</PreferenceScreen>
+	</PreferenceCategory>
 
-	<PreferenceScreen android:title="功能设置">
-
-		<ListPreference android:entries="@array/photo_quality"
-			android:entryValues="@array/photo_quality_values" android:summary="设置上传照片的质量"
-			android:dialogTitle="选择上传照片的质量" android:title="上传照片质量"
-			android:key="@string/option_photo_quality" android:defaultValue="80" />
+	<PreferenceCategory android:title="功能">
 
 		<CheckBoxPreference android:title="启动时刷新"
 			android:summary="设置启动时是否自动获取新消息" android:key="@string/option_refresh_on_open"
 			android:summaryOff="启动时不获取新消息" android:defaultValue="false"
 			android:summaryOn="启动时自动获取新消息" />
 
-		<CheckBoxPreference android:title="自动检测升级"
-			android:summary="设置启动时检测新版本" android:key="@string/option_autoupdate"
-			android:summaryOff="启动时不检测新版本" android:defaultValue="true"
-			android:summaryOn="启动时自动检测新版本" />
+		<ListPreference android:entries="@array/photo_quality"
+			android:entryValues="@array/photo_quality_values" android:summary="设置上传照片的质量"
+			android:dialogTitle="选择上传照片的质量" android:title="上传照片质量"
+			android:key="@string/option_photo_quality" android:defaultValue="80" />
 
 		<com.fanfou.app.preferences.ClearDataDialogPreference
 			android:key="@string/option_cleandb" android:title="清空消息缓存"
@@ -118,11 +111,21 @@
 			android:dialogMessage="是否要清空存储卡中缓存的用户头像和消息图片？（提示：图片缓存在存储卡上，占用空间很小，不建议手动清空）"
 			android:positiveButtonText="确定" android:negativeButtonText="取消" />
 
-	</PreferenceScreen>
+	</PreferenceCategory>
 
-	<PreferenceScreen android:title="软件信息">
+	<PreferenceCategory android:title="信息">
+		<com.fanfou.app.preferences.LogoutDialogPreference
+			android:key="@string/option_logout" android:title="注销登录"
+			android:dialogTitle="注销登录" android:summary="注销当前帐号，重新登录"
+			android:dialogMessage="是否要注销当前帐号，重新登录？" android:positiveButtonText="确定"
+			android:negativeButtonText="取消" />
 
-		<Preference android:title="软件升级" android:summary="联网检测是否有升级版本"
+		<CheckBoxPreference android:title="启用自动升级"
+			android:summary="设置启动时检测新版本" android:key="@string/option_autoupdate"
+			android:summaryOff="启用定时检测新版本" android:defaultValue="true"
+			android:summaryOn="禁用定时检测新版本" />
+
+		<Preference android:title="软件升级" android:summary="联网检测是否有新版本"
 			android:key="@string/option_check_update" />
 
 		<Preference android:title="意见反馈" android:summary="通过邮件发送意见和建议"
@@ -134,12 +137,6 @@
 				android:data="http://fanfou.com/" />
 		</Preference>
 
-	</PreferenceScreen>
-
-	<com.fanfou.app.preferences.LogoutDialogPreference
-		android:key="@string/option_logout" android:title="注销登录"
-		android:dialogTitle="注销登录" android:summary="注销当前帐号，重新登录"
-		android:dialogMessage="是否要注销当前帐号，重新登录？" android:positiveButtonText="确定"
-		android:negativeButtonText="取消" />
+	</PreferenceCategory>
 
 </PreferenceScreen>

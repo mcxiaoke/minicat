@@ -3,12 +3,6 @@ package com.fanfou.app.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fanfou.app.R;
-import com.fanfou.app.api.Status;
-import com.fanfou.app.util.DateTimeHelper;
-import com.fanfou.app.util.StatusHelper;
-import com.fanfou.app.util.StringHelper;
-
 import android.content.Context;
 import android.text.TextPaint;
 import android.util.Log;
@@ -16,6 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.fanfou.app.R;
+import com.fanfou.app.api.Status;
+import com.fanfou.app.util.DateTimeHelper;
+import com.fanfou.app.util.StatusHelper;
+import com.fanfou.app.util.StringHelper;
 
 public class StatusArrayAdapter extends BaseArrayAdapter<Status> {
 
@@ -87,8 +87,9 @@ public class StatusArrayAdapter extends BaseArrayAdapter<Status> {
 
 		final Status s = mStatus.get(position);
 
-		mLoader.set(s.userProfileImageUrl, holder.headIcon,R.drawable.default_head);
-		
+		mLoader.set(s.userProfileImageUrl, holder.headIcon,
+				R.drawable.default_head);
+
 		if (StringHelper.isEmpty(s.inReplyToStatusId)) {
 			holder.replyIcon.setVisibility(View.GONE);
 		} else {
@@ -100,7 +101,7 @@ public class StatusArrayAdapter extends BaseArrayAdapter<Status> {
 		} else {
 			holder.photoIcon.setVisibility(View.VISIBLE);
 		}
-		
+
 		holder.nameText.setText(s.userScreenName);
 		StatusHelper.setSimpifiedText(holder.contentText, s.text);
 		holder.metaText.setText(DateTimeHelper.getInterval(s.createdAt) + " 来自"

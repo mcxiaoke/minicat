@@ -19,12 +19,39 @@ import com.fanfou.app.util.DateTimeHelper;
  * @version 1.0 2011.06.09
  * 
  */
-public class MessageCursorAdapter extends BaseCursorAdapter{
+public class MessageCursorAdapter extends BaseCursorAdapter {
 
-	public static final String TAG = "MessageAdapter";
+	public static final String TAG = "MessageCursorAdapter";
+
+	private static final int ITEM_TYPE_ME = 0;
+	private static final int ITEM_TYPE_NONE = 1;
+	private static final int[] TYPES = new int[] { ITEM_TYPE_ME, ITEM_TYPE_NONE };
 
 	private void log(String message) {
 		Log.e(TAG, message);
+	}
+
+	@Override
+	public int getItemViewType(int position) {
+		final Cursor c = (Cursor) getItem(position);
+		if (c == null) {
+			return ITEM_TYPE_NONE;
+		}
+		final DirectMessage dm = DirectMessage.parse(c);
+		if (dm == null || dm.isNull()) {
+			return ITEM_TYPE_NONE;
+		}
+
+		if (dm.senderId.equals(dm.threadUserId)) {
+			return ITEM_TYPE_NONE;
+		} else {
+			return ITEM_TYPE_ME;
+		}
+	}
+
+	@Override
+	public int getViewTypeCount() {
+		return TYPES.length;
 	}
 
 	private void setTextStyle(ViewHolder holder) {
@@ -53,9 +80,14 @@ public class MessageCursorAdapter extends BaseCursorAdapter{
 
 		final DirectMessage dm = DirectMessage.parse(cursor);
 
-//		if(!fling){
-			mLoader.set(dm.senderProfileImageUrl, holder.headIcon,R.drawable.default_head);
-//		}
+		if (getItemViewType(cursor.getPosition()) == ITEM_TYPE_ME) {
+			row.setBackgroundColor(0x33999999);
+		}
+
+		// if(!fling){
+		mLoader.set(dm.senderProfileImageUrl, holder.headIcon,
+				R.drawable.default_head);
+		// }
 		// Bitmap bitmap=mLoader.get(dm.senderProfileImageUrl,
 		// getImageCallback(holder.headIcon));
 		// if(bitmap!=null){
@@ -64,15 +96,15 @@ public class MessageCursorAdapter extends BaseCursorAdapter{
 		// holder.headIcon.setImageResource(R.drawable.default_head);
 		// }
 		// row.setBackgroundColor(0x44888800);
-			holder.headIcon.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					if(dm!=null){
-						ActionManager.doProfile(mContext, dm);
-					}
+		holder.headIcon.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (dm != null) {
+					ActionManager.doProfile(mContext, dm);
 				}
-			});
+			}
+		});
 
 		holder.nameText.setText(dm.senderScreenName);
 		holder.dateText.setText(DateTimeHelper.getInterval(dm.createdAt));

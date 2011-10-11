@@ -1,7 +1,5 @@
 package com.fanfou.app.ui;
 
-import com.fanfou.app.R;
-
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -15,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.fanfou.app.R;
 
 public class ActionBar extends RelativeLayout implements OnClickListener {
 
@@ -108,11 +108,11 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 				.getBackground();
 		frameAnimation.start();
 	}
-	
-	public void stopAnimation(){
+
+	public void stopAnimation() {
 		AnimationDrawable frameAnimation = (AnimationDrawable) mRefreshButton
-		.getBackground();
-		if(frameAnimation!=null){
+				.getBackground();
+		if (frameAnimation != null) {
 			frameAnimation.stop();
 			mRefreshButton.setBackgroundDrawable(null);
 			mRefreshButton.setImageResource(R.drawable.i_refresh);

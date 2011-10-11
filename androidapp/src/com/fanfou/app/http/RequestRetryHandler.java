@@ -9,14 +9,14 @@ import java.util.HashSet;
 import javax.net.ssl.SSLHandshakeException;
 
 import org.apache.http.NoHttpResponseException;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.HttpRequestRetryHandler;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 
-import com.fanfou.app.App;
-
 import android.os.SystemClock;
+
+import com.fanfou.app.App;
 
 public class RequestRetryHandler implements HttpRequestRetryHandler {
 	private static final int RETRY_SLEEP_TIME_MILLIS = 1500;

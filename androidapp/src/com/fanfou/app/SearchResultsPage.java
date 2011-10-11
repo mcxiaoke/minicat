@@ -28,10 +28,10 @@ import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
- *
+ * 
  */
 public class SearchResultsPage extends BaseActivity implements
-		OnRefreshListener, Action,OnItemLongClickListener {
+		OnRefreshListener, Action, OnItemLongClickListener {
 
 	protected ActionBar mActionBar;
 	protected EndlessListView mListView;
@@ -94,7 +94,7 @@ public class SearchResultsPage extends BaseActivity implements
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			keyword = intent.getStringExtra(SearchManager.QUERY);
 			log("parseIntent() keyword=" + keyword);
-		}else if(Intent.ACTION_VIEW.equals(intent.getAction())){
+		} else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 			Uri data = intent.getData();
 			if (data != null) {
 				keyword = data.getLastPathSegment();
@@ -145,9 +145,9 @@ public class SearchResultsPage extends BaseActivity implements
 	protected void updateUI(boolean noMore) {
 		log("updateUI()");
 		mStatusAdapter.updateDataAndUI(mStatuses);
-		if(noMore){
+		if (noMore) {
 			mListView.onNoLoadMore();
-		}else{
+		} else {
 			mListView.onLoadMoreComplete();
 		}
 	}
@@ -204,7 +204,7 @@ public class SearchResultsPage extends BaseActivity implements
 				log("maxId=" + maxId);
 
 				mStatuses.addAll(result);
-				updateUI(size<20);
+				updateUI(size < 20);
 			}
 		}
 
@@ -215,7 +215,7 @@ public class SearchResultsPage extends BaseActivity implements
 			}
 			List<com.fanfou.app.api.Status> result = null;
 			try {
-				result = App.me.api.search(keyword, maxId,true);
+				result = App.me.api.search(keyword, maxId, true);
 			} catch (ApiException e) {
 				e.printStackTrace();
 			}
@@ -244,9 +244,9 @@ public class SearchResultsPage extends BaseActivity implements
 		showPopup(view, s);
 		return true;
 	}
-	
+
 	private void showPopup(final View view, final Status s) {
-		if (s == null||s.isNull()) {
+		if (s == null || s.isNull()) {
 			return;
 		}
 		UIManager.showPopup(this, view, s, mStatusAdapter, mStatuses);
@@ -262,9 +262,9 @@ public class SearchResultsPage extends BaseActivity implements
 			break;
 		}
 	}
-	
-	private void goTop(){
-		if(mListView!=null){
+
+	private void goTop() {
+		if (mListView != null) {
 			mListView.setSelection(0);
 		}
 	}

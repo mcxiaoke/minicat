@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.05.15
- *
+ * 
  */
 public class Search implements Serializable {
 

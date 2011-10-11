@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -48,7 +49,7 @@ public class ApiImpl implements Api, ResponseCode {
 		if (OAUTH_ON) {
 			mClient = new OAuthClient();
 		} else {
-			mClient = new BasicClient("test","test");
+			mClient = new BasicClient("test", "test");
 		}
 	}
 
@@ -58,25 +59,25 @@ public class ApiImpl implements Api, ResponseCode {
 	 * @param response
 	 * @throws ApiException
 	 */
-//	private void checkResponse(Response response) throws ApiException {
-//		if (response == null || response.statusCode == HTTP_OK) {
-//			return;
-//		} else {
-//			throw new ApiException(response.statusCode, Parser.error(response));
-//		}
-		// switch (response.statusCode) {
-		// case HTTP_UNAUTHORIZED:
-		// case HTTP_BAD_REQUEST:
-		// case HTTP_FORBIDDEN:
-		// case HTTP_NOT_FOUND:
-		// case HTTP_INTERNAL_SERVER_ERROR:
-		// case HTTP_BAD_GATEWAY:
-		// case HTTP_SERVICE_UNAVAILABLE:
-		// case ERROR_NOT_CONNECTED:
-		// default:
-		// throw new ApiException(response.statusCode, Parser.error(response));
-		// }
-//	}
+	// private void checkResponse(Response response) throws ApiException {
+	// if (response == null || response.statusCode == HTTP_OK) {
+	// return;
+	// } else {
+	// throw new ApiException(response.statusCode, Parser.error(response));
+	// }
+	// switch (response.statusCode) {
+	// case HTTP_UNAUTHORIZED:
+	// case HTTP_BAD_REQUEST:
+	// case HTTP_FORBIDDEN:
+	// case HTTP_NOT_FOUND:
+	// case HTTP_INTERNAL_SERVER_ERROR:
+	// case HTTP_BAD_GATEWAY:
+	// case HTTP_SERVICE_UNAVAILABLE:
+	// case ERROR_NOT_CONNECTED:
+	// default:
+	// throw new ApiException(response.statusCode, Parser.error(response));
+	// }
+	// }
 
 	/**
 	 * exec http request
@@ -87,15 +88,15 @@ public class ApiImpl implements Api, ResponseCode {
 	 */
 	private Response fetch(Request request) throws ApiException {
 		try {
-//			long startTime = System.currentTimeMillis();
+			// long startTime = System.currentTimeMillis();
 			HttpResponse response = mClient.exec(request);
-//			if(App.DEBUG){
-//				long reqTime = System.currentTimeMillis() - startTime;
-//			Utils.logTime("fetch", reqTime);}
-			int statusCode=response.getStatusLine().getStatusCode();
+			// if(App.DEBUG){
+			// long reqTime = System.currentTimeMillis() - startTime;
+			// Utils.logTime("fetch", reqTime);}
+			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == HTTP_OK) {
 				return new Response(response);
-			}else{
+			} else {
 				throw new ApiException(statusCode, Parser.error(response));
 			}
 		} catch (IOException e) {
@@ -289,7 +290,8 @@ public class ApiImpl implements Api, ResponseCode {
 	}
 
 	@Override
-	public List<Status> mentions(int count, int page,String sinceId, String maxId, boolean isHtml) throws ApiException {
+	public List<Status> mentions(int count, int page, String sinceId,
+			String maxId, boolean isHtml) throws ApiException {
 		List<Status> ss = fetchStatuses(URL_TIMELINE_MENTIONS, count, page,
 				null, sinceId, maxId, isHtml, Status.TYPE_MENTION);
 		return ss;
@@ -353,10 +355,7 @@ public class ApiImpl implements Api, ResponseCode {
 		if (App.DEBUG) {
 			log("statusShow()---statusCode=" + statusCode);
 		}
-
-		// handlerResponseError(response);
-		Status s = Status.parse(response);
-		return s;
+		return Status.parse(response);
 	}
 
 	@Override
@@ -398,7 +397,7 @@ public class ApiImpl implements Api, ResponseCode {
 		if (StringHelper.isEmpty(response.getContent())) {
 			throw new ApiException(ERROR_DUPLICATE, "重复消息，发送失败");
 		}
-		return Status.parse(response);
+		return Status.parse(response,Status.TYPE_HOME);
 	}
 
 	@Override
@@ -408,13 +407,7 @@ public class ApiImpl implements Api, ResponseCode {
 		if (App.DEBUG) {
 			log("statusDelete()---statusCode=" + statusCode);
 		}
-
-		// handlerResponseError(response);
-		Status s = Status.parse(response);
-		if (s != null) {
-			s.ownerId = App.me.userId;
-		}
-		return s;
+		return Status.parse(response);
 	}
 
 	@Override
@@ -446,13 +439,7 @@ public class ApiImpl implements Api, ResponseCode {
 		if (App.DEBUG) {
 			log("photoUpload()---statusCode=" + statusCode);
 		}
-
-		// handlerResponseError(response);
-		Status s = Status.parse(response);
-		if (s != null) {
-			s.ownerId = App.me.userId;
-		}
-		return s;
+		return Status.parse(response,Status.TYPE_HOME);
 	}
 
 	@Override
@@ -761,21 +748,6 @@ public class ApiImpl implements Api, ResponseCode {
 		return ids(URL_USERS_FOLLOWERS_IDS, userId, count, page);
 	}
 
-	@Override
-	public List<DirectMessage> messagesInbox(int count, int page,
-			String sinceId, String maxId) throws ApiException {
-		List<DirectMessage> dms = messages(URL_DIRECT_MESSAGES_INBOX, count,
-				page, sinceId, maxId);
-		// if (dms != null && dms.size() > 0) {
-		// for (DirectMessage dm : dms) {
-		// dm.type = DirectMessage.TYPE_IN;
-		// }
-		//
-		// }
-
-		return dms;
-	}
-
 	private List<DirectMessage> messages(String url, int count, int page,
 			String sinceId, String maxId) throws ApiException {
 		List<Parameter> params = new ArrayList<Parameter>();
@@ -805,18 +777,32 @@ public class ApiImpl implements Api, ResponseCode {
 	}
 
 	@Override
+	public List<DirectMessage> messagesInbox(int count, int page,
+			String sinceId, String maxId) throws ApiException {
+		List<DirectMessage> dms = messages(URL_DIRECT_MESSAGES_INBOX, count,
+				page, sinceId, maxId);
+		if (dms != null && dms.size() > 0) {
+			for (DirectMessage dm : dms) {
+				dm.type = DirectMessage.TYPE_IN;
+				dm.threadUserId = dm.senderId;
+				dm.threadUserName = dm.senderScreenName;
+			}
+		}
+		return dms;
+	}
+
+	@Override
 	public List<DirectMessage> messagesOutbox(int count, int page,
 			String sinceId, String maxId) throws ApiException {
 		List<DirectMessage> dms = messages(URL_DIRECT_MESSAGES_OUTBOX, count,
 				page, sinceId, maxId);
-
-		// if (dms != null && dms.size() > 0) {
-		// for (DirectMessage dm : dms) {
-		// dm.type = DirectMessage.TYPE_OUT;
-		// }
-		//
-		// }
-
+		if (dms != null && dms.size() > 0) {
+			for (DirectMessage dm : dms) {
+				dm.type = DirectMessage.TYPE_OUT;
+				dm.threadUserId = dm.recipientId;
+				dm.threadUserName = dm.recipientScreenName;
+			}
+		}
 		return dms;
 	}
 
@@ -843,8 +829,15 @@ public class ApiImpl implements Api, ResponseCode {
 			log("messageCreate()---statusCode=" + statusCode);
 		}
 
-		// handlerResponseError(response);
-		return DirectMessage.parse(response);
+		DirectMessage dm= DirectMessage.parse(response);
+		if(dm!=null&&!dm.isNull()){
+			dm.type = DirectMessage.TYPE_OUT;
+			dm.threadUserId = dm.recipientId;
+			dm.threadUserName = dm.recipientScreenName;
+			return dm;
+		}else{
+			return null;
+		}
 	}
 
 	@Override

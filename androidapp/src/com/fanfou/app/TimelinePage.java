@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.CursorAdapter;
 import android.widget.Toast;
+
 import com.fanfou.app.adapter.StatusCursorAdapter;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
@@ -20,8 +21,8 @@ import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.UIManager;
 import com.fanfou.app.ui.ActionBar.Action;
+import com.fanfou.app.ui.UIManager;
 import com.fanfou.app.ui.widget.EndlessListView;
 import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
 import com.fanfou.app.util.StringHelper;
@@ -29,7 +30,7 @@ import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
- *
+ * 
  */
 public class TimelinePage extends BaseActivity implements OnRefreshListener,
 		Action, OnItemLongClickListener {
@@ -48,7 +49,7 @@ public class TimelinePage extends BaseActivity implements OnRefreshListener,
 	protected String userName;
 	protected User user;
 	protected int mType;
-	protected int page=1;
+	protected int page = 1;
 
 	private boolean isInitialized = false;
 
@@ -88,8 +89,8 @@ public class TimelinePage extends BaseActivity implements OnRefreshListener,
 			mCursor = managedQuery(StatusInfo.CONTENT_URI, StatusInfo.COLUMNS,
 					where, whereArgs, null);
 		} else if (mType == Status.TYPE_FAVORITES) {
-			String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
-					+ "=?";
+			String where = BasicColumns.TYPE + "=? AND "
+					+ BasicColumns.OWNER_ID + "=?";
 			String[] whereArgs = new String[] { String.valueOf(mType), userId };
 			mCursor = managedQuery(StatusInfo.CONTENT_URI, StatusInfo.COLUMNS,
 					where, whereArgs, null);
@@ -172,7 +173,7 @@ public class TimelinePage extends BaseActivity implements OnRefreshListener,
 		Bundle b = new Bundle();
 		b.putString(Commons.EXTRA_ID, userId);
 		b.putBoolean(Commons.EXTRA_FORMAT, false);
-		if(mType==Status.TYPE_FAVORITES){
+		if (mType == Status.TYPE_FAVORITES) {
 			b.putInt(Commons.EXTRA_PAGE, page++);
 		}
 		if (isGetMore) {

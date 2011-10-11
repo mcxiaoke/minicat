@@ -1,10 +1,10 @@
 package com.fanfou.app;
 
-import com.fanfou.app.ui.widget.TwoDScrollView;
-
 import android.os.Bundle;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
+
+import com.fanfou.app.ui.widget.TwoDScrollView;
 
 /**
  * @author mcxiaoke
@@ -23,7 +23,7 @@ public class PhotoViewPage extends BaseActivity {
 		root.addView(view, new LayoutParams(LayoutParams.FILL_PARENT,
 				LayoutParams.FILL_PARENT));
 		setContentView(root);
-		
+
 		view.setImageResource(R.drawable.icon);
 	}
 

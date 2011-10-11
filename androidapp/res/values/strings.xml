@@ -11,11 +11,6 @@
 	<string name="accessTokenSecret">accessTokenSecret</string>
 
 	<string name="actionbar_activity_not_found">Failed to open intent...</string>
-
-	<string name="pull_to_refresh_pull_label">Pull to Refresh</string>
-	<string name="pull_to_refresh_release_label">Release to Refresh</string>
-	<string name="pull_to_refresh_refreshing_label">Loading...</string>
-	<string name="pull_to_refresh_tap_label">Tap to Refresh</string>
 	
 	<string name="login_signup_web">Signup via Web</string>
 	<string name="login_signup_sms">Signup via Sms</string>

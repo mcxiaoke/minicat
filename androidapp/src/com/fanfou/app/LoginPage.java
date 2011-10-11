@@ -1,6 +1,7 @@
 package com.fanfou.app;
 
 import java.io.IOException;
+
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -23,7 +24,6 @@ import com.fanfou.app.api.ResultInfo;
 import com.fanfou.app.api.User;
 import com.fanfou.app.auth.OAuth;
 import com.fanfou.app.auth.OAuthToken;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
@@ -60,16 +60,17 @@ public final class LoginPage extends BaseActivity {
 		super.onCreate(savedInstanceState);
 
 		String savedToken = OptionHelper.readString(mContext,
-				Commons.KEY_OAUTH_ACCESS_TOKEN, null);
+				R.string.option_oauth_token, null);
 		String savedTokenSecret = OptionHelper.readString(mContext,
-				Commons.KEY_OAUTH_ACCESS_TOKEN_SECRET, null);
+				R.string.option_oauth_token_secret, null);
 
 		if (!StringHelper.isEmpty(savedToken)
 				&& !StringHelper.isEmpty(savedTokenSecret)) {
 			goHome();
 		} else {
 			g = GoogleAnalyticsTracker.getInstance();
-			g.startNewSession(Commons.GOOGLE_ANALYTICS_CODE, this);
+			g.startNewSession(getString(R.string.config_google_analytics_code),
+					this);
 			g.trackPageView("LoginPage");
 			initLayout();
 		}
@@ -137,8 +138,8 @@ public final class LoginPage extends BaseActivity {
 	}
 
 	public static void doLogin(Context context) {
-		OptionHelper.remove(context, Commons.KEY_OAUTH_ACCESS_TOKEN);
-		OptionHelper.remove(context, Commons.KEY_OAUTH_ACCESS_TOKEN_SECRET);
+		OptionHelper.remove(context, R.string.option_oauth_token);
+		OptionHelper.remove(context, R.string.option_oauth_token_secret);
 		Intent intent = new Intent(context, LoginPage.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		context.startActivity(intent);
@@ -233,7 +234,7 @@ public final class LoginPage extends BaseActivity {
 		protected ResultInfo doInBackground(Void... params) {
 
 			String savedUserId = OptionHelper.readString(mContext,
-					Commons.KEY_USERID, null);
+					R.string.option_userid, null);
 			try {
 				OAuth oauth = new OAuth();
 				OAuthToken token = oauth
@@ -244,13 +245,13 @@ public final class LoginPage extends BaseActivity {
 				if (token != null) {
 
 					OptionHelper.saveString(mContext,
-							Commons.KEY_OAUTH_ACCESS_TOKEN, token.getToken());
+							R.string.option_oauth_token, token.getToken());
 					OptionHelper.saveString(mContext,
-							Commons.KEY_OAUTH_ACCESS_TOKEN_SECRET,
+							R.string.option_oauth_token_secret,
 							token.getTokenSecret());
-					OptionHelper.saveString(mContext, Commons.KEY_USERID,
+					OptionHelper.saveString(mContext, R.string.option_userid,
 							username);
-					OptionHelper.saveString(mContext, Commons.KEY_PASSWORD,
+					OptionHelper.saveString(mContext, R.string.option_password,
 							password);
 					App.me.password = password;
 					App.me.oauthAccessToken = token.getToken();

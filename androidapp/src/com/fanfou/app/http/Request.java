@@ -2,8 +2,10 @@ package com.fanfou.app.http;
 
 import java.io.Serializable;
 import java.util.List;
+
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+
 import com.fanfou.app.util.Utils;
 
 /**
@@ -53,7 +55,7 @@ public class Request implements Serializable {
 		this.headers = headers;
 		this.params = params;
 		if (post) {
-			this.method="POST";
+			this.method = "POST";
 			if (Utils.isEmpty(params)) {
 				throw new IllegalArgumentException("POST参数不能为空");
 			}
@@ -64,11 +66,12 @@ public class Request implements Serializable {
 				entity = Parameter.encodeForPost(params);
 			}
 		} else {
-			this.method="GET";
-			if(Utils.isEmpty(params)){
+			this.method = "GET";
+			if (Utils.isEmpty(params)) {
 				this.url = url;
-			}else{
-				this.url = url + "?" + Parameter.encodeForGet(params);;
+			} else {
+				this.url = url + "?" + Parameter.encodeForGet(params);
+				;
 			}
 			this.entity = null;
 		}
@@ -77,8 +80,8 @@ public class Request implements Serializable {
 	public boolean isPostMethod() {
 		return post;
 	}
-	
-	public String getMethod(){
+
+	public String getMethod() {
 		return method;
 	}
 

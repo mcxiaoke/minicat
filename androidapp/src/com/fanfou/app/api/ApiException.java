@@ -3,7 +3,6 @@
  */
 package com.fanfou.app.api;
 
-
 /**
  * @author mcxiaoke
  * @version 1.0 2011.05.02

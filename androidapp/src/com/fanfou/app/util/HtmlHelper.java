@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.05.02
- *
+ * 
  */
 public final class HtmlHelper {
 	public static String escape(String original) {

@@ -41,7 +41,6 @@ public class User implements Storable<User> {
 
 	public static final int TYPE_FRIENDS = Commons.USER_TYPE_FRIENDS;
 	public static final int TYPE_FOLLOWERS = Commons.USER_TYPE_FOLLOWERS;
-	public static final int TYPE_NONE = Commons.USER_TYPE_NONE;
 	public static final int AUTO_COMPLETE = Commons.USER_AUTO_COMPLETE;
 
 	public Date createdAt;
@@ -186,7 +185,7 @@ public class User implements Storable<User> {
 			u.createdAt = Parser.date(o.getString(BasicColumns.CREATED_AT));
 			u.utcOffset = o.getInt(UserInfo.UTC_OFFSET);
 
-			u.type = User.TYPE_NONE;
+			u.type = Commons.TYPE_NONE;
 
 			if (o.has("status")) {
 				JSONObject so = o.getJSONObject("status");
@@ -211,31 +210,31 @@ public class User implements Storable<User> {
 	public ContentValues toContentValues() {
 		User u = this;
 		ContentValues cv = new ContentValues();
-		
+
 		cv.put(BasicColumns.ID, u.id);
 		cv.put(BasicColumns.OWNER_ID, u.ownerId);
 		cv.put(UserInfo.NAME, u.name);
-		
+
 		cv.put(UserInfo.SCREEN_NAME, u.screenName);
 		cv.put(UserInfo.LOCATION, u.location);
 		cv.put(UserInfo.GENDER, u.gender);
 		cv.put(UserInfo.BIRTHDAY, u.birthday);
-		
+
 		cv.put(UserInfo.DESCRIPTION, u.description);
 		cv.put(UserInfo.PROFILE_IMAGE_URL, u.profileImageUrl);
 		cv.put(UserInfo.URL, u.url);
 		cv.put(UserInfo.PROTECTED, u.protect);
-		
+
 		cv.put(UserInfo.FOLLOWERS_COUNT, u.followersCount);
 		cv.put(UserInfo.FRIENDS_COUNT, u.friendsCount);
 		cv.put(UserInfo.FAVORITES_COUNT, u.favouritesCount);
 		cv.put(UserInfo.STATUSES_COUNT, u.statusesCount);
-		
+
 		cv.put(UserInfo.FOLLOWING, u.following);
 		cv.put(UserInfo.NOTIFICATIONS, u.notifications);
 		cv.put(BasicColumns.CREATED_AT, u.createdAt.getTime());
 		cv.put(UserInfo.UTC_OFFSET, u.utcOffset);
-		
+
 		if (u.lastStatusId != null) {
 			cv.put(UserInfo.LAST_STATUS_CREATED_AT,
 					u.lastStatusCreatedAt.getTime());
@@ -250,27 +249,25 @@ public class User implements Storable<User> {
 	@Override
 	public String toString() {
 		return "[User] " + BasicColumns.ID + "=" + id + " "
-				+ UserInfo.SCREEN_NAME + "=" + screenName + " "
-		 +UserInfo.NAME+"="+name+" "
-		 +UserInfo.LOCATION+"="+location+" "
-		 +UserInfo.GENDER+"="+gender+" "
-		 +UserInfo.BIRTHDAY+"="+birthday+" "
-		 +UserInfo.DESCRIPTION+"="+description+" "
-		 +UserInfo.PROFILE_IMAGE_URL+"="+profileImageUrl+" "
-		 +UserInfo.URL+"="+url+" "
-		 +UserInfo.PROTECTED+"="+protect+" "
-		 +UserInfo.FOLLOWERS_COUNT+"="+followersCount+" "
-		 +UserInfo.FRIENDS_COUNT+"="+friendsCount+" "
-		 +UserInfo.FAVORITES_COUNT+"="+favouritesCount+" "
-		 +UserInfo.STATUSES_COUNT+"="+statusesCount+" "
-		 +UserInfo.FOLLOWING+"="+following+" "
-		 +UserInfo.NOTIFICATIONS+"="+notifications+" "
-		 +UserInfo.CREATED_AT+"="+createdAt+" "
-		 +UserInfo.UTC_OFFSET+"="+utcOffset+" "
-		 +UserInfo.LAST_STATUS_CREATED_AT+"="+lastStatusCreatedAt+" "
-		 +UserInfo.LAST_STATUS_ID+"="+lastStatusId+" "
-		 +UserInfo.LAST_STATUS_TEXT+"="+lastStatusText+" "
-		 +UserInfo.TYPE+"="+type+" ";
+				+ UserInfo.SCREEN_NAME + "=" + screenName + " " + UserInfo.NAME
+				+ "=" + name + " " + UserInfo.LOCATION + "=" + location + " "
+				+ UserInfo.GENDER + "=" + gender + " " + UserInfo.BIRTHDAY
+				+ "=" + birthday + " " + UserInfo.DESCRIPTION + "="
+				+ description + " " + UserInfo.PROFILE_IMAGE_URL + "="
+				+ profileImageUrl + " " + UserInfo.URL + "=" + url + " "
+				+ UserInfo.PROTECTED + "=" + protect + " "
+				+ UserInfo.FOLLOWERS_COUNT + "=" + followersCount + " "
+				+ UserInfo.FRIENDS_COUNT + "=" + friendsCount + " "
+				+ UserInfo.FAVORITES_COUNT + "=" + favouritesCount + " "
+				+ UserInfo.STATUSES_COUNT + "=" + statusesCount + " "
+				+ UserInfo.FOLLOWING + "=" + following + " "
+				+ UserInfo.NOTIFICATIONS + "=" + notifications + " "
+				+ BasicColumns.CREATED_AT + "=" + createdAt + " "
+				+ UserInfo.UTC_OFFSET + "=" + utcOffset + " "
+				+ UserInfo.LAST_STATUS_CREATED_AT + "=" + lastStatusCreatedAt
+				+ " " + UserInfo.LAST_STATUS_ID + "=" + lastStatusId + " "
+				+ UserInfo.LAST_STATUS_TEXT + "=" + lastStatusText + " "
+				+ BasicColumns.TYPE + "=" + type + " ";
 	}
 
 }

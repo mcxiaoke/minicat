@@ -1,8 +1,5 @@
 package com.fanfou.app.ui.widget;
 
-import com.fanfou.app.App;
-import com.fanfou.app.R;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -10,13 +7,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
-public class EndlessListViewNoHeader extends ListView implements OnItemClickListener{
-	private static final String TAG = EndlessListViewNoHeader.class.getSimpleName();
+import com.fanfou.app.App;
+import com.fanfou.app.R;
+
+public class EndlessListViewNoHeader extends ListView implements
+		OnItemClickListener {
+	private static final String TAG = EndlessListViewNoHeader.class
+			.getSimpleName();
 
 	protected static final int FOOTER_NONE = 0;
 	protected static final int FOOTER_HIDE = 1;

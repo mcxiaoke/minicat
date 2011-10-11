@@ -38,7 +38,7 @@ public class CirclePageIndicator extends View implements PageIndicator {
 	private float mRadius;
 	private final Paint mPaintStroke;
 	private final Paint mPaintFill;
-	 private ViewPager mViewPager;
+	private ViewPager mViewPager;
 	private int mCurrentPage;
 	private int mSnapPage;
 	private int mCurrentOffset;
@@ -229,7 +229,7 @@ public class CirclePageIndicator extends View implements PageIndicator {
 		if (mViewPager == null) {
 			throw new IllegalStateException("ViewPager has not been bound.");
 		}
-//		mViewPager.setCurrentItem(item);
+		// mViewPager.setCurrentItem(item);
 		mCurrentPage = item;
 		invalidate();
 	}

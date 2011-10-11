@@ -15,10 +15,8 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.R;
-import com.fanfou.app.api.User;
-import com.fanfou.app.config.Commons;
+import com.fanfou.app.service.AutoCompleteService;
 import com.fanfou.app.service.CleanService;
-import com.fanfou.app.service.FetchService;
 import com.fanfou.app.service.NotificationService;
 
 /**
@@ -31,10 +29,8 @@ public final class AlarmHelper {
 	public static void setCleanTask(Context context) {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-		PendingIntent pi = getCleanPendingIntent(context);
-		am.cancel(pi);
 		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, setAlarmTime(),
-				6 * 3600 * 1000, pi);
+				7 * 24 * 3600 * 1000, getCleanPendingIntent(context));
 	}
 
 	public static void setNotificationTaskOn(Context context) {
@@ -61,10 +57,8 @@ public final class AlarmHelper {
 			}
 			AlarmManager am = (AlarmManager) context
 					.getSystemService(Context.ALARM_SERVICE);
-			PendingIntent pi = getNotificationPendingIntent(context);
-			am.cancel(pi);
-			am.setInexactRepeating(AlarmManager.RTC,
-					c.getTimeInMillis(), interval * 60 * 1000, pi);
+			am.setInexactRepeating(AlarmManager.RTC, c.getTimeInMillis(),
+					interval * 60 * 1000, getNotificationPendingIntent(context));
 		} else {
 			AlarmManager am = (AlarmManager) context
 					.getSystemService(Context.ALARM_SERVICE);
@@ -93,18 +87,15 @@ public final class AlarmHelper {
 		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
 				c.get(Calendar.DAY_OF_MONTH), 4, 0);
 		c.add(Calendar.DATE, 1);
-		long interval = 48 * 3600 * 1000;
+		long interval = 3 * 24 * 3600 * 1000;
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-		PendingIntent pi = getAutoCompletePendingIntent(context);
-		am.cancel(pi);
 		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
-				interval, pi);
+				interval, getAutoCompletePendingIntent(context));
 	}
 
 	private static PendingIntent getAutoCompletePendingIntent(Context context) {
-		Intent intent = new Intent(context, FetchService.class);
-		intent.putExtra(Commons.EXTRA_TYPE, User.AUTO_COMPLETE);
+		Intent intent = new Intent(context, AutoCompleteService.class);
 		PendingIntent pi = PendingIntent.getService(context, 0, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		return pi;

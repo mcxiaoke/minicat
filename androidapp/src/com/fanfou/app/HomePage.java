@@ -1,6 +1,9 @@
 package com.fanfou.app;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -13,15 +16,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 
 import com.fanfou.app.adapter.BaseCursorAdapter;
 import com.fanfou.app.adapter.MessageCursorAdapter;
@@ -29,6 +28,7 @@ import com.fanfou.app.adapter.StatusCursorAdapter;
 import com.fanfou.app.adapter.ViewsAdapter;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
+import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
@@ -41,6 +41,7 @@ import com.fanfou.app.ui.viewpager.TitlePageIndicator;
 import com.fanfou.app.ui.viewpager.TitleProvider;
 import com.fanfou.app.ui.widget.EndlessListViewNoHeader;
 import com.fanfou.app.ui.widget.EndlessListViewNoHeader.OnLoadDataListener;
+import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.Utils;
 
@@ -78,6 +79,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	public static final String TAG = "HomePage";
 
+	BroadcastReceiver mSendSuccessReceiver;
+	IntentFilter mSendSuccessFilter;
+
 	private void log(String message) {
 		Log.i(TAG, message);
 	}
@@ -100,6 +104,37 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	private void init() {
 		mHandler = new Handler();
+		initSendSuccessReceiver();
+	}
+
+	private void initSendSuccessReceiver() {
+		mSendSuccessReceiver = new SendSuccessReceiver();
+		mSendSuccessFilter = new IntentFilter(Actions.ACTION_STATUS_SEND);
+		mSendSuccessFilter.setPriority(1000);
+	}
+
+	private class SendSuccessReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if(App.DEBUG){
+				log("SendSuccessReceiver.received");
+				IntentHelper.logIntent(TAG, intent);
+			}
+			onSendSuccess();
+			abortBroadcast();
+		}
+
+	}
+
+	private void onSendSuccess() {
+//		if(adapters[0]!=null){
+//			adapters[0].notifyDataSetChanged();
+//		}
+		
+		if(cursors[0]!=null){
+			cursors[0].requery();
+		}
 	}
 
 	/**
@@ -249,23 +284,23 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		// views[3].setOnTouchListener(this);
 	}
 
-	private Cursor initCursor(int type) {
+	private Cursor initStatusCursor(int type) {
 		String where = BasicColumns.TYPE + "=?";
 		String[] whereArgs = new String[] { String.valueOf(type) };
 		Uri uri = StatusInfo.CONTENT_URI;
-		String[] columns = StatusInfo.COLUMNS;
-		if (type == DirectMessage.TYPE_NONE) {
-			uri = DirectMessageInfo.CONTENT_URI;
-			columns = DirectMessageInfo.COLUMNS;
-		}
-		return managedQuery(uri, columns, where, whereArgs, null);
+		return managedQuery(uri, StatusInfo.COLUMNS, where, whereArgs, null);
+	}
+
+	private Cursor initMessageCursor() {
+		Uri uri = Uri.withAppendedPath(DirectMessageInfo.CONTENT_URI, "list");
+		return managedQuery(uri, DirectMessageInfo.COLUMNS, null, null, null);
 	}
 
 	private void setCursors() {
-		cursors[0] = initCursor(Status.TYPE_HOME);
-		cursors[1] = initCursor(Status.TYPE_MENTION);
-		cursors[2] = initCursor(DirectMessage.TYPE_NONE);
-		cursors[3] = initCursor(Status.TYPE_PUBLIC);
+		cursors[0] = initStatusCursor(Status.TYPE_HOME);
+		cursors[1] = initStatusCursor(Status.TYPE_MENTION);
+		cursors[2] = initMessageCursor();
+		cursors[3] = initStatusCursor(Status.TYPE_PUBLIC);
 	}
 
 	private void initAdapters() {
@@ -364,24 +399,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			Utils.startFetchService(this, Status.TYPE_MENTION, receiver, b);
 			break;
 		case 2:
-			if (cursor != null && cursor.getCount() > 0) {
-				if (doGetMore) {
-					cursor.moveToLast();
-					DirectMessage dm2 = DirectMessage.parse(cursor);
-					if (dm2 != null) {
-						maxId = dm2.id;
-					}
-					b.putString(Commons.EXTRA_MAX_ID, maxId);
-				} else {
-					cursor.moveToFirst();
-					DirectMessage dm1 = DirectMessage.parse(cursor);
-					if (dm1 != null) {
-						sinceId = dm1.id;
-					}
-					b.putString(Commons.EXTRA_SINCE_ID, sinceId);
-				}
-			}
-			Utils.startFetchService(this, DirectMessage.TYPE_NONE, receiver, b);
+			b.putBoolean(Commons.EXTRA_BOOLEAN, doGetMore);
+			Utils.startFetchService(this, DirectMessage.TYPE_ALL, receiver, b);
 			break;
 		case 3:
 			if (!doGetMore) {
@@ -408,7 +427,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	@Override
-	protected void onReceived(Intent intent) {
+	protected boolean onReceived(Intent intent) {
 		int type = intent.getIntExtra(Commons.EXTRA_TYPE, -1);
 		int count = intent.getIntExtra(Commons.EXTRA_COUNT, 1);
 		// int page=mViewFlow.getCurrentScreen();
@@ -416,34 +435,52 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		case NotificationService.NOTIFICATION_TYPE_HOME:
 			if (cursors[0] != null) {
 				cursors[0].requery();
+				if (count > 1) {
+					views[0].setSelection(0);
+				}
+				mViewPager.setCurrentItem(0);
 			}
 			break;
 		case NotificationService.NOTIFICATION_TYPE_MENTION:
 			if (cursors[1] != null) {
 				cursors[1].requery();
+				if (count > 1) {
+					views[1].setSelection(0);
+				}
+				mViewPager.setCurrentItem(1);
 			}
 			break;
 		case NotificationService.NOTIFICATION_TYPE_DM:
 			if (cursors[2] != null) {
 				cursors[2].requery();
+				if (count > 1) {
+					views[2].setSelection(0);
+				}
+				mViewPager.setCurrentItem(2);
 			}
 			break;
 		default:
 			break;
 		}
+
+		return true;
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		restorePosition();
 		if (App.DEBUG)
 			log("onResume");
+		registerReceiver(mSendSuccessReceiver, mSendSuccessFilter);
+		restorePosition();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+		if (App.DEBUG)
+			log("onPause");
+		unregisterReceiver(mSendSuccessReceiver);
 		savePosition();
 	}
 
@@ -472,9 +509,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			log("onNewIntent page=" + page);
 		}
 		mViewPager.setCurrentItem(page);
-//		if (page == 0) {
-//			onRefreshClick();
-//		}
+		// if (page == 0) {
+		// onRefreshClick();
+		// }
 	}
 
 	@Override
@@ -551,12 +588,12 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 					stopRefreshAnimation();
 					if (i < PAGE_NUMS - 1) {
 						views[i].addFooter();
-					}else{
+					} else {
 						views[i].setSelection(0);
 					}
 				}
 				cursors[i].requery();
-				if(i==PAGE_NUMS-1){
+				if (i == PAGE_NUMS - 1) {
 					views[i].setSelection(0);
 				}
 				break;
@@ -589,7 +626,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			return;
 		}
 		if (mCurrentPage == 2) {
-			Utils.goSendPage(this, c);
+			Utils.goMessageChatPage(this, c);
 		} else {
 			final Status s = Status.parse(c);
 			if (s != null && !s.isNull()) {

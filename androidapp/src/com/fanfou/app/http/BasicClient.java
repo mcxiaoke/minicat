@@ -21,34 +21,35 @@ public class BasicClient extends BaseClient {
 
 	public BasicClient() {
 		super();
-		this.username=App.me.userId;
-		this.password=App.me.password;
+		this.username = App.me.userId;
+		this.password = App.me.password;
 	}
-	
-	public BasicClient(String username, String password){
+
+	public BasicClient(String username, String password) {
 		super();
-		this.username=username;
-		this.password=password;
+		this.username = username;
+		this.password = password;
 	}
-	
-	public void setUsername(String username){
-		this.username=username;
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
-	
-	public void setPassword(String password){
-		this.password=password;
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	@Override
-	void setAuthorization(HttpUriRequest request, List<Parameter> params) throws ApiException{
+	void setAuthorization(HttpUriRequest request, List<Parameter> params)
+			throws ApiException {
 		if (null != username && null != password) {
 			String basicAuth = "Basic "
-					+ Base64
-							.encodeBytes((username + ":" + password).getBytes());
+					+ Base64.encodeBytes((username + ":" + password).getBytes());
 			BasicHeader header = new BasicHeader("Authorization", basicAuth);
 			request.setHeader(header);
 		} else {
-			throw new ApiException(ResponseCode.ERROR_AUTH_EMPTY, "username and password must not be empty.");
+			throw new ApiException(ResponseCode.ERROR_AUTH_EMPTY,
+					"username and password must not be empty.");
 		}
 	}
 }

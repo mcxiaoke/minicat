@@ -1,5 +1,13 @@
 package com.fanfou.app.service;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.ResultReceiver;
+import android.util.Log;
+
 import com.fanfou.app.App;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
@@ -11,16 +19,8 @@ import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.util.StringHelper;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.ResultReceiver;
-import android.util.Log;
-
 public class ActionService extends BaseIntentService {
-	private static final String TAG=ActionService.class.getSimpleName();
+	private static final String TAG = ActionService.class.getSimpleName();
 	ResultReceiver receiver;
 
 	public ActionService() {
@@ -61,8 +61,8 @@ public class ActionService extends BaseIntentService {
 			receiver.send(Commons.RESULT_CODE_FINISH, data);
 		} catch (ApiException e) {
 			if (App.DEBUG) {
-				Log.e(TAG, "doDetectFriendships:"+e.getMessage());
-			}	
+				Log.e(TAG, "doDetectFriendships:" + e.getMessage());
+			}
 			Bundle error = new Bundle();
 			error.putInt(Commons.EXTRA_TYPE, Commons.ACTION_USER_RELATION);
 			error.putSerializable(Commons.EXTRA_ERROR, e);
@@ -188,7 +188,7 @@ public class ActionService extends BaseIntentService {
 				if (u == null || u.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
-					u.type = User.TYPE_NONE;
+					u.type = Commons.TYPE_NONE;
 					ContentResolver cr = getContentResolver();
 					cr.delete(UserInfo.CONTENT_URI, BasicColumns.ID + "=?",
 							new String[] { id });
@@ -240,7 +240,9 @@ public class ActionService extends BaseIntentService {
 
 		} catch (ApiException e) {
 			if (App.DEBUG) {
-				Log.e(TAG, "performAction: id="+id+" type="+type+e.getMessage());
+				Log.e(TAG,
+						"performAction: id=" + id + " type=" + type
+								+ e.getMessage());
 			}
 			Bundle error = new Bundle();
 			error.putInt(Commons.EXTRA_TYPE, type);

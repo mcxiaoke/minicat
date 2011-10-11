@@ -1,14 +1,5 @@
 package com.fanfou.app;
 
-import com.fanfou.app.api.User;
-import com.fanfou.app.cache.IImageLoader;
-import com.fanfou.app.config.Commons;
-import com.fanfou.app.service.ActionService;
-import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.ActionManager;
-import com.fanfou.app.ui.ActionBar.Action;
-import com.fanfou.app.util.DateTimeHelper;
-import com.fanfou.app.util.StringHelper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +13,17 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.fanfou.app.api.User;
+import com.fanfou.app.cache.CacheManager;
+import com.fanfou.app.cache.IImageLoader;
+import com.fanfou.app.config.Commons;
+import com.fanfou.app.service.ActionService;
+import com.fanfou.app.ui.ActionBar;
+import com.fanfou.app.ui.ActionBar.Action;
+import com.fanfou.app.ui.ActionManager;
+import com.fanfou.app.util.DateTimeHelper;
+import com.fanfou.app.util.StringHelper;
 
 /**
  * @author mcxiaoke
@@ -74,19 +76,19 @@ public class MyProfilePage extends BaseActivity implements Action {
 	}
 
 	private boolean parseIntent() {
-		// Intent intent = getIntent();
-		// user = (User) intent.getSerializableExtra(Commons.EXTRA_USER);
 		user = App.me.user;
 		if (user != null && !user.isNull()) {
 			userId = user.id;
 		} else {
-			// userId = intent.getStringExtra(Commons.EXTRA_USER_ID);
 			userId = App.me.userId;
+			user = CacheManager.get(userId);
 		}
 		if (StringHelper.isEmpty(userId)) {
 			log("用户ID不能为空");
+			return false;
+		} else {
+			return true;
 		}
-		return !StringHelper.isEmpty(userId);
 	}
 
 	private void initialize() {
@@ -165,7 +167,7 @@ public class MyProfilePage extends BaseActivity implements Action {
 		}
 		log("updateUI user.name=" + user.screenName);
 
-		mLoader.set(user.profileImageUrl, mHead,R.drawable.default_head);
+		mLoader.set(user.profileImageUrl, mHead, R.drawable.default_head);
 		mName.setText(user.screenName);
 
 		mStatusesInfo.setText("" + user.statusesCount);
@@ -271,6 +273,7 @@ public class MyProfilePage extends BaseActivity implements Action {
 					User result = (User) resultData
 							.getSerializable(Commons.EXTRA_USER);
 					if (result != null) {
+						App.me.updateUserInfo(result);
 						user = result;
 					}
 					if (!isInitialized) {

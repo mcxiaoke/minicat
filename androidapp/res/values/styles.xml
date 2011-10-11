@@ -4,7 +4,8 @@
 	<style name="Theme" parent="android:style/Theme.Light">
 		<item name="android:windowNoTitle">true</item>
 		<item name="android:windowContentOverlay">@null</item>
-		<item name="android:windowBackground">@android:color/white</item>
+<!-- 		<item name="android:windowBackground">@null</item> -->
+<!-- 		<item name="android:windowBackground">@android:color/white</item> -->
 		<item name="android:textColorLink">@color/link_color</item>
 	</style>
 

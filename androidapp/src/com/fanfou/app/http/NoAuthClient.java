@@ -3,6 +3,7 @@ package com.fanfou.app.http;
 import java.util.List;
 
 import org.apache.http.client.methods.HttpUriRequest;
+
 import com.fanfou.app.api.ApiException;
 
 /**
@@ -16,6 +17,7 @@ public class NoAuthClient extends BaseClient {
 	}
 
 	@Override
-	void setAuthorization(HttpUriRequest request, List<Parameter> params) throws ApiException{
+	void setAuthorization(HttpUriRequest request, List<Parameter> params)
+			throws ApiException {
 	}
 }

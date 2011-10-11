@@ -17,6 +17,7 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
@@ -73,13 +74,13 @@ public class ApiImpl2 implements Api, ResponseCode {
 			e.printStackTrace();
 		}
 		try {
-//			long st = System.currentTimeMillis();
+			// long st = System.currentTimeMillis();
 			HttpResponse res = request(post);
 			Response response = new Response(res);
-//			if (App.DEBUG) {
-//				Utils.logTime("doPost url=" + url, System.currentTimeMillis()
-//						- st);
-//			}
+			// if (App.DEBUG) {
+			// Utils.logTime("doPost url=" + url, System.currentTimeMillis()
+			// - st);
+			// }
 			return response;
 		} catch (IOException e) {
 			throw new ApiException(ERROR_NOT_CONNECTED, e.getMessage(),
@@ -143,12 +144,12 @@ public class ApiImpl2 implements Api, ResponseCode {
 		}
 		HttpGet get = new HttpGet(requestUrl);
 		try {
-//			long st = System.currentTimeMillis();
+			// long st = System.currentTimeMillis();
 			HttpResponse response = request(get);
-//			if (App.DEBUG) {
-//				Utils.logTime("doGet url=" + requestUrl,
-//						System.currentTimeMillis() - st);
-//			}
+			// if (App.DEBUG) {
+			// Utils.logTime("doGet url=" + requestUrl,
+			// System.currentTimeMillis() - st);
+			// }
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == 200) {
 				return new Response(response);

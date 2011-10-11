@@ -37,9 +37,9 @@ public class DirectMessage implements Storable<DirectMessage> {
 	}
 
 	private static final long serialVersionUID = 7135927428287533074L;
-	// public static final int TYPE_IN=Commons.DIRECT_MESSAGE_TYPE_INBOX;
-	// public static final int TYPE_OUT=Commons.DIRECT_MESSAGE_TYPE_OUTBOX;
-	public static final int TYPE_NONE = Commons.DIRECT_MESSAGE_TYPE_NONE;
+	public static final int TYPE_IN = Commons.DIRECT_MESSAGE_TYPE_INBOX;
+	public static final int TYPE_OUT = Commons.DIRECT_MESSAGE_TYPE_OUTBOX;
+	public static final int TYPE_ALL = Commons.DIRECT_MESSAGE_TYPE_ALL;
 
 	public String id;
 	public String ownerId;
@@ -54,6 +54,12 @@ public class DirectMessage implements Storable<DirectMessage> {
 	public String recipientProfileImageUrl;
 
 	public int type;
+
+	// add 2011.10.09
+	public String threadUserId;
+	public String threadUserName;
+	public boolean isRead;
+	public boolean isOld;
 
 	public User sender = null;
 	public User recipient = null;
@@ -121,6 +127,13 @@ public class DirectMessage implements Storable<DirectMessage> {
 
 		dm.type = Parser.parseInt(c, BasicColumns.TYPE);
 
+		dm.threadUserId = Parser.parseString(c,
+				DirectMessageInfo.THREAD_USER_ID);
+		dm.threadUserName = Parser.parseString(c,
+				DirectMessageInfo.THREAD_USER_NAME);
+		dm.isRead = Parser.parseBoolean(c, DirectMessageInfo.IS_READ);
+		dm.isOld = Parser.parseBoolean(c, DirectMessageInfo.IS_OLD);
+
 		return dm;
 	}
 
@@ -164,7 +177,10 @@ public class DirectMessage implements Storable<DirectMessage> {
 				dm.recipientProfileImageUrl = dm.recipient.profileImageUrl;
 			}
 
-			dm.type = DirectMessage.TYPE_NONE;
+			dm.isRead = false;
+			dm.isOld = false;
+
+			dm.ownerId = App.me.userId;
 		} catch (JSONException e) {
 			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED,
 					e.getMessage(), e);
@@ -191,7 +207,14 @@ public class DirectMessage implements Storable<DirectMessage> {
 		cv.put(DirectMessageInfo.RECIPIENT_PROFILE_IMAGE_URL,
 				this.recipientProfileImageUrl);
 		cv.put(BasicColumns.TYPE, this.type);
+
+		cv.put(DirectMessageInfo.THREAD_USER_ID, this.threadUserId);
+		cv.put(DirectMessageInfo.THREAD_USER_NAME, this.threadUserName);
+		cv.put(DirectMessageInfo.IS_READ, this.isRead);
+		cv.put(DirectMessageInfo.IS_OLD, this.isOld);
+
 		cv.put(BasicColumns.TIMESTAMP, new Date().getTime());
+
 		return cv;
 	}
 

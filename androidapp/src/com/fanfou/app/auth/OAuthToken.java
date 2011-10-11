@@ -22,12 +22,13 @@ public class OAuthToken implements java.io.Serializable {
 		this.tokenSecret = tokenSecret;
 	}
 
-	public OAuthToken(Response response) throws ApiException, ParseException, IOException {
+	public OAuthToken(Response response) throws ApiException, ParseException,
+			IOException {
 		this(response.getContent());
 	}
 
 	public OAuthToken(String string) {
-//		Log.e("====================================", string);
+		// Log.e("====================================", string);
 		responseStr = string.split("&");
 		tokenSecret = getParameter("oauth_token_secret");
 		token = getParameter("oauth_token");

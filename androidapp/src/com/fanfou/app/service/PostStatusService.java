@@ -15,8 +15,11 @@ import com.fanfou.app.WritePage;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Status;
+import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.ImageHelper;
+import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 
@@ -24,9 +27,9 @@ import com.fanfou.app.util.StringHelper;
  * @author mcxiaoke
  * 
  */
-public class PostService extends BaseIntentService {
+public class PostStatusService extends WakefulIntentService {
 
-	private static final String TAG = PostService.class.getSimpleName();
+	private static final String TAG = PostStatusService.class.getSimpleName();
 	private NotificationManager nm;
 	private Intent mIntent;
 
@@ -40,7 +43,7 @@ public class PostService extends BaseIntentService {
 	private Status src;
 	private int type;
 
-	public PostService() {
+	public PostStatusService() {
 		super("UpdateService");
 
 	}
@@ -95,21 +98,26 @@ public class PostService extends BaseIntentService {
 				if (quality < 0) {
 					quality = ImageHelper.IMAGE_QUALITY_MEDIUM;
 				}
-				File photo = ImageHelper.prepareUploadFile(this,srcFile, quality);
+				File photo = ImageHelper.prepareUploadFile(this, srcFile,
+						quality);
 				if (photo != null && photo.length() > 0) {
 					if (App.DEBUG)
 						log("photo file=" + srcFile.getName() + " size="
-								+ photo.length()/1024 + " quality="
-								+ quality);
+								+ photo.length() / 1024 + " quality=" + quality);
 					result = api.photoUpload(photo, content, null, location);
 				}
 				photo.delete();
 			}
 			nm.cancel(0);
 			if (result == null || result.isNull()) {
-//				showFailedNotification("饭否消息未发送，内容重复", "消息内容重复，发送不成功，点击重新编辑");
-				//重复消息不要显示错误提示
+				// showFailedNotification("饭否消息未发送，内容重复",
+				// "消息内容重复，发送不成功，点击重新编辑");
+				// 重复消息不要显示错误提示
 				res = false;
+			} else {
+				IOHelper.storeStatus(this, result);
+				res = true;
+				sendSuccessBroadcast();
 			}
 		} catch (ApiException e) {
 			if (App.DEBUG) {
@@ -129,15 +137,15 @@ public class PostService extends BaseIntentService {
 		int id = 0;
 		Notification notification = new Notification(R.drawable.statusbar_icon,
 				"饭否消息正在发送...", System.currentTimeMillis());
-		PendingIntent contentIntent = PendingIntent
-				.getService(this, 0, null, 0);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+				IntentHelper.getHomeIntent(), 0);
 		notification.setLatestEventInfo(this, "饭否消息", "正在发送...", contentIntent);
-		// notification.flags |= Notification.FLAG_ONGOING_EVENT;
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		notification.flags |= Notification.FLAG_ONGOING_EVENT;
 		nm.notify(id, notification);
 		return id;
 	}
 
+	@SuppressWarnings("unused")
 	private int showSuccessNotification() {
 		int id = 2;
 		Notification notification = new Notification(R.drawable.icon,
@@ -166,6 +174,12 @@ public class PostService extends BaseIntentService {
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		nm.notify(id, notification);
 		return id;
+	}
+
+	private void sendSuccessBroadcast() {
+		Intent intent = new Intent(Actions.ACTION_STATUS_SEND);
+		intent.setPackage(getPackageName());
+		sendOrderedBroadcast(intent, null);
 	}
 
 }

@@ -14,6 +14,7 @@ import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -21,9 +22,17 @@ import android.os.Environment;
 import android.provider.MediaStore.MediaColumns;
 import android.text.ClipboardManager;
 
+import com.fanfou.app.api.DirectMessage;
+import com.fanfou.app.api.Status;
+import com.fanfou.app.api.User;
+import com.fanfou.app.db.Contents.DirectMessageInfo;
+import com.fanfou.app.db.Contents.StatusInfo;
+import com.fanfou.app.db.Contents.UserInfo;
+
 /**
  * @author mcxiaoke
  * @version 1.0 2011.05.19
+ * @version 1.1 2011.10.11
  * 
  */
 public final class IOHelper {
@@ -54,7 +63,7 @@ public final class IOHelper {
 		if (Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
 			cacheDir = new File(Environment.getExternalStorageDirectory(),
-					"/Android/data/"+context.getPackageName()+"/photocache");
+					"/Android/data/" + context.getPackageName() + "/photocache");
 		} else {
 			cacheDir = context.getCacheDir();
 		}
@@ -92,7 +101,7 @@ public final class IOHelper {
 		}
 		return photoDir;
 	}
-	
+
 	public static String getRealPathFromURI(Context context, Uri contentUri) {
 		// get path from uri like content://media//
 		Cursor cursor = context.getContentResolver().query(contentUri,
@@ -111,9 +120,9 @@ public final class IOHelper {
 		}
 		return path;
 	}
-	
+
 	public static void ClearCache(Context context) {
-		File target=getCacheDir(context);
+		File target = getCacheDir(context);
 		if (target.exists() == false) {
 			return;
 		}
@@ -197,6 +206,21 @@ public final class IOHelper {
 			}
 		} catch (IOException e) {
 		}
+	}
+
+	public static void storeDirectMessage(Context context, DirectMessage dm) {
+		ContentResolver cr = context.getContentResolver();
+		cr.insert(DirectMessageInfo.CONTENT_URI, dm.toContentValues());
+	}
+
+	public static void storeStatus(Context context, Status s) {
+		ContentResolver cr = context.getContentResolver();
+		cr.insert(StatusInfo.CONTENT_URI, s.toContentValues());
+	}
+
+	public static void storeUser(Context context, User u) {
+		ContentResolver cr = context.getContentResolver();
+		cr.insert(UserInfo.CONTENT_URI, u.toContentValues());
 	}
 
 }

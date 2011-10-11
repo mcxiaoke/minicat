@@ -28,7 +28,7 @@ public class ViewsAdapter extends PagerAdapter {
 	public void destroyItem(View container, int position, Object view) {
 		((ViewPager) container).removeView((View) view);
 	}
-	
+
 	@Override
 	public void startUpdate(View container) {
 	}

@@ -72,7 +72,7 @@ public final class AutoUpdateManager {
 
 	public static void checkUpdate(Context context) {
 		VersionInfo info = fetchVersionInfo();
-		if(App.DEBUG){
+		if (App.DEBUG) {
 			if (info != null) {
 				notifyUpdate(info, context);
 			}
@@ -126,8 +126,7 @@ public final class AutoUpdateManager {
 		sb.append("\n最新版本： ").append(info.versionName).append("(Build")
 				.append(info.versionCode).append(")");
 		sb.append("\n更新日期：").append(info.releaseDate);
-		sb.append("\n更新级别：").append(
-				info.forceUpdate ? "重要更新" : "一般更新");
+		sb.append("\n更新级别：").append(info.forceUpdate ? "重要更新" : "一般更新");
 		sb.append("\n更新内容：\n").append(info.changelog);
 		builder.setMessage(sb.toString());
 		AlertDialog dialog = builder.create();

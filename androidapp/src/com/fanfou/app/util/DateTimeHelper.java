@@ -13,21 +13,21 @@ import java.util.TimeZone;
  * 
  */
 public class DateTimeHelper {
-	
+
 	private static final String FANFOU_DATE_FORMAT_STRING = "EEE MMM dd HH:mm:ss Z yyyy";
-	private static final String SIMPLE_DATE_FORMAT_STRING="yyyy年MM月dd日 HH:mm:ss";
-	private static final String DATE_ONLY_FORMAT_STRING="yyyy年MM月dd日";
-	private static final String TIME_ONLY_FORMAT_STRING="HH:mm:ss";
+	private static final String SIMPLE_DATE_FORMAT_STRING = "yyyy年MM月dd日 HH:mm:ss";
+	private static final String DATE_ONLY_FORMAT_STRING = "yyyy年MM月dd日";
+	private static final String TIME_ONLY_FORMAT_STRING = "HH:mm:ss";
 
 	private static final SimpleDateFormat FANFOU_DATE_FORMAT = new SimpleDateFormat(
 			FANFOU_DATE_FORMAT_STRING, Locale.US);
-	
+
 	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(
 			SIMPLE_DATE_FORMAT_STRING, Locale.US);
-	
+
 	private static final SimpleDateFormat DATE_ONLY_FORMAT = new SimpleDateFormat(
 			DATE_ONLY_FORMAT_STRING, Locale.US);
-	
+
 	private static final SimpleDateFormat TIME_ONLY_FORMAT = new SimpleDateFormat(
 			TIME_ONLY_FORMAT_STRING, Locale.US);
 
@@ -35,7 +35,7 @@ public class DateTimeHelper {
 	private static final long MIN = 60;
 	private static final long HOUR = MIN * 60;
 	private static final long DAY = HOUR * 24;
-	private static final long WEEK=DAY*7;
+	private static final long WEEK = DAY * 7;
 	private static final long MONTH = DAY * 30;
 
 	/**
@@ -53,9 +53,9 @@ public class DateTimeHelper {
 			return "";
 		}
 		long seconds = (System.currentTimeMillis() - date.getTime()) / 1000;
-		if(seconds<5){
+		if (seconds < 5) {
 			return "刚刚";
-		}else if (seconds < MIN) {
+		} else if (seconds < MIN) {
 			return seconds + "秒钟前";
 		} else if (seconds < HOUR) {
 			return seconds / MIN + "分钟前";
@@ -102,12 +102,12 @@ public class DateTimeHelper {
 	public static String formatDate(Date date) {
 		return formatDate(date, SIMPLE_DATE_FORMAT);
 	}
-	
-	public static String formatTimeOnly(Date date){
+
+	public static String formatTimeOnly(Date date) {
 		return formatDate(date, TIME_ONLY_FORMAT);
 	}
-	
-	public static String formatDateOnly(Date date){
+
+	public static String formatDateOnly(Date date) {
 		return formatDate(date, DATE_ONLY_FORMAT);
 	}
 

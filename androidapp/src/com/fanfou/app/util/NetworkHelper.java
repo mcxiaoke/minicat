@@ -37,6 +37,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
+
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -48,7 +49,6 @@ import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.http.ApnType;
 import com.fanfou.app.http.GzipResponseInterceptor;
-import com.fanfou.app.http.NetworkState;
 import com.fanfou.app.http.RequestRetryHandler;
 import com.fanfou.app.update.AutoUpdateManager;
 
@@ -235,13 +235,13 @@ public final class NetworkHelper {
 			params.removeParameter(ConnRoutePNames.DEFAULT_PROXY);
 		}
 	}
-	
+
 	private static void setProxy(HttpClient client) {
-		if(client==null){
+		if (client == null) {
 			return;
 		}
 		HttpParams params = client.getParams();
-		ApnType type=App.me.apnType;
+		ApnType type = App.me.apnType;
 		if (type == ApnType.CTWAP) {
 			if (App.DEBUG) {
 				Log.d("setProxy", "set proxy for ctwap");
@@ -288,11 +288,11 @@ public final class NetworkHelper {
 		DefaultHttpClient client = new DefaultHttpClient(manager, params);
 		client.addResponseInterceptor(new GzipResponseInterceptor());
 		client.setHttpRequestRetryHandler(new RequestRetryHandler(3));
-		
+
 		setProxy(client);
 		return client;
 	}
-	
+
 	public static void doAutoUpdate(Context context) {
 		boolean autoUpdate = OptionHelper.readBoolean(context,
 				R.string.option_autoupdate, true);

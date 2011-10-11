@@ -2,9 +2,6 @@ package com.fanfou.app.adapter;
 
 import java.util.List;
 
-import com.fanfou.app.R;
-import com.fanfou.app.api.Search;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,16 +9,19 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.fanfou.app.R;
+import com.fanfou.app.api.Search;
+
 public class SearchAdapter extends BaseAdapter {
 
 	private LayoutInflater mInflater;
 	private Context context;
 	private List<Search> array;
 
-	public SearchAdapter(Context context,List<Search> values) {
+	public SearchAdapter(Context context, List<Search> values) {
 		super();
 		this.context = context;
-		this.mInflater=LayoutInflater.from(context);
+		this.mInflater = LayoutInflater.from(context);
 		array = values;
 	}
 
@@ -43,24 +43,24 @@ public class SearchAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
-		if(convertView==null){
-			convertView=mInflater.inflate(R.layout.list_item_search, null);
-			holder=new ViewHolder(convertView);		
+		if (convertView == null) {
+			convertView = mInflater.inflate(R.layout.list_item_search, null);
+			holder = new ViewHolder(convertView);
 			convertView.setTag(holder);
-		}else{
-			holder=(ViewHolder) convertView.getTag();
+		} else {
+			holder = (ViewHolder) convertView.getTag();
 		}
-		
+
 		holder.name.setText(array.get(position).name);
-		
+
 		return convertView;
 	}
-	
-	static class ViewHolder{
+
+	static class ViewHolder {
 		TextView name;
-		
-		public ViewHolder(View base){
-			name=(TextView) base.findViewById(R.id.item_status_text);
+
+		public ViewHolder(View base) {
+			name = (TextView) base.findViewById(R.id.item_status_text);
 		}
 	}
 

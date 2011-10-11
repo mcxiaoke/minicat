@@ -10,8 +10,10 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.HomePage;
+import com.fanfou.app.MessageChatPage;
 import com.fanfou.app.R;
 import com.fanfou.app.StatusPage;
+import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.service.NotificationService;
@@ -61,7 +63,15 @@ public class NotificationReceiver extends BroadcastReceiver {
 			}
 			break;
 		case NotificationService.NOTIFICATION_TYPE_DM:
-			showDmMoreNotification(context, type, count);
+			if (count == 1) {
+				final DirectMessage dm = (DirectMessage) intent
+						.getSerializableExtra(Commons.EXTRA_MESSAGE);
+				if (dm != null) {
+					showDmOneNotification(context, type, dm);
+				}
+			} else {
+				showDmMoreNotification(context, type, count);
+			}
 			break;
 		default:
 			break;
@@ -91,7 +101,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 					+ count);
 		}
 		String title = "饭否消息";
-		String message = "收到"+count + "条来自好友的消息";
+		String message = "收到" + count + "条来自好友的消息";
 		Intent intent = new Intent(context, HomePage.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
 		intent.putExtra(Commons.EXTRA_PAGE, 0);
@@ -124,7 +134,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 					+ count);
 		}
 		String title = "饭否消息";
-		String message = "收到"+count + "条提到你的消息";
+		String message = "收到" + count + "条提到你的消息";
 		Intent intent = new Intent(context, HomePage.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
 		intent.putExtra(Commons.EXTRA_PAGE, 1);
@@ -134,6 +144,24 @@ public class NotificationReceiver extends BroadcastReceiver {
 				title, message, R.drawable.ic_notify_mention);
 	}
 
+	private static void showDmOneNotification(Context context, int type,
+			DirectMessage dm) {
+		if (App.DEBUG) {
+			Log.i(TAG, "showDmOneNotification type=" + type);
+		}
+		Intent intent = new Intent(context, MessageChatPage.class);
+		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
+		intent.putExtra(Commons.EXTRA_USER_ID, dm.senderId);
+		intent.putExtra(Commons.EXTRA_USER_NAME, dm.senderScreenName);
+		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+				intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+		String title = "收到" + dm.senderScreenName + "的私信";
+		String message = dm.senderScreenName + ":" + dm.text;
+		showNotification(NOTIFICATION_ID_DM, context, contentIntent, title,
+				message, R.drawable.ic_notify_dm);
+	}
+
 	private static void showDmMoreNotification(Context context, int type,
 			int count) {
 		if (App.DEBUG) {
@@ -141,7 +169,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 					+ count);
 		}
 		String title = "饭否私信";
-		String message = "收到"+count + "条发给你的私信";
+		String message = "收到" + count + "条发给你的私信";
 		Intent intent = new Intent(context, HomePage.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
 		intent.putExtra(Commons.EXTRA_PAGE, 2);

@@ -310,13 +310,13 @@ public class TitlePageIndicator extends View implements PageIndicator {
 
 		int page = mCurrentPage;
 		float offsetPercent;
-//		if (mCurrentOffset <= halfWidth) {
-			offsetPercent = 1.0f * mCurrentOffset / width;
-//		} 
-//		else {
-//			page += 1;
-//			offsetPercent = 1.0f * (width - mCurrentOffset) / width;
-//		}
+		// if (mCurrentOffset <= halfWidth) {
+		offsetPercent = 1.0f * mCurrentOffset / width;
+		// }
+		// else {
+		// page += 1;
+		// offsetPercent = 1.0f * (width - mCurrentOffset) / width;
+		// }
 		final boolean currentSelected = (offsetPercent <= SELECTION_FADE_PERCENTAGE);
 		final boolean currentBold = (offsetPercent <= BOLD_FADE_PERCENTAGE);
 		final float selectedPercent = (SELECTION_FADE_PERCENTAGE - offsetPercent)
@@ -556,9 +556,9 @@ public class TitlePageIndicator extends View implements PageIndicator {
 		setViewPager(view);
 		setCurrentItem(initialPosition);
 	}
-	
-	public void setTitleProvider(TitleProvider provider){
-		mTitleProvider=provider;
+
+	public void setTitleProvider(TitleProvider provider) {
+		mTitleProvider = provider;
 	}
 
 	@Override
@@ -566,7 +566,7 @@ public class TitlePageIndicator extends View implements PageIndicator {
 		if (mViewPager == null) {
 			throw new IllegalStateException("ViewPager has not been bound.");
 		}
-//		mViewPager.setCurrentItem(item);
+		// mViewPager.setCurrentItem(item);
 		mCurrentPage = item;
 		invalidate();
 	}

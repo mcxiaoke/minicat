@@ -1,17 +1,10 @@
 package com.fanfou.app;
 
-import com.fanfou.app.config.Commons;
-import com.fanfou.app.update.AutoUpdateManager;
-import com.fanfou.app.update.VersionInfo;
-import com.fanfou.app.util.AlarmHelper;
-import com.fanfou.app.util.IntentHelper;
-import com.fanfou.app.util.OptionHelper;
-import com.fanfou.app.util.Utils;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -20,6 +13,14 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.util.Log;
+
+import com.fanfou.app.config.Commons;
+import com.fanfou.app.update.AutoUpdateManager;
+import com.fanfou.app.update.VersionInfo;
+import com.fanfou.app.util.AlarmHelper;
+import com.fanfou.app.util.IntentHelper;
+import com.fanfou.app.util.OptionHelper;
+import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -56,6 +57,9 @@ public class OptionsPage extends PreferenceActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		Utils.setScreenOrientation(this);
+
 		addPreferencesFromResource(R.xml.options);
 
 		ListPreference fontsize = (ListPreference) findPreference(getText(R.string.option_fontsize));
@@ -117,8 +121,7 @@ public class OptionsPage extends PreferenceActivity implements
 	}
 
 	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sp,
-			String key) {
+	public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
 		Preference p = findPreference(key);
 		if (key.equals(getString(R.string.option_notification))) {
 			CheckBoxPreference cp = (CheckBoxPreference) p;
@@ -127,12 +130,20 @@ public class OptionsPage extends PreferenceActivity implements
 			} else {
 				AlarmHelper.setNotificationTaskOff(this);
 			}
+		} else if (key.equals(getString(R.string.option_force_portrait))) {
+			CheckBoxPreference cp = (CheckBoxPreference) p;
+			if (cp.isChecked()) {
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			} else {
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+			}
 		} else if (key.equals(getString(R.string.option_bottom_refresh_icon))) {
 			ListPreference lp = (ListPreference) p;
 			lp.setSummary(lp.getEntry());
-			String value=lp.getValue();
-			String value2=OptionHelper.readString(this, R.string.option_bottom_write_icon, "none");
-			if(value.equals(value2) && !value.equals("none")){
+			String value = lp.getValue();
+			String value2 = OptionHelper.readString(this,
+					R.string.option_bottom_write_icon, "none");
+			if (value.equals(value2) && !value.equals("none")) {
 				lp.setValue("none");
 				Utils.notify(this, "请重选，刷新图标和发消息图标不能处于同一位置");
 			}
@@ -140,9 +151,10 @@ public class OptionsPage extends PreferenceActivity implements
 		} else if (key.equals(getString(R.string.option_bottom_write_icon))) {
 			ListPreference lp = (ListPreference) p;
 			lp.setSummary(lp.getEntry());
-			String value=lp.getValue();
-			String value2=OptionHelper.readString(this, R.string.option_bottom_refresh_icon, "none");
-			if(value.equals(value2) && !value.equals("none")){
+			String value = lp.getValue();
+			String value2 = OptionHelper.readString(this,
+					R.string.option_bottom_refresh_icon, "none");
+			if (value.equals(value2) && !value.equals("none")) {
 				lp.setValue("none");
 				Utils.notify(this, "请重选，发消息图标和刷新图标不能处于同一位置");
 			}
@@ -182,7 +194,7 @@ public class OptionsPage extends PreferenceActivity implements
 		@Override
 		protected void onPostExecute(VersionInfo info) {
 			pd.dismiss();
-			if(App.DEBUG){
+			if (App.DEBUG) {
 				if (info != null) {
 					AutoUpdateManager.showUpdateConfirmDialog(c, info);
 				}

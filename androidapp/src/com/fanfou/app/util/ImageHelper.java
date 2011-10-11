@@ -23,13 +23,15 @@ import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
-import android.graphics.BitmapRegionDecoder;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.provider.MediaStore.Images;
+import android.provider.MediaStore.Images.ImageColumns;
+import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
 import android.view.View;
 
@@ -690,12 +692,12 @@ final public class ImageHelper {
 		ContentResolver cr = ctx.getContentResolver();
 		imageName = imageName.substring(imageName.lastIndexOf('/') + 1);
 		ContentValues values = new ContentValues(7);
-		values.put(Images.Media.TITLE, imageName);
-		values.put(Images.Media.DISPLAY_NAME, imageName);
-		values.put(Images.Media.DESCRIPTION, "");
-		values.put(Images.Media.DATE_TAKEN, System.currentTimeMillis());
-		values.put(Images.Media.MIME_TYPE, "image/jpeg");
-		values.put(Images.Media.ORIENTATION, 0);
+		values.put(MediaColumns.TITLE, imageName);
+		values.put(MediaColumns.DISPLAY_NAME, imageName);
+		values.put(ImageColumns.DESCRIPTION, "");
+		values.put(ImageColumns.DATE_TAKEN, System.currentTimeMillis());
+		values.put(MediaColumns.MIME_TYPE, "image/jpeg");
+		values.put(ImageColumns.ORIENTATION, 0);
 		File parentFile = imageFile.getParentFile();
 		String path = parentFile.toString().toLowerCase();
 		String name = parentFile.getName().toLowerCase();
@@ -712,10 +714,10 @@ final public class ImageHelper {
 		Uri uri = null;
 		ContentResolver cr = ctx.getContentResolver();
 		// Columns to return
-		String[] projection = { Images.Media._ID, Images.Media.DATA };
+		String[] projection = { BaseColumns._ID, MediaColumns.DATA };
 		// Look for a picture which matches with the requested path
 		// (MediaStore stores the path in column Images.Media.DATA)
-		String selection = Images.Media.DATA + " = ?";
+		String selection = MediaColumns.DATA + " = ?";
 		String[] selArgs = { imageFile.toString() };
 
 		Cursor cursor = cr.query(Images.Media.EXTERNAL_CONTENT_URI, projection,
@@ -724,7 +726,7 @@ final public class ImageHelper {
 		if (cursor.moveToFirst()) {
 
 			String id;
-			int idColumn = cursor.getColumnIndex(Images.Media._ID);
+			int idColumn = cursor.getColumnIndex(BaseColumns._ID);
 			id = cursor.getString(idColumn);
 			uri = Uri.withAppendedPath(Images.Media.EXTERNAL_CONTENT_URI, id);
 		}
@@ -739,32 +741,32 @@ final public class ImageHelper {
 		}
 		return uri;
 	}
-	
-    /**
-     * Rotate a bitmap.
-     * 
-     * @param bmp
-     *            A Bitmap of the picture.
-     * @param degrees
-     *            Angle of the rotation, in degrees.
-     * @return The rotated bitmap, constrained in the source bitmap dimensions.
-     */
-    public static Bitmap rotate(Bitmap bmp, float degrees) {
-        if (degrees % 360 != 0) {
-            Log.d(TAG, "Rotating bitmap " + degrees + "°");
-            Matrix rotMat = new Matrix();
-            rotMat.postRotate(degrees);
 
-            if (bmp != null) {
-                Bitmap dst = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp
-                        .getHeight(), rotMat, false);
+	/**
+	 * Rotate a bitmap.
+	 * 
+	 * @param bmp
+	 *            A Bitmap of the picture.
+	 * @param degrees
+	 *            Angle of the rotation, in degrees.
+	 * @return The rotated bitmap, constrained in the source bitmap dimensions.
+	 */
+	public static Bitmap rotate(Bitmap bmp, float degrees) {
+		if (degrees % 360 != 0) {
+			Log.d(TAG, "Rotating bitmap " + degrees + "°");
+			Matrix rotMat = new Matrix();
+			rotMat.postRotate(degrees);
 
-                return dst;
-            }
-        } else {
-            return bmp;
-        }
-        return null;
-    }
+			if (bmp != null) {
+				Bitmap dst = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(),
+						bmp.getHeight(), rotMat, false);
+
+				return dst;
+			}
+		} else {
+			return bmp;
+		}
+		return null;
+	}
 
 }

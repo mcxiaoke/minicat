@@ -1,7 +1,5 @@
 package com.fanfou.app.db;
 
-import java.util.Iterator;
-
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -15,7 +13,8 @@ import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.fanfou.app.App;
-import com.fanfou.app.R.string;
+import com.fanfou.app.R;
+import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
@@ -28,6 +27,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.6 2011.06.04
  * @version 1.7 2011.07.14
  * @version 1.8 2011.07.22
+ * @version 1.9 2011.10.09
  * 
  */
 public class FanFouProvider extends ContentProvider implements Contents {
@@ -40,7 +40,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 
 	private SQLiteHelper dbHelper;
 
-	public static final int USERS = 1;
+	public static final int USERS_ALL = 1;
 	public static final int USER_SEARCH = 2;
 	public static final int USER_ITEM = 3;
 	public static final int USER_TYPE = 4;
@@ -48,7 +48,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 	public static final int USER_FRIENDS = 6;
 	public static final int USER_FOLLOWERS = 7;
 
-	public static final int STATUSES = 21;
+	public static final int STATUSES_ALL = 21;
 	public static final int STATUS_SEARCH_LOCAL = 22;
 	public static final int STATUS_USER = 23;
 	public static final int STATUS_ITEM = 24;
@@ -58,11 +58,20 @@ public class FanFouProvider extends ContentProvider implements Contents {
 	public static final int STATUS_ACTION_CLEAN = 28;
 	public static final int STATUS_ACTION_COUNT = 29;
 
-	public static final int MESSAGES = 41;
+	public static final int MESSAGES_ALL = 41;
 	public static final int MESSAGE_ITEM = 42;
 	public static final int MESSAGE_ID = 43;
 	public static final int MESSAGE_LIST = 44;// 对话列表，每个人最新的一条，收件箱为准
 	public static final int MESSAGE_USER = 45;// 每个人的私信对话列表
+
+	public static final int ACTION_CLEAN_ALL = 110;
+	public static final int ACTION_CLEAN_STATUS = 112;
+	public static final int ACTION_CLEAN_MESSAGE = 113;
+	public static final int ACTION_CLEAN_USER = 114;
+
+	public static final int ACTION_COUNT_STATUS = 121;
+	public static final int ACTION_COUNT_MESSAGE = 122;
+	public static final int ACTION_COUNT_USER = 123;
 
 	private static final UriMatcher sUriMatcher;
 	// private static HashMap<String, String> sUserProjectionMap;
@@ -72,14 +81,14 @@ public class FanFouProvider extends ContentProvider implements Contents {
 	static {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-		sUriMatcher.addURI(AUTHORITY, UserInfo.URI_PATH, USERS);
+		sUriMatcher.addURI(AUTHORITY, UserInfo.URI_PATH, USERS_ALL);
 		sUriMatcher.addURI(AUTHORITY, UserInfo.URI_PATH + "/search/*",
 				USER_SEARCH);
 		sUriMatcher.addURI(AUTHORITY, UserInfo.URI_PATH + "/item/*", USER_ITEM);
 		sUriMatcher.addURI(AUTHORITY, UserInfo.URI_PATH + "/type/#", USER_TYPE);
 		sUriMatcher.addURI(AUTHORITY, UserInfo.URI_PATH + "/id/#", USER_ID);
 
-		sUriMatcher.addURI(AUTHORITY, StatusInfo.URI_PATH, STATUSES);
+		sUriMatcher.addURI(AUTHORITY, StatusInfo.URI_PATH, STATUSES_ALL);
 		sUriMatcher.addURI(AUTHORITY, StatusInfo.URI_PATH + "/local/*",
 				STATUS_SEARCH_LOCAL);
 		sUriMatcher.addURI(AUTHORITY, StatusInfo.URI_PATH + "/user/*",
@@ -98,7 +107,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 				STATUS_ACTION_CLEAN);
 		sUriMatcher.addURI(AUTHORITY, StatusInfo.URI_PATH + "/id/#", STATUS_ID);
 
-		sUriMatcher.addURI(AUTHORITY, DirectMessageInfo.URI_PATH, MESSAGES);
+		sUriMatcher.addURI(AUTHORITY, DirectMessageInfo.URI_PATH, MESSAGES_ALL);
 		sUriMatcher.addURI(AUTHORITY, DirectMessageInfo.URI_PATH + "/item/*",
 				MESSAGE_ITEM);
 		sUriMatcher.addURI(AUTHORITY, DirectMessageInfo.URI_PATH + "/id/#",
@@ -119,14 +128,14 @@ public class FanFouProvider extends ContentProvider implements Contents {
 	@Override
 	public String getType(Uri uri) {
 		switch (sUriMatcher.match(uri)) {
-		case USERS:
+		case USERS_ALL:
 		case USER_FRIENDS:
 		case USER_FOLLOWERS:
 			return UserInfo.CONTENT_TYPE;
 		case USER_ITEM:
 		case USER_ID:
 			return UserInfo.CONTENT_ITEM_TYPE;
-		case STATUSES:
+		case STATUSES_ALL:
 		case STATUS_SEARCH_LOCAL:
 		case STATUS_SEARCH:
 		case STATUS_USER:
@@ -137,7 +146,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		case STATUS_ACTION_COUNT:
 		case STATUS_ACTION_CLEAN:
 			return StatusInfo.CONTENT_ITEM_TYPE;
-		case MESSAGES:
+		case MESSAGES_ALL:
 		case MESSAGE_LIST:
 		case MESSAGE_USER:
 			return DirectMessageInfo.CONTENT_TYPE;
@@ -158,11 +167,11 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		}
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		String order = null;
+		String order = orderBy;
 		String selection = where;
 		String[] selectionArgs = whereArgs;
 		switch (sUriMatcher.match(uri)) {
-		case USERS:
+		case USERS_ALL:
 			qb.setTables(UserInfo.TABLE_NAME);
 			break;
 		case USER_ITEM:
@@ -175,7 +184,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 			qb.appendWhere(BaseColumns._ID + "=");
 			qb.appendWhere(uri.getPathSegments().get(2));
 			break;
-		case STATUSES:
+		case STATUSES_ALL:
 			qb.setTables(StatusInfo.TABLE_NAME);
 			order = ORDERBY_DATE_DESC;
 			break;
@@ -194,15 +203,41 @@ public class FanFouProvider extends ContentProvider implements Contents {
 			break;
 		case STATUS_ACTION_COUNT:
 			return countStatus(uri);
-		case MESSAGES:
+		case MESSAGES_ALL:
 			qb.setTables(DirectMessageInfo.TABLE_NAME);
-			order = ORDERBY_DATE_DESC;
+			if (order == null) {
+				order = ORDERBY_DATE_DESC;
+			}
 			break;
 		case MESSAGE_LIST:
-			// TODO need implement query;
-			qb.setTables(DirectMessageInfo.TABLE_NAME);
-			String sql="select created_at, id, sender_id, sender_screen_name from message m1 where created_at = (select max(created_at) from message m2 where m1.sender_id = m2.sender_id group by (sender_id));";
-			break;
+			// String sql =
+			// "select * from message m1 where type= 21 and created_at =
+			// (select max(created_at) from message m2 where type= 21 and
+			// m1.sender_id = m2.sender_id group by (sender_id))
+			// order by created_at desc;";
+			String typeStr = DirectMessageInfo.TYPE + "= "
+					+ DirectMessage.TYPE_IN;
+			String orderStr = " order by " + DirectMessageInfo.CREATED_AT
+					+ " desc";
+			String subQuery = "(select max(" + DirectMessageInfo.CREATED_AT
+					+ ") from " + DirectMessageInfo.TABLE_NAME + " m2 where "
+					+ typeStr + " and m1.sender_id = m2.sender_id group by ("
+					+ DirectMessageInfo.SENDER_ID + "))";
+			String querySql = "select * from " + DirectMessageInfo.TABLE_NAME
+					+ " m1 where " + typeStr + " and "
+					+ DirectMessageInfo.CREATED_AT + " = " + subQuery
+					+ orderStr + " ;";
+			Cursor cursor = db.rawQuery(querySql, null);
+			if (cursor == null) {
+				if (App.DEBUG) {
+					log("query() uri MESSAGE_LIST " + uri + " failed.");
+				}
+			} else {
+				cursor.setNotificationUri(getContext().getContentResolver(),
+						uri);
+			}
+			return cursor;
+			// break;
 		case MESSAGE_USER:
 			break;
 		case MESSAGE_ITEM:
@@ -243,7 +278,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		int type = Integer.parseInt(uri.getPathSegments().get(3));
 		String sql = "SELECT COUNT(" + BasicColumns.ID + ") FROM "
 				+ StatusInfo.TABLE_NAME;
-		if (type == Status.TYPE_NONE) {
+		if (type == Commons.TYPE_NONE) {
 			sql += " ;";
 		} else {
 			sql += " WHERE " + BasicColumns.TYPE + "=" + type + ";";
@@ -267,11 +302,11 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		String table;
 		Uri contentUri;
 		switch (sUriMatcher.match(uri)) {
-		case USERS:
+		case USERS_ALL:
 			table = UserInfo.TABLE_NAME;
 			contentUri = UserInfo.CONTENT_URI;
 			break;
-		case STATUSES:
+		case STATUSES_ALL:
 			table = StatusInfo.TABLE_NAME;
 			contentUri = StatusInfo.CONTENT_URI;
 			break;
@@ -279,7 +314,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		// table = StatusInfo.PUBLIC_TABLE_NAME;
 		// contentUri = StatusInfo.PUBLIC_URI;
 		// break;
-		case MESSAGES:
+		case MESSAGES_ALL:
 			table = DirectMessageInfo.TABLE_NAME;
 			contentUri = DirectMessageInfo.CONTENT_URI;
 			break;
@@ -315,15 +350,15 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		final int match = sUriMatcher.match(uri);
 		int result = 0;
 		switch (match) {
-		case STATUSES:
+		case STATUSES_ALL:
 			result = bulkInsertStatuses(values);
 			getContext().getContentResolver().notifyChange(uri, null);
 			break;
-		case USERS:
+		case USERS_ALL:
 			result = bulkInsertUsers(values);
 			getContext().getContentResolver().notifyChange(uri, null);
 			break;
-		case MESSAGES:
+		case MESSAGES_ALL:
 			result = bulkInsertData(DirectMessageInfo.TABLE_NAME, values);
 			break;
 		default:
@@ -573,7 +608,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		// String where;
 		// int type;
 		switch (sUriMatcher.match(uri)) {
-		case USERS:
+		case USERS_ALL:
 			count = db.delete(UserInfo.TABLE_NAME, where, whereArgs);
 			break;
 		case USER_ITEM:
@@ -586,7 +621,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 			count = db.delete(UserInfo.TABLE_NAME, BaseColumns._ID + "=?",
 					new String[] { _id });
 			break;
-		case STATUSES:
+		case STATUSES_ALL:
 			count = db.delete(StatusInfo.TABLE_NAME, where, whereArgs);
 			break;
 		case STATUS_ITEM:
@@ -603,7 +638,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 			// count = cleanDatabase(uri, where, whereArgs);
 			count = cleanAll();
 			break;
-		case MESSAGES:
+		case MESSAGES_ALL:
 			count = db.delete(DirectMessageInfo.TABLE_NAME, where, whereArgs);
 			break;
 		case MESSAGE_ITEM:
@@ -624,13 +659,17 @@ public class FanFouProvider extends ContentProvider implements Contents {
 	}
 
 	private int cleanAll() {
+		final String count = getContext().getString(R.string.config_store_max);
 		int result = 0;
-		result += cleanHome();
-		result += cleanMentions();
-		result += cleanPublic();
-		result += cleanUser();
+		result += cleanMessages(count);
+		result += cleanHome(count);
+		result += cleanMentions(count);
+		result += cleanPublicTimeline();
+		result += cleanOthersTimeline();
+		result += cleanUserTimeline();
 		result += cleanFavorites();
-		result += cleanOthers();
+		
+		result += cleanUsers();
 		return result;
 	}
 
@@ -642,17 +681,18 @@ public class FanFouProvider extends ContentProvider implements Contents {
 	 * @return
 	 */
 	private int cleanDatabase(Uri uri, String where, String[] whereArgs) {
+		final String count = getContext().getString(R.string.config_store_max);
 		int type = Integer.parseInt(uri.getPathSegments().get(3));
 		int result = -1;
 		switch (type) {
 		case Status.TYPE_HOME:
-			result = cleanHome();
+			result = cleanHome(count);
 			break;
 		case Status.TYPE_MENTION:
-			result = cleanMentions();
+			result = cleanMentions(count);
 			break;
 		case Status.TYPE_PUBLIC:
-			result = cleanPublic();
+			result = cleanPublicTimeline();
 			break;
 		case Status.TYPE_USER:
 		case Status.TYPE_FAVORITES:
@@ -660,7 +700,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 					&& !StringHelper.isEmpty(whereArgs[0])) {
 				if (type == Status.TYPE_USER) {
 					// user id
-					result = cleanTimeline(whereArgs[0]);
+					result = cleanTimeline(whereArgs[0], count);
 				} else {
 					// own id
 					result = cleanFavorites(whereArgs[0]);
@@ -674,7 +714,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		return result;
 	}
 
-	private int cleanUser() {
+	private int cleanUserTimeline() {
 		String where = StatusInfo.TYPE + "=?";
 		String[] whereArgs = new String[] { String.valueOf(Status.TYPE_USER), };
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -689,7 +729,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		return db.delete(StatusInfo.TABLE_NAME, where, whereArgs);
 	}
 
-	private int cleanPublic() {
+	private int cleanPublicTimeline() {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		// String where = " " + StatusInfo.CREATED_AT + " < " + " (SELECT "
 		// + StatusInfo.CREATED_AT + " FROM " + StatusInfo.TABLE_NAME;
@@ -712,14 +752,14 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		return db.delete(StatusInfo.TABLE_NAME, where, whereArgs);
 	}
 
-	private int cleanOthers() {
+	private int cleanOthersTimeline() {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		String where = StatusInfo.TYPE + "=?";
-		String[] whereArgs = new String[] { String.valueOf(Status.TYPE_NONE) };
+		String[] whereArgs = new String[] { String.valueOf(Commons.TYPE_NONE) };
 		return db.delete(StatusInfo.TABLE_NAME, where, whereArgs);
 	}
 
-	private int cleanTimeline(String userId) {
+	private int cleanTimeline(String userId, String count) {
 
 		String where = " " + StatusInfo.CREATED_AT + " < " + " (SELECT "
 				+ StatusInfo.CREATED_AT + " FROM " + StatusInfo.TABLE_NAME;
@@ -728,7 +768,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		where += " AND " + StatusInfo.USER_ID + " = " + " '" + userId + "' ";
 
 		where += " ORDER BY " + StatusInfo.CREATED_AT + " DESC LIMIT 1 OFFSET "
-				+ Commons.DATA_NORMAL_MAX + ")";
+				+ count + " )";
 
 		where += " AND " + StatusInfo.TYPE + " = " + Status.TYPE_USER + " ";
 		where += " AND " + StatusInfo.USER_ID + " = " + " '" + userId + "' ";
@@ -747,8 +787,8 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		where += " WHERE " + StatusInfo.TYPE + " = " + Status.TYPE_FAVORITES;
 		where += " AND " + StatusInfo.OWNER_ID + " = " + " '" + ownerId + "' ";
 
-		where += " ORDER BY " + StatusInfo.CREATED_AT + " DESC LIMIT 1 OFFSET "
-				+ Commons.DATA_NORMAL_MAX + ")";
+		where += " ORDER BY " + StatusInfo.CREATED_AT
+				+ " DESC LIMIT 1 OFFSET 20 )";
 
 		where += " AND " + StatusInfo.TYPE + " = " + Status.TYPE_FAVORITES
 				+ " ";
@@ -759,15 +799,14 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		return db.delete(StatusInfo.TABLE_NAME, where, null);
 	}
 
-	private int cleanHome() {
+	private int cleanHome(String count) {
 		String where = " " + StatusInfo.CREATED_AT + " < " + " (SELECT "
 				+ StatusInfo.CREATED_AT + " FROM " + StatusInfo.TABLE_NAME;
 
 		where += " WHERE " + StatusInfo.TYPE + " = " + Status.TYPE_HOME;
 
 		where += " ORDER BY " + StatusInfo.CREATED_AT + " DESC LIMIT 1 OFFSET "
-				+ Commons.DATA_NORMAL_MAX + ")";
-
+				+ count + " )";
 		where += " AND " + StatusInfo.TYPE + " = " + Status.TYPE_HOME + " ";
 
 		// log("cleanHome where: [" + where + "]");
@@ -776,7 +815,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 
 	}
 
-	private int cleanMentions() {
+	private int cleanMentions(String count) {
 
 		String where = " " + StatusInfo.CREATED_AT + " < " + " (SELECT "
 				+ StatusInfo.CREATED_AT + " FROM " + StatusInfo.TABLE_NAME;
@@ -784,7 +823,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		where += " WHERE " + StatusInfo.TYPE + " = " + Status.TYPE_MENTION;
 
 		where += " ORDER BY " + StatusInfo.CREATED_AT + " DESC LIMIT 1 OFFSET "
-				+ Commons.DATA_NORMAL_MAX + ")";
+				+ count + " )";
 
 		where += " AND " + StatusInfo.TYPE + " = " + Status.TYPE_MENTION + " ";
 
@@ -792,6 +831,26 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		return db.delete(StatusInfo.TABLE_NAME, where, null);
 
+	}
+
+	private int cleanMessages(String count) {
+		String where = " " + DirectMessageInfo.CREATED_AT + " < " + " (SELECT "
+				+ DirectMessageInfo.CREATED_AT + " FROM "
+				+ DirectMessageInfo.TABLE_NAME;
+
+		where += " ORDER BY " + DirectMessageInfo.CREATED_AT
+				+ " DESC LIMIT 1 OFFSET " + count + " )";
+
+		// log("cleanMentions where: [" + where + "]");
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		return db.delete(DirectMessageInfo.TABLE_NAME, where, null);
+	}
+	
+	private int cleanUsers(){
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		String where = UserInfo.TYPE + " !=? ";
+		String[] whereArgs = new String[] { String.valueOf(User.AUTO_COMPLETE) };
+		return db.delete(UserInfo.TABLE_NAME, where, whereArgs);
 	}
 
 	@Override
@@ -857,11 +916,11 @@ public class FanFouProvider extends ContentProvider implements Contents {
 			count = db.update(DirectMessageInfo.TABLE_NAME, values,
 					DirectMessageInfo._ID + "=?", new String[] { _id });
 			break;
-		case USERS:
+		case USERS_ALL:
 			id = "";
 			count = db.update(UserInfo.TABLE_NAME, values, where, whereArgs);
 			break;
-		case STATUSES:
+		case STATUSES_ALL:
 			id = "";
 			count = db.update(StatusInfo.TABLE_NAME, values, where, whereArgs);
 			break;
@@ -870,7 +929,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		// count = db.update(StatusInfo.PUBLIC_TABLE_NAME, values, where,
 		// whereArgs);
 		// break;
-		case MESSAGES:
+		case MESSAGES_ALL:
 			id = "";
 			count = db.update(DirectMessageInfo.TABLE_NAME, values, where,
 					whereArgs);

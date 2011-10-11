@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="option_catalogue_appearance">外观</string>
-	<string name="option_catalogue_appinfo">信息</string>
+
+	<string name="option_userid">userid</string>
+	<string name="option_username">screen_name</string>
+	<string name="option_password">password</string>
+	<string name="option_profile_image">profile_image</string>
+	
+	<string name="option_oauth_token">oauth_token</string>
+	<string name="option_oauth_token_secret">oauth_token_secret</string>
+	<string name="option_location_enable">location_enable</string>
+	<string name="option_verified">verified</string>
+	
+	<string name="option_set_auto_complete">set_auto_complete</string>
+	<string name="option_set_auto_clean">set_auto_clean</string>
+	<string name="option_set_notification">set_notification</string>
+	<string name="option_set_auto_update">set_auto_update</string>
 
 	<string name="option_fontsize">fontsize</string>
 	<string name="option_photo_quality">photo_quality</string>
@@ -21,6 +34,8 @@
 	<string name="option_logout">logout</string>
 	<string name="option_cleanpic">cleanpic</string>
 	<string name="option_cleandb">cleandb</string>
+	
+	<string name="option_force_portrait">force_portrait</string>
 
 	<string name="option_notification">notification</string>
 	<string name="option_notification_switch">notification_switch</string>

@@ -9,8 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
@@ -23,7 +23,6 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.fanfou.app.App;
-import com.fanfou.app.http.NetworkState;
 import com.fanfou.app.util.ImageHelper;
 import com.fanfou.app.util.NetworkHelper;
 
@@ -56,7 +55,7 @@ public class ImageLoader implements Runnable, IImageLoader {
 		this.mCache = new ImageCache(context);
 		this.mHandler = new ImageDownloadHandler();
 		this.mExecutorService.submit(this);
-		this.mHttpClient=NetworkHelper.newHttpClient();
+		this.mHttpClient = NetworkHelper.newHttpClient();
 	}
 
 	@Override
@@ -246,9 +245,9 @@ public class ImageLoader implements Runnable, IImageLoader {
 		public void onFinish(String url, Bitmap bitmap) {
 			if (bitmap != null) {
 				String tag = (String) imageView.getTag();
-				if(App.DEBUG){
-					Log.i(TAG,"InternelCallback.onFinish() tag="+tag);
-					Log.i(TAG,"InternelCallback.onFinish() url="+url);
+				if (App.DEBUG) {
+					Log.i(TAG, "InternelCallback.onFinish() tag=" + tag);
+					Log.i(TAG, "InternelCallback.onFinish() url=" + url);
 				}
 				if (tag != null && tag.equals(url)) {
 					imageView.setImageBitmap(bitmap);

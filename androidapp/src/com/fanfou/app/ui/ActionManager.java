@@ -10,9 +10,9 @@ import android.os.ResultReceiver;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.MessageChatPage;
 import com.fanfou.app.MyProfilePage;
 import com.fanfou.app.ProfilePage;
-import com.fanfou.app.SendPage;
 import com.fanfou.app.TimelinePage;
 import com.fanfou.app.UserListPage;
 import com.fanfou.app.WritePage;
@@ -100,7 +100,7 @@ public final class ActionManager {
 			}
 			return;
 		}
-		if(userId.equals(App.me.userId)){
+		if (userId.equals(App.me.userId)) {
 			doMyProfile(context);
 			return;
 		}
@@ -108,7 +108,7 @@ public final class ActionManager {
 		intent.putExtra(Commons.EXTRA_ID, userId);
 		context.startActivity(intent);
 	}
-	
+
 	public static void doProfile(Context context, DirectMessage dm) {
 		if (dm == null || dm.isNull()) {
 			if (App.DEBUG) {
@@ -116,7 +116,7 @@ public final class ActionManager {
 			}
 			return;
 		}
-		if(dm.senderId.equals(App.me.userId)){
+		if (dm.senderId.equals(App.me.userId)) {
 			doMyProfile(context);
 			return;
 		}
@@ -134,7 +134,7 @@ public final class ActionManager {
 			}
 			return;
 		}
-		if(status.userId.equals(App.me.userId)){
+		if (status.userId.equals(App.me.userId)) {
 			doMyProfile(context);
 			return;
 		}
@@ -152,7 +152,7 @@ public final class ActionManager {
 			}
 			return;
 		}
-		if(user.id.equals(App.me.userId)){
+		if (user.id.equals(App.me.userId)) {
 			doMyProfile(context);
 			return;
 		}
@@ -320,10 +320,9 @@ public final class ActionManager {
 	}
 
 	public static void doMessage(Context context, final User user) {
-		final Intent intent = new Intent(context, SendPage.class);
-		intent.putExtra(Commons.EXTRA_ID, user.id);
+		final Intent intent = new Intent(context, MessageChatPage.class);
+		intent.putExtra(Commons.EXTRA_USER_ID, user.id);
 		intent.putExtra(Commons.EXTRA_USER_NAME, user.screenName);
-		intent.putExtra(Commons.EXTRA_USER_HEAD, user.profileImageUrl);
 		context.startActivity(intent);
 	}
 

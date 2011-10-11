@@ -1,11 +1,5 @@
 package com.fanfou.app.adapter;
 
-import com.fanfou.app.App;
-import com.fanfou.app.R;
-import com.fanfou.app.cache.IImageLoader;
-import com.fanfou.app.config.Commons;
-import com.fanfou.app.util.OptionHelper;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
@@ -17,28 +11,33 @@ import android.widget.CursorAdapter;
 import android.widget.FilterQueryProvider;
 import android.widget.ImageView;
 
+import com.fanfou.app.App;
+import com.fanfou.app.R;
+import com.fanfou.app.cache.IImageLoader;
+import com.fanfou.app.util.OptionHelper;
+
 /**
  * @author mcxiaoke
  * @version 1.0 2011.06.01
  * 
  */
 public abstract class BaseCursorAdapter extends CursorAdapter implements
-		FilterQueryProvider,OnScrollListener {
+		FilterQueryProvider, OnScrollListener {
 	boolean fling;
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		if(scrollState==SCROLL_STATE_FLING){
-			fling=true;
-		}else{
-			fling=false;
+		if (scrollState == SCROLL_STATE_FLING) {
+			fling = true;
+		} else {
+			fling = false;
 		}
 	}
 
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
-		
+
 	}
 
 	@Override
@@ -48,7 +47,7 @@ public abstract class BaseCursorAdapter extends CursorAdapter implements
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		
+
 	}
 
 	Context mContext;
@@ -56,11 +55,12 @@ public abstract class BaseCursorAdapter extends CursorAdapter implements
 	Cursor mCursor;
 	IImageLoader mLoader;
 	int fontSize;
-	
-	void initFontSize(){
-		fontSize=OptionHelper.parseInt(mContext, R.string.option_fontsize,String.valueOf(Commons.FONT_SIZE_DEFAULT));
+
+	void initFontSize() {
+		fontSize = OptionHelper.parseInt(mContext, R.string.option_fontsize,
+				mContext.getString(R.string.config_fontsize_default));
 	}
-	
+
 	protected void setHeadImage(ImageView headIcon) {
 		boolean show = OptionHelper.readBoolean(mContext,
 				R.string.option_show_head, true);

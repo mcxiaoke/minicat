@@ -12,29 +12,30 @@ import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
+import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.http.Response;
-import com.fanfou.app.http.ResponseCode;
+import com.fanfou.app.util.IOHelper;
+import com.fanfou.app.util.IntentHelper;
 
 /**
  * @author mcxiaoke
  * 
  */
-public class MessageService extends BaseIntentService {
+public class PostMessageService extends BaseIntentService {
 
-	private static final String TAG = MessageService.class.getSimpleName();
+	private static final String TAG = PostMessageService.class.getSimpleName();
 	private NotificationManager nm;
 	private Intent mIntent;
 
 	public void log(String message) {
-		Log.e(TAG, message);
+		Log.i(TAG, message);
 	}
 
 	private String content;
 	private String userId;
-	private String inReplyToId;
+	private String userName;
 
-	public MessageService() {
+	public PostMessageService() {
 		super("UpdateService");
 
 	}
@@ -46,20 +47,21 @@ public class MessageService extends BaseIntentService {
 		}
 		log("intent=" + intent);
 		this.mIntent = intent;
-		this.nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		parseIntent(intent);
+		this.nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		// if(!doUpdateStatus()){
 		doSend();
 		// }
 	}
 
 	private void parseIntent(Intent intent) {
-		userId=intent.getStringExtra(Commons.EXTRA_USER_ID);
+		userId = intent.getStringExtra(Commons.EXTRA_USER_ID);
+		userName = intent.getStringExtra(Commons.EXTRA_USER_NAME);
 		content = intent.getStringExtra(Commons.EXTRA_TEXT);
-		inReplyToId = intent.getStringExtra(Commons.EXTRA_IN_REPLY_TO_ID);
-		if(App.DEBUG){
-			log("parseIntent userId="+userId);
-			log("parseIntent content="+content);
+		if (App.DEBUG) {
+			log("parseIntent userId=" + userId);
+			log("parseIntent userName=" + userName);
+			log("parseIntent content=" + content);
 		}
 	}
 
@@ -68,47 +70,49 @@ public class MessageService extends BaseIntentService {
 		boolean res = true;
 		Api api = App.me.api;
 		try {
-			DirectMessage result = api.messageCreate(userId, content, inReplyToId);
-
-			nm.cancel(0);
+			DirectMessage result = api.messageCreate(userId, content, null);
+			nm.cancel(10);
 			if (result == null || result.isNull()) {
-				showFailedNotification("私信发送失败", "原因未知");
+				IOHelper.copyToClipBoard(this, content);
+				showFailedNotification("私信未发送，内容已保存到剪贴板", "未知原因");
 				res = false;
+			} else {
+				IOHelper.storeDirectMessage(this, result);
+				res = true;
+//				sendSuccessBroadcast();
 			}
 		} catch (ApiException e) {
-			nm.cancel(0);
+			nm.cancel(10);
 			if (App.DEBUG) {
-				Log.e(TAG, "error: code=" + e.statusCode + " msg="
-						+ e.getMessage());
-				e.printStackTrace();
-			}		
-			if(e.statusCode>=500||e.statusCode==ResponseCode.ERROR_NOT_CONNECTED){
-				showRetryNotification("错误：" + e.getMessage());
-			}else{
-				showFailedNotification("私信发送失败", e.getMessage());
+				Log.e(TAG,
+						"error: code=" + e.statusCode + " msg="
+								+ e.getMessage());
 			}
+			IOHelper.copyToClipBoard(this, content);
+			showFailedNotification("私信未发送，内容已保存到剪贴板", e.getMessage());
 		} finally {
-			nm.cancel(2);
+			nm.cancel(12);
 		}
 		return res;
 	}
 
 	private int showSendingNotification() {
-		int id = 0;
+		int id = 10;
 		Notification notification = new Notification(R.drawable.icon,
-				"私信正在发送...", System.currentTimeMillis());
-		PendingIntent contentIntent = PendingIntent
-				.getService(this, 0, null, 0);
+				"饭否私信正在发送...", System.currentTimeMillis());
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+				IntentHelper.getHomeIntent(), 0);
 		notification.setLatestEventInfo(this, "饭否私信", "正在发送...", contentIntent);
 		notification.flags |= Notification.FLAG_ONGOING_EVENT;
 		nm.notify(id, notification);
 		return id;
 	}
 
+	@SuppressWarnings("unused")
 	private int showSuccessNotification() {
-		int id = 2;
-		Notification notification = new Notification(R.drawable.statusbar_icon, "私信发送成功",
-				System.currentTimeMillis());
+		int id = 12;
+		Notification notification = new Notification(R.drawable.statusbar_icon,
+				"私信发送成功", System.currentTimeMillis());
 		PendingIntent contentIntent = PendingIntent
 				.getService(this, 0, null, 0);
 		notification.setLatestEventInfo(this, "饭否私信", "私信发送成功", contentIntent);
@@ -117,23 +121,8 @@ public class MessageService extends BaseIntentService {
 		return id;
 	}
 
-	private int showRetryNotification(String msg) {
-		int id = 1;
-
-		Notification notification = new Notification(R.drawable.statusbar_icon,
-				"网络异常，私信发送失败", System.currentTimeMillis());
-		PendingIntent contentIntent = PendingIntent.getService(this, 0,
-				mIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		notification.setLatestEventInfo(this, "网络异常，私信发送失败", "私信发送失败，点击重新发送",
-				contentIntent);
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		nm.notify(id, notification);
-		return id;
-
-	}
-
 	private int showFailedNotification(String title, String message) {
-		int id = 1;
+		int id = 11;
 
 		Notification notification = new Notification(R.drawable.statusbar_icon,
 				title, System.currentTimeMillis());
@@ -144,6 +133,12 @@ public class MessageService extends BaseIntentService {
 		nm.notify(id, notification);
 		return id;
 
+	}
+
+	private void sendSuccessBroadcast() {
+		Intent intent = new Intent(Actions.ACTION_MESSAGE_SEND);
+		intent.setPackage(getPackageName());
+		sendOrderedBroadcast(intent, null);
 	}
 
 }

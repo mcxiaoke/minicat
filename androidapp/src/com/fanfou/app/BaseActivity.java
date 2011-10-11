@@ -5,9 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Process;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -16,11 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.http.ApnType;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionBar.OnRefreshClickListener;
 import com.fanfou.app.ui.ActionManager;
+import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -29,31 +31,42 @@ import com.fanfou.app.util.Utils;
  * @version 2.0 2011.09.25
  * 
  */
-public abstract class BaseActivity extends Activity implements OnRefreshClickListener,OnClickListener {
+public abstract class BaseActivity extends Activity implements
+		OnRefreshClickListener, OnClickListener {
 
 	public static final int STATE_INIT = 0;
 	public static final int STATE_NORMAL = 1;
 	public static final int STATE_EMPTY = 2;
-	
-	protected static final int REQUEST_CODE_OPTION=0;
+
+	protected static final int REQUEST_CODE_OPTION = 0;
 
 	Activity mContext;
 	LayoutInflater mInflater;
 	boolean isActive = false;
+
 	// NetworkReceiver mNetworkReceiver;
-	BroadcastReceiver mNotificationReceiver;
-	IntentFilter mNotificationFilter;
+	// BroadcastReceiver mNotificationReceiver;
+	// IntentFilter mNotificationFilter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Utils.setScreenOrientation(this);
 		this.mContext = this;
 		this.mInflater = LayoutInflater.from(this);
-		this.mNotificationReceiver = new NotifyReceiver();
-		this.mNotificationFilter = new IntentFilter(
-				NotificationService.ACTION_NOTIFICATION);
-		mNotificationFilter.setPriority(1000);
+
+		// initReceiver();
+	}
+
+	private void initReceiver() {
 		// this.mNetworkReceiver=new NetworkReceiver();
+		// IntentFilter filter = new IntentFilter();
+		// filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+		// filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+		// this.mNotificationReceiver = new NotifyReceiver();
+		// this.mNotificationFilter = new
+		// IntentFilter(Actions.ACTION_NOTIFICATION);
+		// mNotificationFilter.setPriority(1000);
 	}
 
 	private class NotifyReceiver extends BroadcastReceiver {
@@ -64,35 +77,33 @@ public abstract class BaseActivity extends Activity implements OnRefreshClickLis
 				Log.d("NotificationReceiver", "active, broadcast received: "
 						+ intent.toString());
 			}
-			onReceived(intent);
-			abortBroadcast();
+			if (onReceived(intent)) {
+				abortBroadcast();
+			}
 		}
 
 	}
 
-	protected void onReceived(Intent intent) {
+	protected boolean onReceived(Intent intent) {
+		return false;
 	};
 
 	@Override
 	protected void onResume() {
+		App.active = isActive=true;
 		super.onResume();
-		isActive = true;
-		App.me.active = true;
-		// IntentFilter filter = new IntentFilter();
-		// filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-		// filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+
 		// registerReceiver(mNetworkReceiver, filter);
-		registerReceiver(mNotificationReceiver, mNotificationFilter);
+		// registerReceiver(mNotificationReceiver, mNotificationFilter);
 	}
 
 	//
 	@Override
 	protected void onPause() {
+		App.active = isActive=false;
 		super.onPause();
-		isActive = false;
-		App.me.active = false;
 		// unregisterReceiver(mNetworkReceiver);
-		unregisterReceiver(mNotificationReceiver);
+		// unregisterReceiver(mNotificationReceiver);
 	}
 
 	@Override
@@ -146,13 +157,13 @@ public abstract class BaseActivity extends Activity implements OnRefreshClickLis
 	}
 
 	protected boolean noConnection() {
-		return App.me.apnType!=ApnType.NONE;
-//		if (App.me.connected) {
-//			return false;
-//		} else {
-//			Utils.notify(this, "无可用的网络连接，请稍后重试");
-//			return true;
-//		}
+		return App.me.apnType != ApnType.NONE;
+		// if (App.me.connected) {
+		// return false;
+		// } else {
+		// Utils.notify(this, "无可用的网络连接，请稍后重试");
+		// return true;
+		// }
 	}
 
 	protected static final int MENU_ID_PROFILE = 0; //
@@ -277,7 +288,7 @@ public abstract class BaseActivity extends Activity implements OnRefreshClickLis
 	protected void goOptionPage() {
 		Intent intent = new Intent(this, OptionsPage.class);
 		startActivity(intent);
-//		startActivityForResult(intent, REQUEST_CODE_OPTION);
+		// startActivityForResult(intent, REQUEST_CODE_OPTION);
 	}
 
 	protected void goProfilePage() {
@@ -298,17 +309,21 @@ public abstract class BaseActivity extends Activity implements OnRefreshClickLis
 
 		Intent intent = new Intent(this, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
-		intent.putExtra(Commons.EXTRA_TEXT, "@Android客户端 (" + Build.MODEL + "-"
-				+ Build.VERSION.RELEASE + ") #意见反馈# ");
+		intent.putExtra(Commons.EXTRA_TEXT,
+				getString(R.string.config_feedback_account) + " ("
+						+ Build.MODEL + "-" + Build.VERSION.RELEASE + ") ");
 		startActivity(intent);
 	}
 
 	private void doExit() {
-		Process.killProcess(Process.myPid());
+		finish();
+		// Process.killProcess(Process.myPid());
 	}
-	
-	protected void startRefreshAnimation(){}
-	
-	protected void stopRefreshAnimation(){}
+
+	protected void startRefreshAnimation() {
+	}
+
+	protected void stopRefreshAnimation() {
+	}
 
 }

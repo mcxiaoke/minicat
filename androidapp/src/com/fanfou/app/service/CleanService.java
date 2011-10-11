@@ -3,13 +3,10 @@ package com.fanfou.app.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.IntentService;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.PowerManager;
 import android.util.Log;
 
 import com.fanfou.app.App;
@@ -17,57 +14,68 @@ import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.db.Contents.BasicColumns;
+import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
+import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.util.Utils;
 
-public class CleanService extends IntentService {
+/**
+ * @author mcxiaoke
+ * @version 1.0 2011.09.01
+ * @version 1.5 2011.10.09
+ * 
+ */
+public class CleanService extends WakefulIntentService {
 
 	private static final String TAG = CleanService.class.getSimpleName();
-	private PowerManager.WakeLock mWakeLock;
 
 	public CleanService() {
 		super("CleanService");
 	}
-	
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		PowerManager mgr = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		mWakeLock = mgr.newWakeLock(
-				PowerManager.PARTIAL_WAKE_LOCK, TAG);
-		mWakeLock.acquire();
-	}
 
-	@Override
-	public void onDestroy() {
-		if(mWakeLock!=null){
-			mWakeLock.release();
-		}
-		super.onDestroy();
-	}
-	
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		return super.onStartCommand(intent, flags, startId);
-	}
-	
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		if(App.me.active){
-			return;
+		if (!App.active) {
+			doUpdateHome();
+			doUpdateMention();
+			doCleanAction();
+			// doCleanStatusData();
+			// doCleanMessageData();
+			// doCleanUserData();
 		}
-		doUpdateHome();
-		doUpdateMention();
-		doClean();
 	}
 
-	private void doClean() {
-		ContentResolver cr = getContentResolver();
-		Uri cleanUri = Uri.withAppendedPath(StatusInfo.CONTENT_URI,
-				"action/clean");
-		int result = cr.delete(cleanUri, null, null);
+	private void doCleanAction() {
+		Uri uri = Uri.withAppendedPath(StatusInfo.CONTENT_URI, "action/clean");
+		int result = getContentResolver().delete(uri, null, null);
 		if (App.DEBUG) {
-			Log.d("CleanService", "cleaned items count=" + result);
+			Log.d(TAG, "doCleanAction cleaned items: " + result);
+		}
+	}
+
+	private void doCleanStatusData() {
+		ContentResolver cr = getContentResolver();
+		int result = cr.delete(StatusInfo.CONTENT_URI, null, null);
+		if (App.DEBUG) {
+			Log.d("CleanService", "cleaned status items count=" + result);
+		}
+	}
+
+	private void doCleanMessageData() {
+		ContentResolver cr = getContentResolver();
+		int result = cr.delete(DirectMessageInfo.CONTENT_URI, null, null);
+		if (App.DEBUG) {
+			Log.d("CleanService", "cleaned message items count=" + result);
+		}
+	}
+
+	private void doCleanUserData() {
+		ContentResolver cr = getContentResolver();
+		String where = BasicColumns.OWNER_ID + "!=?";
+		String[] whereArgs = new String[] { App.me.userId };
+		int result = cr.delete(UserInfo.CONTENT_URI, where, whereArgs);
+		if (App.DEBUG) {
+			Log.d("CleanService", "cleaned user items count=" + result);
 		}
 	}
 

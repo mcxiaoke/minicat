@@ -1,14 +1,14 @@
 package com.fanfou.app.preferences;
 
-import com.fanfou.app.App;
-import com.fanfou.app.util.IOHelper;
-import com.fanfou.app.util.Utils;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
+
+import com.fanfou.app.App;
+import com.fanfou.app.util.IOHelper;
+import com.fanfou.app.util.Utils;
 
 public class CheckUpdateDialogPreference extends DialogPreference {
 

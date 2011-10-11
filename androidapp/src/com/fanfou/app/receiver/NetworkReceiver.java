@@ -1,17 +1,16 @@
 package com.fanfou.app.receiver;
 
-import com.fanfou.app.App;
-import com.fanfou.app.http.ApnType;
-import com.fanfou.app.util.IntentHelper;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.fanfou.app.App;
+import com.fanfou.app.http.ApnType;
+import com.fanfou.app.util.IntentHelper;
 
 public class NetworkReceiver extends BroadcastReceiver {
 	private static String TAG = NetworkReceiver.class.getSimpleName();
@@ -25,9 +24,9 @@ public class NetworkReceiver extends BroadcastReceiver {
 			boolean disconnected = intent.getBooleanExtra(
 					ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
 			if (App.DEBUG) {
-				IntentHelper.logIntent(TAG,intent);
+				IntentHelper.logIntent(TAG, intent);
 			}
-			if(disconnected){
+			if (disconnected) {
 				App.me.apnType = ApnType.NONE;
 				return;
 			}
@@ -35,7 +34,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 					.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
 			if (info != null && info.isAvailable()) {
 				App.me.apnType = ApnType.NET;
-				disconnected=false;
+				disconnected = false;
 				if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
 					String apnTypeName = info.getExtraInfo();
 					if (!TextUtils.isEmpty(apnTypeName)) {

@@ -29,7 +29,8 @@ import android.widget.SimpleCursorAdapter;
  * 
  * @author torgny.bjers
  */
-public class SearchableCursorAdapter extends SimpleCursorAdapter implements FilterQueryProvider {
+public class SearchableCursorAdapter extends SimpleCursorAdapter implements
+		FilterQueryProvider {
 
 	private ContentResolver mContentResolver;
 	private String[] mProjection;
@@ -41,7 +42,8 @@ public class SearchableCursorAdapter extends SimpleCursorAdapter implements Filt
 	/**
 	 * Creates a new searchable cursor adapter for auto-complete and similar.
 	 * 
-	 * @see android.widget.SimpleCursorAdapter#SimpleCursorAdapter(Context, int, Cursor, String[], int[])
+	 * @see android.widget.SimpleCursorAdapter#SimpleCursorAdapter(Context, int,
+	 *      Cursor, String[], int[])
 	 * @param context
 	 * @param layout
 	 * @param c
@@ -49,7 +51,8 @@ public class SearchableCursorAdapter extends SimpleCursorAdapter implements Filt
 	 * @param to
 	 */
 	public SearchableCursorAdapter(Context context, int layout, Cursor c,
-			String[] from, int[] to, Uri uri, String[] projection, String sortOrder) {
+			String[] from, int[] to, Uri uri, String[] projection,
+			String sortOrder) {
 		super(context, layout, c, from, to);
 		mContentResolver = context.getContentResolver();
 		mFrom = from;
@@ -73,7 +76,9 @@ public class SearchableCursorAdapter extends SimpleCursorAdapter implements Filt
 			String filter = constraint.toString() + "%";
 			selectionArgs = new String[] { filter };
 		}
-		if (mCursor != null && !mCursor.isClosed()) mCursor.close();
-		return mContentResolver.query(mUri, mProjection, selection, selectionArgs, mSortOrder);
+		if (mCursor != null && !mCursor.isClosed())
+			mCursor.close();
+		return mContentResolver.query(mUri, mProjection, selection,
+				selectionArgs, mSortOrder);
 	}
 }

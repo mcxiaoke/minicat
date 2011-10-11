@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.fanfou.app" android:installLocation="auto"
-	android:versionCode="20111008" android:versionName="1.2.9">
+	android:versionCode="20111010" android:versionName="1.3.2">
 
 	<application android:icon="@drawable/icon" android:label="@string/app_name"
 		android:name=".App">
 
 		<activity android:name=".LoginPage" android:label="@string/app_name"
-			android:theme="@style/Theme" >
+			android:theme="@style/Theme">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
@@ -15,7 +15,7 @@
 		</activity>
 
 		<activity android:name=".HomePage" android:label="@string/app_name"
-			android:theme="@style/Theme" android:launchMode="singleTop">
+			android:theme="@style/Theme" android:launchMode="singleTop" >
 			<meta-data android:name="android.app.default_searchable"
 				android:value=".SearchResultsPage" />
 		</activity>
@@ -92,6 +92,12 @@
 
 		</activity>
 
+		<activity android:name=".ThreadPage" android:label="@string/app_name"
+			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation" />
+
+		<activity android:name=".SignupPage" android:label="@string/app_name"
+			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation" />
+
 		<activity android:name=".MyProfilePage" android:label="@string/app_name"
 			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation" />
 
@@ -112,9 +118,13 @@
 
 		</activity>
 
+		<activity android:name=".MessageChatPage" android:label="@string/app_name"
+			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation"  android:windowSoftInputMode="adjustResize"/>
+
 		<activity android:name=".WritePage" android:label="@string/app_share_name"
 			android:theme="@style/Theme.AutoCompleteTextView"
 			android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="adjustResize">
+
 			<intent-filter>
 				<action android:name="android.intent.action.SEND" />
 				<category android:name="android.intent.category.DEFAULT" />
@@ -127,9 +137,6 @@
 			</intent-filter>
 
 		</activity>
-
-		<activity android:name=".SendPage" android:label="@string/app_name"
-			android:configChanges="keyboardHidden|orientation" android:theme="@style/Theme" android:windowSoftInputMode="adjustResize"/>
 
 		<activity android:name=".OptionsPage" android:label="@string/app_name"
 			android:configChanges="keyboardHidden|orientation" />
@@ -153,12 +160,18 @@
 			android:authorities="com.fanfou.app.provider" />
 
 		<service android:name=".service.FetchService" android:label="@string/app_name" />
-		<service android:name=".service.PostService" android:label="@string/app_name" />
-		<service android:name=".service.DownloadService" android:label="@string/app_name" />
-		<service android:name=".service.MessageService" android:label="@string/app_name" />
+		<service android:name=".service.PostStatusService"
+			android:label="@string/app_name" />
+		<service android:name=".service.DownloadService"
+			android:label="@string/app_name" />
+		<service android:name=".service.PostMessageService"
+			android:label="@string/app_name" />
 		<service android:name=".service.ActionService" android:label="@string/app_name" />
 		<service android:name=".service.CleanService" android:label="@string/app_name" />
-		<service android:name=".service.NotificationService" android:label="@string/app_name" />
+		<service android:name=".service.NotificationService"
+			android:label="@string/app_name" />
+		<service android:name=".service.AutoCompleteService"
+			android:label="@string/app_name" />
 
 		<receiver android:name=".receiver.BootReceiver">
 			<intent-filter>

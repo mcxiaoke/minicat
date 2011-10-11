@@ -11,28 +11,28 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.text.Selection;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 
+import com.fanfou.app.adapter.AtTokenizer;
 import com.fanfou.app.adapter.AutoCompleteCursorAdapter;
-import com.fanfou.app.adapter.SpaceTokenizer;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
-import com.fanfou.app.service.PostService;
+import com.fanfou.app.service.PostStatusService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.ui.TextChangeListener;
-import com.fanfou.app.ui.widget.NameAutoCompleteTextView;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.ImageHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -42,7 +42,7 @@ import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
- *
+ * 
  */
 public class WritePage extends BaseActivity {
 
@@ -53,7 +53,7 @@ public class WritePage extends BaseActivity {
 	}
 
 	private ActionBar mActionBar;
-	private NameAutoCompleteTextView mAutoCompleteTextView;
+	private MultiAutoCompleteTextView mAutoCompleteTextView;
 	CursorAdapter mAdapter;
 	// private ViewGroup vExtra;
 	private ImageView iPicturePrieview;
@@ -104,10 +104,15 @@ public class WritePage extends BaseActivity {
 
 	private void initialize() {
 		enableLocation = OptionHelper.readBoolean(this,
-				Commons.KEY_LOCATION_ENABLE, false);
+				R.string.option_location_enable, false);
 		mLocationMonitor = new LocationMonitor();
 		mLocationManager = (LocationManager) this
 				.getSystemService(Context.LOCATION_SERVICE);
+
+		if (App.me.getDensity() < 1.5) {
+			getWindow().setSoftInputMode(
+					WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
+		}
 	}
 
 	private static final int REQUEST_PHOTO_CAPTURE = 0;
@@ -156,9 +161,10 @@ public class WritePage extends BaseActivity {
 	}
 
 	private void showPreview() {
-		final int size=new Float(getResources().getDimension(R.dimen.photo_preview_width)).intValue();
+		final int size = new Float(getResources().getDimension(
+				R.dimen.photo_preview_width)).intValue();
 		iPicturePrieview.setImageBitmap(ImageHelper.getRoundedCornerBitmap(
-				ImageHelper.getThumb(this, photoUri, size,size), 6));
+				ImageHelper.getThumb(this, photoUri, size, size), 6));
 		iPicturePrieview.setVisibility(View.VISIBLE);
 		iPictureRemove.setVisibility(View.VISIBLE);
 	}
@@ -239,7 +245,7 @@ public class WritePage extends BaseActivity {
 	 */
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setTitle("发消息");
+		mActionBar.setTitle("写消息");
 		mActionBar.setRightAction(new SendAction());
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
 
@@ -253,19 +259,19 @@ public class WritePage extends BaseActivity {
 
 		@Override
 		public void performAction(View view) {
-			update();
+			send();
 		}
 
 	}
 
 	private void setAutoComplete() {
-		mAutoCompleteTextView = (NameAutoCompleteTextView) findViewById(R.id.write_text);
+		mAutoCompleteTextView = (MultiAutoCompleteTextView) findViewById(R.id.write_text);
 		mAutoCompleteTextView.addTextChangedListener(textMonitor);
-		mAutoCompleteTextView.setTokenizer(new SpaceTokenizer());
-		mAutoCompleteTextView.setThreshold(1);
+		mAutoCompleteTextView.setTokenizer(new AtTokenizer());
+		// mAutoCompleteTextView.setThreshold(1);
 		mAutoCompleteTextView.setDropDownBackgroundResource(R.drawable.bg);
 		mAutoCompleteTextView.setDropDownAnchor(R.id.write_text);
-		String[] projection = new String[] { BaseColumns._ID, BasicColumns.ID,
+		String[] projection = new String[] { UserInfo._ID, UserInfo.ID,
 				UserInfo.SCREEN_NAME };
 		String where = BasicColumns.TYPE + " = '" + User.AUTO_COMPLETE + "'";
 		Cursor c = managedQuery(UserInfo.CONTENT_URI, projection, where, null,
@@ -406,7 +412,7 @@ public class WritePage extends BaseActivity {
 
 	private void switchGeoStatus() {
 		enableLocation = !enableLocation;
-		OptionHelper.saveBoolean(this, Commons.KEY_LOCATION_ENABLE,
+		OptionHelper.saveBoolean(this, R.string.option_location_enable,
 				enableLocation);
 		if (App.DEBUG)
 			log("location enable status=" + enableLocation);
@@ -429,20 +435,9 @@ public class WritePage extends BaseActivity {
 		}
 		Selection.setSelection(mAutoCompleteTextView.getEditableText(),
 				mAutoCompleteTextView.getEditableText().length());
-
-		// InputMethodManager imm = (InputMethodManager)
-		// getSystemService(Context.INPUT_METHOD_SERVICE);
-		// imm.showSoftInput(mAutoCompleteTextView,
-		// InputMethodManager.SHOW_IMPLICIT);
-		//
-		// mAutoCompleteTextView.setHeight(20);
-		// mAutoCompleteTextView.setSingleLine();
-
-		// mAutoCompleteTextView.requestFocus();
-		// mAutoCompleteTextView.showDropDown();
 	}
 
-	private void update() {
+	private void send() {
 		if (wordsCount < 1) {
 			Utils.notify(this, "消息内容不能为空");
 			return;
@@ -452,17 +447,17 @@ public class WritePage extends BaseActivity {
 			return;
 		}
 		finish();
-		startUpdateService();
+		startSendService();
 	}
 
-	private void startUpdateService() {
-		Intent i = new Intent(mContext, PostService.class);
+	private void startSendService() {
+		Intent i = new Intent(mContext, PostStatusService.class);
 		i.putExtra(Commons.EXTRA_TYPE, type);
 		i.putExtra(Commons.EXTRA_TEXT, content);
 		i.putExtra(Commons.EXTRA_FILE, photo);
 		i.putExtra(Commons.EXTRA_LOCATION, mLocationString);
 		i.putExtra(Commons.EXTRA_STATUS, status);
-		if(App.DEBUG){
+		if (App.DEBUG) {
 			log("intent=" + i);
 		}
 		startService(i);

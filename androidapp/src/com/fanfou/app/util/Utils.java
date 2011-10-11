@@ -2,16 +2,16 @@
 
 import java.io.File;
 import java.util.Collection;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Configuration;
 import android.database.Cursor;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
@@ -20,18 +20,19 @@ import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.Toast;
 
 import com.fanfou.app.AboutPage;
 import com.fanfou.app.App;
+import com.fanfou.app.MessageChatPage;
 import com.fanfou.app.PhotoViewPage;
-import com.fanfou.app.SendPage;
+import com.fanfou.app.R;
 import com.fanfou.app.StatusPage;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
-import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.service.AutoCompleteService;
 import com.fanfou.app.service.FetchService;
 
 /**
@@ -103,12 +104,13 @@ public final class Utils {
 		}
 	}
 
-	public static void goSendPage(Context context, Cursor c) {
+	public static void goMessageChatPage(Context context, Cursor c) {
 		if (c != null) {
 			final DirectMessage dm = DirectMessage.parse(c);
 			if (dm != null) {
-				final Intent intent = new Intent(context, SendPage.class);
-				intent.putExtra(Commons.EXTRA_MESSAGE, dm);
+				final Intent intent = new Intent(context, MessageChatPage.class);
+				intent.putExtra(Commons.EXTRA_USER_ID, dm.senderId);
+				intent.putExtra(Commons.EXTRA_USER_NAME, dm.senderScreenName);
 				context.startActivity(intent);
 			}
 		}
@@ -139,6 +141,16 @@ public final class Utils {
 			final DirectMessage first = DirectMessage.parse(c);
 			if (first != null) {
 				return first.id;
+			}
+		}
+		return null;
+	}
+
+	public static String getDmMaxId(Cursor c) {
+		if (c != null && c.moveToLast()) {
+			final DirectMessage last = DirectMessage.parse(c);
+			if (last != null) {
+				return last.id;
 			}
 		}
 		return null;
@@ -216,46 +228,59 @@ public final class Utils {
 		return end * ((time = time / duration - 1) * time * time + 1) + start;
 	}
 
-//	public static boolean checkMultiTouch(Context context) {
-//		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.DONUT) {
-//			return context.getPackageManager().hasSystemFeature(
-//					PackageManager.FEATURE_TOUCHSCREEN_MULTITOUCH);
-//		} else {
-//			return false;
-//		}
-//	}
+	// public static boolean checkMultiTouch(Context context) {
+	// if (Build.VERSION.SDK_INT > Build.VERSION_CODES.DONUT) {
+	// return context.getPackageManager().hasSystemFeature(
+	// PackageManager.FEATURE_TOUCHSCREEN_MULTITOUCH);
+	// } else {
+	// return false;
+	// }
+	// }
 
 	public static void setAutoClean(Context context) {
 		boolean isSet = OptionHelper.readBoolean(context,
-				Commons.KEY_SET_AUTO_CLEAN, false);
+				R.string.option_set_auto_clean, false);
 		if (!isSet) {
+			OptionHelper.saveBoolean(context, R.string.option_set_auto_clean,
+					true);
 			AlarmHelper.setCleanTask(context);
-			OptionHelper.saveBoolean(context, Commons.KEY_SET_AUTO_CLEAN, true);
 		}
 	}
 
 	public static void setAutoComplete(Context context) {
 		boolean isSet = OptionHelper.readBoolean(context,
-				Commons.KEY_SET_AUTO_COMPLETE, false);
+				R.string.option_set_auto_complete, false);
 		if (!isSet) {
-			Intent intent = new Intent(context, FetchService.class);
-			intent.putExtra(Commons.EXTRA_TYPE, User.AUTO_COMPLETE);
-			context.startService(intent);
-
+			OptionHelper.saveBoolean(context,
+					R.string.option_set_auto_complete, true);
+			context.startService(new Intent(context, AutoCompleteService.class));
 			AlarmHelper.setAutoCompleteTask(context);
-			OptionHelper.saveBoolean(context, Commons.KEY_SET_AUTO_COMPLETE,
-					true);
 		}
 	}
 
 	public static void setAutoNotification(Context context) {
 		boolean isSet = OptionHelper.readBoolean(context,
-				Commons.KEY_SET_NOTIFICATION, false);
+				R.string.option_set_notification, false);
 		if (!isSet) {
-			AlarmHelper.setNotificationTaskOn(context);
-			OptionHelper.saveBoolean(context, Commons.KEY_SET_NOTIFICATION,
+			OptionHelper.saveBoolean(context, R.string.option_set_notification,
 					true);
+			AlarmHelper.setNotificationTaskOn(context);
 		}
+	}
+	
+	public static void setScreenOrientation(Activity activity) {
+		boolean portrait = OptionHelper.readBoolean(activity,
+				R.string.option_force_portrait, false);
+	    if (portrait) {
+	    	activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	    	
+//	        if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//	            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//	        }
+//	        if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+//	            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//	        }
+	    }
 	}
 
 }

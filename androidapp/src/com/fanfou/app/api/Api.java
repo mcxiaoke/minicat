@@ -6,7 +6,6 @@ package com.fanfou.app.api;
 import java.io.File;
 import java.util.List;
 
-
 /**
  * @author mcxiaoke
  * @version 1.0 2011.05.12
@@ -37,7 +36,7 @@ public interface Api extends ApiConfig {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Status> pubicTimeline(int count,boolean isHtml) throws ApiException;
+	List<Status> pubicTimeline(int count, boolean isHtml) throws ApiException;
 
 	// friends timeline
 	/**
@@ -52,7 +51,7 @@ public interface Api extends ApiConfig {
 	 * @throws ApiException
 	 */
 	List<Status> homeTimeline(int count, int page, String sinceId,
-			String maxId,boolean isHtml) throws ApiException;
+			String maxId, boolean isHtml) throws ApiException;
 
 	// user timeline
 	/**
@@ -66,8 +65,8 @@ public interface Api extends ApiConfig {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Status> userTimeline(int count, int page, String userId, String sinceId,
-			String maxId,boolean isHtml) throws ApiException;
+	List<Status> userTimeline(int count, int page, String userId,
+			String sinceId, String maxId, boolean isHtml) throws ApiException;
 
 	// mention timeline
 	/**
@@ -81,8 +80,8 @@ public interface Api extends ApiConfig {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Status> mentions(int count, int page, String sinceId,
-			String maxId,boolean isHtml) throws ApiException;
+	List<Status> mentions(int count, int page, String sinceId, String maxId,
+			boolean isHtml) throws ApiException;
 
 	// replies timeline
 	/**
@@ -97,7 +96,7 @@ public interface Api extends ApiConfig {
 	 * @throws ApiException
 	 */
 	List<Status> replies(int count, int page, String userId, String sinceId,
-			String maxId,boolean isHtml) throws ApiException;
+			String maxId, boolean isHtml) throws ApiException;
 
 	/**
 	 * favorites
@@ -108,7 +107,7 @@ public interface Api extends ApiConfig {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Status> favorites(int count, int page, String userId,boolean isHtml)
+	List<Status> favorites(int count, int page, String userId, boolean isHtml)
 			throws ApiException;
 
 	/**
@@ -182,7 +181,8 @@ public interface Api extends ApiConfig {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Status> search(String keyword, String maxId,boolean isHtml) throws ApiException;
+	List<Status> search(String keyword, String maxId, boolean isHtml)
+			throws ApiException;
 
 	/**
 	 * get trends
@@ -243,7 +243,7 @@ public interface Api extends ApiConfig {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<User> usersFollowers(String userId ,int page) throws ApiException;
+	List<User> usersFollowers(String userId, int page) throws ApiException;
 
 	/**
 	 * show a user's profile
@@ -307,7 +307,8 @@ public interface Api extends ApiConfig {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<String> usersFriendsIDs(String userId, int count,int page) throws ApiException;
+	List<String> usersFriendsIDs(String userId, int count, int page)
+			throws ApiException;
 
 	/**
 	 * followers id list
@@ -316,7 +317,8 @@ public interface Api extends ApiConfig {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<String> usersFollowersIDs(String userId,int count ,int page) throws ApiException;
+	List<String> usersFollowersIDs(String userId, int count, int page)
+			throws ApiException;
 
 	/**
 	 * inbox messages

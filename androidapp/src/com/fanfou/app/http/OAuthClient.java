@@ -22,11 +22,14 @@ public class OAuthClient extends BaseClient {
 	}
 
 	@Override
-	void setAuthorization(HttpUriRequest request, List<Parameter> params) throws ApiException {
-		if(StringHelper.isEmpty(App.me.oauthAccessToken)||StringHelper.isEmpty(App.me.oauthAccessTokenSecret)){
-			throw new ApiException(ResponseCode.ERROR_AUTH_FAILED,"未通过验证，请登录");
+	void setAuthorization(HttpUriRequest request, List<Parameter> params)
+			throws ApiException {
+		if (StringHelper.isEmpty(App.me.oauthAccessToken)
+				|| StringHelper.isEmpty(App.me.oauthAccessTokenSecret)) {
+			throw new ApiException(ResponseCode.ERROR_AUTH_FAILED, "未通过验证，请登录");
 		}
-		OAuth oauth=new OAuth(App.me.oauthAccessToken,App.me.oauthAccessTokenSecret);
+		OAuth oauth = new OAuth(App.me.oauthAccessToken,
+				App.me.oauthAccessTokenSecret);
 		oauth.signRequest(request, params);
 	}
 

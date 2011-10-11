@@ -50,7 +50,7 @@ public class AutoCompleteCursorAdapter extends ResourceCursorAdapter implements
 		String screenName = cursor.getString(cursor
 				.getColumnIndex(UserInfo.SCREEN_NAME));
 		TextView tv = (TextView) view.findViewById(R.id.item_user_name);
-		tv.setText(screenName + " (" + id.replace("@", "") + ")");
+		tv.setText("@" + screenName + " (" + id + ")");
 	}
 
 }

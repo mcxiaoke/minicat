@@ -11,6 +11,16 @@ public interface Contents {
 	public static final String ORDERBY_DATE_DESC=BasicColumns.CREATED_AT+" DESC";
 	public static final String ORDERBY_DATE=BasicColumns.CREATED_AT;
 	
+	public static interface Counts{
+		public static final String URI_PATH="count";
+		public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/count");
+	}
+	
+	public static interface Actions{
+		public static final String URI_PATH="action";
+		public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/action");
+	}
+	
 	public static interface BasicColumns extends BaseColumns{
 		public static final String ID="id";
         public static final String OWNER_ID="owner_id";
@@ -212,6 +222,11 @@ public interface Contents {
         public static final String SENDER_PROFILE_IMAGE_URL="sender_profile_image_url";
         public static final String RECIPIENT_PROFILE_IMAGE_URL="recipient_profile_image_url";
         
+        public static final String THREAD_USER_ID="thread_user_id";
+        public static final String THREAD_USER_NAME="thread_user_name";
+        public static final String IS_READ="is_read";
+        public static final String IS_OLD="is_old";
+        
         public static final String COLUMNS[]={
           _ID,
           ID,
@@ -226,12 +241,18 @@ public interface Contents {
           RECIPIENT_PROFILE_IMAGE_URL,
           TYPE,
           TIMESTAMP,
+          
+          THREAD_USER_ID,
+          THREAD_USER_NAME,
+          IS_READ,
+          IS_OLD,
+          
         };
         
         public static final String CREATE_TABLE="create table " + TABLE_NAME+" ("
         	+ _ID+" integer primary key autoincrement, "
         	+ ID+" text not null, "
-        	+ OWNER_ID+" text, "
+        	+ OWNER_ID+" text , "
         	+ TEXT+" text not null, "
         	+ CREATED_AT+" integer not null, "
         	+ SENDER_ID+" text not null, "
@@ -242,36 +263,13 @@ public interface Contents {
         	+ RECIPIENT_PROFILE_IMAGE_URL+" text not null, "
         	+ TYPE+" integer not null, "
         	+ TIMESTAMP+" integer not null, "
+        	
+        	+ THREAD_USER_ID+" text not null, "
+        	+ THREAD_USER_NAME+" text not null, "
+        	+ IS_READ+" boolean not null, "
+        	+ IS_OLD+" boolean not null, "
+        	
             + "unique ( "+ID+" ) on conflict ignore );";
     }
-    
-	public static interface AutoCompleteColumns extends BaseColumns{
-		
-    	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/autocomplete");
-    	public static final String URI_PATH="autocomplete";
-    	public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE+"/vnd.fanfou.autocomplete";
-    	public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE+"/vnd.fanfou.autocomplete";
-    	public static final String TABLE_NAME="autocomplete";	
-    	
-		public static final String ID="id";
-        public static final String NAME="name";
-		public static final String HEAD="head";
-		
-        public static final String COLUMNS[]={
-        	_ID,
-        	ID,
-        	NAME,
-        	HEAD,
-        };
-        
-        public static final String CREATE_TABLE="create table " + TABLE_NAME+" ("
-    	+ _ID+" integer primary key autoincrement, "
-    	+ ID+" text not null, "
-    	+ NAME+" text not null, "
-    	+ HEAD+" text not null, "
-        + "unique ( "+ID+" ) on conflict ignore );";
-
-	}
-	
 
 }
