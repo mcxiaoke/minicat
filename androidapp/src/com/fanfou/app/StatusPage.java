@@ -1,7 +1,12 @@
 package com.fanfou.app;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
@@ -45,10 +50,10 @@ public class StatusPage extends BaseActivity implements
 		super.onPause();
 	}
 
-	private static final String tag = StatusPage.class.getSimpleName();
+	private static final String TAG = StatusPage.class.getSimpleName();
 
 	private void log(String message) {
-		Log.e(tag, message);
+		Log.e(TAG, message);
 	}
 
 	private ActionBar mActionBar;
@@ -84,8 +89,6 @@ public class StatusPage extends BaseActivity implements
 	private Handler mHandler;
 
 	private boolean isMe;
-
-	private int photoLevel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -180,34 +183,9 @@ public class StatusPage extends BaseActivity implements
 					R.drawable.default_head);
 
 			StatusHelper.setStatus(tContent, status.text);
-
-			if (status.hasPhoto) {
-				photoLevel = OptionHelper.parseInt(this,
-						R.string.option_pic_level);
-				if (photoLevel < 0) {
-					photoLevel = 0;
-				}
-				if (App.DEBUG)
-					log("level=" + photoLevel);
-				if (photoLevel == 2) {
-					iPhoto.setTag(status.photoLargeUrl);
-					mLoader.set(status.photoLargeUrl, iPhoto,
-							R.drawable.photo_loading);
-				} else if (photoLevel == 1) {
-					iPhoto.setTag(status.photoThumbUrl);
-					mLoader.set(status.photoThumbUrl, iPhoto,
-							R.drawable.photo_loading);
-					iPhoto.setOnClickListener(this);
-				} else if (photoLevel == 0) {
-					iPhoto.setImageResource(R.drawable.photo_icon);
-					iPhoto.setOnClickListener(this);
-				}
-			} else {
-				iPhoto.setVisibility(View.GONE);
-			}
+			checkPhoto(status);
 
 			tDate.setText("时间：" + DateTimeHelper.getInterval(status.createdAt));
-
 			tSource.setText("来源：" + status.source);
 
 			if (isMe) {
@@ -223,6 +201,53 @@ public class StatusPage extends BaseActivity implements
 				doFetchThread();
 			}
 		}
+	}
+
+	private int mPhotoState=PHOTO_ICON;
+	private static final int PHOTO_LOADING=-1;
+	private static final int PHOTO_ICON=0;
+	private static final int PHOTO_SMALL=1;
+	private static final int PHOTO_LARGE=2;
+
+	private void checkPhoto(Status s) {
+		if (!s.hasPhoto) {
+			iPhoto.setVisibility(View.GONE);
+			return;
+		}
+		
+		iPhoto.setOnClickListener(this);
+
+		// 先检查本地是否有大图缓存
+		Bitmap bitmap = mLoader.load(s.photoLargeUrl);
+		if (bitmap != null) {
+			iPhoto.setTag(s.photoLargeUrl);
+			iPhoto.setImageBitmap(bitmap);
+			mPhotoState = PHOTO_LARGE;
+			return;
+		}
+
+		// 再检查本地是否有缩略图缓存
+		bitmap = mLoader.load(s.photoImageUrl);
+		if (bitmap != null) {
+			iPhoto.setTag(s.photoImageUrl);
+			iPhoto.setImageBitmap(bitmap);
+			mPhotoState = PHOTO_SMALL;
+			return;
+		}
+
+		// 再根据系统设置处理
+		int set = OptionHelper.parseInt(this, R.string.option_pic_level);
+		if (set == 2) {
+			// 如果设置为大图
+			loadPhoto(PHOTO_LARGE);
+		}else if (set == 1) {
+			// 如果设置为缩略图
+			loadPhoto(PHOTO_SMALL);
+		}else{
+			iPhoto.setImageResource(R.drawable.photo_icon);
+		}
+
+		
 	}
 
 	@Override
@@ -251,46 +276,83 @@ public class StatusPage extends BaseActivity implements
 		// case R.id.status_text:
 		// break;
 		case R.id.status_photo:
-			doShowBigPicture();
-			// Utils.goPhotoViewPage(this, null);
+			onClickPhoto();
 			break;
 		default:
 			break;
 		}
 	}
 
-	private void doShowBigPicture() {
+	private String getPhotoPath(String key) {
+		File file = new File(IOHelper.getCacheDir(mContext),
+				StringHelper.md5(key) + ".jpg");
+		if (App.DEBUG) {
+			log("loadFile path=" + file.getAbsolutePath());
+		}
+		if (file.exists()) {
+			return file.getAbsolutePath();
+		} else {
+			return null;
+		}
+
+	}
+	
+	private void onClickPhoto(){
+		switch (mPhotoState) {
+		case PHOTO_ICON:
+			loadPhoto(PHOTO_LARGE);
+			break;
+		case PHOTO_SMALL:
+			loadPhoto(PHOTO_LARGE);
+			break;
+		case PHOTO_LARGE:
+			goPhotoViewer();
+			break;
+		case PHOTO_LOADING:
+			break;
+		default:
+			break;
+		}
+	}
+	
+	private void goPhotoViewer(){
+		Intent intent = new Intent(mContext, PhotoViewPage.class);
+		 intent.putExtra(Commons.EXTRA_URL,getPhotoPath((String)iPhoto.getTag()));
+		mContext.startActivity(intent);
+		overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_enter);
+	}
+
+	private void loadPhoto(final int type) {
+		iPhoto.setImageResource(R.drawable.photo_loading);
+		mPhotoState=PHOTO_LOADING;
 		ImageLoaderCallback callback = new ImageLoaderCallback() {
 
 			@Override
 			public void onFinish(String key, Bitmap bitmap) {
-				iPhoto.setOnClickListener(null);
 				if (bitmap != null) {
 					iPhoto.setImageBitmap(bitmap);
+					iPhoto.invalidate();
+					mPhotoState=type;
 				}
-				iPhoto.postInvalidate();
 			}
-
 			@Override
 			public void onError(String message) {
-				if (App.DEBUG) {
-					log("onError message=" + message);
-				}
-				iPhoto.setImageDrawable(null);
+				iPhoto.setImageResource(R.drawable.photo_icon);
+				mPhotoState=PHOTO_ICON;
 			}
 		};
-		if (App.DEBUG) {
-			log("doShowBigPicture init");
+		String photoUrl=null;
+		if(type==PHOTO_LARGE){
+			photoUrl=status.photoLargeUrl;
+		}else if(type==PHOTO_SMALL){
+			photoUrl=status.photoImageUrl;
 		}
-
-		iPhoto.setTag(status.photoLargeUrl);
-		Bitmap bitmap = mLoader.load(status.photoLargeUrl, callback);
-		if (bitmap != null) {
+		iPhoto.setTag(photoUrl);
+		Bitmap bitmap=mLoader.load(photoUrl, callback);
+		if(bitmap!=null){
 			iPhoto.setImageBitmap(bitmap);
-			iPhoto.setOnClickListener(null);
-		} else {
-
-			iPhoto.setImageResource(R.drawable.photo_loading);
+			iPhoto.invalidate();
+			mPhotoState=type;
 		}
 	}
 

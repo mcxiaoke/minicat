@@ -189,7 +189,9 @@ public final class Utils {
 	}
 
 	public static void notify(Context context, String text) {
-		Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+		if(App.active){
+			Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	public static void open(Context context, final String fileName) {

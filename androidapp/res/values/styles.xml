@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<style name="Theme" parent="android:style/Theme.Light">
-		<item name="android:windowNoTitle">true</item>
+	<style name="Theme" parent="android:style/Theme.Light.NoTitleBar">
 		<item name="android:windowContentOverlay">@null</item>
-<!-- 		<item name="android:windowBackground">@null</item> -->
-<!-- 		<item name="android:windowBackground">@android:color/white</item> -->
+		<item name="android:textColorLink">@color/link_color</item>
+	</style>
+
+	<style name="Theme.Black" parent="android:style/Theme.NoTitleBar">
+		<item name="android:windowContentOverlay">@null</item>
+		<item name="android:textColorLink">@color/link_color</item>
+	</style>
+	
+		<style name="Theme.Black.FullScreen" parent="android:style/Theme.NoTitleBar.Fullscreen">
+		<item name="android:windowContentOverlay">@null</item>
 		<item name="android:textColorLink">@color/link_color</item>
 	</style>
 
 	<style name="Theme.AutoCompleteTextView">
 		<item name="android:dropDownItemStyle">@style/Widget.DropDownItemLight</item>
 		<item name="android:autoCompleteTextViewStyle">@style/Widget.AutoCompleteTextViewLight</item>
-	</style>
-
-	<style name="ThemeDark" parent="android:style/Theme">
-		<item name="android:windowNoTitle">true</item>
-		<item name="android:windowContentOverlay">@null</item>
-		<item name="android:windowBackground">@android:color/white</item>
-		<item name="android:textColorLink">@color/link_color</item>
 	</style>
 
 	<style name="ActionBar">
@@ -81,8 +81,8 @@
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:padding">2dp</item>
 	</style>
-	
-		<style name="Icon.Fixed">
+
+	<style name="Icon.Fixed">
 		<item name="android:layout_width">@dimen/icon_width</item>
 		<item name="android:layout_height">@dimen/icon_height</item>
 		<item name="android:padding">2dp</item>

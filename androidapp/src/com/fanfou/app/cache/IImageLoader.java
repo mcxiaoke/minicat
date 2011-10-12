@@ -3,6 +3,8 @@
  */
 package com.fanfou.app.cache;
 
+import java.io.File;
+
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
@@ -17,6 +19,8 @@ public interface IImageLoader {
 	Bitmap load(String key);
 
 	Bitmap load(String key, ImageLoaderCallback callback);
+	
+	File loadFile(String key);
 
 	void set(String key, ImageView imageView);
 
