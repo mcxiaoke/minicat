@@ -84,7 +84,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 			Log.i(TAG, "showHomeOneNotification type=" + type);
 		}
 		String title = status.userScreenName;
-		String message = StatusHelper.getSimpifiedText(status.text);
+		String message = status.simpleText;
 		Intent intent = new Intent(context, StatusPage.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
 		intent.putExtra(Commons.EXTRA_STATUS, status);
@@ -117,7 +117,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 			Log.i(TAG, "showMentionOneNotification type=" + type);
 		}
 		String title = status.userScreenName + "@你的消息";
-		String message = StatusHelper.getSimpifiedText(status.text);
+		String message = status.simpleText;
 		Intent intent = new Intent(context, StatusPage.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
 		intent.putExtra(Commons.EXTRA_STATUS, status);

@@ -14,34 +14,20 @@ import android.widget.TextView;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.util.DateTimeHelper;
-import com.fanfou.app.util.StatusHelper;
 import com.fanfou.app.util.StringHelper;
 
 public class StatusArrayAdapter extends BaseArrayAdapter<Status> {
 
-	private static final String tag = StatusArrayAdapter.class.getSimpleName();
+	private static final String TAG = StatusArrayAdapter.class.getSimpleName();
 
-	private void log(String message) {
-		Log.e(tag, message);
+	void log(String message) {
+		Log.e(TAG, message);
 	}
-
-	private boolean isSearch;
 
 	private List<Status> mStatus;
 
 	public StatusArrayAdapter(Context context, List<Status> ss) {
 		super(context, ss);
-		this.isSearch = false;
-		if (ss == null) {
-			mStatus = new ArrayList<Status>();
-		} else {
-			mStatus = ss;
-		}
-	}
-
-	public StatusArrayAdapter(Context context, List<Status> ss, boolean isSearch) {
-		super(context, ss);
-		this.isSearch = isSearch;
 		if (ss == null) {
 			mStatus = new ArrayList<Status>();
 		} else {
@@ -103,7 +89,7 @@ public class StatusArrayAdapter extends BaseArrayAdapter<Status> {
 		}
 
 		holder.nameText.setText(s.userScreenName);
-		StatusHelper.setSimpifiedText(holder.contentText, s.text);
+		holder.contentText.setText(s.simpleText);
 		holder.metaText.setText(DateTimeHelper.getInterval(s.createdAt) + " 来自"
 				+ s.source);
 

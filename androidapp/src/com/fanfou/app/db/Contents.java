@@ -145,6 +145,10 @@ public interface Contents {
         public static final String USER_PROFILE_IMAGE_URL="user_profile_image_url";
         
         public static final String IS_READ="is_read";
+        public static final String IS_THREAD="is_thread";
+        public static final String HAS_PHOTO="has_photo";
+        public static final String SIMPLE_TEXT="simple_text";
+        
             
         public static final String COLUMNS[]={
             _ID,
@@ -166,6 +170,11 @@ public interface Contents {
             USER_PROFILE_IMAGE_URL,
             TYPE,
             IS_READ,
+
+            IS_THREAD,
+            HAS_PHOTO,
+            SIMPLE_TEXT,
+            
             TIMESTAMP,
             
         };
@@ -199,6 +208,10 @@ public interface Contents {
             
             + IS_READ+" boolean not null, "
             
+            + IS_THREAD+" boolean not null, "
+            + HAS_PHOTO+" boolean not null, "
+            + SIMPLE_TEXT+" text not null, "
+            
             + TIMESTAMP+" integer not null, " 
             + "unique ( "+ID+","+TYPE+","+OWNER_ID+") on conflict ignore );";
         
@@ -225,7 +238,6 @@ public interface Contents {
         public static final String THREAD_USER_ID="thread_user_id";
         public static final String THREAD_USER_NAME="thread_user_name";
         public static final String IS_READ="is_read";
-        public static final String IS_OLD="is_old";
         
         public static final String COLUMNS[]={
           _ID,
@@ -245,7 +257,6 @@ public interface Contents {
           THREAD_USER_ID,
           THREAD_USER_NAME,
           IS_READ,
-          IS_OLD,
           
         };
         
@@ -267,7 +278,6 @@ public interface Contents {
         	+ THREAD_USER_ID+" text not null, "
         	+ THREAD_USER_NAME+" text not null, "
         	+ IS_READ+" boolean not null, "
-        	+ IS_OLD+" boolean not null, "
         	
             + "unique ( "+ID+" ) on conflict ignore );";
     }

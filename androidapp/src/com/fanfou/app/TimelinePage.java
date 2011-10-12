@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.View;
@@ -191,21 +192,38 @@ public class TimelinePage extends BaseActivity implements OnRefreshListener,
 			mCursor.requery();
 		}
 	}
+	
+	
+	private static final String LIST_STATE = "listState";
+	private Parcelable mState=null;
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (mListView != null) {
-			mListView.restorePosition();
+		if(mState!=null&&mListView != null){
+			mListView.onRestoreInstanceState(mState);
+			mState=null;
+		}
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		mState=savedInstanceState.getParcelable(LIST_STATE);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if(mListView!=null){
+			mState=mListView.onSaveInstanceState();
+			outState.putParcelable(LIST_STATE, mState);
 		}
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if (mListView != null) {
-			mListView.savePosition();
-		}
 	}
 
 	protected class ResultHandler extends Handler {

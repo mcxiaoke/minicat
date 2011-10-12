@@ -534,6 +534,12 @@ public class FanFouProvider extends ContentProvider implements Contents {
 
 		int type = ih.getColumnIndex(StatusInfo.TYPE);
 		int isRead = ih.getColumnIndex(StatusInfo.IS_READ);
+		
+		int isThread=ih.getColumnIndex(StatusInfo.IS_THREAD);
+		int hasPhoto=ih.getColumnIndex(StatusInfo.HAS_PHOTO);
+		int simpleText=ih.getColumnIndex(StatusInfo.SIMPLE_TEXT);
+		
+		
 		int timestamp = ih.getColumnIndex(StatusInfo.TIMESTAMP);
 
 		try {
@@ -573,6 +579,10 @@ public class FanFouProvider extends ContentProvider implements Contents {
 
 				ih.bind(type, value.getAsInteger(StatusInfo.TYPE));
 				ih.bind(isRead, value.getAsBoolean(StatusInfo.IS_READ));
+				
+				ih.bind(isThread, value.getAsBoolean(StatusInfo.IS_THREAD));
+				ih.bind(hasPhoto, value.getAsBoolean(StatusInfo.HAS_PHOTO));
+				ih.bind(simpleText, value.getAsString(StatusInfo.SIMPLE_TEXT));
 
 				ih.bind(timestamp, value.getAsLong(StatusInfo.TIMESTAMP));
 

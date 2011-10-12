@@ -51,7 +51,7 @@ public abstract class BaseActivity extends Activity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Utils.setScreenOrientation(this);
+		Utils.setForcePortraitScreen(this);
 		this.mContext = this;
 		this.mInflater = LayoutInflater.from(this);
 
@@ -316,8 +316,8 @@ public abstract class BaseActivity extends Activity implements
 	}
 
 	private void doExit() {
-		finish();
-		// Process.killProcess(Process.myPid());
+//		finish();
+		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
 	protected void startRefreshAnimation() {

@@ -36,7 +36,6 @@ public class FanFouService extends Service {
 	 * 
 	 */
 	public FanFouService() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/*

@@ -58,7 +58,7 @@ public class OptionsPage extends PreferenceActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Utils.setScreenOrientation(this);
+		Utils.setForcePortraitScreen(this);
 
 		addPreferencesFromResource(R.xml.options);
 

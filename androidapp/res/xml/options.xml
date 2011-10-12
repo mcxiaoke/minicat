@@ -6,9 +6,7 @@
 
 		<PreferenceCategory android:title="后台更新">
 			<CheckBoxPreference android:title="后台更新"
-				android:summary="后台更新" android:key="@string/option_notification"
-				android:summaryOff="后台更新未启用" android:defaultValue="true"
-				android:summaryOn="后台更新已启用" />
+				android:summary="启用后台更新" android:key="@string/option_notification" android:defaultValue="true" />
 			<ListPreference android:entries="@array/notification_interval"
 				android:entryValues="@array/notification_interval_values"
 				android:summary="后台更新时间间隔" android:dialogTitle="后台更新时间间隔"
@@ -54,14 +52,10 @@
 	<PreferenceCategory android:title="显示">
 
 		<CheckBoxPreference android:title="锁定屏幕方向"
-			android:summary="设置是否锁定屏幕方向" android:key="@string/option_force_portrait"
-			android:summaryOff="自动旋转屏幕" android:defaultValue="false"
-			android:summaryOn="锁定屏幕方向(强制竖屏)" />
+			android:summary="强制竖屏" android:key="@string/option_force_portrait" android:defaultValue="false" />
 
 		<CheckBoxPreference android:title="显示用户头像"
-			android:summary="设置时间线是否显示用户头像" android:key="@string/option_show_head"
-			android:summaryOff="时间线不显示用户头像" android:defaultValue="true"
-			android:summaryOn="时间线显示用户头像" />
+			android:summary="时间线显示用户头像" android:key="@string/option_show_head" android:defaultValue="true"  />
 
 		<ListPreference android:entries="@array/font_size"
 			android:entryValues="@array/font_size_values" android:summary="设置消息字体大小"
@@ -90,9 +84,7 @@
 	<PreferenceCategory android:title="功能">
 
 		<CheckBoxPreference android:title="启动时刷新"
-			android:summary="设置启动时是否自动获取新消息" android:key="@string/option_refresh_on_open"
-			android:summaryOff="启动时不获取新消息" android:defaultValue="false"
-			android:summaryOn="启动时自动获取新消息" />
+			android:summary="启动时自动获取新消息" android:key="@string/option_refresh_on_open" android:defaultValue="false" />
 
 		<ListPreference android:entries="@array/photo_quality"
 			android:entryValues="@array/photo_quality_values" android:summary="设置上传照片的质量"
@@ -120,10 +112,8 @@
 			android:dialogMessage="是否要注销当前帐号，重新登录？" android:positiveButtonText="确定"
 			android:negativeButtonText="取消" />
 
-		<CheckBoxPreference android:title="启用自动升级"
-			android:summary="设置启动时检测新版本" android:key="@string/option_autoupdate"
-			android:summaryOff="启用定时检测新版本" android:defaultValue="true"
-			android:summaryOn="禁用定时检测新版本" />
+		<CheckBoxPreference android:title="自动升级"
+			android:summary="定时检测新版本" android:key="@string/option_autoupdate" android:defaultValue="true" />
 
 		<Preference android:title="软件升级" android:summary="联网检测是否有新版本"
 			android:key="@string/option_check_update" />

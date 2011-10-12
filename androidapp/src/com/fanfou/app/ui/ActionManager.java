@@ -172,8 +172,7 @@ public final class ActionManager {
 		intent.setType("text/plain");
 		intent.putExtra(Intent.EXTRA_SUBJECT, "来自" + status.userScreenName
 				+ "的饭否消息");
-		intent.putExtra(Intent.EXTRA_TEXT,
-				StatusHelper.getSimpifiedText(status.text));
+		intent.putExtra(Intent.EXTRA_TEXT,status.simpleText);
 		context.startActivity(Intent.createChooser(intent, "分享"));
 	}
 

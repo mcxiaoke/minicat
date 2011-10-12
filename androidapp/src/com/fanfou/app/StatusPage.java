@@ -168,8 +168,7 @@ public class StatusPage extends BaseActivity implements
 
 			@Override
 			public boolean onLongClick(View v) {
-				doCopy(StatusHelper.getSimpifiedText(tContent.getText()
-						.toString()));
+				doCopy(status.simpleText);
 				return true;
 			}
 		});
@@ -182,7 +181,7 @@ public class StatusPage extends BaseActivity implements
 
 			StatusHelper.setStatus(tContent, status.text);
 
-			if (!StringHelper.isEmpty(status.photoLargeUrl)) {
+			if (status.hasPhoto) {
 				photoLevel = OptionHelper.parseInt(this,
 						R.string.option_pic_level);
 				if (photoLevel < 0) {
@@ -219,7 +218,7 @@ public class StatusPage extends BaseActivity implements
 
 			updateFavoriteButton();
 
-			if (!StringHelper.isEmpty(status.inReplyToStatusId)) {
+			if (status.isThread) {
 				showThreadLoading();
 				doFetchThread();
 			}

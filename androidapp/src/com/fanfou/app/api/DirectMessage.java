@@ -59,7 +59,6 @@ public class DirectMessage implements Storable<DirectMessage> {
 	public String threadUserId;
 	public String threadUserName;
 	public boolean isRead;
-	public boolean isOld;
 
 	public User sender = null;
 	public User recipient = null;
@@ -132,7 +131,6 @@ public class DirectMessage implements Storable<DirectMessage> {
 		dm.threadUserName = Parser.parseString(c,
 				DirectMessageInfo.THREAD_USER_NAME);
 		dm.isRead = Parser.parseBoolean(c, DirectMessageInfo.IS_READ);
-		dm.isOld = Parser.parseBoolean(c, DirectMessageInfo.IS_OLD);
 
 		return dm;
 	}
@@ -178,7 +176,6 @@ public class DirectMessage implements Storable<DirectMessage> {
 			}
 
 			dm.isRead = false;
-			dm.isOld = false;
 
 			dm.ownerId = App.me.userId;
 		} catch (JSONException e) {
@@ -211,7 +208,6 @@ public class DirectMessage implements Storable<DirectMessage> {
 		cv.put(DirectMessageInfo.THREAD_USER_ID, this.threadUserId);
 		cv.put(DirectMessageInfo.THREAD_USER_NAME, this.threadUserName);
 		cv.put(DirectMessageInfo.IS_READ, this.isRead);
-		cv.put(DirectMessageInfo.IS_OLD, this.isOld);
 
 		cv.put(BasicColumns.TIMESTAMP, new Date().getTime());
 

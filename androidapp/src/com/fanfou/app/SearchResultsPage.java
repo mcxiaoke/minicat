@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 
-import com.fanfou.app.adapter.StatusArrayAdapter;
+import com.fanfou.app.adapter.SearchResultsAdapter;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Commons;
@@ -28,6 +28,8 @@ import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
+ * @version 1.0 2011.08.05
+ * @version 1.1 2011.10.12
  * 
  */
 public class SearchResultsPage extends BaseActivity implements
@@ -37,7 +39,7 @@ public class SearchResultsPage extends BaseActivity implements
 	protected EndlessListView mListView;
 	protected ViewGroup mEmptyView;
 
-	protected StatusArrayAdapter mStatusAdapter;
+	protected SearchResultsAdapter mStatusAdapter;
 
 	private List<Status> mStatuses;
 
@@ -114,7 +116,7 @@ public class SearchResultsPage extends BaseActivity implements
 		log("showContent()");
 		showListView = true;
 
-		mStatusAdapter = new StatusArrayAdapter(this, mStatuses);
+		mStatusAdapter = new SearchResultsAdapter(this, mStatuses);
 		mListView.setAdapter(mStatusAdapter);
 
 		mEmptyView.setVisibility(View.GONE);
@@ -137,6 +139,7 @@ public class SearchResultsPage extends BaseActivity implements
 	private void doSearch() {
 		if (keyword != null) {
 			log("doSearch() keyword=" + keyword);
+			mActionBar.setTitle(keyword);
 			new SearchTask().execute();
 		}
 

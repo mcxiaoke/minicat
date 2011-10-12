@@ -53,7 +53,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 		if (s == null || s.isNull()) {
 			return ITEM_TYPE_NONE;
 		}
-		if (StatusHelper.getSimpifiedText(s.text).contains(
+		if (s.simpleText.contains(
 				"@" + App.me.userScreenName)) {
 			return ITEM_TYPE_MENTION;
 		} else {
@@ -148,7 +148,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 		}
 
 		holder.nameText.setText(s.userScreenName);
-		StatusHelper.setSimpifiedText(holder.contentText, s.text);
+		holder.contentText.setText(s.simpleText);
 		holder.metaText.setText(DateTimeHelper.getInterval(s.createdAt) + " 来自"
 				+ s.source);
 

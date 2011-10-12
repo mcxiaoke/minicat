@@ -20,6 +20,7 @@ import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.http.ApnType;
 import com.fanfou.app.http.NetworkState;
+import com.fanfou.app.service.CleanService;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
@@ -75,7 +76,7 @@ public class App extends Application {
 
 	private IImageLoader imageLoader;
 	public Api api;
-	private float density;
+	public float density;
 
 	public boolean verified;
 	public boolean isLogin;
@@ -102,7 +103,8 @@ public class App extends Application {
 		init();
 		initAppInfo();
 		initPreferences();
-		getDensity();
+		versionCheck();
+		initDensity();
 		if (isLogin) {
 			initAlarm();
 		}
@@ -147,15 +149,12 @@ public class App extends Application {
 		this.isLogin = !StringHelper.isEmpty(oauthAccessTokenSecret);
 	}
 
-	public float getDensity() {
-		if (density == 0.0f) {
-			DisplayMetrics dm = getResources().getDisplayMetrics();
-			if (DEBUG) {
-				Log.i("App", dm.toString());
-			}
-			density = dm.density;
+	public void initDensity() {
+		DisplayMetrics dm = getResources().getDisplayMetrics();
+		density = dm.density;
+		if (DEBUG) {
+			Log.i("App", dm.toString());
 		}
-		return density;
 	}
 
 	private void initAppInfo() {
@@ -176,6 +175,21 @@ public class App extends Application {
 		Utils.setAutoClean(this);
 		Utils.setAutoComplete(this);
 		Utils.setAutoNotification(this);
+	}
+
+	private void versionCheck() {
+		if (OptionHelper.readInt(this, R.string.option_old_version_code, 0) < appVersionCode) {
+			OptionHelper.saveInt(this, R.string.option_old_version_code,
+					appVersionCode);
+			cleanSettings();
+		}
+	}
+
+	private void cleanSettings() {
+		OptionHelper.remove(this, R.string.option_set_auto_clean);
+		OptionHelper.remove(this, R.string.option_set_auto_complete);
+		OptionHelper.remove(this, R.string.option_set_notification);
+		OptionHelper.remove(this, R.string.option_set_auto_update);
 	}
 
 	public synchronized void updateUserInfo(User u) {

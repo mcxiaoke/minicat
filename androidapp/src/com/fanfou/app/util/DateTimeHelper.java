@@ -61,8 +61,6 @@ public class DateTimeHelper {
 			return seconds / MIN + "分钟前";
 		} else if (seconds < DAY) {
 			return seconds / HOUR + "小时前";
-		} else if (seconds < WEEK) {
-			return seconds / DAY + "天前";
 		} else {
 			return formatDate(date);
 		}

@@ -5,7 +5,9 @@ import java.io.IOException;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -31,16 +33,17 @@ import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.util.DeviceHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.Utils;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public final class LoginPage extends BaseActivity {
 
 	private GoogleAnalyticsTracker g;
 
-	public static final String tag = LoginPage.class.getSimpleName();
+	public static final String TAG = LoginPage.class.getSimpleName();
 
 	public void log(String message) {
-		Log.v(tag, message);
+		Log.i(TAG, message);
 	}
 
 	private static final String USERNAME = "a";
@@ -59,13 +62,10 @@ public final class LoginPage extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		String savedToken = OptionHelper.readString(mContext,
-				R.string.option_oauth_token, null);
 		String savedTokenSecret = OptionHelper.readString(mContext,
 				R.string.option_oauth_token_secret, null);
 
-		if (!StringHelper.isEmpty(savedToken)
-				&& !StringHelper.isEmpty(savedTokenSecret)) {
+		if (!StringHelper.isEmpty(savedTokenSecret)) {
 			goHome();
 		} else {
 			g = GoogleAnalyticsTracker.getInstance();
@@ -73,6 +73,9 @@ public final class LoginPage extends BaseActivity {
 					this);
 			g.trackPageView("LoginPage");
 			initLayout();
+
+			// 登录时不允许横竖屏切换
+			Utils.lockScreenOrientation(mContext);
 		}
 	}
 
@@ -116,6 +119,7 @@ public final class LoginPage extends BaseActivity {
 			if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
 				showToast("密码和帐号不能为空");
 			} else {
+
 				g.setCustomVar(1, "username", username);
 				g.trackEvent("Action", "onClick", "Login", 1);
 				mLoginTask = new LoginTask();
@@ -221,14 +225,16 @@ public final class LoginPage extends BaseActivity {
 		}
 	}
 
-	private class LoginTask extends AsyncTask<Void, Void, ResultInfo> {
+	private class LoginTask extends AsyncTask<Void, Integer, ResultInfo> {
 
 		static final int LOGIN_IO_ERROR = 0; // 网络错误
 		static final int LOGIN_AUTH_FAILED = 1; // 验证失败
 		static final int LOGIN_NEW_AUTH_SUCCESS = 2; // 首次验证成功
 		static final int LOGIN_RE_AUTH_SUCCESS = 3; // 重新验证成功
+		static final int LOGIN_CANCELLED_BY_USER=4;
 
-		ProgressDialog progressDialog;
+		private ProgressDialog progressDialog;
+		private boolean isCancelled;
 
 		@Override
 		protected ResultInfo doInBackground(Void... params) {
@@ -241,27 +247,45 @@ public final class LoginPage extends BaseActivity {
 						.getOAuthAccessToken(username, password);
 				if (App.DEBUG)
 					log("xauth token=" + token);
+				
+				if(isCancelled){
+					if(App.DEBUG){
+						log("login cancelled after xauth process.");
+					}
+					return new ResultInfo(LOGIN_CANCELLED_BY_USER,
+					"user cancel login process.");
+				}
 
 				if (token != null) {
-
-					OptionHelper.saveString(mContext,
-							R.string.option_oauth_token, token.getToken());
-					OptionHelper.saveString(mContext,
-							R.string.option_oauth_token_secret,
-							token.getTokenSecret());
-					OptionHelper.saveString(mContext, R.string.option_userid,
-							username);
-					OptionHelper.saveString(mContext, R.string.option_password,
-							password);
+					publishProgress(1);
+					
 					App.me.password = password;
 					App.me.oauthAccessToken = token.getToken();
 					App.me.oauthAccessTokenSecret = token.getTokenSecret();
 					App.me.isLogin = true;
 
 					User u = App.me.api.verifyAccount();
+					
+					if(isCancelled){
+						if(App.DEBUG){
+							log("login cancelled after verifyAccount process.");
+						}
+						return new ResultInfo(LOGIN_CANCELLED_BY_USER,
+						"user cancel login process.");
+					}
+					
 					if (u != null && !u.isNull()) {
 						if (App.DEBUG)
 							log("xauth successful! ");
+						OptionHelper.saveString(mContext,
+								R.string.option_oauth_token, token.getToken());
+						OptionHelper.saveString(mContext,
+								R.string.option_oauth_token_secret,
+								token.getTokenSecret());
+						OptionHelper.saveString(mContext,
+								R.string.option_userid, username);
+						OptionHelper.saveString(mContext,
+								R.string.option_password, password);
 						App.me.updateUserInfo(u);
 
 						if (StringHelper.isEmpty(savedUserId)) {
@@ -300,9 +324,28 @@ public final class LoginPage extends BaseActivity {
 		@Override
 		protected void onPreExecute() {
 			progressDialog = new ProgressDialog(mContext);
-			progressDialog.setMessage("验证中...");
+			progressDialog.setMessage("正在进行登录认证...");
 			progressDialog.setIndeterminate(true);
+			progressDialog
+					.setOnCancelListener(new DialogInterface.OnCancelListener() {
+
+						@Override
+						public void onCancel(DialogInterface dialog) {
+							isCancelled=true;
+							cancel(true);
+						}
+					});
 			progressDialog.show();
+		}
+		
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			if(values.length>0){
+				int value=values[0];
+				if(value==1){
+					progressDialog.setMessage("正在验证帐号信息...");
+				}
+			}
 		}
 
 		@Override
@@ -321,6 +364,8 @@ public final class LoginPage extends BaseActivity {
 			case LOGIN_AUTH_FAILED:
 				// g.trackEvent("Action", "LoginFailed", "AUTH_FAILED", 1);
 				showToast(result.message);
+				break;
+			case LOGIN_CANCELLED_BY_USER:
 				break;
 			case LOGIN_NEW_AUTH_SUCCESS:
 			case LOGIN_RE_AUTH_SUCCESS:

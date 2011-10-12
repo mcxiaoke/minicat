@@ -11,6 +11,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.os.ResultReceiver;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -55,7 +56,7 @@ import com.fanfou.app.util.Utils;
 public class HomePage extends BaseActivity implements OnPageChangeListener,
 		OnLoadDataListener, OnItemLongClickListener, TitleProvider {
 
-	public static final int PAGE_NUMS = 4;
+	public static final int NUMS_OF_PAGE = 4;
 
 	private ActionBar mActionBar;
 
@@ -71,9 +72,14 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	private int mCurrentPage;
 
-	private EndlessListViewNoHeader[] views = new EndlessListViewNoHeader[PAGE_NUMS];
-	private Cursor[] cursors = new Cursor[PAGE_NUMS];
-	private BaseCursorAdapter[] adapters = new BaseCursorAdapter[PAGE_NUMS];
+	private EndlessListViewNoHeader[] views = new EndlessListViewNoHeader[NUMS_OF_PAGE];
+
+	private Cursor[] cursors = new Cursor[NUMS_OF_PAGE];
+
+	private BaseCursorAdapter[] adapters = new BaseCursorAdapter[NUMS_OF_PAGE];
+
+	private Parcelable[] states = new Parcelable[NUMS_OF_PAGE];
+
 	private static final String[] PAGE_TITLES = new String[] { "我的主页", "提到我的",
 			"我的私信", "随便看看" };
 
@@ -117,7 +123,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if(App.DEBUG){
+			if (App.DEBUG) {
 				log("SendSuccessReceiver.received");
 				IntentHelper.logIntent(TAG, intent);
 			}
@@ -128,11 +134,11 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	private void onSendSuccess() {
-//		if(adapters[0]!=null){
-//			adapters[0].notifyDataSetChanged();
-//		}
-		
-		if(cursors[0]!=null){
+		// if(adapters[0]!=null){
+		// adapters[0].notifyDataSetChanged();
+		// }
+
+		if (cursors[0] != null) {
 			cursors[0].requery();
 		}
 	}
@@ -333,28 +339,28 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		}
 	}
 
-	/**
-	 * 复原列表位置
-	 */
-	private void restorePosition() {
-		for (int i = 0; i < views.length; i++) {
-			views[i].restorePosition();
-		}
-	}
-
-	private void restorePosition(int page) {
-		views[page].restorePosition();
-	}
-
-	private void savePosition() {
-		for (int i = 0; i < views.length; i++) {
-			views[i].savePosition();
-		}
-	}
-
-	private void savePosition(int page) {
-		views[page].savePosition();
-	}
+	// /**
+	// * 复原列表位置
+	// */
+	// private void restorePosition() {
+	// for (int i = 0; i < views.length; i++) {
+	// views[i].restorePosition();
+	// }
+	// }
+	//
+	// private void restorePosition(int page) {
+	// views[page].restorePosition();
+	// }
+	//
+	// private void savePosition() {
+	// for (int i = 0; i < views.length; i++) {
+	// views[i].savePosition();
+	// }
+	// }
+	//
+	// private void savePosition(int page) {
+	// views[page].savePosition();
+	// }
 
 	private synchronized void setBusy(boolean busy) {
 		isBusy = busy;
@@ -467,21 +473,50 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		for (int i = 0; i < views.length; i++) {
+			if (views[i] != null)
+				states[i] = savedInstanceState.getParcelable(views[i]
+						.toString());
+		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		for (int i = 0; i < views.length; i++) {
+			if (views[i] != null) {
+				states[i] = views[i].onSaveInstanceState();
+				outState.putParcelable(views[i].toString(), states[i]);
+			}
+		}
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 		if (App.DEBUG)
 			log("onResume");
 		registerReceiver(mSendSuccessReceiver, mSendSuccessFilter);
-		restorePosition();
+
+		for (int i = 0; i < views.length; i++) {
+			if (views[i] != null && states[i] != null) {
+				views[i].onRestoreInstanceState(states[i]);
+				states[i] = null;
+			}
+		}
+
+		// restorePosition();
 	}
 
 	@Override
 	protected void onPause() {
+		// savePosition();
+		unregisterReceiver(mSendSuccessReceiver);
 		super.onPause();
 		if (App.DEBUG)
 			log("onPause");
-		unregisterReceiver(mSendSuccessReceiver);
-		savePosition();
 	}
 
 	@Override
@@ -532,16 +567,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-	}
-
-	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		if (App.DEBUG)
 			log("onConfigurationChanged() ");
@@ -581,19 +606,16 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			switch (resultCode) {
 			case Commons.RESULT_CODE_FINISH:
 				if (doGetMore) {
-					if (i < PAGE_NUMS - 1) {
+					if (i < NUMS_OF_PAGE - 1) {
 						views[i].onLoadMoreComplete();
 					}
+					cursors[i].requery();
 				} else {
 					stopRefreshAnimation();
-					if (i < PAGE_NUMS - 1) {
+					if (i < NUMS_OF_PAGE - 1) {
 						views[i].addFooter();
-					} else {
-						views[i].setSelection(0);
 					}
-				}
-				cursors[i].requery();
-				if (i == PAGE_NUMS - 1) {
+					cursors[i].requery();
 					views[i].setSelection(0);
 				}
 				break;

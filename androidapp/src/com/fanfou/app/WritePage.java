@@ -109,7 +109,9 @@ public class WritePage extends BaseActivity {
 		mLocationManager = (LocationManager) this
 				.getSystemService(Context.LOCATION_SERVICE);
 
-		if (App.me.getDensity() < 1.5) {
+		// TODO need test and modify
+		// 修复小屏幕软键盘挡住输入框的问题
+		if (App.me.density < 1.5) {
 			getWindow().setSoftInputMode(
 					WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
 		}
@@ -327,8 +329,7 @@ public class WritePage extends BaseActivity {
 						mAutoCompleteTextView.getText().length());
 			} else if (type == TYPE_REPOST) {
 				mAutoCompleteTextView.setText(" 转@" + status.userScreenName
-						+ " " + StatusHelper.getSimpifiedText(status.text)
-						+ " ");
+						+ " " + status.simpleText+ " ");
 			}
 		}
 

@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcel;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
@@ -22,6 +23,7 @@ import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.http.Response;
 import com.fanfou.app.http.ResponseCode;
+import com.fanfou.app.util.StatusHelper;
 import com.fanfou.app.util.StringHelper;
 
 /**
@@ -74,6 +76,10 @@ public class Status implements Storable<Status> {
 	public boolean favorited;
 
 	public boolean isRead;
+
+	public boolean isThread;
+	public boolean hasPhoto;
+	public String simpleText;
 
 	public Status() {
 	}
@@ -150,6 +156,7 @@ public class Status implements Storable<Status> {
 		s.id = Parser.parseString(c, BasicColumns.ID);
 		s.ownerId = Parser.parseString(c, BasicColumns.OWNER_ID);
 		s.text = Parser.parseString(c, StatusInfo.TEXT);
+		s.simpleText=Parser.parseString(c, StatusInfo.SIMPLE_TEXT);
 		s.source = Parser.parseString(c, StatusInfo.SOURCE);
 		s.inReplyToStatusId = Parser.parseString(c,
 				StatusInfo.IN_REPLY_TO_STATUS_ID);
@@ -173,15 +180,14 @@ public class Status implements Storable<Status> {
 		s.favorited = Parser.parseBoolean(c, StatusInfo.FAVORITED);
 
 		s.isRead = Parser.parseBoolean(c, StatusInfo.IS_READ);
-
-		// log("Status.parse(Cursor) id=" + s.id);
-
+		
+		s.isThread = Parser.parseBoolean(c, StatusInfo.IS_THREAD);
+		s.hasPhoto = Parser.parseBoolean(c, StatusInfo.HAS_PHOTO);
 		return s;
 
 	}
 
-	public static Status parse(Response response, int type)
-			throws ApiException {
+	public static Status parse(Response response, int type) throws ApiException {
 		return parse(response.getContent(), type);
 	}
 
@@ -220,8 +226,8 @@ public class Status implements Storable<Status> {
 			s.createdAt = Parser.date(o.getString(BasicColumns.CREATED_AT));
 			s.id = o.getString(BasicColumns.ID);
 			s.text = o.getString(StatusInfo.TEXT);
-			// s.source = o.getString(StatusInfo.SOURCE);
-			s.source = Parser.parseSource(o.getString(StatusInfo.SOURCE));
+
+			s.source = Parser.parseSource(o.getString(StatusInfo.SOURCE));;
 			s.truncated = o.getBoolean(StatusInfo.TRUNCATED);
 			s.inReplyToStatusId = o.getString(StatusInfo.IN_REPLY_TO_STATUS_ID);
 			s.inReplyToUserId = o.getString(StatusInfo.IN_REPLY_TO_USER_ID);
@@ -233,29 +239,18 @@ public class Status implements Storable<Status> {
 
 			s.ownerId = App.me.userId;
 
-			// s.isRead=false;
-			// s.isOld=false;
-			//
-			// s.isHome=false;
-
-			// if(!StringUtil.isEmpty(s.inReplyToStatusId)){
-			// s.isThread=true;
-			// }
-
-			// if(!StringUtil.isEmpty(App.userScreenName) &&
-			// s.text.contains("@"+App.userScreenName+" ")){
-			// s.isMention=true;
-			// }
-
-			// if(s.text.contains("转@")){
-			// s.isRepost=true;
-			// }
+			
+			s.simpleText = StatusHelper.getSimpifiedText(s.text);
+			if (!TextUtils.isEmpty(s.inReplyToStatusId)) {
+				s.isThread = true;
+			}
 
 			if (o.has("photo")) {
 				JSONObject po = o.getJSONObject("photo");
 				s.photoImageUrl = po.getString(StatusInfo.PHOTO_IMAGE_URL);
 				s.photoLargeUrl = po.getString(StatusInfo.PHOTO_LARGE_URL);
 				s.photoThumbUrl = po.getString(StatusInfo.PHOTO_THUMB_URL);
+				s.hasPhoto = true;
 			}
 
 			if (o.has("user")) {
@@ -309,7 +304,10 @@ public class Status implements Storable<Status> {
 		cv.put(StatusInfo.FAVORITED, this.favorited);
 
 		cv.put(StatusInfo.IS_READ, this.isRead);
-
+		
+		cv.put(StatusInfo.IS_THREAD, this.isThread);
+		cv.put(StatusInfo.HAS_PHOTO, this.hasPhoto);
+		cv.put(StatusInfo.SIMPLE_TEXT, this.simpleText);
 		cv.put(BasicColumns.TIMESTAMP, new Date().getTime());
 		return cv;
 	}

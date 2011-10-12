@@ -176,11 +176,7 @@ public class MessageChatPage extends BaseActivity {
 			Utils.notify(this, "私信内容不能为空");
 			return;
 		}
-		if (!App.me.isLogin) {
-			Utils.notify(this, "未通过验证，请先登录");
-			return;
-		}
-//		finish();
+		finish();
 		startSendService();
 	}
 

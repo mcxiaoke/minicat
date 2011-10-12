@@ -267,20 +267,38 @@ public final class Utils {
 			AlarmHelper.setNotificationTaskOn(context);
 		}
 	}
-	
-	public static void setScreenOrientation(Activity activity) {
+
+	public static void setForcePortraitScreen(Activity activity) {
 		boolean portrait = OptionHelper.readBoolean(activity,
 				R.string.option_force_portrait, false);
-	    if (portrait) {
-	    	activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-	    	
-//	        if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-//	            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-//	        }
-//	        if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-//	            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//	        }
-	    }
+		if (portrait) {
+			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
+	}
+
+	public static void lockScreenOrientation(Activity activity) {
+		boolean portrait = OptionHelper.readBoolean(activity,
+				R.string.option_force_portrait, false);
+		if (portrait) {
+			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		} else {
+			if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			}
+			if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			}
+		}
+	}
+
+	public static void unlockScreenOrientation(Activity activity) {
+		boolean portrait = OptionHelper.readBoolean(activity,
+				R.string.option_force_portrait, false);
+		if (portrait) {
+			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		} else {
+			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+		}
 	}
 
 }

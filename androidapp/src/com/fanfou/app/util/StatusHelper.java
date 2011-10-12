@@ -101,11 +101,6 @@ public class StatusHelper {
 		return Html.fromHtml(text).toString();
 	}
 
-	public static void setSimpifiedText(TextView textView, String text) {
-		String processedText = getSimpifiedText(text);
-		textView.setText(processedText);
-	}
-
 	public static void setStatus(TextView textView, String text) {
 		String processedText = preprocessText(text);
 		textView.setText(Html.fromHtml(processedText), BufferType.SPANNABLE);

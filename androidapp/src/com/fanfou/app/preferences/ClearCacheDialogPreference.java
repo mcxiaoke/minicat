@@ -71,7 +71,6 @@ public class ClearCacheDialogPreference extends DialogPreference {
 
 		private void clean(Context context) {
 			IOHelper.ClearCache(context);
-			// TODO : clear memory cache
 		}
 	}
 
