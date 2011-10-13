@@ -150,8 +150,7 @@ public class PostStatusService extends WakefulIntentService {
 		int id = 2;
 		Notification notification = new Notification(R.drawable.icon,
 				"饭否消息发送成功", System.currentTimeMillis());
-		PendingIntent contentIntent = PendingIntent
-				.getService(this, 0, null, 0);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, IntentHelper.getHomeIntent(), 0);
 		notification.setLatestEventInfo(this, "饭否消息", "消息发送成功", contentIntent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		nm.notify(id, notification);

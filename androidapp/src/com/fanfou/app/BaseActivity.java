@@ -5,9 +5,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -32,7 +35,7 @@ import com.fanfou.app.util.Utils;
  * 
  */
 public abstract class BaseActivity extends Activity implements
-		OnRefreshClickListener, OnClickListener {
+		OnRefreshClickListener, OnClickListener{
 
 	public static final int STATE_INIT = 0;
 	public static final int STATE_NORMAL = 1;
@@ -51,7 +54,8 @@ public abstract class BaseActivity extends Activity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Utils.setForcePortraitScreen(this);
+		Utils.initScreenConfig(this);
+
 		this.mContext = this;
 		this.mInflater = LayoutInflater.from(this);
 
@@ -90,9 +94,8 @@ public abstract class BaseActivity extends Activity implements
 
 	@Override
 	protected void onResume() {
-		App.active = isActive=true;
 		super.onResume();
-
+		App.active = isActive = true;
 		// registerReceiver(mNetworkReceiver, filter);
 		// registerReceiver(mNotificationReceiver, mNotificationFilter);
 	}
@@ -100,7 +103,7 @@ public abstract class BaseActivity extends Activity implements
 	//
 	@Override
 	protected void onPause() {
-		App.active = isActive=false;
+		App.active = isActive = false;
 		super.onPause();
 		// unregisterReceiver(mNetworkReceiver);
 		// unregisterReceiver(mNotificationReceiver);
@@ -288,7 +291,6 @@ public abstract class BaseActivity extends Activity implements
 	protected void goOptionPage() {
 		Intent intent = new Intent(this, OptionsPage.class);
 		startActivity(intent);
-		// startActivityForResult(intent, REQUEST_CODE_OPTION);
 	}
 
 	protected void goProfilePage() {
@@ -316,8 +318,8 @@ public abstract class BaseActivity extends Activity implements
 	}
 
 	private void doExit() {
-//		finish();
-		android.os.Process.killProcess(android.os.Process.myPid());
+		finish();
+		// android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
 	protected void startRefreshAnimation() {

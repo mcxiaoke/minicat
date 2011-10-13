@@ -53,6 +53,9 @@
 
 		<CheckBoxPreference android:title="锁定屏幕方向"
 			android:summary="强制竖屏" android:key="@string/option_force_portrait" android:defaultValue="false" />
+			
+		<CheckBoxPreference android:title="全屏显示"
+			android:summary="隐藏系统状态栏" android:key="@string/option_force_fullscreen" android:defaultValue="false" />
 
 		<CheckBoxPreference android:title="显示用户头像"
 			android:summary="时间线显示用户头像" android:key="@string/option_show_head" android:defaultValue="true"  />

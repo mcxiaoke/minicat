@@ -14,8 +14,10 @@ import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.IntentHelper;
+import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -79,7 +81,7 @@ public class PostMessageService extends BaseIntentService {
 			} else {
 				IOHelper.storeDirectMessage(this, result);
 				res = true;
-//				sendSuccessBroadcast();
+//				broadcast(true, "私信发送成功");
 			}
 		} catch (ApiException e) {
 			nm.cancel(10);
@@ -88,8 +90,12 @@ public class PostMessageService extends BaseIntentService {
 						"error: code=" + e.statusCode + " msg="
 								+ e.getMessage());
 			}
-			IOHelper.copyToClipBoard(this, content);
-			showFailedNotification("私信未发送，内容已保存到剪贴板", e.getMessage());
+//			if (e.statusCode == ResponseCode.HTTP_FORBIDDEN) {
+//				broadcast(false, e.getMessage());
+//			} else {
+				IOHelper.copyToClipBoard(this, content);
+				showFailedNotification("私信未发送，内容已保存到剪贴板", e.getMessage());
+//			}
 		} finally {
 			nm.cancel(12);
 		}
@@ -113,10 +119,10 @@ public class PostMessageService extends BaseIntentService {
 		int id = 12;
 		Notification notification = new Notification(R.drawable.statusbar_icon,
 				"私信发送成功", System.currentTimeMillis());
-		PendingIntent contentIntent = PendingIntent
-				.getService(this, 0, null, 0);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, IntentHelper.getHomeIntent(), 0);
 		notification.setLatestEventInfo(this, "饭否私信", "私信发送成功", contentIntent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
 		nm.notify(id, notification);
 		return id;
 	}
@@ -126,17 +132,19 @@ public class PostMessageService extends BaseIntentService {
 
 		Notification notification = new Notification(R.drawable.statusbar_icon,
 				title, System.currentTimeMillis());
-		PendingIntent contentIntent = PendingIntent
-				.getService(this, 0, null, 0);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, IntentHelper.getHomeIntent(), 0);
 		notification.setLatestEventInfo(this, title, message, contentIntent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
 		nm.notify(id, notification);
 		return id;
 
 	}
 
-	private void sendSuccessBroadcast() {
+	private void broadcast(boolean success, String errorMessage) {
 		Intent intent = new Intent(Actions.ACTION_MESSAGE_SEND);
+		intent.putExtra(Commons.EXTRA_BOOLEAN, success);
+		intent.putExtra(Commons.EXTRA_TEXT, errorMessage);
 		intent.setPackage(getPackageName());
 		sendOrderedBroadcast(intent, null);
 	}

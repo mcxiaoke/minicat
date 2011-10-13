@@ -15,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fanfou.app.R;
+import com.fanfou.app.WritePage;
+import com.fanfou.app.util.Utils;
 
 public class ActionBar extends RelativeLayout implements OnClickListener {
 
@@ -206,8 +208,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 	}
 
 	public static class IntentAction extends AbstractAction {
-		private Context mContext;
-		private Intent mIntent;
+		Context mContext;
+		Intent mIntent;
 
 		public IntentAction(Context context, Intent intent, int drawable) {
 			super(drawable);
@@ -220,10 +222,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 			try {
 				mContext.startActivity(mIntent);
 			} catch (ActivityNotFoundException e) {
-				Toast.makeText(
-						mContext,
-						mContext.getText(R.string.actionbar_activity_not_found),
-						Toast.LENGTH_SHORT).show();
+				Utils.notify(
+						mContext,R.string.actionbar_activity_not_found);
 			}
 		}
 	}
@@ -245,14 +245,25 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
 	}
 
-	public static class WriteAction extends AbstractAction {
+	public static class WriteAction extends IntentAction {
 
-		public WriteAction(int drawable) {
-			super(drawable);
+		public WriteAction(Context context) {
+			super(context, new Intent(context,WritePage.class), R.drawable.i_write);
+		}
+
+	}
+	
+	public static class SearchAction extends AbstractAction {
+		private Activity mActivity;
+
+		public SearchAction(Activity activity) {
+			super(R.drawable.i_search);
+			this.mActivity=activity;
 		}
 
 		@Override
 		public void performAction(View view) {
+			mActivity.onSearchRequested();
 		}
 
 	}

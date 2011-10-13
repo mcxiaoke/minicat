@@ -116,6 +116,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	private void initSendSuccessReceiver() {
 		mSendSuccessReceiver = new SendSuccessReceiver();
 		mSendSuccessFilter = new IntentFilter(Actions.ACTION_STATUS_SEND);
+//		mSendSuccessFilter.addAction(Actions.ACTION_MESSAGE_SEND);
 		mSendSuccessFilter.setPriority(1000);
 	}
 
@@ -127,20 +128,34 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				log("SendSuccessReceiver.received");
 				IntentHelper.logIntent(TAG, intent);
 			}
-			onSendSuccess();
-			abortBroadcast();
+			if(onSendSuccess(intent)){
+				abortBroadcast();
+			}
+			
 		}
 
 	}
 
-	private void onSendSuccess() {
-		// if(adapters[0]!=null){
-		// adapters[0].notifyDataSetChanged();
-		// }
-
-		if (cursors[0] != null) {
-			cursors[0].requery();
-		}
+	private boolean onSendSuccess(Intent intent) {
+//		String action=intent.getAction();
+		boolean result=true;
+		
+//		if(action.equals(Actions.ACTION_STATUS_SEND)){
+			if (cursors[0] != null) {
+				cursors[0].requery();
+			}
+//		}
+		
+//		else if(action.equals(Actions.ACTION_MESSAGE_SEND)){
+//			boolean success=intent.getBooleanExtra(Commons.EXTRA_BOOLEAN, true);
+//			String text=intent.getStringExtra(Commons.EXTRA_TEXT);
+//			if(!success){
+//				Utils.notify(this, text);
+//			}else{
+//				Utils.notify(this, "私信未发送："+text);
+//			}
+//		}
+		return result;
 	}
 
 	/**
@@ -148,18 +163,16 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	 */
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		Intent intent = new Intent(mContext, WritePage.class);
-		Action action = new ActionBar.IntentAction(mContext, intent,
-				R.drawable.i_write);
-		mActionBar.setLeftAction(new HomeAction());
+		Action action = new ActionBar.WriteAction(this);
+		mActionBar.setLeftAction(new HomeLogoAction());
 		mActionBar.setRightAction(action);
 		mActionBar.setRefreshEnabled(this);
 
 	}
 
-	private class HomeAction extends ActionBar.AbstractAction {
+	private class HomeLogoAction extends ActionBar.AbstractAction {
 
-		public HomeAction() {
+		public HomeLogoAction() {
 			super(R.drawable.i_logo);
 		}
 

@@ -14,7 +14,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
@@ -188,9 +191,19 @@ public final class Utils {
 		return null;
 	}
 
-	public static void notify(Context context, String text) {
-		if(App.active){
+	public static void notify(Context context, CharSequence text) {
+		if (TextUtils.isEmpty(text)) {
+			return;
+		}
+		if (App.active) {
 			Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	public static void notify(Context context, int resId) {
+		if (App.active) {
+			Toast.makeText(context, context.getText(resId), Toast.LENGTH_SHORT)
+					.show();
 		}
 	}
 
@@ -270,7 +283,15 @@ public final class Utils {
 		}
 	}
 
-	public static void setForcePortraitScreen(Activity activity) {
+	public static void initScreenConfig(final Activity activity) {
+		boolean fullscreen = OptionHelper.readBoolean(activity,
+				R.string.option_force_fullscreen, false);
+		if (fullscreen) {
+			activity.getWindow().setFlags(
+					WindowManager.LayoutParams.FLAG_FULLSCREEN,
+					WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		}
+
 		boolean portrait = OptionHelper.readBoolean(activity,
 				R.string.option_force_portrait, false);
 		if (portrait) {
@@ -278,7 +299,31 @@ public final class Utils {
 		}
 	}
 
-	public static void lockScreenOrientation(Activity activity) {
+	public static void setFullScreen(final Activity activity,
+			final boolean fullscreen) {
+		if (fullscreen) {
+			activity.getWindow().addFlags(
+					WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			activity.getWindow().clearFlags(
+					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+		} else {
+			activity.getWindow().addFlags(
+					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+			activity.getWindow().clearFlags(
+					WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		}
+	}
+
+	public static void setPortraitOrientation(final Activity activity,
+			final boolean portrait) {
+		if (portrait) {
+			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		} else {
+			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+		}
+	}
+
+	public static void lockScreenOrientation(final Activity activity) {
 		boolean portrait = OptionHelper.readBoolean(activity,
 				R.string.option_force_portrait, false);
 		if (portrait) {
@@ -293,12 +338,10 @@ public final class Utils {
 		}
 	}
 
-	public static void unlockScreenOrientation(Activity activity) {
+	public static void unlockScreenOrientation(final Activity activity) {
 		boolean portrait = OptionHelper.readBoolean(activity,
 				R.string.option_force_portrait, false);
-		if (portrait) {
-			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		} else {
+		if (!portrait) {
 			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}
 	}

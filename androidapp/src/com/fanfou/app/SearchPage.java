@@ -27,8 +27,7 @@ import com.fanfou.app.ui.ActionBar.Action;
  * @version 1.0 20110802
  * 
  */
-public class SearchPage extends BaseActivity implements OnItemClickListener,
-		Action {
+public class SearchPage extends BaseActivity implements OnItemClickListener{
 	private ActionBar mActionBar;
 
 	private ListView mListView;
@@ -48,9 +47,8 @@ public class SearchPage extends BaseActivity implements OnItemClickListener,
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("搜索");
-		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
-		mActionBar.setRightAction(this);
-		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
+		mActionBar.setLeftAction(new ActionBar.BackAction(this));
+		mActionBar.setRightAction(new ActionBar.SearchAction(this));
 	}
 
 	private void inflateLayout() {
@@ -129,18 +127,6 @@ public class SearchPage extends BaseActivity implements OnItemClickListener,
 			}
 		}
 
-	}
-
-	@Override
-	public int getDrawable() {
-		return R.drawable.i_write;
-	}
-
-	@Override
-	public void performAction(View view) {
-		Intent intent = new Intent(this, WritePage.class);
-		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
-		startActivity(intent);
 	}
 
 	@Override

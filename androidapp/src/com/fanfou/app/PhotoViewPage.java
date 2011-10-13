@@ -77,13 +77,17 @@ public class PhotoViewPage extends BaseActivity {
 		File file = new File(mPhotoPath);
 		if (file.exists()) {
 			File dest = new File(IOHelper.getPhotoDir(this), file.getName());
-			try {
-				IOHelper.copyFile(file, dest);
+			if(dest.exists()){
 				Utils.notify(this, "照片已保存到 " + dest.getAbsolutePath());
-			} catch (IOException e) {
-				if (App.DEBUG) {
-					e.printStackTrace();
-				}
+			}else{
+				try {
+					IOHelper.copyFile(file, dest);
+					Utils.notify(this, "照片已保存到 " + dest.getAbsolutePath());
+				} catch (IOException e) {
+					if (App.DEBUG) {
+						e.printStackTrace();
+					}
+				}		
 			}
 		}
 	}

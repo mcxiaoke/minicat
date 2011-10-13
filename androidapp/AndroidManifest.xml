@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.fanfou.app" android:installLocation="auto"
-	android:versionCode="20111012" android:versionName="1.3.3">
+	android:versionCode="20111013" android:versionName="1.4.3">
 
 	<application android:icon="@drawable/icon" android:label="@string/app_name"
 		android:name=".App">
@@ -35,7 +35,7 @@
 			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation" />
 
 		<activity android:name=".PhotoViewPage" android:label="@string/app_name"
-			android:theme="@style/Theme.Black.FullScreen" android:configChanges="keyboardHidden|orientation" />
+			android:theme="@style/Theme.Black" android:configChanges="keyboardHidden|orientation" />
 
 		<activity android:name=".StatusPage" android:label="@string/app_name"
 			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation">
@@ -142,7 +142,7 @@
 			android:configChanges="keyboardHidden|orientation" />
 
 		<activity android:name=".SearchResultsPage" android:label="@string/app_name"
-			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation">
+			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation" android:launchMode="singleTop">
 			<meta-data android:name="android.app.searchable"
 				android:resource="@xml/searchable" />
 			<intent-filter>

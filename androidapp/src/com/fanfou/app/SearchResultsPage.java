@@ -33,7 +33,7 @@ import com.fanfou.app.util.Utils;
  * 
  */
 public class SearchResultsPage extends BaseActivity implements
-		OnRefreshListener, Action, OnItemLongClickListener {
+		OnRefreshListener, OnItemLongClickListener {
 
 	protected ActionBar mActionBar;
 	protected EndlessListView mListView;
@@ -67,7 +67,6 @@ public class SearchResultsPage extends BaseActivity implements
 	protected void onNewIntent(Intent intent) {
 		setIntent(intent);
 		search();
-
 	}
 
 	protected void initialize() {
@@ -131,9 +130,8 @@ public class SearchResultsPage extends BaseActivity implements
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("搜索结果");
 		mActionBar.setTitleClickListener(this);
-		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
-		mActionBar.setRightAction(this);
-		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
+		mActionBar.setLeftAction(new ActionBar.BackAction(this));
+		mActionBar.setRightAction(new ActionBar.SearchAction(this));
 	}
 
 	private void doSearch() {
@@ -226,18 +224,6 @@ public class SearchResultsPage extends BaseActivity implements
 			return result;
 		}
 
-	}
-
-	@Override
-	public int getDrawable() {
-		return R.drawable.i_write;
-	}
-
-	@Override
-	public void performAction(View view) {
-		Intent intent = new Intent(this, WritePage.class);
-		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
-		startActivity(intent);
 	}
 
 	@Override

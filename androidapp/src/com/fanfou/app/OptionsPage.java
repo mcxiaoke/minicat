@@ -42,9 +42,9 @@ public class OptionsPage extends PreferenceActivity implements
 
 	@Override
 	protected void onPause() {
-		super.onPause();
 		getPreferenceScreen().getSharedPreferences()
-				.unregisterOnSharedPreferenceChangeListener(this);
+		.unregisterOnSharedPreferenceChangeListener(this);
+		super.onPause();
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class OptionsPage extends PreferenceActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Utils.setForcePortraitScreen(this);
+		Utils.initScreenConfig(this);
 
 		addPreferencesFromResource(R.xml.options);
 
