@@ -5,6 +5,7 @@ package com.fanfou.app.api;
  * @version 1.0 2011.05.02
  * @version 1.1 2011.05.04
  * @version 1.2 2011.05.15
+ * @version 1.3 2011.10.18
  * 
  */
 public interface ApiConfig {
@@ -19,6 +20,9 @@ public interface ApiConfig {
 	// verify account
 	public static final String URL_VERIFY_CREDENTIALS = API_BASE
 			+ "account/verify_credentials" + EXTENSION;
+	
+	// register
+	public static final String URL_REGISTER=API_BASE+"account/register"+EXTENSION;
 
 	// public timeline
 	// param count -- 1-20
@@ -43,6 +47,9 @@ public interface ApiConfig {
 			+ "statuses/replies" + EXTENSION;
 	public static final String URL_TIMELINE_MENTIONS = API_BASE
 			+ "statuses/mentions" + EXTENSION;
+	
+	// timeline contains photos
+	public static final String URL_TIMELINE_PHOTOS=API_BASE+"photos/user_timeline"+EXTENSION;
 
 	// show a status, param id -- status id
 	public static final String URL_STATUS_SHOW = API_BASE + "statuses/show/id"

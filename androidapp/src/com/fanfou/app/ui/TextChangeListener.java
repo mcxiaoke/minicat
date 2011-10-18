@@ -3,7 +3,7 @@ package com.fanfou.app.ui;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-public class TextChangeListener implements TextWatcher {
+public abstract class TextChangeListener implements TextWatcher {
 
 	public TextChangeListener() {
 	}
@@ -15,9 +15,7 @@ public class TextChangeListener implements TextWatcher {
 	}
 
 	@Override
-	public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-	}
+	public abstract void onTextChanged(CharSequence s, int start, int before, int count);
 
 	@Override
 	public void afterTextChanged(Editable s) {

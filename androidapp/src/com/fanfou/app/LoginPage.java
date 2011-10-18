@@ -2,12 +2,13 @@ package com.fanfou.app;
 
 import java.io.IOException;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -18,7 +19,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fanfou.app.api.ApiException;
@@ -26,17 +26,27 @@ import com.fanfou.app.api.ResultInfo;
 import com.fanfou.app.api.User;
 import com.fanfou.app.auth.OAuth;
 import com.fanfou.app.auth.OAuthToken;
+import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
+import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
+import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.util.DeviceHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
+/**
+ * @author mcxiaoke
+ * @version 1.0 2011.06.10
+ * @version 2.0 2011.10.17
+ * 
+ */
 public final class LoginPage extends BaseActivity {
+	private static final int REQUEST_CODE_REGISTER = 0;
 
 	private GoogleAnalyticsTracker g;
 
@@ -52,8 +62,7 @@ public final class LoginPage extends BaseActivity {
 	private EditText editUsername;
 	private EditText editPassword;
 	private ImageView buttonLogin;
-	private TextView textSignupWeb;
-	private TextView textSignupSms;
+	private ActionBar mActionBar;
 
 	private String username;
 	private String password;
@@ -62,10 +71,10 @@ public final class LoginPage extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		String savedTokenSecret = OptionHelper.readString(mContext,
-				R.string.option_oauth_token_secret, null);
+		// String savedTokenSecret = OptionHelper.readString(mContext,
+		// R.string.option_oauth_token_secret, null);
 
-		if (!StringHelper.isEmpty(savedTokenSecret)) {
+		if (App.me.isLogin) {
 			goHome();
 		} else {
 			g = GoogleAnalyticsTracker.getInstance();
@@ -75,12 +84,18 @@ public final class LoginPage extends BaseActivity {
 			initLayout();
 
 			// 登录时不允许横竖屏切换
-			Utils.lockScreenOrientation(mContext);
+			// Utils.lockScreenOrientation(mContext);
 		}
 	}
 
 	private void initLayout() {
 		setContentView(R.layout.login);
+
+		mActionBar = (ActionBar) findViewById(R.id.actionbar);
+		mActionBar.setLeftAction(new LogoAction());
+		mActionBar.setRightAction(new RegisterAction(this));
+		mActionBar.setTitle("登录饭否");
+
 		editUsername = (EditText) findViewById(R.id.login_username);
 		editUsername.addTextChangedListener(new TextChangeListener() {
 			@Override
@@ -99,15 +114,39 @@ public final class LoginPage extends BaseActivity {
 			}
 		});
 
-		buttonLogin = (ImageView) findViewById(R.id.login_dologin);
+		buttonLogin = (ImageView) findViewById(R.id.login_signin);
 		buttonLogin.setOnClickListener(this);
 
-		textSignupWeb = (TextView) findViewById(R.id.login_signup_web);
-		textSignupWeb.setOnClickListener(this);
+	}
 
-		textSignupSms = (TextView) findViewById(R.id.login_signup_sms);
-		textSignupSms.setOnClickListener(this);
+	private static class RegisterAction extends AbstractAction {
+		Activity mContext;
 
+		public RegisterAction(Activity context) {
+			super(R.drawable.i_register);
+			mContext = context;
+		}
+
+		@Override
+		public void performAction(View view) {
+			try {
+				Intent intent = new Intent(mContext, RegisterPage.class);
+				mContext.startActivityForResult(intent, REQUEST_CODE_REGISTER);
+			} catch (ActivityNotFoundException e) {
+				Utils.notify(mContext, R.string.actionbar_activity_not_found);
+			}
+		}
+	}
+
+	private static class LogoAction extends ActionBar.AbstractAction {
+
+		public LogoAction() {
+			super(R.drawable.i_logo);
+		}
+
+		@Override
+		public void performAction(View view) {
+		}
 	}
 
 	private LoginTask mLoginTask;
@@ -115,24 +154,29 @@ public final class LoginPage extends BaseActivity {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.login_dologin:
+		case R.id.login_signin:
 			if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
 				showToast("密码和帐号不能为空");
 			} else {
-
 				g.setCustomVar(1, "username", username);
 				g.trackEvent("Action", "onClick", "Login", 1);
 				mLoginTask = new LoginTask();
 				mLoginTask.execute();
 			}
 			break;
-		case R.id.login_signup_web:
-			goSignUpWeb();
-			break;
-		case R.id.login_signup_sms:
-			goSignUpSms();
 		default:
 			break;
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_REGISTER) {
+//			editUsername.setText(data.getStringExtra("userid"));
+			editUsername.setText(data.getStringExtra("email"));
+			editPassword.setText(data.getStringExtra("password"));
+			mLoginTask = new LoginTask();
+			mLoginTask.execute();
 		}
 	}
 
@@ -142,10 +186,9 @@ public final class LoginPage extends BaseActivity {
 	}
 
 	public static void doLogin(Context context) {
-		OptionHelper.remove(context, R.string.option_oauth_token);
-		OptionHelper.remove(context, R.string.option_oauth_token_secret);
+		App.me.removeAccountInfo();
 		Intent intent = new Intent(context, LoginPage.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		context.startActivity(intent);
 	}
 
@@ -231,7 +274,7 @@ public final class LoginPage extends BaseActivity {
 		static final int LOGIN_AUTH_FAILED = 1; // 验证失败
 		static final int LOGIN_NEW_AUTH_SUCCESS = 2; // 首次验证成功
 		static final int LOGIN_RE_AUTH_SUCCESS = 3; // 重新验证成功
-		static final int LOGIN_CANCELLED_BY_USER=4;
+		static final int LOGIN_CANCELLED_BY_USER = 4;
 
 		private ProgressDialog progressDialog;
 		private boolean isCancelled;
@@ -247,46 +290,35 @@ public final class LoginPage extends BaseActivity {
 						.getOAuthAccessToken(username, password);
 				if (App.DEBUG)
 					log("xauth token=" + token);
-				
-				if(isCancelled){
-					if(App.DEBUG){
+
+				if (isCancelled) {
+					if (App.DEBUG) {
 						log("login cancelled after xauth process.");
 					}
 					return new ResultInfo(LOGIN_CANCELLED_BY_USER,
-					"user cancel login process.");
+							"user cancel login process.");
 				}
 
 				if (token != null) {
 					publishProgress(1);
-					
-					App.me.password = password;
+
 					App.me.oauthAccessToken = token.getToken();
 					App.me.oauthAccessTokenSecret = token.getTokenSecret();
-					App.me.isLogin = true;
-
 					User u = App.me.api.verifyAccount();
-					
-					if(isCancelled){
-						if(App.DEBUG){
+
+					if (isCancelled) {
+						if (App.DEBUG) {
 							log("login cancelled after verifyAccount process.");
 						}
 						return new ResultInfo(LOGIN_CANCELLED_BY_USER,
-						"user cancel login process.");
+								"user cancel login process.");
 					}
-					
+
 					if (u != null && !u.isNull()) {
+						App.me.updateAccountInfo(u, password, token.getToken(),
+								token.getTokenSecret());
 						if (App.DEBUG)
 							log("xauth successful! ");
-						OptionHelper.saveString(mContext,
-								R.string.option_oauth_token, token.getToken());
-						OptionHelper.saveString(mContext,
-								R.string.option_oauth_token_secret,
-								token.getTokenSecret());
-						OptionHelper.saveString(mContext,
-								R.string.option_userid, username);
-						OptionHelper.saveString(mContext,
-								R.string.option_password, password);
-						App.me.updateUserInfo(u);
 
 						if (StringHelper.isEmpty(savedUserId)) {
 							clearDB();
@@ -331,18 +363,18 @@ public final class LoginPage extends BaseActivity {
 
 						@Override
 						public void onCancel(DialogInterface dialog) {
-							isCancelled=true;
+							isCancelled = true;
 							cancel(true);
 						}
 					});
 			progressDialog.show();
 		}
-		
+
 		@Override
 		protected void onProgressUpdate(Integer... values) {
-			if(values.length>0){
-				int value=values[0];
-				if(value==1){
+			if (values.length > 0) {
+				int value = values[0];
+				if (value == 1) {
 					progressDialog.setMessage("正在验证帐号信息...");
 				}
 			}

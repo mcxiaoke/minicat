@@ -167,6 +167,10 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected void doRetrieve(boolean isGetMore) {
+		if(!App.me.isLogin){
+			Utils.notify(this, "未通过验证，请登录");
+			return;
+		}
 		if (userId == null) {
 			if (App.DEBUG)
 				log("userId is null");

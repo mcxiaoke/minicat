@@ -164,8 +164,7 @@ public final class Parameter implements NameValuePair, Serializable,
 
 	@Override
 	public String toString() {
-		return "Parameter{" + "name='" + name + '\'' + ", value='" + value
-				+ '}';
+		return "[" + name + ":" + value + "]";
 	}
 
 	public static String encodeForGet(List<Parameter> params) {

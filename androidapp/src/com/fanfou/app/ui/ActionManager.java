@@ -209,25 +209,25 @@ public final class ActionManager {
 		context.startActivity(intent);
 	}
 
-	public static void doDelete(final Activity activity, final String id) {
-		doDelete(activity, id, null);
+	public static void doStatusDelete(final Activity activity, final String id) {
+		doStatusDelete(activity, id, null);
 	}
 
-	public static void doDelete(final Activity activity, final String id,
+	public static void doStatusDelete(final Activity activity, final String id,
 			final ResultListener li) {
-		doDelete(activity, id, li, false);
+		doStatusDelete(activity, id, li, false);
 	}
 
-	public static void doDelete(final Activity activity, final String id,
+	public static void doStatusDelete(final Activity activity, final String id,
 			final boolean finish) {
-		doDelete(activity, id, null, finish);
+		doStatusDelete(activity, id, null, finish);
 	}
 
-	public static void doDelete(final Activity activity, final String id,
+	public static void doStatusDelete(final Activity activity, final String id,
 			final ResultListener li, final boolean finish) {
 		if (StringHelper.isEmpty(id)) {
 			if (App.DEBUG) {
-				Log.e(TAG, "doDelete: status id is null.");
+				Log.e(TAG, "doStatusDelete: status id is null.");
 			}
 			return;
 		}
@@ -316,6 +316,44 @@ public final class ActionManager {
 			}
 		};
 		startService(activity, type, status.id, receiver);
+	}
+	
+	public static void doMessageDelete(final Activity activity, final String id,
+			final ResultListener li, final boolean finish) {
+		if (StringHelper.isEmpty(id)) {
+			if (App.DEBUG) {
+				Log.d(TAG, "doMessageDelete: status id is null.");
+			}
+			return;
+		}
+		ResultReceiver receiver = new ResultReceiver(new Handler(
+				activity.getMainLooper())) {
+
+			@Override
+			protected void onReceiveResult(int resultCode, Bundle resultData) {
+				switch (resultCode) {
+				case Commons.RESULT_CODE_START:
+					break;
+				case Commons.RESULT_CODE_FINISH:
+					Utils.notify(activity.getApplicationContext(), "删除成功");
+					onSuccess(li, Commons.ACTION_DIRECT_MESSAGE_DELETE, "删除成功");
+					if (finish && activity != null) {
+						activity.finish();
+					}
+					break;
+				case Commons.RESULT_CODE_ERROR:
+					String msg = resultData
+							.getString(Commons.EXTRA_ERROR_MESSAGE);
+					Utils.notify(activity.getApplicationContext(), "删除失败："
+							+ msg);
+					onFailed(li, Commons.ACTION_DIRECT_MESSAGE_DELETE, "删除失败");
+					break;
+				default:
+					break;
+				}
+			}
+		};
+		startService(activity, Commons.ACTION_DIRECT_MESSAGE_DELETE, id, receiver);
 	}
 
 	public static void doMessage(Context context, final User user) {

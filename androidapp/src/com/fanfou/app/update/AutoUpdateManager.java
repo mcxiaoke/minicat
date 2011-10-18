@@ -88,7 +88,7 @@ public final class AutoUpdateManager {
 				+ ")";
 		NotificationManager nm = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notification = new Notification(R.drawable.icon,
+		Notification notification = new Notification(R.drawable.ic_notify_home,
 				"饭否客户端，发现新版本：" + versionInfo, System.currentTimeMillis());
 		Intent intent = new Intent(context, DownloadService.class);
 		intent.putExtra(Commons.EXTRA_URL, info.downloadUrl);

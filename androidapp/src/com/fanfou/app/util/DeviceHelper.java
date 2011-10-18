@@ -47,7 +47,7 @@ public final class DeviceHelper {
 		return uuid;
 	}
 
-	private static int getAppVersionCode(Context context) {
+	public static int getAppVersionCode(Context context) {
 		PackageManager pm = context.getPackageManager();
 		PackageInfo pi;
 		try {
@@ -60,7 +60,7 @@ public final class DeviceHelper {
 		return pi.versionCode;
 	}
 
-	private static String getAppVersionName(Context context) {
+	public static String getAppVersionName(Context context) {
 		PackageManager pm = context.getPackageManager();
 		PackageInfo pi;
 		try {

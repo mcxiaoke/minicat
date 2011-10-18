@@ -23,6 +23,7 @@ import android.widget.RemoteViews;
 
 import com.fanfou.app.App;
 import com.fanfou.app.HomePage;
+import com.fanfou.app.LoginPage;
 import com.fanfou.app.R;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.util.IOHelper;
@@ -107,7 +108,7 @@ public class DownloadService extends WakefulIntentService {
 	}
 
 	private void showProgress() {
-		notification = new Notification(R.drawable.statusbar_icon, "正在下载饭否客户端",
+		notification = new Notification(R.drawable.ic_notify_home, "正在下载饭否客户端",
 				System.currentTimeMillis());
 		notification.flags |= Notification.FLAG_ONGOING_EVENT;
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
@@ -118,10 +119,8 @@ public class DownloadService extends WakefulIntentService {
 		remoteViews.setProgressBar(R.id.download_notification_progress, 100, 0,
 				false);
 		notification.contentView = remoteViews;
-
-		Intent notificationIntent = new Intent(this, HomePage.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-				IntentHelper.getHomeIntent(), 0);
+				new Intent(), 0);
 		notification.contentIntent = contentIntent;
 
 		nm.notify(NOTIFICATION_PROGRESS_ID, notification);

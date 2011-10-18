@@ -146,7 +146,7 @@ public final class UIManager {
 				adapter.notifyDataSetChanged();
 			}
 		};
-		ActionManager.doDelete(activity, s.id, li);
+		ActionManager.doStatusDelete(activity, s.id, li);
 	}
 
 	public static void doDelete(final Activity activity, final Status s,
@@ -157,7 +157,7 @@ public final class UIManager {
 				c.requery();
 			}
 		};
-		ActionManager.doDelete(activity, s.id, li);
+		ActionManager.doStatusDelete(activity, s.id, li);
 	}
 
 	public static void doFavorite(final Activity activity, final Status s,

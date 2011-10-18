@@ -13,7 +13,7 @@
 		<com.fanfou.app.ui.viewpager.TitlePageIndicator
 			android:layout_alignParentTop="true" android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:id="@+id/viewindicator"
-			android:background="@drawable/navbar_bg" app:textSize="12sp"
+			android:background="@drawable/title_page_indicator_bg" app:textSize="12sp"
 			app:footerColor="@color/sky_blue" app:footerLineHeight="0dp"
 			app:footerIndicatorHeight="2dp" app:footerIndicatorStyle="underline"
 			app:textColor="#FF999999" app:selectedColor="#FF333333"

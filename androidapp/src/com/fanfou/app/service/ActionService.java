@@ -11,10 +11,12 @@ import android.util.Log;
 import com.fanfou.app.App;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
+import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
+import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.util.StringHelper;
@@ -233,6 +235,29 @@ public class ActionService extends BaseIntentService {
 					receiver.send(Commons.RESULT_CODE_FINISH, data);
 				}
 			}
+				break;
+			case Commons.ACTION_DIRECT_MESSAGE_DELETE:
+			{
+				// 删除消息
+				// 404 说明消息不存在
+				// 403 说明不是你的消息，无权限删除
+				DirectMessage dm = api.messageDelete(id);
+				if (dm == null || dm.isNull()) {
+					receiver.send(Commons.RESULT_CODE_FINISH, null);
+				} else {
+					ContentResolver cr = getContentResolver();
+					int result = cr.delete(DirectMessageInfo.CONTENT_URI, where,
+							whereArgs);
+					Bundle data = new Bundle();
+					data.putInt(Commons.EXTRA_TYPE, type);
+					data.putSerializable(Commons.EXTRA_MESSAGE, dm);
+					receiver.send(Commons.RESULT_CODE_FINISH, data);
+				}
+			}
+				break;
+			case Commons.ACTION_DIRECT_MESSAGE_SHOW:
+				break;
+			case Commons.ACTION_DIRECT_MESSAGE_CREATE:
 				break;
 			default:
 				break;

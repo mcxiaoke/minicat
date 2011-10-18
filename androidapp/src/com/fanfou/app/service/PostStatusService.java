@@ -135,10 +135,10 @@ public class PostStatusService extends WakefulIntentService {
 
 	private int showSendingNotification() {
 		int id = 0;
-		Notification notification = new Notification(R.drawable.statusbar_icon,
+		Notification notification = new Notification(R.drawable.ic_notify_home,
 				"饭否消息正在发送...", System.currentTimeMillis());
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-				IntentHelper.getHomeIntent(), 0);
+				new Intent(), 0);
 		notification.setLatestEventInfo(this, "饭否消息", "正在发送...", contentIntent);
 		notification.flags |= Notification.FLAG_ONGOING_EVENT;
 		nm.notify(id, notification);
@@ -148,9 +148,9 @@ public class PostStatusService extends WakefulIntentService {
 	@SuppressWarnings("unused")
 	private int showSuccessNotification() {
 		int id = 2;
-		Notification notification = new Notification(R.drawable.icon,
+		Notification notification = new Notification(R.drawable.ic_notify_home,
 				"饭否消息发送成功", System.currentTimeMillis());
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, IntentHelper.getHomeIntent(), 0);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(), 0);
 		notification.setLatestEventInfo(this, "饭否消息", "消息发送成功", contentIntent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		nm.notify(id, notification);
@@ -159,7 +159,7 @@ public class PostStatusService extends WakefulIntentService {
 
 	private int showFailedNotification(String title, String message) {
 		int id = 1;
-		Notification notification = new Notification(R.drawable.statusbar_icon,
+		Notification notification = new Notification(R.drawable.ic_notify_home,
 				title, System.currentTimeMillis());
 		Intent intent = new Intent(this, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TEXT, content);

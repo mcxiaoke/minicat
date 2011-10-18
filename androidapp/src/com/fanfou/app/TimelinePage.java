@@ -171,6 +171,10 @@ public class TimelinePage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected void doRetrieve(boolean isGetMore) {
+		if(!App.me.isLogin){
+			Utils.notify(this, "未通过验证，请登录");
+			return;
+		}
 		Bundle b = new Bundle();
 		b.putString(Commons.EXTRA_ID, userId);
 		b.putBoolean(Commons.EXTRA_FORMAT, false);

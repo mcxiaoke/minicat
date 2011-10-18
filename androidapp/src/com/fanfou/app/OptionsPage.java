@@ -171,10 +171,11 @@ public class OptionsPage extends PreferenceActivity implements
 
 	private static class CheckTask extends AsyncTask<Void, Void, VersionInfo> {
 		private Context c;
-		private ProgressDialog pd = null;
+		private final ProgressDialog pd;
 
 		public CheckTask(Context context) {
 			this.c = context;
+			pd = new ProgressDialog(c);
 			if (App.DEBUG) {
 				Log.i(TAG, "CheckTask init");
 			}
@@ -184,7 +185,6 @@ public class OptionsPage extends PreferenceActivity implements
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			pd = new ProgressDialog(c);
 			pd.setTitle("检测更新");
 			pd.setMessage("正在检测新版本...");
 			pd.setIndeterminate(true);

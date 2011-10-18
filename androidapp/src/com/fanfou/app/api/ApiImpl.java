@@ -882,4 +882,11 @@ public class ApiImpl implements Api, ResponseCode {
 	public void test() throws ApiException {
 	}
 
+	@Override
+	public List<Status> photosTimeline(int count, int page, String userId,
+			String sinceId, String maxId, boolean isHtml) throws ApiException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

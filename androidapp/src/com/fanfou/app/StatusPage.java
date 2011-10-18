@@ -357,7 +357,7 @@ public class StatusPage extends BaseActivity implements
 	}
 
 	private void doDelete() {
-		ActionManager.doDelete(this, status.id, true);
+		ActionManager.doStatusDelete(this, status.id, true);
 	}
 
 	private void doFavorite() {

@@ -167,7 +167,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		mActionBar.setLeftAction(new HomeLogoAction());
 		mActionBar.setRightAction(action);
 		mActionBar.setRefreshEnabled(this);
-
 	}
 
 	private class HomeLogoAction extends ActionBar.AbstractAction {
@@ -386,6 +385,10 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	 *            类型参数：Home/Mention/Message/Public
 	 */
 	private void doRetrieve(final int page, boolean doGetMore) {
+		if(!App.me.isLogin){
+			Utils.notify(this, "未通过验证，请登录");
+			return;
+		}
 		Bundle b = new Bundle();
 		b.putInt(Commons.EXTRA_COUNT, 0);
 		b.putInt(Commons.EXTRA_PAGE, 0);

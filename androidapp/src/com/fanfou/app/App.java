@@ -10,6 +10,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -192,6 +193,28 @@ public class App extends Application {
 		OptionHelper.remove(this, R.string.option_set_auto_update);
 	}
 
+	public synchronized void updateAccountInfo(User u,String password, String token, String tokenSecret) {
+		user = u;
+		userId = u.id;
+		userScreenName = u.screenName;
+		userProfileImage = u.profileImageUrl;
+		
+		OptionHelper.saveString(this, R.string.option_userid, u.id);
+		OptionHelper.saveString(this, R.string.option_username, u.screenName);
+		OptionHelper.saveString(this, R.string.option_profile_image,
+				u.profileImageUrl);
+		
+		if(!TextUtils.isEmpty(password)){
+			OptionHelper.saveString(this, R.string.option_password, password);
+			
+		}
+		if(!TextUtils.isEmpty(token)){
+			OptionHelper.saveString(this, R.string.option_oauth_token, token);
+			OptionHelper.saveString(this, R.string.option_oauth_token_secret, tokenSecret);
+		}
+		isLogin=true;
+	}
+	
 	public synchronized void updateUserInfo(User u) {
 		user = u;
 		userId = u.id;
@@ -201,6 +224,22 @@ public class App extends Application {
 		OptionHelper.saveString(this, R.string.option_username, u.screenName);
 		OptionHelper.saveString(this, R.string.option_profile_image,
 				u.profileImageUrl);
+	}
+	
+	public synchronized void removeAccountInfo(){
+		isLogin=false;
+		user=null;
+		userId=null;
+		userScreenName=null;
+		userProfileImage=null;
+		oauthAccessToken=null;
+		oauthAccessTokenSecret=null;
+		OptionHelper.remove(this, R.string.option_userid);
+		OptionHelper.remove(this, R.string.option_password);
+		OptionHelper.remove(this, R.string.option_username);
+		OptionHelper.remove(this, R.string.option_profile_image);
+		OptionHelper.remove(this,R.string.option_oauth_token);
+		OptionHelper.remove(this, R.string.option_oauth_token_secret);
 	}
 
 	public IImageLoader getImageLoader() {

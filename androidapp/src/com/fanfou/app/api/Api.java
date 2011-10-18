@@ -10,6 +10,7 @@ import java.util.List;
  * @author mcxiaoke
  * @version 1.0 2011.05.12
  * @version 1.1 2011.05.15
+ * @version 1.2 2011.10.18
  * 
  */
 public interface Api extends ApiConfig {
@@ -67,6 +68,18 @@ public interface Api extends ApiConfig {
 	 */
 	List<Status> userTimeline(int count, int page, String userId,
 			String sinceId, String maxId, boolean isHtml) throws ApiException;
+	
+	/** user timeline contains photos
+	 * @param count
+	 * @param page
+	 * @param userId
+	 * @param sinceId
+	 * @param maxId
+	 * @param isHtml
+	 * @return
+	 * @throws ApiException
+	 */
+	List<Status> photosTimeline(int count, int page, String userId, String sinceId, String maxId, boolean isHtml) throws ApiException;
 
 	// mention timeline
 	/**
@@ -82,6 +95,7 @@ public interface Api extends ApiConfig {
 	 */
 	List<Status> mentions(int count, int page, String sinceId, String maxId,
 			boolean isHtml) throws ApiException;
+	
 
 	// replies timeline
 	/**

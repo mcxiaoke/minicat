@@ -10,8 +10,8 @@
 		<item name="android:windowContentOverlay">@null</item>
 		<item name="android:textColorLink">@color/link_color</item>
 	</style>
-	
-		<style name="Theme.Black.FullScreen" parent="android:style/Theme.NoTitleBar.Fullscreen">
+
+	<style name="Theme.Black.FullScreen" parent="android:style/Theme.NoTitleBar.Fullscreen">
 		<item name="android:windowContentOverlay">@null</item>
 		<item name="android:textColorLink">@color/link_color</item>
 	</style>
@@ -254,6 +254,18 @@
 
 	<style name="Text.Large">
 		<item name="android:textSize">@dimen/text_size_large</item>
+	</style>
+
+	<style name="EditText"></style>
+
+	<style name="EditText.Login">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">@dimen/text_size_medium</item>
+		<item name="android:singleLine">true</item>
+		<item name="android:background">@drawable/login_input_bg</item>
+		<item name="android:padding">10dp</item>
+		<item name="android:layout_marginBottom">6dp</item>
 	</style>
 
 	<style name="List">

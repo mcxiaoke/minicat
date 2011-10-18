@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.fanfou.app" android:installLocation="auto"
-	android:versionCode="20111013" android:versionName="1.4.3">
+	android:versionCode="20111017" android:versionName="1.5.2">
 
 	<application android:icon="@drawable/icon" android:label="@string/app_name"
 		android:name=".App">
 
 		<activity android:name=".LoginPage" android:label="@string/app_name"
-			android:theme="@style/Theme">
+			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
 
+		<activity android:name=".RegisterPage" android:label="@string/app_name"
+			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation">
+		</activity>
+
 		<activity android:name=".HomePage" android:label="@string/app_name"
-			android:theme="@style/Theme" android:launchMode="singleTop" >
+			android:theme="@style/Theme" android:launchMode="singleTop">
 			<meta-data android:name="android.app.default_searchable"
 				android:value=".SearchResultsPage" />
 		</activity>
@@ -44,7 +48,6 @@
 				<action android:name="com.fanfou.app.action.STATUS" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
-
 		</activity>
 
 		<activity android:name=".UserListPage" android:label="@string/app_name"
@@ -95,7 +98,7 @@
 		<activity android:name=".ThreadPage" android:label="@string/app_name"
 			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation" />
 
-		<activity android:name=".SignupPage" android:label="@string/app_name"
+		<activity android:name=".RegisterPage" android:label="@string/app_name"
 			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation" />
 
 		<activity android:name=".MyProfilePage" android:label="@string/app_name"
@@ -119,11 +122,13 @@
 		</activity>
 
 		<activity android:name=".MessageChatPage" android:label="@string/app_name"
-			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation"  android:windowSoftInputMode="adjustResize"/>
+			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation"
+			android:windowSoftInputMode="adjustResize" />
 
 		<activity android:name=".WritePage" android:label="@string/app_share_name"
 			android:theme="@style/Theme.AutoCompleteTextView"
-			android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="adjustResize">
+			android:configChanges="keyboardHidden|orientation"
+			android:windowSoftInputMode="adjustResize">
 
 			<intent-filter>
 				<action android:name="android.intent.action.SEND" />
@@ -142,7 +147,8 @@
 			android:configChanges="keyboardHidden|orientation" />
 
 		<activity android:name=".SearchResultsPage" android:label="@string/app_name"
-			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation" android:launchMode="singleTop">
+			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation"
+			android:launchMode="singleTop">
 			<meta-data android:name="android.app.searchable"
 				android:resource="@xml/searchable" />
 			<intent-filter>

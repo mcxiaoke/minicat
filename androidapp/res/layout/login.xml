@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:scrollbars="none" android:background="@drawable/bg">
+	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+		<com.fanfou.app.ui.ActionBar android:id="@id/actionbar"
+			style="@style/ActionBar" android:layout_alignParentTop="true" />
+
+		<ImageView android:layout_width="wrap_content" android:id="@+id/login_logo"
+			android:layout_height="wrap_content" android:src="@drawable/login_logo"
+			android:layout_centerHorizontal="true" android:layout_marginTop="20dp"
+			android:layout_below="@id/actionbar" />
+
+		<LinearLayout android:orientation="vertical"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:padding="20dp" android:gravity="center_horizontal"
+			android:layout_below="@id/login_logo">
+
+			<EditText android:id="@+id/login_username" style="@style/EditText.Login"
+				android:layout_below="@id/actionbar" android:hint="输入饭否帐号" />
+
+			<EditText android:id="@+id/login_password" style="@style/EditText.Login"
+				android:layout_below="@id/login_username" android:password="true"
+				android:inputType="textPassword" android:hint="输入饭否密码" />
+
+			<ImageView android:id="@+id/login_signin"
+				android:background="@drawable/btn_signin" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:padding="5dp"
+				android:layout_weight="1" android:layout_marginLeft="4dp"
+				android:layout_marginRight="4dp" android:layout_marginTop="20dp" />
+		</LinearLayout>
+	</RelativeLayout>
+</ScrollView>
+

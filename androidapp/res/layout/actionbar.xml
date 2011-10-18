@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="@dimen/actionbar_height"
-	android:background="@drawable/actionbar_bg" android:gravity="center_vertical">
+	android:background="@drawable/actionbar_bg" >
 
 	<ImageView android:id="@id/actionbar_left"
 		android:layout_marginLeft="3dp" android:layout_centerVertical="true"
@@ -12,7 +12,7 @@
 		android:layout_centerInParent="true" android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:textSize="@dimen/text_size_large"
 		android:paddingLeft="10dp" android:paddingRight="10dp"
-		android:textColor="@color/solid_white" />
+		android:textColor="@color/solid_white" android:gravity="center" />
 
 	<ImageView android:id="@id/actionbar_refresh"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"

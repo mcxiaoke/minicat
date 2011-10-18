@@ -6,7 +6,8 @@
 
 		<PreferenceCategory android:title="后台更新">
 			<CheckBoxPreference android:title="后台更新"
-				android:summary="启用后台更新" android:key="@string/option_notification" android:defaultValue="true" />
+				android:summary="启用后台更新" android:key="@string/option_notification"
+				android:defaultValue="true" />
 			<ListPreference android:entries="@array/notification_interval"
 				android:entryValues="@array/notification_interval_values"
 				android:summary="后台更新时间间隔" android:dialogTitle="后台更新时间间隔"
@@ -52,13 +53,16 @@
 	<PreferenceCategory android:title="显示">
 
 		<CheckBoxPreference android:title="锁定屏幕方向"
-			android:summary="强制竖屏" android:key="@string/option_force_portrait" android:defaultValue="false" />
-			
+			android:summary="强制竖屏" android:key="@string/option_force_portrait"
+			android:defaultValue="false" />
+
 		<CheckBoxPreference android:title="全屏显示"
-			android:summary="隐藏系统状态栏" android:key="@string/option_force_fullscreen" android:defaultValue="false" />
+			android:summary="隐藏系统状态栏" android:key="@string/option_force_fullscreen"
+			android:defaultValue="false" />
 
 		<CheckBoxPreference android:title="显示用户头像"
-			android:summary="时间线显示用户头像" android:key="@string/option_show_head" android:defaultValue="true"  />
+			android:summary="时间线显示用户头像" android:key="@string/option_show_head"
+			android:defaultValue="true" />
 
 		<ListPreference android:entries="@array/font_size"
 			android:entryValues="@array/font_size_values" android:summary="设置消息字体大小"
@@ -87,12 +91,17 @@
 	<PreferenceCategory android:title="功能">
 
 		<CheckBoxPreference android:title="启动时刷新"
-			android:summary="启动时自动获取新消息" android:key="@string/option_refresh_on_open" android:defaultValue="false" />
+			android:summary="启动时自动获取新消息" android:key="@string/option_refresh_on_open"
+			android:defaultValue="false" />
 
 		<ListPreference android:entries="@array/photo_quality"
 			android:entryValues="@array/photo_quality_values" android:summary="设置上传照片的质量"
 			android:dialogTitle="选择上传照片的质量" android:title="上传照片质量"
 			android:key="@string/option_photo_quality" android:defaultValue="80" />
+
+		<CheckBoxPreference android:title="自动升级"
+			android:summary="定时检测新版本" android:key="@string/option_autoupdate"
+			android:defaultValue="true" />
 
 		<com.fanfou.app.preferences.ClearDataDialogPreference
 			android:key="@string/option_cleandb" android:title="清空消息缓存"
@@ -114,9 +123,6 @@
 			android:dialogTitle="注销登录" android:summary="注销当前帐号，重新登录"
 			android:dialogMessage="是否要注销当前帐号，重新登录？" android:positiveButtonText="确定"
 			android:negativeButtonText="取消" />
-
-		<CheckBoxPreference android:title="自动升级"
-			android:summary="定时检测新版本" android:key="@string/option_autoupdate" android:defaultValue="true" />
 
 		<Preference android:title="软件升级" android:summary="联网检测是否有新版本"
 			android:key="@string/option_check_update" />

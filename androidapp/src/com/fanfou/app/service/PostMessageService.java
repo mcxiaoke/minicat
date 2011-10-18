@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.HomePage;
+import com.fanfou.app.LoginPage;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
@@ -107,7 +109,7 @@ public class PostMessageService extends BaseIntentService {
 		Notification notification = new Notification(R.drawable.icon,
 				"饭否私信正在发送...", System.currentTimeMillis());
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-				IntentHelper.getHomeIntent(), 0);
+				new Intent(), 0);
 		notification.setLatestEventInfo(this, "饭否私信", "正在发送...", contentIntent);
 		notification.flags |= Notification.FLAG_ONGOING_EVENT;
 		nm.notify(id, notification);
@@ -117,9 +119,10 @@ public class PostMessageService extends BaseIntentService {
 	@SuppressWarnings("unused")
 	private int showSuccessNotification() {
 		int id = 12;
-		Notification notification = new Notification(R.drawable.statusbar_icon,
+		Notification notification = new Notification(R.drawable.ic_notify_home,
 				"私信发送成功", System.currentTimeMillis());
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, IntentHelper.getHomeIntent(), 0);
+		Intent intent = new Intent(this, LoginPage.class);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
 		notification.setLatestEventInfo(this, "饭否私信", "私信发送成功", contentIntent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
@@ -130,9 +133,11 @@ public class PostMessageService extends BaseIntentService {
 	private int showFailedNotification(String title, String message) {
 		int id = 11;
 
-		Notification notification = new Notification(R.drawable.statusbar_icon,
+		Notification notification = new Notification(R.drawable.ic_notify_home,
 				title, System.currentTimeMillis());
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, IntentHelper.getHomeIntent(), 0);
+//		Intent intent = new Intent(this, HomePage.class);
+//		intent.putExtra(Commons.EXTRA_PAGE, 2);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,new Intent(), 0);
 		notification.setLatestEventInfo(this, title, message, contentIntent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE;

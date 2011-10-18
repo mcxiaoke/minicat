@@ -4,17 +4,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.util.AttributeSet;
 
+import com.fanfou.app.App;
 import com.fanfou.app.LoginPage;
 
 public class LogoutDialogPreference extends DialogPreference {
 
 	public LogoutDialogPreference(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		init();
 	}
-
-	public LogoutDialogPreference(Context context, AttributeSet attrs,
-			int defStyle) {
-		super(context, attrs, defStyle);
+	
+	private void init(){
+		setSummary("当前登录帐号:"+App.me.userId);
 	}
 
 	@Override
