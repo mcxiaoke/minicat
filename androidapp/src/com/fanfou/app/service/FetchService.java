@@ -65,14 +65,14 @@ public class FetchService extends BaseIntentService {
 		case Status.TYPE_PUBLIC:
 			doFetchStatuses();
 			break;
-		case DirectMessage.TYPE_IN:
-			doFetchMessages();
-			break;
-		case DirectMessage.TYPE_OUT:
-			doFetchMessages();
-			break;
+//		case DirectMessage.TYPE_IN:
+//			doFetchMessages();
+//			break;
+//		case DirectMessage.TYPE_OUT:
+//			doFetchMessages();
+//			break;
 		case DirectMessage.TYPE_ALL:
-			doFetchMessagesAll();
+			doFetchMessages();
 			break;
 		case User.TYPE_FRIENDS:
 		case User.TYPE_FOLLOWERS:
@@ -142,51 +142,38 @@ public class FetchService extends BaseIntentService {
 	private void doFetchMessages() {
 		boolean doGetMore = mBundle.getBoolean(Commons.EXTRA_BOOLEAN);
 		if (doGetMore) {
-			sendCountMessage(doFetchMessagesMore(mType));
+			sendCountMessage(doFetchMessagesMore());
 		} else {
-			sendCountMessage(doFetchMessagesRefresh(mType));
+			sendCountMessage(doFetchMessagesRefresh());
 		}
 	}
-
-	private void doFetchMessagesAll() {
-		boolean doGetMore = mBundle.getBoolean(Commons.EXTRA_BOOLEAN);
-		Cursor c = getContentResolver().query(DirectMessageInfo.CONTENT_URI,
-				DirectMessageInfo.COLUMNS, null, null, null);
-		String maxId = null;
-		String sinceId = null;
+	
+	private int doFetchMessagesRefresh() {
 		Api api = App.me.api;
-
-		if (doGetMore) {
-			maxId = Utils.getDmMaxId(c);
-		} else {
-			sinceId = Utils.getDmSinceId(c);
-		}
-
-		if (App.DEBUG) {
-			log("doFetchMessagesAll doGetMore=" + doGetMore + " type=" + mType
-					+ " maxId=" + (maxId == null ? "null" : maxId)
-					+ " sinceId=" + (sinceId == null ? "null" : sinceId));
-		}
-
+		Cursor ic = initMessagesCursor(false);
+		Cursor oc=initMessagesCursor(true);
 		try {
+			String inboxSinceId = Utils.getDmSinceId(ic);
+			String outboxSinceId=Utils.getDmSinceId(oc);
 			List<DirectMessage> messages = new ArrayList<DirectMessage>();
-			List<DirectMessage> in = api.messagesInbox(0, 0, sinceId, maxId);
+			List<DirectMessage> in = api.messagesInbox(0, 0, inboxSinceId, null);
 			if (in != null && in.size() > 0) {
 				messages.addAll(in);
 			}
-			List<DirectMessage> out = api.messagesOutbox(0, 0, sinceId, maxId);
+			List<DirectMessage> out = api.messagesOutbox(0, 0, outboxSinceId, null);
 			if (out != null && out.size() > 0) {
 				messages.addAll(out);
 			}
 			if (messages != null && messages.size() > 0) {
 				ContentResolver cr = getContentResolver();
 				int size = messages.size();
-				log("doFetchMessagesAll size()=" + size);
+				log("doFetchMessagesRefresh size()=" + size);
 				cr.bulkInsert(DirectMessageInfo.CONTENT_URI,
 						Parser.toContentValuesArray(messages));
 				sendCountMessage(size);
+				return size;
 			} else {
-				log("doFetchMessagesAll size()=0");
+				log("doFetchMessagesRefresh size()=0");
 				sendCountMessage(0);
 			}
 		} catch (ApiException e) {
@@ -194,101 +181,58 @@ public class FetchService extends BaseIntentService {
 				e.printStackTrace();
 			}
 			handleError(e);
+		}finally{
+			oc.close();
+			ic.close();
 		}
+		return 0;
 	}
 
-	private int doFetchMessagesMore(int type) {
-
-		int result = 0;
-
-		String[] projection = new String[] { BasicColumns.ID,
-				BasicColumns.CREATED_AT };
-		String where = BasicColumns.TYPE + "=?";
-		String[] whereArgs = new String[] { String.valueOf(type) };
-		Cursor c = getContentResolver().query(DirectMessageInfo.CONTENT_URI,
-				projection, where, whereArgs, null);
-
-		String maxId = Utils.getDmMaxId(c);
+	private int doFetchMessagesMore() {
 		Api api = App.me.api;
+		Cursor ic = initMessagesCursor(false);
+		Cursor oc=initMessagesCursor(true);
 		try {
-
-			if (App.DEBUG) {
-				log("doFetchMessagesMore type=" + type + " maxId="
-						+ (maxId == null ? "null" : maxId));
-			}
-
+			String inboxMaxId = Utils.getDmMaxId(ic);
+			String outboxMaxid=Utils.getDmMaxId(oc);
 			List<DirectMessage> messages = new ArrayList<DirectMessage>();
-			if (type == DirectMessage.TYPE_IN) {
-
-				messages = api.messagesInbox(0, 0, null, maxId);
-			} else if (type == DirectMessage.TYPE_OUT) {
-				messages = api.messagesInbox(0, 0, null, maxId);
+			List<DirectMessage> in = api.messagesInbox(0, 0, null, inboxMaxId);
+			if (in != null && in.size() > 0) {
+				messages.addAll(in);
+			}
+			List<DirectMessage> out = api.messagesOutbox(0, 0, null, outboxMaxid);
+			if (out != null && out.size() > 0) {
+				messages.addAll(out);
 			}
 			if (messages != null && messages.size() > 0) {
 				ContentResolver cr = getContentResolver();
 				int size = messages.size();
-				Log.d(tag, "doFetchMessagesMore size()=" + size);
+				log("doFetchMessagesMore size()=" + size);
 				cr.bulkInsert(DirectMessageInfo.CONTENT_URI,
 						Parser.toContentValuesArray(messages));
-				result = size;
+				sendCountMessage(size);
+				return size;
 			} else {
 				log("doFetchMessagesMore size()=0");
+				sendCountMessage(0);
 			}
 		} catch (ApiException e) {
 			if (App.DEBUG) {
 				e.printStackTrace();
 			}
 			handleError(e);
+		}finally{
+			oc.close();
+			ic.close();
 		}
-		return result;
+		return 0;
 	}
-
-	private int doFetchMessagesRefresh(int type) {
-		if (App.DEBUG) {
-			log("doFetchMessagesRefresh type=" + type);
-		}
-		int result = 0;
-
-		String[] projection = new String[] { BasicColumns.ID,
-				BasicColumns.CREATED_AT };
-		String where = BasicColumns.TYPE + "=?";
-		String[] whereArgs = new String[] { String.valueOf(type) };
-		Cursor c = getContentResolver().query(DirectMessageInfo.CONTENT_URI,
-				projection, where, whereArgs, null);
-
-		String sinceId = Utils.getDmSinceId(c);
-		Api api = App.me.api;
-		try {
-
-			if (App.DEBUG) {
-				log("doFetchMessagesRefresh type=" + type + " sinceId="
-						+ (sinceId == null ? "null" : sinceId));
-			}
-
-			List<DirectMessage> messages = new ArrayList<DirectMessage>();
-			if (type == DirectMessage.TYPE_IN) {
-				messages = api.messagesInbox(0, 0, sinceId, null);
-			} else if (type == DirectMessage.TYPE_OUT) {
-				messages = api.messagesInbox(0, 0, sinceId, null);
-			}
-			if (messages != null && messages.size() > 0) {
-				ContentResolver cr = getContentResolver();
-				int size = messages.size();
-				Log.d(tag, "doFetchMessagesRefresh size()=" + size);
-				cr.bulkInsert(DirectMessageInfo.CONTENT_URI,
-						Parser.toContentValuesArray(messages));
-				result = size;
-			} else {
-				Log.d(tag, "doFetchMessagesRefresh size()=0");
-			}
-
-		} catch (ApiException e) {
-			if (App.DEBUG) {
-				e.printStackTrace();
-			}
-			handleError(e);
-		}
-		return result;
+	
+	private Cursor initMessagesCursor(final boolean outbox){
+		String where=DirectMessageInfo.TYPE+" = ? ";
+		String[] whereArgs=new String[]{String.valueOf(outbox?DirectMessage.TYPE_OUT:DirectMessage.TYPE_IN)};
+		return getContentResolver().query(DirectMessageInfo.CONTENT_URI,
+				DirectMessageInfo.COLUMNS, where, whereArgs, null);
 	}
 
 	@SuppressWarnings("unused")

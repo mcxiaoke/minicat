@@ -104,9 +104,9 @@
 			android:defaultValue="true" />
 
 		<com.fanfou.app.preferences.ClearDataDialogPreference
-			android:key="@string/option_cleandb" android:title="清空消息缓存"
-			android:dialogTitle="清空消息缓存" android:summary="清空缓存的消息和用户数据"
-			android:dialogMessage="是否要清空数据库中缓存的消息和用户数据？（提示：客户端每天会自动清理过旧的消息，不建议手动清空）"
+			android:key="@string/option_cleandb" android:title="清空数据缓存"
+			android:dialogTitle="清空数据缓存" android:summary="清空缓存的消息，私信和个人数据"
+			android:dialogMessage="是否要清空数据库中缓存的消息，私信和个人数据？（提示：客户端会自动清理过旧的数据，不建议手动清空）"
 			android:positiveButtonText="确定" android:negativeButtonText="取消" />
 
 		<com.fanfou.app.preferences.ClearCacheDialogPreference

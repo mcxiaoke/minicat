@@ -225,8 +225,9 @@ public class MessageChatPage extends BaseActivity {
 			Utils.notify(this, "私信内容不能为空");
 			return;
 		}
-		finish();
+		Utils.hideKeyboard(this, mEditText);
 		startSendService();
+		finish();
 	}
 
 	private void startSendService() {
