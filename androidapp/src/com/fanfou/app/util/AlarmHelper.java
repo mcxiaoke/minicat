@@ -30,7 +30,7 @@ public final class AlarmHelper {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, setAlarmTime(),
-				7 * 24 * 3600 * 1000, getCleanPendingIntent(context));
+				15 * 24 * 3600 * 1000, getCleanPendingIntent(context));
 	}
 
 	public static void setNotificationTaskOn(Context context) {
@@ -85,7 +85,7 @@ public final class AlarmHelper {
 		}
 		Calendar c = Calendar.getInstance();
 		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
-				c.get(Calendar.DAY_OF_MONTH), 4, 0);
+				c.get(Calendar.DAY_OF_MONTH), 10, 0);
 		c.add(Calendar.DATE, 1);
 		long interval = 3 * 24 * 3600 * 1000;
 		AlarmManager am = (AlarmManager) context

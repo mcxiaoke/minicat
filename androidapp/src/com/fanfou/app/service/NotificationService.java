@@ -66,27 +66,25 @@ public class NotificationService extends BaseIntentService {
 				R.string.option_notification_mention, false);
 		boolean home = OptionHelper.readBoolean(this,
 				R.string.option_notification_home, false);
-
 		try {
-
-			if (home) {
-				handleHome();
+			if (dm) {
+				handleDm();
 				try {
-					Thread.sleep(200);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 				}
 			}
 			if (mention) {
 				handleMention();
 				try {
-					Thread.sleep(200);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 				}
 			}
-			if (dm) {
-				handleDm();
-			}
+			if (home) {
+				handleHome();
 
+			}
 		} catch (ApiException e) {
 			if (App.DEBUG) {
 				Log.e(TAG, "error code=" + e.statusCode + " error message="

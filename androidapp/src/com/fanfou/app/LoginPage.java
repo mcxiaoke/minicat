@@ -34,6 +34,7 @@ import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.util.DeviceHelper;
+import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
@@ -48,9 +49,11 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 public final class LoginPage extends BaseActivity {
 	private static final int REQUEST_CODE_REGISTER = 0;
 
-	private GoogleAnalyticsTracker g;
 
 	public static final String TAG = LoginPage.class.getSimpleName();
+	
+	private GoogleAnalyticsTracker g;
+	private int page;
 
 	public void log(String message) {
 		Log.i(TAG, message);
@@ -75,7 +78,7 @@ public final class LoginPage extends BaseActivity {
 		// R.string.option_oauth_token_secret, null);
 
 		if (App.me.isLogin) {
-			goHome();
+			IntentHelper.goHomePage(this, page);
 		} else {
 			g = GoogleAnalyticsTracker.getInstance();
 			g.startNewSession(getString(R.string.config_google_analytics_code),
@@ -175,6 +178,7 @@ public final class LoginPage extends BaseActivity {
 //			editUsername.setText(data.getStringExtra("userid"));
 			editUsername.setText(data.getStringExtra("email"));
 			editPassword.setText(data.getStringExtra("password"));
+			page=data.getIntExtra(Commons.EXTRA_PAGE, 0);
 			mLoginTask = new LoginTask();
 			mLoginTask.execute();
 		}
@@ -237,18 +241,6 @@ public final class LoginPage extends BaseActivity {
 
 	private void showToast(String message) {
 		Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
-	}
-
-	private void goHome() {
-		if (App.DEBUG)
-			log("goHome()");
-		if (g != null) {
-			g.dispatch();
-		}
-		Intent intent = new Intent(mContext, HomePage.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
-		finish();
 	}
 
 	private void clearDB() {
@@ -405,8 +397,10 @@ public final class LoginPage extends BaseActivity {
 				g.setCustomVar(2, "api", String.valueOf(Build.VERSION.SDK_INT));
 				g.setCustomVar(2, "device", Build.MODEL);
 				g.setCustomVar(2, "uuid", DeviceHelper.uuid(mContext));
-				// g.trackEvent("Action", "LoginSuccess", "AUTH_SUCCESS", 1);
-				goHome();
+				if (g != null) {
+					g.dispatch();
+				}
+				IntentHelper.goHomePage(mContext, page);
 				break;
 			default:
 				break;

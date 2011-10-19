@@ -27,6 +27,7 @@ public interface Contents {
 		public static final String CREATED_AT="created_at";
         public static final String TYPE="type";
         public static final String TIMESTAMP="timestamp";
+        public static final String REAL_ID="real_id";
         
 	} 
 	
@@ -62,6 +63,7 @@ public interface Contents {
         public static final String COLUMNS[]={
             _ID,
             ID,
+            REAL_ID,
             OWNER_ID,
             NAME,
             SCREEN_NAME,
@@ -90,6 +92,7 @@ public interface Contents {
         public static final String CREATE_TABLE="create table "+TABLE_NAME+" ( "
         	+ _ID+" integer primary key autoincrement, "
             + ID+" text not null, "
+            + REAL_ID+" long not null,"
             + NAME+" text not null, "
             + OWNER_ID+" text, "
             + SCREEN_NAME+" text not null, "
@@ -114,7 +117,7 @@ public interface Contents {
             + TYPE+" integer not null, "
             + TIMESTAMP+" integer not null, " 
 //            + "unique ( "+ID+","+TYPE+" ) on conflict replace );";
-            + "unique ( "+ID+","+TYPE+","+OWNER_ID+") on conflict replace );";
+            + "unique ( "+ID+","+TYPE+","+OWNER_ID+") on conflict ignore );";
     }
     
     public static interface StatusInfo extends BasicColumns{
@@ -153,6 +156,7 @@ public interface Contents {
         public static final String COLUMNS[]={
             _ID,
             ID,
+            REAL_ID,
             OWNER_ID,
             CREATED_AT,
             TEXT,
@@ -185,6 +189,7 @@ public interface Contents {
             + _ID+" integer primary key autoincrement, "
             + CREATED_AT+" integer not null, "
             + ID+" text not null, "
+            + REAL_ID+" long not null,"
             + OWNER_ID+" text, "
             + TEXT+" text not null, "
             + SOURCE+" text not null, "
@@ -242,6 +247,7 @@ public interface Contents {
         public static final String COLUMNS[]={
           _ID,
           ID,
+          REAL_ID,
           OWNER_ID,
           TEXT,
           CREATED_AT,
@@ -263,6 +269,7 @@ public interface Contents {
         public static final String CREATE_TABLE="create table " + TABLE_NAME+" ("
         	+ _ID+" integer primary key autoincrement, "
         	+ ID+" text not null, "
+        	+ REAL_ID+" long not null,"
         	+ OWNER_ID+" text , "
         	+ TEXT+" text not null, "
         	+ CREATED_AT+" integer not null, "

@@ -25,6 +25,7 @@ import com.fanfou.app.http.ApnType;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionBar.OnRefreshClickListener;
 import com.fanfou.app.ui.ActionManager;
+import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.Utils;
 
@@ -32,6 +33,7 @@ import com.fanfou.app.util.Utils;
  * @author mcxiaoke
  * @version 1.0 2011.05.30
  * @version 2.0 2011.09.25
+ * @version 2.1 2011.10.19
  * 
  */
 public abstract class BaseActivity extends Activity implements
@@ -43,9 +45,9 @@ public abstract class BaseActivity extends Activity implements
 
 	protected static final int REQUEST_CODE_OPTION = 0;
 
-	Activity mContext;
-	LayoutInflater mInflater;
-	boolean isActive = false;
+	protected Activity mContext;
+	protected LayoutInflater mInflater;
+	protected boolean isActive = false;
 
 	// NetworkReceiver mNetworkReceiver;
 	// BroadcastReceiver mNotificationReceiver;
@@ -182,25 +184,25 @@ public abstract class BaseActivity extends Activity implements
 		int id = item.getItemId();
 		switch (id) {
 		case MENU_ID_OPTION:
-			goOptionPage();
+			onOptionClick();
 			break;
 		case MENU_ID_PROFILE:
-			goProfilePage();
+			onProfileClick();
 			break;
 		case MENU_ID_SEARCH:
-			goSearchPage();
+			onSearchClick();
 			break;
 		case MENU_ID_EXIT:
-			doExit();
+			onExitClick();
 			break;
 		case MENU_ID_ABOUT:
-			goAboutPage();
+			onAboutClick();
 			break;
 		case MENU_ID_FEEDBACK:
-			doFeedback();
+			onFeedbackClick();
 			break;
 		case MENU_ID_HOME:
-			goBackHome();
+			onHomeClick();
 			break;
 		default:
 			break;
@@ -282,33 +284,25 @@ public abstract class BaseActivity extends Activity implements
 	public void onClick(View v) {
 	}
 
-	protected void goBackHome() {
-		Intent intent = new Intent(mContext, HomePage.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
-	}
-
-	protected void goOptionPage() {
+	protected void onOptionClick() {
 		Intent intent = new Intent(this, OptionsPage.class);
 		startActivity(intent);
 	}
 
-	protected void goProfilePage() {
+	protected void onProfileClick() {
 		ActionManager.doMyProfile(this);
 	}
 
-	protected void goSearchPage() {
+	protected void onSearchClick() {
 		Intent intent = new Intent(this, SearchPage.class);
 		startActivity(intent);
 	}
 
-	protected void goAboutPage() {
+	protected void onAboutClick() {
 		Utils.goAboutPage(this);
 	}
 
-	protected void doFeedback() {
-		// IntentHelper.sendFeedback(this, "");
-
+	protected void onFeedbackClick() {
 		Intent intent = new Intent(this, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
 		intent.putExtra(Commons.EXTRA_TEXT,
@@ -316,8 +310,12 @@ public abstract class BaseActivity extends Activity implements
 						+ Build.MODEL + "-" + Build.VERSION.RELEASE + ") ");
 		startActivity(intent);
 	}
+	
+	protected void onHomeClick(){
+		IntentHelper.goHomePage(this, 0);
+	}
 
-	private void doExit() {
+	protected void onExitClick() {
 		finish();
 		// android.os.Process.killProcess(android.os.Process.myPid());
 	}

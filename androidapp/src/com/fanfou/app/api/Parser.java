@@ -31,6 +31,7 @@ import com.fanfou.app.util.DateTimeHelper;
  * @version 1.0 2011.05.04
  * @version 1.1 2011.05.15
  * @version 1.2 2011.05.17
+ * @version 1.3 2011.10.19
  * 
  */
 public final class Parser implements ResponseCode {
@@ -373,6 +374,10 @@ public final class Parser implements ResponseCode {
 	public static int parseInt(Cursor c, String columnName) {
 		return c.getInt(c.getColumnIndex(columnName));
 	}
+	
+	public static long parseLong(Cursor c, String columnName) {
+		return c.getLong(c.getColumnIndex(columnName));
+	}
 
 	public static String parseString(Cursor c, String columnName) {
 		try {
@@ -391,6 +396,18 @@ public final class Parser implements ResponseCode {
 
 	public static Date parseDate(Cursor c, String columnName) {
 		return new Date(c.getLong(c.getColumnIndex(columnName)));
+	}
+
+	public static long decodeStatusRealId(String id) {
+		return 0;
+	}
+
+	public static long decodeUserRealId(String id) {
+		return 0;
+	}
+
+	public static long decodeMessageRealId(String id) {
+		return 0;
 	}
 
 	/**

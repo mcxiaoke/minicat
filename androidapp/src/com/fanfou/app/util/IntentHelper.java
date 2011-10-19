@@ -1,5 +1,6 @@
 package com.fanfou.app.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,9 +9,19 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.HomePage;
 import com.fanfou.app.R;
+import com.fanfou.app.config.Commons;
 
 public final class IntentHelper {
+	
+	public static void goHomePage(final Activity activity, final int page ) {
+		Intent intent = new Intent(activity, HomePage.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.putExtra(Commons.EXTRA_PAGE, page);
+		activity.startActivity(intent);
+		activity.finish();
+	}
 
 	private static Intent getHomeIntent() {
 		Intent intent = new Intent(Intent.ACTION_MAIN);

@@ -33,6 +33,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.2 2011.05.02
  * @version 1.3 2011.06.03
  * @version 1.4 2011.07.21
+ * @version 1.5 2011.10.19
  * 
  */
 public class Status implements Storable<Status> {
@@ -80,6 +81,8 @@ public class Status implements Storable<Status> {
 	public boolean isThread;
 	public boolean hasPhoto;
 	public String simpleText;
+	
+	public long realId;
 
 	public Status() {
 	}
@@ -152,9 +155,10 @@ public class Status implements Storable<Status> {
 			return null;
 		}
 		Status s = new Status();
-		s.createdAt = Parser.parseDate(c, BasicColumns.CREATED_AT);
-		s.id = Parser.parseString(c, BasicColumns.ID);
-		s.ownerId = Parser.parseString(c, BasicColumns.OWNER_ID);
+		s.createdAt = Parser.parseDate(c, StatusInfo.CREATED_AT);
+		s.id = Parser.parseString(c, StatusInfo.ID);
+		s.realId=Parser.parseLong(c, StatusInfo.REAL_ID);
+		s.ownerId = Parser.parseString(c, StatusInfo.OWNER_ID);
 		s.text = Parser.parseString(c, StatusInfo.TEXT);
 		s.simpleText=Parser.parseString(c, StatusInfo.SIMPLE_TEXT);
 		s.source = Parser.parseString(c, StatusInfo.SOURCE);
@@ -238,6 +242,8 @@ public class Status implements Storable<Status> {
 			s.type = type;
 
 			s.ownerId = App.me.userId;
+			
+			s.realId=Parser.decodeStatusRealId(s.id);
 
 			
 			s.simpleText = StatusHelper.getSimpifiedText(s.text);
@@ -281,9 +287,12 @@ public class Status implements Storable<Status> {
 	@Override
 	public ContentValues toContentValues() {
 		ContentValues cv = new ContentValues();
-		cv.put(BasicColumns.CREATED_AT, this.createdAt.getTime());
-		cv.put(BasicColumns.ID, this.id);
-		cv.put(BasicColumns.OWNER_ID, this.ownerId);
+		cv.put(StatusInfo.CREATED_AT, this.createdAt.getTime());
+		cv.put(StatusInfo.ID, this.id);
+		
+		cv.put(StatusInfo.REAL_ID, this.realId);
+		
+		cv.put(StatusInfo.OWNER_ID, this.ownerId);
 		cv.put(StatusInfo.TEXT, this.text);
 		cv.put(StatusInfo.SOURCE, this.source);
 		cv.put(StatusInfo.IN_REPLY_TO_STATUS_ID, this.inReplyToStatusId);
@@ -298,7 +307,7 @@ public class Status implements Storable<Status> {
 		cv.put(StatusInfo.USER_SCREEN_NAME, this.userScreenName);
 		cv.put(StatusInfo.USER_PROFILE_IMAGE_URL, this.userProfileImageUrl);
 
-		cv.put(BasicColumns.TYPE, this.type);
+		cv.put(StatusInfo.TYPE, this.type);
 
 		cv.put(StatusInfo.TRUNCATED, this.truncated);
 		cv.put(StatusInfo.FAVORITED, this.favorited);
@@ -308,7 +317,7 @@ public class Status implements Storable<Status> {
 		cv.put(StatusInfo.IS_THREAD, this.isThread);
 		cv.put(StatusInfo.HAS_PHOTO, this.hasPhoto);
 		cv.put(StatusInfo.SIMPLE_TEXT, this.simpleText);
-		cv.put(BasicColumns.TIMESTAMP, new Date().getTime());
+		cv.put(StatusInfo.TIMESTAMP, new Date().getTime());
 		return cv;
 	}
 

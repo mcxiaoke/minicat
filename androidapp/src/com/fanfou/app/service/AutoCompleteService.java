@@ -44,7 +44,7 @@ public class AutoCompleteService extends WakefulIntentService {
 			log("doFetchAutoComplete");
 		Api api = App.me.api;
 		try {
-			List<User> users = new ArrayList<User>();
+			int size = 0;
 			boolean hasNext = true;
 			for (int page = 1; hasNext; page++) {
 				List<User> result = api.usersFriends(null, page);
@@ -55,7 +55,8 @@ public class AutoCompleteService extends WakefulIntentService {
 					if (App.DEBUG)
 						log("doFetchAutoComplete page==" + page
 								+ " result.size=" + result.size());
-					users.addAll(result);
+					getContentResolver().bulkInsert(UserInfo.CONTENT_URI, Parser.toContentValuesArray(result));
+					size += result.size();
 					if (page >= 10) {
 						hasNext = false;
 					}
@@ -63,24 +64,11 @@ public class AutoCompleteService extends WakefulIntentService {
 					hasNext = false;
 				}
 			}
-			insertAutoComplete(users);
 		} catch (ApiException e) {
 			if (App.DEBUG) {
+				Log.e(TAG, e.getMessage());
 				e.printStackTrace();
 			}
-		}
-	}
-
-	private void insertAutoComplete(List<User> users) {
-		if (users != null && users.size() > 0) {
-			ContentResolver cr = getContentResolver();
-			String where = BasicColumns.TYPE + "='" + User.AUTO_COMPLETE + "'";
-			int size = users.size();
-			if (App.DEBUG)
-				log("insertAutoComplete size=" + size);
-			// cr.delete(UserInfo.CONTENT_URI, where, null);
-			cr.bulkInsert(UserInfo.CONTENT_URI,
-					Parser.toContentValuesArray(users));
 		}
 	}
 

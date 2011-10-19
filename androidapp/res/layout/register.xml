@@ -39,7 +39,7 @@
 					android:checked="true" android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:button="@drawable/cb_followrandom" />
 				<TextView android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:text="关注十个活跃用户"
+					android:layout_height="wrap_content" android:text="关注推荐的活跃用户"
 					android:textSize="@dimen/text_size_medium" android:textColor="@color/soft_white" />
 			</LinearLayout>
 

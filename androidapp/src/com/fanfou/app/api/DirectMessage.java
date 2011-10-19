@@ -59,6 +59,8 @@ public class DirectMessage implements Storable<DirectMessage> {
 	public String threadUserId;
 	public String threadUserName;
 	public boolean isRead;
+	
+	public long realId;
 
 	public User sender = null;
 	public User recipient = null;
@@ -109,10 +111,11 @@ public class DirectMessage implements Storable<DirectMessage> {
 			return null;
 		}
 		DirectMessage dm = new DirectMessage();
-		dm.id = Parser.parseString(c, BasicColumns.ID);
-		dm.ownerId = Parser.parseString(c, BasicColumns.OWNER_ID);
+		dm.id = Parser.parseString(c, DirectMessageInfo.ID);
+		dm.realId=Parser.parseLong(c, DirectMessageInfo.REAL_ID);
+		dm.ownerId = Parser.parseString(c, DirectMessageInfo.OWNER_ID);
 		dm.text = Parser.parseString(c, DirectMessageInfo.TEXT);
-		dm.createdAt = Parser.parseDate(c, BasicColumns.CREATED_AT);
+		dm.createdAt = Parser.parseDate(c, DirectMessageInfo.CREATED_AT);
 		dm.senderId = Parser.parseString(c, DirectMessageInfo.SENDER_ID);
 		dm.senderScreenName = Parser.parseString(c,
 				DirectMessageInfo.SENDER_SCREEN_NAME);
@@ -124,7 +127,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 		dm.recipientProfileImageUrl = Parser.parseString(c,
 				DirectMessageInfo.RECIPIENT_PROFILE_IMAGE_URL);
 
-		dm.type = Parser.parseInt(c, BasicColumns.TYPE);
+		dm.type = Parser.parseInt(c, DirectMessageInfo.TYPE);
 
 		dm.threadUserId = Parser.parseString(c,
 				DirectMessageInfo.THREAD_USER_ID);
@@ -155,6 +158,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 		try {
 			dm = new DirectMessage();
 			dm.id = o.getString(BasicColumns.ID);
+			dm.realId=Parser.decodeMessageRealId(dm.id);
 			dm.text = o.getString(DirectMessageInfo.TEXT);
 			dm.createdAt = Parser.date(o.getString(BasicColumns.CREATED_AT));
 			dm.senderId = o.getString(DirectMessageInfo.SENDER_ID);
@@ -191,6 +195,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 	public ContentValues toContentValues() {
 		ContentValues cv = new ContentValues();
 		cv.put(BasicColumns.ID, this.id);
+		cv.put(DirectMessageInfo.REAL_ID, this.realId);
 		cv.put(BasicColumns.OWNER_ID, this.ownerId);
 		cv.put(DirectMessageInfo.TEXT, this.text);
 		cv.put(BasicColumns.CREATED_AT, this.createdAt.getTime());

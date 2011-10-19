@@ -265,6 +265,9 @@ public final class Utils {
 	public static void setAutoComplete(Context context) {
 		boolean isSet = OptionHelper.readBoolean(context,
 				R.string.option_set_auto_complete, false);
+		if(App.DEBUG){
+			isSet=false;
+		}
 		if (!isSet) {
 			OptionHelper.saveBoolean(context,
 					R.string.option_set_auto_complete, true);

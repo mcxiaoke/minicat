@@ -72,7 +72,7 @@ public class RegisterPage extends BaseActivity {
 	private EditText eEmail;
 	private EditText ePassword;
 	private EditText ePasswordConfirm;
-	private CheckBox cFollowRandom;
+	private CheckBox cFollowPushed;
 	private ImageView iRegister;
 
 	public void log(String message) {
@@ -81,7 +81,6 @@ public class RegisterPage extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		init();
 		setContentView(R.layout.register);
@@ -99,7 +98,7 @@ public class RegisterPage extends BaseActivity {
 		eEmail = (EditText) findViewById(R.id.register_email);
 		ePassword = (EditText) findViewById(R.id.register_password);
 		ePasswordConfirm = (EditText) findViewById(R.id.register_password_confirm);
-		cFollowRandom = (CheckBox) findViewById(R.id.register_follow_random);
+		cFollowPushed = (CheckBox) findViewById(R.id.register_follow_random);
 		iRegister = (ImageView) findViewById(R.id.register_register);
 		iRegister.setOnClickListener(this);
 	}
@@ -275,6 +274,9 @@ public class RegisterPage extends BaseActivity {
 				data.putExtra("userid", u.id);
 				data.putExtra("password", mPassword);
 				data.putExtra("email", mEmail);
+				if(!cFollowPushed.isChecked()){
+					data.putExtra(Commons.EXTRA_PAGE, 3);
+				}
 				setResult(Activity.RESULT_OK, data);
 				finish();
 				break;
@@ -306,14 +308,13 @@ public class RegisterPage extends BaseActivity {
 
 		private User register(String email, String nickname, String password,
 				String deviceId) throws IOException, ApiException {
-			final Boolean checked = cFollowRandom.isChecked();
 			List<Parameter> params = new ArrayList<Parameter>();
 			params.add(new Parameter("email", email));
 			params.add(new Parameter("realname", nickname));
 			params.add(new Parameter("loginpass", password));
 			params.add(new Parameter("devicetype", "android"));
 			params.add(new Parameter("deviceid", deviceId));
-			params.add(new Parameter("follow_random", checked.toString()));
+			params.add(new Parameter("follow_pushed", String.valueOf(cFollowPushed.isChecked())));
 
 			for (Parameter parameter : params) {
 				Log.d("RegisterTask", parameter.toString());

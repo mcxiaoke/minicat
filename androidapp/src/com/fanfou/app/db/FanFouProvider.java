@@ -402,6 +402,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		InsertHelper ih = new InsertHelper(db, UserInfo.TABLE_NAME);
 
 		int id = ih.getColumnIndex(UserInfo.ID);
+		int realId=ih.getColumnIndex(UserInfo.REAL_ID);
 		int ownerId = ih.getColumnIndex(UserInfo.OWNER_ID);
 		int name = ih.getColumnIndex(UserInfo.NAME);
 
@@ -439,6 +440,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 				ih.prepareForInsert();
 
 				ih.bind(id, value.getAsString(UserInfo.ID));
+				ih.bind(realId, value.getAsLong(UserInfo.REAL_ID));
 				ih.bind(ownerId, value.getAsString(UserInfo.OWNER_ID));
 
 				ih.bind(screenName, value.getAsString(UserInfo.SCREEN_NAME));
@@ -508,6 +510,9 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		InsertHelper ih = new InsertHelper(db, StatusInfo.TABLE_NAME);
 
 		int id = ih.getColumnIndex(StatusInfo.ID);
+		
+		int realId=ih.getColumnIndex(StatusInfo.REAL_ID);
+		
 		int ownerId = ih.getColumnIndex(StatusInfo.OWNER_ID);
 		int createdAt = ih.getColumnIndex(StatusInfo.CREATED_AT);
 
@@ -548,6 +553,7 @@ public class FanFouProvider extends ContentProvider implements Contents {
 				ih.prepareForInsert();
 
 				ih.bind(id, value.getAsString(StatusInfo.ID));
+				ih.bind(realId, value.getAsLong(StatusInfo.REAL_ID));
 				ih.bind(ownerId, value.getAsString(StatusInfo.OWNER_ID));
 				ih.bind(createdAt, value.getAsLong(StatusInfo.CREATED_AT));
 

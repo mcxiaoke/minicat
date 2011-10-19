@@ -68,6 +68,8 @@ public class User implements Storable<User> {
 	public String lastStatusId;
 	public String lastStatusText;
 	public Date lastStatusCreatedAt = null;
+	
+	public long realId;
 
 	@Override
 	public int compareTo(User another) {
@@ -114,9 +116,10 @@ public class User implements Storable<User> {
 		}
 		User user = new User();
 
-		user.createdAt = Parser.parseDate(c, BasicColumns.CREATED_AT);
-		user.id = Parser.parseString(c, BasicColumns.ID);
-		user.ownerId = Parser.parseString(c, BasicColumns.OWNER_ID);
+		user.createdAt = Parser.parseDate(c, UserInfo.CREATED_AT);
+		user.id = Parser.parseString(c, UserInfo.ID);
+		user.realId=Parser.parseLong(c, UserInfo.REAL_ID);
+		user.ownerId = Parser.parseString(c, UserInfo.OWNER_ID);
 		user.name = Parser.parseString(c, UserInfo.NAME);
 		user.screenName = Parser.parseString(c, UserInfo.SCREEN_NAME);
 		user.location = Parser.parseString(c, UserInfo.LOCATION);
@@ -134,7 +137,7 @@ public class User implements Storable<User> {
 		user.following = Parser.parseBoolean(c, UserInfo.FOLLOWING);
 		user.notifications = Parser.parseBoolean(c, UserInfo.NOTIFICATIONS);
 		user.utcOffset = Parser.parseInt(c, UserInfo.UTC_OFFSET);
-		user.type = Parser.parseInt(c, BasicColumns.TYPE);
+		user.type = Parser.parseInt(c, UserInfo.TYPE);
 
 		user.lastStatusId = Parser.parseString(c, UserInfo.LAST_STATUS_ID);
 		user.lastStatusText = Parser.parseString(c, UserInfo.LAST_STATUS_TEXT);
@@ -167,6 +170,7 @@ public class User implements Storable<User> {
 		try {
 			u = new User();
 			u.id = o.getString(BasicColumns.ID);
+			u.realId=Parser.decodeUserRealId(u.id);
 			u.name = o.getString(UserInfo.NAME);
 			u.screenName = o.getString(UserInfo.SCREEN_NAME);
 			u.location = o.getString(UserInfo.LOCATION);
@@ -211,8 +215,9 @@ public class User implements Storable<User> {
 		User u = this;
 		ContentValues cv = new ContentValues();
 
-		cv.put(BasicColumns.ID, u.id);
-		cv.put(BasicColumns.OWNER_ID, u.ownerId);
+		cv.put(UserInfo.ID, u.id);
+		cv.put(UserInfo.REAL_ID, u.realId);
+		cv.put(UserInfo.OWNER_ID, u.ownerId);
 		cv.put(UserInfo.NAME, u.name);
 
 		cv.put(UserInfo.SCREEN_NAME, u.screenName);
@@ -232,7 +237,7 @@ public class User implements Storable<User> {
 
 		cv.put(UserInfo.FOLLOWING, u.following);
 		cv.put(UserInfo.NOTIFICATIONS, u.notifications);
-		cv.put(BasicColumns.CREATED_AT, u.createdAt.getTime());
+		cv.put(UserInfo.CREATED_AT, u.createdAt.getTime());
 		cv.put(UserInfo.UTC_OFFSET, u.utcOffset);
 
 		if (u.lastStatusId != null) {
@@ -241,8 +246,8 @@ public class User implements Storable<User> {
 			cv.put(UserInfo.LAST_STATUS_ID, u.lastStatusId);
 			cv.put(UserInfo.LAST_STATUS_TEXT, u.lastStatusText);
 		}
-		cv.put(BasicColumns.TYPE, u.type);
-		cv.put(BasicColumns.TIMESTAMP, new Date().getTime());
+		cv.put(UserInfo.TYPE, u.type);
+		cv.put(UserInfo.TIMESTAMP, new Date().getTime());
 		return cv;
 	}
 
