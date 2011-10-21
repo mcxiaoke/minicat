@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.CursorAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.fanfou.app.adapter.StatusCursorAdapter;
@@ -260,17 +261,17 @@ public abstract class BaseTimelineActivity extends BaseActivity implements OnRef
 	}
 
 	@Override
-	public void onRefresh(EndlessListView view) {
+	public void onRefresh(ListView view) {
 		doRefresh();
 	}
 
 	@Override
-	public void onLoadMore(EndlessListView view) {
+	public void onLoadMore(ListView viw) {
 		doGetMore();
 	}
 
 	@Override
-	public void onItemClick(EndlessListView view, int position) {
+	public void onItemClick(ListView view,View row,int position) {
 		final Cursor c = (Cursor) view.getItemAtPosition(position);
 		if(c!=null){	
 			final Status s = Status.parse(c);

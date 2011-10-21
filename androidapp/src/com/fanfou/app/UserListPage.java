@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.fanfou.app.adapter.UserCursorAdapter;
@@ -167,7 +168,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected void doRetrieve(boolean isGetMore) {
-		if(!App.me.isLogin){
+		if (!App.me.isLogin) {
 			Utils.notify(this, "未通过验证，请登录");
 			return;
 		}
@@ -263,17 +264,17 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	@Override
-	public void onRefresh(EndlessListView view) {
+	public void onRefresh(ListView view) {
 		doRefresh();
 	}
 
 	@Override
-	public void onLoadMore(EndlessListView view) {
+	public void onLoadMore(ListView view) {
 		doGetMore();
 	}
 
 	@Override
-	public void onItemClick(EndlessListView view, int position) {
+	public void onItemClick(ListView view, View row, int position) {
 		final Cursor c = (Cursor) view.getItemAtPosition(position);
 		final User u = User.parse(c);
 		if (u != null) {

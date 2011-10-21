@@ -279,7 +279,7 @@ public class EndlessListView extends ListView implements OnItemClickListener {
 			}
 		} else {
 			if (mOnRefreshListener != null) {
-				mOnRefreshListener.onItemClick(this, position);
+				mOnRefreshListener.onItemClick(this, view, position);
 			}
 		}
 	}
@@ -370,10 +370,10 @@ public class EndlessListView extends ListView implements OnItemClickListener {
 	}
 
 	public interface OnRefreshListener {
-		public void onRefresh(EndlessListView view);
+		public void onRefresh(ListView view);
 
-		public void onLoadMore(EndlessListView view);
+		public void onLoadMore(ListView view);
 
-		public void onItemClick(EndlessListView view, int position);
+		public void onItemClick(ListView view, View row, int position);
 	}
 }

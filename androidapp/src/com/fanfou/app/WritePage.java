@@ -429,13 +429,15 @@ public class WritePage extends BaseActivity {
 	}
 
 	private void startAddUsername() {
-		if (StringHelper.isEmpty(content)) {
-			mAutoCompleteTextView.setText("@");
-		} else {
-			mAutoCompleteTextView.setText(content + " @");
-		}
-		Selection.setSelection(mAutoCompleteTextView.getEditableText(),
-				mAutoCompleteTextView.getEditableText().length());
+		Intent intent=new Intent(this, UserChoosePage.class);
+		startActivity(intent);
+//		if (StringHelper.isEmpty(content)) {
+//			mAutoCompleteTextView.setText("@");
+//		} else {
+//			mAutoCompleteTextView.setText(content + " @");
+//		}
+//		Selection.setSelection(mAutoCompleteTextView.getEditableText(),
+//				mAutoCompleteTextView.getEditableText().length());
 	}
 
 	private void send() {

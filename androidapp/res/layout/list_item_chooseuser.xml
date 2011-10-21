@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="horizontal"
+	android:padding="2dp" android:descendantFocusability="blocksDescendants">
+
+	<ImageView
+		android:id="@id/item_user_head"
+		style="@style/Image.Head" />
+
+	<RelativeLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/item_user_head"
+		android:padding="4dp" android:layout_weight="1" >
+
+		<TextView
+			android:id="@id/item_user_name"
+			style="@style/Text.Name"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentTop="true"
+			android:text="Username" />
+
+		<TextView
+			android:id="@id/item_user_id"
+			style="@style/Text.Info"
+			android:layout_below="@id/item_user_name"
+			android:text="useid" />
+	</RelativeLayout>
+
+	<CheckBox
+		android:id="@+id/item_user_checkbox"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:checked="false" android:focusable="false" android:focusableInTouchMode="false" />
+
+</LinearLayout>

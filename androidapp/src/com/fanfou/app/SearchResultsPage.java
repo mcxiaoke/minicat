@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.fanfou.app.adapter.SearchResultsAdapter;
@@ -170,16 +171,16 @@ public class SearchResultsPage extends BaseActivity implements
 	}
 
 	@Override
-	public void onRefresh(EndlessListView view) {
+	public void onRefresh(ListView view) {
 	}
 
 	@Override
-	public void onLoadMore(EndlessListView view) {
+	public void onLoadMore(ListView view) {
 		doSearch();
 	}
 
 	@Override
-	public void onItemClick(EndlessListView view, int position) {
+	public void onItemClick(ListView view,View row,int position) {
 		final Status s = (Status) view.getItemAtPosition(position);
 		if (s != null) {
 			Utils.goStatusPage(mContext, s);
