@@ -21,16 +21,25 @@ import com.fanfou.app.service.NotificationService;
 
 /**
  * @author mcxiaoke
- * @version 1.0 20110922
+ * @version 1.0 2011.09.22
+ * @version 1.1 2011.10.21
  * 
  */
 public final class AlarmHelper {
 
 	public static void setCleanTask(Context context) {
+		int hour = 4;
+		int minute = 0;
+		Calendar c = Calendar.getInstance();
+		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
+				c.get(Calendar.DAY_OF_MONTH), hour, minute);
+		c.add(Calendar.DATE, 1);
+		
+		
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, setAlarmTime(),
-				15 * 24 * 3600 * 1000, getCleanPendingIntent(context));
+		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
+				7 * 24 * 3600 * 1000, getCleanPendingIntent(context));
 	}
 
 	public static void setNotificationTaskOn(Context context) {
@@ -111,20 +120,6 @@ public final class AlarmHelper {
 	private static PendingIntent getCleanPendingIntent(Context context) {
 		return PendingIntent.getService(context, 0, new Intent(context,
 				CleanService.class), PendingIntent.FLAG_UPDATE_CURRENT);
-	}
-
-	public static long setAlarmTime() {
-		int hour = 7;
-		int minute = 0;
-		Calendar c = Calendar.getInstance();
-		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
-				c.get(Calendar.DAY_OF_MONTH), hour, minute);
-		c.add(Calendar.DATE, 1);
-		long result = c.getTimeInMillis();
-		if (App.DEBUG)
-			Log.d("AlarmHelper",
-					"Alarm Time:" + DateTimeHelper.formatDate(new Date(result)));
-		return result;
 	}
 
 	public static long setTestTime() {

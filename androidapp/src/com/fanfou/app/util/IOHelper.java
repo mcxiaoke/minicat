@@ -140,7 +140,7 @@ public final class IOHelper {
 	}
 
 	public static void deleteDir(File target) {
-		if (target.exists() == false) {
+		if (!target.exists()) {
 			return;
 		}
 		if (target.isFile()) {
@@ -149,10 +149,28 @@ public final class IOHelper {
 
 		if (target.isDirectory()) {
 			File[] files = target.listFiles();
-			for (int i = 0; i < files.length; i++) {
-				deleteDir(files[i]);
+			for (File file : files) {
+				deleteDir(file);
 			}
 			target.delete();
+		}
+	}
+	
+	public static void deleteDir(File target, int minFileSize) {
+		if (!target.exists()) {
+			return;
+		}
+		if (target.isFile()) {
+			if(target.length()>minFileSize){
+				target.delete();
+			}
+		}
+
+		if (target.isDirectory()) {
+			File[] files = target.listFiles();
+			for (File file : files) {
+				deleteDir(file,minFileSize);
+			}
 		}
 	}
 

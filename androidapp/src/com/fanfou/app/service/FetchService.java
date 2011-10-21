@@ -31,6 +31,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.0 20110714
  * @version 2.1 2011.10.10
  * @version 3.0 2011.10.20
+ * @version 3.1 2011.10.21
  * 
  */
 public class FetchService extends BaseIntentService {
@@ -66,12 +67,12 @@ public class FetchService extends BaseIntentService {
 		case Status.TYPE_PUBLIC:
 			doFetchStatuses();
 			break;
-//		case DirectMessage.TYPE_IN:
-//			doFetchMessages();
-//			break;
-//		case DirectMessage.TYPE_OUT:
-//			doFetchMessages();
-//			break;
+		// case DirectMessage.TYPE_IN:
+		// doFetchMessages();
+		// break;
+		// case DirectMessage.TYPE_OUT:
+		// doFetchMessages();
+		// break;
 		case DirectMessage.TYPE_ALL:
 			doFetchMessages();
 			break;
@@ -148,20 +149,22 @@ public class FetchService extends BaseIntentService {
 			sendCountMessage(doFetchMessagesRefresh());
 		}
 	}
-	
+
 	private int doFetchMessagesRefresh() {
 		Api api = App.me.api;
 		Cursor ic = initMessagesCursor(false);
-		Cursor oc=initMessagesCursor(true);
+		Cursor oc = initMessagesCursor(true);
 		try {
 			String inboxSinceId = Utils.getDmSinceId(ic);
-			String outboxSinceId=Utils.getDmSinceId(oc);
+			String outboxSinceId = Utils.getDmSinceId(oc);
 			List<DirectMessage> messages = new ArrayList<DirectMessage>();
-			List<DirectMessage> in = api.messagesInbox(0, 0, inboxSinceId, null);
+			List<DirectMessage> in = api
+					.messagesInbox(0, 0, inboxSinceId, null);
 			if (in != null && in.size() > 0) {
 				messages.addAll(in);
 			}
-			List<DirectMessage> out = api.messagesOutbox(0, 0, outboxSinceId, null);
+			List<DirectMessage> out = api.messagesOutbox(0, 0, outboxSinceId,
+					null);
 			if (out != null && out.size() > 0) {
 				messages.addAll(out);
 			}
@@ -182,7 +185,7 @@ public class FetchService extends BaseIntentService {
 				e.printStackTrace();
 			}
 			handleError(e);
-		}finally{
+		} finally {
 			oc.close();
 			ic.close();
 		}
@@ -192,16 +195,17 @@ public class FetchService extends BaseIntentService {
 	private int doFetchMessagesMore() {
 		Api api = App.me.api;
 		Cursor ic = initMessagesCursor(false);
-		Cursor oc=initMessagesCursor(true);
+		Cursor oc = initMessagesCursor(true);
 		try {
 			String inboxMaxId = Utils.getDmMaxId(ic);
-			String outboxMaxid=Utils.getDmMaxId(oc);
+			String outboxMaxid = Utils.getDmMaxId(oc);
 			List<DirectMessage> messages = new ArrayList<DirectMessage>();
 			List<DirectMessage> in = api.messagesInbox(0, 0, null, inboxMaxId);
 			if (in != null && in.size() > 0) {
 				messages.addAll(in);
 			}
-			List<DirectMessage> out = api.messagesOutbox(0, 0, null, outboxMaxid);
+			List<DirectMessage> out = api.messagesOutbox(0, 0, null,
+					outboxMaxid);
 			if (out != null && out.size() > 0) {
 				messages.addAll(out);
 			}
@@ -222,16 +226,18 @@ public class FetchService extends BaseIntentService {
 				e.printStackTrace();
 			}
 			handleError(e);
-		}finally{
+		} finally {
 			oc.close();
 			ic.close();
 		}
 		return 0;
 	}
-	
-	private Cursor initMessagesCursor(final boolean outbox){
-		String where=DirectMessageInfo.TYPE+" = ? ";
-		String[] whereArgs=new String[]{String.valueOf(outbox?DirectMessage.TYPE_OUT:DirectMessage.TYPE_IN)};
+
+	private Cursor initMessagesCursor(final boolean outbox) {
+		String where = DirectMessageInfo.TYPE + " = ? ";
+		String[] whereArgs = new String[] { String
+				.valueOf(outbox ? DirectMessage.TYPE_OUT
+						: DirectMessage.TYPE_IN) };
 		return getContentResolver().query(DirectMessageInfo.CONTENT_URI,
 				DirectMessageInfo.COLUMNS, where, whereArgs, null);
 	}
@@ -273,7 +279,7 @@ public class FetchService extends BaseIntentService {
 		String userId = mBundle.getString(Commons.EXTRA_ID);
 		String sinceId = mBundle.getString(Commons.EXTRA_SINCE_ID);
 		String maxId = mBundle.getString(Commons.EXTRA_MAX_ID);
-		boolean format = mBundle.getBoolean(Commons.EXTRA_FORMAT, false);
+		boolean format = mBundle.getBoolean(Commons.EXTRA_FORMAT, true);
 		format = true;
 		try {
 			switch (mType) {
@@ -315,9 +321,24 @@ public class FetchService extends BaseIntentService {
 				return;
 			} else {
 				int size = statuses.size();
-				if (App.DEBUG)
+				if (App.DEBUG) {
 					Log.e(tag, "doFetchStatuses received items count=" + size);
+				}
 				ContentResolver cr = getContentResolver();
+				
+				// add at 2011.10.21
+				// if count=20, clear old statuses.
+				if (size == 20 && maxId == null) {
+					String where = StatusInfo.TYPE + " = ?";
+					String[] whereArgs = new String[] { String.valueOf(mType) };
+					cr.delete(StatusInfo.CONTENT_URI, where, whereArgs);
+					if (App.DEBUG) {
+						Log.e(tag,
+								"doFetchStatuses items count = 20 ,remove old statuses.");
+					}
+				}
+				
+				
 				cr.bulkInsert(StatusInfo.CONTENT_URI,
 						Parser.toContentValuesArray(statuses));
 				sendCountMessage(size);

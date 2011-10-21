@@ -17,12 +17,14 @@ import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
+import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.09.01
  * @version 1.5 2011.10.09
+ * @version 2.0 2011.10.21
  * 
  */
 public class CleanService extends WakefulIntentService {
@@ -36,12 +38,13 @@ public class CleanService extends WakefulIntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		if (!App.active) {
-			doUpdateHome();
-			doUpdateMention();
-			doCleanAction();
-			// doCleanStatusData();
-			// doCleanMessageData();
-			// doCleanUserData();
+//			doUpdateHome();
+//			doUpdateMention();
+//			doCleanAction();
+			 doCleanStatusData();
+			 doCleanMessageData();
+			 doCleanUserData();
+			 doCleanPhotos();
 		}
 	}
 
@@ -71,12 +74,16 @@ public class CleanService extends WakefulIntentService {
 
 	private void doCleanUserData() {
 		ContentResolver cr = getContentResolver();
-		String where = BasicColumns.OWNER_ID + "!=?";
+		String where = UserInfo.OWNER_ID + "!=?";
 		String[] whereArgs = new String[] { App.me.userId };
 		int result = cr.delete(UserInfo.CONTENT_URI, where, whereArgs);
 		if (App.DEBUG) {
 			Log.d("CleanService", "cleaned user items count=" + result);
 		}
+	}
+	
+	private void doCleanPhotos(){
+		IOHelper.deleteDir(IOHelper.getCacheDir(this), 10*1024);
 	}
 
 	private void doUpdateHome() {
