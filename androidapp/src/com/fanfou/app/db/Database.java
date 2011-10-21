@@ -12,6 +12,10 @@ import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.Contents.BasicColumns;
+import com.fanfou.app.db.Contents.DirectMessageInfo;
+import com.fanfou.app.db.Contents.StatusInfo;
+import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -21,7 +25,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.2 2011.05.02
  * @version 2.0 2011.05.25
  */
-public class Database implements Contents {
+public class Database {
 	private static final String tag = "Database";
 
 	private Context mContext;

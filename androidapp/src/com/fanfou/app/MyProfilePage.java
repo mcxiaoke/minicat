@@ -134,7 +134,7 @@ public class MyProfilePage extends BaseActivity implements Action {
 	 */
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setTitle("我的资料");
+		mActionBar.setTitle("我的空间");
 		mActionBar.setRightAction(this);
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
 	}

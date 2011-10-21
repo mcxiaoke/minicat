@@ -4,12 +4,9 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-public interface Contents {
+public final class Contents {
 	
 	public static final String AUTHORITY = "com.fanfou.app.provider";
-	
-	public static final String ORDERBY_DATE_DESC=BasicColumns.CREATED_AT+" DESC";
-	public static final String ORDERBY_DATE=BasicColumns.CREATED_AT;
 	
 	public static interface Counts{
 		public static final String URI_PATH="count";
@@ -28,7 +25,6 @@ public interface Contents {
         public static final String TYPE="type";
         public static final String TIMESTAMP="timestamp";
         public static final String REAL_ID="real_id";
-        
 	} 
 	
     public static interface UserInfo extends BasicColumns{
@@ -151,6 +147,7 @@ public interface Contents {
         public static final String IS_THREAD="is_thread";
         public static final String HAS_PHOTO="has_photo";
         public static final String SIMPLE_TEXT="simple_text";
+        public static final String SPECIAL="special";
         
             
         public static final String COLUMNS[]={
@@ -178,7 +175,7 @@ public interface Contents {
             IS_THREAD,
             HAS_PHOTO,
             SIMPLE_TEXT,
-            
+            SPECIAL,
             TIMESTAMP,
             
         };
@@ -216,7 +213,7 @@ public interface Contents {
             + IS_THREAD+" boolean not null, "
             + HAS_PHOTO+" boolean not null, "
             + SIMPLE_TEXT+" text not null, "
-            
+            + SPECIAL+" boolean not null, "
             + TIMESTAMP+" integer not null, " 
             + "unique ( "+ID+","+TYPE+","+OWNER_ID+") on conflict ignore );";
         

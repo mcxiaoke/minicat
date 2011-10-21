@@ -30,6 +30,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.0 20110602
  * @version 2.0 20110714
  * @version 2.1 2011.10.10
+ * @version 3.0 2011.10.20
  * 
  */
 public class FetchService extends BaseIntentService {

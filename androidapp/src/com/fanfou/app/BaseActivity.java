@@ -252,25 +252,25 @@ public abstract class BaseActivity extends Activity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		option = menu.add(0, MENU_ID_OPTION, MENU_ID_OPTION, "选项");
+		option = menu.add(0, MENU_ID_OPTION, MENU_ID_OPTION, "设置");
 		option.setIcon(R.drawable.i_menu_option);
 
-		profile = menu.add(0, MENU_ID_PROFILE, MENU_ID_PROFILE, "个人");
+		profile = menu.add(0, MENU_ID_PROFILE, MENU_ID_PROFILE, "我的空间");
 		profile.setIcon(R.drawable.i_menu_profile);
 
-		search = menu.add(0, MENU_ID_SEARCH, MENU_ID_SEARCH, "搜索");
+		search = menu.add(0, MENU_ID_SEARCH, MENU_ID_SEARCH, "热词和搜索");
 		search.setIcon(R.drawable.i_menu_search);
 
 		logout = menu.add(0, MENU_ID_EXIT, MENU_ID_EXIT, "退出");
 		logout.setIcon(R.drawable.i_menu_logout);
 
-		about = menu.add(0, MENU_ID_ABOUT, MENU_ID_ABOUT, "关于");
+		about = menu.add(0, MENU_ID_ABOUT, MENU_ID_ABOUT, "关于饭否");
 		about.setIcon(R.drawable.i_menu_about);
 
-		feedback = menu.add(0, MENU_ID_FEEDBACK, MENU_ID_FEEDBACK, "反馈");
+		feedback = menu.add(0, MENU_ID_FEEDBACK, MENU_ID_FEEDBACK, "意见反馈");
 		feedback.setIcon(R.drawable.i_menu_feedback);
 
-		home = menu.add(0, MENU_ID_HOME, MENU_ID_HOME, "首页");
+		home = menu.add(0, MENU_ID_HOME, MENU_ID_HOME, "返回首页");
 		home.setIcon(R.drawable.i_menu_home);
 
 		return true;

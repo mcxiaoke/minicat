@@ -19,8 +19,6 @@ import com.fanfou.app.adapter.StatusCursorAdapter;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.db.Contents.BasicColumns;
-import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.Action;
 import com.fanfou.app.ui.UIManager;
@@ -31,9 +29,12 @@ import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
+ * @version 1.0 2011.07.10
+ * @version 2.0 2011.10.19
+ * @version 3.0 2011.10.21
  * 
  */
-public class TimelinePage extends BaseActivity implements OnRefreshListener,
+public abstract class BaseTimelineActivity extends BaseActivity implements OnRefreshListener,
 		Action, OnItemLongClickListener {
 
 	protected ActionBar mActionBar;
@@ -49,12 +50,10 @@ public class TimelinePage extends BaseActivity implements OnRefreshListener,
 	protected String userId;
 	protected String userName;
 	protected User user;
-	protected int mType;
-	protected int page = 1;
 
-	private boolean isInitialized = false;
+	protected boolean isInitialized = false;
 
-	private static final String tag = TimelinePage.class.getSimpleName();
+	private static final String tag = BaseTimelineActivity.class.getSimpleName();
 
 	private void log(String message) {
 		Log.e(tag, message);
@@ -73,29 +72,28 @@ public class TimelinePage extends BaseActivity implements OnRefreshListener,
 			finish();
 		}
 	}
+	
+
 
 	protected void initialize() {
 		mHandler = new ResultHandler();
 		mResultReceiver = new MyResultHandler(mHandler);
-		initCursor();
-
-		mCursorAdapter = new StatusCursorAdapter(mContext, mCursor);
+		
+		mCursor=getCursor();
+		mCursorAdapter=new StatusCursorAdapter(this, mCursor);
+		
 	}
+	
+	private void setLayout() {
+		setContentView(R.layout.list);
+		setActionBar();
 
-	protected void initCursor() {
-		if (mType == Status.TYPE_USER) {
-			String where = BasicColumns.TYPE + "=? AND " + StatusInfo.USER_ID
-					+ "=?";
-			String[] whereArgs = new String[] { String.valueOf(mType), userId };
-			mCursor = managedQuery(StatusInfo.CONTENT_URI, StatusInfo.COLUMNS,
-					where, whereArgs, null);
-		} else if (mType == Status.TYPE_FAVORITES) {
-			String where = BasicColumns.TYPE + "=? AND "
-					+ BasicColumns.OWNER_ID + "=?";
-			String[] whereArgs = new String[] { String.valueOf(mType), userId };
-			mCursor = managedQuery(StatusInfo.CONTENT_URI, StatusInfo.COLUMNS,
-					where, whereArgs, null);
-		}
+		mEmptyView = (ViewGroup) findViewById(R.id.empty);
+		mListView = (EndlessListView) findViewById(R.id.list);
+		mListView.setOnRefreshListener(this);
+		mListView.setOnItemLongClickListener(this);
+		
+		mListView.setAdapter(mCursorAdapter);
 	}
 
 	protected void initCheckState() {
@@ -118,40 +116,24 @@ public class TimelinePage extends BaseActivity implements OnRefreshListener,
 		mListView.setVisibility(View.VISIBLE);
 	}
 
-	private void setLayout() {
-		setContentView(R.layout.list);
-		setActionBar();
-
-		mEmptyView = (ViewGroup) findViewById(R.id.empty);
-
-		mListView = (EndlessListView) findViewById(R.id.list);
-		mListView.setOnRefreshListener(this);
-		mListView.setOnItemLongClickListener(this);
-		mListView.setAdapter(mCursorAdapter);
-	}
 
 	/**
 	 * 初始化和设置ActionBar
 	 */
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
+		mActionBar.setTitleClickListener(this);
+		mActionBar.setRightAction(this);
+		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
 		String title = "";
 		if (!StringHelper.isEmpty(userName)) {
 			title = userName + "的";
 		}
-		if (mType == Status.TYPE_USER) {
-			mActionBar.setTitle(title + "消息");
-		} else if (mType == Status.TYPE_FAVORITES) {
-			mActionBar.setTitle(title + "收藏");
-		}
-		mActionBar.setTitleClickListener(this);
-		mActionBar.setRightAction(this);
-		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
+		mActionBar.setTitle(title+getPageTitle());
 	}
 
 	protected boolean parseIntent() {
 		Intent intent = getIntent();
-		mType = intent.getIntExtra(Commons.EXTRA_TYPE, Status.TYPE_USER);
 		user = (User) intent.getSerializableExtra(Commons.EXTRA_USER);
 		if (user == null) {
 			userId = intent.getStringExtra(Commons.EXTRA_ID);
@@ -169,58 +151,54 @@ public class TimelinePage extends BaseActivity implements OnRefreshListener,
 	protected void doGetMore() {
 		doRetrieve(true);
 	}
-
-	protected void doRetrieve(boolean isGetMore) {
-		if(!App.me.isLogin){
+	
+	protected void doRetrieve(boolean isGetMore){
+		if (!App.me.isLogin) {
 			Utils.notify(this, "未通过验证，请登录");
 			return;
 		}
 		Bundle b = new Bundle();
 		b.putString(Commons.EXTRA_ID, userId);
-		b.putBoolean(Commons.EXTRA_FORMAT, false);
-		if (mType == Status.TYPE_FAVORITES) {
-			b.putInt(Commons.EXTRA_PAGE, page++);
-		}
-		if (isGetMore) {
-			String maxId = Utils.getMaxId(mCursor);
-			b.putString(Commons.EXTRA_MAX_ID, maxId);
-		} else {
-			String sinceId = Utils.getSinceId(mCursor);
-			b.putString(Commons.EXTRA_SINCE_ID, sinceId);
-		}
-		Utils.startFetchService(this, mType, mResultReceiver, b);
+		b.putBoolean(Commons.EXTRA_FORMAT, true);
+		doRetrieveImpl(b, isGetMore);
 	}
+	
+	protected abstract void doRetrieveImpl(Bundle bundle, boolean isGetMore);
+	
+	protected abstract Cursor getCursor();
+	
+	protected abstract String getPageTitle();
 
 	protected void updateUI() {
-		if (mCursor != null) {
+		if(mCursor!=null){
 			mCursor.requery();
 		}
+		
 	}
-	
-	
+
 	private static final String LIST_STATE = "listState";
-	private Parcelable mState=null;
+	private Parcelable mState = null;
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(mState!=null&&mListView != null){
+		if (mState != null && mListView != null) {
 			mListView.onRestoreInstanceState(mState);
-			mState=null;
+			mState = null;
 		}
 	}
 
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		mState=savedInstanceState.getParcelable(LIST_STATE);
+		mState = savedInstanceState.getParcelable(LIST_STATE);
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if(mListView!=null){
-			mState=mListView.onSaveInstanceState();
+		if (mListView != null) {
+			mState = mListView.onSaveInstanceState();
 			outState.putParcelable(LIST_STATE, mState);
 		}
 	}
@@ -294,8 +272,10 @@ public class TimelinePage extends BaseActivity implements OnRefreshListener,
 	@Override
 	public void onItemClick(EndlessListView view, int position) {
 		final Cursor c = (Cursor) view.getItemAtPosition(position);
-		final Status s = Status.parse(c);
-		Utils.goStatusPage(mContext, s);
+		if(c!=null){	
+			final Status s = Status.parse(c);
+			Utils.goStatusPage(mContext, s);
+		}
 	}
 
 	@Override

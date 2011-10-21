@@ -21,6 +21,11 @@ public interface Commons {
 	public static final String EXTRA_RECEIVER = "extra_receiver";
 	public static final String EXTRA_BUNDLE = "extra_bundle";
 	public static final String EXTRA_BOOLEAN = "extra_boolean";
+	
+	public static final String EXTRA_GAP_TIME="extra_gap_time";
+	public static final String EXTRA_GAP_ID="extra_gap_id";
+	public static final String EXTRA_GAP_UP_STATUS="extra_gap_up_status";
+	public static final String EXTRA_GAP_DOWN_STATUS="extra_gap_down_status";
 
 	public static final String EXTRA_ERROR = "extra_error";
 	public static final String EXTRA_ERROR_CODE = "extra_error_code";

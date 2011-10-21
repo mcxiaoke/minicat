@@ -68,7 +68,7 @@ public class EndlessListView extends ListView implements OnItemClickListener {
 	}
 
 	void log(String message) {
-		Log.d(TAG, message);
+		Log.i(TAG, message);
 	}
 
 	private void init(Context context) {

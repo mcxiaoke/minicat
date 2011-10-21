@@ -14,7 +14,6 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.http.Response;
@@ -27,6 +26,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.1 2011.05.01
  * @version 1.2 2011.05.02
  * @version 1.3 2011.07.21
+ * @version 1.4 2011.10.21
  * 
  */
 public class User implements Storable<User> {
@@ -169,7 +169,7 @@ public class User implements Storable<User> {
 		User u = null;
 		try {
 			u = new User();
-			u.id = o.getString(BasicColumns.ID);
+			u.id = o.getString(UserInfo.ID);
 			u.realId=Parser.decodeUserRealId(u.id);
 			u.name = o.getString(UserInfo.NAME);
 			u.screenName = o.getString(UserInfo.SCREEN_NAME);
@@ -186,19 +186,19 @@ public class User implements Storable<User> {
 			u.statusesCount = o.getInt(UserInfo.STATUSES_COUNT);
 			u.following = o.getBoolean(UserInfo.FOLLOWING);
 			u.notifications = o.getBoolean(UserInfo.NOTIFICATIONS);
-			u.createdAt = Parser.date(o.getString(BasicColumns.CREATED_AT));
+			u.createdAt = Parser.date(o.getString(UserInfo.CREATED_AT));
 			u.utcOffset = o.getInt(UserInfo.UTC_OFFSET);
 
 			u.type = Commons.TYPE_NONE;
 
 			if (o.has("status")) {
 				JSONObject so = o.getJSONObject("status");
-				String d = so.getString(BasicColumns.CREATED_AT);
+				String d = so.getString(UserInfo.CREATED_AT);
 				u.lastStatusCreatedAt = Parser.date(d);
 				if (App.DEBUG)
 					log("userid=" + u.id + " date="
 							+ Parser.formatDate(u.lastStatusCreatedAt));
-				u.lastStatusId = so.getString(BasicColumns.ID);
+				u.lastStatusId = so.getString(UserInfo.ID);
 				u.lastStatusText = so.getString(StatusInfo.TEXT);
 			}
 		} catch (JSONException e) {
@@ -253,7 +253,7 @@ public class User implements Storable<User> {
 
 	@Override
 	public String toString() {
-		return "[User] " + BasicColumns.ID + "=" + id + " "
+		return "[User] " + UserInfo.ID + "=" + id + " "
 				+ UserInfo.SCREEN_NAME + "=" + screenName + " " + UserInfo.NAME
 				+ "=" + name + " " + UserInfo.LOCATION + "=" + location + " "
 				+ UserInfo.GENDER + "=" + gender + " " + UserInfo.BIRTHDAY
@@ -267,12 +267,12 @@ public class User implements Storable<User> {
 				+ UserInfo.STATUSES_COUNT + "=" + statusesCount + " "
 				+ UserInfo.FOLLOWING + "=" + following + " "
 				+ UserInfo.NOTIFICATIONS + "=" + notifications + " "
-				+ BasicColumns.CREATED_AT + "=" + createdAt + " "
+				+ UserInfo.CREATED_AT + "=" + createdAt + " "
 				+ UserInfo.UTC_OFFSET + "=" + utcOffset + " "
 				+ UserInfo.LAST_STATUS_CREATED_AT + "=" + lastStatusCreatedAt
 				+ " " + UserInfo.LAST_STATUS_ID + "=" + lastStatusId + " "
 				+ UserInfo.LAST_STATUS_TEXT + "=" + lastStatusText + " "
-				+ BasicColumns.TYPE + "=" + type + " ";
+				+ UserInfo.TYPE + "=" + type + " ";
 	}
 
 }

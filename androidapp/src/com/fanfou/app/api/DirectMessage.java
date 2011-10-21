@@ -14,7 +14,6 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.http.Response;
 import com.fanfou.app.http.ResponseCode;
@@ -26,6 +25,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.1 2011.05.02
  * @version 1.5 2011.05.20
  * @version 1.6 2011.07.22
+ * @version 1.7 2011.10.21
  * 
  */
 public class DirectMessage implements Storable<DirectMessage> {
@@ -157,10 +157,10 @@ public class DirectMessage implements Storable<DirectMessage> {
 		DirectMessage dm = null;
 		try {
 			dm = new DirectMessage();
-			dm.id = o.getString(BasicColumns.ID);
+			dm.id = o.getString(DirectMessageInfo.ID);
 			dm.realId=Parser.decodeMessageRealId(dm.id);
 			dm.text = o.getString(DirectMessageInfo.TEXT);
-			dm.createdAt = Parser.date(o.getString(BasicColumns.CREATED_AT));
+			dm.createdAt = Parser.date(o.getString(DirectMessageInfo.CREATED_AT));
 			dm.senderId = o.getString(DirectMessageInfo.SENDER_ID);
 			dm.senderScreenName = o
 					.getString(DirectMessageInfo.SENDER_SCREEN_NAME);
@@ -194,11 +194,11 @@ public class DirectMessage implements Storable<DirectMessage> {
 	@Override
 	public ContentValues toContentValues() {
 		ContentValues cv = new ContentValues();
-		cv.put(BasicColumns.ID, this.id);
+		cv.put(DirectMessageInfo.ID, this.id);
 		cv.put(DirectMessageInfo.REAL_ID, this.realId);
-		cv.put(BasicColumns.OWNER_ID, this.ownerId);
+		cv.put(DirectMessageInfo.OWNER_ID, this.ownerId);
 		cv.put(DirectMessageInfo.TEXT, this.text);
-		cv.put(BasicColumns.CREATED_AT, this.createdAt.getTime());
+		cv.put(DirectMessageInfo.CREATED_AT, this.createdAt.getTime());
 		cv.put(DirectMessageInfo.SENDER_ID, this.senderId);
 		cv.put(DirectMessageInfo.RECIPIENT_ID, this.recipientId);
 		cv.put(DirectMessageInfo.SENDER_SCREEN_NAME, this.senderScreenName);
@@ -208,13 +208,13 @@ public class DirectMessage implements Storable<DirectMessage> {
 				this.senderProfileImageUrl);
 		cv.put(DirectMessageInfo.RECIPIENT_PROFILE_IMAGE_URL,
 				this.recipientProfileImageUrl);
-		cv.put(BasicColumns.TYPE, this.type);
+		cv.put(DirectMessageInfo.TYPE, this.type);
 
 		cv.put(DirectMessageInfo.THREAD_USER_ID, this.threadUserId);
 		cv.put(DirectMessageInfo.THREAD_USER_NAME, this.threadUserName);
 		cv.put(DirectMessageInfo.IS_READ, this.isRead);
 
-		cv.put(BasicColumns.TIMESTAMP, new Date().getTime());
+		cv.put(DirectMessageInfo.TIMESTAMP, new Date().getTime());
 
 		return cv;
 	}
@@ -222,9 +222,9 @@ public class DirectMessage implements Storable<DirectMessage> {
 	@Override
 	public String toString() {
 		// return toContentValues().toString();
-		return "[Message] " + BasicColumns.ID + "=" + this.id + " "
+		return "[Message] " + DirectMessageInfo.ID + "=" + this.id + " "
 				+ DirectMessageInfo.TEXT + "=" + this.text + " "
-				+ BasicColumns.CREATED_AT + "=" + this.createdAt + " "
+				+ DirectMessageInfo.CREATED_AT + "=" + this.createdAt + " "
 				+ DirectMessageInfo.SENDER_ID + "=" + this.senderId + " "
 				+ DirectMessageInfo.RECIPIENT_ID + "=" + this.recipientId + " ";
 	}

@@ -7,11 +7,17 @@ import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 
+/**
+ * @author mcxiaoke
+ * @version 1.0 2011.06.20
+ * @version 2.0 2011.10.21
+ *
+ */
 public class SQLiteHelper extends SQLiteOpenHelper {
 	public static final String TAG = "SQLiteHelper";
 
 	public static final String DATABASE_NAME = "fanfou.db";
-	public static final int DATABASE_VERSION = 2;
+	public static final int DATABASE_VERSION = 3;
 
 	/**
 	 * @param context

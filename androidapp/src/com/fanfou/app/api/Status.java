@@ -18,7 +18,6 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.http.Response;
@@ -34,6 +33,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.3 2011.06.03
  * @version 1.4 2011.07.21
  * @version 1.5 2011.10.19
+ * @version 1.6 2011.10.21
  * 
  */
 public class Status implements Storable<Status> {
@@ -83,6 +83,8 @@ public class Status implements Storable<Status> {
 	public String simpleText;
 	
 	public long realId;
+	
+	public boolean special;
 
 	public Status() {
 	}
@@ -161,6 +163,7 @@ public class Status implements Storable<Status> {
 		s.ownerId = Parser.parseString(c, StatusInfo.OWNER_ID);
 		s.text = Parser.parseString(c, StatusInfo.TEXT);
 		s.simpleText=Parser.parseString(c, StatusInfo.SIMPLE_TEXT);
+		s.special=Parser.parseBoolean(c, StatusInfo.SPECIAL);
 		s.source = Parser.parseString(c, StatusInfo.SOURCE);
 		s.inReplyToStatusId = Parser.parseString(c,
 				StatusInfo.IN_REPLY_TO_STATUS_ID);
@@ -178,7 +181,7 @@ public class Status implements Storable<Status> {
 		s.userProfileImageUrl = Parser.parseString(c,
 				StatusInfo.USER_PROFILE_IMAGE_URL);
 
-		s.type = Parser.parseInt(c, BasicColumns.TYPE);
+		s.type = Parser.parseInt(c, StatusInfo.TYPE);
 
 		s.truncated = Parser.parseBoolean(c, StatusInfo.TRUNCATED);
 		s.favorited = Parser.parseBoolean(c, StatusInfo.FAVORITED);
@@ -227,8 +230,8 @@ public class Status implements Storable<Status> {
 		}
 		try {
 			Status s = new Status();
-			s.createdAt = Parser.date(o.getString(BasicColumns.CREATED_AT));
-			s.id = o.getString(BasicColumns.ID);
+			s.createdAt = Parser.date(o.getString(StatusInfo.CREATED_AT));
+			s.id = o.getString(StatusInfo.ID);
 			s.text = o.getString(StatusInfo.TEXT);
 
 			s.source = Parser.parseSource(o.getString(StatusInfo.SOURCE));;
@@ -247,6 +250,9 @@ public class Status implements Storable<Status> {
 
 			
 			s.simpleText = StatusHelper.getSimpifiedText(s.text);
+			
+			s.special=false;
+			
 			if (!TextUtils.isEmpty(s.inReplyToStatusId)) {
 				s.isThread = true;
 			}
@@ -261,7 +267,7 @@ public class Status implements Storable<Status> {
 
 			if (o.has("user")) {
 				JSONObject uo = o.getJSONObject("user");
-				s.userId = uo.getString(BasicColumns.ID);
+				s.userId = uo.getString(StatusInfo.ID);
 				s.userScreenName = uo.getString(UserInfo.SCREEN_NAME);
 				s.userProfileImageUrl = uo
 						.getString(UserInfo.PROFILE_IMAGE_URL);
@@ -317,6 +323,8 @@ public class Status implements Storable<Status> {
 		cv.put(StatusInfo.IS_THREAD, this.isThread);
 		cv.put(StatusInfo.HAS_PHOTO, this.hasPhoto);
 		cv.put(StatusInfo.SIMPLE_TEXT, this.simpleText);
+		cv.put(StatusInfo.SPECIAL, this.special);
+		
 		cv.put(StatusInfo.TIMESTAMP, new Date().getTime());
 		return cv;
 	}
@@ -324,9 +332,9 @@ public class Status implements Storable<Status> {
 	@Override
 	public String toString() {
 		// return toContentValues().toString();
-		return "[Status] " + BasicColumns.ID + "=" + this.id + " "
+		return "[Status] " + StatusInfo.ID + "=" + this.id + " "
 				+ StatusInfo.TEXT + "=" + this.text + " "
-				+ BasicColumns.CREATED_AT + "+" + this.createdAt + " "
+				+ StatusInfo.CREATED_AT + "+" + this.createdAt + " "
 				// +StatusInfo.SOURCE+"="+this.source+" "
 				// +StatusInfo.TRUNCATED+"="+this.truncated+" "
 				// +StatusInfo.IN_REPLY_TO_STATUS_ID+"="+this.inReplyToStatusId+" "

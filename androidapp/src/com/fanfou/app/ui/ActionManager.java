@@ -13,8 +13,9 @@ import com.fanfou.app.App;
 import com.fanfou.app.MessageChatPage;
 import com.fanfou.app.MyProfilePage;
 import com.fanfou.app.ProfilePage;
-import com.fanfou.app.TimelinePage;
+import com.fanfou.app.UserFavoritesPage;
 import com.fanfou.app.UserListPage;
+import com.fanfou.app.UserTimelinePage;
 import com.fanfou.app.WritePage;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
@@ -37,16 +38,14 @@ public final class ActionManager {
 	}
 
 	public static void doShowTimeline(Context context, final User user) {
-		Intent intent = new Intent(context, TimelinePage.class);
+		Intent intent = new Intent(context, UserTimelinePage.class);
 		intent.putExtra(Commons.EXTRA_USER, user);
-		intent.putExtra(Commons.EXTRA_TYPE, Status.TYPE_USER);
 		context.startActivity(intent);
 	}
 
 	public static void doShowFavorites(Context context, final User user) {
-		Intent intent = new Intent(context, TimelinePage.class);
+		Intent intent = new Intent(context, UserFavoritesPage.class);
 		intent.putExtra(Commons.EXTRA_USER, user);
-		intent.putExtra(Commons.EXTRA_TYPE, Status.TYPE_FAVORITES);
 		context.startActivity(intent);
 	}
 

@@ -213,7 +213,7 @@ public class ProfilePage extends BaseActivity implements Action {
 		}
 		noPermission = !user.following && user.protect;
 
-		mActionBar.setTitle(user.screenName + "的资料");
+		mActionBar.setTitle(user.screenName + "的空间");
 		if (App.DEBUG)
 			log("updateUI user.name=" + user.screenName);
 

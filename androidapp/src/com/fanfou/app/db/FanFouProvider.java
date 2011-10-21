@@ -18,6 +18,10 @@ import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.Contents.BasicColumns;
+import com.fanfou.app.db.Contents.DirectMessageInfo;
+import com.fanfou.app.db.Contents.StatusInfo;
+import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.util.StringHelper;
 
 /**
@@ -30,7 +34,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.9 2011.10.09
  * 
  */
-public class FanFouProvider extends ContentProvider implements Contents {
+public class FanFouProvider extends ContentProvider {
 
 	private static final String TAG = FanFouProvider.class.getSimpleName();
 
@@ -39,6 +43,9 @@ public class FanFouProvider extends ContentProvider implements Contents {
 	}
 
 	private SQLiteHelper dbHelper;
+	
+	public static final String ORDERBY_DATE_DESC=BasicColumns.CREATED_AT+" DESC";
+	public static final String ORDERBY_DATE=BasicColumns.CREATED_AT;
 
 	public static final int USERS_ALL = 1;
 	public static final int USER_SEARCH = 2;
@@ -81,41 +88,41 @@ public class FanFouProvider extends ContentProvider implements Contents {
 	static {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-		sUriMatcher.addURI(AUTHORITY, UserInfo.URI_PATH, USERS_ALL);
-		sUriMatcher.addURI(AUTHORITY, UserInfo.URI_PATH + "/search/*",
+		sUriMatcher.addURI(Contents.AUTHORITY, UserInfo.URI_PATH, USERS_ALL);
+		sUriMatcher.addURI(Contents.AUTHORITY, UserInfo.URI_PATH + "/search/*",
 				USER_SEARCH);
-		sUriMatcher.addURI(AUTHORITY, UserInfo.URI_PATH + "/item/*", USER_ITEM);
-		sUriMatcher.addURI(AUTHORITY, UserInfo.URI_PATH + "/type/#", USER_TYPE);
-		sUriMatcher.addURI(AUTHORITY, UserInfo.URI_PATH + "/id/#", USER_ID);
+		sUriMatcher.addURI(Contents.AUTHORITY, UserInfo.URI_PATH + "/item/*", USER_ITEM);
+		sUriMatcher.addURI(Contents.AUTHORITY, UserInfo.URI_PATH + "/type/#", USER_TYPE);
+		sUriMatcher.addURI(Contents.AUTHORITY, UserInfo.URI_PATH + "/id/#", USER_ID);
 
-		sUriMatcher.addURI(AUTHORITY, StatusInfo.URI_PATH, STATUSES_ALL);
-		sUriMatcher.addURI(AUTHORITY, StatusInfo.URI_PATH + "/local/*",
+		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH, STATUSES_ALL);
+		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH + "/local/*",
 				STATUS_SEARCH_LOCAL);
-		sUriMatcher.addURI(AUTHORITY, StatusInfo.URI_PATH + "/user/*",
+		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH + "/user/*",
 				STATUS_USER);
-		sUriMatcher.addURI(AUTHORITY, StatusInfo.URI_PATH + "/item/*",
+		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH + "/item/*",
 				STATUS_ITEM);
 
-		sUriMatcher.addURI(AUTHORITY, StatusInfo.URI_PATH + "/search/*",
+		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH + "/search/*",
 				STATUS_SEARCH);
 
-		sUriMatcher.addURI(AUTHORITY, StatusInfo.URI_PATH + "/type/#",
+		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH + "/type/#",
 				STATUS_TYPE);
-		sUriMatcher.addURI(AUTHORITY, StatusInfo.URI_PATH + "/action/count/#",
+		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH + "/action/count/#",
 				STATUS_ACTION_COUNT);
-		sUriMatcher.addURI(AUTHORITY, StatusInfo.URI_PATH + "/action/clean",
+		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH + "/action/clean",
 				STATUS_ACTION_CLEAN);
-		sUriMatcher.addURI(AUTHORITY, StatusInfo.URI_PATH + "/id/#", STATUS_ID);
+		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH + "/id/#", STATUS_ID);
 
-		sUriMatcher.addURI(AUTHORITY, DirectMessageInfo.URI_PATH, MESSAGES_ALL);
-		sUriMatcher.addURI(AUTHORITY, DirectMessageInfo.URI_PATH + "/item/*",
+		sUriMatcher.addURI(Contents.AUTHORITY, DirectMessageInfo.URI_PATH, MESSAGES_ALL);
+		sUriMatcher.addURI(Contents.AUTHORITY, DirectMessageInfo.URI_PATH + "/item/*",
 				MESSAGE_ITEM);
-		sUriMatcher.addURI(AUTHORITY, DirectMessageInfo.URI_PATH + "/id/#",
+		sUriMatcher.addURI(Contents.AUTHORITY, DirectMessageInfo.URI_PATH + "/id/#",
 				MESSAGE_ID);
 
-		sUriMatcher.addURI(AUTHORITY, DirectMessageInfo.URI_PATH + "/list",
+		sUriMatcher.addURI(Contents.AUTHORITY, DirectMessageInfo.URI_PATH + "/list",
 				MESSAGE_LIST);
-		sUriMatcher.addURI(AUTHORITY, DirectMessageInfo.URI_PATH + "/user/*",
+		sUriMatcher.addURI(Contents.AUTHORITY, DirectMessageInfo.URI_PATH + "/user/*",
 				MESSAGE_USER);
 	}
 
@@ -513,6 +520,8 @@ public class FanFouProvider extends ContentProvider implements Contents {
 		
 		int realId=ih.getColumnIndex(StatusInfo.REAL_ID);
 		
+		int special=ih.getColumnIndex(StatusInfo.SPECIAL);
+		
 		int ownerId = ih.getColumnIndex(StatusInfo.OWNER_ID);
 		int createdAt = ih.getColumnIndex(StatusInfo.CREATED_AT);
 
@@ -559,6 +568,8 @@ public class FanFouProvider extends ContentProvider implements Contents {
 
 				ih.bind(text, value.getAsString(StatusInfo.TEXT));
 				ih.bind(source, value.getAsString(StatusInfo.SOURCE));
+				
+				ih.bind(special, value.getAsBoolean(StatusInfo.SPECIAL));
 
 				ih.bind(inReplyToStatusId,
 						value.getAsString(StatusInfo.IN_REPLY_TO_STATUS_ID));

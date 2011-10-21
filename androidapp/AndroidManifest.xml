@@ -1,208 +1,258 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.fanfou.app" android:installLocation="auto"
-	android:versionCode="20111019" android:versionName="1.5.4">
-
-	<application android:icon="@drawable/icon" android:label="@string/app_name"
-		android:name=".App">
-
-		<activity android:name=".LoginPage" android:label="@string/app_name"
-			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation">
-			<intent-filter>
+	android:installLocation="auto"
+	package="com.fanfou.app"
+	android:versionCode="20111021"
+	android:versionName="1.5.5" >
+	<application
+		android:icon="@drawable/icon"
+		android:label="@string/app_name"
+		android:name=".App" >
+		<activity
+			android:configChanges="keyboardHidden|orientation"
+			android:label="@string/app_name"
+			android:name=".LoginPage"
+			android:theme="@style/Theme" >
+			<intent-filter >
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-
-		<activity android:name=".RegisterPage" android:label="@string/app_name"
-			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation">
+		<activity
+			android:configChanges="keyboardHidden|orientation"
+			android:label="@string/app_name"
+			android:name=".RegisterPage"
+			android:theme="@style/Theme" >
 		</activity>
-
-		<activity android:name=".HomePage" android:label="@string/app_name"
-			android:theme="@style/Theme" android:launchMode="singleTop">
-			<meta-data android:name="android.app.default_searchable"
+		<activity
+			android:label="@string/app_name"
+			android:launchMode="singleTop"
+			android:name=".HomePage"
+			android:theme="@style/Theme" >
+			<meta-data
+				android:name="android.app.default_searchable"
 				android:value=".SearchResultsPage" />
 		</activity>
-
-		<activity android:name=".SearchPage" android:label="@string/app_name"
-			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation">
-			<meta-data android:name="android.app.default_searchable"
+		<activity
+			android:configChanges="keyboardHidden|orientation"
+			android:label="@string/app_name"
+			android:name=".SearchPage"
+			android:theme="@style/Theme" >
+			<meta-data
+				android:name="android.app.default_searchable"
 				android:value=".SearchResultsPage" />
-
-			<intent-filter>
+			<intent-filter >
 				<action android:name="com.fanfou.app.action.SEARCH" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
-
-		<activity android:name=".AboutPage" android:label="@string/app_name"
-			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation" />
-
-		<activity android:name=".PhotoViewPage" android:label="@string/app_name"
-			android:theme="@style/Theme.Black" android:configChanges="keyboardHidden|orientation" />
-
-		<activity android:name=".StatusPage" android:label="@string/app_name"
-			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation">
-
-			<intent-filter>
+		<activity
+			android:configChanges="keyboardHidden|orientation"
+			android:label="@string/app_name"
+			android:name=".AboutPage"
+			android:theme="@style/Theme" />
+		<activity
+			android:configChanges="keyboardHidden|orientation"
+			android:label="@string/app_name"
+			android:name=".PhotoViewPage"
+			android:theme="@style/Theme.Black" />
+		<activity
+			android:configChanges="keyboardHidden|orientation"
+			android:label="@string/app_name"
+			android:name=".StatusPage"
+			android:theme="@style/Theme" >
+			<intent-filter >
 				<action android:name="com.fanfou.app.action.STATUS" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
-
-		<activity android:name=".UserListPage" android:label="@string/app_name"
-			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation">
-
-			<intent-filter>
+		<activity
+			android:configChanges="keyboardHidden|orientation"
+			android:label="@string/app_name"
+			android:name=".UserListPage"
+			android:theme="@style/Theme" >
+			<intent-filter >
 				<action android:name="com.fanfou.app.action.FRIENDS" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
-
-			<intent-filter>
+			<intent-filter >
 				<action android:name="com.fanfou.app.action.FOLLOWERS" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
-
-			<intent-filter>
+			<intent-filter >
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:host="timeline" android:scheme="fanfou" />
+				<data
+					android:host="timeline"
+					android:scheme="fanfou" />
 			</intent-filter>
 		</activity>
-
-		<activity android:name=".TimelinePage" android:label="@string/app_name"
-			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation">
-
-			<intent-filter>
+		<activity
+			android:configChanges="keyboardHidden|orientation"
+			android:label="@string/app_name"
+			android:name=".UserTimelinePage"
+			android:theme="@style/Theme" >
+			<intent-filter >
 				<action android:name="com.fanfou.app.action.TIMELINE" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
-
-			<intent-filter>
+			<intent-filter >
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data
+					android:host="timeline"
+					android:scheme="fanfou" />
+			</intent-filter>
+		</activity>
+		<activity
+			android:configChanges="keyboardHidden|orientation"
+			android:label="@string/app_name"
+			android:name=".UserFavoritesPage"
+			android:theme="@style/Theme" >
+			<intent-filter >
 				<action android:name="com.fanfou.app.action.FAVORITES" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
-
-			<intent-filter>
+			<intent-filter >
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:host="timeline" android:scheme="fanfou" />
+				<data
+					android:host="favorites"
+					android:scheme="fanfou" />
 			</intent-filter>
-
 		</activity>
-
-		<activity android:name=".ThreadPage" android:label="@string/app_name"
-			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation" />
-
-		<activity android:name=".RegisterPage" android:label="@string/app_name"
-			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation" />
-
-		<activity android:name=".MyProfilePage" android:label="@string/app_name"
-			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation" />
-
-		<activity android:name=".ProfilePage" android:label="@string/app_name"
-			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation">
-
-			<intent-filter>
+		<activity
+			android:configChanges="keyboardHidden|orientation"
+			android:label="@string/app_name"
+			android:name=".ThreadPage"
+			android:theme="@style/Theme" />
+		<activity
+			android:configChanges="keyboardHidden|orientation"
+			android:label="@string/app_name"
+			android:name=".RegisterPage"
+			android:theme="@style/Theme" />
+		<activity
+			android:configChanges="keyboardHidden|orientation"
+			android:label="@string/app_name"
+			android:name=".MyProfilePage"
+			android:theme="@style/Theme" />
+		<activity
+			android:configChanges="keyboardHidden|orientation"
+			android:label="@string/app_name"
+			android:name=".ProfilePage"
+			android:theme="@style/Theme" >
+			<intent-filter >
 				<action android:name="com.fanfou.app.action.PROFILE" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
-
-			<intent-filter>
+			<intent-filter >
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:host="user" android:scheme="fanfou" />
+				<data
+					android:host="user"
+					android:scheme="fanfou" />
 			</intent-filter>
-
 		</activity>
-
-		<activity android:name=".MessageChatPage" android:label="@string/app_name"
-			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation"
-			android:windowSoftInputMode="adjustResize" />
-
-		<activity android:name=".WritePage" android:label="@string/app_share_name"
-			android:theme="@style/Theme.AutoCompleteTextView"
+		<activity
 			android:configChanges="keyboardHidden|orientation"
-			android:windowSoftInputMode="adjustResize">
-
-			<intent-filter>
+			android:label="@string/app_name"
+			android:name=".MessageChatPage"
+			android:theme="@style/Theme"
+			android:windowSoftInputMode="adjustResize" />
+		<activity
+			android:configChanges="keyboardHidden|orientation"
+			android:label="@string/app_share_name"
+			android:name=".WritePage"
+			android:theme="@style/Theme.AutoCompleteTextView"
+			android:windowSoftInputMode="adjustResize" >
+			<intent-filter >
 				<action android:name="android.intent.action.SEND" />
 				<category android:name="android.intent.category.DEFAULT" />
 				<data android:mimeType="text/plain" />
 			</intent-filter>
-			<intent-filter>
+			<intent-filter >
 				<action android:name="android.intent.action.SEND" />
 				<category android:name="android.intent.category.DEFAULT" />
 				<data android:mimeType="image/*" />
 			</intent-filter>
-
 		</activity>
-
-		<activity android:name=".OptionsPage" android:label="@string/app_name"
-			android:configChanges="keyboardHidden|orientation" />
-
-		<activity android:name=".SearchResultsPage" android:label="@string/app_name"
-			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation"
-			android:launchMode="singleTop">
-			<meta-data android:name="android.app.searchable"
+		<activity
+			android:configChanges="keyboardHidden|orientation"
+			android:label="@string/app_name"
+			android:name=".OptionsPage" />
+		<activity
+			android:configChanges="keyboardHidden|orientation"
+			android:label="@string/app_name"
+			android:launchMode="singleTop"
+			android:name=".SearchResultsPage"
+			android:theme="@style/Theme" >
+			<meta-data
+				android:name="android.app.searchable"
 				android:resource="@xml/searchable" />
-			<intent-filter>
+			<intent-filter >
 				<action android:name="android.intent.action.SEARCH" />
 			</intent-filter>
-			<intent-filter>
+			<intent-filter >
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:host="search" android:scheme="fanfou" />
+				<data
+					android:host="search"
+					android:scheme="fanfou" />
 			</intent-filter>
 		</activity>
-
-		<provider android:name=".db.FanFouProvider"
-			android:authorities="com.fanfou.app.provider" />
-
-		<service android:name=".service.FetchService" android:label="@string/app_name" />
-		<service android:name=".service.PostStatusService"
-			android:label="@string/app_name" />
-		<service android:name=".service.DownloadService"
-			android:label="@string/app_name" />
-		<service android:name=".service.PostMessageService"
-			android:label="@string/app_name" />
-		<service android:name=".service.ActionService" android:label="@string/app_name" />
-		<service android:name=".service.CleanService" android:label="@string/app_name" />
-		<service android:name=".service.NotificationService"
-			android:label="@string/app_name" />
-		<service android:name=".service.AutoCompleteService"
-			android:label="@string/app_name" />
-
-		<receiver android:name=".receiver.BootReceiver">
-			<intent-filter>
+		<provider
+			android:authorities="com.fanfou.app.provider"
+			android:name=".db.FanFouProvider" />
+		<service
+			android:label="@string/app_name"
+			android:name=".service.FetchService" />
+		<service
+			android:label="@string/app_name"
+			android:name=".service.PostStatusService" />
+		<service
+			android:label="@string/app_name"
+			android:name=".service.DownloadService" />
+		<service
+			android:label="@string/app_name"
+			android:name=".service.PostMessageService" />
+		<service
+			android:label="@string/app_name"
+			android:name=".service.ActionService" />
+		<service
+			android:label="@string/app_name"
+			android:name=".service.CleanService" />
+		<service
+			android:label="@string/app_name"
+			android:name=".service.NotificationService" />
+		<service
+			android:label="@string/app_name"
+			android:name=".service.AutoCompleteService" />
+		<receiver android:name=".receiver.BootReceiver" >
+			<intent-filter >
 				<action android:name="android.intent.action.BOOT_COMPLETED" />
 			</intent-filter>
 		</receiver>
-
-		<receiver android:name=".receiver.AlarmReceiver">
-			<intent-filter>
+		<receiver android:name=".receiver.AlarmReceiver" >
+			<intent-filter >
 				<action android:name="com.fanfou.app.action.REPEAT" />
 			</intent-filter>
 		</receiver>
-
-		<receiver android:name=".receiver.NotificationReceiver">
-			<intent-filter>
+		<receiver android:name=".receiver.NotificationReceiver" >
+			<intent-filter >
 				<action android:name="com.fanfou.app.action.NOTIFICATION" />
 			</intent-filter>
 		</receiver>
-
-		<receiver android:name=".receiver.NetworkReceiver">
-			<intent-filter>
+		<receiver android:name=".receiver.NetworkReceiver" >
+			<intent-filter >
 				<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
 			</intent-filter>
 		</receiver>
-
 	</application>
-
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -211,7 +261,7 @@
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 	<uses-permission android:name="android.permission.VIBRATE" />
 	<uses-permission android:name="android.permission.READ_LOGS" />
-
-	<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="10" />
-
+	<uses-sdk
+		android:minSdkVersion="4"
+		android:targetSdkVersion="10" />
 </manifest>

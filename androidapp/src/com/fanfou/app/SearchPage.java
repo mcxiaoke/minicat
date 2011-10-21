@@ -8,11 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.fanfou.app.adapter.SearchAdapter;
 import com.fanfou.app.api.Api;
@@ -24,35 +26,41 @@ import com.fanfou.app.ui.ActionBar.Action;
 
 /**
  * @author mcxiaoke
- * @version 1.0 20110802
+ * @version 1.0 2011.08.02
+ * @version 2.0 2011.10.21
  * 
  */
 public class SearchPage extends BaseActivity implements OnItemClickListener{
 	private ActionBar mActionBar;
 
 	private ListView mListView;
+	private View mEmptyView;
 	private BaseAdapter mAdapter;
-	private ArrayList<Search> mSearches = new ArrayList<Search>(20);
+	private ArrayList<Search> mHotwords = new ArrayList<Search>(20);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		parseIntent();
-		inflateLayout();
-		setActionBar();
-		onSearchRequested();
-		fetchTrends();
+		setLayout();
+//		onSearchRequested();
+		fetchHotwords();
 	}
 
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setTitle("搜索");
+		mActionBar.setTitle("热词和搜索");
 		mActionBar.setLeftAction(new ActionBar.BackAction(this));
 		mActionBar.setRightAction(new ActionBar.SearchAction(this));
 	}
 
-	private void inflateLayout() {
+	private void setLayout() {
 		setContentView(R.layout.search);
+		setActionBar();
+		mEmptyView=findViewById(R.id.empty);
+		TextView tv=(TextView) findViewById(R.id.empty_text);
+		tv.setText("热词载入中...");
+		
 		mListView = (ListView) findViewById(R.id.list);
 		mListView.setOnItemClickListener(this);
 	}
@@ -60,13 +68,17 @@ public class SearchPage extends BaseActivity implements OnItemClickListener{
 	private void parseIntent() {
 	}
 
-	private void fetchTrends() {
+	private void fetchHotwords() {
 		new TrendsTask().execute();
 	}
 
-	private void updateUI() {
-		mAdapter = new SearchAdapter(this, mSearches);
+	private void showHotwords() {
+		mEmptyView.setVisibility(View.GONE);
+		mListView.setVisibility(View.VISIBLE);
+		
+		mAdapter = new SearchAdapter(this, mHotwords);
 		mListView.setAdapter(mAdapter);
+		mAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -89,7 +101,7 @@ public class SearchPage extends BaseActivity implements OnItemClickListener{
 		protected void onPostExecute(Integer result) {
 			switch (result) {
 			case 1:
-				updateUI();
+				showHotwords();
 				break;
 			case 0:
 				break;
@@ -106,16 +118,16 @@ public class SearchPage extends BaseActivity implements OnItemClickListener{
 			try {
 				List<Search> savedSearches = api.savedSearches();
 				if (savedSearches != null && savedSearches.size() > 0) {
-					mSearches.addAll(savedSearches);
+					mHotwords.addAll(savedSearches);
 				}
 
 				List<Search> trends = api.trends();
 
 				if (trends != null && trends.size() > 0) {
-					mSearches.addAll(trends);
+					mHotwords.addAll(trends);
 				}
 
-				if (mSearches.size() > 0) {
+				if (mHotwords.size() > 0) {
 					return 1;
 				} else {
 					return 0;
