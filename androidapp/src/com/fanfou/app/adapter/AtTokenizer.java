@@ -34,9 +34,6 @@ public class AtTokenizer implements Tokenizer {
 		return len;
 	}
 
-	/**
-	 * @see android.widget.MultiAutoCompleteTextView.Tokenizer#terminateToken(java.lang.CharSequence)
-	 */
 	@Override
 	public CharSequence terminateToken(CharSequence text) {
 		int i = text.length();
@@ -51,7 +48,7 @@ public class AtTokenizer implements Tokenizer {
 						Object.class, sp, 0);
 				return sp;
 			} else {
-				return text;
+				return text+" ";
 			}
 		}
 	}

@@ -449,7 +449,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	@Override
-	protected boolean onReceived(Intent intent) {
+	protected boolean onBroadcastReceived(Intent intent) {
 		int type = intent.getIntExtra(Commons.EXTRA_TYPE, -1);
 		int count = intent.getIntExtra(Commons.EXTRA_COUNT, 1);
 		// int page=mViewFlow.getCurrentScreen();

@@ -33,20 +33,20 @@ import com.fanfou.app.util.Utils;
  * @version 1.0 2011.07.10
  * @version 2.0 2011.10.19
  * @version 3.0 2011.10.21
+ * @version 3.1 2011.10.24
  * 
  */
-public abstract class BaseTimelineActivity extends BaseActivity implements OnRefreshListener,
-		Action, OnItemLongClickListener {
+public abstract class BaseTimelineActivity extends BaseActivity implements
+		OnRefreshListener, Action, OnItemLongClickListener {
 
 	protected ActionBar mActionBar;
 	protected EndlessListView mListView;
 	protected ViewGroup mEmptyView;
 
 	protected Cursor mCursor;
-	protected CursorAdapter mCursorAdapter;
+	protected StatusCursorAdapter mCursorAdapter;
 
 	protected Handler mHandler;
-	protected ResultReceiver mResultReceiver;
 
 	protected String userId;
 	protected String userName;
@@ -54,7 +54,8 @@ public abstract class BaseTimelineActivity extends BaseActivity implements OnRef
 
 	protected boolean isInitialized = false;
 
-	private static final String tag = BaseTimelineActivity.class.getSimpleName();
+	private static final String tag = BaseTimelineActivity.class
+			.getSimpleName();
 
 	private void log(String message) {
 		Log.e(tag, message);
@@ -73,18 +74,14 @@ public abstract class BaseTimelineActivity extends BaseActivity implements OnRef
 			finish();
 		}
 	}
-	
-
 
 	protected void initialize() {
 		mHandler = new ResultHandler();
-		mResultReceiver = new MyResultHandler(mHandler);
-		
-		mCursor=getCursor();
-		mCursorAdapter=new StatusCursorAdapter(this, mCursor);
-		
+		mCursor = getCursor();
+		mCursorAdapter = new StatusCursorAdapter(this, mCursor);
+
 	}
-	
+
 	private void setLayout() {
 		setContentView(R.layout.list);
 		setActionBar();
@@ -93,7 +90,6 @@ public abstract class BaseTimelineActivity extends BaseActivity implements OnRef
 		mListView = (EndlessListView) findViewById(R.id.list);
 		mListView.setOnRefreshListener(this);
 		mListView.setOnItemLongClickListener(this);
-		
 		mListView.setAdapter(mCursorAdapter);
 	}
 
@@ -117,7 +113,6 @@ public abstract class BaseTimelineActivity extends BaseActivity implements OnRef
 		mListView.setVisibility(View.VISIBLE);
 	}
 
-
 	/**
 	 * 初始化和设置ActionBar
 	 */
@@ -126,11 +121,17 @@ public abstract class BaseTimelineActivity extends BaseActivity implements OnRef
 		mActionBar.setTitleClickListener(this);
 		mActionBar.setRightAction(this);
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
-		String title = "";
-		if (!StringHelper.isEmpty(userName)) {
-			title = userName + "的";
+		
+		
+		String title="TA";
+		if(user!=null){
+			if(user.gender.equals("男")){
+				title = "他";
+			}else if(user.gender.equals("女")){
+				title = "她";
+			}
 		}
-		mActionBar.setTitle(title+getPageTitle());
+		mActionBar.setTitle(title + getPageTitle());
 	}
 
 	protected boolean parseIntent() {
@@ -152,8 +153,8 @@ public abstract class BaseTimelineActivity extends BaseActivity implements OnRef
 	protected void doGetMore() {
 		doRetrieve(true);
 	}
-	
-	protected void doRetrieve(boolean isGetMore){
+
+	protected void doRetrieve(boolean isGetMore) {
 		if (!App.me.isLogin) {
 			Utils.notify(this, "未通过验证，请登录");
 			return;
@@ -161,20 +162,23 @@ public abstract class BaseTimelineActivity extends BaseActivity implements OnRef
 		Bundle b = new Bundle();
 		b.putString(Commons.EXTRA_ID, userId);
 		b.putBoolean(Commons.EXTRA_FORMAT, true);
-		doRetrieveImpl(b, isGetMore);
+		MyResultHandler receiver = new MyResultHandler(mHandler, isGetMore);
+		doRetrieveImpl(b, receiver);
 	}
-	
-	protected abstract void doRetrieveImpl(Bundle bundle, boolean isGetMore);
-	
+
+	protected abstract void doRetrieveImpl(Bundle bundle,
+			MyResultHandler receiver);
+
 	protected abstract Cursor getCursor();
-	
+
 	protected abstract String getPageTitle();
 
 	protected void updateUI() {
-		if(mCursor!=null){
+		if (mCursor != null) {
 			mCursor.requery();
 		}
-		
+		// mCursorAdapter.getFilter().filter("今天");
+
 	}
 
 	private static final String LIST_STATE = "listState";
@@ -218,6 +222,7 @@ public abstract class BaseTimelineActivity extends BaseActivity implements OnRef
 	}
 
 	protected class MyResultHandler extends ResultReceiver {
+		public final boolean doGetMore;
 
 		@Override
 		protected void onReceiveResult(int resultCode, Bundle resultData) {
@@ -228,34 +233,39 @@ public abstract class BaseTimelineActivity extends BaseActivity implements OnRef
 				if (!isInitialized) {
 					showContent();
 				}
-				mListView.onRefreshComplete();
-				int count = resultData.getInt(Commons.EXTRA_COUNT);
-				if (count < 20) {
-					mListView.onNoLoadMore();
+
+				if (doGetMore) {
+					int count = resultData.getInt(Commons.EXTRA_COUNT);
+					if (count < 20) {
+						mListView.onNoLoadMore();
+					} else {
+						mListView.onLoadMoreComplete();
+					}
 				} else {
-					mListView.onLoadMoreComplete();
+					mListView.onRefreshComplete();
 				}
 				updateUI();
 				break;
 			case Commons.RESULT_CODE_ERROR:
 				if (!isInitialized) {
 					showContent();
-					mListView.onNoRefresh();
-					mListView.onNoLoadMore();
-				} else {
-					mListView.onRefreshComplete();
-					mListView.onLoadMoreComplete();
 				}
 				String msg = resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
-				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+				Utils.notify(mContext, msg);
+				if (doGetMore) {
+					mListView.onLoadMoreComplete();
+				} else {
+					mListView.onRefreshComplete();
+				}
 				break;
 			default:
 				break;
 			}
 		}
 
-		public MyResultHandler(Handler handler) {
+		public MyResultHandler(Handler handler, boolean doGetMore) {
 			super(handler);
+			this.doGetMore = doGetMore;
 		}
 
 	}
@@ -271,9 +281,9 @@ public abstract class BaseTimelineActivity extends BaseActivity implements OnRef
 	}
 
 	@Override
-	public void onItemClick(ListView view,View row,int position) {
+	public void onItemClick(ListView view, View row, int position) {
 		final Cursor c = (Cursor) view.getItemAtPosition(position);
-		if(c!=null){	
+		if (c != null) {
 			final Status s = Status.parse(c);
 			Utils.goStatusPage(mContext, s);
 		}

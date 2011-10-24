@@ -300,7 +300,7 @@ public class MyProfilePage extends BaseActivity implements Action {
 	private static final String tag = MyProfilePage.class.getSimpleName();
 
 	private void log(String message) {
-		Log.e(tag, message);
+		Log.d(tag, message);
 	}
 
 	@Override

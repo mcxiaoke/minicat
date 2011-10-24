@@ -16,6 +16,7 @@ import com.fanfou.app.util.DateTimeHelper;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.06.04
+ * @version 1.5 2011.10.24
  * 
  */
 public class UserCursorAdapter extends BaseCursorAdapter {
@@ -36,11 +37,6 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 	@Override
 	int getLayoutId() {
 		return R.layout.list_item_user;
-	}
-
-	@Override
-	public Cursor runQuery(CharSequence constraint) {
-		return null;
 	}
 
 	private void setTextStyle(ViewHolder holder) {

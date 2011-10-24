@@ -142,6 +142,7 @@
 
 	<item type="id" name="user_extrainfo" />
 
+<item type="id" name="choose_input" />
 
 	<item type="id" name="search" />
 	<item type="id" name="search_input" />
@@ -165,5 +166,8 @@
 	<item type="id" name="download_notification" />
 	<item type="id" name="download_notification_text" />
 	<item type="id" name="download_notification_progress" />
+	
+	<item type="id" name="button1" />
+	<item type="id" name="button2" />
 
 </resources>

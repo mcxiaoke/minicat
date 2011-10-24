@@ -131,15 +131,21 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 
-		String title = "";
-		if (!StringHelper.isEmpty(userName)) {
-			title = userName;
+		String title = "TA";
+		if(user!=null){
+			if(user.gender.equals("男")){
+				title = "他";
+			}else if(user.gender.equals("女")){
+				title = "她";
+			}
 		}
+		
 		if (type == User.TYPE_FRIENDS) {
 			mActionBar.setTitle(title + "关注的人");
 		} else if (type == User.TYPE_FOLLOWERS) {
 			mActionBar.setTitle("关注" + title + "的人");
 		}
+
 		mActionBar.setRightAction(this);
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
 	}

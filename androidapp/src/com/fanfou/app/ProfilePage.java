@@ -35,7 +35,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.0 2011.07.18
  * 
  */
-public class ProfilePage extends BaseActivity implements Action {
+public class ProfilePage extends BaseActivity {
 
 	private ScrollView mScrollView;
 	private View mEmptyView;
@@ -140,6 +140,7 @@ public class ProfilePage extends BaseActivity implements Action {
 		mName = (TextView) findViewById(R.id.user_name);
 		TextPaint tp = mName.getPaint();
 		tp.setFakeBoldText(true);
+		
 		mExtraInfo = (TextView) findViewById(R.id.user_extrainfo);
 
 		mProtected = (ImageView) findViewById(R.id.user_protected);
@@ -178,9 +179,9 @@ public class ProfilePage extends BaseActivity implements Action {
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		// mActionBar.setTitle("个人资料");
-		mActionBar.setRightAction(this);
+//		mActionBar.setRightAction(this);
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
-		mActionBar.setRefreshEnabled(this);
+//		mActionBar.setRefreshEnabled(this);
 	}
 
 	protected void initCheckState() {
@@ -212,8 +213,14 @@ public class ProfilePage extends BaseActivity implements Action {
 			return;
 		}
 		noPermission = !user.following && user.protect;
-
-		mActionBar.setTitle(user.screenName + "的空间");
+		
+		if(user.gender.equals("男")){
+			mActionBar.setTitle("他的空间");
+		}else if(user.gender.equals("女")){
+			mActionBar.setTitle("她的空间");
+		}else{
+			mActionBar.setTitle("TA的空间");
+		}
 		if (App.DEBUG)
 			log("updateUI user.name=" + user.screenName);
 
@@ -453,21 +460,6 @@ public class ProfilePage extends BaseActivity implements Action {
 
 	private void log(String message) {
 		Log.i(tag, message);
-	}
-
-	@Override
-	public int getDrawable() {
-		return R.drawable.i_write;
-	}
-
-	@Override
-	public void performAction(View view) {
-		Intent intent = new Intent(this, WritePage.class);
-		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
-		if (user != null) {
-			intent.putExtra(Commons.EXTRA_TEXT, "@" + user.name + " "); // 此时设置会报空指针
-		}
-		startActivity(intent);
 	}
 
 }

@@ -53,7 +53,7 @@ public class DateTimeHelper {
 			return "";
 		}
 		long seconds = (System.currentTimeMillis() - date.getTime()) / 1000;
-		if (seconds < 5) {
+		if (seconds < 3) {
 			return "刚刚";
 		} else if (seconds < MIN) {
 			return seconds + "秒钟前";
@@ -61,6 +61,8 @@ public class DateTimeHelper {
 			return seconds / MIN + "分钟前";
 		} else if (seconds < DAY) {
 			return seconds / HOUR + "小时前";
+		}else if(seconds< WEEK){
+			return seconds/DAY + "天前";
 		} else {
 			return formatDate(date);
 		}

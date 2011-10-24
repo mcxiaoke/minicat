@@ -50,7 +50,7 @@ public class AutoCompleteService extends WakefulIntentService {
 				List<User> result = api.usersFriends(null, page);
 				if (result != null && result.size() > 0) {
 					for (User u : result) {
-						u.type = User.AUTO_COMPLETE;
+						u.type = User.TYPE_FRIENDS;
 					}
 					if (App.DEBUG)
 						log("doFetchAutoComplete page==" + page

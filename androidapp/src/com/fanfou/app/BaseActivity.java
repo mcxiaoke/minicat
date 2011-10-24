@@ -37,7 +37,7 @@ import com.fanfou.app.util.Utils;
  * 
  */
 public abstract class BaseActivity extends Activity implements
-		OnRefreshClickListener, OnClickListener{
+		OnRefreshClickListener, OnClickListener {
 
 	public static final int STATE_INIT = 0;
 	public static final int STATE_NORMAL = 1;
@@ -49,9 +49,8 @@ public abstract class BaseActivity extends Activity implements
 	protected LayoutInflater mInflater;
 	protected boolean isActive = false;
 
-	// NetworkReceiver mNetworkReceiver;
-	// BroadcastReceiver mNotificationReceiver;
-	// IntentFilter mNotificationFilter;
+	private BroadcastReceiver mBroadcastReceiver;
+	private IntentFilter mIntentFilter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,21 +60,16 @@ public abstract class BaseActivity extends Activity implements
 		this.mContext = this;
 		this.mInflater = LayoutInflater.from(this);
 
-		// initReceiver();
+		initReceiver();
 	}
 
 	private void initReceiver() {
-		// this.mNetworkReceiver=new NetworkReceiver();
-		// IntentFilter filter = new IntentFilter();
-		// filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-		// filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
-		// this.mNotificationReceiver = new NotifyReceiver();
-		// this.mNotificationFilter = new
-		// IntentFilter(Actions.ACTION_NOTIFICATION);
-		// mNotificationFilter.setPriority(1000);
+		this.mBroadcastReceiver = new MyBroadcastReceiver();
+		this.mIntentFilter = getIntentFilter();
+		mIntentFilter.setPriority(1000);
 	}
 
-	private class NotifyReceiver extends BroadcastReceiver {
+	private class MyBroadcastReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -83,14 +77,18 @@ public abstract class BaseActivity extends Activity implements
 				Log.d("NotificationReceiver", "active, broadcast received: "
 						+ intent.toString());
 			}
-			if (onReceived(intent)) {
+			if (onBroadcastReceived(intent)) {
 				abortBroadcast();
 			}
 		}
 
 	}
 
-	protected boolean onReceived(Intent intent) {
+	protected IntentFilter getIntentFilter() {
+		return new IntentFilter();
+	}
+
+	protected boolean onBroadcastReceived(Intent intent) {
 		return false;
 	};
 
@@ -98,17 +96,14 @@ public abstract class BaseActivity extends Activity implements
 	protected void onResume() {
 		super.onResume();
 		App.active = isActive = true;
-		// registerReceiver(mNetworkReceiver, filter);
-		// registerReceiver(mNotificationReceiver, mNotificationFilter);
+		registerReceiver(mBroadcastReceiver, mIntentFilter);
 	}
 
-	//
 	@Override
 	protected void onPause() {
 		App.active = isActive = false;
 		super.onPause();
-		// unregisterReceiver(mNetworkReceiver);
-		// unregisterReceiver(mNotificationReceiver);
+		 unregisterReceiver(mBroadcastReceiver);
 	}
 
 	@Override
@@ -310,8 +305,8 @@ public abstract class BaseActivity extends Activity implements
 						+ Build.MODEL + "-" + Build.VERSION.RELEASE + ") ");
 		startActivity(intent);
 	}
-	
-	protected void onHomeClick(){
+
+	protected void onHomeClick() {
 		IntentHelper.goHomePage(this, 0);
 	}
 

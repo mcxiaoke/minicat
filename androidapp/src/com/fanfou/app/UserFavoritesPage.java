@@ -7,10 +7,12 @@ import com.fanfou.app.util.Utils;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.ResultReceiver;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.10.21
+ * @version 1.1 2011.10.24
  *
  */
 public class UserFavoritesPage extends BaseTimelineActivity {
@@ -27,11 +29,11 @@ public class UserFavoritesPage extends BaseTimelineActivity {
 	}
 
 	@Override
-	protected void doRetrieveImpl(Bundle b, boolean isGetMore) {
-		if(isGetMore){
+	protected void doRetrieveImpl(Bundle b,MyResultHandler receiver) {
+		if(receiver.doGetMore){
 			b.putInt(Commons.EXTRA_PAGE, page++);
 		}
-		Utils.startFetchService(this, getType(), mResultReceiver, b);
+		Utils.startFetchService(this, getType(), receiver, b);
 	}
 
 	@Override

@@ -11,7 +11,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -35,10 +38,11 @@ import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
+ * @version 1.0 2011.06.01
+ * @version 1.2 2011.10.24
  * 
  */
-public class StatusPage extends BaseActivity implements
-		ActionManager.ResultListener {
+public class StatusPage extends BaseActivity{
 
 	@Override
 	protected void onResume() {
@@ -66,7 +70,6 @@ public class StatusPage extends BaseActivity implements
 	private View vUser;
 
 	private ImageView iUserHead;
-	// private TextView tUserId;
 	private TextView tUserName;
 
 	private ImageView iShowUser;
@@ -144,7 +147,9 @@ public class StatusPage extends BaseActivity implements
 		tUserName = (TextView) findViewById(R.id.user_name);
 		TextPaint tp = tUserName.getPaint();
 		tp.setFakeBoldText(true);
+		
 		tUserName.setText(status.userScreenName);
+		
 		iShowUser = (ImageView) findViewById(R.id.status_action_user);
 		tContent = (TextView) findViewById(R.id.status_text);
 		iPhoto = (ImageView) findViewById(R.id.status_photo);
@@ -167,14 +172,7 @@ public class StatusPage extends BaseActivity implements
 		bFavorite.setOnClickListener(this);
 		bShare.setOnClickListener(this);
 
-		tContent.setOnLongClickListener(new OnLongClickListener() {
-
-			@Override
-			public boolean onLongClick(View v) {
-				doCopy(status.simpleText);
-				return true;
-			}
-		});
+		registerForContextMenu(tContent);
 	}
 
 	private void updateUI() {
@@ -185,8 +183,8 @@ public class StatusPage extends BaseActivity implements
 			StatusHelper.setStatus(tContent, status.text);
 			checkPhoto(status);
 
-			tDate.setText("时间：" + DateTimeHelper.getInterval(status.createdAt));
-			tSource.setText("来源：" + status.source);
+			tDate.setText(DateTimeHelper.getInterval(status.createdAt));
+			tSource.setText("通过" + status.source);
 
 			if (isMe) {
 				bReply.setImageResource(R.drawable.i_bar2_delete);
@@ -203,18 +201,18 @@ public class StatusPage extends BaseActivity implements
 		}
 	}
 
-	private int mPhotoState=PHOTO_ICON;
-	private static final int PHOTO_LOADING=-1;
-	private static final int PHOTO_ICON=0;
-	private static final int PHOTO_SMALL=1;
-	private static final int PHOTO_LARGE=2;
+	private int mPhotoState = PHOTO_ICON;
+	private static final int PHOTO_LOADING = -1;
+	private static final int PHOTO_ICON = 0;
+	private static final int PHOTO_SMALL = 1;
+	private static final int PHOTO_LARGE = 2;
 
 	private void checkPhoto(Status s) {
 		if (!s.hasPhoto) {
 			iPhoto.setVisibility(View.GONE);
 			return;
 		}
-		
+
 		iPhoto.setOnClickListener(this);
 
 		// 先检查本地是否有大图缓存
@@ -240,14 +238,13 @@ public class StatusPage extends BaseActivity implements
 		if (set == 2) {
 			// 如果设置为大图
 			loadPhoto(PHOTO_LARGE);
-		}else if (set == 1) {
+		} else if (set == 1) {
 			// 如果设置为缩略图
 			loadPhoto(PHOTO_SMALL);
-		}else{
+		} else {
 			iPhoto.setImageResource(R.drawable.photo_icon);
 		}
 
-		
 	}
 
 	@Override
@@ -283,6 +280,12 @@ public class StatusPage extends BaseActivity implements
 		}
 	}
 
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		doCopy(status.simpleText);
+	}
+
 	private String getPhotoPath(String key) {
 		File file = new File(IOHelper.getCacheDir(mContext),
 				StringHelper.md5(key) + ".jpg");
@@ -296,8 +299,8 @@ public class StatusPage extends BaseActivity implements
 		}
 
 	}
-	
-	private void onClickPhoto(){
+
+	private void onClickPhoto() {
 		switch (mPhotoState) {
 		case PHOTO_ICON:
 			loadPhoto(PHOTO_LARGE);
@@ -314,17 +317,18 @@ public class StatusPage extends BaseActivity implements
 			break;
 		}
 	}
-	
-	private void goPhotoViewer(){
+
+	private void goPhotoViewer() {
 		Intent intent = new Intent(mContext, PhotoViewPage.class);
-		 intent.putExtra(Commons.EXTRA_URL,getPhotoPath((String)iPhoto.getTag()));
+		intent.putExtra(Commons.EXTRA_URL,
+				getPhotoPath((String) iPhoto.getTag()));
 		mContext.startActivity(intent);
 		overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_enter);
 	}
 
 	private void loadPhoto(final int type) {
 		iPhoto.setImageResource(R.drawable.photo_loading);
-		mPhotoState=PHOTO_LOADING;
+		mPhotoState = PHOTO_LOADING;
 		ImageLoaderCallback callback = new ImageLoaderCallback() {
 
 			@Override
@@ -332,27 +336,28 @@ public class StatusPage extends BaseActivity implements
 				if (bitmap != null) {
 					iPhoto.setImageBitmap(bitmap);
 					iPhoto.invalidate();
-					mPhotoState=type;
+					mPhotoState = type;
 				}
 			}
+
 			@Override
 			public void onError(String message) {
 				iPhoto.setImageResource(R.drawable.photo_icon);
-				mPhotoState=PHOTO_ICON;
+				mPhotoState = PHOTO_ICON;
 			}
 		};
-		String photoUrl=null;
-		if(type==PHOTO_LARGE){
-			photoUrl=status.photoLargeUrl;
-		}else if(type==PHOTO_SMALL){
-			photoUrl=status.photoImageUrl;
+		String photoUrl = null;
+		if (type == PHOTO_LARGE) {
+			photoUrl = status.photoLargeUrl;
+		} else if (type == PHOTO_SMALL) {
+			photoUrl = status.photoImageUrl;
 		}
 		iPhoto.setTag(photoUrl);
-		Bitmap bitmap=mLoader.load(photoUrl, callback);
-		if(bitmap!=null){
+		Bitmap bitmap = mLoader.load(photoUrl, callback);
+		if (bitmap != null) {
 			iPhoto.setImageBitmap(bitmap);
 			iPhoto.invalidate();
-			mPhotoState=type;
+			mPhotoState = type;
 		}
 	}
 
@@ -421,7 +426,11 @@ public class StatusPage extends BaseActivity implements
 		}
 		if (App.DEBUG)
 			log("showThreadError() " + text);
-		tThreadText.setText("加载消息失败：" + text);
+		if(TextUtils.isEmpty(text)){
+			tThreadText.setText("加载消息失败");
+		}else{
+			tThreadText.setText(text);
+		}
 		vThread.setVisibility(View.VISIBLE);
 
 	}
@@ -456,14 +465,6 @@ public class StatusPage extends BaseActivity implements
 		intent.putExtra(Commons.EXTRA_ID, status.inReplyToStatusId);
 		intent.putExtra(Commons.EXTRA_RECEIVER, receiver);
 		startService(intent);
-	}
-
-	@Override
-	public void onActionSuccess(int type, String message) {
-	}
-
-	@Override
-	public void onActionFailed(int type, String message) {
 	}
 
 }

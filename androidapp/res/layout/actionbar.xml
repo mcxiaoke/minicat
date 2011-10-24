@@ -8,11 +8,17 @@
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:layout_alignParentLeft="true" />
 
-	<TextView android:id="@id/actionbar_title"
-		android:layout_centerInParent="true" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:textSize="@dimen/text_size_large"
-		android:paddingLeft="10dp" android:paddingRight="10dp"
-		android:textColor="@color/solid_white" android:gravity="center" />
+	<TextView
+		android:id="@id/actionbar_title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerInParent="true"
+		android:ellipsize="marquee"
+		android:gravity="center"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:textColor="@color/solid_white"
+		android:textSize="@dimen/text_size_large" />
 
 	<ImageView android:id="@id/actionbar_refresh"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"

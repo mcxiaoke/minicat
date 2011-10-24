@@ -17,6 +17,7 @@ import com.fanfou.app.util.DateTimeHelper;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.06.09
+ * @version 1.5 2011.10.24
  * 
  */
 public class MessageCursorAdapter extends BaseCursorAdapter {
@@ -122,11 +123,6 @@ public class MessageCursorAdapter extends BaseCursorAdapter {
 	@Override
 	int getLayoutId() {
 		return R.layout.list_item_message;
-	}
-
-	@Override
-	public Cursor runQuery(CharSequence constraint) {
-		return null;
 	}
 
 	static class ViewHolder {

@@ -1,28 +1,32 @@
 package com.fanfou.app;
 
-import android.R.bool;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.ResultReceiver;
 import android.util.Log;
-import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.view.ViewStub;
+import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.EditText;
+import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.fanfou.app.adapter.UserChooseCursorAdapter;
-import com.fanfou.app.adapter.UserCursorAdapter;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.ActionManager;
+import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.ui.widget.EndlessListView;
 import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
 import com.fanfou.app.util.Utils;
@@ -30,18 +34,31 @@ import com.fanfou.app.util.Utils;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.10.21
+ * @version 2.0 2011.10.24
  */
-public class UserChoosePage extends BaseActivity implements OnRefreshListener{
+public class UserChoosePage extends BaseActivity implements OnRefreshListener,
+		FilterQueryProvider {
 
 	protected ActionBar mActionBar;
 	protected EndlessListView mListView;
+	protected EditText mEditText;
 	protected ViewGroup mEmptyView;
+
+	private ViewStub mViewStub;
+	private Button okButton;
+	private Button cancelButton;
+
+//	private boolean mViewStubInitialized;
+
+	private TextChangeListener mTextChangeListener;
 
 	protected Cursor mCursor;
 	protected CursorAdapter mCursorAdapter;
 
 	protected Handler mHandler;
 	protected ResultReceiver mResultReceiver;
+
+	private List<String> mUserNames;
 
 	protected int page = 1;
 
@@ -58,23 +75,29 @@ public class UserChoosePage extends BaseActivity implements OnRefreshListener{
 		super.onCreate(savedInstanceState);
 		if (App.DEBUG)
 			log("onCreate");
-			initialize();
-			setLayout();
-			initCheckState();
+		initialize();
+		setLayout();
+		initCheckState();
 	}
 
 	protected void initialize() {
+		mUserNames = new ArrayList<String>();
 		mHandler = new ResultHandler();
 		mResultReceiver = new MyResultHandler(mHandler);
-		initCursor();
+		mTextChangeListener = new MyTextWatcher();
+		initCursorAdapter();
+
 	}
 
-	protected void initCursor() {
-		String where = UserInfo.TYPE + "=? AND " + UserInfo.OWNER_ID
-				+ "=?";
-		String[] whereArgs = new String[] { String.valueOf(User.AUTO_COMPLETE), App.me.userId };
+	protected void initCursorAdapter() {
+		String where = UserInfo.TYPE + "=? AND " + UserInfo.OWNER_ID + "=?";
+		String[] whereArgs = new String[] { String.valueOf(User.TYPE_FRIENDS),
+				App.me.userId };
 		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				whereArgs, null);
+
+		mCursorAdapter = new UserChooseCursorAdapter(mContext, mCursor);
+		mCursorAdapter.setFilterQueryProvider(this);
 	}
 
 	protected void initCheckState() {
@@ -88,6 +111,7 @@ public class UserChoosePage extends BaseActivity implements OnRefreshListener{
 
 	private void showProgress() {
 		mListView.setVisibility(View.GONE);
+		mEditText.setVisibility(View.GONE);
 		mEmptyView.setVisibility(View.VISIBLE);
 	}
 
@@ -97,23 +121,41 @@ public class UserChoosePage extends BaseActivity implements OnRefreshListener{
 		}
 		isInitialized = true;
 		mEmptyView.setVisibility(View.GONE);
+		mEditText.setVisibility(View.VISIBLE);
 		mListView.setVisibility(View.VISIBLE);
 	}
 
 	private void setLayout() {
-		setContentView(R.layout.list);
+		setContentView(R.layout.user_choose);
 		setActionBar();
 
+		mViewStub = (ViewStub) findViewById(R.id.stub);
+
 		mEmptyView = (ViewGroup) findViewById(R.id.empty);
+
+		mEditText = (EditText) findViewById(R.id.choose_input);
+		mEditText.addTextChangedListener(mTextChangeListener);
 
 		mListView = (EndlessListView) findViewById(R.id.list);
 		mListView.setOnRefreshListener(this);
 		mListView.setItemsCanFocus(false);
 		mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-		mListView.setTextFilterEnabled(true);
-		mCursorAdapter = new UserChooseCursorAdapter(mContext, mCursor);
 		mListView.setAdapter(mCursorAdapter);
 		mListView.removeHeader();
+	}
+
+	private void initViewStub() {
+//		mViewStubInitialized = true;
+		mViewStub.inflate();
+		mViewStub=null;
+		
+		okButton = (Button) findViewById(R.id.button1);
+		okButton.setText(android.R.string.ok);
+		okButton.setOnClickListener(this);
+		
+		cancelButton = (Button) findViewById(R.id.button2);
+		cancelButton.setText(android.R.string.cancel);
+		cancelButton.setOnClickListener(this);
 	}
 
 	/**
@@ -139,7 +181,7 @@ public class UserChoosePage extends BaseActivity implements OnRefreshListener{
 		Bundle b = new Bundle();
 		b.putString(Commons.EXTRA_ID, App.me.userId);
 		b.putInt(Commons.EXTRA_PAGE, page);
-		Utils.startFetchService(this, User.AUTO_COMPLETE, mResultReceiver, b);
+		Utils.startFetchService(this, User.TYPE_FRIENDS, mResultReceiver, b);
 	}
 
 	protected void updateUI() {
@@ -166,12 +208,48 @@ public class UserChoosePage extends BaseActivity implements OnRefreshListener{
 		}
 	}
 
+	@Override
+	public void onClick(View v) {
+		int id = v.getId();
+		switch (id) {
+		case R.id.button1:
+			doAddUserNames();
+			break;
+		case R.id.button2:
+			finish();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	private void doAddUserNames(){
+		StringBuilder sb = new StringBuilder();
+		for (String screenName : mUserNames) {
+			sb.append("@").append(screenName).append(" ");
+		}
+
+		log("User Names: "+sb.toString());
+		Intent intent = new Intent();
+		intent.putExtra(Commons.EXTRA_TEXT, sb.toString());
+		setResult(RESULT_OK, intent);
+		finish();
+	}
+
 	protected class ResultHandler extends Handler {
 
 		@Override
 		public void handleMessage(Message msg) {
 		}
 
+	}
+
+	private class MyTextWatcher extends TextChangeListener {
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before,
+				int count) {
+			mCursorAdapter.getFilter().filter(s.toString());
+		}
 	}
 
 	protected class MyResultHandler extends ResultReceiver {
@@ -230,18 +308,34 @@ public class UserChoosePage extends BaseActivity implements OnRefreshListener{
 
 	@Override
 	public void onItemClick(ListView view, View row, int position) {
-		final Cursor c = (Cursor) view.getItemAtPosition(position);
-		final User u = User.parse(c);
-		if (u != null) {
-			if (App.DEBUG){
-				log("userId=" + u.id + " username=" + u.screenName);
-				Utils.notify(this, "userId=" + u.id + " username=" + u.screenName);
+		SparseBooleanArray sba = view.getCheckedItemPositions();
+		mUserNames.clear();
+		for (int i = 0; i < sba.size(); i++) {
+			if (sba.valueAt(i)) {
+				final Cursor cc = (Cursor) view.getItemAtPosition(sba.keyAt(i));
+				final User uu = User.parse(cc);
+				if (App.DEBUG) {
+					log("userId=" + uu.id + " username=" + uu.screenName);
 				}
-			SparseBooleanArray selectedItems=view.getCheckedItemPositions();
-//			CheckBox cb=(CheckBox) row.findViewById(R.id.item_user_checkbox);
-//			cb.setChecked(true);
-//			ActionManager.doProfile(mContext, u);
+				mUserNames.add(uu.screenName);
+			}
 		}
+
+		if (mViewStub != null) {
+			initViewStub();
+		}
+
+	}
+
+	@Override
+	public Cursor runQuery(CharSequence constraint) {
+		String where = UserInfo.TYPE + " = " + User.TYPE_FRIENDS + " AND "
+				+ UserInfo.OWNER_ID + " = '" + App.me.userId + "' AND ("
+				+ UserInfo.SCREEN_NAME + " like '%" + constraint + "%' OR "
+				+ UserInfo.ID + " like '%" + constraint + "%' )";
+		;
+		return managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
+				null, null);
 	}
 
 }

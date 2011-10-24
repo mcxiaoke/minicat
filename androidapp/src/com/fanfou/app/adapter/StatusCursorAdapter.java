@@ -14,6 +14,9 @@ import android.widget.TextView;
 import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
+import com.fanfou.app.db.Contents.BasicColumns;
+import com.fanfou.app.db.Contents.StatusInfo;
+import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.StatusHelper;
@@ -22,19 +25,10 @@ import com.fanfou.app.util.StringHelper;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.06.01
+ * @version 1.5 2011.10.24
  * 
  */
 public class StatusCursorAdapter extends BaseCursorAdapter {
-
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		if (scrollState == SCROLL_STATE_FLING) {
-			fling = true;
-		} else {
-			fling = false;
-		}
-
-	}
 
 	private static final int ITEM_TYPE_MENTION = 0;
 	private static final int ITEM_TYPE_NONE = 1;
@@ -53,8 +47,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 		if (s == null || s.isNull()) {
 			return ITEM_TYPE_NONE;
 		}
-		if (s.simpleText.contains(
-				"@" + App.me.userScreenName)) {
+		if (s.simpleText.contains("@" + App.me.userScreenName)) {
 			return ITEM_TYPE_MENTION;
 		} else {
 			return ITEM_TYPE_NONE;
@@ -149,7 +142,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 
 		holder.nameText.setText(s.userScreenName);
 		holder.contentText.setText(s.simpleText);
-		holder.metaText.setText(DateTimeHelper.getInterval(s.createdAt) + " 来自"
+		holder.metaText.setText(DateTimeHelper.getInterval(s.createdAt) + " 通过"
 				+ s.source);
 
 	}
@@ -180,11 +173,6 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 	@Override
 	int getLayoutId() {
 		return R.layout.list_item_status;
-	}
-
-	@Override
-	public Cursor runQuery(CharSequence constraint) {
-		return null;
 	}
 
 }

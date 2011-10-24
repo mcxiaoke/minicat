@@ -7,8 +7,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CheckedTextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.CompoundButton;
+import android.widget.FilterQueryProvider;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,9 +21,10 @@ import com.fanfou.app.api.User;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.10.21
+ * @version 1.1 2011.10.24
  * 
  */
-public class UserChooseCursorAdapter extends BaseCursorAdapter implements Filterable{
+public class UserChooseCursorAdapter extends BaseCursorAdapter{
 	private static final String tag = UserChooseCursorAdapter.class.getSimpleName();
 
 	private void log(String message) {
@@ -38,25 +41,23 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter implements Filter
 
 	@Override
 	int getLayoutId() {
-		return R.layout.list_item_chooseuser;
-	}
-
-	@Override
-	public Cursor runQuery(CharSequence constraint) {
-		return null;
+//		return R.layout.list_item_chooseuser;
+		return android.R.layout.simple_list_item_multiple_choice;
 	}
 
 	private void setTextStyle(ViewHolder holder) {
-		holder.nameText.setTextSize(fontSize);
-		TextPaint tp = holder.nameText.getPaint();
-		tp.setFakeBoldText(true);
+		holder.tv.setTextSize(fontSize);
+		
+//		holder.nameText.setTextSize(fontSize);
+//		TextPaint tp = holder.nameText.getPaint();
+//		tp.setFakeBoldText(true);
 	}
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		View view = mInflater.inflate(getLayoutId(), null);
 		ViewHolder holder = new ViewHolder(view);
-		setHeadImage(holder.headIcon);
+//		setHeadImage(holder.headIcon);
 		setTextStyle(holder);
 		view.setTag(holder);
 		bindView(view, context, cursor);
@@ -69,12 +70,12 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter implements Filter
 		final User u = User.parse(cursor);
 		
 		final ViewHolder holder = (ViewHolder) row.getTag();
-		mLoader.set(u.profileImageUrl, holder.headIcon, R.drawable.default_head);
-		
-		holder.nameText.setText(u.screenName);
-		holder.idText.setText(u.id);
-		holder.checkBox.setTag(u);
-		holder.checkBox.setOnCheckedChangeListener(occ);
+//		mLoader.set(u.profileImageUrl, holder.headIcon, R.drawable.default_head);
+		holder.tv.setText(u.screenName+" ("+u.id+")");
+//		holder.nameText.setText(u.screenName);
+//		holder.idText.setText(u.id);
+//		holder.checkBox.setTag(u);
+//		holder.checkBox.setOnCheckedChangeListener(occ);
 
 	}
 	
@@ -82,22 +83,29 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter implements Filter
 		
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-			// TODO Auto-generated method stub
 			User u=(User) buttonView.getTag();
 		}
 	};
 	
 	public void setChecked(int position){
 	}
-
+	
 	private static class ViewHolder {
+		CheckedTextView tv;
+		
+		ViewHolder(View base){
+			this.tv=(CheckedTextView) base.findViewById(android.R.id.text1);
+		}
+	}
+
+	private static class ViewHolder2 {
 
 		ImageView headIcon = null;
 		TextView nameText = null;
 		TextView idText = null;
 		CheckBox checkBox=null;
 
-		ViewHolder(View base) {
+		ViewHolder2(View base) {
 			this.headIcon = (ImageView) base.findViewById(R.id.item_user_head);
 			this.nameText = (TextView) base.findViewById(R.id.item_user_name);
 			this.idText = (TextView) base

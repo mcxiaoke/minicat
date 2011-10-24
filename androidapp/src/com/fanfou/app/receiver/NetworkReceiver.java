@@ -32,7 +32,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 			}
 			NetworkInfo info = (NetworkInfo) intent
 					.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-			if (info != null && info.isAvailable()) {
+			if (info != null && info.isConnectedOrConnecting()) {
 				App.me.apnType = ApnType.NET;
 				disconnected = false;
 				if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
@@ -46,6 +46,8 @@ public class NetworkReceiver extends BroadcastReceiver {
 							App.me.apnType = ApnType.WAP;
 						}
 					}
+				}else{
+					App.me.apnType=ApnType.WIFI;
 				}
 			}
 		}

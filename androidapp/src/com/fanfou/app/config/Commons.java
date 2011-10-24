@@ -82,7 +82,7 @@ public interface Commons {
 	public static final int USER_TYPE_FRIENDS = 41;
 	public static final int USER_TYPE_FOLLOWERS = 42;
 	public static final int USER_TYPE_ALL = 43;
-	public static final int USER_AUTO_COMPLETE = 45;
+//	public static final int USER_AUTO_COMPLETE = 45;
 
 	public static final int ACTION_STATUS_SHOW = 101;
 	public static final int ACTION_STATUS_CREATE = 102;

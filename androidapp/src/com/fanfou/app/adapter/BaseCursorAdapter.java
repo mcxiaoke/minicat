@@ -19,26 +19,10 @@ import com.fanfou.app.util.OptionHelper;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.06.01
+ * @version 1.5 2011.10.24
  * 
  */
-public abstract class BaseCursorAdapter extends CursorAdapter implements
-		FilterQueryProvider, OnScrollListener {
-	boolean fling;
-
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		if (scrollState == SCROLL_STATE_FLING) {
-			fling = true;
-		} else {
-			fling = false;
-		}
-	}
-
-	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem,
-			int visibleItemCount, int totalItemCount) {
-
-	}
+public abstract class BaseCursorAdapter extends CursorAdapter {
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {

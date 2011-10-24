@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.text.Selection;
 import android.util.Log;
 import android.view.View;
@@ -33,6 +34,7 @@ import com.fanfou.app.service.PostStatusService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.ui.TextChangeListener;
+import com.fanfou.app.ui.widget.MyAutoCompleteTextView;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.ImageHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -42,18 +44,25 @@ import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
+ * @version 1.0 2011.06.20
+ * @version 2.0 2011.10.24
  * 
  */
 public class WritePage extends BaseActivity {
 
 	private static final String tag = WritePage.class.getSimpleName();
+	private static final int REQUEST_PHOTO_CAPTURE = 0;
+	private static final int REQUEST_PHOTO_LIBRARY = 1;
+	private static final int REQUEST_LOCATION_ADD = 2;
+	private static final int REQUEST_USERNAME_ADD = 3;
+	private static final int REQUEST_ADD_USER=4;
 
 	private void log(String message) {
 		Log.i(tag, message);
 	}
 
 	private ActionBar mActionBar;
-	private MultiAutoCompleteTextView mAutoCompleteTextView;
+	private MyAutoCompleteTextView mAutoCompleteTextView;
 	CursorAdapter mAdapter;
 	// private ViewGroup vExtra;
 	private ImageView iPicturePrieview;
@@ -117,10 +126,7 @@ public class WritePage extends BaseActivity {
 		}
 	}
 
-	private static final int REQUEST_PHOTO_CAPTURE = 0;
-	private static final int REQUEST_PHOTO_LIBRARY = 1;
-	private static final int REQUEST_LOCATION_ADD = 2;
-	private static final int REQUEST_USERNAME_ADD = 3;
+
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -136,6 +142,9 @@ public class WritePage extends BaseActivity {
 				break;
 			case REQUEST_PHOTO_CAPTURE:
 				doCameraShot(data);
+				break;
+			case REQUEST_ADD_USER:
+				doAddUserNames(data);
 				break;
 			default:
 				break;
@@ -267,15 +276,14 @@ public class WritePage extends BaseActivity {
 	}
 
 	private void setAutoComplete() {
-		mAutoCompleteTextView = (MultiAutoCompleteTextView) findViewById(R.id.write_text);
+		mAutoCompleteTextView = (MyAutoCompleteTextView) findViewById(R.id.write_text);
 		mAutoCompleteTextView.addTextChangedListener(textMonitor);
 		mAutoCompleteTextView.setTokenizer(new AtTokenizer());
-		// mAutoCompleteTextView.setThreshold(1);
 		mAutoCompleteTextView.setDropDownBackgroundResource(R.drawable.bg);
 		mAutoCompleteTextView.setDropDownAnchor(R.id.write_text);
 		String[] projection = new String[] { UserInfo._ID, UserInfo.ID,
 				UserInfo.SCREEN_NAME };
-		String where = BasicColumns.TYPE + " = '" + User.AUTO_COMPLETE + "'";
+		String where = BasicColumns.TYPE + " = '" + User.TYPE_FRIENDS + "'";
 		Cursor c = managedQuery(UserInfo.CONTENT_URI, projection, where, null,
 				null);
 		mAdapter = new AutoCompleteCursorAdapter(this, c);
@@ -430,7 +438,7 @@ public class WritePage extends BaseActivity {
 
 	private void startAddUsername() {
 		Intent intent=new Intent(this, UserChoosePage.class);
-		startActivity(intent);
+		startActivityForResult(intent, REQUEST_ADD_USER);
 //		if (StringHelper.isEmpty(content)) {
 //			mAutoCompleteTextView.setText("@");
 //		} else {
@@ -438,6 +446,13 @@ public class WritePage extends BaseActivity {
 //		}
 //		Selection.setSelection(mAutoCompleteTextView.getEditableText(),
 //				mAutoCompleteTextView.getEditableText().length());
+	}
+	
+	private void doAddUserNames(Intent intent){
+		String names=intent.getStringExtra(Commons.EXTRA_TEXT);
+		mAutoCompleteTextView.setText(content+names);
+		Editable editable=mAutoCompleteTextView.getEditableText();
+		Selection.setSelection(editable, editable.length());
 	}
 
 	private void send() {

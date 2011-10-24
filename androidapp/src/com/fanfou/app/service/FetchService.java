@@ -32,6 +32,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.1 2011.10.10
  * @version 3.0 2011.10.20
  * @version 3.1 2011.10.21
+ * @version 3.2 2011.10.24
  * 
  */
 public class FetchService extends BaseIntentService {
@@ -115,9 +116,9 @@ public class FetchService extends BaseIntentService {
 				if (App.DEBUG)
 					log("doFetchUsers size=" + size);
 
-				if (page <= 1) {
-					cleanUsers(ownerId, mType);
-				}
+//				if (page <= 1) {
+//					cleanUsers(ownerId, mType);
+//				}
 
 				ContentResolver cr = getContentResolver();
 				cr.bulkInsert(UserInfo.CONTENT_URI,

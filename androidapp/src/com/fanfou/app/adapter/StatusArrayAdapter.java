@@ -16,6 +16,11 @@ import com.fanfou.app.api.Status;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.StringHelper;
 
+/**
+ * @author mcxiaoke
+ * @version 1.0 2011.06.25
+ *
+ */
 public class StatusArrayAdapter extends BaseArrayAdapter<Status> {
 
 	private static final String TAG = StatusArrayAdapter.class.getSimpleName();
@@ -90,7 +95,7 @@ public class StatusArrayAdapter extends BaseArrayAdapter<Status> {
 
 		holder.nameText.setText(s.userScreenName);
 		holder.contentText.setText(s.simpleText);
-		holder.metaText.setText(DateTimeHelper.getInterval(s.createdAt) + " 来自"
+		holder.metaText.setText(DateTimeHelper.getInterval(s.createdAt) + " 通过"
 				+ s.source);
 
 		return convertView;

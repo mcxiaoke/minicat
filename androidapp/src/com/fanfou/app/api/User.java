@@ -41,7 +41,7 @@ public class User implements Storable<User> {
 
 	public static final int TYPE_FRIENDS = Commons.USER_TYPE_FRIENDS;
 	public static final int TYPE_FOLLOWERS = Commons.USER_TYPE_FOLLOWERS;
-	public static final int AUTO_COMPLETE = Commons.USER_AUTO_COMPLETE;
+//	public static final int AUTO_COMPLETE = Commons.USER_AUTO_COMPLETE;
 
 	public Date createdAt;
 	public String id;

@@ -875,8 +875,8 @@ public class FanFouProvider extends ContentProvider {
 	
 	private int cleanUsers(){
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		String where = UserInfo.TYPE + " !=? ";
-		String[] whereArgs = new String[] { String.valueOf(User.AUTO_COMPLETE) };
+		String where = UserInfo.OWNER_ID + " !=? ";
+		String[] whereArgs = new String[] { String.valueOf(App.me.userId) };
 		return db.delete(UserInfo.TABLE_NAME, where, whereArgs);
 	}
 

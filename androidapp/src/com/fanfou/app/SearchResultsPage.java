@@ -31,6 +31,7 @@ import com.fanfou.app.util.Utils;
  * @author mcxiaoke
  * @version 1.0 2011.08.05
  * @version 1.1 2011.10.12
+ * @version 1.5 2011.10.24
  * 
  */
 public class SearchResultsPage extends BaseActivity implements
@@ -146,7 +147,7 @@ public class SearchResultsPage extends BaseActivity implements
 
 	protected void updateUI(boolean noMore) {
 		log("updateUI()");
-		mStatusAdapter.updateDataAndUI(mStatuses);
+		mStatusAdapter.updateDataAndUI(mStatuses,keyword);
 		if (noMore) {
 			mListView.onNoLoadMore();
 		} else {
@@ -219,6 +220,7 @@ public class SearchResultsPage extends BaseActivity implements
 			try {
 				result = App.me.api.search(keyword, maxId, true);
 			} catch (ApiException e) {
+				if(App.DEBUG)
 				e.printStackTrace();
 			}
 

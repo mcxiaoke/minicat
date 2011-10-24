@@ -7,6 +7,7 @@ import com.fanfou.app.util.Utils;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.ResultReceiver;
 
 /**
  * @author mcxiaoke
@@ -25,15 +26,15 @@ public class UserTimelinePage extends BaseTimelineActivity {
 	}
 
 	@Override
-	protected void doRetrieveImpl(Bundle b, boolean isGetMore) {
-		if (isGetMore) {
+	protected void doRetrieveImpl(Bundle b, MyResultHandler receiver) {
+		if (receiver.doGetMore) {
 			String maxId = Utils.getMaxId(mCursor);
 			b.putString(Commons.EXTRA_MAX_ID, maxId);
 		} else {
 			String sinceId = Utils.getSinceId(mCursor);
 			b.putString(Commons.EXTRA_SINCE_ID, sinceId);
 		}
-		Utils.startFetchService(this, getType(), mResultReceiver, b);
+		Utils.startFetchService(this, getType(), receiver, b);
 	}
 
 	@Override
