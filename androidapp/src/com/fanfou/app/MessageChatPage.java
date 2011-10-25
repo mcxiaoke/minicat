@@ -1,17 +1,23 @@
 package com.fanfou.app;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.fanfou.app.adapter.MessageCursorAdapter;
 import com.fanfou.app.api.DirectMessage;
+import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
@@ -29,6 +35,7 @@ import com.fanfou.app.util.Utils;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.10.08
+ * @version 1.1 2011.10.25
  * 
  */
 public class MessageChatPage extends BaseActivity {
@@ -45,18 +52,18 @@ public class MessageChatPage extends BaseActivity {
 
 	private EditText mEditText;
 
+	private Button mSendButton;
+
 	private String mContent;
 
-	// private BroadcastReceiver mSendSuccessReceiver;
-	// private IntentFilter mSendSuccessFilter;
-
-	// private Button mButton;
+	private BroadcastReceiver mSendSuccessReceiver;
+	private IntentFilter mSendSuccessFilter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (parseIntent()) {
-			// initSendSuccessReceiver();
+			initSendSuccessReceiver();
 			setLayout();
 			setActionBar();
 			setListView();
@@ -67,28 +74,30 @@ public class MessageChatPage extends BaseActivity {
 		}
 	}
 
-	// private void initSendSuccessReceiver() {
-	// mSendSuccessReceiver = new SendSuccessReceiver();
-	// mSendSuccessFilter = new IntentFilter(Actions.ACTION_MESSAGE_SEND);
-	// mSendSuccessFilter.setPriority(1000);
-	// }
+	private void initSendSuccessReceiver() {
+		mSendSuccessReceiver = new SendSuccessReceiver();
+		mSendSuccessFilter = new IntentFilter(Actions.ACTION_MESSAGE_SEND);
+		mSendSuccessFilter.setPriority(1000);
+	}
 
-	// private class SendSuccessReceiver extends BroadcastReceiver {
-	//
-	// @Override
-	// public void onReceive(Context context, Intent intent) {
-	// if (App.DEBUG) {
-	// Log.d(TAG, "SendSuccessReceiver.received");
-	// IntentHelper.logIntent(TAG, intent);
-	// }
-	// onSendSuccess();
-	// abortBroadcast();
-	// }
-	//
-	// }
+	private class SendSuccessReceiver extends BroadcastReceiver {
 
-	private void onSendSuccess() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (App.DEBUG) {
+				Log.d(TAG, "SendSuccessReceiver.received");
+			}
+			if (onSendSuccess()) {
+				abortBroadcast();
+			}
+		}
 
+	}
+
+	private boolean onSendSuccess() {
+		Utils.notify(this, "私信发送成功！");
+		mListView.setSelection(mCursorAdapter.getCount());
+		return true;
 	}
 
 	private boolean parseIntent() {
@@ -106,6 +115,9 @@ public class MessageChatPage extends BaseActivity {
 		setContentView(R.layout.chat);
 		mEditText = (EditText) findViewById(R.id.msgchat_input);
 		mEditText.addTextChangedListener(textMonitor);
+
+		mSendButton = (Button) findViewById(R.id.button_ok);
+		mSendButton.setOnClickListener(this);
 	}
 
 	private void setActionBar() {
@@ -147,18 +159,26 @@ public class MessageChatPage extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// registerReceiver(mSendSuccessReceiver, mSendSuccessFilter);
+		registerReceiver(mSendSuccessReceiver, mSendSuccessFilter);
 	}
 
 	@Override
 	protected void onPause() {
-		// unregisterReceiver(mSendSuccessReceiver);
+		unregisterReceiver(mSendSuccessReceiver);
 		super.onPause();
 	}
 
 	@Override
 	public void onClick(View v) {
-		super.onClick(v);
+		int id = v.getId();
+		switch (id) {
+		case R.id.button_ok:
+			doSend(false);
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	@Override
@@ -200,7 +220,7 @@ public class MessageChatPage extends BaseActivity {
 	}
 
 	private void doDelete(DirectMessage dm) {
-		if (dm.type==DirectMessage.TYPE_OUT) {
+		if (dm.type == DirectMessage.TYPE_OUT) {
 			ActionManager.doMessageDelete(this, dm.id, null, false);
 		} else {
 			Utils.notify(this, "只能删除你自己发送的私信");
@@ -215,19 +235,23 @@ public class MessageChatPage extends BaseActivity {
 
 		@Override
 		public void performAction(View view) {
-			send();
+			doSend(true);
 		}
 
 	}
 
-	private void send() {
+	private void doSend(boolean finish) {
 		if (StringHelper.isEmpty(mContent)) {
 			Utils.notify(this, "私信内容不能为空");
 			return;
 		}
-		Utils.hideKeyboard(this, mEditText);
 		startSendService();
-		finish();
+		if (finish) {
+			Utils.hideKeyboard(this, mEditText);
+			finish();
+		}else{
+			mEditText.setText("");
+		}
 	}
 
 	private void startSendService() {

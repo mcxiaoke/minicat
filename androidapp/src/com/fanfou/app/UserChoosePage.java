@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.Button;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
@@ -29,6 +28,7 @@ import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.ui.widget.EndlessListView;
 import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
+import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -48,12 +48,12 @@ public class UserChoosePage extends BaseActivity implements OnRefreshListener,
 	private Button okButton;
 	private Button cancelButton;
 
-//	private boolean mViewStubInitialized;
+	// private boolean mViewStubInitialized;
 
 	private TextChangeListener mTextChangeListener;
 
 	protected Cursor mCursor;
-	protected CursorAdapter mCursorAdapter;
+	protected UserChooseCursorAdapter mCursorAdapter;
 
 	protected Handler mHandler;
 	protected ResultReceiver mResultReceiver;
@@ -145,14 +145,14 @@ public class UserChoosePage extends BaseActivity implements OnRefreshListener,
 	}
 
 	private void initViewStub() {
-//		mViewStubInitialized = true;
+		// mViewStubInitialized = true;
 		mViewStub.inflate();
-		mViewStub=null;
-		
+		mViewStub = null;
+
 		okButton = (Button) findViewById(R.id.button1);
 		okButton.setText(android.R.string.ok);
 		okButton.setOnClickListener(this);
-		
+
 		cancelButton = (Button) findViewById(R.id.button2);
 		cancelButton.setText(android.R.string.cancel);
 		cancelButton.setOnClickListener(this);
@@ -195,17 +195,12 @@ public class UserChoosePage extends BaseActivity implements OnRefreshListener,
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (mListView != null) {
-			mListView.restorePosition();
-		}
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if (mListView != null) {
-			mListView.savePosition();
-		}
+		App.me.clearImageTasks();
 	}
 
 	@Override
@@ -222,14 +217,14 @@ public class UserChoosePage extends BaseActivity implements OnRefreshListener,
 			break;
 		}
 	}
-	
-	private void doAddUserNames(){
+
+	private void doAddUserNames() {
 		StringBuilder sb = new StringBuilder();
 		for (String screenName : mUserNames) {
 			sb.append("@").append(screenName).append(" ");
 		}
 
-		log("User Names: "+sb.toString());
+		log("User Names: " + sb.toString());
 		Intent intent = new Intent();
 		intent.putExtra(Commons.EXTRA_TEXT, sb.toString());
 		setResult(RESULT_OK, intent);
@@ -311,15 +306,18 @@ public class UserChoosePage extends BaseActivity implements OnRefreshListener,
 		SparseBooleanArray sba = view.getCheckedItemPositions();
 		mUserNames.clear();
 		for (int i = 0; i < sba.size(); i++) {
+			mCursorAdapter.setItemChecked(sba.keyAt(i), sba.valueAt(i));
 			if (sba.valueAt(i)) {
 				final Cursor cc = (Cursor) view.getItemAtPosition(sba.keyAt(i));
 				final User uu = User.parse(cc);
 				if (App.DEBUG) {
-					log("userId=" + uu.id + " username=" + uu.screenName);
+					log("onItemClick Checked userId=" + uu.id + " username=" + uu.screenName);
 				}
 				mUserNames.add(uu.screenName);
 			}
 		}
+
+		log(StringHelper.toString(mUserNames));
 
 		if (mViewStub != null) {
 			initViewStub();

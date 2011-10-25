@@ -14,10 +14,12 @@ import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.dialog.ConfirmDialog;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.06.09
+ * @version 1.1 2011.10.25
  * 
  */
 public final class UIManager {
@@ -75,7 +77,16 @@ public final class UIManager {
 				switch (pos) {
 				case 0:
 					if (s.userId.equals(App.me.userId)) {
-						UIManager.doDelete(a, s, adapter, ss);
+						final ConfirmDialog dialog = new ConfirmDialog(a,
+								"删除消息", "要删除这条消息吗？");
+						dialog.setOnClickListener(new ConfirmDialog.OnOKClickListener() {
+
+							@Override
+							public void onOKClick() {
+								doDelete(a, s, adapter, ss);
+							}
+						});
+						dialog.show();
 					} else {
 						ActionManager.doReply(a, s);
 					}
@@ -112,7 +123,16 @@ public final class UIManager {
 				switch (pos) {
 				case 0:
 					if (s.userId.equals(App.me.userId)) {
-						UIManager.doDelete(a, s, c);
+						final ConfirmDialog dialog = new ConfirmDialog(a,
+								"删除消息", "要删除这条消息吗？");
+						dialog.setOnClickListener(new ConfirmDialog.OnOKClickListener() {
+
+							@Override
+							public void onOKClick() {
+								doDelete(a, s, c);
+							}
+						});
+						dialog.show();
 					} else {
 						ActionManager.doReply(a, s);
 					}

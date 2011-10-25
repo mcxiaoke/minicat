@@ -9,10 +9,11 @@ import com.fanfou.app.api.ApiException;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.08.29
+ * @version 1.1 2011.10.25
  */
-public class NoAuthClient extends BaseClient {
+public class SimpleAuthClient extends BaseClient {
 
-	public NoAuthClient() {
+	public SimpleAuthClient() {
 		super();
 	}
 

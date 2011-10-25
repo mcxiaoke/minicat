@@ -53,10 +53,6 @@ public class EndlessListView extends ListView implements OnItemClickListener {
 	protected boolean isLoading;
 	protected boolean isRefresh;
 
-	protected View curPosView;
-	protected int curPos;
-	protected int curPosTop;
-
 	public EndlessListView(Context context) {
 		super(context);
 		init(context);
@@ -250,17 +246,6 @@ public class EndlessListView extends ListView implements OnItemClickListener {
 
 	public boolean noFooter() {
 		return getFooterViewsCount() == 0;
-	}
-
-	public void savePosition() {
-		int index = getFirstVisiblePosition();
-		View v = getChildAt(index);
-		curPosTop = (v == null) ? 0 : v.getTop();
-		curPos = index;
-	}
-
-	public void restorePosition() {
-		setSelectionFromTop(curPos, curPosTop);
 	}
 
 	@Override

@@ -17,6 +17,7 @@ import android.text.Selection;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -44,14 +45,17 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * @author mcxiaoke
  * @version 1.0 2011.06.10
  * @version 2.0 2011.10.17
+ * @version 2.5 2011.10.25
  * 
  */
-public final class LoginPage extends BaseActivity {
+public final class LoginPage extends Activity implements OnClickListener{
+	
 	private static final int REQUEST_CODE_REGISTER = 0;
-
 
 	public static final String TAG = LoginPage.class.getSimpleName();
 	
+	private LoginPage mContext;
+
 	private GoogleAnalyticsTracker g;
 	private int page;
 
@@ -73,25 +77,20 @@ public final class LoginPage extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// String savedTokenSecret = OptionHelper.readString(mContext,
-		// R.string.option_oauth_token_secret, null);
-
-		if (App.me.isLogin) {
-			IntentHelper.goHomePage(this, page);
-		} else {
-			g = GoogleAnalyticsTracker.getInstance();
-			g.startNewSession(getString(R.string.config_google_analytics_code),
-					this);
-			g.trackPageView("LoginPage");
-			initLayout();
-
-			// 登录时不允许横竖屏切换
-			// Utils.lockScreenOrientation(mContext);
-		}
+		init();
+		setLayout();
 	}
 
-	private void initLayout() {
+	private void init() {
+		mContext=this;
+		Utils.initScreenConfig(this);
+		g = GoogleAnalyticsTracker.getInstance();
+		g.startNewSession(getString(R.string.config_google_analytics_code),
+				this);
+		g.trackPageView("LoginPage");
+	}
+
+	private void setLayout() {
 		setContentView(R.layout.login);
 
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
@@ -159,7 +158,7 @@ public final class LoginPage extends BaseActivity {
 		switch (v.getId()) {
 		case R.id.login_signin:
 			if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
-				showToast("密码和帐号不能为空");
+				Utils.notify(mContext,"密码和帐号不能为空");
 			} else {
 				g.setCustomVar(1, "username", username);
 				g.trackEvent("Action", "onClick", "Login", 1);
@@ -175,25 +174,13 @@ public final class LoginPage extends BaseActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_REGISTER) {
-//			editUsername.setText(data.getStringExtra("userid"));
+			// editUsername.setText(data.getStringExtra("userid"));
 			editUsername.setText(data.getStringExtra("email"));
 			editPassword.setText(data.getStringExtra("password"));
-			page=data.getIntExtra(Commons.EXTRA_PAGE, 0);
+			page = data.getIntExtra(Commons.EXTRA_PAGE, 0);
 			mLoginTask = new LoginTask();
 			mLoginTask.execute();
 		}
-	}
-
-	@Override
-	protected int getPageType() {
-		return PAGE_LOGIN;
-	}
-
-	public static void doLogin(Context context) {
-		App.me.removeAccountInfo();
-		Intent intent = new Intent(context, LoginPage.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		context.startActivity(intent);
 	}
 
 	private void goSignUpWeb() {
@@ -214,10 +201,12 @@ public final class LoginPage extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		App.active = true;
 	}
 
 	@Override
 	protected void onPause() {
+		App.active = false;
 		super.onPause();
 	}
 
@@ -237,10 +226,6 @@ public final class LoginPage extends BaseActivity {
 		super.onSaveInstanceState(state);
 		state.putString(USERNAME, username);
 		state.putString(PASSWORD, password);
-	}
-
-	private void showToast(String message) {
-		Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
 	}
 
 	private void clearDB() {
@@ -383,11 +368,10 @@ public final class LoginPage extends BaseActivity {
 
 			switch (result.code) {
 			case LOGIN_IO_ERROR:
-				showToast(result.message);
+				Utils.notify(mContext,result.message);
 				break;
 			case LOGIN_AUTH_FAILED:
-				// g.trackEvent("Action", "LoginFailed", "AUTH_FAILED", 1);
-				showToast(result.message);
+				Utils.notify(mContext,result.message);
 				break;
 			case LOGIN_CANCELLED_BY_USER:
 				break;
@@ -401,6 +385,7 @@ public final class LoginPage extends BaseActivity {
 					g.dispatch();
 				}
 				IntentHelper.goHomePage(mContext, page);
+				finish();
 				break;
 			default:
 				break;

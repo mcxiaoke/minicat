@@ -256,8 +256,8 @@ public class ImageLoader implements Runnable, IImageLoader {
 			if (bitmap != null) {
 				String tag = (String) imageView.getTag();
 				if (App.DEBUG) {
-					Log.i(TAG, "InternelCallback.onFinish() tag=" + tag);
-					Log.i(TAG, "InternelCallback.onFinish() url=" + url);
+					Log.d(TAG, "InternelCallback.onFinish() tag=" + tag);
+					Log.d(TAG, "InternelCallback.onFinish() url=" + url);
 				}
 				if (tag != null && tag.equals(url)) {
 					imageView.setImageBitmap(bitmap);
@@ -295,6 +295,12 @@ public class ImageLoader implements Runnable, IImageLoader {
 	@Override
 	public void clearCache() {
 		mCache.clear();
+	}
+
+	@Override
+	public void clearQueue() {
+		mTaskQueue.clear();
+		mCallbackMap.clear();
 	}
 
 }

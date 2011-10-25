@@ -261,6 +261,13 @@ public final class Utils {
 			AlarmHelper.setCleanTask(context);
 		}
 	}
+	
+	public static void setAutoUpdate(Context context) {
+		boolean isSet=OptionHelper.readBoolean(context, R.string.option_autoupdate, false);
+		if(isSet){
+			AlarmHelper.setUpdateTask(context);
+		}
+	}
 
 	public static void setAutoComplete(Context context) {
 		boolean isSet = OptionHelper.readBoolean(context,
@@ -348,5 +355,7 @@ public final class Utils {
 			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}
 	}
+
+
 
 }

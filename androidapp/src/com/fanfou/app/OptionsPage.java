@@ -24,6 +24,8 @@ import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
+ * @version 1.0 2011.06.11
+ * @version 1.1 2011.10.25
  * 
  */
 public class OptionsPage extends PreferenceActivity implements
@@ -44,12 +46,14 @@ public class OptionsPage extends PreferenceActivity implements
 	protected void onPause() {
 		getPreferenceScreen().getSharedPreferences()
 		.unregisterOnSharedPreferenceChangeListener(this);
+		App.active = false;
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		App.active = true;
 		getPreferenceScreen().getSharedPreferences()
 				.registerOnSharedPreferenceChangeListener(this);
 	}

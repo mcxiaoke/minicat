@@ -123,12 +123,12 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
 		
 		
-		String title="TA";
+		String title="TA的";
 		if(user!=null){
 			if(user.gender.equals("男")){
-				title = "他";
+				title = "他的";
 			}else if(user.gender.equals("女")){
-				title = "她";
+				title = "她的";
 			}
 		}
 		mActionBar.setTitle(title + getPageTitle());

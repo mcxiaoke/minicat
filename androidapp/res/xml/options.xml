@@ -1,141 +1,216 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-	android:title="设置">
+	android:title="设置" >
 
-	<PreferenceScreen android:title="后台更新和通知">
+	<PreferenceScreen android:title="后台更新和通知" >
 
-		<PreferenceCategory android:title="后台更新">
-			<CheckBoxPreference android:title="后台更新"
-				android:summary="启用后台更新" android:key="@string/option_notification"
-				android:defaultValue="true" />
-			<ListPreference android:entries="@array/notification_interval"
+		<PreferenceCategory android:title="后台更新" >
+
+			<CheckBoxPreference
+				android:defaultValue="true"
+				android:key="@string/option_notification"
+				android:summary="启用后台更新"
+				android:title="后台更新" />
+
+			<ListPreference
+				android:defaultValue="5"
+				android:dependency="@string/option_notification"
+				android:dialogTitle="后台更新时间间隔"
+				android:entries="@array/notification_interval"
 				android:entryValues="@array/notification_interval_values"
-				android:summary="后台更新时间间隔" android:dialogTitle="后台更新时间间隔"
-				android:title="更新频率" android:key="@string/option_notification_interval"
-				android:defaultValue="5" android:dependency="@string/option_notification" />
+				android:key="@string/option_notification_interval"
+				android:summary="后台更新时间间隔"
+				android:title="更新频率" />
 		</PreferenceCategory>
 
-		<PreferenceCategory android:title="通知类型">
-			<CheckBoxPreference android:title="好友消息"
-				android:key="@string/option_notification_home" android:defaultValue="false"
-				android:dependency="@string/option_notification" />
-			<CheckBoxPreference android:title="提到我的消息"
+		<PreferenceCategory android:title="通知类型" >
+
+			<CheckBoxPreference
+				android:defaultValue="false"
+				android:dependency="@string/option_notification"
+				android:key="@string/option_notification_home"
+				android:title="好友消息" />
+
+			<CheckBoxPreference
+				android:defaultValue="true"
+				android:dependency="@string/option_notification"
 				android:key="@string/option_notification_mention"
-				android:defaultValue="true" android:dependency="@string/option_notification" />
-			<CheckBoxPreference android:title="私信"
-				android:key="@string/option_notification_dm" android:defaultValue="true"
-				android:dependency="@string/option_notification" />
+				android:title="提到我的消息" />
+
+			<CheckBoxPreference
+				android:defaultValue="true"
+				android:dependency="@string/option_notification"
+				android:key="@string/option_notification_dm"
+				android:title="私信" />
 		</PreferenceCategory>
 
-		<PreferenceCategory android:title="通知设置">
+		<PreferenceCategory android:title="通知设置" >
 
-			<CheckBoxPreference android:title="通知"
-				android:summary="收到消息和私信时在状态栏显示通知" android:key="@string/option_notification_switch"
-				android:defaultValue="true" android:dependency="@string/option_notification" />
+			<CheckBoxPreference
+				android:defaultValue="true"
+				android:dependency="@string/option_notification"
+				android:key="@string/option_notification_switch"
+				android:summary="收到消息和私信时在状态栏显示通知"
+				android:title="通知" />
 
-			<CheckBoxPreference android:title="声音"
-				android:summary="收到消息和私信时声音提示" android:key="@string/option_notification_sound"
-				android:defaultValue="true" android:dependency="@string/option_notification_switch" />
+			<CheckBoxPreference
+				android:defaultValue="true"
+				android:dependency="@string/option_notification_switch"
+				android:key="@string/option_notification_sound"
+				android:summary="收到消息和私信时声音提示"
+				android:title="声音" />
 
-			<RingtonePreference android:key="@string/option_notification_ringtone"
-				android:title="选择铃声" android:ringtoneType="notification"
+			<RingtonePreference
 				android:defaultValue="content://settings/system/notification_sound"
-				android:dependency="@string/option_notification_sound" />
+				android:dependency="@string/option_notification_sound"
+				android:key="@string/option_notification_ringtone"
+				android:ringtoneType="notification"
+				android:title="选择铃声" />
 
-			<CheckBoxPreference android:title="震动"
-				android:summary="收到消息和私信时震动提示" android:key="@string/option_notification_vibrate"
-				android:defaultValue="true" android:dependency="@string/option_notification_switch" />
-
+			<CheckBoxPreference
+				android:defaultValue="true"
+				android:dependency="@string/option_notification_switch"
+				android:key="@string/option_notification_vibrate"
+				android:summary="收到消息和私信时震动提示"
+				android:title="震动" />
 		</PreferenceCategory>
-
 	</PreferenceScreen>
 
-	<PreferenceCategory android:title="显示">
+	<PreferenceCategory android:title="界面" >
 
-		<CheckBoxPreference android:title="锁定屏幕方向"
-			android:summary="强制竖屏" android:key="@string/option_force_portrait"
-			android:defaultValue="false" />
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="@string/option_show_head"
+			android:summary="时间线显示用户头像"
+			android:title="显示头像" />
 
-		<CheckBoxPreference android:title="全屏显示"
-			android:summary="隐藏系统状态栏" android:key="@string/option_force_fullscreen"
-			android:defaultValue="false" />
+		<ListPreference
+			android:defaultValue="15"
+			android:dialogTitle="选择消息字体大小"
+			android:entries="@array/font_size"
+			android:entryValues="@array/font_size_values"
+			android:key="@string/option_fontsize"
+			android:summary="设置消息字体大小"
+			android:title="消息字体大小" />
 
-		<CheckBoxPreference android:title="显示用户头像"
-			android:summary="时间线显示用户头像" android:key="@string/option_show_head"
-			android:defaultValue="true" />
+		<ListPreference
+			android:defaultValue="0"
+			android:dialogTitle="选择消息页面图片显示方式"
+			android:entries="@array/pic_level"
+			android:entryValues="@array/pic_level_values"
+			android:key="@string/option_pic_level"
+			android:summary="设置消息页面图片大小"
+			android:title="消息图片预览" />
 
-		<ListPreference android:entries="@array/font_size"
-			android:entryValues="@array/font_size_values" android:summary="设置消息字体大小"
-			android:dialogTitle="选择消息字体大小" android:title="消息字体大小"
-			android:key="@string/option_fontsize" android:defaultValue="15" />
-
-		<ListPreference android:entries="@array/pic_level"
-			android:entryValues="@array/pic_level_values" android:summary="设置消息页面图片大小"
-			android:dialogTitle="选择消息页面图片显示方式" android:title="消息图片预览"
-			android:key="@string/option_pic_level" android:defaultValue="0" />
-
-		<ListPreference android:entries="@array/bottom_icon_position"
+		<ListPreference
+			android:defaultValue="right"
+			android:dialogTitle="设置刷新图标显示位置"
+			android:entries="@array/bottom_icon_position"
 			android:entryValues="@array/bottom_icon_position_values"
-			android:summary="设置底部刷新图标" android:dialogTitle="设置刷新图标显示位置"
-			android:title="底部刷新图标" android:key="@string/option_bottom_refresh_icon"
-			android:defaultValue="right" />
+			android:key="@string/option_bottom_refresh_icon"
+			android:summary="设置底部刷新图标"
+			android:title="底部刷新图标" />
 
-		<ListPreference android:entries="@array/bottom_icon_position"
+		<ListPreference
+			android:defaultValue="none"
+			android:dialogTitle="设置编辑图标显示位置"
+			android:entries="@array/bottom_icon_position"
 			android:entryValues="@array/bottom_icon_position_values"
-			android:summary="底部编辑图标" android:dialogTitle="设置编辑图标显示位置"
-			android:title="底部编辑图标" android:key="@string/option_bottom_write_icon"
-			android:defaultValue="none" />
-
+			android:key="@string/option_bottom_write_icon"
+			android:summary="底部编辑图标"
+			android:title="底部编辑图标" />
 	</PreferenceCategory>
 
-	<PreferenceCategory android:title="功能">
+	<PreferenceCategory android:title="功能" >
 
-		<CheckBoxPreference android:title="启动时刷新"
-			android:summary="启动时自动获取新消息" android:key="@string/option_refresh_on_open"
-			android:defaultValue="false" />
+		<CheckBoxPreference
+			android:defaultValue="false"
+			android:key="@string/option_force_portrait"
+			android:summary="强制竖屏显示"
+			android:title="锁定竖屏" />
 
-		<ListPreference android:entries="@array/photo_quality"
-			android:entryValues="@array/photo_quality_values" android:summary="设置上传照片的质量"
-			android:dialogTitle="选择上传照片的质量" android:title="上传照片质量"
-			android:key="@string/option_photo_quality" android:defaultValue="80" />
+		<CheckBoxPreference
+			android:defaultValue="false"
+			android:key="@string/option_force_fullscreen"
+			android:summary="隐藏系统状态栏"
+			android:title="全屏显示" />
 
-		<CheckBoxPreference android:title="自动升级"
-			android:summary="定时检测新版本" android:key="@string/option_autoupdate"
-			android:defaultValue="true" />
+		<CheckBoxPreference
+			android:defaultValue="false"
+			android:key="@string/option_confirm_on_exit"
+			android:summary="退出客户端时需要确认"
+			android:title="退出确认" />
+
+		<CheckBoxPreference
+			android:defaultValue="false"
+			android:key="@string/option_refresh_on_open"
+			android:summary="启动时自动获取新消息"
+			android:title="启动时刷新" />
+
+		<ListPreference
+			android:defaultValue="80"
+			android:dialogTitle="选择上传照片的质量"
+			android:entries="@array/photo_quality"
+			android:entryValues="@array/photo_quality_values"
+			android:key="@string/option_photo_quality"
+			android:summary="设置上传照片的质量"
+			android:title="上传照片质量" />
+
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="@string/option_autoupdate"
+			android:summary="定时检测新版本"
+			android:title="自动升级" />
 
 		<com.fanfou.app.preferences.ClearDataDialogPreference
-			android:key="@string/option_cleandb" android:title="清空数据缓存"
-			android:dialogTitle="清空数据缓存" android:summary="清空缓存的消息，私信和个人数据"
 			android:dialogMessage="是否要清空数据库中缓存的消息，私信和个人数据？（提示：客户端会自动清理过旧的数据，不建议手动清空）"
-			android:positiveButtonText="确定" android:negativeButtonText="取消" />
+			android:dialogTitle="清空数据缓存"
+			android:key="@string/option_cleandb"
+			android:negativeButtonText="取消"
+			android:positiveButtonText="确定"
+			android:summary="清空缓存的消息，私信和个人数据"
+			android:title="清空数据缓存" />
 
 		<com.fanfou.app.preferences.ClearCacheDialogPreference
-			android:key="@string/option_cleanpic" android:title="清空图片缓存"
-			android:dialogTitle="清空图片缓存" android:summary="清空存储卡中缓存的图片"
 			android:dialogMessage="是否要清空存储卡中缓存的用户头像和消息图片？（提示：图片缓存在存储卡上，占用空间很小，不建议手动清空）"
-			android:positiveButtonText="确定" android:negativeButtonText="取消" />
-
+			android:dialogTitle="清空图片缓存"
+			android:key="@string/option_cleanpic"
+			android:negativeButtonText="取消"
+			android:positiveButtonText="确定"
+			android:summary="清空存储卡中缓存的图片"
+			android:title="清空图片缓存" />
 	</PreferenceCategory>
 
-	<PreferenceCategory android:title="信息">
+	<PreferenceCategory android:title="信息" >
+
 		<com.fanfou.app.preferences.LogoutDialogPreference
-			android:key="@string/option_logout" android:title="注销登录"
-			android:dialogTitle="注销登录" android:summary="注销当前帐号，重新登录"
-			android:dialogMessage="是否要注销当前帐号，重新登录？" android:positiveButtonText="确定"
-			android:negativeButtonText="取消" />
+			android:dialogMessage="是否要注销当前帐号，重新登录？"
+			android:dialogTitle="注销登录"
+			android:key="@string/option_logout"
+			android:negativeButtonText="取消"
+			android:positiveButtonText="确定"
+			android:summary="注销当前帐号，重新登录"
+			android:title="注销登录" />
 
-		<Preference android:title="软件升级" android:summary="联网检测是否有新版本"
-			android:key="@string/option_check_update" />
+		<Preference
+			android:key="@string/option_check_update"
+			android:summary="联网检测是否有新版本"
+			android:title="软件升级" />
 
-		<Preference android:title="意见反馈" android:summary="通过邮件发送意见和建议"
-			android:key="@string/option_feedback" />
+		<Preference
+			android:key="@string/option_feedback"
+			android:summary="通过邮件发送意见和建议"
+			android:title="意见反馈" />
 
-		<Preference android:title="访问网站" android:summary="访问饭否网站获取更多信息"
-			android:key="@string/option_website">
-			<intent android:action="android.intent.action.VIEW"
+		<Preference
+			android:key="@string/option_website"
+			android:summary="访问饭否网站获取更多信息"
+			android:title="访问网站" >
+
+			<intent
+				android:action="android.intent.action.VIEW"
 				android:data="http://fanfou.com/" />
 		</Preference>
-
 	</PreferenceCategory>
 
 </PreferenceScreen>

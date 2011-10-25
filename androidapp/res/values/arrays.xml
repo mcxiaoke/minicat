@@ -2,14 +2,14 @@
 <resources>
 
 	<string-array name="photo_quality">
-		<item>高质量(流量大)</item>
+		<item>高质量(较多流量)</item>
 		<item>中等质量(推荐)</item>
 		<item>低质量(省流量)</item>
 	</string-array>
 	<string-array name="photo_quality_values">
 		<item>95</item>
 		<item>80</item>
-		<item>60</item>
+		<item>70</item>
 	</string-array>
 
 	<string-array name="pic_level">

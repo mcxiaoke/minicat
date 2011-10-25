@@ -34,6 +34,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.0 2011.05.30
  * @version 2.0 2011.09.25
  * @version 2.1 2011.10.19
+ * @version 2.1 2011.10.25
  * 
  */
 public abstract class BaseActivity extends Activity implements
@@ -45,7 +46,7 @@ public abstract class BaseActivity extends Activity implements
 
 	protected static final int REQUEST_CODE_OPTION = 0;
 
-	protected Activity mContext;
+	protected BaseActivity mContext;
 	protected LayoutInflater mInflater;
 	protected boolean isActive = false;
 
@@ -102,8 +103,8 @@ public abstract class BaseActivity extends Activity implements
 	@Override
 	protected void onPause() {
 		App.active = isActive = false;
+		unregisterReceiver(mBroadcastReceiver);
 		super.onPause();
-		 unregisterReceiver(mBroadcastReceiver);
 	}
 
 	@Override
@@ -308,6 +309,7 @@ public abstract class BaseActivity extends Activity implements
 
 	protected void onHomeClick() {
 		IntentHelper.goHomePage(this, 0);
+		finish();
 	}
 
 	protected void onExitClick() {

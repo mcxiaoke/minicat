@@ -1,100 +1,188 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:orientation="vertical">
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical" >
 
-	<com.fanfou.app.ui.ActionBar android:id="@id/actionbar"
+	<com.fanfou.app.ui.ActionBar
+		android:id="@id/actionbar"
 		style="@style/ActionBar" />
 
-	<include layout="@layout/empty" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" />
+	<include
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		layout="@layout/empty" />
 
-	<ScrollView android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:id="@id/user_profile"
-		android:scrollbars="none" android:background="@color/list_background">
-		<LinearLayout android:layout_width="fill_parent"
-			android:layout_height="fill_parent" android:orientation="vertical">
+	<ScrollView
+		android:id="@id/user_profile"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:background="@color/list_background"
+		android:scrollbars="none" >
 
-			<RelativeLayout style="@style/Box" android:id="@id/user_headview"
-				android:layout_margin="4dp">
+		<LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:orientation="vertical" >
 
-				<ImageView android:id="@id/user_head" style="@style/Image.Head"
+			<RelativeLayout
+				android:id="@id/user_headview"
+				style="@style/Box"
+				android:layout_margin="4dp" >
+
+				<ImageView
+					android:id="@id/user_head"
+					style="@style/Image.Head"
 					android:layout_alignParentLeft="true" />
 
-				<TextView android:id="@id/user_name" style="@style/Text.NameBig"
-					android:layout_toRightOf="@id/user_head" android:text="mcxiaoke" />
+				<TextView
+					android:id="@id/user_name"
+					style="@style/Text.NameBig"
+					android:layout_toRightOf="@id/user_head"
+					android:text="mcxiaoke" />
 
-				<TextView android:id="@id/user_relationship" style="@style/Text.MetaBig"
-					android:layout_alignLeft="@id/user_name" android:layout_below="@id/user_name"
+				<TextView
+					android:id="@id/user_relationship"
+					style="@style/Text.MetaBig"
+					android:layout_alignLeft="@id/user_name"
+					android:layout_below="@id/user_name"
 					android:visibility="gone" />
 
-				<ImageView android:id="@id/user_protected" style="@style/Icon.Mini"
+				<ImageView
+					android:id="@id/user_protected"
+					style="@style/Icon.Mini"
+					android:layout_alignBottom="@id/user_name"
 					android:layout_toRightOf="@id/user_name"
-					android:layout_alignBottom="@id/user_name" android:src="@drawable/i_mini_locked"/>
-
-				<ImageView style="@style/Icon.Action" android:id="@id/user_action_follow"
-					android:layout_centerVertical="true"
-					android:layout_alignParentRight="true" android:src="@drawable/btn_follow" />
+					android:src="@drawable/i_mini_locked" />
 			</RelativeLayout>
 
-			<LinearLayout style="@style/Box.Horizontal" android:id="@id/user_actionview"
-				android:layout_margin="8dp" android:padding="6dp"
-				android:background="@drawable/text_white_bg">
+			<LinearLayout
+				android:id="@id/user_actionview"
+				style="@style/Box.Horizontal"
+				android:layout_margin="4dp"
+				android:background="@drawable/text_white_bg"
+				android:padding="6dp" >
 
-				<ImageView style="@style/Icon.Action" android:id="@id/user_action_reply"
-					android:src="@drawable/btn_reply" android:layout_weight="1" />
+				<ImageView
+					android:id="@id/user_action_follow"
+					style="@style/Icon.Action"
+					android:layout_weight="1"
+					android:src="@drawable/btn_follow" />
 
-				<ImageView style="@style/Icon.Action" android:id="@id/user_action_message"
-					android:src="@drawable/btn_dm" android:layout_weight="1" />
+				<ImageView
+					android:id="@id/user_action_reply"
+					style="@style/Icon.Action"
+					android:layout_weight="1"
+					android:src="@drawable/btn_reply" />
 
+				<ImageView
+					android:id="@id/user_action_message"
+					style="@style/Icon.Action"
+					android:layout_weight="1"
+					android:src="@drawable/btn_dm" />
 			</LinearLayout>
 
-			<LinearLayout style="@style/Profile.Item" android:id="@id/user_statuses_view">
-				<TextView style="@style/Text.Large" android:id="@id/user_statuses_title"
-					android:text="我的消息" android:layout_alignParentLeft="true" />
-				<View android:layout_width="wrap_content"
-					android:layout_height="0dp" android:layout_weight="1" />
-				<TextView android:id="@id/user_statuses" style="@style/Text.Small"
-					android:text="123456" android:layout_alignParentRight="true" />
+			<LinearLayout
+				android:id="@id/user_statuses_view"
+				style="@style/Profile.Item" >
+
+				<TextView
+					android:id="@id/user_statuses_title"
+					style="@style/Text.Large"
+					android:layout_alignParentLeft="true"
+					android:text="我的消息" />
+
+				<View
+					android:layout_width="wrap_content"
+					android:layout_height="0dp"
+					android:layout_weight="1" />
+
+				<TextView
+					android:id="@id/user_statuses"
+					style="@style/Text.Small"
+					android:layout_alignParentRight="true"
+					android:text="123456" />
 			</LinearLayout>
 
-			<LinearLayout style="@style/Profile.Item" android:id="@id/user_favorites_view">
-				<TextView style="@style/Text.Large" android:id="@id/user_favorites_title"
+			<LinearLayout
+				android:id="@id/user_favorites_view"
+				style="@style/Profile.Item" >
+
+				<TextView
+					android:id="@id/user_favorites_title"
+					style="@style/Text.Large"
 					android:text="我的收藏" />
-				<View android:layout_width="wrap_content"
-					android:layout_height="0dp" android:layout_weight="1" />
-				<TextView android:id="@id/user_favorites" style="@style/Text.Small"
+
+				<View
+					android:layout_width="wrap_content"
+					android:layout_height="0dp"
+					android:layout_weight="1" />
+
+				<TextView
+					android:id="@id/user_favorites"
+					style="@style/Text.Small"
 					android:text="123" />
 			</LinearLayout>
 
-			<LinearLayout style="@style/Profile.Item" android:id="@id/user_friends_view">
-				<TextView style="@style/Text.Large" android:id="@id/user_friends_title"
+			<LinearLayout
+				android:id="@id/user_friends_view"
+				style="@style/Profile.Item" >
+
+				<TextView
+					android:id="@id/user_friends_title"
+					style="@style/Text.Large"
 					android:text="我关注的人" />
-				<View android:layout_width="wrap_content"
-					android:layout_height="0dp" android:layout_weight="1" />
-				<TextView android:id="@id/user_friends" style="@style/Text.Small"
+
+				<View
+					android:layout_width="wrap_content"
+					android:layout_height="0dp"
+					android:layout_weight="1" />
+
+				<TextView
+					android:id="@id/user_friends"
+					style="@style/Text.Small"
 					android:text="1856" />
 			</LinearLayout>
 
-			<LinearLayout style="@style/Profile.Item" android:id="@id/user_followers_view">
-				<TextView style="@style/Text.Large" android:id="@id/user_followers_title"
+			<LinearLayout
+				android:id="@id/user_followers_view"
+				style="@style/Profile.Item" >
+
+				<TextView
+					android:id="@id/user_followers_title"
+					style="@style/Text.Large"
 					android:text="关注我的人" />
-				<View android:layout_width="wrap_content"
-					android:layout_height="0dp" android:layout_weight="1" />
-				<TextView android:id="@id/user_followers" style="@style/Text.Small"
+
+				<View
+					android:layout_width="wrap_content"
+					android:layout_height="0dp"
+					android:layout_weight="1" />
+
+				<TextView
+					android:id="@id/user_followers"
+					style="@style/Text.Small"
 					android:text="156" />
 			</LinearLayout>
 
-			<TextView android:id="@id/user_description"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:background="@drawable/text_white_bg" style="@style/Text.Medium"
-				android:padding="6dp" android:layout_margin="8dp" />
-				
-				<TextView android:id="@id/user_extrainfo"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:background="@drawable/text_white_bg" style="@style/Text.Medium"
-				android:padding="6dp" android:layout_margin="8dp" android:autoLink="web"/>
+			<TextView
+				android:id="@id/user_description"
+				style="@style/Text.Medium"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:layout_margin="8dp"
+				android:background="@drawable/text_white_bg"
+				android:padding="6dp" />
 
+			<TextView
+				android:id="@id/user_extrainfo"
+				style="@style/Text.Medium"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:layout_margin="8dp"
+				android:autoLink="web"
+				android:background="@drawable/text_white_bg"
+				android:padding="6dp" />
 		</LinearLayout>
 	</ScrollView>
+
 </LinearLayout>

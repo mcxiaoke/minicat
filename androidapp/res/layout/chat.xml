@@ -1,24 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:orientation="vertical" android:background="@drawable/bg">
-	<com.fanfou.app.ui.ActionBar android:id="@id/actionbar"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@drawable/bg"
+	android:orientation="vertical" >
+
+	<com.fanfou.app.ui.ActionBar
+		android:id="@id/actionbar"
 		style="@style/ActionBar" />
 
 	<com.fanfou.app.ui.widget.EndlessListView
-		android:id="@id/list" android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:layout_weight="1" />
+		android:id="@id/list"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_weight="1" />
 
-	<LinearLayout android:id="@+id/msgchat_area"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:orientation="vertical" android:padding="6dp">
-		<ImageView android:layout_width="fill_parent"
-			android:layout_height="2dp" android:background="@drawable/separator" android:layout_marginBottom="6dp"/>
-		<EditText android:id="@+id/msgchat_input" android:maxLines="4"
-			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:hint="私信内容，不能超过140字" android:textSize="@dimen/text_size_medium"
-			android:layout_weight="1" android:background="@drawable/input"
-			android:padding="6dp" android:gravity="top|left" />
+	<LinearLayout
+		android:id="@+id/msgchat_area"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:padding="2dp" android:gravity="center_vertical">
+
+		<EditText
+			android:id="@+id/msgchat_input"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:background="@drawable/input_bg"
+			android:gravity="top|left"
+			android:hint="私信内容，不能超过140字"
+			android:maxLines="3"
+			android:padding="10dp"
+			android:textSize="@dimen/text_size_medium" />
+
+		<Button android:id="@id/button_ok"
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent"
+			android:background="@drawable/btn_send_bg"
+			android:text="发送" android:textColor="@color/solid_white"
+			android:textSize="@dimen/text_size_medium" android:layout_margin="6dp"/>
 	</LinearLayout>
 
 </LinearLayout>

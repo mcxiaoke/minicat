@@ -32,6 +32,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.0 2011.07.28
  * @version 3.0 2011.08.29
  * @version 4.0 2011.09.22
+ * @version 4.5 2011.10.25
  * 
  */
 
@@ -174,6 +175,7 @@ public class App extends Application {
 
 	private void initAlarm() {
 		Utils.setAutoClean(this);
+		Utils.setAutoUpdate(this);
 		Utils.setAutoComplete(this);
 		Utils.setAutoNotification(this);
 	}
@@ -248,8 +250,14 @@ public class App extends Application {
 		}
 		return imageLoader;
 	}
+	
+	public void clearImageTasks(){
+		if (imageLoader != null) {
+			imageLoader.clearQueue();
+		}
+	}
 
-	public synchronized void shutdownImageLoader() {
+	public void shutdownImageLoader() {
 		if (imageLoader != null) {
 			imageLoader.shutdown();
 		}

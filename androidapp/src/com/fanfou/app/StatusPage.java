@@ -1,12 +1,9 @@
 package com.fanfou.app;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
@@ -17,7 +14,6 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +21,7 @@ import com.fanfou.app.api.Status;
 import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.cache.IImageLoader.ImageLoaderCallback;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.service.ActionService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.Action;
@@ -40,6 +37,7 @@ import com.fanfou.app.util.Utils;
  * @author mcxiaoke
  * @version 1.0 2011.06.01
  * @version 1.2 2011.10.24
+ * @version 2.0 2011.10.25
  * 
  */
 public class StatusPage extends BaseActivity{
@@ -72,8 +70,6 @@ public class StatusPage extends BaseActivity{
 	private ImageView iUserHead;
 	private TextView tUserName;
 
-	private ImageView iShowUser;
-
 	private TextView tContent;
 	private ImageView iPhoto;
 
@@ -85,9 +81,7 @@ public class StatusPage extends BaseActivity{
 	private ImageView bFavorite;
 	private ImageView bShare;
 
-	private View vThread;
-	private TextView tThreadName;
-	private TextView tThreadText;
+	private TextView vThread;
 
 	private Handler mHandler;
 
@@ -150,17 +144,11 @@ public class StatusPage extends BaseActivity{
 		
 		tUserName.setText(status.userScreenName);
 		
-		iShowUser = (ImageView) findViewById(R.id.status_action_user);
 		tContent = (TextView) findViewById(R.id.status_text);
 		iPhoto = (ImageView) findViewById(R.id.status_photo);
 		tDate = (TextView) findViewById(R.id.status_date);
 		tSource = (TextView) findViewById(R.id.status_source);
-		vThread = findViewById(R.id.status_thread);
-		vThread.setVisibility(View.GONE);
-		tThreadName = (TextView) findViewById(R.id.status_thread_user);
-		TextPaint tp2 = tThreadName.getPaint();
-		tp2.setFakeBoldText(true);
-		tThreadText = (TextView) findViewById(R.id.status_thread_text);
+		vThread = (TextView) findViewById(R.id.status_thread);
 
 		bReply = (ImageView) findViewById(R.id.status_action_reply);
 		bRepost = (ImageView) findViewById(R.id.status_action_retweet);
@@ -171,6 +159,7 @@ public class StatusPage extends BaseActivity{
 		bRepost.setOnClickListener(this);
 		bFavorite.setOnClickListener(this);
 		bShare.setOnClickListener(this);
+		vThread.setOnClickListener(this);
 
 		registerForContextMenu(tContent);
 	}
@@ -195,8 +184,9 @@ public class StatusPage extends BaseActivity{
 			updateFavoriteButton();
 
 			if (status.isThread) {
-				showThreadLoading();
-				doFetchThread();
+				vThread.setVisibility(View.VISIBLE);	
+			}else{
+				vThread.setVisibility(View.GONE);
 			}
 		}
 	}
@@ -274,6 +264,11 @@ public class StatusPage extends BaseActivity{
 		// break;
 		case R.id.status_photo:
 			onClickPhoto();
+			break;
+		case R.id.status_thread:
+			Intent intent=new Intent(mContext, ConversationPage.class);
+			intent.putExtra(Commons.EXTRA_STATUS, status);
+			mContext.startActivity(intent);
 			break;
 		default:
 			break;
@@ -362,7 +357,16 @@ public class StatusPage extends BaseActivity{
 	}
 
 	private void doDelete() {
-		ActionManager.doStatusDelete(this, status.id, true);
+		final ConfirmDialog dialog=new ConfirmDialog(this,"删除消息","要删除这条消息吗？");
+		dialog.setOnClickListener(new ConfirmDialog.OnOKClickListener() {
+			
+			@Override
+			public void onOKClick() {
+				ActionManager.doStatusDelete(mContext, status.id, true);
+			}
+		});
+		dialog.show();
+		
 	}
 
 	private void doFavorite() {
@@ -392,79 +396,6 @@ public class StatusPage extends BaseActivity{
 	private void doCopy(String content) {
 		IOHelper.copyToClipBoard(this, content);
 		Utils.notify(this, "消息内容已复制到剪贴板");
-	}
-
-	private void showThread(Status result) {
-		if (App.DEBUG)
-			log("showThread() status.text=" + result.text);
-		thread = result;
-		tThreadName.setText(thread.userScreenName);
-		tThreadText.setText(thread.text);
-		tThreadText.setGravity(Gravity.LEFT);
-		tThreadName.setVisibility(View.VISIBLE);
-		vThread.setVisibility(View.VISIBLE);
-		vThread.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Utils.goStatusPage(mContext, thread);
-			}
-		});
-
-	}
-
-	private void showThreadLoading() {
-		vThread.setVisibility(View.VISIBLE);
-		tThreadName.setVisibility(View.GONE);
-		tThreadText.setGravity(Gravity.CENTER);
-		tThreadText.setText("正在加载对话消息...");
-	}
-
-	private void showThreadError(String text) {
-		if (status == null) {
-			return;
-		}
-		if (App.DEBUG)
-			log("showThreadError() " + text);
-		if(TextUtils.isEmpty(text)){
-			tThreadText.setText("加载消息失败");
-		}else{
-			tThreadText.setText(text);
-		}
-		vThread.setVisibility(View.VISIBLE);
-
-	}
-
-	private void doFetchThread() {
-		ResultReceiver receiver = new ResultReceiver(mHandler) {
-
-			@Override
-			protected void onReceiveResult(int resultCode, Bundle resultData) {
-				switch (resultCode) {
-				case Commons.RESULT_CODE_START:
-					break;
-				case Commons.RESULT_CODE_FINISH:
-					Status result = (Status) resultData
-							.getSerializable(Commons.EXTRA_STATUS);
-					if (result != null) {
-						showThread(result);
-					}
-					break;
-				case Commons.RESULT_CODE_ERROR:
-					String errorMessage = resultData
-							.getString(Commons.EXTRA_ERROR_MESSAGE);
-					showThreadError(errorMessage);
-					break;
-				default:
-					break;
-				}
-			}
-		};
-		Intent intent = new Intent(this, ActionService.class);
-		intent.putExtra(Commons.EXTRA_TYPE, Commons.ACTION_STATUS_SHOW);
-		intent.putExtra(Commons.EXTRA_ID, status.inReplyToStatusId);
-		intent.putExtra(Commons.EXTRA_RECEIVER, receiver);
-		startService(intent);
 	}
 
 }

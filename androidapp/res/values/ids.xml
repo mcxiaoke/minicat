@@ -72,9 +72,10 @@
 	<item type="id" name="status_source" />
 	<item type="id" name="status_date" />
 	<item type="id" name="status_photo" />
+	<item type="id" name="status_photo_area" />
 	<item type="id" name="status_info" />
+	
 	<item type="id" name="status_thread" />
-	<item type="id" name="status_thread_user" />
 	<item type="id" name="status_thread_text" />
 
 	<item type="id" name="status_line" />
@@ -169,5 +170,7 @@
 	
 	<item type="id" name="button1" />
 	<item type="id" name="button2" />
+	<item type="id" name="title" />
+	<item type="id" name="text" />
 
 </resources>

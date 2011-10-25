@@ -22,6 +22,7 @@ import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.service.ActionService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.Action;
@@ -33,6 +34,7 @@ import com.fanfou.app.util.Utils;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.07.18
+ * @version 1.1 2011.10.25
  * 
  */
 public class ProfilePage extends BaseActivity {
@@ -313,6 +315,23 @@ public class ProfilePage extends BaseActivity {
 		mRelationship.setVisibility(View.VISIBLE);
 		mRelationship.setText(follow ? "(此用户正在关注你)" : "(此用户没有关注你)");
 	}
+	
+	private void doFollow(){
+		if(user.following){
+			final ConfirmDialog dialog=new ConfirmDialog(this,"取消关注","要取消关注"+user.screenName+"吗？");
+			dialog.setOnClickListener(new ConfirmDialog.OnOKClickListener() {
+				
+				@Override
+				public void onOKClick() {
+					ActionManager.doFollow(mContext, user, new MyResultReceiver());
+				}
+			});
+			dialog.show();
+		}else{
+			ActionManager.doFollow(mContext, user, new MyResultReceiver());
+		}
+
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -324,7 +343,7 @@ public class ProfilePage extends BaseActivity {
 			ActionManager.doMessage(this, user);
 			break;
 		case R.id.user_action_follow:
-			ActionManager.doFollow(this, user, new MyResultReceiver());
+			doFollow();
 			break;
 		case R.id.user_statuses_view:
 			if (hasPermission()) {

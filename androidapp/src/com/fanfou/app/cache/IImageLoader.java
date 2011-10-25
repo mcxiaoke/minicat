@@ -29,6 +29,8 @@ public interface IImageLoader {
 	void shutdown();
 
 	void clearCache();
+	
+	void clearQueue();
 
 	public interface ImageLoaderCallback {
 		void onFinish(String url, Bitmap bitmap);

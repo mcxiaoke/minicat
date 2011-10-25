@@ -1,11 +1,9 @@
 package com.fanfou.app.api;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.http.ParseException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -95,7 +93,11 @@ public class Status implements Storable<Status> {
 
 	@Override
 	public int compareTo(Status another) {
-		return createdAt.compareTo(another.createdAt);
+//		if(createdAt.equals(another.createdAt)){
+//			return 1;
+//		}else{
+			return createdAt.compareTo(another.createdAt);
+//		}
 	}
 
 	public boolean isNull() {

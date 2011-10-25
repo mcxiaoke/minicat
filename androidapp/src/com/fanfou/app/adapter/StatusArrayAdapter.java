@@ -75,6 +75,12 @@ public class StatusArrayAdapter extends BaseArrayAdapter<Status> {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
+		
+		if(position%2==1){
+			convertView.setBackgroundColor(0x33999999);
+		}else{
+			convertView.setBackgroundColor(0);
+		}
 
 		final Status s = mStatus.get(position);
 

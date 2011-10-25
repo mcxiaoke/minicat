@@ -33,13 +33,17 @@ public final class AlarmHelper {
 		Calendar c = Calendar.getInstance();
 		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
 				c.get(Calendar.DAY_OF_MONTH), hour, minute);
-		c.add(Calendar.DATE, 1);
-		
-		
+		c.add(Calendar.DATE, 10);
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
-				7 * 24 * 3600 * 1000, getCleanPendingIntent(context));
+				10 * 24 * 3600 * 1000, getCleanPendingIntent(context));
+	}
+	
+
+	public static void setUpdateTask(Context context) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	public static void setNotificationTaskOn(Context context) {
@@ -121,6 +125,8 @@ public final class AlarmHelper {
 		return PendingIntent.getService(context, 0, new Intent(context,
 				CleanService.class), PendingIntent.FLAG_UPDATE_CURRENT);
 	}
+	
+	
 
 	public static long setTestTime() {
 		Calendar c = Calendar.getInstance();
@@ -154,5 +160,6 @@ public final class AlarmHelper {
 			notification.vibrate = null;
 		}
 	}
+
 
 }

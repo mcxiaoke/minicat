@@ -19,6 +19,7 @@ import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
@@ -33,6 +34,23 @@ import com.fanfou.app.App;
  * 
  */
 public class StringHelper {
+	
+	public static String toString (List<String> array){
+		if (array == null || array.size() == 0) {
+			return "";
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("(");
+		for (int i = 0; i < array.size(); i++) {
+			if (i > 0) {
+				sb.append(", ");
+			}
+			sb.append(array.get(i));
+		}
+		sb.append(")");
+		return sb.toString();
+	}
 
 	public static String toString(String[] array) {
 

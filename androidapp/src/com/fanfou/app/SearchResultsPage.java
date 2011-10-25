@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -147,7 +148,7 @@ public class SearchResultsPage extends BaseActivity implements
 
 	protected void updateUI(boolean noMore) {
 		log("updateUI()");
-		mStatusAdapter.updateDataAndUI(mStatuses,keyword);
+		mStatusAdapter.updateDataAndUI(mStatuses, keyword);
 		if (noMore) {
 			mListView.onNoLoadMore();
 		} else {
@@ -155,20 +156,36 @@ public class SearchResultsPage extends BaseActivity implements
 		}
 	}
 
+	private static final String LIST_STATE = "listState";
+	private Parcelable mState = null;
+
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if (mState != null && mListView != null) {
+			mListView.onRestoreInstanceState(mState);
+			mState = null;
+		}
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		mState = savedInstanceState.getParcelable(LIST_STATE);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
 		if (mListView != null) {
-			mListView.restorePosition();
+			mState = mListView.onSaveInstanceState();
+			outState.putParcelable(LIST_STATE, mState);
 		}
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if (mListView != null) {
-			mListView.savePosition();
-		}
 	}
 
 	@Override
@@ -181,7 +198,7 @@ public class SearchResultsPage extends BaseActivity implements
 	}
 
 	@Override
-	public void onItemClick(ListView view,View row,int position) {
+	public void onItemClick(ListView view, View row, int position) {
 		final Status s = (Status) view.getItemAtPosition(position);
 		if (s != null) {
 			Utils.goStatusPage(mContext, s);
@@ -220,8 +237,8 @@ public class SearchResultsPage extends BaseActivity implements
 			try {
 				result = App.me.api.search(keyword, maxId, true);
 			} catch (ApiException e) {
-				if(App.DEBUG)
-				e.printStackTrace();
+				if (App.DEBUG)
+					e.printStackTrace();
 			}
 
 			return result;

@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
-	android:orientation="horizontal"
-	android:padding="2dp" android:descendantFocusability="blocksDescendants">
+	android:descendantFocusability="blocksDescendants"
+	android:orientation="horizontal" android:gravity="center_vertical"
+	android:padding="2dp" >
 
 	<ImageView
 		android:id="@id/item_user_head"
@@ -13,7 +14,8 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_toRightOf="@id/item_user_head"
-		android:padding="4dp" android:layout_weight="1" >
+		android:layout_weight="1"
+		android:padding="4dp" >
 
 		<TextView
 			android:id="@id/item_user_name"
@@ -33,6 +35,9 @@
 		android:id="@+id/item_user_checkbox"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:checked="false" android:focusable="false" android:focusableInTouchMode="false" />
+		android:clickable="false"
+		android:focusable="false"
+		android:focusableInTouchMode="false" 
+		android:button="@drawable/checkbox_bg"/>
 
 </LinearLayout>

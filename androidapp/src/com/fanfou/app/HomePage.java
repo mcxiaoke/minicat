@@ -34,8 +34,10 @@ import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
+import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionBar;
+import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.ActionBar.Action;
 import com.fanfou.app.ui.UIManager;
 import com.fanfou.app.ui.viewpager.TitlePageIndicator;
@@ -515,20 +517,16 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		if (App.DEBUG)
 			log("onResume");
 		registerReceiver(mSendSuccessReceiver, mSendSuccessFilter);
-
 		for (int i = 0; i < views.length; i++) {
 			if (views[i] != null && states[i] != null) {
 				views[i].onRestoreInstanceState(states[i]);
 				states[i] = null;
 			}
 		}
-
-		// restorePosition();
 	}
 
 	@Override
 	protected void onPause() {
-		// savePosition();
 		unregisterReceiver(mSendSuccessReceiver);
 		super.onPause();
 		if (App.DEBUG)
@@ -740,7 +738,20 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	@Override
 	public void onBackPressed() {
-		super.onBackPressed();
+		boolean needConfirm=OptionHelper.readBoolean(this, R.string.option_confirm_on_exit, false);
+		if(needConfirm){
+			final ConfirmDialog dialog=new ConfirmDialog(this,"退出","确认退出吗？");
+			dialog.setOnClickListener(new ConfirmDialog.OnOKClickListener() {
+				
+				@Override
+				public void onOKClick() {
+					mContext.finish();
+				}
+			});
+			dialog.show();
+		}else{
+			finish();
+		}
 	}
 
 	@Override

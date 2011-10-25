@@ -4,19 +4,19 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+/**
+ * @author mcxiaoke
+ * @version 1.0 2011.06.01
+ * @version 2.0 2011.07.04
+ * @version 3.0 2011.09.10
+ * @version 4.0 2011.09.26
+ * @version 5.0 2011.10.20
+ * @version 5.1 2011.10.25
+ *
+ */
 public final class Contents {
 	
 	public static final String AUTHORITY = "com.fanfou.app.provider";
-	
-	public static interface Counts{
-		public static final String URI_PATH="count";
-		public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/count");
-	}
-	
-	public static interface Actions{
-		public static final String URI_PATH="action";
-		public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/action");
-	}
 	
 	public static interface BasicColumns extends BaseColumns{
 		public static final String ID="id";

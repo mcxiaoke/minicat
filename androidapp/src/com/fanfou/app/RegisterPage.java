@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -51,15 +52,18 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * @author mcxiaoke
  * @version 1.0 2011.10.08
  * @version 1.1 2011.10.17
+ * @version 1.2 2011.10.25
  * 
  */
-public class RegisterPage extends BaseActivity {
+public class RegisterPage extends Activity implements OnClickListener{
 
 	/** @see http://code.fanfouapps.com/issues/2691 */
 
 	private static final String TAG = RegisterPage.class.getSimpleName();
 
 	private GoogleAnalyticsTracker g;
+	
+	private RegisterPage mContext;
 
 	private String mNickName;
 	private String mDeviceId;
@@ -90,6 +94,8 @@ public class RegisterPage extends BaseActivity {
 	}
 
 	private void init() {
+		mContext=this;
+		Utils.initScreenConfig(this);
 		mDeviceId = DeviceHelper.uuid(this);
 	}
 
@@ -150,10 +156,12 @@ public class RegisterPage extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		App.active = true;
 	}
 
 	@Override
 	protected void onPause() {
+		App.active = false;
 		super.onPause();
 	}
 
@@ -190,11 +198,6 @@ public class RegisterPage extends BaseActivity {
 		}
 
 		new RegisterTask().execute();
-	}
-
-	@Override
-	protected int getPageType() {
-		return PAGE_LOGIN;
 	}
 
 	private class RegisterTask extends AsyncTask<Void, Integer, ResultInfo> {
@@ -282,27 +285,6 @@ public class RegisterPage extends BaseActivity {
 				break;
 			default:
 				break;
-			}
-		}
-
-		private ResultInfo processRegister() {
-			try {
-				User user = register(mEmail, mNickName, mPassword, mDeviceId);
-				if (user != null && !user.isNull()) {
-					return new ResultInfo(REGISTER_SUCCESS, "注册成功", user);
-				} else {
-					return new ResultInfo(REGISTER_FAILED, "未知原因");
-				}
-			} catch (ApiException e) {
-				if (App.DEBUG) {
-					e.printStackTrace();
-				}
-				return new ResultInfo(REGISTER_FAILED, e.getMessage());
-			} catch (IOException e) {
-				if (App.DEBUG) {
-					e.printStackTrace();
-				}
-				return new ResultInfo(REGISTER_IO_ERROR, e.getMessage());
 			}
 		}
 

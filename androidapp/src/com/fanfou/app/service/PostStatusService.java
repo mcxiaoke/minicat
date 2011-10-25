@@ -25,6 +25,8 @@ import com.fanfou.app.util.StringHelper;
 
 /**
  * @author mcxiaoke
+ * @version 1.0 2011.06.10
+ * @version 1.1 2011.10.25
  * 
  */
 public class PostStatusService extends WakefulIntentService {
@@ -57,9 +59,7 @@ public class PostStatusService extends WakefulIntentService {
 		this.mIntent = intent;
 		this.nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		parseIntent();
-		// if(!doUpdateStatus()){
 		doUpdateStatus();
-		// }
 	}
 
 	private void parseIntent() {
@@ -110,12 +110,9 @@ public class PostStatusService extends WakefulIntentService {
 			}
 			nm.cancel(0);
 			if (result == null || result.isNull()) {
-				// showFailedNotification("饭否消息未发送，内容重复",
-				// "消息内容重复，发送不成功，点击重新编辑");
-				// 重复消息不要显示错误提示
 				res = false;
 			} else {
-				IOHelper.storeStatus(this, result);
+//				IOHelper.storeStatus(this, result);
 				res = true;
 				sendSuccessBroadcast();
 			}

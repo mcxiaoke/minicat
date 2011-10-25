@@ -23,6 +23,8 @@ import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
+ * @version 1.0 2011.06.25
+ * @version 1.1 2011.10.25
  * 
  */
 public class PostMessageService extends BaseIntentService {
@@ -53,9 +55,7 @@ public class PostMessageService extends BaseIntentService {
 		this.mIntent = intent;
 		parseIntent(intent);
 		this.nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		// if(!doUpdateStatus()){
 		doSend();
-		// }
 	}
 
 	private void parseIntent(Intent intent) {
@@ -83,7 +83,7 @@ public class PostMessageService extends BaseIntentService {
 			} else {
 				IOHelper.storeDirectMessage(this, result);
 				res = true;
-//				broadcast(true, "私信发送成功");
+				sendSuccessBroadcast();
 			}
 		} catch (ApiException e) {
 			nm.cancel(10);
@@ -92,12 +92,8 @@ public class PostMessageService extends BaseIntentService {
 						"error: code=" + e.statusCode + " msg="
 								+ e.getMessage());
 			}
-//			if (e.statusCode == ResponseCode.HTTP_FORBIDDEN) {
-//				broadcast(false, e.getMessage());
-//			} else {
-				IOHelper.copyToClipBoard(this, content);
-				showFailedNotification("私信未发送，内容已保存到剪贴板", e.getMessage());
-//			}
+			IOHelper.copyToClipBoard(this, content);
+			showFailedNotification("私信未发送，内容已保存到剪贴板", e.getMessage());
 		} finally {
 			nm.cancel(12);
 		}
@@ -122,7 +118,8 @@ public class PostMessageService extends BaseIntentService {
 		Notification notification = new Notification(R.drawable.ic_notify_home,
 				"私信发送成功", System.currentTimeMillis());
 		Intent intent = new Intent(this, LoginPage.class);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+				intent, 0);
 		notification.setLatestEventInfo(this, "饭否私信", "私信发送成功", contentIntent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
@@ -135,9 +132,8 @@ public class PostMessageService extends BaseIntentService {
 
 		Notification notification = new Notification(R.drawable.ic_notify_home,
 				title, System.currentTimeMillis());
-//		Intent intent = new Intent(this, HomePage.class);
-//		intent.putExtra(Commons.EXTRA_PAGE, 2);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,new Intent(), 0);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+				new Intent(), 0);
 		notification.setLatestEventInfo(this, title, message, contentIntent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
@@ -146,10 +142,8 @@ public class PostMessageService extends BaseIntentService {
 
 	}
 
-	private void broadcast(boolean success, String errorMessage) {
+	private void sendSuccessBroadcast() {
 		Intent intent = new Intent(Actions.ACTION_MESSAGE_SEND);
-		intent.putExtra(Commons.EXTRA_BOOLEAN, success);
-		intent.putExtra(Commons.EXTRA_TEXT, errorMessage);
 		intent.setPackage(getPackageName());
 		sendOrderedBroadcast(intent, null);
 	}
