@@ -2,15 +2,25 @@ package com.fanfou.app.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.fanfou.app.App;
+import com.fanfou.app.api.Status;
 
 import android.text.Html;
 import android.text.util.Linkify;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
+/**
+ * @author mcxiaoke
+ * @version 1.0 2011.06.01
+ * @version 1.5 2011.10.26
+ *
+ */
 public class StatusHelper {
 	private static final String TAG = "StatusHelper";
 
@@ -118,24 +128,20 @@ public class StatusHelper {
 	 *            消息文本
 	 * @return 消息中@的人的列表，按顺序存放
 	 */
-	public static List<String> getMentionedNames(String text) {
-		ArrayList<String> mentionList = new ArrayList<String>();
+	public static HashSet<String> getMentionedNames(Status status) {
+		HashSet<String> names=new HashSet<String>();
 
 		final Pattern p = Pattern.compile("@(.*?)\\s");
-		final int MAX_NAME_LENGTH = 12; // 简化判断，无论中英文最长12个字
+		final int MAX_NAME_LENGTH = 12;
 
-		Matcher m = p.matcher(text);
+		Matcher m = p.matcher(status.simpleText);
 		while (m.find()) {
-			String mention = m.group(1);
-
-			// 过长的名字就忽略（不是合法名字） +1是为了补上“@”所占的长度
-			if (mention.length() <= MAX_NAME_LENGTH + 1) {
-				// 避免重复名字
-				if (!mentionList.contains(mention)) {
-					mentionList.add(m.group(1));
-				}
+			String name = m.group(1);
+			if (name.length() <= MAX_NAME_LENGTH + 1) {
+				names.add(m.group(1));
 			}
 		}
-		return mentionList;
+		names.add(status.userScreenName);
+		return names;
 	}
 }

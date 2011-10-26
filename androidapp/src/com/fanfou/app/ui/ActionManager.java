@@ -1,5 +1,9 @@
 package com.fanfou.app.ui;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -28,7 +32,8 @@ import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
- * @version 1.0 20110825
+ * @version 1.0 2011.08.25
+ * @version 1.1 2011.10.26
  * 
  */
 public final class ActionManager {
@@ -182,9 +187,19 @@ public final class ActionManager {
 			}
 			return;
 		}
+		
+		HashSet<String> names=StatusHelper.getMentionedNames(status);
+		StringBuilder sb=new StringBuilder();
+		Iterator<String> i=names.iterator();
+		while (i.hasNext()) {
+			String name = i.next();
+			sb.append("@").append(name).append(" ");
+		}
+		
 		Intent intent = new Intent(context, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_REPLY);
 		intent.putExtra(Commons.EXTRA_STATUS, status);
+		intent.putExtra(Commons.EXTRA_TEXT, sb.toString());
 		context.startActivity(intent);
 	}
 

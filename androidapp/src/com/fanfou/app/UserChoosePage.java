@@ -28,6 +28,7 @@ import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
+import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.ui.widget.EndlessListView;
 import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
 import com.fanfou.app.util.StringHelper;
@@ -37,6 +38,7 @@ import com.fanfou.app.util.Utils;
  * @author mcxiaoke
  * @version 1.0 2011.10.21
  * @version 2.0 2011.10.24
+ * @version 2.1 2011.10.26
  */
 public class UserChoosePage extends BaseActivity implements
 		FilterQueryProvider, OnItemClickListener {
@@ -176,6 +178,20 @@ public class UserChoosePage extends BaseActivity implements
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("我关注的人");
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
+		mActionBar.setRightAction(new ConfirmAction());
+	}
+	
+	private class ConfirmAction extends AbstractAction {
+
+		public ConfirmAction() {
+			super(R.drawable.i_ok);
+		}
+
+		@Override
+		public void performAction(View view) {
+			doAddUserNames();
+		}
+
 	}
 
 	protected void doRefresh() {

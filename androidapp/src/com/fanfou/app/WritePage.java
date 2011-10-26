@@ -333,7 +333,7 @@ public class WritePage extends BaseActivity {
 		if (status != null) {
 			if (type == TYPE_REPLY) {
 				mAutoCompleteTextView
-						.setText("@" + status.userScreenName + " ");
+						.setText(text);
 				Selection.setSelection(mAutoCompleteTextView.getText(),
 						mAutoCompleteTextView.getText().length());
 			} else if (type == TYPE_REPOST) {
