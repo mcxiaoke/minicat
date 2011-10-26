@@ -21,6 +21,7 @@ import android.view.View.OnClickListener;
 
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.http.ApnType;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionBar.OnRefreshClickListener;
@@ -28,6 +29,8 @@ import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.Utils;
+
+import com.fanfou.app.R;
 
 /**
  * @author mcxiaoke
@@ -90,8 +93,22 @@ public abstract class BaseActivity extends Activity implements
 	}
 
 	protected boolean onBroadcastReceived(Intent intent) {
-		return false;
+		return true;
 	};
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+	
+//	public void doLogout(){
+//		if(isTaskRoot()){
+//			IntentHelper.goLoginPage(this);
+//		}else{
+//			setResult(RESULT_LOGOUT);
+//		}
+//		finish();
+//	}
 
 	@Override
 	protected void onResume() {
@@ -172,7 +189,7 @@ public abstract class BaseActivity extends Activity implements
 	protected static final int MENU_ID_SEARCH = 2;
 	protected static final int MENU_ID_ABOUT = 3; // 关于
 	protected static final int MENU_ID_FEEDBACK = 4; //
-	protected static final int MENU_ID_EXIT = 5; // 退出
+	protected static final int MENU_ID_LOGOUT = 5; // 退出
 	protected static final int MENU_ID_HOME = 6; // 返回首页
 
 	@Override
@@ -188,8 +205,8 @@ public abstract class BaseActivity extends Activity implements
 		case MENU_ID_SEARCH:
 			onSearchClick();
 			break;
-		case MENU_ID_EXIT:
-			onExitClick();
+		case MENU_ID_LOGOUT:
+			onLogoutClick();
 			break;
 		case MENU_ID_ABOUT:
 			onAboutClick();
@@ -215,7 +232,7 @@ public abstract class BaseActivity extends Activity implements
 			menu.removeItem(MENU_ID_OPTION);
 			menu.removeItem(MENU_ID_PROFILE);
 			menu.removeItem(MENU_ID_SEARCH);
-			menu.removeItem(MENU_ID_EXIT);
+			menu.removeItem(MENU_ID_LOGOUT);
 			menu.removeItem(MENU_ID_ABOUT);
 			menu.removeItem(MENU_ID_FEEDBACK);
 			break;
@@ -226,7 +243,7 @@ public abstract class BaseActivity extends Activity implements
 			menu.removeItem(MENU_ID_OPTION);
 			menu.removeItem(MENU_ID_PROFILE);
 			menu.removeItem(MENU_ID_SEARCH);
-			menu.removeItem(MENU_ID_EXIT);
+			menu.removeItem(MENU_ID_LOGOUT);
 			menu.removeItem(MENU_ID_ABOUT);
 			menu.removeItem(MENU_ID_FEEDBACK);
 			menu.removeItem(MENU_ID_HOME);
@@ -248,7 +265,7 @@ public abstract class BaseActivity extends Activity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		option = menu.add(0, MENU_ID_OPTION, MENU_ID_OPTION, "设置");
+		option = menu.add(0, MENU_ID_OPTION, MENU_ID_OPTION, "选项");
 		option.setIcon(R.drawable.i_menu_option);
 
 		profile = menu.add(0, MENU_ID_PROFILE, MENU_ID_PROFILE, "我的空间");
@@ -257,7 +274,7 @@ public abstract class BaseActivity extends Activity implements
 		search = menu.add(0, MENU_ID_SEARCH, MENU_ID_SEARCH, "热词和搜索");
 		search.setIcon(R.drawable.i_menu_search);
 
-		logout = menu.add(0, MENU_ID_EXIT, MENU_ID_EXIT, "退出");
+		logout = menu.add(0, MENU_ID_LOGOUT, MENU_ID_LOGOUT, "注销");
 		logout.setIcon(R.drawable.i_menu_logout);
 
 		about = menu.add(0, MENU_ID_ABOUT, MENU_ID_ABOUT, "关于饭否");
@@ -312,9 +329,16 @@ public abstract class BaseActivity extends Activity implements
 		finish();
 	}
 
-	protected void onExitClick() {
-		finish();
-		// android.os.Process.killProcess(android.os.Process.myPid());
+	protected void onLogoutClick() {
+		final ConfirmDialog dialog=new ConfirmDialog(this, "提示", "确定注销当前登录帐号吗？");
+		dialog.setOnClickListener(new ConfirmDialog.OnOKClickListener() {
+			@Override
+			public void onOKClick() {
+				IntentHelper.goLoginPage(mContext);
+				finish();
+			}
+		});
+		dialog.show();
 	}
 
 	protected void startRefreshAnimation() {

@@ -26,12 +26,14 @@
 
 	<string name="option_version">app_version</string>
 	<string name="option_refresh_on_open">refresh_on_open</string>
+	<string name="option_refresh_after_send">refresh_after_send</string>
 	<string name="option_confirm_on_exit">confirm_on_exit</string>
 	<string name="option_feedback">feedback</string>
 	<string name="option_website">website</string>
 	<string name="option_check_update">check_update</string>
 	<string name="option_autoupdate">autoupdate</string>
 	<string name="option_autoupdate_interval">autoupdate_interval</string>
+	<string name="option_current_account">current_account</string>
 	<string name="option_logout">logout</string>
 	<string name="option_cleanpic">cleanpic</string>
 	<string name="option_cleandb">cleandb</string>

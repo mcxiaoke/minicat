@@ -1,7 +1,13 @@
 package com.fanfou.app;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextPaint;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fanfou.app.ui.ActionBar;
@@ -10,14 +16,17 @@ import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
- * @version 1.0 20110826
+ * @version 1.0 2011.08.26
+ * @version 1.1 2011.10.26
  * 
  */
-public class AboutPage extends BaseActivity {
+public class AboutPage extends Activity implements OnClickListener{
 	public static final String COPYRIGHT = "\u00a9";
 	public static final String REGISTERED = "\u00ae";
 
 	private ActionBar mActionBar;
+	
+	private ImageView mLogo;
 
 	private TextView mTitle;
 	private TextView mVersion;
@@ -31,6 +40,7 @@ public class AboutPage extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Utils.initScreenConfig(this);
 		setLayout();
 	}
 
@@ -38,7 +48,10 @@ public class AboutPage extends BaseActivity {
 		setContentView(R.layout.about);
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setLeftAction(new ActionBar.BackAction(this));
-		mActionBar.setTitle("关于饭否客户端");
+		mActionBar.setTitle("关于");
+		
+		mLogo=(ImageView) findViewById(R.id.about_icon);
+		mLogo.setOnClickListener(this);
 
 		mTitle = (TextView) findViewById(R.id.about_title);
 		mVersion = (TextView) findViewById(R.id.about_version);
@@ -80,6 +93,16 @@ public class AboutPage extends BaseActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+	}
+
+	@Override
+	public void onClick(View v) {
+		if(v.getId()==R.id.about_icon){
+			Uri uri = Uri.parse("market://details?id="+getPackageName());
+			Intent intent=new Intent(Intent.ACTION_VIEW);
+			intent.setData(uri);
+			startActivity(intent);
+		}
 	}
 
 }

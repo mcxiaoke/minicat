@@ -12,6 +12,7 @@ import android.provider.BaseColumns;
  * @version 4.0 2011.09.26
  * @version 5.0 2011.10.20
  * @version 5.1 2011.10.25
+ * @version 5.5 2011.10.26
  *
  */
 public final class Contents {

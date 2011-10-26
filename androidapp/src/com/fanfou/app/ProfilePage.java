@@ -114,7 +114,7 @@ public class ProfilePage extends BaseActivity {
 		}
 
 		if (userId != null && user == null) {
-			user = CacheManager.get(userId);
+			user = CacheManager.getUser(userId);
 		}
 
 		if (StringHelper.isEmpty(userId)) {

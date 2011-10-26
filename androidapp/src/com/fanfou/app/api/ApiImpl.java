@@ -355,7 +355,11 @@ public class ApiImpl implements Api, ResponseCode {
 		if (App.DEBUG) {
 			log("statusShow()---statusCode=" + statusCode);
 		}
-		return Status.parse(response);
+		Status s= Status.parse(response);
+		if(s!=null){
+			CacheManager.put(s);
+		}
+		return s;
 	}
 
 	@Override

@@ -155,7 +155,7 @@ public class App extends Application {
 		DisplayMetrics dm = getResources().getDisplayMetrics();
 		density = dm.density;
 		if (DEBUG) {
-			Log.i("App", dm.toString());
+			Log.d("App", dm.toString());
 		}
 	}
 

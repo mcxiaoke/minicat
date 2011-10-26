@@ -9,7 +9,7 @@ import java.util.HashMap;
  * 
  * @param <T>
  */
-public abstract class AbstractCache<T> implements ICache<T> {
+public class AbstractCache<T> implements ICache<T> {
 
 	final HashMap<String, SoftReference<T>> memoryCache;
 	final boolean onlyMemoryCache;

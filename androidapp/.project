@@ -30,11 +30,4 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>QuickAction3D_src</name>
-			<type>2</type>
-			<locationURI>_android_QuickAction3D_1f974c14/src</locationURI>
-		</link>
-	</linkedResources>
 </projectDescription>

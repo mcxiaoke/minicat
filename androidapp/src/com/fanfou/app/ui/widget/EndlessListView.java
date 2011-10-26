@@ -64,18 +64,20 @@ public class EndlessListView extends ListView implements OnItemClickListener {
 	}
 
 	void log(String message) {
-		Log.i(TAG, message);
+		Log.d(TAG, message);
 	}
 
 	private void init(Context context) {
 		mContext = context;
-		// Float y=App.me.density*MAX_OVERSCROLL_Y;
-		// mMaxOverScrollY=y.intValue();
-		// setOnScrollListener(this);
-		setFastScrollEnabled(true);
+//		setFastScrollEnabled(true);
 		setHorizontalScrollBarEnabled(false);
 		setVerticalScrollBarEnabled(false);
 		setOnItemClickListener(this);
+
+		setCacheColorHint(0);
+		setSelector(getResources().getDrawable(R.drawable.list_selector));
+		setDivider(getResources().getDrawable(R.drawable.separator));
+
 		initHeaderAndFooter();
 	}
 
@@ -97,12 +99,6 @@ public class EndlessListView extends ListView implements OnItemClickListener {
 		mLoadMoreTextView = (TextView) mLoadMoreView
 				.findViewById(R.id.list_footer_text);
 		addFooterView(mLoadMoreView);
-
-		setCacheColorHint(0);
-		// setBackgroundResource(R.drawable.bg);
-		setSelector(getResources().getDrawable(R.drawable.list_selector));
-		setDivider(getResources().getDrawable(R.drawable.separator));
-
 	}
 
 	public void removeHeader() {

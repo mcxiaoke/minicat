@@ -59,7 +59,7 @@ public class EndlessListViewNoHeader extends ListView implements
 
 	private void init(Context context) {
 		mContext = context;
-		setFastScrollEnabled(true);
+//		setFastScrollEnabled(true);
 		setHorizontalScrollBarEnabled(false);
 		setVerticalScrollBarEnabled(false);
 		setOnItemClickListener(this);

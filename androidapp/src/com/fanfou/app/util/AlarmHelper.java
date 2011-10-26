@@ -59,8 +59,8 @@ public final class AlarmHelper {
 					R.string.option_notification_interval, "5");
 
 			if (App.DEBUG) {
-				interval = 1;
-				Log.i("AlarmHelper", "interval=" + interval);
+				interval = 3;
+				Log.d("AlarmHelper", "interval=" + interval);
 			}
 
 			Calendar c = Calendar.getInstance();

@@ -14,11 +14,13 @@ import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.fanfou.app.adapter.UserChooseCursorAdapter;
 import com.fanfou.app.api.User;
@@ -36,19 +38,18 @@ import com.fanfou.app.util.Utils;
  * @version 1.0 2011.10.21
  * @version 2.0 2011.10.24
  */
-public class UserChoosePage extends BaseActivity implements OnRefreshListener,
-		FilterQueryProvider {
+public class UserChoosePage extends BaseActivity implements
+		FilterQueryProvider, OnItemClickListener {
 
 	protected ActionBar mActionBar;
-	protected EndlessListView mListView;
+	protected ListView mListView;
 	protected EditText mEditText;
 	protected ViewGroup mEmptyView;
 
 	private ViewStub mViewStub;
+	private View mButtonGroup;
 	private Button okButton;
 	private Button cancelButton;
-
-	// private boolean mViewStubInitialized;
 
 	private TextChangeListener mTextChangeListener;
 
@@ -67,7 +68,7 @@ public class UserChoosePage extends BaseActivity implements OnRefreshListener,
 	private static final String tag = UserChoosePage.class.getSimpleName();
 
 	private void log(String message) {
-		Log.i(tag, message);
+		Log.d(tag, message);
 	}
 
 	@Override
@@ -136,24 +137,35 @@ public class UserChoosePage extends BaseActivity implements OnRefreshListener,
 		mEditText = (EditText) findViewById(R.id.choose_input);
 		mEditText.addTextChangedListener(mTextChangeListener);
 
-		mListView = (EndlessListView) findViewById(R.id.list);
-		mListView.setOnRefreshListener(this);
+		setListView();
+	}
+
+	private void setListView() {
+		mListView = (ListView) findViewById(R.id.list);
+		mListView.setCacheColorHint(0);
+		mListView.setFastScrollEnabled(true);
+		mListView.setHorizontalScrollBarEnabled(false);
+		mListView.setVerticalScrollBarEnabled(false);
+		mListView.setSelector(getResources().getDrawable(
+				R.drawable.list_selector));
+		mListView.setDivider(getResources().getDrawable(R.drawable.separator));
+
+		mListView.setOnItemClickListener(this);
 		mListView.setItemsCanFocus(false);
 		mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		mListView.setAdapter(mCursorAdapter);
-		mListView.removeHeader();
 	}
 
 	private void initViewStub() {
-		// mViewStubInitialized = true;
-		mViewStub.inflate();
+
+		mButtonGroup = mViewStub.inflate();
 		mViewStub = null;
 
-		okButton = (Button) findViewById(R.id.button1);
+		okButton = (Button) findViewById(R.id.button_ok);
 		okButton.setText(android.R.string.ok);
 		okButton.setOnClickListener(this);
 
-		cancelButton = (Button) findViewById(R.id.button2);
+		cancelButton = (Button) findViewById(R.id.button_cancel);
 		cancelButton.setText(android.R.string.cancel);
 		cancelButton.setOnClickListener(this);
 	}
@@ -207,10 +219,10 @@ public class UserChoosePage extends BaseActivity implements OnRefreshListener,
 	public void onClick(View v) {
 		int id = v.getId();
 		switch (id) {
-		case R.id.button1:
+		case R.id.button_ok:
 			doAddUserNames();
 			break;
-		case R.id.button2:
+		case R.id.button_cancel:
 			finish();
 			break;
 		default:
@@ -219,15 +231,17 @@ public class UserChoosePage extends BaseActivity implements OnRefreshListener,
 	}
 
 	private void doAddUserNames() {
-		StringBuilder sb = new StringBuilder();
-		for (String screenName : mUserNames) {
-			sb.append("@").append(screenName).append(" ");
-		}
+		if (!mUserNames.isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			for (String screenName : mUserNames) {
+				sb.append("@").append(screenName).append(" ");
+			}
 
-		log("User Names: " + sb.toString());
-		Intent intent = new Intent();
-		intent.putExtra(Commons.EXTRA_TEXT, sb.toString());
-		setResult(RESULT_OK, intent);
+			log("User Names: " + sb.toString());
+			Intent intent = new Intent();
+			intent.putExtra(Commons.EXTRA_TEXT, sb.toString());
+			setResult(RESULT_OK, intent);
+		}
 		finish();
 	}
 
@@ -258,14 +272,10 @@ public class UserChoosePage extends BaseActivity implements OnRefreshListener,
 				if (!isInitialized) {
 					showContent();
 				}
-				mListView.onRefreshComplete();
 				int count = resultData.getInt(Commons.EXTRA_COUNT);
-				if (count < 100) {
-					mListView.onNoLoadMore();
-				} else {
-					mListView.onLoadMoreComplete();
+				if (count > 0) {
+					updateUI();
 				}
-				updateUI();
 				break;
 			case Commons.RESULT_CODE_ERROR:
 				int code = resultData.getInt(Commons.EXTRA_ERROR_CODE);
@@ -273,11 +283,6 @@ public class UserChoosePage extends BaseActivity implements OnRefreshListener,
 				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
 				if (!isInitialized) {
 					showContent();
-					mListView.onNoRefresh();
-					mListView.onNoLoadMore();
-				} else {
-					mListView.onRefreshComplete();
-					mListView.onLoadMoreComplete();
 				}
 				break;
 			default:
@@ -292,26 +297,32 @@ public class UserChoosePage extends BaseActivity implements OnRefreshListener,
 	}
 
 	@Override
-	public void onRefresh(ListView view) {
-		doRefresh();
+	public Cursor runQuery(CharSequence constraint) {
+		String where = UserInfo.TYPE + " = " + User.TYPE_FRIENDS + " AND "
+				+ UserInfo.OWNER_ID + " = '" + App.me.userId + "' AND ("
+				+ UserInfo.SCREEN_NAME + " like '%" + constraint + "%' OR "
+				+ UserInfo.ID + " like '%" + constraint + "%' )";
+		;
+		return managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
+				null, null);
 	}
 
 	@Override
-	public void onLoadMore(ListView view) {
-		doGetMore();
-	}
-
-	@Override
-	public void onItemClick(ListView view, View row, int position) {
-		SparseBooleanArray sba = view.getCheckedItemPositions();
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		SparseBooleanArray sba = mListView.getCheckedItemPositions();
 		mUserNames.clear();
+		int checkedNums = 0;
 		for (int i = 0; i < sba.size(); i++) {
 			mCursorAdapter.setItemChecked(sba.keyAt(i), sba.valueAt(i));
 			if (sba.valueAt(i)) {
-				final Cursor cc = (Cursor) view.getItemAtPosition(sba.keyAt(i));
+				final Cursor cc = (Cursor) mListView.getItemAtPosition(sba
+						.keyAt(i));
 				final User uu = User.parse(cc);
 				if (App.DEBUG) {
-					log("onItemClick Checked userId=" + uu.id + " username=" + uu.screenName);
+					log("onItemClick Checked userId=" + uu.id + " username="
+							+ uu.screenName);
+					checkedNums++;
 				}
 				mUserNames.add(uu.screenName);
 			}
@@ -323,17 +334,11 @@ public class UserChoosePage extends BaseActivity implements OnRefreshListener,
 			initViewStub();
 		}
 
-	}
-
-	@Override
-	public Cursor runQuery(CharSequence constraint) {
-		String where = UserInfo.TYPE + " = " + User.TYPE_FRIENDS + " AND "
-				+ UserInfo.OWNER_ID + " = '" + App.me.userId + "' AND ("
-				+ UserInfo.SCREEN_NAME + " like '%" + constraint + "%' OR "
-				+ UserInfo.ID + " like '%" + constraint + "%' )";
-		;
-		return managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
-				null, null);
+		if (checkedNums > 0) {
+			mButtonGroup.setVisibility(View.VISIBLE);
+		} else {
+			mButtonGroup.setVisibility(View.GONE);
+		}
 	}
 
 }

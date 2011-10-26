@@ -115,15 +115,10 @@ public class FetchService extends BaseIntentService {
 				int size = users.size();
 				if (App.DEBUG)
 					log("doFetchUsers size=" + size);
-
-//				if (page <= 1) {
-//					cleanUsers(ownerId, mType);
-//				}
-
 				ContentResolver cr = getContentResolver();
-				cr.bulkInsert(UserInfo.CONTENT_URI,
+				int count=cr.bulkInsert(UserInfo.CONTENT_URI,
 						Parser.toContentValuesArray(users));
-				sendCountMessage(size);
+				sendCountMessage(count);
 			} else {
 				sendCountMessage(0);
 			}
@@ -173,9 +168,9 @@ public class FetchService extends BaseIntentService {
 				ContentResolver cr = getContentResolver();
 				int size = messages.size();
 				log("doFetchMessagesRefresh size()=" + size);
-				cr.bulkInsert(DirectMessageInfo.CONTENT_URI,
+				int count=cr.bulkInsert(DirectMessageInfo.CONTENT_URI,
 						Parser.toContentValuesArray(messages));
-				sendCountMessage(size);
+				sendCountMessage(count);
 				return size;
 			} else {
 				log("doFetchMessagesRefresh size()=0");
@@ -286,29 +281,29 @@ public class FetchService extends BaseIntentService {
 			switch (mType) {
 			case Status.TYPE_HOME:
 				if (App.DEBUG)
-					Log.e(tag, "doFetchStatuses TYPE_HOME");
+					Log.d(tag, "doFetchStatuses TYPE_HOME");
 				statuses = api
 						.homeTimeline(count, page, sinceId, maxId, format);
 
 				break;
 			case Status.TYPE_MENTION:
 				if (App.DEBUG)
-					Log.e(tag, "doFetchStatuses TYPE_MENTION");
+					Log.d(tag, "doFetchStatuses TYPE_MENTION");
 				statuses = api.mentions(count, page, sinceId, maxId, format);
 				break;
 			case Status.TYPE_PUBLIC:
 				if (App.DEBUG)
-					Log.e(tag, "doFetchStatuses TYPE_PUBLIC");
+					Log.d(tag, "doFetchStatuses TYPE_PUBLIC");
 				statuses = api.pubicTimeline(count, format);
 				break;
 			case Status.TYPE_FAVORITES:
 				if (App.DEBUG)
-					Log.e(tag, "doFetchStatuses TYPE_FAVORITES");
+					Log.d(tag, "doFetchStatuses TYPE_FAVORITES");
 				statuses = api.favorites(count, page, userId, format);
 				break;
 			case Status.TYPE_USER:
 				if (App.DEBUG)
-					Log.e(tag, "doFetchStatuses TYPE_USER");
+					Log.d(tag, "doFetchStatuses TYPE_USER");
 				statuses = api.userTimeline(count, page, userId, sinceId,
 						maxId, format);
 				break;
@@ -337,12 +332,11 @@ public class FetchService extends BaseIntentService {
 						Log.e(tag,
 								"doFetchStatuses items count = 20 ,remove old statuses.");
 					}
-				}
+				}	
 				
-				
-				cr.bulkInsert(StatusInfo.CONTENT_URI,
+				int insertedCount=cr.bulkInsert(StatusInfo.CONTENT_URI,
 						Parser.toContentValuesArray(statuses));
-				sendCountMessage(size);
+				sendCountMessage(insertedCount);
 			}
 		} catch (ApiException e) {
 			if (App.DEBUG) {

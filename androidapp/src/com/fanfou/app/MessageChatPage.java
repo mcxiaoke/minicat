@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.fanfou.app.adapter.MessageCursorAdapter;
 import com.fanfou.app.api.DirectMessage;
@@ -26,7 +27,6 @@ import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.ui.TextChangeListener;
-import com.fanfou.app.ui.widget.EndlessListView;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.StringHelper;
@@ -36,6 +36,7 @@ import com.fanfou.app.util.Utils;
  * @author mcxiaoke
  * @version 1.0 2011.10.08
  * @version 1.1 2011.10.25
+ * @version 1.2 2011.10.26
  * 
  */
 public class MessageChatPage extends BaseActivity {
@@ -45,7 +46,7 @@ public class MessageChatPage extends BaseActivity {
 	private String mUserName;
 
 	private Cursor mCursor;
-	private EndlessListView mListView;
+	private ListView mListView;
 	private MessageCursorAdapter mCursorAdapter;
 
 	private ActionBar mActionBar;
@@ -130,11 +131,17 @@ public class MessageChatPage extends BaseActivity {
 	private void setListView() {
 		initCursor();
 		mCursorAdapter = new MessageCursorAdapter(this, mCursor, true);
-		mListView = (EndlessListView) findViewById(R.id.list);
+
+		mListView = (ListView) findViewById(R.id.list);
 		registerForContextMenu(mListView);
+		
+		mListView.setCacheColorHint(0);
+		mListView.setHorizontalScrollBarEnabled(false);
+		mListView.setVerticalScrollBarEnabled(false);
+		mListView.setSelector(getResources().getDrawable(
+				R.drawable.list_selector));
+		mListView.setDivider(getResources().getDrawable(R.drawable.separator));
 		mListView.setAdapter(mCursorAdapter);
-		mListView.removeHeader();
-		mListView.removeFooter();
 		mListView.setSelection(mListView.getCount() - 1);
 	}
 

@@ -168,8 +168,6 @@
 	<item type="id" name="download_notification_text" />
 	<item type="id" name="download_notification_progress" />
 	
-	<item type="id" name="button1" />
-	<item type="id" name="button2" />
 	<item type="id" name="title" />
 	<item type="id" name="text" />
 

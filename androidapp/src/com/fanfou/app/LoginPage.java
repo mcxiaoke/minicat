@@ -18,6 +18,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -46,14 +47,15 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * @version 1.0 2011.06.10
  * @version 2.0 2011.10.17
  * @version 2.5 2011.10.25
+ * @version 2.6 2011.10.26
  * 
  */
-public final class LoginPage extends Activity implements OnClickListener{
-	
+public final class LoginPage extends Activity implements OnClickListener {
+
 	private static final int REQUEST_CODE_REGISTER = 0;
 
 	public static final String TAG = LoginPage.class.getSimpleName();
-	
+
 	private LoginPage mContext;
 
 	private GoogleAnalyticsTracker g;
@@ -68,7 +70,9 @@ public final class LoginPage extends Activity implements OnClickListener{
 
 	private EditText editUsername;
 	private EditText editPassword;
-	private ImageView buttonLogin;
+
+//	private Button mButtonRegister;
+	private Button mButtonSignin;
 	private ActionBar mActionBar;
 
 	private String username;
@@ -82,7 +86,7 @@ public final class LoginPage extends Activity implements OnClickListener{
 	}
 
 	private void init() {
-		mContext=this;
+		mContext = this;
 		Utils.initScreenConfig(this);
 		g = GoogleAnalyticsTracker.getInstance();
 		g.startNewSession(getString(R.string.config_google_analytics_code),
@@ -96,7 +100,7 @@ public final class LoginPage extends Activity implements OnClickListener{
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setLeftAction(new LogoAction());
 		mActionBar.setRightAction(new RegisterAction(this));
-		mActionBar.setTitle("登录饭否");
+//		mActionBar.setTitle("登录饭否");
 
 		editUsername = (EditText) findViewById(R.id.login_username);
 		editUsername.addTextChangedListener(new TextChangeListener() {
@@ -116,8 +120,11 @@ public final class LoginPage extends Activity implements OnClickListener{
 			}
 		});
 
-		buttonLogin = (ImageView) findViewById(R.id.login_signin);
-		buttonLogin.setOnClickListener(this);
+//		mButtonRegister = (Button) findViewById(R.id.button_register);
+//		mButtonRegister.setOnClickListener(this);
+
+		mButtonSignin = (Button) findViewById(R.id.button_signin);
+		mButtonSignin.setOnClickListener(this);
 
 	}
 
@@ -131,13 +138,13 @@ public final class LoginPage extends Activity implements OnClickListener{
 
 		@Override
 		public void performAction(View view) {
-			try {
-				Intent intent = new Intent(mContext, RegisterPage.class);
-				mContext.startActivityForResult(intent, REQUEST_CODE_REGISTER);
-			} catch (ActivityNotFoundException e) {
-				Utils.notify(mContext, R.string.actionbar_activity_not_found);
-			}
+			goRegisterPage(mContext);
 		}
+	}
+
+	private static void goRegisterPage(Activity context) {
+		Intent intent = new Intent(context, RegisterPage.class);
+		context.startActivityForResult(intent, REQUEST_CODE_REGISTER);
 	}
 
 	private static class LogoAction extends ActionBar.AbstractAction {
@@ -151,19 +158,19 @@ public final class LoginPage extends Activity implements OnClickListener{
 		}
 	}
 
-	private LoginTask mLoginTask;
-
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.login_signin:
+//		case R.id.button_register:
+//			goRegisterPage(mContext);
+//			break;
+		case R.id.button_signin:
 			if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
-				Utils.notify(mContext,"密码和帐号不能为空");
+				Utils.notify(mContext, "密码和帐号不能为空");
 			} else {
 				g.setCustomVar(1, "username", username);
 				g.trackEvent("Action", "onClick", "Login", 1);
-				mLoginTask = new LoginTask();
-				mLoginTask.execute();
+				new LoginTask().execute();
 			}
 			break;
 		default:
@@ -174,28 +181,11 @@ public final class LoginPage extends Activity implements OnClickListener{
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_REGISTER) {
-			// editUsername.setText(data.getStringExtra("userid"));
 			editUsername.setText(data.getStringExtra("email"));
 			editPassword.setText(data.getStringExtra("password"));
 			page = data.getIntExtra(Commons.EXTRA_PAGE, 0);
-			mLoginTask = new LoginTask();
-			mLoginTask.execute();
+			new LoginTask().execute();
 		}
-	}
-
-	private void goSignUpWeb() {
-		g.setCustomVar(0, "SignupWeb", "OnClick");
-		Uri uri = Uri.parse("http://m.fanfou.com/register/");
-		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		startActivity(intent);
-	}
-
-	private void goSignUpSms() {
-		g.setCustomVar(1, "SignupSms", "OnClick");
-		Uri uri = Uri.parse("smsto:106900293152");
-		Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
-		intent.putExtra("sms_body", "ff");
-		startActivity(intent);
 	}
 
 	@Override
@@ -228,13 +218,17 @@ public final class LoginPage extends Activity implements OnClickListener{
 		state.putString(PASSWORD, password);
 	}
 
-	private void clearDB() {
+	private void clearData() {
 		if (App.DEBUG)
 			log("clearDB()");
 		ContentResolver cr = getContentResolver();
 		cr.delete(StatusInfo.CONTENT_URI, null, null);
 		cr.delete(UserInfo.CONTENT_URI, null, null);
 		cr.delete(DirectMessageInfo.CONTENT_URI, null, null);
+	}
+	
+	private void clearSettings(){
+		OptionHelper.clear(this);
 	}
 
 	@Override
@@ -298,11 +292,12 @@ public final class LoginPage extends Activity implements OnClickListener{
 							log("xauth successful! ");
 
 						if (StringHelper.isEmpty(savedUserId)) {
-							clearDB();
+							clearData();
+							clearSettings();
 							return new ResultInfo(LOGIN_NEW_AUTH_SUCCESS);
 						} else {
 							if (!savedUserId.equals(u.id)) {
-								clearDB();
+								clearData();
 							}
 							return new ResultInfo(LOGIN_RE_AUTH_SUCCESS);
 						}
@@ -368,10 +363,10 @@ public final class LoginPage extends Activity implements OnClickListener{
 
 			switch (result.code) {
 			case LOGIN_IO_ERROR:
-				Utils.notify(mContext,result.message);
+				Utils.notify(mContext, result.message);
 				break;
 			case LOGIN_AUTH_FAILED:
-				Utils.notify(mContext,result.message);
+				Utils.notify(mContext, result.message);
 				break;
 			case LOGIN_CANCELLED_BY_USER:
 				break;

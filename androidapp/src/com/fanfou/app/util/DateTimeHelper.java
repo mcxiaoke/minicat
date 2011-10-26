@@ -11,14 +11,15 @@ import java.util.TimeZone;
  * @author mcxiaoke
  * @version 1.0 2011.05.19
  * @version 1.5 2011.10.25
+ * @version 1.6 2011.10.26
  * 
  */
 public class DateTimeHelper {
 
 	private static final String FANFOU_DATE_FORMAT_STRING = "EEE MMM dd HH:mm:ss Z yyyy";
-	private static final String SIMPLE_DATE_FORMAT_STRING = "yyyy年MM月dd日 HH时mm分ss秒";
-	private static final String DATE_ONLY_FORMAT_STRING = "yyyy年MM月dd日";
-	private static final String TIME_ONLY_FORMAT_STRING = "HH时mm分ss秒";
+	private static final String SIMPLE_DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm";
+	private static final String DATE_ONLY_FORMAT_STRING = "yyyy-MM-dd";
+	private static final String TIME_ONLY_FORMAT_STRING = "HH:mm:ss";
 
 	private static final SimpleDateFormat FANFOU_DATE_FORMAT = new SimpleDateFormat(
 			FANFOU_DATE_FORMAT_STRING, Locale.US);
@@ -47,9 +48,6 @@ public class DateTimeHelper {
 	 * @return 返回字符串类型的时间间隔
 	 */
 	public static String getInterval(Date date) {
-		// long
-		// now=Calendar.getInstance(TimeZone.getTimeZone("GMT+08:00")).getTimeInMillis();
-		// long seconds = (now - date.getTime()) / 1000;
 		if (date == null) {
 			return "";
 		}
@@ -61,19 +59,10 @@ public class DateTimeHelper {
 		} else if (seconds < HOUR) {
 			return seconds / MIN + "分钟前";
 		} else if (seconds < DAY) {
-			return "今天"+formatTimeOnly(date);
-//			return seconds / HOUR + "小时前";
-		}
-		else if (seconds < DAY*2) {
-			return "昨天"+formatTimeOnly(date);
-		}
-		else if (seconds < DAY*3) {
-			return "前天"+formatTimeOnly(date);
-		}
-		else if(seconds< WEEK){
-			return seconds/DAY + "天前" + formatTimeOnly(date);
-		}
-		else {
+			return seconds / HOUR + "小时前";
+		} else if (seconds < WEEK) {
+			return seconds / DAY + "天前";
+		} else {
 			return formatDate(date);
 		}
 	}

@@ -1,13 +1,11 @@
 package com.fanfou.app;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.TextUtils.TruncateAt;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +15,7 @@ import com.fanfou.app.adapter.ConversationAdapter;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Status;
+import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.widget.EndlessListView;
@@ -26,6 +25,7 @@ import com.fanfou.app.util.StringHelper;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.10.25
+ * @version 1.1 2011.10.26
  * 
  */
 public class ConversationPage extends BaseActivity implements OnRefreshListener {
@@ -137,7 +137,10 @@ public class ConversationPage extends BaseActivity implements OnRefreshListener 
 			try {
 				while(flag){
 					if(!StringHelper.isEmpty(inReplyToStatusId)){
-						com.fanfou.app.api.Status result=api.statusShow(inReplyToStatusId);
+						com.fanfou.app.api.Status result=CacheManager.getStatus(inReplyToStatusId);
+						if(result==null||result.isNull()){
+							result=api.statusShow(inReplyToStatusId);
+						}
 						if(result!=null&&!result.isNull()){
 							publishProgress(result);
 							if(StringHelper.isEmpty(result.inReplyToStatusId)){

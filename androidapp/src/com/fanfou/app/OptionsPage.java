@@ -85,6 +85,9 @@ public class OptionsPage extends PreferenceActivity implements
 
 		ListPreference interval = (ListPreference) findPreference(getText(R.string.option_notification_interval));
 		interval.setSummary(interval.getEntry());
+		
+		Preference currentAccount=findPreference(getText(R.string.option_current_account));
+		currentAccount.setSummary(""+App.me.userScreenName+"("+App.me.userId+")");
 
 		Preference checkUpdate = findPreference(getText(R.string.option_check_update));
 		checkUpdate.setOnPreferenceClickListener(this);

@@ -7,6 +7,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.TextPaint;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -15,8 +17,7 @@ import android.widget.TextView;
  * @version 1.0 2011.10.25
  * 
  */
-public class ConfirmDialog extends Dialog implements
-		View.OnClickListener {
+public class ConfirmDialog extends Dialog implements View.OnClickListener {
 
 	private Context mContext;
 
@@ -24,7 +25,7 @@ public class ConfirmDialog extends Dialog implements
 	private TextView mTextView;
 	private Button mButtonOk;
 	private Button mButtonCancel;
-	
+
 	private CharSequence mTitle;
 	private CharSequence mText;
 
@@ -33,54 +34,65 @@ public class ConfirmDialog extends Dialog implements
 	public ConfirmDialog(Context context, String title, String text) {
 		super(context, R.style.Dialog);
 		this.mContext = context;
-		this.mTitle=title;
-		this.mText=text;
+		this.mTitle = title;
+		this.mText = text;
 	}
-	
-	private void init(){
-		setContentView(R.layout.dialog);
-		
+
+	protected void setBlurEffect() {
+		Window window = getWindow();
+		WindowManager.LayoutParams lp = window.getAttributes();
+//		 lp.alpha=0.8f;
+		lp.dimAmount = 0.6f;
+		window.setAttributes(lp);
+		window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+//		window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
+	}
+
+	private void init() {
+		setContentView(R.layout.dialog_confirm);
+
 		mTitleView = (TextView) findViewById(R.id.title);
-		TextPaint tp=mTitleView.getPaint();
+		TextPaint tp = mTitleView.getPaint();
 		tp.setFakeBoldText(true);
 		mTitleView.setText(mTitle);
-		
+
 		mTextView = (TextView) findViewById(R.id.text);
 		mTextView.setText(mText);
-		
+
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonOk.setOnClickListener(this);
-		
+
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
 		mButtonCancel.setOnClickListener(this);
-		
+
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setBlurEffect();
 		init();
 	}
 
 	@Override
 	public void setTitle(CharSequence title) {
-		mTitle=title;
+		mTitle = title;
 		mTitleView.setText(mTitle);
 	}
 
 	@Override
 	public void setTitle(int resId) {
-		mTitle=mContext.getResources().getText(resId);
+		mTitle = mContext.getResources().getText(resId);
 		mTitleView.setText(mTitle);
 	}
 
 	public void setMessage(CharSequence message) {
-		mText=message;
+		mText = message;
 		mTextView.setText(mText);
 	}
 
 	public void setMessage(int resId) {
-		mText=mContext.getResources().getText(resId);
+		mText = mContext.getResources().getText(resId);
 		mTextView.setText(mText);
 	}
 
@@ -90,11 +102,11 @@ public class ConfirmDialog extends Dialog implements
 
 	@Override
 	public void onClick(View v) {
-		int id=v.getId();
+		int id = v.getId();
 		switch (id) {
 		case R.id.button_ok:
 			cancel();
-			if(mClickListener!=null){
+			if (mClickListener != null) {
 				mClickListener.onOKClick();
 			}
 			break;
@@ -105,10 +117,9 @@ public class ConfirmDialog extends Dialog implements
 			break;
 		}
 	}
-	
-	
-	public static interface OnOKClickListener{
+
+	public static interface OnOKClickListener {
 		public void onOKClick();
 	}
-	
+
 }

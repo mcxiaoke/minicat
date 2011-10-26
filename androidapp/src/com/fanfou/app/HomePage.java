@@ -53,6 +53,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.0 2011.05.31
  * @version 2.0 2011.07.16
  * @version 3.0 2011.09.24
+ * @version 3.2 2011.10.25
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
@@ -91,7 +92,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	IntentFilter mSendSuccessFilter;
 
 	private void log(String message) {
-		Log.i(TAG, message);
+		Log.d(TAG, message);
 	}
 
 	@Override
@@ -118,7 +119,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	private void initSendSuccessReceiver() {
 		mSendSuccessReceiver = new SendSuccessReceiver();
 		mSendSuccessFilter = new IntentFilter(Actions.ACTION_STATUS_SEND);
-//		mSendSuccessFilter.addAction(Actions.ACTION_MESSAGE_SEND);
+		// mSendSuccessFilter.addAction(Actions.ACTION_MESSAGE_SEND);
 		mSendSuccessFilter.setPriority(1000);
 	}
 
@@ -130,33 +131,33 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				log("SendSuccessReceiver.received");
 				IntentHelper.logIntent(TAG, intent);
 			}
-			if(onSendSuccess(intent)){
+			if (onSendSuccess(intent)) {
 				abortBroadcast();
 			}
-			
+
 		}
 
 	}
 
 	private boolean onSendSuccess(Intent intent) {
-//		String action=intent.getAction();
-		boolean result=true;
-		
-//		if(action.equals(Actions.ACTION_STATUS_SEND)){
-			if (cursors[0] != null) {
-				cursors[0].requery();
-			}
-//		}
-		
-//		else if(action.equals(Actions.ACTION_MESSAGE_SEND)){
-//			boolean success=intent.getBooleanExtra(Commons.EXTRA_BOOLEAN, true);
-//			String text=intent.getStringExtra(Commons.EXTRA_TEXT);
-//			if(!success){
-//				Utils.notify(this, text);
-//			}else{
-//				Utils.notify(this, "私信未发送："+text);
-//			}
-//		}
+		// String action=intent.getAction();
+		boolean result = true;
+
+		// if(action.equals(Actions.ACTION_STATUS_SEND)){
+		if (cursors[0] != null) {
+			cursors[0].requery();
+		}
+		// }
+
+		// else if(action.equals(Actions.ACTION_MESSAGE_SEND)){
+		// boolean success=intent.getBooleanExtra(Commons.EXTRA_BOOLEAN, true);
+		// String text=intent.getStringExtra(Commons.EXTRA_TEXT);
+		// if(!success){
+		// Utils.notify(this, text);
+		// }else{
+		// Utils.notify(this, "私信未发送："+text);
+		// }
+		// }
 		return result;
 	}
 
@@ -348,8 +349,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				R.string.option_refresh_on_open, false);
 
 		if (cursors[0].getCount() == 0 || refresh) {
-			doRefresh();
-			startRefreshAnimation();
+			onRefreshClick();
 		}
 	}
 
@@ -387,7 +387,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	 *            类型参数：Home/Mention/Message/Public
 	 */
 	private void doRetrieve(final int page, boolean doGetMore) {
-		if(!App.me.isLogin){
+		if (!App.me.isLogin) {
 			Utils.notify(this, "未通过验证，请登录");
 			return;
 		}
@@ -451,42 +451,64 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	@Override
-	protected boolean onBroadcastReceived(Intent intent) {
-		int type = intent.getIntExtra(Commons.EXTRA_TYPE, -1);
-		int count = intent.getIntExtra(Commons.EXTRA_COUNT, 1);
-		// int page=mViewFlow.getCurrentScreen();
-		switch (type) {
-		case NotificationService.NOTIFICATION_TYPE_HOME:
-			if (cursors[0] != null) {
-				cursors[0].requery();
-				if (count > 1) {
-					views[0].setSelection(0);
-				}
-				mViewPager.setCurrentItem(0);
-			}
-			break;
-		case NotificationService.NOTIFICATION_TYPE_MENTION:
-			if (cursors[1] != null) {
-				cursors[1].requery();
-				if (count > 1) {
-					views[1].setSelection(0);
-				}
-				mViewPager.setCurrentItem(1);
-			}
-			break;
-		case NotificationService.NOTIFICATION_TYPE_DM:
-			if (cursors[2] != null) {
-				cursors[2].requery();
-				if (count > 1) {
-					views[2].setSelection(0);
-				}
-				mViewPager.setCurrentItem(2);
-			}
-			break;
-		default:
-			break;
-		}
+	protected IntentFilter getIntentFilter() {
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(Actions.ACTION_STATUS_SEND);
+		filter.addAction(Actions.ACTION_NOTIFICATION);
+		return filter;
+	}
 
+	@Override
+	protected boolean onBroadcastReceived(Intent intent) {
+		String action = intent.getAction();
+		if (action.equals(Actions.ACTION_STATUS_SEND)) {
+			if (App.DEBUG) {
+				log("onBroadcastReceived ACTION_STATUS_SEND");
+			}
+			boolean needRefresh = OptionHelper.readBoolean(this,
+					R.string.option_refresh_after_send, false);
+			if (needRefresh && mCurrentPage == 0) {
+				onRefreshClick();
+			}
+
+		} else if (action.equals(Actions.ACTION_NOTIFICATION)) {
+			if (App.DEBUG) {
+				log("onBroadcastReceived ACTION_NOTIFICATION");
+			}
+			int type = intent.getIntExtra(Commons.EXTRA_TYPE, -1);
+			int count = intent.getIntExtra(Commons.EXTRA_COUNT, 1);
+			switch (type) {
+			case NotificationService.NOTIFICATION_TYPE_HOME:
+				if (cursors[0] != null) {
+					cursors[0].requery();
+					if (count > 0) {
+						views[0].setSelection(0);
+						Utils.notify(this, count+"条新消息");
+					}
+				}
+				break;
+			case NotificationService.NOTIFICATION_TYPE_MENTION:
+				if (cursors[1] != null) {
+					cursors[1].requery();
+					if (count > 0) {
+						views[1].setSelection(0);
+						Utils.notify(this, count+"条新@消息");
+					}
+				}
+				break;
+			case NotificationService.NOTIFICATION_TYPE_DM:
+				if (cursors[2] != null) {
+					cursors[2].requery();
+					if (count > 0) {
+						views[2].setSelection(0);
+						Utils.notify(this, count+"条新私信");
+					}
+				}
+				break;
+			default:
+				break;
+			}
+		}
 		return true;
 	}
 
@@ -557,10 +579,10 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		if (App.DEBUG) {
 			log("onNewIntent page=" + page);
 		}
+		if (page == 0 && adapters[0].getCount() == 0) {
+			onRefreshClick();
+		}
 		mViewPager.setCurrentItem(page);
-		// if (page == 0) {
-		// onRefreshClick();
-		// }
 	}
 
 	@Override
@@ -738,18 +760,20 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	@Override
 	public void onBackPressed() {
-		boolean needConfirm=OptionHelper.readBoolean(this, R.string.option_confirm_on_exit, false);
-		if(needConfirm){
-			final ConfirmDialog dialog=new ConfirmDialog(this,"退出","确认退出吗？");
+		boolean needConfirm = OptionHelper.readBoolean(this,
+				R.string.option_confirm_on_exit, false);
+		if (needConfirm) {
+			final ConfirmDialog dialog = new ConfirmDialog(this, "提示",
+					"确认退出饭否吗？");
 			dialog.setOnClickListener(new ConfirmDialog.OnOKClickListener() {
-				
+
 				@Override
 				public void onOKClick() {
 					mContext.finish();
 				}
 			});
 			dialog.show();
-		}else{
+		} else {
 			finish();
 		}
 	}
@@ -781,8 +805,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		if (isBusy) {
 			return;
 		}
-		startRefreshAnimation();
 		doRefresh();
+		startRefreshAnimation();
 	}
 
 }

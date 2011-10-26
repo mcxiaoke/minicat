@@ -9,8 +9,8 @@
 	<com.fanfou.app.ui.widget.MyAutoCompleteTextView  
 		android:id="@id/write_text" android:layout_width="fill_parent"
 		android:layout_below="@id/actionbar" android:layout_height="fill_parent"
-		android:minHeight="@dimen/write_minheight" android:background="@drawable/input"
-		android:gravity="top|left" android:padding="6dp" android:layout_margin="6dp" android:singleLine="false"
+		android:minHeight="@dimen/write_minheight" android:background="@drawable/input_bg"
+		android:gravity="top|left" android:padding="10dp" android:layout_margin="2dp" android:singleLine="false"
 		android:layout_weight="1" />
 
 	<RelativeLayout android:id="@id/write_extras"

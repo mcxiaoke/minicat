@@ -10,6 +10,7 @@ import com.fanfou.app.App;
  * @author mcxiaoke
  * @version 1.0 2011.06.01
  * @version 1.1 2011.10.10
+ * @version 1.2 2011.10.26
  * 
  */
 public class OptionHelper {
@@ -121,6 +122,12 @@ public class OptionHelper {
 	public static void remove(Context context, int resId) {
 		Editor sp = App.me.sp.edit();
 		sp.remove(context.getString(resId));
+		sp.commit();
+	}
+	
+	public static void clear(Context context){
+		Editor sp=App.me.sp.edit();
+		sp.clear();
 		sp.commit();
 	}
 

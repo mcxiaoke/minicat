@@ -1,6 +1,7 @@
 package com.fanfou.app.adapter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
@@ -19,6 +20,7 @@ import com.fanfou.app.util.StringHelper;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.06.25
+ * @version 1.1 2011.10.26
  *
  */
 public class StatusArrayAdapter extends BaseArrayAdapter<Status> {
@@ -101,7 +103,7 @@ public class StatusArrayAdapter extends BaseArrayAdapter<Status> {
 
 		holder.nameText.setText(s.userScreenName);
 		holder.contentText.setText(s.simpleText);
-		holder.metaText.setText(DateTimeHelper.getInterval(s.createdAt) + " 通过"
+		holder.metaText.setText(getDateString(s.createdAt) + " 通过"
 				+ s.source);
 
 		return convertView;
@@ -133,6 +135,10 @@ public class StatusArrayAdapter extends BaseArrayAdapter<Status> {
 	@Override
 	int getLayoutId() {
 		return R.layout.list_item_status;
+	}
+	
+	protected String getDateString(Date date){
+		return DateTimeHelper.getInterval(date);
 	}
 
 	public void updateDataAndUI(List<Status> ss) {

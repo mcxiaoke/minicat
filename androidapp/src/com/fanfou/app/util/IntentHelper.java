@@ -22,6 +22,7 @@ public final class IntentHelper {
 	
 	public static void goLoginPage(Context context) {
 		App.me.removeAccountInfo();
+		App.me.clearImageTasks();
 		Intent intent = new Intent(context, LoginPage.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		context.startActivity(intent);

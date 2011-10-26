@@ -32,6 +32,8 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.7 2011.07.14
  * @version 1.8 2011.07.22
  * @version 1.9 2011.10.09
+ * @version 2.0 2011.10.25
+ * @version 2.5 2011.10.26
  * 
  */
 public class FanFouProvider extends ContentProvider {
@@ -384,10 +386,13 @@ public class FanFouProvider extends ContentProvider {
 		db.beginTransaction();
 		try {
 			for (ContentValues value : values) {
-				db.insert(table, null, value);
+				long result=db.insert(table, null, value);
+				if(result>-1){
+					numInserted++;
+				}
 			}
 			db.setTransactionSuccessful();
-			numInserted += values.length;
+//			numInserted += values.length;
 		} catch (Exception e) {
 			if (App.DEBUG) {
 				e.printStackTrace();
@@ -490,6 +495,9 @@ public class FanFouProvider extends ContentProvider {
 				ih.bind(name, value.getAsString(UserInfo.NAME));
 
 				long result = ih.execute();
+				if(result>-1){
+					numInserted++;
+				}
 				if (App.DEBUG) {
 					log("bulkInsertUsers insert: user.id= "
 							+ value.getAsString(UserInfo.ID) + " result="
@@ -497,7 +505,7 @@ public class FanFouProvider extends ContentProvider {
 				}
 			}
 			db.setTransactionSuccessful();
-			numInserted = values.length;
+//			numInserted = values.length;
 		} catch (Exception e) {
 			if (App.DEBUG) {
 				e.printStackTrace();
@@ -604,6 +612,9 @@ public class FanFouProvider extends ContentProvider {
 				ih.bind(timestamp, value.getAsLong(StatusInfo.TIMESTAMP));
 
 				long result = ih.execute();
+				if(result>-1){
+					numInserted++;
+				}
 				if (App.DEBUG) {
 					log("bulkInsertStatuses insert: status.id= "
 							+ value.getAsString(StatusInfo.ID) + " result="
@@ -611,7 +622,7 @@ public class FanFouProvider extends ContentProvider {
 				}
 			}
 			db.setTransactionSuccessful();
-			numInserted = values.length;
+//			numInserted = values.length;
 		} catch (Exception e) {
 			if (App.DEBUG) {
 				e.printStackTrace();

@@ -46,6 +46,7 @@ import com.fanfou.app.util.Utils;
  * @author mcxiaoke
  * @version 1.0 2011.06.20
  * @version 2.0 2011.10.24
+ * @version 2.1 2011.10.26
  * 
  */
 public class WritePage extends BaseActivity {
@@ -58,7 +59,7 @@ public class WritePage extends BaseActivity {
 	private static final int REQUEST_ADD_USER=4;
 
 	private void log(String message) {
-		Log.i(tag, message);
+		Log.d(tag, message);
 	}
 
 	private ActionBar mActionBar;
@@ -367,12 +368,6 @@ public class WritePage extends BaseActivity {
 	public void onClick(View v) {
 		int id = v.getId();
 		switch (id) {
-		// case R.id.write_button_cancel:
-		// finish();
-		// break;
-		// case R.id.write_button_ok:
-		// update();
-		// break;
 		case R.id.write_action_at:
 			startAddUsername();
 			break;
@@ -460,12 +455,16 @@ public class WritePage extends BaseActivity {
 			Utils.notify(this, "消息内容不能为空");
 			return;
 		}
+		if(wordsCount>140){
+			Utils.notify(this, "消息内容超过140字");
+			return;
+		}
 		if (!App.me.isLogin) {
 			Utils.notify(this, "未通过验证，请先登录");
 			return;
 		}
-		finish();
 		startSendService();
+		finish();
 	}
 
 	private void startSendService() {

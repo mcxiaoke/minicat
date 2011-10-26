@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,6 +37,8 @@ import com.fanfou.app.api.User;
 import com.fanfou.app.auth.OAuth;
 import com.fanfou.app.auth.OAuthToken;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.dialog.AlertInfoDialog;
+import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.http.Parameter;
 import com.fanfou.app.http.Response;
 import com.fanfou.app.http.ResponseCode;
@@ -53,20 +56,21 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * @version 1.0 2011.10.08
  * @version 1.1 2011.10.17
  * @version 1.2 2011.10.25
+ * @version 1.3 2011.10.26
  * 
  */
-public class RegisterPage extends Activity implements OnClickListener{
+public class RegisterPage extends Activity implements OnClickListener {
 
 	/** @see http://code.fanfouapps.com/issues/2691 */
 
 	private static final String TAG = RegisterPage.class.getSimpleName();
 
 	private GoogleAnalyticsTracker g;
-	
+
 	private RegisterPage mContext;
 
 	private String mNickName;
-	private String mDeviceId;
+	private String mUUID;
 	private String mPassword;
 	private String mPasswordConfirm;
 	private String mEmail;
@@ -77,7 +81,7 @@ public class RegisterPage extends Activity implements OnClickListener{
 	private EditText ePassword;
 	private EditText ePasswordConfirm;
 	private CheckBox cFollowPushed;
-	private ImageView iRegister;
+	private Button mButtonRegister;
 
 	public void log(String message) {
 		Log.i(TAG, message);
@@ -94,9 +98,14 @@ public class RegisterPage extends Activity implements OnClickListener{
 	}
 
 	private void init() {
-		mContext=this;
+		mContext = this;
 		Utils.initScreenConfig(this);
-		mDeviceId = DeviceHelper.uuid(this);
+		mUUID = DeviceHelper.uuid(this);
+		
+		g = GoogleAnalyticsTracker.getInstance();
+		g.startNewSession(getString(R.string.config_google_analytics_code),
+				this);
+		g.trackPageView("RegisterPage");
 	}
 
 	private void setLayout() {
@@ -105,8 +114,8 @@ public class RegisterPage extends Activity implements OnClickListener{
 		ePassword = (EditText) findViewById(R.id.register_password);
 		ePasswordConfirm = (EditText) findViewById(R.id.register_password_confirm);
 		cFollowPushed = (CheckBox) findViewById(R.id.register_follow_random);
-		iRegister = (ImageView) findViewById(R.id.register_register);
-		iRegister.setOnClickListener(this);
+		mButtonRegister = (Button) findViewById(R.id.button_register);
+		mButtonRegister.setOnClickListener(this);
 	}
 
 	private void setActionBar() {
@@ -168,35 +177,39 @@ public class RegisterPage extends Activity implements OnClickListener{
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		if (id == R.id.register_register) {
+		if (id == R.id.button_register) {
 			doRegister();
 		}
 	}
 
 	private void doRegister() {
+		if (StringHelper.isEmpty(mNickName) || StringHelper.isEmpty(mEmail)
+				|| StringHelper.isEmpty(mPassword)
+				|| StringHelper.isEmpty(mPasswordConfirm)) {
+			Utils.notify(this, " 注册资料未填写完整");
+			return;
+		}
+		
+		g.setCustomVar(1, "doRegisterEmail", mEmail);
+		g.setCustomVar(1, "doRegisterUUID", mUUID);
+		
 		int nickLength = mNickName.length();
 		if (nickLength < 2 || nickLength > 12) {
 			Utils.notify(this, "昵称为2～12字符");
 			return;
 		}
-
 		int emailLength = mEmail.length();
 		if (emailLength < 8) {
 			Utils.notify(this, "Email地址不正确");
 			return;
 		}
-
-		if (StringHelper.isEmpty(mPassword)
-				|| StringHelper.isEmpty(mPasswordConfirm)
-				|| mPassword.length() < 4 || mPasswordConfirm.length() < 4) {
-			Utils.notify(this, "密码至少4个字符");
-			return;
-		}
-
 		if (!mPassword.equals(mPasswordConfirm)) {
 			Utils.notify(this, "两次输入密码不一致");
 		}
-
+		if (mPassword.length() < 4 || mPasswordConfirm.length() < 4) {
+			Utils.notify(this, "密码至少4个字符");
+			return;
+		}
 		new RegisterTask().execute();
 	}
 
@@ -213,8 +226,8 @@ public class RegisterPage extends Activity implements OnClickListener{
 		@Override
 		protected ResultInfo doInBackground(Void... params) {
 			try {
-				User user = register(mEmail, mNickName, mPassword, mDeviceId);
-				if(isCancelled){
+				User user = register(mEmail, mNickName, mPassword, mUUID);
+				if (isCancelled) {
 					return new ResultInfo(REGISTER_CANCELLED);
 				}
 				if (user != null && !user.isNull()) {
@@ -271,21 +284,38 @@ public class RegisterPage extends Activity implements OnClickListener{
 			case REGISTER_CANCELLED:
 				break;
 			case REGISTER_SUCCESS:
-				Utils.notify(mContext, "注册成功");
-				User u = (User) result.content;
-				Intent data = new Intent();
-				data.putExtra("userid", u.id);
-				data.putExtra("password", mPassword);
-				data.putExtra("email", mEmail);
-				if(!cFollowPushed.isChecked()){
-					data.putExtra(Commons.EXTRA_PAGE, 3);
-				}
-				setResult(Activity.RESULT_OK, data);
-				finish();
+				onRegisterSuccess(result);
 				break;
 			default:
 				break;
 			}
+		}
+
+		private void onRegisterSuccess(ResultInfo result) {
+			final User u = (User) result.content;
+			g.setCustomVar(2, "onRegisterSuccessUUID", mUUID);
+			g.setCustomVar(2, "onRegisterSuccessEmail", mEmail);
+			if (g != null) {
+				g.dispatch();
+			}
+			final String message="你的临时ID是["+u.id+"]，你的昵称是["+u.screenName+"]，请访问饭否网站修改个人网址，完善你的个人介绍，点击确定直接登录";
+			final AlertInfoDialog dialog=new AlertInfoDialog(mContext, "注册成功", message);
+			dialog.setOnClickListener(new AlertInfoDialog.OnOKClickListener() {
+				
+				@Override
+				public void onOKClick() {
+					Intent data = new Intent();
+					data.putExtra("userid", u.id);
+					data.putExtra("password", mPassword);
+					data.putExtra("email", mEmail);
+					if (!cFollowPushed.isChecked()) {
+						data.putExtra(Commons.EXTRA_PAGE, 3);
+					}
+					setResult(Activity.RESULT_OK, data);
+					finish();
+				}
+			});
+			dialog.show();
 		}
 
 		private User register(String email, String nickname, String password,
@@ -296,7 +326,8 @@ public class RegisterPage extends Activity implements OnClickListener{
 			params.add(new Parameter("loginpass", password));
 			params.add(new Parameter("devicetype", "android"));
 			params.add(new Parameter("deviceid", deviceId));
-			params.add(new Parameter("follow_pushed", String.valueOf(cFollowPushed.isChecked())));
+			params.add(new Parameter("follow_pushed", String
+					.valueOf(cFollowPushed.isChecked())));
 
 			for (Parameter parameter : params) {
 				Log.d("RegisterTask", parameter.toString());
