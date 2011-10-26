@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
+import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 
@@ -11,13 +12,14 @@ import com.fanfou.app.db.Contents.UserInfo;
  * @author mcxiaoke
  * @version 1.0 2011.06.20
  * @version 2.0 2011.10.21
+ * @version 3.0 2011.10.26
  *
  */
 public class SQLiteHelper extends SQLiteOpenHelper {
 	public static final String TAG = "SQLiteHelper";
 
 	public static final String DATABASE_NAME = "fanfou.db";
-	public static final int DATABASE_VERSION = 3;
+	public static final int DATABASE_VERSION = 4;
 
 	/**
 	 * @param context
@@ -34,6 +36,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		db.execSQL(StatusInfo.CREATE_TABLE);
 		db.execSQL(UserInfo.CREATE_TABLE);
 		db.execSQL(DirectMessageInfo.CREATE_TABLE);
+		db.execSQL(DraftInfo.CREATE_TABLE);
 	}
 
 	@Override
@@ -41,6 +44,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + StatusInfo.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + UserInfo.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + DirectMessageInfo.TABLE_NAME);
+		db.execSQL("DROP TABLE IF EXISTS " + DraftInfo.TABLE_NAME);
 		onCreate(db);
 
 	}

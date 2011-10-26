@@ -19,8 +19,9 @@
 		android:id="@+id/msgchat_area"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:orientation="horizontal"
-		android:padding="2dp" android:gravity="center_vertical">
+		android:orientation="horizontal" android:background="@drawable/rect_bg" android:gravity="center_vertical" 
+		android:paddingTop="10dp" android:paddingLeft="2dp" android:paddingRight="2dp" android:paddingBottom="2dp"
+		>
 
 		<EditText
 			android:id="@+id/msgchat_input"

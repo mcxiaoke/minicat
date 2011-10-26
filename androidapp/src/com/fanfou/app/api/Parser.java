@@ -387,7 +387,7 @@ public final class Parser implements ResponseCode {
 				e.printStackTrace();
 			}
 		}
-		return "";
+		return null;
 	}
 
 	public static boolean parseBoolean(Cursor c, String columnName) {

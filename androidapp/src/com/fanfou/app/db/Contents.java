@@ -286,5 +286,48 @@ public final class Contents {
         	
             + "unique ( "+ID+" ) on conflict ignore );";
     }
+    
+    // add at 2011.10.26
+	public static interface DraftInfo extends BaseColumns{
+    	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/drafts");
+    	public static final String URI_PATH="drafts";
+    	public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE+"/vnd.fanfou.draft";
+    	public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE+"/vnd.fanfou.draft";
+    	
+    	public static final String TABLE_NAME="draft";
+    	
+    	public static final String ITEM_ID="item_id";
+    	public static final String OWNER_ID="owner_id";
+    	public static final String TYPE="type";
+    	public static final String TEXT="text";
+    	public static final String CREATED_AT="created_at";
+    	public static final String REPLY_TO="reply";
+    	public static final String FILE_PATH="file_path";
+    	
+    	public static final String COLUMNS[]={
+            _ID,
+            ITEM_ID,
+            OWNER_ID,
+            TEXT,
+            CREATED_AT,
+            TYPE,
+            REPLY_TO,
+            FILE_PATH,
+          };
+    	
+        public static final String CREATE_TABLE="create table " + TABLE_NAME+" ("
+    	+ _ID+" integer primary key autoincrement, "
+    	+ ITEM_ID+" integer , "
+    	+ OWNER_ID+" text , "
+    	+ TEXT+" text not null, "
+    	+ CREATED_AT+" integer not null, "
+    	+ TYPE+" integer not null, "
+    	+ REPLY_TO+" text , "
+    	+ FILE_PATH+" text , "
+        + "unique ( "+_ID+" ) on conflict ignore );";
+    	
+	}
+	
+	
 
 }

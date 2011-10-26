@@ -812,3 +812,5 @@ TODO:
 修改注册界面，添加GoogleAnalytics代码
 关于界面LOGO添加点击跳转到Market
 Home界面添加发消息和后台更新广播处理，Toast提示
+
+添加草稿数据库类，表和字段

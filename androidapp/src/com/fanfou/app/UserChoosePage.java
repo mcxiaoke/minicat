@@ -143,7 +143,6 @@ public class UserChoosePage extends BaseActivity implements
 	private void setListView() {
 		mListView = (ListView) findViewById(R.id.list);
 		mListView.setCacheColorHint(0);
-		mListView.setFastScrollEnabled(true);
 		mListView.setHorizontalScrollBarEnabled(false);
 		mListView.setVerticalScrollBarEnabled(false);
 		mListView.setSelector(getResources().getDrawable(

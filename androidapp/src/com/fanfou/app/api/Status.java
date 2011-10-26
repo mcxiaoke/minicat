@@ -87,17 +87,9 @@ public class Status implements Storable<Status> {
 	public Status() {
 	}
 
-	public Status(Parcel p) {
-
-	}
-
 	@Override
 	public int compareTo(Status another) {
-//		if(createdAt.equals(another.createdAt)){
-//			return 1;
-//		}else{
-			return createdAt.compareTo(another.createdAt);
-//		}
+		return createdAt.compareTo(another.createdAt);
 	}
 
 	public boolean isNull() {

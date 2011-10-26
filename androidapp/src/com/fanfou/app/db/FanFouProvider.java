@@ -16,10 +16,10 @@ import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
-import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
+import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.util.StringHelper;
@@ -72,6 +72,9 @@ public class FanFouProvider extends ContentProvider {
 	public static final int MESSAGE_ID = 43;
 	public static final int MESSAGE_LIST = 44;// 对话列表，每个人最新的一条，收件箱为准
 	public static final int MESSAGE_USER = 45;// 每个人的私信对话列表
+	
+	public static final int DRAFT_ALL=61;
+	public static final int DRAFT_ID=62;
 
 	public static final int ACTION_CLEAN_ALL = 110;
 	public static final int ACTION_CLEAN_STATUS = 112;
@@ -81,6 +84,8 @@ public class FanFouProvider extends ContentProvider {
 	public static final int ACTION_COUNT_STATUS = 121;
 	public static final int ACTION_COUNT_MESSAGE = 122;
 	public static final int ACTION_COUNT_USER = 123;
+	
+	
 
 	private static final UriMatcher sUriMatcher;
 	// private static HashMap<String, String> sUserProjectionMap;
@@ -126,6 +131,9 @@ public class FanFouProvider extends ContentProvider {
 				MESSAGE_LIST);
 		sUriMatcher.addURI(Contents.AUTHORITY, DirectMessageInfo.URI_PATH + "/user/*",
 				MESSAGE_USER);
+		
+		sUriMatcher.addURI(Contents.AUTHORITY, DraftInfo.URI_PATH, DRAFT_ALL);
+		sUriMatcher.addURI(Contents.AUTHORITY, DraftInfo.URI_PATH+"/#", DRAFT_ID);
 	}
 
 	@Override
@@ -162,6 +170,10 @@ public class FanFouProvider extends ContentProvider {
 		case MESSAGE_ITEM:
 		case MESSAGE_ID:
 			return DirectMessageInfo.CONTENT_ITEM_TYPE;
+		case DRAFT_ALL:
+			return DraftInfo.CONTENT_TYPE;
+		case DRAFT_ID:
+			return DraftInfo.CONTENT_ITEM_TYPE;
 		default:
 			throw new IllegalArgumentException("getType() Unknown URI " + uri);
 		}
@@ -259,6 +271,15 @@ public class FanFouProvider extends ContentProvider {
 			qb.appendWhere(BaseColumns._ID + "=");
 			qb.appendWhere(uri.getPathSegments().get(2));
 			break;
+		case DRAFT_ALL:
+			qb.setTables(DraftInfo.TABLE_NAME);
+			if (order == null) {
+				order = ORDERBY_DATE_DESC;
+			}
+			break;
+		case DRAFT_ID:
+			throw new UnsupportedOperationException("unsupported operation: "+uri);
+//			break;
 		default:
 			throw new IllegalArgumentException("query() Unknown URI " + uri);
 		}
@@ -327,9 +348,14 @@ public class FanFouProvider extends ContentProvider {
 			table = DirectMessageInfo.TABLE_NAME;
 			contentUri = DirectMessageInfo.CONTENT_URI;
 			break;
+		case DRAFT_ALL:
+			table=DraftInfo.TABLE_NAME;
+			contentUri=DraftInfo.CONTENT_URI;
+			break;
 		case USER_ITEM:
 		case STATUS_ITEM:
 		case MESSAGE_ITEM:
+		case DRAFT_ID:
 			throw new UnsupportedOperationException("Cannot insert URI: " + uri);
 		default:
 			throw new IllegalArgumentException("insert() Unknown URI " + uri);
@@ -369,6 +395,9 @@ public class FanFouProvider extends ContentProvider {
 			break;
 		case MESSAGES_ALL:
 			result = bulkInsertData(DirectMessageInfo.TABLE_NAME, values);
+			break;
+		case DRAFT_ALL:
+			result=bulkInsertData(DraftInfo.TABLE_NAME,values);
 			break;
 		default:
 			if (App.DEBUG) {
@@ -689,6 +718,14 @@ public class FanFouProvider extends ContentProvider {
 			count = db.delete(DirectMessageInfo.TABLE_NAME,
 					DirectMessageInfo._ID + "=?", new String[] { _id });
 			break;
+		case DRAFT_ALL:
+			count = db.delete(DraftInfo.TABLE_NAME, where, whereArgs);
+			break;
+		case DRAFT_ID:
+			_id = uri.getPathSegments().get(2);
+			count = db.delete(DraftInfo.TABLE_NAME,
+					DraftInfo._ID + "=?", new String[] { _id });
+			break;
 		default:
 			throw new IllegalArgumentException("delete() Unknown URI " + uri);
 		}
@@ -972,6 +1009,9 @@ public class FanFouProvider extends ContentProvider {
 			count = db.update(DirectMessageInfo.TABLE_NAME, values, where,
 					whereArgs);
 			break;
+		case DRAFT_ALL:
+		case DRAFT_ID:
+			throw new UnsupportedOperationException("unsupported update action: "+uri);
 		default:
 			throw new IllegalArgumentException("update() Unknown URI " + uri);
 		}
