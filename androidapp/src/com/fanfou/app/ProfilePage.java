@@ -35,6 +35,7 @@ import com.fanfou.app.util.Utils;
  * @author mcxiaoke
  * @version 1.0 2011.07.18
  * @version 1.1 2011.10.25
+ * @version 1.2 2011.10.27
  * 
  */
 public class ProfilePage extends BaseActivity {
@@ -76,7 +77,7 @@ public class ProfilePage extends BaseActivity {
 	private IImageLoader mLoader;
 
 	private boolean isInitialized = false;
-	private boolean noPermission = false;// noPermission=user.protect&&!user.following
+	private boolean noPermission = false;
 	private boolean isBusy = false;
 
 	@Override
@@ -142,7 +143,7 @@ public class ProfilePage extends BaseActivity {
 		mName = (TextView) findViewById(R.id.user_name);
 		TextPaint tp = mName.getPaint();
 		tp.setFakeBoldText(true);
-		
+
 		mExtraInfo = (TextView) findViewById(R.id.user_extrainfo);
 
 		mProtected = (ImageView) findViewById(R.id.user_protected);
@@ -173,6 +174,8 @@ public class ProfilePage extends BaseActivity {
 		mReplyAction.setOnClickListener(this);
 		mMessageAction.setOnClickListener(this);
 		mFollowAction.setOnClickListener(this);
+		
+		mScrollView.setVisibility(View.GONE);
 	}
 
 	/**
@@ -181,9 +184,9 @@ public class ProfilePage extends BaseActivity {
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		// mActionBar.setTitle("个人资料");
-//		mActionBar.setRightAction(this);
+		// mActionBar.setRightAction(this);
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
-//		mActionBar.setRefreshEnabled(this);
+		mActionBar.setRefreshEnabled(this);
 	}
 
 	protected void initCheckState() {
@@ -192,13 +195,8 @@ public class ProfilePage extends BaseActivity {
 			updateUI();
 		} else {
 			doRefresh();
-			showProgress();
+			mEmptyView.setVisibility(View.VISIBLE);
 		}
-	}
-
-	private void showProgress() {
-		mScrollView.setVisibility(View.GONE);
-		mEmptyView.setVisibility(View.VISIBLE);
 	}
 
 	private void showContent() {
@@ -215,12 +213,12 @@ public class ProfilePage extends BaseActivity {
 			return;
 		}
 		noPermission = !user.following && user.protect;
-		
-		if(user.gender.equals("男")){
+
+		if (user.gender.equals("男")) {
 			mActionBar.setTitle("他的空间");
-		}else if(user.gender.equals("女")){
+		} else if (user.gender.equals("女")) {
 			mActionBar.setTitle("她的空间");
-		}else{
+		} else {
 			mActionBar.setTitle("TA的空间");
 		}
 		if (App.DEBUG)
@@ -315,19 +313,24 @@ public class ProfilePage extends BaseActivity {
 		mRelationship.setVisibility(View.VISIBLE);
 		mRelationship.setText(follow ? "(此用户正在关注你)" : "(此用户没有关注你)");
 	}
-	
-	private void doFollow(){
-		if(user.following){
-			final ConfirmDialog dialog=new ConfirmDialog(this,"取消关注","要取消关注"+user.screenName+"吗？");
-			dialog.setOnClickListener(new ConfirmDialog.OnOKClickListener() {
-				
+
+	private void doFollow() {
+		if (user == null || user.isNull()) {
+			return;
+		}
+		if (user.following) {
+			final ConfirmDialog dialog = new ConfirmDialog(this, "取消关注",
+					"要取消关注" + user.screenName + "吗？");
+			dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
+
 				@Override
-				public void onOKClick() {
-					ActionManager.doFollow(mContext, user, new MyResultReceiver());
+				public void onButton1Click() {
+					ActionManager.doFollow(mContext, user,
+							new MyResultReceiver());
 				}
 			});
 			dialog.show();
-		}else{
+		} else {
 			ActionManager.doFollow(mContext, user, new MyResultReceiver());
 		}
 
@@ -335,6 +338,9 @@ public class ProfilePage extends BaseActivity {
 
 	@Override
 	public void onClick(View v) {
+		if (user == null || user.isNull()) {
+			return;
+		}
 		switch (v.getId()) {
 		case R.id.user_action_reply:
 			ActionManager.doReply(this, user);
@@ -456,7 +462,7 @@ public class ProfilePage extends BaseActivity {
 				if (App.DEBUG)
 					log("result error");
 				if (!isInitialized) {
-					finish();
+					mEmptyView.setVisibility(View.GONE);
 				}
 				int type = resultData.getInt(Commons.EXTRA_TYPE);
 				if (type == Commons.ACTION_USER_RELATION) {

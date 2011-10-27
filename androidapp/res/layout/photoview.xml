@@ -13,7 +13,12 @@
 			android:layout_height="wrap_content" android:text="关闭"
 			android:textColor="@color/soft_white" android:textSize="@dimen/text_size_large"
 			android:padding="10dp" android:layout_weight="1" android:gravity="center" />
-
+		
+		<TextView android:layout_width="fill_parent" android:id="@+id/photoview_share"
+			android:layout_height="wrap_content" android:text="分享"
+			android:textColor="@color/soft_white" android:textSize="@dimen/text_size_large"
+			android:padding="10dp" android:layout_weight="1" android:gravity="center" />
+		
 		<TextView android:layout_width="fill_parent" android:id="@+id/photoview_save"
 			android:layout_height="wrap_content" android:text="保存"
 			android:textColor="@color/soft_white" android:textSize="@dimen/text_size_large"

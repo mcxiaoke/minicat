@@ -16,29 +16,30 @@ import android.text.Editable;
 import android.text.Selection;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 
 import com.fanfou.app.adapter.AtTokenizer;
 import com.fanfou.app.adapter.AutoCompleteCursorAdapter;
+import com.fanfou.app.api.Draft;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.db.Contents.BasicColumns;
+import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.db.Contents.UserInfo;
+import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.service.PostStatusService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
+import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.ui.widget.MyAutoCompleteTextView;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.ImageHelper;
 import com.fanfou.app.util.OptionHelper;
-import com.fanfou.app.util.StatusHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
 
@@ -47,6 +48,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.0 2011.06.20
  * @version 2.0 2011.10.24
  * @version 2.1 2011.10.26
+ * @version 3.0 2011.10.27
  * 
  */
 public class WritePage extends BaseActivity {
@@ -56,7 +58,6 @@ public class WritePage extends BaseActivity {
 	private static final int REQUEST_PHOTO_LIBRARY = 1;
 	private static final int REQUEST_LOCATION_ADD = 2;
 	private static final int REQUEST_USERNAME_ADD = 3;
-	private static final int REQUEST_ADD_USER=4;
 
 	private void log(String message) {
 		Log.d(tag, message);
@@ -65,20 +66,17 @@ public class WritePage extends BaseActivity {
 	private ActionBar mActionBar;
 	private MyAutoCompleteTextView mAutoCompleteTextView;
 	CursorAdapter mAdapter;
-	// private ViewGroup vExtra;
+
 	private ImageView iPicturePrieview;
 	private ImageView iPictureRemove;
 	private TextView tWordsCount;
 
-	private ViewGroup vActions;
 	private ImageView iAtIcon;
 	private ImageView iLocationIcon;
 	private ImageView iGalleryIcon;
 	private ImageView iCameraIcon;
 
-	// private ViewGroup vButtons;
-	// private ImageView bCancel;
-	// private ImageView bOK;
+	private Button mButtonDraft;
 
 	private Uri photoUri;
 	private File photo;
@@ -98,18 +96,16 @@ public class WritePage extends BaseActivity {
 
 	public static final int TYPE_NORMAL = 0;
 	public static final int TYPE_REPLY = 1;
-	public static final int TYPE_REPLY_ALL = 2;
-	public static final int TYPE_REPOST = 3;
+	public static final int TYPE_REPOST = 2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		parseIntent();
 		initialize();
 		setContentView(R.layout.write);
 		setActionBar();
 		setLayout();
-		setValues();
+		parseIntent();
 	}
 
 	private void initialize() {
@@ -119,38 +115,48 @@ public class WritePage extends BaseActivity {
 		mLocationManager = (LocationManager) this
 				.getSystemService(Context.LOCATION_SERVICE);
 
-		// TODO need test and modify
-		// 修复小屏幕软键盘挡住输入框的问题
-		if (App.me.density < 1.5) {
+		if (mDisplayMetrics.heightPixels < 600) {
 			getWindow().setSoftInputMode(
 					WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
 		}
 	}
 
-
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
-			case REQUEST_USERNAME_ADD:
-				break;
 			case REQUEST_LOCATION_ADD:
 				break;
 			case REQUEST_PHOTO_LIBRARY:
-				doAddPicture(data.getData());
+				if (App.DEBUG) {
+					log("onActivityResult requestCode=REQUEST_PHOTO_LIBRARY");
+				}
+				parsePhoto(data.getData());
 				showPreview();
 				break;
 			case REQUEST_PHOTO_CAPTURE:
+				if (App.DEBUG) {
+					log("onActivityResult requestCode=REQUEST_PHOTO_CAPTURE");
+				}
 				doCameraShot(data);
 				break;
-			case REQUEST_ADD_USER:
-				doAddUserNames(data);
+			case REQUEST_USERNAME_ADD:
+				if (App.DEBUG) {
+					log("onActivityResult requestCode=REQUEST_USERNAME_ADD");
+				}
+				insertNames(data);
 				break;
 			default:
 				break;
 			}
 		}
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		setIntent(intent);
+		parseIntent();
 	}
 
 	private void doCameraShot(Intent data) {
@@ -166,10 +172,6 @@ public class WritePage extends BaseActivity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	private void doAddPicture(Uri uri) {
-		parseUri(uri);
 	}
 
 	private void showPreview() {
@@ -197,21 +199,33 @@ public class WritePage extends BaseActivity {
 		tWordsCount.setText("剩余字数：" + (140 - count));
 	}
 
-	private void parseUri(Uri uri) {
+	private void parsePhoto(Uri uri) {
 		if (uri != null) {
-			photoUri = uri;
+			
 			if (App.DEBUG)
 				log("from gallery uri=" + photoUri);
 
 			String path;
-			if (photoUri.getScheme().equals("content")) {
-				path = IOHelper.getRealPathFromURI(this, photoUri);
+			if (uri.getScheme().equals("content")) {
+				path = IOHelper.getRealPathFromURI(this, uri);
 			} else {
-				path = photoUri.getPath();
+				path = uri.getPath();
 			}
 			photo = new File(path);
+			if(photo.exists()){
+				photoUri = uri;
+			}
 			if (App.DEBUG)
 				log("from gallery file=" + path);
+		}
+	}
+
+	private void parsePhoto(File file) {
+		if (file != null&&file.exists()) {
+			photo = file;
+			photoUri = Uri.fromFile(file);
+			if (App.DEBUG)
+				log("from file=" + file);
 		}
 	}
 
@@ -224,25 +238,22 @@ public class WritePage extends BaseActivity {
 				text = intent.getStringExtra(Commons.EXTRA_TEXT);
 				status = (Status) intent
 						.getSerializableExtra(Commons.EXTRA_STATUS);
-				photo = (File) intent.getSerializableExtra(Commons.EXTRA_FILE);
-				if (photo != null) {
-					photoUri = Uri.parse(photo.getAbsolutePath());
-				}
+				File file = (File) intent
+						.getSerializableExtra(Commons.EXTRA_FILE);
+				parsePhoto(file);
 			} else if (action.equals(Intent.ACTION_SEND)) {
 				type = TYPE_NORMAL;
 				Bundle extras = intent.getExtras();
 				if (extras.containsKey(Intent.EXTRA_STREAM)) {
 					Uri uri = extras.getParcelable(Intent.EXTRA_STREAM);
-					if (uri != null) {
-						doAddPicture(uri);
-						if (App.DEBUG)
-							log("parseIntent ACTION_SEND EXTRA_STREAM uri="
-									+ uri);
-					}
-				} else if (extras.containsKey(Intent.EXTRA_TEXT)) {
+					parsePhoto(uri);
+				}
+
+				if (extras.containsKey(Intent.EXTRA_TEXT)) {
 					type = TYPE_NORMAL;
 					text = extras.getString(Intent.EXTRA_TEXT);
 				}
+
 			}
 			if (App.DEBUG) {
 				log("intent type=" + type);
@@ -250,6 +261,8 @@ public class WritePage extends BaseActivity {
 				log("intent status=" + status);
 			}
 		}
+
+		updateUI();
 	}
 
 	/**
@@ -259,7 +272,7 @@ public class WritePage extends BaseActivity {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("写消息");
 		mActionBar.setRightAction(new SendAction());
-		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
+		mActionBar.setLeftAction(new ActionBar.BackAction(this));
 
 	}
 
@@ -278,13 +291,22 @@ public class WritePage extends BaseActivity {
 
 	private void setAutoComplete() {
 		mAutoCompleteTextView = (MyAutoCompleteTextView) findViewById(R.id.write_text);
-		mAutoCompleteTextView.addTextChangedListener(textMonitor);
+		mAutoCompleteTextView.addTextChangedListener(new TextChangeListener() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				content = s.toString();
+				wordsCount = content.length();
+				showCount(wordsCount);
+			}
+		});
 		mAutoCompleteTextView.setTokenizer(new AtTokenizer());
 		mAutoCompleteTextView.setDropDownBackgroundResource(R.drawable.bg);
 		mAutoCompleteTextView.setDropDownAnchor(R.id.write_text);
 		String[] projection = new String[] { UserInfo._ID, UserInfo.ID,
 				UserInfo.SCREEN_NAME };
-		String where = BasicColumns.TYPE + " = '" + User.TYPE_FRIENDS + "'";
+		String where = UserInfo.TYPE + " = '" + User.TYPE_FRIENDS + "'";
 		Cursor c = managedQuery(UserInfo.CONTENT_URI, projection, where, null,
 				null);
 		mAdapter = new AutoCompleteCursorAdapter(this, c);
@@ -294,23 +316,16 @@ public class WritePage extends BaseActivity {
 	private void setLayout() {
 		setAutoComplete();
 
-		// vExtra = (ViewGroup) findViewById(R.id.write_extras);
 		iPicturePrieview = (ImageView) findViewById(R.id.write_extra_picture_prieview);
 		iPictureRemove = (ImageView) findViewById(R.id.write_extra_picture_remove);
 
 		tWordsCount = (TextView) findViewById(R.id.write_extra_words);
 
-		vActions = (ViewGroup) findViewById(R.id.write_actions);
 		iAtIcon = (ImageView) findViewById(R.id.write_action_at);
 		iLocationIcon = (ImageView) findViewById(R.id.write_action_location);
 		iGalleryIcon = (ImageView) findViewById(R.id.write_action_gallery);
 		iCameraIcon = (ImageView) findViewById(R.id.write_action_camera);
 
-		// vButtons = (ViewGroup) findViewById(R.id.write_buttons);
-		// bCancel = (ImageView) findViewById(R.id.write_button_cancel);
-		// bOK = (ImageView) findViewById(R.id.write_button_ok);
-		// bCancel.setOnClickListener(this);
-		// bOK.setOnClickListener(this);
 		iAtIcon.setOnClickListener(this);
 		iLocationIcon.setOnClickListener(this);
 		iGalleryIcon.setOnClickListener(this);
@@ -322,9 +337,12 @@ public class WritePage extends BaseActivity {
 				.setImageResource(enableLocation ? R.drawable.i_bar_location_on
 						: R.drawable.i_bar_location_off);
 
+		mButtonDraft = (Button) findViewById(R.id.button_draft);
+		mButtonDraft.setOnClickListener(this);
+
 	}
 
-	private void setValues() {
+	private void updateUI() {
 		if (type == TYPE_NORMAL) {
 			mAutoCompleteTextView.setText(text);
 			Selection.setSelection(mAutoCompleteTextView.getText(),
@@ -332,13 +350,12 @@ public class WritePage extends BaseActivity {
 		}
 		if (status != null) {
 			if (type == TYPE_REPLY) {
-				mAutoCompleteTextView
-						.setText(text);
+				mAutoCompleteTextView.setText(text);
 				Selection.setSelection(mAutoCompleteTextView.getText(),
 						mAutoCompleteTextView.getText().length());
 			} else if (type == TYPE_REPOST) {
 				mAutoCompleteTextView.setText(" 转@" + status.userScreenName
-						+ " " + status.simpleText+ " ");
+						+ " " + status.simpleText + " ");
 			}
 		}
 
@@ -349,11 +366,11 @@ public class WritePage extends BaseActivity {
 
 	@Override
 	protected void onResume() {
+		super.onResume();
 		if (enableLocation) {
 			mLocationManager.requestLocationUpdates(
 					LocationManager.NETWORK_PROVIDER, 0, 0, mLocationMonitor);
 		}
-		super.onResume();
 	}
 
 	@Override
@@ -362,6 +379,16 @@ public class WritePage extends BaseActivity {
 			mLocationManager.removeUpdates(mLocationMonitor);
 		}
 		super.onPause();
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (StringHelper.isEmpty(content)) {
+			super.onBackPressed();
+		} else {
+			checkSave();
+		}
+
 	}
 
 	@Override
@@ -383,10 +410,46 @@ public class WritePage extends BaseActivity {
 		case R.id.write_extra_picture_remove:
 			removePicture();
 			break;
+		case R.id.button_draft:
+			ActionManager.doShowDrafts(this);
+			break;
 		default:
 			break;
 		}
 
+	}
+
+	private void checkSave() {
+
+		final ConfirmDialog dialog = new ConfirmDialog(this, "保存草稿",
+				"要保存未发送内容为草稿吗？");
+		dialog.setButton1Text("保存");
+		dialog.setButton2Text("放弃");
+		dialog.setClickListener(new ConfirmDialog.ClickHandler() {
+
+			@Override
+			public void onButton1Click() {
+				doSaveDrafts();
+				finish();
+			}
+
+			@Override
+			public void onButton2Click() {
+				finish();
+			}
+		});
+		dialog.show();
+	}
+
+	private void doSaveDrafts() {
+		Draft d = new Draft();
+		d.type=type;
+		d.text = content;
+		d.filePath = photo == null ? "" : photo.toString();
+		if(status!=null&&type==TYPE_REPLY){
+			d.replyTo=status.id;
+		}
+		getContentResolver().insert(DraftInfo.CONTENT_URI, d.toContentValues());
 	}
 
 	private void removePicture() {
@@ -432,21 +495,17 @@ public class WritePage extends BaseActivity {
 	}
 
 	private void startAddUsername() {
-		Intent intent=new Intent(this, UserChoosePage.class);
-		startActivityForResult(intent, REQUEST_ADD_USER);
-//		if (StringHelper.isEmpty(content)) {
-//			mAutoCompleteTextView.setText("@");
-//		} else {
-//			mAutoCompleteTextView.setText(content + " @");
-//		}
-//		Selection.setSelection(mAutoCompleteTextView.getEditableText(),
-//				mAutoCompleteTextView.getEditableText().length());
+		Intent intent = new Intent(this, UserChoosePage.class);
+		startActivityForResult(intent, REQUEST_USERNAME_ADD);
 	}
-	
-	private void doAddUserNames(Intent intent){
-		String names=intent.getStringExtra(Commons.EXTRA_TEXT);
-		mAutoCompleteTextView.setText(content+names);
-		Editable editable=mAutoCompleteTextView.getEditableText();
+
+	private void insertNames(Intent intent) {
+		String names = intent.getStringExtra(Commons.EXTRA_TEXT);
+		if (App.DEBUG) {
+			log("doAddUserNames: " + names);
+		}
+		mAutoCompleteTextView.setText(content + names);
+		Editable editable = mAutoCompleteTextView.getEditableText();
 		Selection.setSelection(editable, editable.length());
 	}
 
@@ -455,7 +514,7 @@ public class WritePage extends BaseActivity {
 			Utils.notify(this, "消息内容不能为空");
 			return;
 		}
-		if(wordsCount>140){
+		if (wordsCount > 140) {
 			Utils.notify(this, "消息内容超过140字");
 			return;
 		}
@@ -479,76 +538,6 @@ public class WritePage extends BaseActivity {
 		}
 		startService(i);
 	}
-
-	// private ProgressDialog dialog = null;
-	//
-	// private void post2() {
-	// if (StringHelper.isEmpty(content)) {
-	// Utils.notify(mContext, "消息内容不能为空");
-	// return;
-	// }
-	// dialog = new ProgressDialog(WritePage.this);
-	// dialog.setMessage("发送中...");
-	// dialog.setIndeterminate(true);
-	// dialog.show();
-	// Intent i = new Intent(this, UpdateService.class);
-	// i.putExtra(Commons.EXTRA_RECEIVER, receiver);
-	// if (status != null) {
-	// if (type == TYPE_REPLY) {
-	// i.putExtra(Commons.EXTRA_IN_REPLY_TO_ID, status.id);
-	// } else if (type == TYPE_REPOST) {
-	// i.putExtra(Commons.EXTRA_REPOST_ID, status.id);
-	// }
-	// }
-	// if (photo != null) {
-	// i.putExtra(Commons.EXTRA_FILE, photo);
-	// }
-	// if (enableLocation) {
-	// i.putExtra(Commons.EXTRA_LOCATION, mLocationString);
-	// }
-	// i.putExtra(Commons.EXTRA_TEXT, content);
-	// log("intent=" + i);
-	// startService(i);
-	// }
-
-	// private ResultReceiver receiver = new ResultReceiver(new Handler()) {
-	//
-	// @Override
-	// public void onReceiveResult(int resultCode, Bundle resultData) {
-	// switch (resultCode) {
-	// case Commons.RESULT_CODE_START:
-	// break;
-	// case Commons.RESULT_CODE_FINISH:
-	// dialog.dismiss();
-	// Toast.makeText(WritePage.this, "发送成功！", Toast.LENGTH_SHORT)
-	// .show();
-	// finish();
-	// break;
-	// case Commons.RESULT_CODE_ERROR:
-	// dialog.dismiss();
-	// String errorMessage = resultData
-	// .getString(Commons.EXTRA_ERROR_MESSAGE);
-	// Toast.makeText(WritePage.this,
-	// "发送失败：" + errorMessage == null ? "" : errorMessage,
-	// Toast.LENGTH_SHORT).show();
-	// break;
-	// default:
-	// break;
-	// }
-	//
-	// }
-	// };
-
-	private TextChangeListener textMonitor = new TextChangeListener() {
-
-		@Override
-		public void onTextChanged(CharSequence s, int start, int before,
-				int count) {
-			content = s.toString();
-			wordsCount = content.length();
-			showCount(wordsCount);
-		}
-	};
 
 	private void updateLocationString(Location loc) {
 		if (loc != null) {

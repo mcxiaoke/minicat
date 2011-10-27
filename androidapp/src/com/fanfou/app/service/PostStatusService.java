@@ -10,13 +10,16 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.DraftsPage;
 import com.fanfou.app.R;
 import com.fanfou.app.WritePage;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
+import com.fanfou.app.api.Draft;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.ImageHelper;
 import com.fanfou.app.util.IntentHelper;
@@ -27,6 +30,7 @@ import com.fanfou.app.util.StringHelper;
  * @author mcxiaoke
  * @version 1.0 2011.06.10
  * @version 1.1 2011.10.25
+ * @version 2.0 2011.10.27
  * 
  */
 public class PostStatusService extends WakefulIntentService {
@@ -89,15 +93,12 @@ public class PostStatusService extends WakefulIntentService {
 					replyId = src.id;
 				}
 			}
-			if (srcFile == null || srcFile.length() == 0) {
+			if (srcFile == null || !srcFile.exists()||srcFile.isDirectory()) {
 				result = api.statusUpdate(content, replyId, null, location,
 						repostId);
 			} else {
 				int quality = OptionHelper.parseInt(this,
-						R.string.option_photo_quality);
-				if (quality < 0) {
-					quality = ImageHelper.IMAGE_QUALITY_MEDIUM;
-				}
+						R.string.option_photo_quality,String.valueOf(ImageHelper.IMAGE_QUALITY_MEDIUM));
 				File photo = ImageHelper.prepareUploadFile(this, srcFile,
 						quality);
 				if (photo != null && photo.length() > 0) {
@@ -123,7 +124,7 @@ public class PostStatusService extends WakefulIntentService {
 								+ e.getMessage());
 				e.printStackTrace();
 			}
-			showFailedNotification("饭否消息发送失败,点击重新编辑", e.getMessage());
+			showFailedNotification("消息未发送，已保存到草稿箱", e.getMessage());
 		} finally {
 			nm.cancel(0);
 		}
@@ -142,34 +143,29 @@ public class PostStatusService extends WakefulIntentService {
 		return id;
 	}
 
-	@SuppressWarnings("unused")
-	private int showSuccessNotification() {
-		int id = 2;
-		Notification notification = new Notification(R.drawable.ic_notify_home,
-				"饭否消息发送成功", System.currentTimeMillis());
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(), 0);
-		notification.setLatestEventInfo(this, "饭否消息", "消息发送成功", contentIntent);
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		nm.notify(id, notification);
-		return id;
-	}
-
 	private int showFailedNotification(String title, String message) {
+		doSaveDrafts();
 		int id = 1;
 		Notification notification = new Notification(R.drawable.ic_notify_home,
 				title, System.currentTimeMillis());
-		Intent intent = new Intent(this, WritePage.class);
-		intent.putExtra(Commons.EXTRA_TEXT, content);
-		intent.putExtra(Commons.EXTRA_TYPE, type);
-		if (src != null) {
-			intent.putExtra(Commons.EXTRA_STATUS, src);
-		}
+		Intent intent = new Intent(this, DraftsPage.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		notification.setLatestEventInfo(this, title, message, contentIntent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		nm.notify(id, notification);
 		return id;
+	}
+	
+	private void doSaveDrafts() {
+		Draft d = new Draft();
+		d.text = content;
+		d.filePath = srcFile == null ? "" : srcFile.toString();
+		if(src!=null&&!src.isNull()){
+			d.replyTo=src.id;
+			d.type=WritePage.TYPE_REPLY;
+		}
+		getContentResolver().insert(DraftInfo.CONTENT_URI, d.toContentValues());
 	}
 
 	private void sendSuccessBroadcast() {

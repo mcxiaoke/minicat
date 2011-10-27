@@ -20,6 +20,7 @@ import com.fanfou.app.dialog.ConfirmDialog;
  * @author mcxiaoke
  * @version 1.0 2011.06.09
  * @version 1.1 2011.10.25
+ * @version 1.2 2011.10.27
  * 
  */
 public final class UIManager {
@@ -79,10 +80,10 @@ public final class UIManager {
 					if (s.userId.equals(App.me.userId)) {
 						final ConfirmDialog dialog = new ConfirmDialog(a,
 								"删除消息", "要删除这条消息吗？");
-						dialog.setOnClickListener(new ConfirmDialog.OnOKClickListener() {
+						dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
 
 							@Override
-							public void onOKClick() {
+							public void onButton1Click() {
 								doDelete(a, s, adapter, ss);
 							}
 						});
@@ -125,10 +126,10 @@ public final class UIManager {
 					if (s.userId.equals(App.me.userId)) {
 						final ConfirmDialog dialog = new ConfirmDialog(a,
 								"删除消息", "要删除这条消息吗？");
-						dialog.setOnClickListener(new ConfirmDialog.OnOKClickListener() {
+						dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
 
 							@Override
-							public void onOKClick() {
+							public void onButton1Click() {
 								doDelete(a, s, c);
 							}
 						});

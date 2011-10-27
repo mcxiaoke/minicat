@@ -15,7 +15,7 @@ public class AbstractCache<T> implements ICache<T> {
 	final boolean onlyMemoryCache;
 
 	public AbstractCache() {
-		this.memoryCache = new HashMap<String, SoftReference<T>>();
+		this.memoryCache = new HashMap<String, SoftReference<T>>(64);
 		this.onlyMemoryCache = true;
 	}
 

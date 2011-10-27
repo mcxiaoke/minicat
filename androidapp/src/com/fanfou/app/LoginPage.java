@@ -4,12 +4,9 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,8 +17,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.ResultInfo;
@@ -30,11 +25,12 @@ import com.fanfou.app.auth.OAuth;
 import com.fanfou.app.auth.OAuthToken;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
+import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
+import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.util.DeviceHelper;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -48,6 +44,7 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * @version 2.0 2011.10.17
  * @version 2.5 2011.10.25
  * @version 2.6 2011.10.26
+ * @version 2.7 2011.10.27
  * 
  */
 public final class LoginPage extends Activity implements OnClickListener {
@@ -71,7 +68,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 	private EditText editUsername;
 	private EditText editPassword;
 
-//	private Button mButtonRegister;
+	// private Button mButtonRegister;
 	private Button mButtonSignin;
 	private ActionBar mActionBar;
 
@@ -100,7 +97,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setLeftAction(new LogoAction());
 		mActionBar.setRightAction(new RegisterAction(this));
-//		mActionBar.setTitle("登录饭否");
+		// mActionBar.setTitle("登录饭否");
 
 		editUsername = (EditText) findViewById(R.id.login_username);
 		editUsername.addTextChangedListener(new TextChangeListener() {
@@ -120,8 +117,8 @@ public final class LoginPage extends Activity implements OnClickListener {
 			}
 		});
 
-//		mButtonRegister = (Button) findViewById(R.id.button_register);
-//		mButtonRegister.setOnClickListener(this);
+		// mButtonRegister = (Button) findViewById(R.id.button_register);
+		// mButtonRegister.setOnClickListener(this);
 
 		mButtonSignin = (Button) findViewById(R.id.button_signin);
 		mButtonSignin.setOnClickListener(this);
@@ -161,9 +158,9 @@ public final class LoginPage extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-//		case R.id.button_register:
-//			goRegisterPage(mContext);
-//			break;
+		// case R.id.button_register:
+		// goRegisterPage(mContext);
+		// break;
 		case R.id.button_signin:
 			if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
 				Utils.notify(mContext, "密码和帐号不能为空");
@@ -225,10 +222,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 		cr.delete(StatusInfo.CONTENT_URI, null, null);
 		cr.delete(UserInfo.CONTENT_URI, null, null);
 		cr.delete(DirectMessageInfo.CONTENT_URI, null, null);
-	}
-	
-	private void clearSettings(){
-		OptionHelper.clear(this);
+		cr.delete(DraftInfo.CONTENT_URI, null, null);
 	}
 
 	@Override
@@ -243,9 +237,8 @@ public final class LoginPage extends Activity implements OnClickListener {
 
 		static final int LOGIN_IO_ERROR = 0; // 网络错误
 		static final int LOGIN_AUTH_FAILED = 1; // 验证失败
-		static final int LOGIN_NEW_AUTH_SUCCESS = 2; // 首次验证成功
-		static final int LOGIN_RE_AUTH_SUCCESS = 3; // 重新验证成功
-		static final int LOGIN_CANCELLED_BY_USER = 4;
+		static final int LOGIN_AUTH_SUCCESS = 2; // 首次验证成功
+		static final int LOGIN_CANCELLED_BY_USER = 3;
 
 		private ProgressDialog progressDialog;
 		private boolean isCancelled;
@@ -291,16 +284,11 @@ public final class LoginPage extends Activity implements OnClickListener {
 						if (App.DEBUG)
 							log("xauth successful! ");
 
-						if (StringHelper.isEmpty(savedUserId)) {
+						if (StringHelper.isEmpty(savedUserId)
+								|| !savedUserId.equals(u.id)) {
 							clearData();
-							clearSettings();
-							return new ResultInfo(LOGIN_NEW_AUTH_SUCCESS);
-						} else {
-							if (!savedUserId.equals(u.id)) {
-								clearData();
-							}
-							return new ResultInfo(LOGIN_RE_AUTH_SUCCESS);
 						}
+						return new ResultInfo(LOGIN_AUTH_SUCCESS);
 					} else {
 						if (App.DEBUG)
 							log("xauth failed.");
@@ -370,8 +358,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 				break;
 			case LOGIN_CANCELLED_BY_USER:
 				break;
-			case LOGIN_NEW_AUTH_SUCCESS:
-			case LOGIN_RE_AUTH_SUCCESS:
+			case LOGIN_AUTH_SUCCESS:
 				g.setCustomVar(2, "username", username);
 				g.setCustomVar(2, "api", String.valueOf(Build.VERSION.SDK_INT));
 				g.setCustomVar(2, "device", Build.MODEL);

@@ -1,5 +1,6 @@
 package com.fanfou.app.ui;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,6 +16,7 @@ import android.os.ResultReceiver;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.DraftsPage;
 import com.fanfou.app.MessageChatPage;
 import com.fanfou.app.MyProfilePage;
 import com.fanfou.app.ProfilePage;
@@ -34,6 +37,7 @@ import com.fanfou.app.util.Utils;
  * @author mcxiaoke
  * @version 1.0 2011.08.25
  * @version 1.1 2011.10.26
+ * @version 1.2 2011.10.27
  * 
  */
 public final class ActionManager {
@@ -82,6 +86,11 @@ public final class ActionManager {
 		context.startService(intent);
 
 	}
+	
+	public static void doShowDrafts(Context context) {
+		Intent intent = new Intent(context, DraftsPage.class);
+		context.startActivity(intent);
+	}
 
 	public static void doMyProfile(Context context) {
 		Intent intent = new Intent(context, MyProfilePage.class);
@@ -100,7 +109,7 @@ public final class ActionManager {
 	public static void doProfile(Context context, String userId) {
 		if (StringHelper.isEmpty(userId)) {
 			if (App.DEBUG) {
-				Log.e(TAG, "doProfile: userid is null.");
+				Log.d(TAG, "doProfile: userid is null.");
 			}
 			return;
 		}
@@ -116,7 +125,7 @@ public final class ActionManager {
 	public static void doProfile(Context context, DirectMessage dm) {
 		if (dm == null || dm.isNull()) {
 			if (App.DEBUG) {
-				Log.e(TAG, "doProfile: status is null.");
+				Log.d(TAG, "doProfile: status is null.");
 			}
 			return;
 		}
@@ -134,7 +143,7 @@ public final class ActionManager {
 	public static void doProfile(Context context, Status status) {
 		if (status == null || status.isNull()) {
 			if (App.DEBUG) {
-				Log.e(TAG, "doProfile: status is null.");
+				Log.d(TAG, "doProfile: status is null.");
 			}
 			return;
 		}
@@ -152,7 +161,7 @@ public final class ActionManager {
 	public static void doProfile(Context context, User user) {
 		if (user == null || user.isNull()) {
 			if (App.DEBUG) {
-				Log.e(TAG, "doProfile: user is null.");
+				Log.d(TAG, "doProfile: user is null.");
 			}
 			return;
 		}
@@ -168,7 +177,7 @@ public final class ActionManager {
 	public static void doShare(Context context, Status status) {
 		if (status == null || status.isNull()) {
 			if (App.DEBUG) {
-				Log.e(TAG, "doShare: status is null.");
+				Log.d(TAG, "doShare: status is null.");
 			}
 			return;
 		}
@@ -179,11 +188,24 @@ public final class ActionManager {
 		intent.putExtra(Intent.EXTRA_TEXT,status.simpleText);
 		context.startActivity(Intent.createChooser(intent, "分享"));
 	}
+	
+	public static void doShare(Context context, File image) {
+		if (App.DEBUG) {
+			Log.d(TAG, "doShare: image is "+image);
+		}
+		if (image == null ) {
+			return;
+		}
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.setType("image/*");
+		intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(image));
+		context.startActivity(Intent.createChooser(intent, "分享"));
+	}
 
 	public static void doReply(Context context, Status status) {
 		if (status == null || status.isNull()) {
 			if (App.DEBUG) {
-				Log.e(TAG, "doReply: status is null.");
+				Log.d(TAG, "doReply: status is null.");
 			}
 			return;
 		}
@@ -213,7 +235,7 @@ public final class ActionManager {
 	public static void doRetweet(Context context, Status status) {
 		if (status == null || status.isNull()) {
 			if (App.DEBUG) {
-				Log.e(TAG, "doRetweet: status is null.");
+				Log.d(TAG, "doRetweet: status is null.");
 			}
 			return;
 		}
@@ -241,7 +263,7 @@ public final class ActionManager {
 			final ResultListener li, final boolean finish) {
 		if (StringHelper.isEmpty(id)) {
 			if (App.DEBUG) {
-				Log.e(TAG, "doStatusDelete: status id is null.");
+				Log.d(TAG, "doStatusDelete: status id is null.");
 			}
 			return;
 		}
@@ -293,7 +315,7 @@ public final class ActionManager {
 			final ResultListener li, final boolean finish) {
 		if (status == null || status.isNull()) {
 			if (App.DEBUG) {
-				Log.e(TAG, "doFavorite: status is null.");
+				Log.d(TAG, "doFavorite: status is null.");
 			}
 			return;
 		}

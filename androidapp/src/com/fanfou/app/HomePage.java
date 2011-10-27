@@ -54,6 +54,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.0 2011.07.16
  * @version 3.0 2011.09.24
  * @version 3.2 2011.10.25
+ * @version 3.3 2011.10.27
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
@@ -166,9 +167,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	 */
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		Action action = new ActionBar.WriteAction(this);
 		mActionBar.setLeftAction(new HomeLogoAction());
-		mActionBar.setRightAction(action);
+		mActionBar.setRightAction(new ActionBar.WriteAction(this));
 		mActionBar.setRefreshEnabled(this);
 	}
 
@@ -347,8 +347,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 		boolean refresh = OptionHelper.readBoolean(this,
 				R.string.option_refresh_on_open, false);
-
-		if (cursors[0].getCount() == 0 || refresh) {
+		if (refresh) {
 			onRefreshClick();
 		}
 	}
@@ -483,7 +482,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 					cursors[0].requery();
 					if (count > 0) {
 						views[0].setSelection(0);
-						Utils.notify(this, count+"条新消息");
+						Utils.notify(this, count + "条新消息");
 					}
 				}
 				break;
@@ -492,7 +491,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 					cursors[1].requery();
 					if (count > 0) {
 						views[1].setSelection(0);
-						Utils.notify(this, count+"条新@消息");
+						Utils.notify(this, count + "条新@消息");
 					}
 				}
 				break;
@@ -501,7 +500,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 					cursors[2].requery();
 					if (count > 0) {
 						views[2].setSelection(0);
-						Utils.notify(this, count+"条新私信");
+						Utils.notify(this, count + "条新私信");
 					}
 				}
 				break;
@@ -545,6 +544,10 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				states[i] = null;
 			}
 		}
+
+		if (mCurrentPage == 0 && cursors[0].getCount() == 0) {
+			onRefreshClick();
+		}
 	}
 
 	@Override
@@ -567,7 +570,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	@Override
-	protected boolean isRootScreen() {
+	protected boolean isHomeScreen() {
 		return true;
 	}
 
@@ -578,9 +581,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		int page = getIntent().getIntExtra(Commons.EXTRA_PAGE, 0);
 		if (App.DEBUG) {
 			log("onNewIntent page=" + page);
-		}
-		if (page == 0 && adapters[0].getCount() == 0) {
-			onRefreshClick();
 		}
 		mViewPager.setCurrentItem(page);
 	}
@@ -765,10 +765,10 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		if (needConfirm) {
 			final ConfirmDialog dialog = new ConfirmDialog(this, "提示",
 					"确认退出饭否吗？");
-			dialog.setOnClickListener(new ConfirmDialog.OnOKClickListener() {
+			dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
 
 				@Override
-				public void onOKClick() {
+				public void onButton1Click() {
 					mContext.finish();
 				}
 			});

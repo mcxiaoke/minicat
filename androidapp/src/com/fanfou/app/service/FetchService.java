@@ -23,6 +23,7 @@ import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
+import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -349,11 +350,14 @@ public class FetchService extends BaseIntentService {
 	}
 
 	private void handleError(ApiException e) {
-		Bundle error = new Bundle();
-		error.putSerializable(Commons.EXTRA_ERROR, e.getCause());
-		error.putInt(Commons.EXTRA_ERROR_CODE, e.statusCode);
-		error.putString(Commons.EXTRA_ERROR_MESSAGE, e.getMessage());
-		receiver.send(Commons.RESULT_CODE_ERROR, error);
+		String message=e.getMessage();
+		if(e.statusCode==ResponseCode.ERROR_NOT_CONNECTED||e.statusCode>=500){
+			message="网络连接异常，请稍后重试";
+		}
+		Bundle b = new Bundle();
+		b.putInt(Commons.EXTRA_ERROR_CODE, e.statusCode);
+		b.putString(Commons.EXTRA_ERROR_MESSAGE, message);
+		receiver.send(Commons.RESULT_CODE_ERROR, b);
 	}
 
 }

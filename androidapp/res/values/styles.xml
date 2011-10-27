@@ -49,17 +49,34 @@
 	<style name="Button">
 		<item name="android:gravity">center</item>
 	</style>
-
+	
 	<style name="Button.Blue">
 		<item name="android:layout_width">fill_parent</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:layout_weight">1</item>
 		<item name="android:background">@drawable/button_bg</item>
 		<item name="android:textColor">@color/solid_white</item>
+	</style>
+
+	<style name="Button.Blue.Big">
 		<item name="android:textSize">@dimen/text_size_large</item>
 	</style>
 
+	<style name="Button.Blue.Middle">
+		<item name="android:textSize">@dimen/text_size_medium</item>
+	</style>
+
+	<style name="Button.Blue2">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_weight">1</item>
+		<item name="android:background">@drawable/button_bg</item>
+		<item name="android:textColor">@color/solid_white</item>
+		<item name="android:textSize">@dimen/text_size_medium</item>
+	</style>
+
 	<style name="Button.Blue.Login">
+		<item name="android:textSize">@dimen/text_size_large</item>
 		<item name="android:padding">6dp</item>
 		<item name="android:layout_marginLeft">6dp</item>
 		<item name="android:layout_marginRight">6dp</item>

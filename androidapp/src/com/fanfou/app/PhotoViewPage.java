@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.widget.TouchImageView;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.Utils;
@@ -20,6 +21,7 @@ import com.fanfou.app.util.Utils;
  * @author mcxiaoke
  * @version 1.0 2011.08.28
  * @version 2.0 2011.10.12
+ * @version 2.1 2011.10.27
  * 
  */
 public class PhotoViewPage extends BaseActivity {
@@ -30,6 +32,7 @@ public class PhotoViewPage extends BaseActivity {
 	private TouchImageView mTouchImageView;
 	private TextView mSave;
 	private TextView mClose;
+	private TextView mShare;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +50,10 @@ public class PhotoViewPage extends BaseActivity {
 		mTouchImageView = (TouchImageView) findViewById(R.id.photoview_pic);
 		mSave = (TextView) findViewById(R.id.photoview_save);
 		mClose = (TextView) findViewById(R.id.photoview_close);
+		mShare=(TextView) findViewById(R.id.photoview_share);
 		mSave.setOnClickListener(this);
 		mClose.setOnClickListener(this);
+		mShare.setOnClickListener(this);
 		Bitmap bitmap = BitmapFactory.decodeFile(mPhotoPath);
 		if (bitmap != null) {
 			mTouchImageView.setImageBitmap(bitmap);
@@ -64,7 +69,13 @@ public class PhotoViewPage extends BaseActivity {
 			finish();
 		} else if (id == R.id.photoview_save) {
 			savePhoto();
+		}else if(id==R.id.photoview_share){
+			sharePhoto();
 		}
+	}
+	
+	private void sharePhoto(){
+		ActionManager.doShare(this, new File(mPhotoPath));
 	}
 
 	@Override

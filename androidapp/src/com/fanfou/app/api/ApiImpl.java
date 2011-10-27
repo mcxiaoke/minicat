@@ -278,6 +278,9 @@ public class ApiImpl implements Api, ResponseCode {
 			String maxId, boolean isHtml) throws ApiException {
 		List<Status> ss = fetchStatuses(URL_TIMELINE_FRIENDS, count, page,
 				null, sinceId, maxId, isHtml, Status.TYPE_HOME);
+		for (Status status : ss) {
+			CacheManager.put(status.user);
+		}
 		return ss;
 	}
 
@@ -327,6 +330,9 @@ public class ApiImpl implements Api, ResponseCode {
 			log("statusFavorite()---statusCode=" + statusCode);
 		}
 		Status s = Status.parse(response);
+		if(s!=null){
+			CacheManager.put(s);
+		}
 		return s;
 	}
 
@@ -340,6 +346,9 @@ public class ApiImpl implements Api, ResponseCode {
 
 		// handlerResponseError(response);
 		Status s = Status.parse(response);
+		if(s!=null){
+			CacheManager.put(s);
+		}
 		return s;
 	}
 
@@ -401,7 +410,11 @@ public class ApiImpl implements Api, ResponseCode {
 		if (StringHelper.isEmpty(response.getContent())) {
 			throw new ApiException(ERROR_DUPLICATE, "重复消息，发送失败");
 		}
-		return Status.parse(response,Status.TYPE_HOME);
+		Status s= Status.parse(response,Status.TYPE_HOME);
+		if(s!=null){
+			CacheManager.put(s);
+		}
+		return s;
 	}
 
 	@Override
@@ -443,7 +456,11 @@ public class ApiImpl implements Api, ResponseCode {
 		if (App.DEBUG) {
 			log("photoUpload()---statusCode=" + statusCode);
 		}
-		return Status.parse(response,Status.TYPE_HOME);
+		Status s= Status.parse(response,Status.TYPE_HOME);
+		if(s!=null){
+			CacheManager.put(s);
+		}
+		return s;
 	}
 
 	@Override
@@ -636,6 +653,7 @@ public class ApiImpl implements Api, ResponseCode {
 		User u = User.parse(response);
 		if (u != null) {
 			u.ownerId = App.me.userId;
+			CacheManager.put(u);
 		}
 		return u;
 	}
@@ -652,6 +670,7 @@ public class ApiImpl implements Api, ResponseCode {
 		User u = User.parse(response);
 		if (u != null) {
 			u.ownerId = App.me.userId;
+			CacheManager.put(u);
 		}
 		return u;
 	}

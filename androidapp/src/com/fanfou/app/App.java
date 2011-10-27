@@ -33,6 +33,7 @@ import com.fanfou.app.util.Utils;
  * @version 3.0 2011.08.29
  * @version 4.0 2011.09.22
  * @version 4.5 2011.10.25
+ * @version 4.6 2011.10.27
  * 
  */
 
@@ -78,7 +79,6 @@ public class App extends Application {
 
 	private IImageLoader imageLoader;
 	public Api api;
-	public float density;
 
 	public boolean verified;
 	public boolean isLogin;
@@ -106,13 +106,14 @@ public class App extends Application {
 		initAppInfo();
 		initPreferences();
 		versionCheck();
-		initDensity();
 		if (isLogin) {
 			initAlarm();
 		}
 
-		if (!DEBUG) {
-			ACRA.init(this);
+		ACRA.init(this);
+		
+		if(DEBUG){
+			Log.d("App", "uid="+android.os.Process.myUid()+" pid="+android.os.Process.myPid()+" tid="+android.os.Process.myTid());
 		}
 
 	}
@@ -151,14 +152,6 @@ public class App extends Application {
 		this.isLogin = !StringHelper.isEmpty(oauthAccessTokenSecret);
 	}
 
-	public void initDensity() {
-		DisplayMetrics dm = getResources().getDisplayMetrics();
-		density = dm.density;
-		if (DEBUG) {
-			Log.d("App", dm.toString());
-		}
-	}
-
 	private void initAppInfo() {
 		PackageManager pm = getPackageManager();
 		PackageInfo pi;
@@ -189,6 +182,9 @@ public class App extends Application {
 	}
 
 	private void cleanSettings() {
+		if(DEBUG){
+			Log.d("App", "cleanSettings");
+		}
 		OptionHelper.remove(this, R.string.option_set_auto_clean);
 		OptionHelper.remove(this, R.string.option_set_auto_complete);
 		OptionHelper.remove(this, R.string.option_set_notification);

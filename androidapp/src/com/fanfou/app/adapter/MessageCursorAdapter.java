@@ -67,7 +67,7 @@ public class MessageCursorAdapter extends BaseCursorAdapter {
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		View view = mInflater.inflate(getLayoutId(), null);
 		ViewHolder holder = new ViewHolder(view);
-		setHeadImage(holder.headIcon);
+		setHeadImage(mContext,holder.headIcon);
 		setTextStyle(holder);
 		view.setTag(holder);
 		bindView(view, context, cursor);

@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
@@ -83,6 +84,8 @@ public class Status implements Storable<Status> {
 	public long realId;
 	
 	public boolean special;
+	
+	public User user;
 
 	public Status() {
 	}
@@ -265,7 +268,7 @@ public class Status implements Storable<Status> {
 				s.userScreenName = uo.getString(UserInfo.SCREEN_NAME);
 				s.userProfileImageUrl = uo
 						.getString(UserInfo.PROFILE_IMAGE_URL);
-				// s.user = User.parse(uo);
+				 s.user = User.parse(uo);
 				// s.userId = s.user.id;
 				// s.userScreenName = s.user.screenName;
 				// s.userProfileImageUrl = s.user.profileImageUrl;

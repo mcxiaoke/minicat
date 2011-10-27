@@ -722,7 +722,7 @@ public class FanFouProvider extends ContentProvider {
 			count = db.delete(DraftInfo.TABLE_NAME, where, whereArgs);
 			break;
 		case DRAFT_ID:
-			_id = uri.getPathSegments().get(2);
+			_id = uri.getPathSegments().get(1);
 			count = db.delete(DraftInfo.TABLE_NAME,
 					DraftInfo._ID + "=?", new String[] { _id });
 			break;

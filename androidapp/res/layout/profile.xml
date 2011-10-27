@@ -38,8 +38,7 @@
 				<TextView
 					android:id="@id/user_name"
 					style="@style/Text.NameBig"
-					android:layout_toRightOf="@id/user_head"
-					android:text="mcxiaoke" />
+					android:layout_toRightOf="@id/user_head" />
 
 				<TextView
 					android:id="@id/user_relationship"
@@ -53,7 +52,7 @@
 					style="@style/Icon.Mini"
 					android:layout_alignBottom="@id/user_name"
 					android:layout_toRightOf="@id/user_name"
-					android:src="@drawable/i_mini_locked" />
+					android:src="@drawable/i_mini_locked" android:visibility="gone"/>
 			</RelativeLayout>
 
 			<LinearLayout
@@ -100,8 +99,7 @@
 				<TextView
 					android:id="@id/user_statuses"
 					style="@style/Text.Small"
-					android:layout_alignParentRight="true"
-					android:text="123456" />
+					android:layout_alignParentRight="true" />
 			</LinearLayout>
 
 			<LinearLayout
@@ -120,8 +118,7 @@
 
 				<TextView
 					android:id="@id/user_favorites"
-					style="@style/Text.Small"
-					android:text="123" />
+					style="@style/Text.Small" />
 			</LinearLayout>
 
 			<LinearLayout
@@ -140,8 +137,7 @@
 
 				<TextView
 					android:id="@id/user_friends"
-					style="@style/Text.Small"
-					android:text="1856" />
+					style="@style/Text.Small" />
 			</LinearLayout>
 
 			<LinearLayout
@@ -160,8 +156,7 @@
 
 				<TextView
 					android:id="@id/user_followers"
-					style="@style/Text.Small"
-					android:text="156" />
+					style="@style/Text.Small" />
 			</LinearLayout>
 
 			<TextView

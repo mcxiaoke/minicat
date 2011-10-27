@@ -27,7 +27,7 @@ public class Draft implements Storable<Draft> {
 		Log.d(tag, message);
 	}
 
-	public int itemId;
+	public int id;
 	public String ownerId;
 	public String text;
 	public Date createdAt;
@@ -40,7 +40,7 @@ public class Draft implements Storable<Draft> {
 			return null;
 		}
 		Draft d=new Draft();
-		d.itemId=Parser.parseInt(c, DraftInfo.ITEM_ID);
+		d.id=Parser.parseInt(c, DraftInfo._ID);
 		d.ownerId=Parser.parseString(c, DraftInfo.OWNER_ID);
 		d.text=Parser.parseString(c, DraftInfo.TEXT);
 		d.createdAt=Parser.parseDate(c, DraftInfo.CREATED_AT);
@@ -58,7 +58,6 @@ public class Draft implements Storable<Draft> {
 	@Override
 	public ContentValues toContentValues() {
 		ContentValues cv = new ContentValues();
-		cv.put(DraftInfo.ITEM_ID, itemId);
 		cv.put(DraftInfo.OWNER_ID, ownerId);
 		cv.put(DraftInfo.TEXT, text);
 		cv.put(DraftInfo.CREATED_AT, new Date().getTime());

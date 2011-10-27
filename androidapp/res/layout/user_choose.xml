@@ -19,14 +19,14 @@
 		android:textSize="@dimen/text_size_medium"
 		android:background="@drawable/input_bg"
 		android:hint="输入文字搜索用户"
-		android:padding="8dp" android:singleLine="true" android:gravity="center"/>
+		android:padding="8dp" android:singleLine="true" android:gravity="center_vertical"/>
 
 	<RelativeLayout
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent" >
 
 		<ListView
-			android:id="@id/list"
+			android:id="@id/list" 
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent" />
 

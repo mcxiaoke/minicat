@@ -57,7 +57,7 @@ public class StatusPage extends BaseActivity{
 	private static final String TAG = StatusPage.class.getSimpleName();
 
 	private void log(String message) {
-		Log.e(TAG, message);
+		Log.d(TAG, message);
 	}
 
 	private ActionBar mActionBar;
@@ -360,10 +360,9 @@ public class StatusPage extends BaseActivity{
 
 	private void doDelete() {
 		final ConfirmDialog dialog=new ConfirmDialog(this,"删除消息","要删除这条消息吗？");
-		dialog.setOnClickListener(new ConfirmDialog.OnOKClickListener() {
-			
+		dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
 			@Override
-			public void onOKClick() {
+			public void onButton1Click() {
 				ActionManager.doStatusDelete(mContext, status.id, true);
 			}
 		});

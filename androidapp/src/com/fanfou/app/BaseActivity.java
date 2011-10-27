@@ -5,12 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -19,18 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.http.ApnType;
-import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionBar.OnRefreshClickListener;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.IntentHelper;
-import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.Utils;
-
-import com.fanfou.app.R;
 
 /**
  * @author mcxiaoke
@@ -38,6 +30,7 @@ import com.fanfou.app.R;
  * @version 2.0 2011.09.25
  * @version 2.1 2011.10.19
  * @version 2.1 2011.10.25
+ * @version 2.2 2011.10.27
  * 
  */
 public abstract class BaseActivity extends Activity implements
@@ -52,6 +45,8 @@ public abstract class BaseActivity extends Activity implements
 	protected BaseActivity mContext;
 	protected LayoutInflater mInflater;
 	protected boolean isActive = false;
+	
+	protected DisplayMetrics mDisplayMetrics;
 
 	private BroadcastReceiver mBroadcastReceiver;
 	private IntentFilter mIntentFilter;
@@ -64,7 +59,13 @@ public abstract class BaseActivity extends Activity implements
 		this.mContext = this;
 		this.mInflater = LayoutInflater.from(this);
 
+		initialize();
 		initReceiver();
+	}
+	
+	private void initialize(){
+		mDisplayMetrics=new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
 	}
 
 	private void initReceiver() {
@@ -165,23 +166,18 @@ public abstract class BaseActivity extends Activity implements
 	protected static final int PAGE_TIMELINE = 5;
 	protected static final int PAGE_FRIENDS = 6;
 	protected static final int PAGE_FOLLOWERS = 7;
+	protected static final int PAGE_DRAFTS = 8;
 
 	protected int getPageType() {
 		return PAGE_NORMAL;
 	}
 
-	protected boolean isRootScreen() {
+	protected boolean isHomeScreen() {
 		return false;
 	}
 
 	protected boolean noConnection() {
-		return App.me.apnType != ApnType.NONE;
-		// if (App.me.connected) {
-		// return false;
-		// } else {
-		// Utils.notify(this, "无可用的网络连接，请稍后重试");
-		// return true;
-		// }
+		return App.me.apnType == ApnType.NONE;
 	}
 
 	protected static final int MENU_ID_PROFILE = 0; //
@@ -191,6 +187,9 @@ public abstract class BaseActivity extends Activity implements
 	protected static final int MENU_ID_FEEDBACK = 4; //
 	protected static final int MENU_ID_LOGOUT = 5; // 退出
 	protected static final int MENU_ID_HOME = 6; // 返回首页
+	
+	protected static final int MENU_ID_REFRESH = 7; // 返回首页
+	protected static final int MENU_ID_CLEAR = 8; // 返回首页
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
@@ -217,6 +216,9 @@ public abstract class BaseActivity extends Activity implements
 		case MENU_ID_HOME:
 			onHomeClick();
 			break;
+		case MENU_ID_CLEAR:
+			onClearClick();
+			break;
 		default:
 			break;
 		}
@@ -235,19 +237,22 @@ public abstract class BaseActivity extends Activity implements
 			menu.removeItem(MENU_ID_LOGOUT);
 			menu.removeItem(MENU_ID_ABOUT);
 			menu.removeItem(MENU_ID_FEEDBACK);
+			menu.removeItem(MENU_ID_CLEAR);
 			break;
 		case PAGE_HOME:
 			menu.removeItem(MENU_ID_HOME);
+			menu.removeItem(MENU_ID_CLEAR);
 			break;
 		case PAGE_LOGIN:
+			menu.clear();
+			break;
+		case PAGE_DRAFTS:
 			menu.removeItem(MENU_ID_OPTION);
 			menu.removeItem(MENU_ID_PROFILE);
 			menu.removeItem(MENU_ID_SEARCH);
 			menu.removeItem(MENU_ID_LOGOUT);
 			menu.removeItem(MENU_ID_ABOUT);
 			menu.removeItem(MENU_ID_FEEDBACK);
-			menu.removeItem(MENU_ID_HOME);
-			break;
 		default:
 			break;
 		}
@@ -261,6 +266,7 @@ public abstract class BaseActivity extends Activity implements
 	MenuItem about;
 	MenuItem feedback;
 	MenuItem home;
+	MenuItem clear;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -285,6 +291,11 @@ public abstract class BaseActivity extends Activity implements
 
 		home = menu.add(0, MENU_ID_HOME, MENU_ID_HOME, "返回首页");
 		home.setIcon(R.drawable.i_menu_home);
+		
+		clear=menu.add(0,MENU_ID_CLEAR,MENU_ID_CLEAR,"清空草稿箱");
+		clear.setIcon(R.drawable.i_menu_logout);
+		
+		
 
 		return true;
 	}
@@ -328,12 +339,15 @@ public abstract class BaseActivity extends Activity implements
 		IntentHelper.goHomePage(this, 0);
 		finish();
 	}
+	
+	protected void onClearClick(){};
 
 	protected void onLogoutClick() {
-		final ConfirmDialog dialog=new ConfirmDialog(this, "提示", "确定注销当前登录帐号吗？");
-		dialog.setOnClickListener(new ConfirmDialog.OnOKClickListener() {
+		final ConfirmDialog dialog=new ConfirmDialog(this, "注销", "确定注销当前登录帐号吗？");
+		dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
+
 			@Override
-			public void onOKClick() {
+			public void onButton1Click() {
 				IntentHelper.goLoginPage(mContext);
 				finish();
 			}

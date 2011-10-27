@@ -12,6 +12,8 @@
 	<item type="id" name="buttons" />
 	<item type="id" name="button_cancel" />
 	<item type="id" name="button_ok" />
+	<item type="id" name="button_save" />
+	<item type="id" name="button_discard" />
 
 	<item type="id" name="item_user" />
 	<item type="id" name="item_user_id" />
@@ -50,14 +52,14 @@
 	<item type="id" name="write_title" />
 	<item type="id" name="write_info" />
 	<item type="id" name="write_text" />
-	
+
 	<item type="id" name="write_actions" />
 	<item type="id" name="write_action_back" />
 	<item type="id" name="write_action_at" />
 	<item type="id" name="write_action_location" />
 	<item type="id" name="write_action_gallery" />
 	<item type="id" name="write_action_camera" />
-	
+
 	<item type="id" name="write_origin" />
 
 	<item type="id" name="write_extras" />
@@ -74,7 +76,7 @@
 	<item type="id" name="status_photo" />
 	<item type="id" name="status_photo_area" />
 	<item type="id" name="status_info" />
-	
+
 	<item type="id" name="status_thread" />
 	<item type="id" name="status_thread_text" />
 
@@ -143,7 +145,7 @@
 
 	<item type="id" name="user_extrainfo" />
 
-<item type="id" name="choose_input" />
+	<item type="id" name="choose_input" />
 
 	<item type="id" name="search" />
 	<item type="id" name="search_input" />
@@ -167,8 +169,12 @@
 	<item type="id" name="download_notification" />
 	<item type="id" name="download_notification_text" />
 	<item type="id" name="download_notification_progress" />
-	
+
 	<item type="id" name="title" />
 	<item type="id" name="text" />
+	<item type="id" name="date" />
+	<item type="id" name="button1" />
+	<item type="id" name="button2" />
+	<item type="id" name="mini_icon" />
 
 </resources>

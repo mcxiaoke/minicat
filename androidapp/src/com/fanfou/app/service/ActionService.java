@@ -19,6 +19,7 @@ import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
+import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.StringHelper;
 
 public class ActionService extends BaseIntentService {
@@ -269,12 +270,15 @@ public class ActionService extends BaseIntentService {
 						"performAction: id=" + id + " type=" + type
 								+ e.getMessage());
 			}
-			Bundle error = new Bundle();
-			error.putInt(Commons.EXTRA_TYPE, type);
-			error.putSerializable(Commons.EXTRA_ERROR, e);
-			error.putInt(Commons.EXTRA_ERROR_CODE, e.statusCode);
-			error.putString(Commons.EXTRA_ERROR_MESSAGE, e.getMessage());
-			receiver.send(Commons.RESULT_CODE_ERROR, error);
+			String message=e.getMessage();
+			if(e.statusCode==ResponseCode.ERROR_NOT_CONNECTED||e.statusCode>=500){
+				message="网络连接异常，请稍后重试";
+			}
+			Bundle b = new Bundle();
+			b.putInt(Commons.EXTRA_TYPE, type);
+			b.putInt(Commons.EXTRA_ERROR_CODE, e.statusCode);
+			b.putString(Commons.EXTRA_ERROR_MESSAGE, message);
+			receiver.send(Commons.RESULT_CODE_ERROR, b);
 		}
 	}
 }

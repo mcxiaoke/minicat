@@ -31,10 +31,16 @@
 			android:name=".RegisterPage"
 			android:theme="@style/Theme" >
 		</activity>
+				<activity
+			android:configChanges="keyboardHidden|orientation"
+			android:label="@string/app_name"
+			android:name=".DraftsPage"
+			android:theme="@style/Theme" >
+		</activity>
 		<activity
 			android:label="@string/app_name" 
 			android:name=".HomePage"
-			android:launchMode="singleTop"
+			android:launchMode="singleTask"
 			android:theme="@style/Theme" >
 			<meta-data
 				android:name="android.app.default_searchable"
@@ -195,7 +201,7 @@
 		<activity
 			android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_share_name"
-			android:name=".WritePage"
+			android:name=".WritePage" android:launchMode="singleTask"
 			android:theme="@style/Theme.AutoCompleteTextView"
 			android:windowSoftInputMode="adjustResize" >
 			<intent-filter >

@@ -14,31 +14,29 @@ import android.widget.TextView;
 
 /**
  * @author mcxiaoke
- * @version 1.0 2011.10.25
- * @version 2.0 2011.10.27
+ * @version 1.0 2011.10.27
  * 
  */
-public class ConfirmDialog extends Dialog implements View.OnClickListener {
+public class SaveConfirmDialog extends Dialog implements View.OnClickListener {
 
 	private Context mContext;
 
 	private TextView mTitleView;
 	private TextView mTextView;
-	private Button mButton1;
-	private Button mButton2;
+	private Button mButtonSave;
+	private Button mButtonDisCard;
+	private Button mButtonCancel;
 
 	private CharSequence mTitle;
 	private CharSequence mText;
 
-	private ClickHandler mClickListener;
+	private OnButtonClickListener mClickListener;
 
-	public ConfirmDialog(Context context, String title, String text) {
+	public SaveConfirmDialog(Context context, String title, String text) {
 		super(context, R.style.Dialog);
 		this.mContext = context;
 		this.mTitle = title;
 		this.mText = text;
-		
-		init();
 	}
 
 	protected void setBlurEffect() {
@@ -52,7 +50,7 @@ public class ConfirmDialog extends Dialog implements View.OnClickListener {
 	}
 
 	private void init() {
-		setContentView(R.layout.dialog_confirm);
+		setContentView(R.layout.dialog_save_confirm);
 
 		mTitleView = (TextView) findViewById(R.id.title);
 		TextPaint tp = mTitleView.getPaint();
@@ -62,11 +60,14 @@ public class ConfirmDialog extends Dialog implements View.OnClickListener {
 		mTextView = (TextView) findViewById(R.id.text);
 		mTextView.setText(mText);
 
-		mButton1 = (Button) findViewById(R.id.button1);
-		mButton1.setOnClickListener(this);
+		mButtonSave = (Button) findViewById(R.id.button_save);
+		mButtonSave.setOnClickListener(this);
+		
+		mButtonDisCard=(Button) findViewById(R.id.button_discard);
+		mButtonDisCard.setOnClickListener(this);
 
-		mButton2 = (Button) findViewById(R.id.button2);
-		mButton2.setOnClickListener(this);
+		mButtonCancel = (Button) findViewById(R.id.button_cancel);
+		mButtonCancel.setOnClickListener(this);
 
 	}
 
@@ -74,7 +75,7 @@ public class ConfirmDialog extends Dialog implements View.OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setBlurEffect();
-		
+		init();
 	}
 
 	@Override
@@ -93,21 +94,13 @@ public class ConfirmDialog extends Dialog implements View.OnClickListener {
 		mText = message;
 		mTextView.setText(mText);
 	}
-	
-	public void setButton1Text(CharSequence text){
-		mButton1.setText(text);
-	}
-	
-	public void setButton2Text(CharSequence text){
-		mButton2.setText(text);
-	}
 
 	public void setMessage(int resId) {
 		mText = mContext.getResources().getText(resId);
 		mTextView.setText(mText);
 	}
 
-	public void setClickListener(ClickHandler clickListener) {
+	public void setOnClickListener(OnButtonClickListener clickListener) {
 		this.mClickListener = clickListener;
 	}
 
@@ -115,16 +108,19 @@ public class ConfirmDialog extends Dialog implements View.OnClickListener {
 	public void onClick(View v) {
 		int id = v.getId();
 		switch (id) {
-		case R.id.button1:
+		case R.id.button_save:
 			if (mClickListener != null) {
-				mClickListener.onButton1Click();
+				mClickListener.onSaveClick();
 			}
 			cancel();
 			break;
-		case R.id.button2:
+		case R.id.button_discard:
 			if (mClickListener != null) {
-				mClickListener.onButton2Click();
+				mClickListener.onDiscardClick();
 			}
+			cancel();
+			break;
+		case R.id.button_cancel:
 			cancel();
 			break;
 		default:
@@ -132,21 +128,9 @@ public class ConfirmDialog extends Dialog implements View.OnClickListener {
 		}
 	}
 
-	public static interface ClickHandler {
-		public void onButton1Click();
-		public void onButton2Click();
-	}
-	
-	public abstract static class AbstractClickHandler implements ClickHandler{
-
-		@Override
-		public void onButton1Click() {
-		}
-
-		@Override
-		public void onButton2Click() {
-		}
-		
+	public static interface OnButtonClickListener {
+		public void onSaveClick();
+		public void onDiscardClick();
 	}
 
 }

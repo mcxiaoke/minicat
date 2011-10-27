@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical" android:background="@drawable/bg">
+	<com.fanfou.app.ui.ActionBar android:id="@id/actionbar"
+		style="@style/ActionBar" />
+
+	<ListView android:id="@id/list" android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:cacheColorHint="#00000000"
+		android:scrollbars="none" android:listSelector="@drawable/list_selector"
+		android:divider="@drawable/list_separator" />
+
+</LinearLayout>

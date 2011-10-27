@@ -45,8 +45,8 @@ public abstract class BaseCursorAdapter extends CursorAdapter {
 				mContext.getString(R.string.config_fontsize_default));
 	}
 
-	protected void setHeadImage(ImageView headIcon) {
-		boolean show = OptionHelper.readBoolean(mContext,
+	protected static void setHeadImage(Context context, ImageView headIcon) {
+		boolean show = OptionHelper.readBoolean(context,
 				R.string.option_show_head, true);
 		if (show) {
 			headIcon.setVisibility(View.VISIBLE);

@@ -296,7 +296,6 @@ public final class Contents {
     	
     	public static final String TABLE_NAME="draft";
     	
-    	public static final String ITEM_ID="item_id";
     	public static final String OWNER_ID="owner_id";
     	public static final String TYPE="type";
     	public static final String TEXT="text";
@@ -306,7 +305,6 @@ public final class Contents {
     	
     	public static final String COLUMNS[]={
             _ID,
-            ITEM_ID,
             OWNER_ID,
             TEXT,
             CREATED_AT,
@@ -317,7 +315,6 @@ public final class Contents {
     	
         public static final String CREATE_TABLE="create table " + TABLE_NAME+" ("
     	+ _ID+" integer primary key autoincrement, "
-    	+ ITEM_ID+" integer , "
     	+ OWNER_ID+" text , "
     	+ TEXT+" text not null, "
     	+ CREATED_AT+" integer not null, "
