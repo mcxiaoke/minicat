@@ -30,13 +30,14 @@ import com.fanfou.app.api.ApiConfig;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.http.Parameter;
 import com.fanfou.app.util.Base64;
+import com.fanfou.app.util.NetworkHelper;
 
 public class OAuth {
 
-	private static final String tag = OAuth.class.getSimpleName();
+	private static final String TAG = OAuth.class.getSimpleName();
 
 	void log(String message) {
-		Log.i(tag, message);
+		Log.d(TAG, message);
 	}
 
 	public static final String REQUEST_TOKEN_URL = ApiConfig.HOST
@@ -81,7 +82,8 @@ public class OAuth {
 		if (App.DEBUG)
 			log("xauth authorization=" + authorization);
 		request.addHeader(new BasicHeader("Authorization", authorization));
-		HttpClient client = new DefaultHttpClient();
+		HttpClient client = NetworkHelper.newHttpClient();
+		NetworkHelper.setProxy(client);
 		HttpResponse response = client.execute(request);
 		int statusCode = response.getStatusLine().getStatusCode();
 		String content = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);

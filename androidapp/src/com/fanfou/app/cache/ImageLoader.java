@@ -205,6 +205,7 @@ public class ImageLoader implements Runnable, IImageLoader {
 	}
 
 	private Bitmap downloadImage(String url) throws IOException {
+		NetworkHelper.setProxy(mHttpClient);
 		HttpGet request = new HttpGet(url);
 		HttpResponse response = mHttpClient.execute(request);
 		int statusCode = response.getStatusLine().getStatusCode();

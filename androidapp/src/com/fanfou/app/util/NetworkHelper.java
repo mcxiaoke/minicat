@@ -215,7 +215,7 @@ public final class NetworkHelper {
 		}
 	}
 
-	public static void setProxy(HttpParams params, ApnType type) {
+	public static void setProxy(final HttpParams params,final ApnType type) {
 		if (type == ApnType.CTWAP) {
 			if (App.DEBUG) {
 				Log.d("setProxy", "set proxy for ctwap");
@@ -236,7 +236,7 @@ public final class NetworkHelper {
 		}
 	}
 
-	private static void setProxy(HttpClient client) {
+	public static void setProxy(final HttpClient client) {
 		if (client == null) {
 			return;
 		}
