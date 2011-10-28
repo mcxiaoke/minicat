@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
-
-import android.content.Context;
 import android.util.Log;
 
 import com.fanfou.app.App;
@@ -25,6 +23,7 @@ import com.fanfou.app.util.StringHelper;
  * @author mcxiaoke
  * @version 1.0 2011.05.15
  * @version 1.1 2011.05.17
+ * @version 1.2 2011.10.28
  * 
  */
 public class ApiImpl implements Api, ResponseCode {
@@ -43,41 +42,16 @@ public class ApiImpl implements Api, ResponseCode {
 		Log.d(TAG, message);
 	}
 
-	public ApiImpl(Context context) {
+	public ApiImpl() {
 		if (App.DEBUG)
 			log("new api instance");
 		if (OAUTH_ON) {
 			mClient = new OAuthClient();
 		} else {
-			mClient = new BasicClient("test", "test");
+			mClient = new BasicClient();
 		}
 	}
 
-	/**
-	 * handler http response with non-200 statusCode
-	 * 
-	 * @param response
-	 * @throws ApiException
-	 */
-	// private void checkResponse(Response response) throws ApiException {
-	// if (response == null || response.statusCode == HTTP_OK) {
-	// return;
-	// } else {
-	// throw new ApiException(response.statusCode, Parser.error(response));
-	// }
-	// switch (response.statusCode) {
-	// case HTTP_UNAUTHORIZED:
-	// case HTTP_BAD_REQUEST:
-	// case HTTP_FORBIDDEN:
-	// case HTTP_NOT_FOUND:
-	// case HTTP_INTERNAL_SERVER_ERROR:
-	// case HTTP_BAD_GATEWAY:
-	// case HTTP_SERVICE_UNAVAILABLE:
-	// case ERROR_NOT_CONNECTED:
-	// default:
-	// throw new ApiException(response.statusCode, Parser.error(response));
-	// }
-	// }
 
 	/**
 	 * exec http request
@@ -277,9 +251,6 @@ public class ApiImpl implements Api, ResponseCode {
 			String maxId, boolean isHtml) throws ApiException {
 		List<Status> ss = fetchStatuses(URL_TIMELINE_FRIENDS, count, page,
 				null, sinceId, maxId, isHtml, Status.TYPE_HOME);
-		for (Status status : ss) {
-			CacheManager.put(status.user);
-		}
 		return ss;
 	}
 
@@ -329,9 +300,6 @@ public class ApiImpl implements Api, ResponseCode {
 			log("statusFavorite()---statusCode=" + statusCode);
 		}
 		Status s = Status.parse(response);
-		if(s!=null){
-			CacheManager.put(s);
-		}
 		return s;
 	}
 
@@ -343,11 +311,7 @@ public class ApiImpl implements Api, ResponseCode {
 			log("statusUnfavorite()---statusCode=" + statusCode);
 		}
 
-		// handlerResponseError(response);
 		Status s = Status.parse(response);
-		if(s!=null){
-			CacheManager.put(s);
-		}
 		return s;
 	}
 
@@ -410,9 +374,6 @@ public class ApiImpl implements Api, ResponseCode {
 			throw new ApiException(ERROR_DUPLICATE, "重复消息，发送失败");
 		}
 		Status s= Status.parse(response,Status.TYPE_HOME);
-		if(s!=null){
-			CacheManager.put(s);
-		}
 		return s;
 	}
 
@@ -456,9 +417,6 @@ public class ApiImpl implements Api, ResponseCode {
 			log("photoUpload()---statusCode=" + statusCode);
 		}
 		Status s= Status.parse(response,Status.TYPE_HOME);
-		if(s!=null){
-			CacheManager.put(s);
-		}
 		return s;
 	}
 
@@ -907,7 +865,6 @@ public class ApiImpl implements Api, ResponseCode {
 	@Override
 	public List<Status> photosTimeline(int count, int page, String userId,
 			String sinceId, String maxId, boolean isHtml) throws ApiException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

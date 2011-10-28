@@ -91,7 +91,7 @@ public final class Contents {
             + ID+" text not null, "
             + REAL_ID+" long not null,"
             + NAME+" text not null, "
-            + OWNER_ID+" text, "
+            + OWNER_ID+" text , "
             + SCREEN_NAME+" text not null, "
             + LOCATION+" text not null, "
             + GENDER+" text not null, "
@@ -113,8 +113,8 @@ public final class Contents {
             + LAST_STATUS_TEXT+" integer, "     
             + TYPE+" integer not null, "
             + TIMESTAMP+" integer not null, " 
-//            + "unique ( "+ID+","+TYPE+" ) on conflict replace );";
-            + "unique ( "+ID+","+TYPE+","+OWNER_ID+") on conflict ignore );";
+            + "unique ( "+ID+","+TYPE+" ) on conflict replace );";
+//            + "unique ( "+ID+","+TYPE+","+OWNER_ID+") on conflict ignore );";
     }
     
     public static interface StatusInfo extends BasicColumns{

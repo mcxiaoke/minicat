@@ -41,7 +41,6 @@ public class User implements Storable<User> {
 
 	public static final int TYPE_FRIENDS = Commons.USER_TYPE_FRIENDS;
 	public static final int TYPE_FOLLOWERS = Commons.USER_TYPE_FOLLOWERS;
-//	public static final int AUTO_COMPLETE = Commons.USER_AUTO_COMPLETE;
 
 	public Date createdAt;
 	public String id;
@@ -190,6 +189,7 @@ public class User implements Storable<User> {
 			u.utcOffset = o.getInt(UserInfo.UTC_OFFSET);
 
 			u.type = Commons.TYPE_NONE;
+			u.ownerId=App.me.userId;
 
 			if (o.has("status")) {
 				JSONObject so = o.getJSONObject("status");

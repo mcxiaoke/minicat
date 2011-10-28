@@ -1,29 +1,25 @@
 package com.fanfou.app;
 
 import java.io.File;
-import java.util.List;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.ResultReceiver;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fanfou.app.api.Status;
+import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.cache.IImageLoader.ImageLoaderCallback;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
-import com.fanfou.app.service.ActionService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.Action;
 import com.fanfou.app.ui.ActionManager;
@@ -43,7 +39,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.2 2011.10.28
  * 
  */
-public class StatusPage extends BaseActivity{
+public class StatusPage extends BaseActivity {
 
 	@Override
 	protected void onResume() {
@@ -65,6 +61,7 @@ public class StatusPage extends BaseActivity{
 
 	private IImageLoader mLoader;
 
+	private String statusId;
 	private Status status;
 	private Status thread;
 
@@ -115,8 +112,14 @@ public class StatusPage extends BaseActivity{
 
 	private void parseIntent() {
 		Intent intent = getIntent();
+		statusId = intent.getStringExtra(Commons.EXTRA_STATUS_ID);
 		status = (Status) intent.getSerializableExtra(Commons.EXTRA_STATUS);
 
+		if (status == null && statusId != null) {
+			status = CacheManager.getStatus(this,statusId);
+		} else {
+			statusId = status.id;
+		}
 		isMe = status.userId.equals(App.me.userId);
 	}
 
@@ -144,9 +147,9 @@ public class StatusPage extends BaseActivity{
 		tUserName = (TextView) findViewById(R.id.user_name);
 		TextPaint tp = tUserName.getPaint();
 		tp.setFakeBoldText(true);
-		
+
 		tUserName.setText(status.userScreenName);
-		
+
 		tContent = (TextView) findViewById(R.id.status_text);
 		iPhoto = (ImageView) findViewById(R.id.status_photo);
 		tDate = (TextView) findViewById(R.id.status_date);
@@ -187,8 +190,8 @@ public class StatusPage extends BaseActivity{
 			updateFavoriteButton();
 
 			if (status.isThread) {
-				vThread.setVisibility(View.VISIBLE);	
-			}else{
+				vThread.setVisibility(View.VISIBLE);
+			} else {
 				vThread.setVisibility(View.GONE);
 			}
 		}
@@ -269,7 +272,7 @@ public class StatusPage extends BaseActivity{
 			onClickPhoto();
 			break;
 		case R.id.status_thread:
-			Intent intent=new Intent(mContext, ConversationPage.class);
+			Intent intent = new Intent(mContext, ConversationPage.class);
 			intent.putExtra(Commons.EXTRA_STATUS, status);
 			mContext.startActivity(intent);
 			break;
@@ -360,7 +363,8 @@ public class StatusPage extends BaseActivity{
 	}
 
 	private void doDelete() {
-		final ConfirmDialog dialog=new ConfirmDialog(this,"删除消息","要删除这条消息吗？");
+		final ConfirmDialog dialog = new ConfirmDialog(this, "删除消息",
+				"要删除这条消息吗？");
 		dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
 			@Override
 			public void onButton1Click() {
@@ -368,7 +372,7 @@ public class StatusPage extends BaseActivity{
 			}
 		});
 		dialog.show();
-		
+
 	}
 
 	private void doFavorite() {

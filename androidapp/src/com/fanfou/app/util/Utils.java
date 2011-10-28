@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Collection;
 
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -34,7 +35,11 @@ import com.fanfou.app.R;
 import com.fanfou.app.StatusPage;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
+import com.fanfou.app.api.User;
+import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.Contents.StatusInfo;
+import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.service.AutoCompleteService;
 import com.fanfou.app.service.FetchService;
 
@@ -43,6 +48,10 @@ import com.fanfou.app.service.FetchService;
  * 网络连接包需要用到的一些静态工具函数
  * 
  * @author mcxiaoke
+ * @version 1.0 2011.06.01
+ * @version 2.0 2011.09.10
+ * @version 3.0 2011.09.28
+ * @version 3.5 2011.10.28
  * 
  */
 public final class Utils {
@@ -261,10 +270,11 @@ public final class Utils {
 			AlarmHelper.setCleanTask(context);
 		}
 	}
-	
+
 	public static void setAutoUpdate(Context context) {
-		boolean isSet=OptionHelper.readBoolean(context, R.string.option_autoupdate, false);
-		if(isSet){
+		boolean isSet = OptionHelper.readBoolean(context,
+				R.string.option_autoupdate, false);
+		if (isSet) {
 			AlarmHelper.setUpdateTask(context);
 		}
 	}
@@ -272,9 +282,9 @@ public final class Utils {
 	public static void setAutoComplete(Context context) {
 		boolean isSet = OptionHelper.readBoolean(context,
 				R.string.option_set_auto_complete, false);
-//		if(App.DEBUG){
-//			isSet=false;
-//		}
+		// if(App.DEBUG){
+		// isSet=false;
+		// }
 		if (!isSet) {
 			OptionHelper.saveBoolean(context,
 					R.string.option_set_auto_complete, true);
@@ -355,7 +365,5 @@ public final class Utils {
 			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}
 	}
-
-
 
 }

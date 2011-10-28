@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 
 import com.fanfou.app.App;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
+import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.util.Utils;
@@ -77,6 +78,7 @@ public class ClearDataDialogPreference extends DialogPreference {
 			cr.delete(StatusInfo.CONTENT_URI, null, null);
 			cr.delete(UserInfo.CONTENT_URI, null, null);
 			cr.delete(DirectMessageInfo.CONTENT_URI, null, null);
+			cr.delete(DraftInfo.CONTENT_URI, null, null);
 		}
 	}
 

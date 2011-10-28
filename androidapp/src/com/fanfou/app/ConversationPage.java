@@ -26,6 +26,7 @@ import com.fanfou.app.util.StringHelper;
  * @author mcxiaoke
  * @version 1.0 2011.10.25
  * @version 1.1 2011.10.26
+ * @version 1.2 2011.10.28
  * 
  */
 public class ConversationPage extends BaseActivity implements OnRefreshListener {
@@ -137,7 +138,7 @@ public class ConversationPage extends BaseActivity implements OnRefreshListener 
 			try {
 				while(flag){
 					if(!StringHelper.isEmpty(inReplyToStatusId)){
-						com.fanfou.app.api.Status result=CacheManager.getStatus(inReplyToStatusId);
+						com.fanfou.app.api.Status result=CacheManager.getStatus(mContext,inReplyToStatusId);
 						if(result==null||result.isNull()){
 							result=api.statusShow(inReplyToStatusId);
 						}

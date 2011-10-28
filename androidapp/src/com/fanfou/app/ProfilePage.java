@@ -114,16 +114,15 @@ public class ProfilePage extends BaseActivity {
 				userId = data.getLastPathSegment();
 			}
 		}
-
-		if (userId != null && user == null) {
-			user = CacheManager.getUser(userId);
+		if (user == null && userId != null) {
+			user = CacheManager.getUser(this, userId);
 		}
-
 		if (StringHelper.isEmpty(userId)) {
 			if (App.DEBUG)
 				log("用户ID不能为空");
 			finish();
 		}
+
 	}
 
 	private void initialize() {
@@ -175,7 +174,7 @@ public class ProfilePage extends BaseActivity {
 		mReplyAction.setOnClickListener(this);
 		mMessageAction.setOnClickListener(this);
 		mFollowAction.setOnClickListener(this);
-		
+
 		mScrollView.setVisibility(View.GONE);
 	}
 
@@ -344,7 +343,7 @@ public class ProfilePage extends BaseActivity {
 		}
 		switch (v.getId()) {
 		case R.id.user_action_reply:
-			ActionManager.doReply(this, "@"+user.screenName+" ");
+			ActionManager.doReply(this, "@" + user.screenName + " ");
 			break;
 		case R.id.user_action_message:
 			ActionManager.doMessage(this, user);

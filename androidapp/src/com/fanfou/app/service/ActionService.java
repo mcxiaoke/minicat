@@ -22,6 +22,12 @@ import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.StringHelper;
 
+/**
+ * @author mcxiaoke
+ * @version 1.0 2011.06.15
+ * @version 3.0 2011.10.28
+ *
+ */
 public class ActionService extends BaseIntentService {
 	private static final String TAG = ActionService.class.getSimpleName();
 	ResultReceiver receiver;
@@ -104,8 +110,9 @@ public class ActionService extends BaseIntentService {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
 					ContentResolver cr = getContentResolver();
-					int result = cr.delete(StatusInfo.CONTENT_URI, where,
-							whereArgs);
+					Uri uri=Uri.parse(StatusInfo.CONTENT_URI+"/id/"+id);
+					int result = cr.delete(uri, null,
+							null);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
 					data.putSerializable(Commons.EXTRA_STATUS, s);
@@ -157,7 +164,7 @@ public class ActionService extends BaseIntentService {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
 					ContentResolver cr = getContentResolver();
-					Uri uri = Uri.parse(UserInfo.CONTENT_URI + "/item/" + id);
+					Uri uri = Uri.parse(UserInfo.CONTENT_URI + "/id/" + id);
 					int result = cr
 							.update(uri, u.toContentValues(), null, null);
 					Bundle data = new Bundle();
@@ -177,7 +184,7 @@ public class ActionService extends BaseIntentService {
 					ContentResolver cr = getContentResolver();
 					ContentValues values = new ContentValues();
 					values.put(UserInfo.FOLLOWING, u.following);
-					Uri uri = Uri.parse(UserInfo.CONTENT_URI + "/item/" + id);
+					Uri uri = Uri.parse(UserInfo.CONTENT_URI + "/id/" + id);
 					int result = cr.update(uri, values, null, null);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);

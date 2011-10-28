@@ -13,6 +13,7 @@ import com.fanfou.app.util.Base64;
  * @author mcxiaoke
  * @version 1.0 2011.05.05
  * @version 1.1 2011.05.15
+ * @version 1.2 2011.10.28
  * 
  */
 public class BasicClient extends BaseClient {

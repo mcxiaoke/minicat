@@ -34,6 +34,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.9 2011.10.09
  * @version 2.0 2011.10.25
  * @version 2.5 2011.10.26
+ * @version 3.0 2011.10.28
  * 
  */
 public class FanFouProvider extends ContentProvider {
@@ -45,23 +46,19 @@ public class FanFouProvider extends ContentProvider {
 	}
 
 	private SQLiteHelper dbHelper;
-	
-	public static final String ORDERBY_DATE_DESC=BasicColumns.CREATED_AT+" DESC";
-	public static final String ORDERBY_DATE=BasicColumns.CREATED_AT;
 
-	public static final int USERS_ALL = 1;
-	public static final int USER_SEARCH = 2;
-	public static final int USER_ITEM = 3;
+	public static final String ORDERBY_DATE_DESC = BasicColumns.CREATED_AT
+			+ " DESC";
+	public static final String ORDERBY_DATE = BasicColumns.CREATED_AT;
+
+	public static final int USERS_ALL = 1;// 查询全部用户信息，可附加条件参数
+	public static final int USER_SEARCH = 2; // 搜索用户，未实现
+	public static final int USER_ID = 3; // 根据ID查询单个用户
 	public static final int USER_TYPE = 4;
-	public static final int USER_ID = 5;
-	public static final int USER_FRIENDS = 6;
-	public static final int USER_FOLLOWERS = 7;
 
 	public static final int STATUSES_ALL = 21;
 	public static final int STATUS_SEARCH_LOCAL = 22;
-	public static final int STATUS_USER = 23;
-	public static final int STATUS_ITEM = 24;
-	public static final int STATUS_ID = 25;
+	public static final int STATUS_ID = 24;
 	public static final int STATUS_SEARCH = 26;
 	public static final int STATUS_TYPE = 27;
 	public static final int STATUS_ACTION_CLEAN = 28;
@@ -72,9 +69,9 @@ public class FanFouProvider extends ContentProvider {
 	public static final int MESSAGE_ID = 43;
 	public static final int MESSAGE_LIST = 44;// 对话列表，每个人最新的一条，收件箱为准
 	public static final int MESSAGE_USER = 45;// 每个人的私信对话列表
-	
-	public static final int DRAFT_ALL=61;
-	public static final int DRAFT_ID=62;
+
+	public static final int DRAFT_ALL = 61;
+	public static final int DRAFT_ID = 62;
 
 	public static final int ACTION_CLEAN_ALL = 110;
 	public static final int ACTION_CLEAN_STATUS = 112;
@@ -84,8 +81,6 @@ public class FanFouProvider extends ContentProvider {
 	public static final int ACTION_COUNT_STATUS = 121;
 	public static final int ACTION_COUNT_MESSAGE = 122;
 	public static final int ACTION_COUNT_USER = 123;
-	
-	
 
 	private static final UriMatcher sUriMatcher;
 	// private static HashMap<String, String> sUserProjectionMap;
@@ -98,42 +93,44 @@ public class FanFouProvider extends ContentProvider {
 		sUriMatcher.addURI(Contents.AUTHORITY, UserInfo.URI_PATH, USERS_ALL);
 		sUriMatcher.addURI(Contents.AUTHORITY, UserInfo.URI_PATH + "/search/*",
 				USER_SEARCH);
-		sUriMatcher.addURI(Contents.AUTHORITY, UserInfo.URI_PATH + "/item/*", USER_ITEM);
-		sUriMatcher.addURI(Contents.AUTHORITY, UserInfo.URI_PATH + "/type/#", USER_TYPE);
-		sUriMatcher.addURI(Contents.AUTHORITY, UserInfo.URI_PATH + "/id/#", USER_ID);
+		sUriMatcher.addURI(Contents.AUTHORITY, UserInfo.URI_PATH + "/id/*",
+				USER_ID);
+		sUriMatcher.addURI(Contents.AUTHORITY, UserInfo.URI_PATH + "/type/#",
+				USER_TYPE);
 
-		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH, STATUSES_ALL);
-		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH + "/local/*",
-				STATUS_SEARCH_LOCAL);
-		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH + "/user/*",
-				STATUS_USER);
-		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH + "/item/*",
-				STATUS_ITEM);
+		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH,
+				STATUSES_ALL);
+		sUriMatcher.addURI(Contents.AUTHORITY,
+				StatusInfo.URI_PATH + "/local/*", STATUS_SEARCH_LOCAL);
+		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH + "/id/*",
+				STATUS_ID);
 
-		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH + "/search/*",
-				STATUS_SEARCH);
+		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH
+				+ "/search/*", STATUS_SEARCH);
 
 		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH + "/type/#",
 				STATUS_TYPE);
-		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH + "/action/count/#",
-				STATUS_ACTION_COUNT);
-		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH + "/action/clean",
-				STATUS_ACTION_CLEAN);
-		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH + "/id/#", STATUS_ID);
+		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH
+				+ "/action/count/#", STATUS_ACTION_COUNT);
+		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH
+				+ "/action/clean", STATUS_ACTION_CLEAN);
 
-		sUriMatcher.addURI(Contents.AUTHORITY, DirectMessageInfo.URI_PATH, MESSAGES_ALL);
-		sUriMatcher.addURI(Contents.AUTHORITY, DirectMessageInfo.URI_PATH + "/item/*",
-				MESSAGE_ITEM);
-		sUriMatcher.addURI(Contents.AUTHORITY, DirectMessageInfo.URI_PATH + "/id/#",
-				MESSAGE_ID);
+		sUriMatcher.addURI(Contents.AUTHORITY, DirectMessageInfo.URI_PATH,
+				MESSAGES_ALL);
+		sUriMatcher.addURI(Contents.AUTHORITY, DirectMessageInfo.URI_PATH
+				+ "/item/*", MESSAGE_ITEM);
+		sUriMatcher.addURI(Contents.AUTHORITY, DirectMessageInfo.URI_PATH
+				+ "/id/#", MESSAGE_ID);
 
-		sUriMatcher.addURI(Contents.AUTHORITY, DirectMessageInfo.URI_PATH + "/list",
-				MESSAGE_LIST);
-		sUriMatcher.addURI(Contents.AUTHORITY, DirectMessageInfo.URI_PATH + "/user/*",
-				MESSAGE_USER);
-		
+		sUriMatcher.addURI(Contents.AUTHORITY, DirectMessageInfo.URI_PATH
+				+ "/list", MESSAGE_LIST);
+		sUriMatcher.addURI(Contents.AUTHORITY, DirectMessageInfo.URI_PATH
+				+ "/user/*", MESSAGE_USER);
+
 		sUriMatcher.addURI(Contents.AUTHORITY, DraftInfo.URI_PATH, DRAFT_ALL);
-		sUriMatcher.addURI(Contents.AUTHORITY, DraftInfo.URI_PATH+"/#", DRAFT_ID);
+		sUriMatcher.addURI(Contents.AUTHORITY, DraftInfo.URI_PATH + "/#",
+				DRAFT_ID);
+
 	}
 
 	@Override
@@ -146,19 +143,14 @@ public class FanFouProvider extends ContentProvider {
 	public String getType(Uri uri) {
 		switch (sUriMatcher.match(uri)) {
 		case USERS_ALL:
-		case USER_FRIENDS:
-		case USER_FOLLOWERS:
+		case USER_TYPE:
 			return UserInfo.CONTENT_TYPE;
-		case USER_ITEM:
 		case USER_ID:
 			return UserInfo.CONTENT_ITEM_TYPE;
 		case STATUSES_ALL:
 		case STATUS_SEARCH_LOCAL:
 		case STATUS_SEARCH:
-		case STATUS_USER:
-			// case PUBLIC:
 			return StatusInfo.CONTENT_TYPE;
-		case STATUS_ITEM:
 		case STATUS_ID:
 		case STATUS_ACTION_COUNT:
 		case STATUS_ACTION_CLEAN:
@@ -195,15 +187,15 @@ public class FanFouProvider extends ContentProvider {
 		case USERS_ALL:
 			qb.setTables(UserInfo.TABLE_NAME);
 			break;
-		case USER_ITEM:
+		case USER_TYPE:
 			qb.setTables(UserInfo.TABLE_NAME);
-			qb.appendWhere(BasicColumns.ID + "=");
-			qb.appendWhere("'" + uri.getPathSegments().get(2) + "'");
+			qb.appendWhere(UserInfo.TYPE + "=");
+			qb.appendWhere(uri.getPathSegments().get(2));
 			break;
 		case USER_ID:
 			qb.setTables(UserInfo.TABLE_NAME);
-			qb.appendWhere(BaseColumns._ID + "=");
-			qb.appendWhere(uri.getPathSegments().get(2));
+			qb.appendWhere(UserInfo.ID + "=");
+			qb.appendWhere("'" + uri.getPathSegments().get(2) + "'");
 			break;
 		case STATUSES_ALL:
 			qb.setTables(StatusInfo.TABLE_NAME);
@@ -212,15 +204,10 @@ public class FanFouProvider extends ContentProvider {
 		case STATUS_SEARCH:
 			order = ORDERBY_DATE_DESC;
 			break;
-		case STATUS_ITEM:
+		case STATUS_ID:
 			qb.setTables(StatusInfo.TABLE_NAME);
 			qb.appendWhere(BasicColumns.ID + "=");
 			qb.appendWhere("'" + uri.getPathSegments().get(2) + "'");
-			break;
-		case STATUS_ID:
-			qb.setTables(StatusInfo.TABLE_NAME);
-			qb.appendWhere(BaseColumns._ID + "=");
-			qb.appendWhere(uri.getPathSegments().get(2));
 			break;
 		case STATUS_ACTION_COUNT:
 			return countStatus(uri);
@@ -278,8 +265,9 @@ public class FanFouProvider extends ContentProvider {
 			}
 			break;
 		case DRAFT_ID:
-			throw new UnsupportedOperationException("unsupported operation: "+uri);
-//			break;
+			throw new UnsupportedOperationException("unsupported operation: "
+					+ uri);
+			// break;
 		default:
 			throw new IllegalArgumentException("query() Unknown URI " + uri);
 		}
@@ -349,11 +337,12 @@ public class FanFouProvider extends ContentProvider {
 			contentUri = DirectMessageInfo.CONTENT_URI;
 			break;
 		case DRAFT_ALL:
-			table=DraftInfo.TABLE_NAME;
-			contentUri=DraftInfo.CONTENT_URI;
+			table = DraftInfo.TABLE_NAME;
+			contentUri = DraftInfo.CONTENT_URI;
 			break;
-		case USER_ITEM:
-		case STATUS_ITEM:
+		case USER_TYPE:
+		case USER_ID:
+		case STATUS_ID:
 		case MESSAGE_ITEM:
 		case DRAFT_ID:
 			throw new UnsupportedOperationException("Cannot insert URI: " + uri);
@@ -397,7 +386,7 @@ public class FanFouProvider extends ContentProvider {
 			result = bulkInsertData(DirectMessageInfo.TABLE_NAME, values);
 			break;
 		case DRAFT_ALL:
-			result=bulkInsertData(DraftInfo.TABLE_NAME,values);
+			result = bulkInsertData(DraftInfo.TABLE_NAME, values);
 			break;
 		default:
 			if (App.DEBUG) {
@@ -415,13 +404,13 @@ public class FanFouProvider extends ContentProvider {
 		db.beginTransaction();
 		try {
 			for (ContentValues value : values) {
-				long result=db.insert(table, null, value);
-				if(result>-1){
+				long result = db.insert(table, null, value);
+				if (result > -1) {
 					numInserted++;
 				}
 			}
 			db.setTransactionSuccessful();
-//			numInserted += values.length;
+			// numInserted += values.length;
 		} catch (Exception e) {
 			if (App.DEBUG) {
 				e.printStackTrace();
@@ -443,7 +432,7 @@ public class FanFouProvider extends ContentProvider {
 		InsertHelper ih = new InsertHelper(db, UserInfo.TABLE_NAME);
 
 		int id = ih.getColumnIndex(UserInfo.ID);
-		int realId=ih.getColumnIndex(UserInfo.REAL_ID);
+		int realId = ih.getColumnIndex(UserInfo.REAL_ID);
 		int ownerId = ih.getColumnIndex(UserInfo.OWNER_ID);
 		int name = ih.getColumnIndex(UserInfo.NAME);
 
@@ -524,7 +513,7 @@ public class FanFouProvider extends ContentProvider {
 				ih.bind(name, value.getAsString(UserInfo.NAME));
 
 				long result = ih.execute();
-				if(result>-1){
+				if (result > -1) {
 					numInserted++;
 				}
 				if (App.DEBUG) {
@@ -534,7 +523,7 @@ public class FanFouProvider extends ContentProvider {
 				}
 			}
 			db.setTransactionSuccessful();
-//			numInserted = values.length;
+			// numInserted = values.length;
 		} catch (Exception e) {
 			if (App.DEBUG) {
 				e.printStackTrace();
@@ -554,11 +543,11 @@ public class FanFouProvider extends ContentProvider {
 		InsertHelper ih = new InsertHelper(db, StatusInfo.TABLE_NAME);
 
 		int id = ih.getColumnIndex(StatusInfo.ID);
-		
-		int realId=ih.getColumnIndex(StatusInfo.REAL_ID);
-		
-		int special=ih.getColumnIndex(StatusInfo.SPECIAL);
-		
+
+		int realId = ih.getColumnIndex(StatusInfo.REAL_ID);
+
+		int special = ih.getColumnIndex(StatusInfo.SPECIAL);
+
 		int ownerId = ih.getColumnIndex(StatusInfo.OWNER_ID);
 		int createdAt = ih.getColumnIndex(StatusInfo.CREATED_AT);
 
@@ -585,12 +574,11 @@ public class FanFouProvider extends ContentProvider {
 
 		int type = ih.getColumnIndex(StatusInfo.TYPE);
 		int isRead = ih.getColumnIndex(StatusInfo.IS_READ);
-		
-		int isThread=ih.getColumnIndex(StatusInfo.IS_THREAD);
-		int hasPhoto=ih.getColumnIndex(StatusInfo.HAS_PHOTO);
-		int simpleText=ih.getColumnIndex(StatusInfo.SIMPLE_TEXT);
-		
-		
+
+		int isThread = ih.getColumnIndex(StatusInfo.IS_THREAD);
+		int hasPhoto = ih.getColumnIndex(StatusInfo.HAS_PHOTO);
+		int simpleText = ih.getColumnIndex(StatusInfo.SIMPLE_TEXT);
+
 		int timestamp = ih.getColumnIndex(StatusInfo.TIMESTAMP);
 
 		try {
@@ -605,7 +593,7 @@ public class FanFouProvider extends ContentProvider {
 
 				ih.bind(text, value.getAsString(StatusInfo.TEXT));
 				ih.bind(source, value.getAsString(StatusInfo.SOURCE));
-				
+
 				ih.bind(special, value.getAsBoolean(StatusInfo.SPECIAL));
 
 				ih.bind(inReplyToStatusId,
@@ -633,7 +621,7 @@ public class FanFouProvider extends ContentProvider {
 
 				ih.bind(type, value.getAsInteger(StatusInfo.TYPE));
 				ih.bind(isRead, value.getAsBoolean(StatusInfo.IS_READ));
-				
+
 				ih.bind(isThread, value.getAsBoolean(StatusInfo.IS_THREAD));
 				ih.bind(hasPhoto, value.getAsBoolean(StatusInfo.HAS_PHOTO));
 				ih.bind(simpleText, value.getAsString(StatusInfo.SIMPLE_TEXT));
@@ -641,7 +629,7 @@ public class FanFouProvider extends ContentProvider {
 				ih.bind(timestamp, value.getAsLong(StatusInfo.TIMESTAMP));
 
 				long result = ih.execute();
-				if(result>-1){
+				if (result > -1) {
 					numInserted++;
 				}
 				if (App.DEBUG) {
@@ -651,7 +639,7 @@ public class FanFouProvider extends ContentProvider {
 				}
 			}
 			db.setTransactionSuccessful();
-//			numInserted = values.length;
+			// numInserted = values.length;
 		} catch (Exception e) {
 			if (App.DEBUG) {
 				e.printStackTrace();
@@ -666,40 +654,29 @@ public class FanFouProvider extends ContentProvider {
 
 	@Override
 	public int delete(Uri uri, String where, String[] whereArgs) {
-		// log("delete() uri = " + uri + " where= (" + where + ") whereArgs = "
-		// + StringHelper.toString(whereArgs));
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		int count;
 		String id;
 		String _id;
-		// String where;
-		// int type;
 		switch (sUriMatcher.match(uri)) {
 		case USERS_ALL:
 			count = db.delete(UserInfo.TABLE_NAME, where, whereArgs);
 			break;
-		case USER_ITEM:
-			id = uri.getPathSegments().get(2);
-			count = db.delete(UserInfo.TABLE_NAME, BasicColumns.ID + "=?",
-					new String[] { id });
-			break;
+		case USER_TYPE:
+			count = db.delete(UserInfo.TABLE_NAME, UserInfo.TYPE + "=?",
+					new String[] { uri.getPathSegments().get(2) });
 		case USER_ID:
-			_id = uri.getPathSegments().get(2);
-			count = db.delete(UserInfo.TABLE_NAME, BaseColumns._ID + "=?",
-					new String[] { _id });
+			id = uri.getPathSegments().get(2);
+			count = db.delete(UserInfo.TABLE_NAME, UserInfo.ID + "=?",
+					new String[] { id });
 			break;
 		case STATUSES_ALL:
 			count = db.delete(StatusInfo.TABLE_NAME, where, whereArgs);
 			break;
-		case STATUS_ITEM:
+		case STATUS_ID:
 			id = uri.getPathSegments().get(2);
 			count = db.delete(StatusInfo.TABLE_NAME, BasicColumns.ID + "=?",
 					new String[] { id });
-			break;
-		case STATUS_ID:
-			_id = uri.getPathSegments().get(2);
-			count = db.delete(StatusInfo.TABLE_NAME, StatusInfo._ID + "=?",
-					new String[] { _id });
 			break;
 		case STATUS_ACTION_CLEAN:
 			// count = cleanDatabase(uri, where, whereArgs);
@@ -723,8 +700,8 @@ public class FanFouProvider extends ContentProvider {
 			break;
 		case DRAFT_ID:
 			_id = uri.getPathSegments().get(1);
-			count = db.delete(DraftInfo.TABLE_NAME,
-					DraftInfo._ID + "=?", new String[] { _id });
+			count = db.delete(DraftInfo.TABLE_NAME, DraftInfo._ID + "=?",
+					new String[] { _id });
 			break;
 		default:
 			throw new IllegalArgumentException("delete() Unknown URI " + uri);
@@ -743,7 +720,7 @@ public class FanFouProvider extends ContentProvider {
 		result += cleanOthersTimeline();
 		result += cleanUserTimeline();
 		result += cleanFavorites();
-		
+
 		result += cleanUsers();
 		return result;
 	}
@@ -920,8 +897,8 @@ public class FanFouProvider extends ContentProvider {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		return db.delete(DirectMessageInfo.TABLE_NAME, where, null);
 	}
-	
-	private int cleanUsers(){
+
+	private int cleanUsers() {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		String where = UserInfo.OWNER_ID + " !=? ";
 		String[] whereArgs = new String[] { String.valueOf(App.me.userId) };
@@ -938,24 +915,12 @@ public class FanFouProvider extends ContentProvider {
 		String id;
 		String _id;
 		switch (sUriMatcher.match(uri)) {
-		case USER_ITEM:
+		case USER_ID:
 			id = uri.getPathSegments().get(2);
 			count = db.update(UserInfo.TABLE_NAME, values, UserInfo.ID + "=?",
 					new String[] { id });
-			// count = db.update(UserInfo.TABLE_NAME, values,
-			// UserInfo.ID
-			// + "="
-			// + userId
-			// + (!TextUtils.isEmpty(where) ? " AND (" + where
-			// + ')' : ""), whereArgs);
 			break;
-		case USER_ID:
-			_id = uri.getPathSegments().get(2);
-			id = _id;
-			count = db.update(UserInfo.TABLE_NAME, values, UserInfo._ID + "=?",
-					new String[] { _id });
-			break;
-		case STATUS_ITEM:
+		case STATUS_ID:
 			id = uri.getPathSegments().get(2);
 			count = db.update(StatusInfo.TABLE_NAME, values, StatusInfo.ID
 					+ "=?", new String[] { id });
@@ -965,12 +930,6 @@ public class FanFouProvider extends ContentProvider {
 			// + statusId
 			// + (!TextUtils.isEmpty(where) ? " AND (" + where
 			// + ')' : ""), whereArgs);
-			break;
-		case STATUS_ID:
-			_id = uri.getPathSegments().get(2);
-			id = _id;
-			count = db.update(StatusInfo.TABLE_NAME, values, StatusInfo._ID
-					+ "=?", new String[] { _id });
 			break;
 		case MESSAGE_ITEM:
 			id = uri.getPathSegments().get(2);
@@ -995,6 +954,12 @@ public class FanFouProvider extends ContentProvider {
 			id = "";
 			count = db.update(UserInfo.TABLE_NAME, values, where, whereArgs);
 			break;
+		case USER_TYPE:
+			id = "";
+			count = db.update(UserInfo.TABLE_NAME, values,
+					UserInfo.TYPE + "=?", new String[] { uri.getPathSegments()
+							.get(2) });
+			break;
 		case STATUSES_ALL:
 			id = "";
 			count = db.update(StatusInfo.TABLE_NAME, values, where, whereArgs);
@@ -1011,7 +976,8 @@ public class FanFouProvider extends ContentProvider {
 			break;
 		case DRAFT_ALL:
 		case DRAFT_ID:
-			throw new UnsupportedOperationException("unsupported update action: "+uri);
+			throw new UnsupportedOperationException(
+					"unsupported update action: " + uri);
 		default:
 			throw new IllegalArgumentException("update() Unknown URI " + uri);
 		}

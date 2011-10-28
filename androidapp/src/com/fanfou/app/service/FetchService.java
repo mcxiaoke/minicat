@@ -34,15 +34,16 @@ import com.fanfou.app.util.Utils;
  * @version 3.0 2011.10.20
  * @version 3.1 2011.10.21
  * @version 3.2 2011.10.24
+ * @version 3.3 2011.10.28
  * 
  */
 public class FetchService extends BaseIntentService {
-	private static final String tag = FetchService.class.getSimpleName();
+	private static final String TAG = FetchService.class.getSimpleName();
 
 	ResultReceiver receiver;
 
 	public void log(String message) {
-		Log.i(tag, message);
+		Log.d(TAG, message);
 	}
 
 	private int mType;
@@ -268,7 +269,7 @@ public class FetchService extends BaseIntentService {
 
 	private void doFetchStatuses() {
 		if (App.DEBUG)
-			Log.e(tag, "doFetchStatuses");
+			Log.d(TAG, "doFetchStatuses");
 		Api api = App.me.api;
 		List<Status> statuses = null;
 		int count = mBundle.getInt(Commons.EXTRA_COUNT);
@@ -282,29 +283,29 @@ public class FetchService extends BaseIntentService {
 			switch (mType) {
 			case Status.TYPE_HOME:
 				if (App.DEBUG)
-					Log.d(tag, "doFetchStatuses TYPE_HOME");
+					Log.d(TAG, "doFetchStatuses TYPE_HOME");
 				statuses = api
 						.homeTimeline(count, page, sinceId, maxId, format);
 
 				break;
 			case Status.TYPE_MENTION:
 				if (App.DEBUG)
-					Log.d(tag, "doFetchStatuses TYPE_MENTION");
+					Log.d(TAG, "doFetchStatuses TYPE_MENTION");
 				statuses = api.mentions(count, page, sinceId, maxId, format);
 				break;
 			case Status.TYPE_PUBLIC:
 				if (App.DEBUG)
-					Log.d(tag, "doFetchStatuses TYPE_PUBLIC");
+					Log.d(TAG, "doFetchStatuses TYPE_PUBLIC");
 				statuses = api.pubicTimeline(count, format);
 				break;
 			case Status.TYPE_FAVORITES:
 				if (App.DEBUG)
-					Log.d(tag, "doFetchStatuses TYPE_FAVORITES");
+					Log.d(TAG, "doFetchStatuses TYPE_FAVORITES");
 				statuses = api.favorites(count, page, userId, format);
 				break;
 			case Status.TYPE_USER:
 				if (App.DEBUG)
-					Log.d(tag, "doFetchStatuses TYPE_USER");
+					Log.d(TAG, "doFetchStatuses TYPE_USER");
 				statuses = api.userTimeline(count, page, userId, sinceId,
 						maxId, format);
 				break;
@@ -314,12 +315,12 @@ public class FetchService extends BaseIntentService {
 			if (statuses == null || statuses.size() == 0) {
 				sendCountMessage(0);
 				if (App.DEBUG)
-					Log.e(tag, "doFetchStatuses received no items.");
+					Log.d(TAG, "doFetchStatuses received no items.");
 				return;
 			} else {
 				int size = statuses.size();
 				if (App.DEBUG) {
-					Log.e(tag, "doFetchStatuses received items count=" + size);
+					Log.d(TAG, "doFetchStatuses received items count=" + size);
 				}
 				ContentResolver cr = getContentResolver();
 				
@@ -330,7 +331,7 @@ public class FetchService extends BaseIntentService {
 					String[] whereArgs = new String[] { String.valueOf(mType) };
 					cr.delete(StatusInfo.CONTENT_URI, where, whereArgs);
 					if (App.DEBUG) {
-						Log.e(tag,
+						Log.d(TAG,
 								"doFetchStatuses items count = 20 ,remove old statuses.");
 					}
 				}	
@@ -338,6 +339,9 @@ public class FetchService extends BaseIntentService {
 				int insertedCount=cr.bulkInsert(StatusInfo.CONTENT_URI,
 						Parser.toContentValuesArray(statuses));
 				sendCountMessage(insertedCount);
+				
+				// extract users and insert to db, replace original object.
+				extractUsers(statuses, mType);
 			}
 		} catch (ApiException e) {
 			if (App.DEBUG) {
@@ -347,6 +351,27 @@ public class FetchService extends BaseIntentService {
 			}
 			handleError(e);
 		}
+	}
+	
+	// add at 2011.10.28
+	private int extractUsers(List<Status> ss, int type){
+		int result=0;
+		boolean isFriends=type==Status.TYPE_HOME;
+		ArrayList<User> us=new ArrayList<User>();
+		for (Status s : ss) {
+			User u=s.user;
+			if(u!=null){
+				if(isFriends){
+					u.type=User.TYPE_FRIENDS;
+				}
+				us.add(s.user);
+			}
+		}
+		result=getContentResolver().bulkInsert(UserInfo.CONTENT_URI, Parser.toContentValuesArray(us));
+		if(App.DEBUG){
+			log("extractUsers from status list , result="+result+" isFriends="+isFriends);
+		}
+		return result;
 	}
 
 	private void handleError(ApiException e) {

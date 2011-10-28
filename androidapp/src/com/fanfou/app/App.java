@@ -123,7 +123,7 @@ public class App extends Application {
 		NetworkState state = new NetworkState(this);
 		apnType = state.getApnType();
 		this.imageLoader = new ImageLoader(this);
-		this.api = new ApiImpl(this);
+		this.api = new ApiImpl();
 
 		if (DEBUG) {
 			java.util.logging.Logger.getLogger("org.apache.http").setLevel(
