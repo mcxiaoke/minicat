@@ -5,7 +5,7 @@
 	android:layout_height="wrap_content" 
 	android:clickable="true"
 	android:focusable="true"
-	android:background="@drawable/action_item_btn" android:padding="2dp" >
+	android:background="@drawable/action_item_btn" android:padding="4dp" >
         	
 	<ImageView
 		android:id="@+id/iv_icon" 
@@ -17,8 +17,8 @@
 		android:layout_width="fill_parent" 
 		android:layout_height="fill_parent" 
 		android:gravity="center_vertical"
-		android:paddingLeft="5dip"
-		android:paddingRight="10dip"
+		android:paddingLeft="5dp"
+		android:paddingRight="10dp"
 		android:text="Chart"
 		android:textColor="#fff"/>
 									         

@@ -43,6 +43,7 @@ public class ClearCacheDialogPreference extends DialogPreference {
 			pd = new ProgressDialog(c);
 			pd.setTitle("清空缓存图片");
 			pd.setMessage("正在清空缓存图片...");
+			pd.setCancelable(false);
 			pd.setIndeterminate(true);
 			pd.show();
 		}
@@ -60,17 +61,13 @@ public class ClearCacheDialogPreference extends DialogPreference {
 		protected Boolean doInBackground(Void... params) {
 			try {
 				Thread.sleep(300);
-				clean(c);
+				IOHelper.ClearBigPictures(c);
 				return true;
 			} catch (InterruptedException e) {
 				if (App.DEBUG)
 					e.printStackTrace();
 				return false;
 			}
-		}
-
-		private void clean(Context context) {
-			IOHelper.ClearCache(context);
 		}
 	}
 

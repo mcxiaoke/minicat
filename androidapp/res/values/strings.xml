@@ -2,6 +2,7 @@
 <resources>
 	<string name="app_name">FanFou</string>
 	<string name="app_share_name">Share to FanFou</string>
+	<string name="app_photoviewer_name">FanFou Photo Viewer</string>
 	
 	<string name="search_hint">Search on fanfou.com</string>
 

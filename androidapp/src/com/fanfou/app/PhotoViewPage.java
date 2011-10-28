@@ -3,8 +3,10 @@ package com.fanfou.app;
 import java.io.File;
 import java.io.IOException;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -37,7 +39,9 @@ public class PhotoViewPage extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mPhotoPath = getIntent().getStringExtra(Commons.EXTRA_URL);
+		
+		parseIntent(getIntent());
+		
 		if (TextUtils.isEmpty(mPhotoPath)) {
 			finish();
 			return;
@@ -60,6 +64,21 @@ public class PhotoViewPage extends BaseActivity {
 		}else{
 			finish();
 		}
+	}
+	
+	private void parseIntent(Intent intent){
+		String action=intent.getAction();
+		if(action==null){
+			mPhotoPath = intent.getStringExtra(Commons.EXTRA_URL);			
+		}else if(action.equals(Intent.ACTION_VIEW)){
+			Uri uri=(Uri)intent.getData();
+			if (uri.getScheme().equals("content")) {
+				mPhotoPath = IOHelper.getRealPathFromURI(this, uri);
+			} else {
+				mPhotoPath = uri.getPath();
+			}
+		}
+		
 	}
 
 	@Override

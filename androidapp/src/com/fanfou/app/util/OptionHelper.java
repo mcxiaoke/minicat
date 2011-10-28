@@ -125,7 +125,7 @@ public class OptionHelper {
 		sp.commit();
 	}
 	
-	public static void clear(Context context){
+	public static void clearSettings(Context context){
 		Editor sp=App.me.sp.edit();
 		sp.clear();
 		sp.commit();

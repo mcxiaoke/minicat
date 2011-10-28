@@ -42,10 +42,10 @@
 
 				<TextView
 					android:id="@id/user_relationship"
-					style="@style/Text.MetaBig"
+					style="@style/Text.MetaBig" android:textColor="@color/blue" 
 					android:layout_alignLeft="@id/user_name"
 					android:layout_below="@id/user_name"
-					android:visibility="gone" />
+					android:visibility="invisible" android:text=" "/>
 
 				<ImageView
 					android:id="@id/user_protected"

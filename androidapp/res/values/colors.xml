@@ -17,6 +17,7 @@
     
     <color name="transparent">#00000000</color>
     <color name="red">#ffff0000</color>
+    <color name="blue">#ff0000ff</color>
 
     <color name="link_color">#ff236ed8</color>
     

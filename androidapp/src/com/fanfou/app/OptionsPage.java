@@ -91,6 +91,9 @@ public class OptionsPage extends PreferenceActivity implements
 
 		Preference checkUpdate = findPreference(getText(R.string.option_check_update));
 		checkUpdate.setOnPreferenceClickListener(this);
+		
+		Preference reset=findPreference(getText(R.string.option_clear_data_and_settings));
+		reset.setOnPreferenceClickListener(this);
 
 		Preference feedback = findPreference(getText(R.string.option_feedback));
 		feedback.setOnPreferenceClickListener(this);

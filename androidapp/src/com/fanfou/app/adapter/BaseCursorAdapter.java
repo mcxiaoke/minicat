@@ -46,12 +46,12 @@ public abstract class BaseCursorAdapter extends CursorAdapter {
 	}
 
 	protected static void setHeadImage(Context context, ImageView headIcon) {
-		boolean show = OptionHelper.readBoolean(context,
-				R.string.option_show_head, true);
-		if (show) {
-			headIcon.setVisibility(View.VISIBLE);
-		} else {
+		boolean textMode = OptionHelper.readBoolean(context,
+				R.string.option_text_mode, false);
+		if (textMode) {
 			headIcon.setVisibility(View.GONE);
+		} else {
+			headIcon.setVisibility(View.VISIBLE);
 		}
 	}
 

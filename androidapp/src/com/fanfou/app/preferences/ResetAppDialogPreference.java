@@ -1,27 +1,30 @@
 package com.fanfou.app.preferences;
 
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 
 import com.fanfou.app.App;
-import com.fanfou.app.db.Contents.DirectMessageInfo;
-import com.fanfou.app.db.Contents.DraftInfo;
-import com.fanfou.app.db.Contents.StatusInfo;
-import com.fanfou.app.db.Contents.UserInfo;
+import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.IOHelper;
+import com.fanfou.app.util.IntentHelper;
+import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.Utils;
 
-public class ClearDataDialogPreference extends DialogPreference {
+/**
+ * @author mcxiaoke
+ * @version 1.0 2011.10.28
+ *
+ */
+public class ResetAppDialogPreference extends DialogPreference {
 
-	public ClearDataDialogPreference(Context context, AttributeSet attrs) {
+	public ResetAppDialogPreference(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 
-	public ClearDataDialogPreference(Context context, AttributeSet attrs,
+	public ResetAppDialogPreference(Context context, AttributeSet attrs,
 			int defStyle) {
 		super(context, attrs, defStyle);
 	}
@@ -46,8 +49,8 @@ public class ClearDataDialogPreference extends DialogPreference {
 		protected void onPreExecute() {
 			super.onPreExecute();
 			pd = new ProgressDialog(c);
-			pd.setTitle("清空程序数据");
-			pd.setMessage("正在清空程序数据...");
+			pd.setTitle("重置所有数据和设置");
+			pd.setMessage("正在重置所有数据和设置...");
 			pd.setCancelable(false);
 			pd.setIndeterminate(true);
 			pd.show();
@@ -58,14 +61,20 @@ public class ClearDataDialogPreference extends DialogPreference {
 			super.onPostExecute(result);
 			pd.dismiss();
 			if (result.booleanValue() == true) {
-				Utils.notify(c, "程序数据已清空");
+				Utils.notify(c, "数据和设置已全部重置");
+				IntentHelper.goLoginPage(c);
+//				android.os.Process.killProcess(android.os.Process.myPid());
 			}
 		}
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
-				IOHelper.cleanDB(c);
-				return true;
+			AlarmHelper.clearAlarms(c);
+			OptionHelper.clearSettings(c);
+			IOHelper.cleanDB(c);
+			IOHelper.ClearCache(c);
+			
+			return true;
 		}
 	}
 

@@ -116,7 +116,7 @@ public class StatusPage extends BaseActivity {
 		status = (Status) intent.getSerializableExtra(Commons.EXTRA_STATUS);
 
 		if (status == null && statusId != null) {
-			status = CacheManager.getStatus(this,statusId);
+			status = CacheManager.getStatus(this, statusId);
 		} else {
 			statusId = status.id;
 		}
@@ -172,11 +172,18 @@ public class StatusPage extends BaseActivity {
 
 	private void updateUI() {
 		if (status != null) {
-			mLoader.set(status.userProfileImageUrl, iUserHead,
-					R.drawable.default_head);
+
+			boolean textMode = OptionHelper.readBoolean(this,
+					R.string.option_text_mode, false);
+			if (textMode) {
+				iUserHead.setVisibility(View.GONE);
+			} else {
+				mLoader.set(status.userProfileImageUrl, iUserHead,
+						R.drawable.default_head);
+			}
 
 			StatusHelper.setStatus(tContent, status.text);
-			checkPhoto(status);
+			checkPhoto(textMode, status);
 
 			tDate.setText(DateTimeHelper.getInterval(status.createdAt));
 			tSource.setText("通过" + status.source);
@@ -203,7 +210,7 @@ public class StatusPage extends BaseActivity {
 	private static final int PHOTO_SMALL = 1;
 	private static final int PHOTO_LARGE = 2;
 
-	private void checkPhoto(Status s) {
+	private void checkPhoto(boolean textMode, Status s) {
 		if (!s.hasPhoto) {
 			iPhoto.setVisibility(View.GONE);
 			return;
@@ -229,18 +236,22 @@ public class StatusPage extends BaseActivity {
 			return;
 		}
 
-		// 再根据系统设置处理
-		int set = OptionHelper.parseInt(this, R.string.option_pic_level);
-		if (set == 2) {
-			// 如果设置为大图
-			loadPhoto(PHOTO_LARGE);
-		} else if (set == 1) {
-			// 如果设置为缩略图
-			loadPhoto(PHOTO_SMALL);
-		} else {
+		// 是否需要显示图片
+		if (textMode) {
 			iPhoto.setImageResource(R.drawable.photo_icon);
+		} else {
+			// 再根据系统设置处理
+			int set = OptionHelper.parseInt(this, R.string.option_pic_level);
+			if (set == 2) {
+				// 如果设置为大图
+				loadPhoto(PHOTO_LARGE);
+			} else if (set == 1) {
+				// 如果设置为缩略图
+				loadPhoto(PHOTO_SMALL);
+			} else {
+				iPhoto.setImageResource(R.drawable.photo_icon);
+			}
 		}
-
 	}
 
 	@Override

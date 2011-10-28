@@ -28,6 +28,7 @@ import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.Action;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
+import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
 
@@ -224,7 +225,13 @@ public class ProfilePage extends BaseActivity {
 		if (App.DEBUG)
 			log("updateUI user.name=" + user.screenName);
 
-		mLoader.set(user.profileImageUrl, mHead, R.drawable.default_head);
+		boolean textMode=OptionHelper.readBoolean(this, R.string.option_text_mode, false);
+		if(textMode){
+			mHead.setVisibility(View.GONE);
+		}else{
+			mLoader.set(user.profileImageUrl, mHead, R.drawable.default_head);
+		}
+		
 		mName.setText(user.screenName);
 
 		mStatusesInfo.setText("" + user.statusesCount);
@@ -247,7 +254,10 @@ public class ProfilePage extends BaseActivity {
 		updateFollowButton(user);
 
 		if (!noPermission) {
-			doFetchRelationshipInfo();
+			boolean need=OptionHelper.readBoolean(this, R.string.option_fetch_relationships, true);
+			if(need){
+				doFetchRelationshipInfo();
+			}
 		}
 	}
 

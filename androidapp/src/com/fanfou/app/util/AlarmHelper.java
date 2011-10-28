@@ -23,9 +23,18 @@ import com.fanfou.app.service.NotificationService;
  * @author mcxiaoke
  * @version 1.0 2011.09.22
  * @version 1.1 2011.10.21
+ * @version 1.1 2011.10.28
  * 
  */
 public final class AlarmHelper {
+	
+	public static void clearAlarms(Context context){
+		AlarmManager am = (AlarmManager) context
+		.getSystemService(Context.ALARM_SERVICE);
+		am.cancel(getAutoCompletePendingIntent(context));
+		am.cancel(getCleanPendingIntent(context));
+		am.cancel(getNotificationPendingIntent(context));
+	}
 
 	public static void setCleanTask(Context context) {
 		int hour = 4;

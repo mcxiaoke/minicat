@@ -26,6 +26,7 @@ import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
+import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 
@@ -139,6 +140,10 @@ public final class IOHelper {
 		}
 	}
 
+	public static void ClearBigPictures(Context context) {
+		deleteDir(getCacheDir(context), 6 * 1024);
+	}
+
 	public static void deleteDir(File target) {
 		if (!target.exists()) {
 			return;
@@ -155,13 +160,13 @@ public final class IOHelper {
 			target.delete();
 		}
 	}
-	
+
 	public static void deleteDir(File target, int minFileSize) {
 		if (!target.exists()) {
 			return;
 		}
 		if (target.isFile()) {
-			if(target.length()>minFileSize){
+			if (target.length() > minFileSize) {
 				target.delete();
 			}
 		}
@@ -169,7 +174,7 @@ public final class IOHelper {
 		if (target.isDirectory()) {
 			File[] files = target.listFiles();
 			for (File file : files) {
-				deleteDir(file,minFileSize);
+				deleteDir(file, minFileSize);
 			}
 		}
 	}
@@ -239,6 +244,14 @@ public final class IOHelper {
 	public static void storeUser(Context context, User u) {
 		ContentResolver cr = context.getContentResolver();
 		cr.insert(UserInfo.CONTENT_URI, u.toContentValues());
+	}
+	
+	public static void cleanDB(Context context) {
+		ContentResolver cr = context.getContentResolver();
+		cr.delete(StatusInfo.CONTENT_URI, null, null);
+		cr.delete(UserInfo.CONTENT_URI, null, null);
+		cr.delete(DirectMessageInfo.CONTENT_URI, null, null);
+		cr.delete(DraftInfo.CONTENT_URI, null, null);
 	}
 
 }
