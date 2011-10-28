@@ -8,6 +8,8 @@ import com.fanfou.app.adapter.DraftsCursorAdaper;
 import com.fanfou.app.api.Draft;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.DraftInfo;
+import com.fanfou.app.dialog.ConfirmDialog;
+import com.fanfou.app.service.TaskQueueService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.util.StringHelper;
@@ -28,6 +30,7 @@ import android.widget.AdapterView.OnItemClickListener;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.10.27
+ * @version 1.1 2011.10.28
  * 
  */
 public class DraftsPage extends BaseActivity implements OnItemClickListener{
@@ -60,6 +63,10 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener{
 	private void setListView() {
 		mCursor = managedQuery(DraftInfo.CONTENT_URI, DraftInfo.COLUMNS, null,
 				null, null);
+		if(mCursor.getCount()==0){
+			mBar.setRightActionEnabled(false);
+		}
+		
 		mAdapter = new DraftsCursorAdaper(this, mCursor);
 		mListView = (ListView) findViewById(R.id.list);
 		mListView.setAdapter(mAdapter);
@@ -115,9 +122,24 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener{
 		}
 
 	}
+	
+	private void startTaskQueueService(){
+		Intent service=new Intent(this, TaskQueueService.class);
+		service.putExtra(Commons.EXTRA_TYPE, TaskQueueService.TYPE_DRAFTS_LIST);
+		startService(service);
+	}
 
 	private void doSendAll() {
-		Utils.notify(this, "发送所有");
+		final ConfirmDialog dialog=new ConfirmDialog(this, "发送所有", "确定发送所有草稿吗？");
+		dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
+
+			@Override
+			public void onButton1Click() {
+				startTaskQueueService();
+				finish();
+			}
+		});
+		dialog.show();
 	}
 
 	@Override
@@ -138,19 +160,14 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener{
 		Intent intent=new Intent(this, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TYPE, draft.type);
 		intent.putExtra(Commons.EXTRA_TEXT, draft.text);
+		intent.putExtra(Commons.EXTRA_DRAFT_ID, draft.id);
 		intent.putExtra(Commons.EXTRA_IN_REPLY_TO_ID, draft.replyTo);
 		if(!StringHelper.isEmpty(draft.filePath)){
 			intent.putExtra(Commons.EXTRA_FILE, new File(draft.filePath));
 		}
 		startActivity(intent);
-		deleteDraft(draft);
 		finish();
 		
-	}
-	
-	private void deleteDraft(final Draft draft){
-		Uri uri=ContentUris.withAppendedId(DraftInfo.CONTENT_URI, draft.id);
-		getContentResolver().delete(uri, null, null);
 	}
 
 }

@@ -102,8 +102,7 @@ public class ApiImpl implements Api, ResponseCode {
 		} catch (IOException e) {
 			if (App.DEBUG)
 				e.printStackTrace();
-			throw new ApiException(ERROR_NOT_CONNECTED, "Connection error: "
-					+ e.getMessage(), e.getCause());
+			throw new ApiException(ERROR_NOT_CONNECTED, e.toString(), e.getCause());
 		}
 	}
 

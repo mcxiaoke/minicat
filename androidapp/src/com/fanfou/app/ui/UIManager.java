@@ -21,6 +21,7 @@ import com.fanfou.app.dialog.ConfirmDialog;
  * @version 1.0 2011.06.09
  * @version 1.1 2011.10.25
  * @version 1.2 2011.10.27
+ * @version 1.3 2011.10.28
  * 
  */
 public final class UIManager {

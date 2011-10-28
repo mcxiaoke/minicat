@@ -63,9 +63,9 @@
 	<item type="id" name="write_origin" />
 
 	<item type="id" name="write_extras" />
-	<item type="id" name="write_extra_picture" />
-	<item type="id" name="write_extra_picture_prieview" />
-	<item type="id" name="write_extra_picture_remove" />
+	<item type="id" name="write_picture" />
+	<item type="id" name="write_picture_prieview" />
+	<item type="id" name="write_picture_remove" />
 	<item type="id" name="write_extra_words" />
 
 	<item type="id" name="status_top" />

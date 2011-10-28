@@ -36,6 +36,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.0 2011.07.18
  * @version 1.1 2011.10.25
  * @version 1.2 2011.10.27
+ * @version 1.3 2011.10.28
  * 
  */
 public class ProfilePage extends BaseActivity {
@@ -343,7 +344,7 @@ public class ProfilePage extends BaseActivity {
 		}
 		switch (v.getId()) {
 		case R.id.user_action_reply:
-			ActionManager.doReply(this, user);
+			ActionManager.doReply(this, "@"+user.screenName+" ");
 			break;
 		case R.id.user_action_message:
 			ActionManager.doMessage(this, user);

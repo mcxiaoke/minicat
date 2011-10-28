@@ -705,14 +705,13 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	private void showPopup(final View view, final Cursor c) {
-		if (c == null) {
-			return;
+		if (c != null) {
+			final Status s = Status.parse(c);
+			if (s == null) {
+				return;
+			}
+			UIManager.showPopup(mContext, c, view, s);
 		}
-		final Status s = Status.parse(c);
-		if (s == null) {
-			return;
-		}
-		UIManager.showPopup(mContext, c, view, s);
 	}
 
 	@Override

@@ -38,6 +38,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.0 2011.08.25
  * @version 1.1 2011.10.26
  * @version 1.2 2011.10.27
+ * @version 1.3 2011.10.28
  * 
  */
 public final class ActionManager {
@@ -220,28 +221,26 @@ public final class ActionManager {
 		
 		Intent intent = new Intent(context, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_REPLY);
-		intent.putExtra(Commons.EXTRA_STATUS, status);
+		intent.putExtra(Commons.EXTRA_IN_REPLY_TO_ID, status.id);
 		intent.putExtra(Commons.EXTRA_TEXT, sb.toString());
 		context.startActivity(intent);
 	}
 
-	public static void doReply(Context context, final User user) {
+	public static void doReply(Context context, String text) {
 		Intent intent = new Intent(context, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
-		intent.putExtra(Commons.EXTRA_TEXT, "@" + user.screenName + " ");
+		intent.putExtra(Commons.EXTRA_TEXT, text);
 		context.startActivity(intent);
 	}
 
 	public static void doRetweet(Context context, Status status) {
 		if (status == null || status.isNull()) {
-			if (App.DEBUG) {
-				Log.d(TAG, "doRetweet: status is null.");
-			}
 			return;
 		}
 		Intent intent = new Intent(context, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_REPOST);
-		intent.putExtra(Commons.EXTRA_STATUS, status);
+		intent.putExtra(Commons.EXTRA_IN_REPLY_TO_ID, status.id);
+		intent.putExtra(Commons.EXTRA_TEXT, "转@"+status.userScreenName+" "+status.simpleText);
 		context.startActivity(intent);
 	}
 

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	android:installLocation="auto"
 	package="com.fanfou.app"
-	android:versionCode="20111026"
+	android:versionCode="20111028"
 	android:versionName="1.9.0" >
 
 	<application
@@ -203,7 +203,7 @@
 			android:label="@string/app_share_name"
 			android:name=".WritePage" android:launchMode="singleTask"
 			android:theme="@style/Theme.AutoCompleteTextView"
-			android:windowSoftInputMode="adjustResize" >
+			android:windowSoftInputMode="stateVisible|adjustPan" >
 			<intent-filter >
 				<action android:name="android.intent.action.SEND" />
 
@@ -276,6 +276,9 @@
 		<service
 			android:label="@string/app_name"
 			android:name=".service.AutoCompleteService" />
+		<service
+			android:label="@string/app_name"
+			android:name=".service.TaskQueueService" />
 
 		<receiver android:name=".receiver.BootReceiver" >
 			<intent-filter >

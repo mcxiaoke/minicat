@@ -18,6 +18,14 @@ import com.fanfou.app.R;
 import com.fanfou.app.WritePage;
 import com.fanfou.app.util.Utils;
 
+/**
+ * @author mcxiaoke
+ * @version 1.0 2011.06.15
+ * @version 2.0 2011.08.20
+ * @version 3.0 2011.09.18
+ * @version 3.5 2011.10.27
+ *
+ */
 public class ActionBar extends RelativeLayout implements OnClickListener {
 
 	public static final int TYPE_HOME = 0; // 左侧LOGO，中间标题文字，右侧编辑图标
@@ -76,12 +84,24 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 		mRightButton.setTag(action);
 	}
 
-	public void hideLeftIcon() {
-		mLeftButton.setVisibility(View.INVISIBLE);
+	public void removeLeftIcon() {
+		mLeftButton.setVisibility(View.GONE);
 	}
 
-	public void hideRightIcon() {
-		mRightButton.setVisibility(View.INVISIBLE);
+	public void removeRightIcon() {
+		mRightButton.setVisibility(View.GONE);
+	}
+	
+	public void setLeftActionEnabled(boolean enabled){
+		mLeftButton.setEnabled(enabled);
+	}
+	
+	public void setRightActionEnabled(boolean enabled){
+		mRightButton.setEnabled(enabled);
+	}
+	
+	public void setRefreshActionEnabled(boolean enabled){
+		mRefreshButton.setEnabled(enabled);
 	}
 
 	private void setRefreshAction(Action action) {

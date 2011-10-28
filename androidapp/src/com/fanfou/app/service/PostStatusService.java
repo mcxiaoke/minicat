@@ -20,9 +20,7 @@ import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.DraftInfo;
-import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.ImageHelper;
-import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 
@@ -31,22 +29,22 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.0 2011.06.10
  * @version 1.1 2011.10.25
  * @version 2.0 2011.10.27
+ * @version 2.1 2011.10.28
  * 
  */
 public class PostStatusService extends WakefulIntentService {
 
 	private static final String TAG = PostStatusService.class.getSimpleName();
 	private NotificationManager nm;
-	private Intent mIntent;
 
 	public void log(String message) {
 		Log.d(TAG, message);
 	}
 
-	private String content;
+	private String text;
 	private File srcFile;
 	private String location;
-	private Status src;
+	private String relationId;
 	private int type;
 
 	public PostStatusService() {
@@ -60,60 +58,56 @@ public class PostStatusService extends WakefulIntentService {
 			return;
 		}
 		log("intent=" + intent);
-		this.mIntent = intent;
 		this.nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		parseIntent();
-		doUpdateStatus();
+		parseIntent(intent);
+		doSend();
 	}
 
-	private void parseIntent() {
-		type = mIntent.getIntExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
-		content = mIntent.getStringExtra(Commons.EXTRA_TEXT);
-		srcFile = (File) mIntent.getSerializableExtra(Commons.EXTRA_FILE);
-		src = (Status) mIntent.getSerializableExtra(Commons.EXTRA_STATUS);
-		location = mIntent.getStringExtra(Commons.EXTRA_LOCATION);
+	private void parseIntent(Intent intent) {
+		type = intent.getIntExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
+		text = intent.getStringExtra(Commons.EXTRA_TEXT);
+		srcFile = (File) intent.getSerializableExtra(Commons.EXTRA_FILE);
+		relationId = intent.getStringExtra(Commons.EXTRA_IN_REPLY_TO_ID);
+		location = intent.getStringExtra(Commons.EXTRA_LOCATION);
 		if (App.DEBUG) {
 			log("location="
 					+ (StringHelper.isEmpty(location) ? "null" : location));
 		}
 	}
 
-	private boolean doUpdateStatus() {
+	private boolean doSend() {
 		showSendingNotification();
 		boolean res = true;
 		Api api = App.me.api;
 		try {
 			Status result = null;
-			String replyId = null;
-			String repostId = null;
-			if (src != null) {
-				if (type == WritePage.TYPE_REPOST) {
-					repostId = src.id;
-				} else {
-					replyId = src.id;
-				}
-			}
-			if (srcFile == null || !srcFile.exists()||srcFile.isDirectory()) {
-				result = api.statusUpdate(content, replyId, null, location,
-						repostId);
+			if (type == WritePage.TYPE_REPLY) {
+				result = api.statusUpdate(text, relationId, null, location,
+						null);
 			} else {
-				int quality = OptionHelper.parseInt(this,
-						R.string.option_photo_quality,String.valueOf(ImageHelper.IMAGE_QUALITY_MEDIUM));
-				File photo = ImageHelper.prepareUploadFile(this, srcFile,
-						quality);
-				if (photo != null && photo.length() > 0) {
-					if (App.DEBUG)
-						log("photo file=" + srcFile.getName() + " size="
-								+ photo.length() / 1024 + " quality=" + quality);
-					result = api.photoUpload(photo, content, null, location);
+				if (srcFile == null || !srcFile.exists()) {
+					result = api.statusUpdate(text, null, null, location,
+							relationId);
+				} else {
+					int quality = OptionHelper.parseInt(this,
+							R.string.option_photo_quality,
+							String.valueOf(ImageHelper.IMAGE_QUALITY_MEDIUM));
+					File photo = ImageHelper.prepareUploadFile(this, srcFile,
+							quality);
+					if (photo != null && photo.length() > 0) {
+						if (App.DEBUG)
+							log("photo file=" + srcFile.getName() + " size="
+									+ photo.length() / 1024 + " quality="
+									+ quality);
+						result = api.photoUpload(photo, text, null, location);
+					}
+					photo.delete();
 				}
-				photo.delete();
 			}
 			nm.cancel(0);
 			if (result == null || result.isNull()) {
 				res = false;
 			} else {
-//				IOHelper.storeStatus(this, result);
 				res = true;
 				sendSuccessBroadcast();
 			}
@@ -156,15 +150,13 @@ public class PostStatusService extends WakefulIntentService {
 		nm.notify(id, notification);
 		return id;
 	}
-	
+
 	private void doSaveDrafts() {
 		Draft d = new Draft();
-		d.text = content;
+		d.text = text;
 		d.filePath = srcFile == null ? "" : srcFile.toString();
-		if(src!=null&&!src.isNull()){
-			d.replyTo=src.id;
-			d.type=WritePage.TYPE_REPLY;
-		}
+		d.replyTo = relationId;
+		d.type = WritePage.TYPE_REPLY;
 		getContentResolver().insert(DraftInfo.CONTENT_URI, d.toContentValues());
 	}
 

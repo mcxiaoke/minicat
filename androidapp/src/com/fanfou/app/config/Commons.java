@@ -22,6 +22,9 @@ public interface Commons {
 	public static final String EXTRA_BUNDLE = "extra_bundle";
 	public static final String EXTRA_BOOLEAN = "extra_boolean";
 	
+	public static final String EXTRA_DRAFT = "extra_draft";
+	public static final String EXTRA_DRAFT_ID = "extra_draft_id";
+	
 	public static final String EXTRA_GAP_TIME="extra_gap_time";
 	public static final String EXTRA_GAP_ID="extra_gap_id";
 	public static final String EXTRA_GAP_UP_STATUS="extra_gap_up_status";

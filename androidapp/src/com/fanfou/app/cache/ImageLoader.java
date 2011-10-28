@@ -45,9 +45,9 @@ public class ImageLoader implements Runnable, IImageLoader {
 	private static final String EXTRA_BITMAP = "bitmap";
 	private static final int MESSAGE_FINISH = 0;
 	private static final int MESSAGE_ERROR = 1;
-	public static final int CORE_POOL_SIZE = 4;
+	private static final int CORE_POOL_SIZE = 4;
 
-	public final ExecutorService mExecutorService = Executors
+	private final ExecutorService mExecutorService = Executors
 			.newFixedThreadPool(CORE_POOL_SIZE);
 
 	private final BlockingQueue<ImageLoaderTask> mTaskQueue = new LinkedBlockingQueue<ImageLoaderTask>();

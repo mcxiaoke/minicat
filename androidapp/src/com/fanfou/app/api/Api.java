@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fanfou.app.api;
 
 import java.io.File;
@@ -11,6 +8,7 @@ import java.util.List;
  * @version 1.0 2011.05.12
  * @version 1.1 2011.05.15
  * @version 1.2 2011.10.18
+ * @version 1.3 2011.10.28
  * 
  */
 public interface Api extends ApiConfig {

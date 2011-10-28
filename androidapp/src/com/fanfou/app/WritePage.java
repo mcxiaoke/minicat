@@ -3,6 +3,7 @@ package com.fanfou.app;
 import java.io.File;
 import java.io.IOException;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -49,6 +50,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.0 2011.10.24
  * @version 2.1 2011.10.26
  * @version 3.0 2011.10.27
+ * @version 3.1 2011.10.28
  * 
  */
 public class WritePage extends BaseActivity {
@@ -65,8 +67,9 @@ public class WritePage extends BaseActivity {
 
 	private ActionBar mActionBar;
 	private MyAutoCompleteTextView mAutoCompleteTextView;
-	CursorAdapter mAdapter;
+	private CursorAdapter mAdapter;
 
+	private View mPictureView;
 	private ImageView iPicturePrieview;
 	private ImageView iPictureRemove;
 	private TextView tWordsCount;
@@ -90,7 +93,8 @@ public class WritePage extends BaseActivity {
 
 	private boolean enableLocation;
 
-	private Status status;
+	private String inReplyToStatusId;
+	private int draftId;
 	private String text;
 	private int type;
 
@@ -102,8 +106,6 @@ public class WritePage extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initialize();
-		setContentView(R.layout.write);
-		setActionBar();
 		setLayout();
 		parseIntent();
 	}
@@ -177,15 +179,13 @@ public class WritePage extends BaseActivity {
 	private void showPreview() {
 		final int size = new Float(getResources().getDimension(
 				R.dimen.photo_preview_width)).intValue();
+		mPictureView.setVisibility(View.VISIBLE);
 		iPicturePrieview.setImageBitmap(ImageHelper.getRoundedCornerBitmap(
 				ImageHelper.getThumb(this, photoUri, size, size), 6));
-		iPicturePrieview.setVisibility(View.VISIBLE);
-		iPictureRemove.setVisibility(View.VISIBLE);
 	}
 
 	private void hidePreview() {
-		iPicturePrieview.setVisibility(View.INVISIBLE);
-		iPictureRemove.setVisibility(View.INVISIBLE);
+		mPictureView.setVisibility(View.GONE);
 	}
 
 	private void showCount(int count) {
@@ -201,7 +201,7 @@ public class WritePage extends BaseActivity {
 
 	private void parsePhoto(Uri uri) {
 		if (uri != null) {
-			
+
 			if (App.DEBUG)
 				log("from gallery uri=" + photoUri);
 
@@ -212,7 +212,7 @@ public class WritePage extends BaseActivity {
 				path = uri.getPath();
 			}
 			photo = new File(path);
-			if(photo.exists()){
+			if (photo.exists()) {
 				photoUri = uri;
 			}
 			if (App.DEBUG)
@@ -221,7 +221,7 @@ public class WritePage extends BaseActivity {
 	}
 
 	private void parsePhoto(File file) {
-		if (file != null&&file.exists()) {
+		if (file != null && file.exists()) {
 			photo = file;
 			photoUri = Uri.fromFile(file);
 			if (App.DEBUG)
@@ -230,39 +230,44 @@ public class WritePage extends BaseActivity {
 	}
 
 	private void parseIntent() {
+		type = TYPE_NORMAL;
 		Intent intent = getIntent();
 		if (intent != null) {
 			String action = intent.getAction();
 			if (action == null) {
 				type = intent.getIntExtra(Commons.EXTRA_TYPE, TYPE_NORMAL);
 				text = intent.getStringExtra(Commons.EXTRA_TEXT);
-				status = (Status) intent
-						.getSerializableExtra(Commons.EXTRA_STATUS);
+				draftId = intent.getIntExtra(Commons.EXTRA_DRAFT_ID, -1);
+				inReplyToStatusId = intent
+						.getStringExtra(Commons.EXTRA_IN_REPLY_TO_ID);
 				File file = (File) intent
 						.getSerializableExtra(Commons.EXTRA_FILE);
 				parsePhoto(file);
 			} else if (action.equals(Intent.ACTION_SEND)) {
-				type = TYPE_NORMAL;
 				Bundle extras = intent.getExtras();
-				if (extras.containsKey(Intent.EXTRA_STREAM)) {
-					Uri uri = extras.getParcelable(Intent.EXTRA_STREAM);
-					parsePhoto(uri);
-				}
-
-				if (extras.containsKey(Intent.EXTRA_TEXT)) {
-					type = TYPE_NORMAL;
-					text = extras.getString(Intent.EXTRA_TEXT);
-				}
-
+				text = extras.getString(Intent.EXTRA_TEXT);
+				Uri uri = extras.getParcelable(Intent.EXTRA_STREAM);
+				parsePhoto(uri);
 			}
 			if (App.DEBUG) {
 				log("intent type=" + type);
 				log("intent text=" + text);
-				log("intent status=" + status);
 			}
 		}
-
-		updateUI();
+		mAutoCompleteTextView.setText(text);
+		if (type != TYPE_REPOST) {
+			Selection.setSelection(mAutoCompleteTextView.getText(),
+					mAutoCompleteTextView.getText().length());
+		}
+		if (photoUri != null) {
+			showPreview();
+		}
+		
+		if(draftId>=0){
+			getContentResolver().delete(
+					ContentUris.withAppendedId(DraftInfo.CONTENT_URI, draftId),
+					null, null);
+		}
 	}
 
 	/**
@@ -284,7 +289,7 @@ public class WritePage extends BaseActivity {
 
 		@Override
 		public void performAction(View view) {
-			send();
+			doSend();
 		}
 
 	}
@@ -314,10 +319,14 @@ public class WritePage extends BaseActivity {
 	}
 
 	private void setLayout() {
+
+		setContentView(R.layout.write);
+		setActionBar();
 		setAutoComplete();
 
-		iPicturePrieview = (ImageView) findViewById(R.id.write_extra_picture_prieview);
-		iPictureRemove = (ImageView) findViewById(R.id.write_extra_picture_remove);
+		mPictureView = findViewById(R.id.write_picture);
+		iPicturePrieview = (ImageView) findViewById(R.id.write_picture_prieview);
+		iPictureRemove = (ImageView) findViewById(R.id.write_picture_remove);
 
 		tWordsCount = (TextView) findViewById(R.id.write_extra_words);
 
@@ -340,28 +349,6 @@ public class WritePage extends BaseActivity {
 		mButtonDraft = (Button) findViewById(R.id.button_draft);
 		mButtonDraft.setOnClickListener(this);
 
-	}
-
-	private void updateUI() {
-		if (type == TYPE_NORMAL) {
-			mAutoCompleteTextView.setText(text);
-			Selection.setSelection(mAutoCompleteTextView.getText(),
-					mAutoCompleteTextView.getText().length());
-		}
-		if (status != null) {
-			if (type == TYPE_REPLY) {
-				mAutoCompleteTextView.setText(text);
-				Selection.setSelection(mAutoCompleteTextView.getText(),
-						mAutoCompleteTextView.getText().length());
-			} else if (type == TYPE_REPOST) {
-				mAutoCompleteTextView.setText(" 转@" + status.userScreenName
-						+ " " + status.simpleText + " ");
-			}
-		}
-
-		if (photoUri != null) {
-			showPreview();
-		}
 	}
 
 	@Override
@@ -407,7 +394,7 @@ public class WritePage extends BaseActivity {
 		case R.id.write_action_camera:
 			startCameraShot();
 			break;
-		case R.id.write_extra_picture_remove:
+		case R.id.write_picture_remove:
 			removePicture();
 			break;
 		case R.id.button_draft:
@@ -443,12 +430,10 @@ public class WritePage extends BaseActivity {
 
 	private void doSaveDrafts() {
 		Draft d = new Draft();
-		d.type=type;
+		d.type = type;
 		d.text = content;
 		d.filePath = photo == null ? "" : photo.toString();
-		if(status!=null&&type==TYPE_REPLY){
-			d.replyTo=status.id;
-		}
+		d.replyTo = inReplyToStatusId;
 		getContentResolver().insert(DraftInfo.CONTENT_URI, d.toContentValues());
 	}
 
@@ -456,7 +441,6 @@ public class WritePage extends BaseActivity {
 		hidePreview();
 		photo = null;
 		photoUri = null;
-
 	}
 
 	private void startCameraShot() {
@@ -509,7 +493,7 @@ public class WritePage extends BaseActivity {
 		Selection.setSelection(editable, editable.length());
 	}
 
-	private void send() {
+	private void doSend() {
 		if (wordsCount < 1) {
 			Utils.notify(this, "消息内容不能为空");
 			return;
@@ -532,7 +516,7 @@ public class WritePage extends BaseActivity {
 		i.putExtra(Commons.EXTRA_TEXT, content);
 		i.putExtra(Commons.EXTRA_FILE, photo);
 		i.putExtra(Commons.EXTRA_LOCATION, mLocationString);
-		i.putExtra(Commons.EXTRA_STATUS, status);
+		i.putExtra(Commons.EXTRA_IN_REPLY_TO_ID, inReplyToStatusId);
 		if (App.DEBUG) {
 			log("intent=" + i);
 		}

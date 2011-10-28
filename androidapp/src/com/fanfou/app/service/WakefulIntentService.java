@@ -4,6 +4,11 @@ import android.app.IntentService;
 import android.content.Context;
 import android.os.PowerManager;
 
+/**
+ * @author mcxiaoke
+ * @version 1.0 2011.09.20
+ *
+ */
 public abstract class WakefulIntentService extends IntentService {
 	private static final String TAG = WakefulIntentService.class
 			.getSimpleName();
