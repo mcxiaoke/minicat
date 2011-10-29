@@ -1,7 +1,6 @@
 package net.londatiga.android;
 
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 
 import android.view.LayoutInflater;
@@ -72,7 +71,7 @@ public class PopupWindows {
 	
 		onShow();
 
-		if (mBackground == null)
+		if (mBackground == null) 
 			mWindow.setBackgroundDrawable(new BitmapDrawable());
 		else 
 			mWindow.setBackgroundDrawable(mBackground);
@@ -93,15 +92,6 @@ public class PopupWindows {
 	 */
 	public void setBackgroundDrawable(Drawable background) {
 		mBackground = background;
-	}
-	
-	public void setBackgroundResource(int resId){
-		mBackground=mContext.getResources().getDrawable(resId);
-	}
-	
-	//add by mcxiaoke 
-	public void setBackgroundColor(int color){
-		mBackground=new ColorDrawable(color);
 	}
 
 	/**

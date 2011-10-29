@@ -55,13 +55,14 @@ import com.fanfou.app.update.AutoUpdateManager;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.05.05
+ * @version 2.0 2011.10.29
  * 
  */
 public final class NetworkHelper {
 
 	public static final int SOCKET_BUFFER_SIZE = 8192;
-	public static final int CONNECTION_TIMEOUT_MS = 20000;
-	public static final int SOCKET_TIMEOUT_MS = 20000;
+	public static final int CONNECTION_TIMEOUT_MS = 5000;
+	public static final int SOCKET_TIMEOUT_MS = 10000;
 
 	public static HttpURLConnection newHttpURLConnection(ApnType apnType,
 			String url) throws IOException {
@@ -128,55 +129,6 @@ public final class NetworkHelper {
 			return domain;
 		}
 	}
-
-	private static final int SECOND_IN_MILLIS = (int) DateUtils.SECOND_IN_MILLIS;
-	private static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
-	private static final String ENCODING_GZIP = "gzip";
-
-	public static HttpClient getHttpClient(Context context) {
-		final HttpParams params = new BasicHttpParams();
-
-		// Use generous timeouts for slow mobile networks
-		HttpConnectionParams
-				.setConnectionTimeout(params, 20 * SECOND_IN_MILLIS);
-		HttpConnectionParams.setSoTimeout(params, 20 * SECOND_IN_MILLIS);
-
-		HttpConnectionParams.setSocketBufferSize(params, 8192);
-		HttpProtocolParams.setUserAgent(params, buildUserAgent(context));
-
-		final DefaultHttpClient client = new DefaultHttpClient(params);
-
-		client.addRequestInterceptor(new HttpRequestInterceptor() {
-			@Override
-			public void process(HttpRequest request, HttpContext context) {
-				// Add header to accept gzip content
-				if (!request.containsHeader(HEADER_ACCEPT_ENCODING)) {
-					request.addHeader(HEADER_ACCEPT_ENCODING, ENCODING_GZIP);
-				}
-			}
-		});
-
-		client.addResponseInterceptor(new HttpResponseInterceptor() {
-			@Override
-			public void process(HttpResponse response, HttpContext context) {
-				// Inflate any responses compressed with gzip
-				final HttpEntity entity = response.getEntity();
-				final Header encoding = entity.getContentEncoding();
-				if (encoding != null) {
-					for (HeaderElement element : encoding.getElements()) {
-						if (element.getName().equalsIgnoreCase(ENCODING_GZIP)) {
-							response.setEntity(new InflatingEntity(response
-									.getEntity()));
-							break;
-						}
-					}
-				}
-			}
-		});
-
-		return client;
-	}
-
 	/**
 	 * Build and return a user-agent string that can identify this application
 	 * to remote servers. Contains the package name and version code.
@@ -192,26 +144,6 @@ public final class NetworkHelper {
 					+ info.versionCode + ") (gzip)";
 		} catch (NameNotFoundException e) {
 			return null;
-		}
-	}
-
-	/**
-	 * Simple {@link HttpEntityWrapper} that inflates the wrapped
-	 * {@link HttpEntity} by passing it through {@link GZIPInputStream}.
-	 */
-	private static class InflatingEntity extends HttpEntityWrapper {
-		public InflatingEntity(HttpEntity wrapped) {
-			super(wrapped);
-		}
-
-		@Override
-		public InputStream getContent() throws IOException {
-			return new GZIPInputStream(wrappedEntity.getContent());
-		}
-
-		@Override
-		public long getContentLength() {
-			return -1;
 		}
 	}
 
@@ -271,6 +203,7 @@ public final class NetworkHelper {
 		};
 		HttpParams params = new BasicHttpParams();
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+//		ConnManagerParams.setTimeout(params, CONNECTION_TIMEOUT_MS);
 		ConnManagerParams.setMaxConnectionsPerRoute(params, connPerRoute);
 		HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
 		HttpConnectionParams

@@ -22,42 +22,37 @@ import com.fanfou.app.dialog.ConfirmDialog;
  * @version 1.1 2011.10.25
  * @version 1.2 2011.10.27
  * @version 1.3 2011.10.28
+ * @version 2.0 2011.10.29
  * 
  */
 public final class UIManager {
+	public static final int QUICK_ACTION_ID_REPLY = 0;
+	public static final int QUICK_ACTION_ID_DELETE = 1;
+	public static final int QUICK_ACTION_ID_FAVORITE = 2;
+	public static final int QUICK_ACTION_ID_UNFAVORITE = 3;
+	public static final int QUICK_ACTION_ID_RETWEET = 4;
+	public static final int QUICK_ACTION_ID_SHARE = 5;
+	public static final int QUICK_ACTION_ID_PROFILE = 6;
 
 	public static QuickAction makePopup(Context context, final Status status) {
-		ActionItem reply = new ActionItem();
-		reply.setIcon(context.getResources()
-				.getDrawable(R.drawable.i_pop_reply));
+		ActionItem reply = new ActionItem(QUICK_ACTION_ID_REPLY, "回复",null);
 
-		ActionItem delete = new ActionItem();
-		delete.setIcon(context.getResources().getDrawable(
-				R.drawable.i_pop_delete));
+		ActionItem delete = new ActionItem(QUICK_ACTION_ID_DELETE, "删除",null);
 
-		ActionItem favorite = new ActionItem();
-		favorite.setIcon(context.getResources().getDrawable(
-				R.drawable.i_pop_favorite));
+		ActionItem favorite = new ActionItem(QUICK_ACTION_ID_FAVORITE, "收藏",null);
 
-		ActionItem unfavorite = new ActionItem();
-		unfavorite.setIcon(context.getResources().getDrawable(
-				R.drawable.i_pop_unfavorite));
+		ActionItem unfavorite = new ActionItem(QUICK_ACTION_ID_UNFAVORITE,
+				"取消", null);
 
-		ActionItem retweet = new ActionItem();
-		retweet.setIcon(context.getResources().getDrawable(
-				R.drawable.i_pop_retweet));
+		ActionItem retweet = new ActionItem(QUICK_ACTION_ID_RETWEET, "转发",null);
 
-		ActionItem share = new ActionItem();
-		share.setIcon(context.getResources()
-				.getDrawable(R.drawable.i_pop_share));
+		ActionItem share = new ActionItem(QUICK_ACTION_ID_SHARE, "分享",null);
 
-		ActionItem profile = new ActionItem();
-		profile.setIcon(context.getResources().getDrawable(
-				R.drawable.i_pop_profile));
+		ActionItem profile = new ActionItem(QUICK_ACTION_ID_PROFILE, "空间",null);
 
 		final boolean me = status.userId.equals(App.me.userId);
 
-		final QuickAction q = new QuickAction(context);
+		final QuickAction q = new QuickAction(context, QuickAction.HORIZONTAL);
 		q.addActionItem(me ? delete : reply);
 		q.addActionItem(status.favorited ? unfavorite : favorite);
 		q.addActionItem(retweet);
@@ -75,7 +70,7 @@ public final class UIManager {
 		q.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {
 
 			@Override
-			public void onItemClick(int pos) {
+			public void onItemClick(QuickAction source, int pos, int actionId) {
 				switch (pos) {
 				case 0:
 					if (s.userId.equals(App.me.userId)) {
@@ -110,7 +105,9 @@ public final class UIManager {
 				}
 			}
 		});
+		
 		q.show(v);
+		q.setAnimStyle(QuickAction.ANIM_REFLECT);
 	}
 
 	public static void showPopup(final Activity a, final Cursor c,
@@ -121,7 +118,7 @@ public final class UIManager {
 		q.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {
 
 			@Override
-			public void onItemClick(int pos) {
+			public void onItemClick(QuickAction source, int pos, int actionId) {
 				switch (pos) {
 				case 0:
 					if (s.userId.equals(App.me.userId)) {

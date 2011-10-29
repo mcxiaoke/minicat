@@ -115,7 +115,7 @@ public class SearchResultsAdapter extends BaseArrayAdapter<Status> {
 			while(m.find()){
 				int start=m.start();
 				int end=m.end();
-				span.setSpan(new ForegroundColorSpan(Color.BLUE), start, end,
+				span.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.profile_relation_blue)), start, end,
 						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				span.setSpan(new StyleSpan(Typeface.BOLD), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			}		

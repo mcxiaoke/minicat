@@ -41,6 +41,7 @@ import com.fanfou.app.App;
  * @author mcxiaoke
  * @version 1.0 2011.06.05
  * @version 2.0 2011.09.23
+ * @version 2.5 2011.10.29
  * 
  */
 final public class ImageHelper {
@@ -75,7 +76,7 @@ final public class ImageHelper {
 	private static final int SHADOW_COLOR = 0x99000000;
 	private static final Paint SHADOW_PAINT = new Paint();
 
-	private static final float PHOTO_BORDER_WIDTH = 3.0f;
+	private static final float PHOTO_BORDER_WIDTH = 4.0f;
 	private static final int PHOTO_BORDER_COLOR = 0xffffffff;
 
 	private static final float ROTATION_ANGLE_MIN = 2.5f;
@@ -254,8 +255,9 @@ final public class ImageHelper {
 			input = context.getContentResolver().openInputStream(uri);
 
 			Bitmap src = BitmapFactory.decodeStream(input, null, options);
-			Bitmap bitmap = Bitmap
-					.createScaledBitmap(src, width, height, false);
+//			Bitmap bitmap = Bitmap
+//					.createScaledBitmap(src, width, height, false);
+			Bitmap bitmap=scaleBitmap(src, width, height);
 			src.recycle();
 			return bitmap;
 		} catch (IOException e) {
@@ -558,6 +560,7 @@ final public class ImageHelper {
 		return output;
 	}
 
+
 	/**
 	 * Rotate specified Bitmap by a random angle. The angle is either negative
 	 * or positive, and ranges, in degrees, from 2.5 to 8. After rotation a
@@ -623,7 +626,7 @@ final public class ImageHelper {
 	 * @return A scaled version of the original bitmap, whose dimension are less
 	 *         than or equal to the specified width and height.
 	 */
-	public static Bitmap scaleAndFrame(Bitmap bitmap, int width, int height) {
+	public static Bitmap scaleBitmap(final Bitmap bitmap, int width, int height) {
 		final int bitmapWidth = bitmap.getWidth();
 		final int bitmapHeight = bitmap.getHeight();
 
@@ -635,13 +638,6 @@ final public class ImageHelper {
 
 		final Bitmap decored = Bitmap.createScaledBitmap(bitmap, scaledWidth,
 				scaledHeight, true);
-		final Canvas canvas = new Canvas(decored);
-
-		final int offset = (int) (PHOTO_BORDER_WIDTH / 2);
-		sStrokePaint.setAntiAlias(false);
-		canvas.drawRect(offset, offset, scaledWidth - offset - 1, scaledHeight
-				- offset - 1, sStrokePaint);
-		sStrokePaint.setAntiAlias(true);
 		return decored;
 	}
 

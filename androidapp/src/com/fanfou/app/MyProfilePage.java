@@ -28,9 +28,10 @@ import com.fanfou.app.util.StringHelper;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.07.18
+ * @version 1.2 2011.10.29
  * 
  */
-public class MyProfilePage extends BaseActivity implements Action {
+public class MyProfilePage extends BaseActivity {
 
 	private ScrollView mScrollView;
 	private View mEmptyView;
@@ -62,6 +63,7 @@ public class MyProfilePage extends BaseActivity implements Action {
 	private IImageLoader mLoader;
 
 	private boolean isInitialized = false;
+	private boolean isBusy = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +137,7 @@ public class MyProfilePage extends BaseActivity implements Action {
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("我的空间");
-		mActionBar.setRightAction(this);
+		mActionBar.setRefreshEnabled(this);
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
 	}
 
@@ -230,6 +232,9 @@ public class MyProfilePage extends BaseActivity implements Action {
 		intent.putExtra(Commons.EXTRA_ID, userId);// 如果只传了ID就用这个
 		intent.putExtra(Commons.EXTRA_RECEIVER, receiver);
 		startService(intent);
+		if (isInitialized) {
+			startRefreshAnimation();
+		}
 	}
 
 	@Override
@@ -254,7 +259,31 @@ public class MyProfilePage extends BaseActivity implements Action {
 		default:
 			break;
 		}
+		
+	}
+	
+	@Override
+	public void onRefreshClick() {
+		if (isBusy) {
+			return;
+		}
+		doRefresh();
+	}
 
+	private synchronized void setBusy(boolean busy) {
+		isBusy = busy;
+	}
+
+	@Override
+	protected void startRefreshAnimation() {
+		setBusy(true);
+		mActionBar.startAnimation();
+	}
+
+	@Override
+	protected void stopRefreshAnimation() {
+		setBusy(false);
+		mActionBar.stopAnimation();
 	}
 
 	private class MyResultReceiver extends ResultReceiver {
@@ -282,10 +311,17 @@ public class MyProfilePage extends BaseActivity implements Action {
 					if (type == Commons.ACTION_USER_SHOW) {
 						log("show result=" + user.id);
 						updateUI();
+						if (isInitialized) {
+							stopRefreshAnimation();
+						}
 					}
 				}
 				break;
 			case Commons.RESULT_CODE_ERROR:
+				int type = resultData.getInt(Commons.EXTRA_TYPE);
+				if (type == Commons.ACTION_USER_SHOW) {
+					stopRefreshAnimation();
+				}
 				String msg = resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
 				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
 				log("result error");
@@ -301,21 +337,6 @@ public class MyProfilePage extends BaseActivity implements Action {
 
 	private void log(String message) {
 		Log.d(tag, message);
-	}
-
-	@Override
-	public int getDrawable() {
-		return R.drawable.i_write;
-	}
-
-	@Override
-	public void performAction(View view) {
-		Intent intent = new Intent(this, WritePage.class);
-		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
-		if (user != null) {
-			intent.putExtra(Commons.EXTRA_TEXT, "@" + user.name + " "); // 此时设置会报空指针
-		}
-		startActivity(intent);
 	}
 
 }

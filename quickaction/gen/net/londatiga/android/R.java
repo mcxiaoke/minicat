@@ -31,10 +31,17 @@ public final class R {
     public static final class drawable {
         public static int action_item_btn=0x7f020000;
         public static int action_item_selected=0x7f020001;
-        public static int down=0x7f020002;
-        public static int icon=0x7f020003;
-        public static int pop=0x7f020004;
-        public static int up=0x7f020005;
+        public static int arrow_down=0x7f020002;
+        public static int arrow_up=0x7f020003;
+        public static int icon=0x7f020004;
+        public static int menu_cancel=0x7f020005;
+        public static int menu_down_arrow=0x7f020006;
+        public static int menu_eraser=0x7f020007;
+        public static int menu_info=0x7f020008;
+        public static int menu_ok=0x7f020009;
+        public static int menu_search=0x7f02000a;
+        public static int menu_up_arrow=0x7f02000b;
+        public static int popup=0x7f02000c;
     }
     public static final class id {
         public static int arrow_down=0x7f070008;
@@ -48,9 +55,12 @@ public final class R {
         public static int tv_title=0x7f070001;
     }
     public static final class layout {
-        public static int action_item=0x7f030000;
-        public static int main=0x7f030001;
-        public static int popup=0x7f030002;
+        public static int action_item_horizontal=0x7f030000;
+        public static int action_item_vertical=0x7f030001;
+        public static int horiz_separator=0x7f030002;
+        public static int main=0x7f030003;
+        public static int popup_horizontal=0x7f030004;
+        public static int popup_vertical=0x7f030005;
     }
     public static final class string {
         public static int app_name=0x7f050001;

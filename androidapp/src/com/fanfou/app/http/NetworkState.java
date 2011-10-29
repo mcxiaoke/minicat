@@ -33,7 +33,7 @@ public class NetworkState {
 	 *            调试信息内容
 	 */
 	private void log(String message) {
-		Log.e(tag, message);
+		Log.d(tag, message);
 	}
 
 	/**

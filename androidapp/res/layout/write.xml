@@ -1,60 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:orientation="vertical" android:background="@drawable/bg">
+	android:background="@drawable/bg" android:orientation="vertical">
 
 	<com.fanfou.app.ui.ActionBar android:id="@id/actionbar"
 		style="@style/ActionBar" />
 
 	<ScrollView android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:scrollbars="none">
+
 		<LinearLayout android:layout_width="fill_parent"
-			android:layout_height="fill_parent" android:orientation="vertical"
-			android:background="@drawable/bg">
+			android:layout_height="fill_parent" android:background="@drawable/bg"
+			android:orientation="vertical">
 
 			<com.fanfou.app.ui.widget.MyAutoCompleteTextView
 				android:id="@id/write_text" android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:background="@drawable/input_bg"
-				android:gravity="top|left" android:padding="10dp" android:minLines="5"
-				android:layout_margin="2dp" android:singleLine="false"
-				android:maxLines="7" android:layout_weight="1" android:maxLength="150" />
+				android:layout_height="wrap_content" android:layout_margin="2dp"
+				android:layout_weight="1" android:background="@drawable/input_bg"
+				android:gravity="top|left" android:maxLength="150" android:maxLines="7"
+				android:minLines="5" android:padding="10dp" android:singleLine="false" />
 
 			<RelativeLayout android:id="@id/write_extras"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:layout_below="@id/write_text" android:layout_marginLeft="8dp"
-				android:layout_marginRight="8dp" android:layout_marginBottom="6dp">
+				android:layout_below="@id/write_text" android:layout_marginBottom="6dp"
+				android:layout_marginLeft="8dp" android:layout_marginRight="8dp">
 
-				<Button style="@style/Button.Blue2" android:id="@+id/button_draft"
-					android:text="草稿箱" android:layout_alignParentTop="true"/>
-
-				<TextView android:id="@id/write_extra_words"
-					android:layout_alignParentRight="true" style="@style/Text.Count" android:gravity="right|center_vertical" />
-
+				<TextView android:id="@id/write_extra_words" style="@style/Text.Count"
+					android:layout_alignParentRight="true" android:gravity="right|center_vertical" />
 			</RelativeLayout>
 
 			<ImageView android:layout_width="fill_parent"
-				android:layout_height="2dp" android:background="@drawable/separator"
-				android:layout_marginLeft="4dp" android:layout_marginRight="4dp" />
+				android:layout_height="2dp" android:layout_marginLeft="4dp"
+				android:layout_marginRight="4dp" android:background="@drawable/separator" />
 
 			<LinearLayout android:id="@id/write_actions"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:orientation="horizontal" android:padding="4dp">
 
-				<ImageView android:id="@id/write_action_at" android:src="@drawable/i_bar_at"
-					android:layout_weight="1" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" />
+				<ImageView android:id="@id/write_action_at"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:layout_weight="1" android:src="@drawable/i_bar_at" />
+
+				<ImageView android:id="@id/write_action_draft"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:layout_weight="1" android:src="@drawable/i_bar_draft" />
 
 				<ImageView android:id="@id/write_action_location"
-					android:layout_weight="1" android:src="@drawable/i_bar_location_off"
-					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:layout_weight="1" android:src="@drawable/i_bar_location_off" />
 
 				<ImageView android:id="@id/write_action_gallery"
-					android:layout_weight="1" android:src="@drawable/i_bar_picture"
-					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:layout_weight="1" android:src="@drawable/i_bar_picture" />
 
 				<ImageView android:id="@id/write_action_camera"
-					android:layout_weight="1" android:src="@drawable/i_bar_camera"
-					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:layout_weight="1" android:src="@drawable/i_bar_camera" />
 
 			</LinearLayout>
 
@@ -65,23 +66,21 @@
 
 				<ImageView android:id="@+id/write_separator2"
 					android:layout_width="fill_parent" android:layout_height="2dp"
-					android:background="@drawable/separator"
-					android:layout_alignParentTop="true" android:layout_marginLeft="4dp"
-					android:layout_marginRight="4dp" android:layout_marginBottom="10dp" />
+					android:layout_alignParentTop="true" android:layout_marginBottom="10dp"
+					android:layout_marginLeft="4dp" android:layout_marginRight="4dp"
+					android:background="@drawable/separator" />
 
 				<ImageView android:id="@id/write_picture_prieview"
 					android:layout_width="wrap_content" android:layout_height="wrap_content"
-					android:layout_centerInParent="true" android:layout_below="@id/write_separator2"
-					android:layout_margin="8dp" />
+					android:layout_below="@id/write_separator2"
+					android:layout_centerInParent="true" android:layout_margin="8dp" />
 
 				<ImageView android:id="@id/write_picture_remove"
-					android:src="@drawable/i_close" android:layout_toRightOf="@id/write_picture_prieview"
 					android:layout_width="wrap_content" android:layout_height="wrap_content"
-					android:padding="8dp" android:layout_centerVertical="true" />
-
+					android:layout_centerVertical="true" android:layout_toRightOf="@id/write_picture_prieview"
+					android:padding="8dp" android:src="@drawable/i_close" />
 			</RelativeLayout>
 		</LinearLayout>
-
 	</ScrollView>
 
 </LinearLayout>

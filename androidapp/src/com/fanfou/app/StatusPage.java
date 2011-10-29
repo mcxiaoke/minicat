@@ -37,6 +37,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.0 2011.10.25
  * @version 2.1 2011.10.26
  * @version 2.2 2011.10.28
+ * @version 2.3 2011.10.29
  * 
  */
 public class StatusPage extends BaseActivity {
@@ -129,7 +130,6 @@ public class StatusPage extends BaseActivity {
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("消息");
-
 		Intent intent = new Intent(this, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_REPLY);
 		intent.putExtra(Commons.EXTRA_STATUS, status);
@@ -172,7 +172,6 @@ public class StatusPage extends BaseActivity {
 
 	private void updateUI() {
 		if (status != null) {
-
 			boolean textMode = OptionHelper.readBoolean(this,
 					R.string.option_text_mode, false);
 			if (textMode) {

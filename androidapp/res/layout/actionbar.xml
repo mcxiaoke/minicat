@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="@dimen/actionbar_height"
-	android:background="@drawable/actionbar_bg" >
+	android:background="@drawable/actionbar_bg">
 
 	<ImageView android:id="@id/actionbar_left"
 		android:layout_marginLeft="3dp" android:layout_centerVertical="true"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:layout_alignParentLeft="true" />
 
-	<TextView
-		android:id="@id/actionbar_title"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_centerInParent="true"
-		android:ellipsize="marquee"
-		android:gravity="center"
-		android:paddingLeft="10dp"
-		android:paddingRight="10dp"
-		android:textColor="@color/solid_white"
-		android:textSize="@dimen/text_size_large" />
+	<!-- <TextView android:id="@id/actionbar_title" android:layout_width="wrap_content" 
+		android:layout_height="wrap_content" android:layout_toRightOf="@id/actionbar_left" 
+		android:layout_toLeftOf="@id/actionbar_refresh" android:layout_centerVertical="true" 
+		android:gravity="center" android:paddingLeft="6dp" android:paddingRight="6dp" 
+		android:textColor="@color/solid_white" android:textSize="@dimen/text_size_large" 
+		android:singleLine="true" android:ellipsize="marquee" android:marqueeRepeatLimit="marquee_forever" 
+		android:focusable="true" android:focusableInTouchMode="true" android:scrollHorizontally="true" 
+		/> -->
+
+	<com.fanfou.app.ui.widget.ScrollingTextView
+		android:id="@id/actionbar_title" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_toRightOf="@id/actionbar_left"
+		android:layout_toLeftOf="@id/actionbar_refresh"
+		android:layout_centerVertical="true" android:ellipsize="marquee"
+		android:gravity="center" android:paddingLeft="6dp"
+		android:paddingRight="6dp" android:textColor="@color/solid_white"
+		android:textSize="@dimen/text_size_large" android:singleLine="true" />
 
 	<ImageView android:id="@id/actionbar_refresh"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"

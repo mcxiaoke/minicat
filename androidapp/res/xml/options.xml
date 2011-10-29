@@ -54,10 +54,22 @@
 	</PreferenceScreen>
 
 	<PreferenceCategory android:title="界面">
+	    
+	    <CheckBoxPreference android:defaultValue="false"
+			android:key="@string/option_force_fullscreen" android:summary="隐藏系统状态栏"
+			android:title="全屏显示" />
+
+		<CheckBoxPreference android:defaultValue="false"
+			android:key="@string/option_force_portrait" android:summary="强制竖屏显示"
+			android:title="锁定竖屏" />
 
 		<CheckBoxPreference android:defaultValue="false"
 			android:key="@string/option_text_mode" android:summary="文本模式，不显示头像和图片"
 			android:title="文本模式" />
+
+		<CheckBoxPreference android:defaultValue="true"
+			android:key="@string/option_fetch_relationships" android:summary="个人页面显示对方是否关注你"
+			android:title="显示好友关系" />
 
 		<ListPreference android:defaultValue="15"
 			android:dialogTitle="选择消息字体大小" android:entries="@array/font_size"
@@ -81,39 +93,27 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory android:title="功能">
+	    
+	    <CheckBoxPreference android:defaultValue="false"
+			android:key="@string/option_refresh_on_open" android:summary="应用启动时刷新时间线"
+			android:title="启动时刷新" />
 
-		<CheckBoxPreference android:defaultValue="false"
-			android:key="@string/option_force_portrait" android:summary="强制竖屏显示"
-			android:title="锁定竖屏" />
-
-		<CheckBoxPreference android:defaultValue="false"
-			android:key="@string/option_force_fullscreen" android:summary="隐藏系统状态栏"
-			android:title="全屏显示" />
-
-		<CheckBoxPreference android:defaultValue="false"
-			android:key="@string/option_confirm_on_exit" android:summary="退出客户端时需要确认"
-			android:title="退出确认" />
-		
 		<CheckBoxPreference android:defaultValue="false"
 			android:key="@string/option_refresh_after_send" android:summary="发消息成功后刷新时间线"
 			android:title="发消息后刷新" />
 
 		<CheckBoxPreference android:defaultValue="false"
-			android:key="@string/option_refresh_on_open" android:summary="应用启动时刷新时间线"
-			android:title="启动时刷新" />
+			android:key="@string/option_confirm_on_exit" android:summary="退出客户端时需要确认"
+			android:title="退出确认" />
 
 		<CheckBoxPreference android:defaultValue="true"
-			android:key="@string/option_fetch_relationships" android:summary="个人页面显示对方是否关注你"
-			android:title="显示好友关系" />
+			android:key="@string/option_autoupdate" android:summary="定时检测新版本"
+			android:title="自动升级" />
 
 		<ListPreference android:defaultValue="80"
 			android:dialogTitle="选择上传照片的质量" android:entries="@array/photo_quality"
 			android:entryValues="@array/photo_quality_values" android:key="@string/option_photo_quality"
 			android:summary="设置上传照片的质量" android:title="上传照片质量" />
-
-		<CheckBoxPreference android:defaultValue="true"
-			android:key="@string/option_autoupdate" android:summary="定时检测新版本"
-			android:title="自动升级" />
 
 		<com.fanfou.app.preferences.ClearDataDialogPreference
 			android:dialogMessage="是否要清空数据库中缓存的消息，私信和个人数据？（提示：客户端会自动清理过旧的数据，不建议手动清空）"
@@ -126,9 +126,8 @@
 			android:dialogTitle="清空图片缓存" android:key="@string/option_cleanpic"
 			android:negativeButtonText="取消" android:positiveButtonText="确定"
 			android:summary="清空存储卡中缓存的图片" android:title="清空图片缓存" />
-		
-		
-		<com.fanfou.app.preferences.ResetAppDialogPreference 
+
+		<com.fanfou.app.preferences.ResetAppDialogPreference
 			android:dialogMessage="是否要重置所有数据？（此操作会清空所有个人设置，图片缓存和数据库）"
 			android:dialogTitle="重置数据" android:key="@string/option_clear_data_and_settings"
 			android:negativeButtonText="取消" android:positiveButtonText="确定"
@@ -137,12 +136,8 @@
 
 	<PreferenceCategory android:title="信息">
 
-<!-- 		<com.fanfou.app.preferences.LogoutDialogPreference
-			android:dialogMessage="是否要注销当前帐号，重新登录？" android:dialogTitle="注销登录"
-			android:key="@string/option_logout" android:negativeButtonText="取消"
-			android:positiveButtonText="确定" android:summary="注销当前帐号，重新登录"
-			android:title="注销登录" /> -->
-			<Preference android:key="@string/option_current_account" android:title="当前帐号" />
+		<Preference android:key="@string/option_current_account"
+			android:title="当前帐号" />
 
 		<Preference android:key="@string/option_check_update"
 			android:summary="联网检测是否有新版本" android:title="软件升级" />

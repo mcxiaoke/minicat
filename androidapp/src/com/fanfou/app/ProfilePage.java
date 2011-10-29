@@ -38,6 +38,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.1 2011.10.25
  * @version 1.2 2011.10.27
  * @version 1.3 2011.10.28
+ * @version 1.4 2011.10.29
  * 
  */
 public class ProfilePage extends BaseActivity {
@@ -214,14 +215,8 @@ public class ProfilePage extends BaseActivity {
 			return;
 		}
 		noPermission = !user.following && user.protect;
-
-		if (user.gender.equals("男")) {
-			mActionBar.setTitle("他的空间");
-		} else if (user.gender.equals("女")) {
-			mActionBar.setTitle("她的空间");
-		} else {
-			mActionBar.setTitle("TA的空间");
-		}
+		mActionBar.setTitle(user.screenName+"的空间");
+		
 		if (App.DEBUG)
 			log("updateUI user.name=" + user.screenName);
 
@@ -494,7 +489,7 @@ public class ProfilePage extends BaseActivity {
 	private static final String tag = ProfilePage.class.getSimpleName();
 
 	private void log(String message) {
-		Log.i(tag, message);
+		Log.d(tag, message);
 	}
 
 }

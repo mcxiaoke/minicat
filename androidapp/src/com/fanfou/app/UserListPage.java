@@ -30,10 +30,11 @@ import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
+ * @version 1.0 2011.06.10
+ * @version 1.5 2011.10.29
  * 
  */
-public class UserListPage extends BaseActivity implements OnRefreshListener,
-		Action {
+public class UserListPage extends BaseActivity implements OnRefreshListener{
 
 	protected ActionBar mActionBar;
 	protected EndlessListView mListView;
@@ -131,23 +132,15 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	 */
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-
-		String title = "TA";
+		
 		if(user!=null){
-			if(user.gender.equals("男")){
-				title = "他";
-			}else if(user.gender.equals("女")){
-				title = "她";
+			if (type == User.TYPE_FRIENDS) {
+				mActionBar.setTitle(user.screenName + "关注的人");
+			} else if (type == User.TYPE_FOLLOWERS) {
+				mActionBar.setTitle("关注" + user.screenName + "的人");
 			}
 		}
-		
-		if (type == User.TYPE_FRIENDS) {
-			mActionBar.setTitle(title + "关注的人");
-		} else if (type == User.TYPE_FOLLOWERS) {
-			mActionBar.setTitle("关注" + title + "的人");
-		}
 
-		mActionBar.setRightAction(this);
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
 	}
 
@@ -307,20 +300,4 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 			ActionManager.doProfile(mContext, u);
 		}
 	}
-
-	@Override
-	public int getDrawable() {
-		return R.drawable.i_write;
-	}
-
-	@Override
-	public void performAction(View view) {
-		Intent intent = new Intent(this, WritePage.class);
-		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
-		if (user != null) {
-			intent.putExtra(Commons.EXTRA_TEXT, "@" + user.name + " "); // 此时设置会报空指针
-		}
-		startActivity(intent);
-	}
-
 }

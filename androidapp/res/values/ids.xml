@@ -56,6 +56,7 @@
 	<item type="id" name="write_actions" />
 	<item type="id" name="write_action_back" />
 	<item type="id" name="write_action_at" />
+	<item type="id" name="write_action_draft" />
 	<item type="id" name="write_action_location" />
 	<item type="id" name="write_action_gallery" />
 	<item type="id" name="write_action_camera" />

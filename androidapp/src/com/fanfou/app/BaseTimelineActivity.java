@@ -34,6 +34,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.0 2011.10.19
  * @version 3.0 2011.10.21
  * @version 3.1 2011.10.24
+ * @version 3.2 2011.10.29
  * 
  */
 public abstract class BaseTimelineActivity extends BaseActivity implements
@@ -121,17 +122,10 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 		mActionBar.setTitleClickListener(this);
 		mActionBar.setRightAction(this);
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
-		
-		
-		String title="TA的";
-		if(user!=null){
-			if(user.gender.equals("男")){
-				title = "他的";
-			}else if(user.gender.equals("女")){
-				title = "她的";
-			}
+
+		if (user != null) {
+			mActionBar.setTitle(user.screenName + "的" + getPageTitle());
 		}
-		mActionBar.setTitle(title + getPageTitle());
 	}
 
 	protected boolean parseIntent() {

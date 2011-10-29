@@ -51,6 +51,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.1 2011.10.26
  * @version 3.0 2011.10.27
  * @version 3.1 2011.10.28
+ * @version 3.2 2011.10.29
  * 
  */
 public class WritePage extends BaseActivity {
@@ -75,11 +76,10 @@ public class WritePage extends BaseActivity {
 	private TextView tWordsCount;
 
 	private ImageView iAtIcon;
+	private ImageView iDraftIcon;
 	private ImageView iLocationIcon;
 	private ImageView iGalleryIcon;
 	private ImageView iCameraIcon;
-
-	private Button mButtonDraft;
 
 	private Uri photoUri;
 	private File photo;
@@ -262,8 +262,8 @@ public class WritePage extends BaseActivity {
 		if (photoUri != null) {
 			showPreview();
 		}
-		
-		if(draftId>=0){
+
+		if (draftId >= 0) {
 			getContentResolver().delete(
 					ContentUris.withAppendedId(DraftInfo.CONTENT_URI, draftId),
 					null, null);
@@ -331,11 +331,13 @@ public class WritePage extends BaseActivity {
 		tWordsCount = (TextView) findViewById(R.id.write_extra_words);
 
 		iAtIcon = (ImageView) findViewById(R.id.write_action_at);
+		iDraftIcon = (ImageView) findViewById(R.id.write_action_draft);
 		iLocationIcon = (ImageView) findViewById(R.id.write_action_location);
 		iGalleryIcon = (ImageView) findViewById(R.id.write_action_gallery);
 		iCameraIcon = (ImageView) findViewById(R.id.write_action_camera);
 
 		iAtIcon.setOnClickListener(this);
+		iDraftIcon.setOnClickListener(this);
 		iLocationIcon.setOnClickListener(this);
 		iGalleryIcon.setOnClickListener(this);
 		iCameraIcon.setOnClickListener(this);
@@ -345,9 +347,6 @@ public class WritePage extends BaseActivity {
 		iLocationIcon
 				.setImageResource(enableLocation ? R.drawable.i_bar_location_on
 						: R.drawable.i_bar_location_off);
-
-		mButtonDraft = (Button) findViewById(R.id.button_draft);
-		mButtonDraft.setOnClickListener(this);
 
 	}
 
@@ -385,6 +384,9 @@ public class WritePage extends BaseActivity {
 		case R.id.write_action_at:
 			startAddUsername();
 			break;
+		case R.id.write_action_draft:
+			ActionManager.doShowDrafts(this);
+			break;
 		case R.id.write_action_location:
 			switchGeoStatus();
 			break;
@@ -396,9 +398,6 @@ public class WritePage extends BaseActivity {
 			break;
 		case R.id.write_picture_remove:
 			removePicture();
-			break;
-		case R.id.button_draft:
-			ActionManager.doShowDrafts(this);
 			break;
 		default:
 			break;
