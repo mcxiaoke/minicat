@@ -60,9 +60,9 @@ import com.fanfou.app.update.AutoUpdateManager;
  */
 public final class NetworkHelper {
 
-	public static final int SOCKET_BUFFER_SIZE = 8192;
+	public static final int SOCKET_BUFFER_SIZE = 2048;
 	public static final int CONNECTION_TIMEOUT_MS = 5000;
-	public static final int SOCKET_TIMEOUT_MS = 10000;
+	public static final int SOCKET_TIMEOUT_MS = 15000;
 
 	public static HttpURLConnection newHttpURLConnection(ApnType apnType,
 			String url) throws IOException {

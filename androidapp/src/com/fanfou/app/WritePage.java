@@ -178,8 +178,12 @@ public class WritePage extends BaseActivity {
 		final int size = new Float(getResources().getDimension(
 				R.dimen.photo_preview_width)).intValue();
 		mPictureView.setVisibility(View.VISIBLE);
-		iPicturePrieview.setImageBitmap(ImageHelper.getRoundedCornerBitmap(
-				ImageHelper.getThumb(this, photoUri, size, size), 6));
+		try {
+			iPicturePrieview.setImageBitmap(ImageHelper.getRoundedCornerBitmap(
+					ImageHelper.resampleImage(photo, size), 6));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void hidePreview() {
@@ -343,8 +347,8 @@ public class WritePage extends BaseActivity {
 		iPictureRemove.setOnClickListener(this);
 
 		iLocationIcon
-				.setImageResource(enableLocation ? R.drawable.i_bar_location_on
-						: R.drawable.i_bar_location_off);
+				.setImageResource(enableLocation ? R.drawable.toolbar_geo_on
+						: R.drawable.toolbar_geo_off);
 
 	}
 
@@ -472,11 +476,11 @@ public class WritePage extends BaseActivity {
 			log("location enable status=" + enableLocation);
 		if (enableLocation) {
 
-			iLocationIcon.setImageResource(R.drawable.i_bar_location_on);
+			iLocationIcon.setImageResource(R.drawable.toolbar_geo_on);
 			mLocationManager.requestLocationUpdates(
 					LocationManager.NETWORK_PROVIDER, 0, 0, mLocationMonitor);
 		} else {
-			iLocationIcon.setImageResource(R.drawable.i_bar_location_off);
+			iLocationIcon.setImageResource(R.drawable.toolbar_geo_off);
 			mLocationManager.removeUpdates(mLocationMonitor);
 		}
 	}

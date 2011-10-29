@@ -78,7 +78,7 @@ public class TaskQueueService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if(App.DEBUG){
+		if (App.DEBUG) {
 			log("onStartCommand");
 			IntentHelper.logIntent(TAG, intent);
 		}
@@ -176,13 +176,15 @@ public class TaskQueueService extends Service {
 			while (running.get()) {
 				final Draft d = queue.poll();
 				if (d != null) {
-					if(App.DEBUG){
-						log("Start sending draft: text="+d.text);
+					if (App.DEBUG) {
+						log("Start sending draft: text=" + d.text + " file="
+								+ d.filePath);
 					}
 					if (doSend(d)) {
 						deleteDraft(d.id);
-						if(App.DEBUG){
-							log("Send draft successful: id="+d.id+" text="+d.text);
+						if (App.DEBUG) {
+							log("Send draft successful: id=" + d.id + " text="
+									+ d.text + " filepath=" + d.filePath);
 						}
 					}
 				} else {
@@ -204,16 +206,16 @@ public class TaskQueueService extends Service {
 
 	private void onCommandReceived(Intent intent) {
 		int type = intent.getIntExtra(Commons.EXTRA_TYPE, TYPE_DEFAULT);
-		if(App.DEBUG){
-			log("onCommandReceived type="+type);
+		if (App.DEBUG) {
+			log("onCommandReceived type=" + type);
 		}
 		switch (type) {
 		case TYPE_DRAFTS_LIST:
-//			if(App.me.apnType==ApnType.NONE){
-//				stopSelf();
-//			}else{	
-				mExecutorService.submit(new DraftsTaskRunnable());
-//			}
+			// if(App.me.apnType==ApnType.NONE){
+			// stopSelf();
+			// }else{
+			mExecutorService.submit(new DraftsTaskRunnable());
+			// }
 			break;
 		default:
 			stopSelf();

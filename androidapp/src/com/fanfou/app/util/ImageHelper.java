@@ -5,9 +5,11 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Random;
 
 import android.content.ContentResolver;
@@ -27,12 +29,16 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.provider.BaseColumns;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Images.ImageColumns;
 import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
+import android.view.OrientationEventListener;
 import android.view.View;
 
 import com.fanfou.app.App;
@@ -41,7 +47,7 @@ import com.fanfou.app.App;
  * @author mcxiaoke
  * @version 1.0 2011.06.05
  * @version 2.0 2011.09.23
- * @version 2.5 2011.10.29
+ * @version 3.0 2011.10.29
  * 
  */
 final public class ImageHelper {
@@ -174,6 +180,39 @@ final public class ImageHelper {
 		return null;
 	}
 
+	// public static Bitmap resampleImage(String path, int maxDim)
+	// throws Exception {
+	//
+	// BitmapFactory.Options bfo = new BitmapFactory.Options();
+	// bfo.inJustDecodeBounds = true;
+	// BitmapFactory.decodeFile(path, bfo);
+	//
+	// BitmapFactory.Options optsDownSample = new BitmapFactory.Options();
+	// optsDownSample.inSampleSize = getClosestResampleSize(bfo.outWidth,
+	// bfo.outHeight, maxDim);
+	//
+	// Bitmap bmpt = BitmapFactory.decodeFile(path, optsDownSample);
+	//
+	// Matrix m = new Matrix();
+	//
+	// if (bmpt.getWidth() > maxDim || bmpt.getHeight() > maxDim) {
+	// BitmapFactory.Options optsScale = getResampling(bmpt.getWidth(),
+	// bmpt.getHeight(), maxDim);
+	// m.postScale((float) optsScale.outWidth / (float) bmpt.getWidth(),
+	// (float) optsScale.outHeight / (float) bmpt.getHeight());
+	// }
+	//
+	// int sdk = new Integer(Build.VERSION.SDK).intValue();
+	// if (sdk > 4) {
+	// int rotation = getExifOrientation(path);
+	// if (rotation != 0) {
+	// m.postRotate(rotation);
+	// }
+	// }
+	// return Bitmap.createBitmap(bmpt, 0, 0, bmpt.getWidth(),
+	// bmpt.getHeight(), m, true);
+	// }
+
 	public static Bitmap resizeBitmap(String filePath, int width, int height) {
 		Bitmap bitmap = null;
 		Options options = new Options();
@@ -204,67 +243,199 @@ final public class ImageHelper {
 		return bitmap;
 	}
 
-	public static Bitmap getThumb(File file, int size) {
-		InputStream input = null;
+	public static int roundOrientation(int orientationInput) {
+		// landscape mode
+		int orientation = orientationInput;
 
-		try {
-			input = new FileInputStream(file);
-			BitmapFactory.Options options = new BitmapFactory.Options();
-			options.inJustDecodeBounds = true;
-			BitmapFactory.decodeStream(input, null, options);
-			input.close();
-			int scale = 1;
-			while ((options.outWidth / scale > size)
-					|| (options.outHeight / scale > size)) {
-				scale *= 2;
-			}
-
-			options.inJustDecodeBounds = false;
-			options.inSampleSize = scale;
-
-			input = new FileInputStream(file);
-
-			return BitmapFactory.decodeStream(input, null, options);
-		} catch (IOException e) {
-			return null;
-		} finally {
-			if (input != null) {
-				try {
-					input.close();
-				} catch (IOException e) {
-				}
-			}
+		if (orientation == OrientationEventListener.ORIENTATION_UNKNOWN) {
+			orientation = 0;
 		}
+
+		orientation = orientation % 360;
+		int retVal;
+		if (orientation < (0 * 90) + 45) {
+			retVal = 0;
+		} else if (orientation < (1 * 90) + 45) {
+			retVal = 90;
+		} else if (orientation < (2 * 90) + 45) {
+			retVal = 180;
+		} else if (orientation < (3 * 90) + 45) {
+			retVal = 270;
+		} else {
+			retVal = 0;
+		}
+
+		return retVal;
 	}
 
-	public static Bitmap getThumb(Context context, Uri uri, int width,
-			int height) {
-		InputStream input = null;
-		try {
-			input = context.getContentResolver().openInputStream(uri);
-			BitmapFactory.Options options = new BitmapFactory.Options();
-			options.inJustDecodeBounds = true;
-			BitmapFactory.decodeStream(input, null, options);
-			input.close();
-			int scale = 1;
-			while ((options.outHeight / scale > height)) {
-				scale *= 2;
-			}
-			options.inJustDecodeBounds = false;
-			options.inSampleSize = scale;
-			input = context.getContentResolver().openInputStream(uri);
+	public static Uri insertImage(ContentResolver cr, File file, int degree) {
+		long size = file.length();
+		String name = file.getName();
+		ContentValues values = new ContentValues(9);
+		values.put(MediaColumns.TITLE, name);
+		values.put(MediaColumns.DISPLAY_NAME, name);
+		values.put(ImageColumns.DATE_TAKEN, System.currentTimeMillis());
+		values.put(MediaColumns.MIME_TYPE, "image/jpeg");
+		values.put(ImageColumns.ORIENTATION, degree);
+		values.put(MediaColumns.DATA, file.getAbsolutePath());
+		values.put(MediaColumns.SIZE, size);
+		// return cr.insert(STORAGE_URI, values);
+		return null;
+	}
 
-			Bitmap src = BitmapFactory.decodeStream(input, null, options);
-//			Bitmap bitmap = Bitmap
-//					.createScaledBitmap(src, width, height, false);
-			Bitmap bitmap=scaleBitmap(src, width, height);
-			src.recycle();
-			return bitmap;
-		} catch (IOException e) {
-			return null;
-		} finally {
-			IOHelper.forceClose(input);
+	public static Bitmap resampleImage(File file, int maxDim) throws Exception {
+		return resampleImage(file.getAbsolutePath(), maxDim);
+	}
+
+	public static Bitmap resampleImage(Context context, Uri uri, int maxDim)
+			throws Exception {
+		String path = IOHelper.getRealPathFromURI(context, uri);
+		return resampleImage(path, maxDim);
+	}
+
+	public static Bitmap resampleImage(String path, int maxDim)
+			throws Exception {
+
+		BitmapFactory.Options bfo = new BitmapFactory.Options();
+		bfo.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(path, bfo);
+
+		BitmapFactory.Options optsDownSample = new BitmapFactory.Options();
+		optsDownSample.inSampleSize = getClosestResampleSize(bfo.outWidth,
+				bfo.outHeight, maxDim);
+
+		Bitmap bmpt = BitmapFactory.decodeFile(path, optsDownSample);
+
+		Matrix m = new Matrix();
+
+		if (bmpt.getWidth() > maxDim || bmpt.getHeight() > maxDim) {
+			BitmapFactory.Options optsScale = getResampling(bmpt.getWidth(),
+					bmpt.getHeight(), maxDim);
+			m.postScale((float) optsScale.outWidth / (float) bmpt.getWidth(),
+					(float) optsScale.outHeight / (float) bmpt.getHeight());
 		}
+
+		int sdk = new Integer(Build.VERSION.SDK).intValue();
+		if (sdk > 4) {
+			int rotation = getExifOrientation(path);
+			if (rotation != 0) {
+				m.postRotate(rotation);
+			}
+		}
+		return Bitmap.createBitmap(bmpt, 0, 0, bmpt.getWidth(),
+				bmpt.getHeight(), m, true);
+	}
+
+	private static BitmapFactory.Options getResampling(int cx, int cy, int max) {
+		float scaleVal = 1.0f;
+		BitmapFactory.Options bfo = new BitmapFactory.Options();
+		if (cx > cy) {
+			scaleVal = (float) max / (float) cx;
+		} else if (cy > cx) {
+			scaleVal = (float) max / (float) cy;
+		} else {
+			scaleVal = (float) max / (float) cx;
+		}
+		bfo.outWidth = (int) (cx * scaleVal + 0.5f);
+		bfo.outHeight = (int) (cy * scaleVal + 0.5f);
+		return bfo;
+	}
+
+	private static int getClosestResampleSize(int cx, int cy, int maxDim) {
+		int max = Math.max(cx, cy);
+
+		int resample = 1;
+		for (resample = 1; resample < Integer.MAX_VALUE; resample++) {
+			if (resample * maxDim > max) {
+				resample--;
+				break;
+			}
+		}
+
+		if (resample > 0) {
+			return resample;
+		}
+		return 1;
+	}
+
+	private static boolean checkFsWritable() {
+		// Create a temporary file to see whether a volume is really writeable.
+		// It's important not to put it in the root directory which may have a
+		// limit on the number of files.
+		String directoryName = Environment.getExternalStorageDirectory()
+				.toString() + "/DCIM";
+		File directory = new File(directoryName);
+		if (!directory.isDirectory()) {
+			if (!directory.mkdirs()) {
+				return false;
+			}
+		}
+		return directory.canWrite();
+	}
+
+	public static boolean hasStorage() {
+		return hasStorage(true);
+	}
+
+	public static boolean hasStorage(boolean requireWriteAccess) {
+		String state = Environment.getExternalStorageState();
+
+		if (Environment.MEDIA_MOUNTED.equals(state)) {
+			if (requireWriteAccess) {
+				boolean writable = checkFsWritable();
+				return writable;
+			} else {
+				return true;
+			}
+		} else if (!requireWriteAccess
+				&& Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+			return true;
+		}
+		return false;
+	}
+
+	public static int getExifOrientation(String filepath) {
+		int degree = 0;
+		ExifInterface exif = null;
+		try {
+			exif = new ExifInterface(filepath);
+		} catch (IOException ex) {
+			Log.e(TAG, "cannot read exif", ex);
+		}
+		if (exif != null) {
+			int orientation = exif.getAttributeInt(
+					ExifInterface.TAG_ORIENTATION, -1);
+			if (orientation != -1) {
+				// We only recognize a subset of orientation tag values.
+				switch (orientation) {
+				case ExifInterface.ORIENTATION_ROTATE_90:
+					degree = 90;
+					break;
+				case ExifInterface.ORIENTATION_ROTATE_180:
+					degree = 180;
+					break;
+				case ExifInterface.ORIENTATION_ROTATE_270:
+					degree = 270;
+					break;
+				}
+
+			}
+		}
+		return degree;
+	}
+
+	public static int getExifOrientation2(String filename) {
+		try {
+			ExifInterface exif = new ExifInterface(filename);
+			return exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+					ExifInterface.ORIENTATION_NORMAL);
+		} catch (IOException e) {
+			if (App.DEBUG) {
+				e.printStackTrace();
+			}
+		}
+
+		return ExifInterface.ORIENTATION_NORMAL;
 	}
 
 	public static Bitmap captureViewToBitmap(View view) {
@@ -286,7 +457,6 @@ final public class ImageHelper {
 			Bitmap.CompressFormat format, int quality, String outputFilePath) {
 		if (original == null)
 			return false;
-
 		try {
 			return original.compress(format, quality, new FileOutputStream(
 					outputFilePath));
@@ -346,80 +516,72 @@ final public class ImageHelper {
 	public static File prepareUploadFile(Context context, File file, int quality) {
 		File destFile = new File(IOHelper.getCacheDir(context),
 				"fanfouupload.jpg");
-		return getResizedBitmapFile(file, destFile, IMAGE_MAX_WIDTH,
-				IMAGE_MAX_HEIGHT, quality);
+		return compressForUpload(file.getPath(), destFile.getPath(),
+				IMAGE_MAX_WIDTH, quality);
 	}
 
-	public static File getResizedBitmapFile(File file, File destFile,
-			int width, int height, int quality) {
-		if (quality > 100) {
-			quality = 100;
-		} else if (quality < 60) {
-			quality = 60;
+	private static File compressForUpload(String srcFileName,
+			String destFileName, int maxWidth, int quality) {
+		if (quality > IMAGE_QUALITY_HIGH) {
+			quality = IMAGE_QUALITY_HIGH;
+		} else if (quality < IMAGE_QUALITY_LOW) {
+			quality = IMAGE_QUALITY_LOW;
 		}
+		Bitmap bitmap = compressImage(srcFileName, maxWidth);
+		if (App.DEBUG) {
+			Log.d(TAG, "compressForUpload bitmap.width=" + bitmap.getWidth()
+					+ " height=" + bitmap.getHeight());
+		}
+		OutputStream os = null;
 		try {
-			BitmapFactory.Options opt = new BitmapFactory.Options();
-			opt.inJustDecodeBounds = true;
-			BitmapFactory.decodeFile(file.getAbsolutePath(), opt);
-
-			int outWidth = opt.outWidth;
-			int outHeight = opt.outHeight;
-			int sampleSize = 1;
-			if (outWidth > IMAGE_MAX_WIDTH * 2) {
-				sampleSize = outWidth / IMAGE_MAX_WIDTH;
-			}
+			os=new FileOutputStream(destFileName);
+			bitmap.compress(Bitmap.CompressFormat.JPEG, quality, os);
+		} catch (FileNotFoundException e) {
 			if (App.DEBUG) {
-				Log.d(TAG, "getResizedBitmapFile() srcFile.width=" + outWidth
-						+ " srcFile.height=" + outHeight + " inSampleSize="
-						+ sampleSize);
-			}
-			opt.inJustDecodeBounds = false;
-			opt.inSampleSize = sampleSize;
-			Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),
-					opt);
-			bitmap.compress(Bitmap.CompressFormat.JPEG, quality,
-					new FileOutputStream(destFile));
-			if (App.DEBUG) {
-				Log.d(TAG,
-						"getResizedBitmapFile() srcFile="
-								+ file.getAbsolutePath() + " destFile="
-								+ destFile.getAbsolutePath());
-				Log.d(TAG,
-						"getResizedBitmapFile() quality=" + quality + " width="
-								+ bitmap.getWidth() + " height="
-								+ bitmap.getHeight());
-			}
-			bitmap.recycle();
-		} catch (Exception e) {
-			if (App.DEBUG)
 				e.printStackTrace();
+			}
+		} finally {
+			IOHelper.forceClose(os);
 		}
-		return destFile;
+
+		return new File(destFileName);
 	}
 
-	public static Bitmap getResizedBitmap(File file, int width, int height) {
-		try {
-			BitmapFactory.Options getSizeOpt = new BitmapFactory.Options();
-			getSizeOpt.inJustDecodeBounds = true;
-			BitmapFactory.decodeStream(new FileInputStream(file), null,
-					getSizeOpt);
-			int sampleSize = 1;
-			int outWidth = getSizeOpt.outWidth;
-			int outHeight = getSizeOpt.outHeight;
-			while ((outWidth / sampleSize) > width
-					|| (outHeight / sampleSize) > height) {
-				sampleSize *= 2;
-			}
+	public static Bitmap compressImage(String path, int maxDim) {
 
-			BitmapFactory.Options resizeOpt = new BitmapFactory.Options();
-			resizeOpt.inSampleSize = sampleSize;
-			return BitmapFactory.decodeStream(new FileInputStream(file), null,
-					resizeOpt);
-		} catch (Exception e) {
-			if (App.DEBUG)
-				e.printStackTrace();
+		BitmapFactory.Options bfo = new BitmapFactory.Options();
+		bfo.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(path, bfo);
+		int w = bfo.outWidth;
+		BitmapFactory.Options optsDownSample = new BitmapFactory.Options();
+		int sampleSize = 1;
+		while (w / sampleSize > maxDim) {
+			sampleSize += 1;
 		}
-		return null;
+		optsDownSample.inSampleSize = sampleSize;
+		Bitmap bmpt = BitmapFactory.decodeFile(path, optsDownSample);
+
+		Matrix m = new Matrix();
+		if (bmpt.getWidth() > maxDim || bmpt.getHeight() > maxDim) {
+			float scale=1.0f;
+			float s1=(float)bmpt.getWidth()/(float)maxDim;
+			float s2=(float)bmpt.getHeight()/(float)maxDim;
+			if(s1>s2){
+				scale=s1;
+			}else{
+				scale=s2;
+			}
+			m.postScale(scale,scale);
+		}
+		int sdk = new Integer(Build.VERSION.SDK).intValue();
+		if (sdk > 4) {
+			int rotation = getExifOrientation(path);
+			if (rotation != 0) {
+				m.postRotate(rotation);
+			}
+		}
+		return Bitmap.createBitmap(bmpt, 0, 0, bmpt.getWidth(),
+				bmpt.getHeight(), m, true);
 	}
 
 	/**
@@ -560,7 +722,6 @@ final public class ImageHelper {
 		return output;
 	}
 
-
 	/**
 	 * Rotate specified Bitmap by a random angle. The angle is either negative
 	 * or positive, and ranges, in degrees, from 2.5 to 8. After rotation a
@@ -606,38 +767,6 @@ final public class ImageHelper {
 		canvas.drawBitmap(bitmap, x, y, sPaint);
 		canvas.drawRect(x, y, x + bitmapWidth, y + bitmapHeight, sStrokePaint);
 
-		return decored;
-	}
-
-	/**
-	 * Scales the specified Bitmap to fit within the specified dimensions. After
-	 * scaling, a frame is overlaid on top of the scaled image.
-	 * 
-	 * This method is not thread safe.
-	 * 
-	 * @param bitmap
-	 *            The Bitmap to scale to fit the specified dimensions and to
-	 *            apply a frame onto.
-	 * @param width
-	 *            The maximum width of the new Bitmap.
-	 * @param height
-	 *            The maximum height of the new Bitmap.
-	 * 
-	 * @return A scaled version of the original bitmap, whose dimension are less
-	 *         than or equal to the specified width and height.
-	 */
-	public static Bitmap scaleBitmap(final Bitmap bitmap, int width, int height) {
-		final int bitmapWidth = bitmap.getWidth();
-		final int bitmapHeight = bitmap.getHeight();
-
-		final float scale = Math.min((float) width / (float) bitmapWidth,
-				(float) height / (float) bitmapHeight);
-
-		final int scaledWidth = (int) (bitmapWidth * scale);
-		final int scaledHeight = (int) (bitmapHeight * scale);
-
-		final Bitmap decored = Bitmap.createScaledBitmap(bitmap, scaledWidth,
-				scaledHeight, true);
 		return decored;
 	}
 
@@ -763,6 +892,103 @@ final public class ImageHelper {
 			return bmp;
 		}
 		return null;
+	}
+
+	public static boolean checkStorageWritable() {
+		String directoryName = Environment.getExternalStorageDirectory()
+				.toString();
+		File directory = new File(directoryName);
+		if (!directory.isDirectory()) {
+			if (!directory.mkdirs()) {
+				return false;
+			}
+		}
+		File f = new File(directoryName, ".probe");
+		try {
+			if (!f.createNewFile())
+				return false;
+			f.delete();
+			return true;
+		} catch (IOException ex) {
+			return false;
+		}
+	}
+
+	public static boolean isStorageWritable(Context context) {
+		boolean mExternalStorageAvailable = false;
+		boolean mExternalStorageWriteable = false;
+		String state = Environment.getExternalStorageState();
+
+		if (Environment.MEDIA_MOUNTED.equals(state)) {
+			// can read and write
+			mExternalStorageAvailable = mExternalStorageWriteable = true;
+		} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+			// can only read
+			mExternalStorageAvailable = true;
+			mExternalStorageWriteable = false;
+		} else {
+			// can neither read nor write
+			mExternalStorageAvailable = mExternalStorageWriteable = false;
+		}
+		boolean goodmount = mExternalStorageAvailable
+				&& mExternalStorageWriteable;
+		return goodmount;
+	}
+
+	public static Bitmap scaleImageFile(Context context, File file, int size) {
+		Uri uri = Uri.fromFile(file);
+		return scaleImageFromUri(context, uri, size);
+	}
+
+	public static Bitmap scaleImageFromUri(Context context, Uri uri, int size) {
+		Bitmap bitmap = null;
+		InputStream is = null;
+		try {
+			is = context.getContentResolver().openInputStream(uri);
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inJustDecodeBounds = true;
+			BitmapFactory.decodeStream(is, null, options);
+			is.close();
+			int scale = 1;
+			while ((options.outWidth / scale > size)
+					|| (options.outHeight / scale > size)) {
+				scale *= 2;
+			}
+			options.inJustDecodeBounds = false;
+			options.inSampleSize = scale;
+			is = context.getContentResolver().openInputStream(uri);
+			bitmap = BitmapFactory.decodeStream(is, null, options);
+		} catch (IOException e) {
+		} finally {
+			if (is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+		return bitmap;
+	}
+
+	public static Bitmap rotateImageFile(String filePath) {
+		int orientation = getExifOrientation(filePath);
+		Bitmap source = BitmapFactory.decodeFile(filePath);
+		int sw = source.getWidth();
+		int sh = source.getHeight();
+		Matrix matrix = new Matrix();
+		matrix.setRotate(orientation);
+		Bitmap bitmap = Bitmap.createBitmap(source, 0, 0, sw, sh, matrix, true);
+		releaseBitmap(source);
+		return bitmap;
+	}
+
+	public static void releaseBitmap(Bitmap bitmap) {
+		if (bitmap != null) {
+			if (!bitmap.isRecycled()) {
+				bitmap.recycle();
+				bitmap = null;
+			}
+		}
 	}
 
 }
