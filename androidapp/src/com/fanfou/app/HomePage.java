@@ -55,6 +55,7 @@ import com.fanfou.app.util.Utils;
  * @version 3.0 2011.09.24
  * @version 3.2 2011.10.25
  * @version 3.3 2011.10.27
+ * @version 3.5 2011.10.29
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
@@ -168,7 +169,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setLeftAction(new HomeLogoAction());
-		mActionBar.setRightAction(new ActionBar.WriteAction(this));
+		mActionBar.setRightAction(new ActionBar.WriteAction(this, null));
 		mActionBar.setRefreshEnabled(this);
 	}
 
@@ -345,35 +346,15 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		}
 		views[3].removeFooter();
 
+	}
+
+	private void checkRefresh() {
 		boolean refresh = OptionHelper.readBoolean(this,
 				R.string.option_refresh_on_open, false);
-		if (refresh) {
+		if (refresh || (cursors[0].getCount() == 0 && mCurrentPage == 0)) {
 			onRefreshClick();
 		}
 	}
-
-	// /**
-	// * 复原列表位置
-	// */
-	// private void restorePosition() {
-	// for (int i = 0; i < views.length; i++) {
-	// views[i].restorePosition();
-	// }
-	// }
-	//
-	// private void restorePosition(int page) {
-	// views[page].restorePosition();
-	// }
-	//
-	// private void savePosition() {
-	// for (int i = 0; i < views.length; i++) {
-	// views[i].savePosition();
-	// }
-	// }
-	//
-	// private void savePosition(int page) {
-	// views[page].savePosition();
-	// }
 
 	private synchronized void setBusy(boolean busy) {
 		isBusy = busy;
@@ -545,9 +526,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			}
 		}
 
-		if (mCurrentPage == 0 && cursors[0].getCount() == 0) {
-			onRefreshClick();
-		}
+		checkRefresh();
 	}
 
 	@Override

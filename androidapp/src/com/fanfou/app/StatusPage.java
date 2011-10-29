@@ -21,7 +21,6 @@ import com.fanfou.app.cache.IImageLoader.ImageLoaderCallback;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.ActionBar.Action;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.IOHelper;
@@ -130,12 +129,7 @@ public class StatusPage extends BaseActivity {
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("消息");
-		Intent intent = new Intent(this, WritePage.class);
-		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_REPLY);
-		intent.putExtra(Commons.EXTRA_STATUS, status);
-		Action action = new ActionBar.IntentAction(mContext, intent,
-				R.drawable.i_write);
-		mActionBar.setRightAction(action);
+		mActionBar.setRightAction(new ActionBar.WriteAction(this,status));
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
 	}
 

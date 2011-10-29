@@ -18,7 +18,6 @@ import android.text.Selection;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,7 +25,6 @@ import android.widget.TextView;
 import com.fanfou.app.adapter.AtTokenizer;
 import com.fanfou.app.adapter.AutoCompleteCursorAdapter;
 import com.fanfou.app.api.Draft;
-import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.DraftInfo;
@@ -372,7 +370,13 @@ public class WritePage extends BaseActivity {
 		if (StringHelper.isEmpty(content)) {
 			super.onBackPressed();
 		} else {
-			checkSave();
+			boolean needConfirm = OptionHelper.readBoolean(this,
+					R.string.option_save_on_back_press, true);
+			if (needConfirm) {
+				checkSave();
+			} else {
+				super.onBackPressed();
+			}
 		}
 
 	}

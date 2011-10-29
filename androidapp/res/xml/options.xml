@@ -54,8 +54,8 @@
 	</PreferenceScreen>
 
 	<PreferenceCategory android:title="界面">
-	    
-	    <CheckBoxPreference android:defaultValue="false"
+
+		<CheckBoxPreference android:defaultValue="false"
 			android:key="@string/option_force_fullscreen" android:summary="隐藏系统状态栏"
 			android:title="全屏显示" />
 
@@ -93,14 +93,18 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory android:title="功能">
-	    
-	    <CheckBoxPreference android:defaultValue="false"
+
+		<CheckBoxPreference android:defaultValue="false"
 			android:key="@string/option_refresh_on_open" android:summary="应用启动时刷新时间线"
 			android:title="启动时刷新" />
 
 		<CheckBoxPreference android:defaultValue="false"
 			android:key="@string/option_refresh_after_send" android:summary="发消息成功后刷新时间线"
 			android:title="发消息后刷新" />
+
+		<CheckBoxPreference android:defaultValue="true"
+			android:key="@string/option_save_on_back_press" android:summary="保存未发送消息为草稿"
+			android:title="保存草稿" />
 
 		<CheckBoxPreference android:defaultValue="false"
 			android:key="@string/option_confirm_on_exit" android:summary="退出客户端时需要确认"

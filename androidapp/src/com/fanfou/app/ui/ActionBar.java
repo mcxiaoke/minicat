@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.fanfou.app.R;
 import com.fanfou.app.WritePage;
+import com.fanfou.app.api.Status;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -265,12 +266,24 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
 	}
 
-	public static class WriteAction extends IntentAction {
+	public static class WriteAction extends AbstractAction{
+		private Context context;
+		private Status status;
 
-		public WriteAction(Context context) {
-			super(context, new Intent(context,WritePage.class), R.drawable.i_write);
+		public WriteAction(Context context, Status status) {
+			super(R.drawable.i_write);
+			this.context=context;
+			this.status=status;
 		}
 
+		@Override
+		public void performAction(View view) {
+			if(status==null){
+				ActionManager.doWrite(context, null);
+			}else{
+				ActionManager.doReply(context, status);
+			}
+		}
 	}
 	
 	public static class SearchAction extends AbstractAction {

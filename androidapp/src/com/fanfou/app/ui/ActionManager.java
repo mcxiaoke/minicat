@@ -39,6 +39,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.1 2011.10.26
  * @version 1.2 2011.10.27
  * @version 1.3 2011.10.28
+ * @version 2.0 2011.10.29
  * 
  */
 public final class ActionManager {
@@ -112,7 +113,7 @@ public final class ActionManager {
 			if (App.DEBUG) {
 				Log.d(TAG, "doProfile: userid is null.");
 			}
-			return;
+			throw new NullPointerException("userid cannot be null.");
 		}
 		if (userId.equals(App.me.userId)) {
 			doMyProfile(context);
@@ -128,7 +129,7 @@ public final class ActionManager {
 			if (App.DEBUG) {
 				Log.d(TAG, "doProfile: status is null.");
 			}
-			return;
+			throw new NullPointerException("directmessage cannot be null.");
 		}
 		if (dm.senderId.equals(App.me.userId)) {
 			doMyProfile(context);
@@ -146,7 +147,7 @@ public final class ActionManager {
 			if (App.DEBUG) {
 				Log.d(TAG, "doProfile: status is null.");
 			}
-			return;
+			throw new NullPointerException("status cannot be null.");
 		}
 		if (status.userId.equals(App.me.userId)) {
 			doMyProfile(context);
@@ -164,7 +165,7 @@ public final class ActionManager {
 			if (App.DEBUG) {
 				Log.d(TAG, "doProfile: user is null.");
 			}
-			return;
+			throw new NullPointerException("user cannot be null.");
 		}
 		if (user.id.equals(App.me.userId)) {
 			doMyProfile(context);
@@ -180,7 +181,7 @@ public final class ActionManager {
 			if (App.DEBUG) {
 				Log.d(TAG, "doShare: status is null.");
 			}
-			return;
+			throw new NullPointerException("status cannot be null.");
 		}
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("text/plain");
@@ -204,29 +205,30 @@ public final class ActionManager {
 	}
 
 	public static void doReply(Context context, Status status) {
-		if (status == null || status.isNull()) {
+		
+		if (status != null) {
 			if (App.DEBUG) {
 				Log.d(TAG, "doReply: status is null.");
 			}
-			return;
+			HashSet<String> names=StatusHelper.getMentionedNames(status);
+			StringBuilder sb=new StringBuilder();
+			Iterator<String> i=names.iterator();
+			while (i.hasNext()) {
+				String name = i.next();
+				sb.append("@").append(name).append(" ");
+			}
+			Intent intent = new Intent(context, WritePage.class);
+			intent.putExtra(Commons.EXTRA_IN_REPLY_TO_ID, status.id);
+			intent.putExtra(Commons.EXTRA_TEXT, sb.toString());
+			intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_REPLY);
+			context.startActivity(intent);
+		}else{
+			doWrite(context, null);
 		}
 		
-		HashSet<String> names=StatusHelper.getMentionedNames(status);
-		StringBuilder sb=new StringBuilder();
-		Iterator<String> i=names.iterator();
-		while (i.hasNext()) {
-			String name = i.next();
-			sb.append("@").append(name).append(" ");
-		}
-		
-		Intent intent = new Intent(context, WritePage.class);
-		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_REPLY);
-		intent.putExtra(Commons.EXTRA_IN_REPLY_TO_ID, status.id);
-		intent.putExtra(Commons.EXTRA_TEXT, sb.toString());
-		context.startActivity(intent);
 	}
 
-	public static void doReply(Context context, String text) {
+	public static void doWrite(Context context, String text) {
 		Intent intent = new Intent(context, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
 		intent.putExtra(Commons.EXTRA_TEXT, text);
@@ -235,7 +237,7 @@ public final class ActionManager {
 
 	public static void doRetweet(Context context, Status status) {
 		if (status == null || status.isNull()) {
-			return;
+			throw new NullPointerException("status cannot be null.");
 		}
 		Intent intent = new Intent(context, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_REPOST);
@@ -264,7 +266,7 @@ public final class ActionManager {
 			if (App.DEBUG) {
 				Log.d(TAG, "doStatusDelete: status id is null.");
 			}
-			return;
+			throw new NullPointerException("statusid cannot be null.");
 		}
 		ResultReceiver receiver = new ResultReceiver(new Handler(
 				activity.getMainLooper())) {
@@ -316,7 +318,7 @@ public final class ActionManager {
 			if (App.DEBUG) {
 				Log.d(TAG, "doFavorite: status is null.");
 			}
-			return;
+			throw new NullPointerException("status cannot be null.");
 		}
 		final int type = status.favorited ? Commons.ACTION_STATUS_UNFAVORITE
 				: Commons.ACTION_STATUS_FAVORITE;
@@ -359,7 +361,7 @@ public final class ActionManager {
 			if (App.DEBUG) {
 				Log.d(TAG, "doMessageDelete: status id is null.");
 			}
-			return;
+			throw new NullPointerException("directmessageid cannot be null.");
 		}
 		ResultReceiver receiver = new ResultReceiver(new Handler(
 				activity.getMainLooper())) {

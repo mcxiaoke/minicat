@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.BaseAdapter;
 
 import com.fanfou.app.App;
-import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;

@@ -1,5 +1,6 @@
 package com.fanfou.app;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.cache.IImageLoader;
@@ -25,6 +27,7 @@ import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.service.ActionService;
 import com.fanfou.app.ui.ActionBar;
+import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.ui.ActionBar.Action;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
@@ -185,10 +188,21 @@ public class ProfilePage extends BaseActivity {
 	 */
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		// mActionBar.setTitle("个人资料");
-		// mActionBar.setRightAction(this);
+		// mActionBar.setRightAction(new WriteAction());
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
 		mActionBar.setRefreshEnabled(this);
+	}
+
+	private class WriteAction extends AbstractAction {
+
+		public WriteAction() {
+			super(R.drawable.i_write);
+		}
+
+		@Override
+		public void performAction(View view) {
+			ActionManager.doWrite(mContext, "@" + user.screenName + " ");
+		}
 	}
 
 	protected void initCheckState() {
@@ -215,18 +229,19 @@ public class ProfilePage extends BaseActivity {
 			return;
 		}
 		noPermission = !user.following && user.protect;
-		mActionBar.setTitle(user.screenName+"的空间");
-		
+		mActionBar.setTitle(user.screenName + "的空间");
+
 		if (App.DEBUG)
 			log("updateUI user.name=" + user.screenName);
 
-		boolean textMode=OptionHelper.readBoolean(this, R.string.option_text_mode, false);
-		if(textMode){
+		boolean textMode = OptionHelper.readBoolean(this,
+				R.string.option_text_mode, false);
+		if (textMode) {
 			mHead.setVisibility(View.GONE);
-		}else{
+		} else {
 			mLoader.set(user.profileImageUrl, mHead, R.drawable.default_head);
 		}
-		
+
 		mName.setText(user.screenName);
 
 		mStatusesInfo.setText("" + user.statusesCount);
@@ -249,8 +264,9 @@ public class ProfilePage extends BaseActivity {
 		updateFollowButton(user);
 
 		if (!noPermission) {
-			boolean need=OptionHelper.readBoolean(this, R.string.option_fetch_relationships, true);
-			if(need){
+			boolean need = OptionHelper.readBoolean(this,
+					R.string.option_fetch_relationships, true);
+			if (need) {
 				doFetchRelationshipInfo();
 			}
 		}
@@ -348,7 +364,7 @@ public class ProfilePage extends BaseActivity {
 		}
 		switch (v.getId()) {
 		case R.id.user_action_reply:
-			ActionManager.doReply(this, "@" + user.screenName + " ");
+			ActionManager.doWrite(this, "@" + user.screenName + " ");
 			break;
 		case R.id.user_action_message:
 			ActionManager.doMessage(this, user);
