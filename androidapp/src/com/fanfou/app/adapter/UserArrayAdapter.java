@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.fanfou.app.R;
 import com.fanfou.app.api.User;
+import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
 
 public class UserArrayAdapter extends BaseArrayAdapter<User> {
@@ -66,7 +67,20 @@ public class UserArrayAdapter extends BaseArrayAdapter<User> {
 
 		final User u = mUsers.get(position);
 
-		mLoader.set(u.profileImageUrl, holder.headIcon, R.drawable.default_head);
+		if (!isTextMode()) {
+			mLoader.set(u.profileImageUrl, holder.headIcon,
+					R.drawable.default_head);
+			holder.headIcon.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					if (u != null) {
+						ActionManager.doProfile(mContext, u);
+					}
+				}
+			});
+		}
+
 		if (u.protect) {
 			holder.lockIcon.setVisibility(View.VISIBLE);
 		} else {

@@ -227,13 +227,14 @@ public final class NetworkHelper {
 	}
 
 	public static void doAutoUpdate(Context context) {
+		final Context c=context;
 		boolean autoUpdate = OptionHelper.readBoolean(context,
 				R.string.option_autoupdate, true);
 		if (autoUpdate) {
 			Thread task = new Thread() {
 				@Override
 				public void run() {
-					AutoUpdateManager.checkUpdate(App.me);
+					AutoUpdateManager.checkUpdate(c);
 				}
 			};
 			task.start();

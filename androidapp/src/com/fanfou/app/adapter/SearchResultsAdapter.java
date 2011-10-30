@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
+import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.StringHelper;
 
@@ -69,6 +70,7 @@ public class SearchResultsAdapter extends BaseArrayAdapter<Status> {
 	}
 
 	private void setTextStyle(ViewHolder holder) {
+		int fontSize=getFontSize();
 		holder.contentText.setTextSize(fontSize);
 		holder.nameText.setTextSize(fontSize);
 		holder.metaText.setTextSize(fontSize - 4);
@@ -91,8 +93,19 @@ public class SearchResultsAdapter extends BaseArrayAdapter<Status> {
 
 		final Status s = mStatus.get(position);
 
-		mLoader.set(s.userProfileImageUrl, holder.headIcon,
-				R.drawable.default_head);
+		if(!isTextMode()){
+			mLoader.set(s.userProfileImageUrl, holder.headIcon,
+					R.drawable.default_head);
+			holder.headIcon.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					if (s != null) {
+						ActionManager.doProfile(mContext, s);
+					}
+				}
+			});
+		}
 
 		if (StringHelper.isEmpty(s.inReplyToStatusId)) {
 			holder.replyIcon.setVisibility(View.GONE);

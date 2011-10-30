@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import com.fanfou.app.R;
 import com.fanfou.app.api.User;
+import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
+import com.fanfou.app.util.StringHelper;
 
 /**
  * @author mcxiaoke
@@ -40,6 +42,7 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 	}
 
 	private void setTextStyle(ViewHolder holder) {
+		int fontSize=getFontSize();
 		holder.contentText.setTextSize(fontSize);
 		holder.nameText.setTextSize(fontSize);
 		holder.dateText.setTextSize(fontSize - 3);
@@ -51,7 +54,7 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		View view = mInflater.inflate(getLayoutId(), null);
 		ViewHolder holder = new ViewHolder(view);
-		setHeadImage(mContext,holder.headIcon);
+		setHeadImage(mContext, holder.headIcon);
 		setTextStyle(holder);
 		view.setTag(holder);
 		bindView(view, context, cursor);
@@ -62,22 +65,33 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 	public void bindView(View view, Context context, Cursor cursor) {
 		View row = view;
 		final ViewHolder holder = (ViewHolder) row.getTag();
-		User u = User.parse(cursor);
-		// if(!fling){
-		mLoader.set(u.profileImageUrl, holder.headIcon, R.drawable.default_head);
-		// }
+		final User u = User.parse(cursor);
+		if (!isTextMode()) {
+			mLoader.set(u.profileImageUrl, holder.headIcon,
+					R.drawable.default_head);
+			holder.headIcon.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					if (u != null) {
+						ActionManager.doProfile(mContext, u);
+					}
+				}
+			});
+		}
 		if (u.protect) {
 			holder.lockIcon.setVisibility(View.VISIBLE);
 		} else {
 			holder.lockIcon.setVisibility(View.GONE);
 		}
 		holder.nameText.setText(u.screenName);
-		holder.contentText.setText(u.lastStatusText);
-		String dateStr = DateTimeHelper.formatDateOnly(u.createdAt);
-		// if(!StringHelper.isEmpty(u.lastStatusId)){
-		// dateStr=DateTimeHelper.formatDateOnly(u.lastStatusCreatedAt);
-		// }
-		holder.dateText.setText(dateStr);
+
+		if (!StringHelper.isEmpty(u.lastStatusId)) {
+			holder.contentText.setText(u.lastStatusText);
+			String dateStr = DateTimeHelper.formatDate(u.lastStatusCreatedAt);
+			holder.dateText.setText(dateStr);
+		} else {
+		}
 
 	}
 

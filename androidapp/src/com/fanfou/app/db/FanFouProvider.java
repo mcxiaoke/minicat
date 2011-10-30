@@ -1,5 +1,6 @@
 package com.fanfou.app.db;
 
+import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -35,6 +36,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.0 2011.10.25
  * @version 2.5 2011.10.26
  * @version 3.0 2011.10.28
+ * @version 3.1 2011.10.30
  * 
  */
 public class FanFouProvider extends ContentProvider {
@@ -55,6 +57,9 @@ public class FanFouProvider extends ContentProvider {
 	public static final int USER_SEARCH = 2; // 搜索用户，未实现
 	public static final int USER_ID = 3; // 根据ID查询单个用户
 	public static final int USER_TYPE = 4;
+	
+	public static final int USER_SEARCH_SUGGEST=7;
+	public static final int USER_REFRESH_SHORTCUT=8;
 
 	public static final int STATUSES_ALL = 21;
 	public static final int STATUS_SEARCH_LOCAL = 22;
@@ -97,6 +102,13 @@ public class FanFouProvider extends ContentProvider {
 				USER_ID);
 		sUriMatcher.addURI(Contents.AUTHORITY, UserInfo.URI_PATH + "/type/#",
 				USER_TYPE);
+		
+		// add for user info search in search box
+		sUriMatcher.addURI(Contents.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY, USER_SEARCH_SUGGEST);
+		sUriMatcher.addURI(Contents.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", USER_SEARCH_SUGGEST);
+		sUriMatcher.addURI(Contents.AUTHORITY, SearchManager.SUGGEST_URI_PATH_SHORTCUT, USER_REFRESH_SHORTCUT);
+		sUriMatcher.addURI(Contents.AUTHORITY, SearchManager.SUGGEST_URI_PATH_SHORTCUT + "/*", USER_REFRESH_SHORTCUT);
+		
 
 		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH,
 				STATUSES_ALL);

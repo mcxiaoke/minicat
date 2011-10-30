@@ -56,6 +56,7 @@ public class MessageCursorAdapter extends BaseCursorAdapter {
 	}
 
 	private void setTextStyle(ViewHolder holder) {
+		int fontSize=getFontSize();
 		holder.contentText.setTextSize(fontSize);
 		holder.nameText.setTextSize(fontSize);
 		holder.dateText.setTextSize(fontSize - 4);
@@ -85,10 +86,11 @@ public class MessageCursorAdapter extends BaseCursorAdapter {
 			row.setBackgroundColor(0x33999999);
 		}
 
-		// if(!fling){
-		mLoader.set(dm.senderProfileImageUrl, holder.headIcon,
-				R.drawable.default_head);
-		// }
+		if(!isTextMode()){
+			mLoader.set(dm.senderProfileImageUrl, holder.headIcon,
+					R.drawable.default_head);
+		}
+
 		// Bitmap bitmap=mLoader.get(dm.senderProfileImageUrl,
 		// getImageCallback(holder.headIcon));
 		// if(bitmap!=null){

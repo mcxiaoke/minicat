@@ -41,7 +41,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener{
 	protected ViewGroup mEmptyView;
 
 	protected Cursor mCursor;
-	protected CursorAdapter mCursorAdapter;
+	protected UserCursorAdapter mCursorAdapter;
 
 	protected Handler mHandler;
 	protected ResultReceiver mResultReceiver;

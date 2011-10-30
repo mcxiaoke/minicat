@@ -69,6 +69,7 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter{
 	}
 
 	private void setTextStyle(ViewHolder holder) {
+		int fontSize=getFontSize();
 		holder.nameText.setTextSize(fontSize);
 		TextPaint tp = holder.nameText.getPaint();
 		tp.setFakeBoldText(true);
@@ -91,7 +92,10 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter{
 		final User u = User.parse(cursor);
 		
 		final ViewHolder holder = (ViewHolder) row.getTag();
-		mLoader.set(u.profileImageUrl, holder.headIcon, R.drawable.default_head);
+		
+		if(!isTextMode()){
+			mLoader.set(u.profileImageUrl, holder.headIcon, R.drawable.default_head);
+		}
 		holder.nameText.setText(u.screenName);
 		holder.idText.setText(u.id);
 		

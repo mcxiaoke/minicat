@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
+import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.StringHelper;
 
@@ -21,7 +22,7 @@ import com.fanfou.app.util.StringHelper;
  * @author mcxiaoke
  * @version 1.0 2011.06.25
  * @version 1.1 2011.10.26
- *
+ * 
  */
 public class StatusArrayAdapter extends BaseArrayAdapter<Status> {
 
@@ -58,6 +59,7 @@ public class StatusArrayAdapter extends BaseArrayAdapter<Status> {
 	}
 
 	private void setTextStyle(ViewHolder holder) {
+		int fontSize = getFontSize();
 		holder.contentText.setTextSize(fontSize);
 		holder.nameText.setTextSize(fontSize);
 		holder.metaText.setTextSize(fontSize - 4);
@@ -77,17 +79,28 @@ public class StatusArrayAdapter extends BaseArrayAdapter<Status> {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		
-		if(position%2==1){
+
+		if (position % 2 == 1) {
 			convertView.setBackgroundColor(0x33999999);
-		}else{
+		} else {
 			convertView.setBackgroundColor(0);
 		}
 
 		final Status s = mStatus.get(position);
 
-		mLoader.set(s.userProfileImageUrl, holder.headIcon,
-				R.drawable.default_head);
+		if (!isTextMode()) {
+			mLoader.set(s.userProfileImageUrl, holder.headIcon,
+					R.drawable.default_head);
+			holder.headIcon.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					if (s != null) {
+						ActionManager.doProfile(mContext, s);
+					}
+				}
+			});
+		}
 
 		if (StringHelper.isEmpty(s.inReplyToStatusId)) {
 			holder.replyIcon.setVisibility(View.GONE);
@@ -103,8 +116,7 @@ public class StatusArrayAdapter extends BaseArrayAdapter<Status> {
 
 		holder.nameText.setText(s.userScreenName);
 		holder.contentText.setText(s.simpleText);
-		holder.metaText.setText(getDateString(s.createdAt) + " 通过"
-				+ s.source);
+		holder.metaText.setText(getDateString(s.createdAt) + " 通过" + s.source);
 
 		return convertView;
 	}
@@ -136,8 +148,8 @@ public class StatusArrayAdapter extends BaseArrayAdapter<Status> {
 	int getLayoutId() {
 		return R.layout.list_item_status;
 	}
-	
-	protected String getDateString(Date date){
+
+	protected String getDateString(Date date) {
 		return DateTimeHelper.getInterval(date);
 	}
 

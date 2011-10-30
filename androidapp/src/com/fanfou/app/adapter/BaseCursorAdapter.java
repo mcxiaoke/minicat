@@ -20,6 +20,7 @@ import com.fanfou.app.util.OptionHelper;
  * @author mcxiaoke
  * @version 1.0 2011.06.01
  * @version 1.5 2011.10.24
+ * @version 1.6 2011.10.30
  * 
  */
 public abstract class BaseCursorAdapter extends CursorAdapter {
@@ -38,16 +39,10 @@ public abstract class BaseCursorAdapter extends CursorAdapter {
 	LayoutInflater mInflater;
 	Cursor mCursor;
 	IImageLoader mLoader;
-	int fontSize;
-
-	void initFontSize() {
-		fontSize = OptionHelper.parseInt(mContext, R.string.option_fontsize,
-				mContext.getString(R.string.config_fontsize_default));
-	}
-
-	protected static void setHeadImage(Context context, ImageView headIcon) {
-		boolean textMode = OptionHelper.readBoolean(context,
-				R.string.option_text_mode, false);
+	private int fontSize;
+	private boolean textMode;
+	
+	protected void setHeadImage(Context context, ImageView headIcon) {
 		if (textMode) {
 			headIcon.setVisibility(View.GONE);
 		} else {
@@ -79,7 +74,9 @@ public abstract class BaseCursorAdapter extends CursorAdapter {
 		this.mInflater = LayoutInflater.from(mContext);
 		this.mCursor = c;
 		this.mLoader = App.me.getImageLoader();
-		initFontSize();
+		this.textMode=OptionHelper.readBoolean(mContext, R.string.option_text_mode, false);
+		this.fontSize = OptionHelper.parseInt(mContext, R.string.option_fontsize,
+				mContext.getString(R.string.config_fontsize_default));
 	}
 
 	@Override
@@ -97,5 +94,21 @@ public abstract class BaseCursorAdapter extends CursorAdapter {
 	}
 
 	abstract int getLayoutId();
+	
+	public int getFontSize(){
+		return fontSize;
+	}
+	
+	public void setFontSize(int size){
+		fontSize=size;
+	}
+	
+	public boolean isTextMode(){
+		return textMode;
+	}
+	
+	public void setTextMode(boolean mode){
+		textMode=mode;
+	}
 
 }

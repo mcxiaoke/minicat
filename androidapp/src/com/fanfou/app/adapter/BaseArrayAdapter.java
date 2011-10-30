@@ -13,28 +13,33 @@ import com.fanfou.app.R;
 import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.util.OptionHelper;
 
+/**
+ * @author mcxiaoke
+ * @version 1.0 2011.06.01
+ * @version 1.5 2011.10.24
+ * @version 1.6 2011.10.30
+ * 
+ */
 public abstract class BaseArrayAdapter<T> extends BaseAdapter {
 	Context mContext;
 	LayoutInflater mInflater;
 	IImageLoader mLoader;
-	int fontSize;
+	private int fontSize;
+	private boolean textMode;
 
 	public BaseArrayAdapter(Context context, List<T> t) {
 		super();
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);
 		this.mLoader = App.me.getImageLoader();
-		initFontSize();
-	}
-
-	private void initFontSize() {
-		fontSize = OptionHelper.parseInt(mContext, R.string.option_fontsize,
+		this.textMode = OptionHelper.readBoolean(mContext,
+				R.string.option_text_mode, false);
+		this.fontSize = OptionHelper.parseInt(mContext,
+				R.string.option_fontsize,
 				mContext.getString(R.string.config_fontsize_default));
 	}
 
 	protected void setHeadImage(ImageView headIcon) {
-		boolean textMode = OptionHelper.readBoolean(mContext,
-				R.string.option_text_mode, false);
 		if (textMode) {
 			headIcon.setVisibility(View.GONE);
 		} else {
@@ -43,5 +48,21 @@ public abstract class BaseArrayAdapter<T> extends BaseAdapter {
 	}
 
 	abstract int getLayoutId();
+
+	public int getFontSize() {
+		return fontSize;
+	}
+
+	public void setFontSize(int size) {
+		fontSize = size;
+	}
+
+	public boolean isTextMode() {
+		return textMode;
+	}
+
+	public void setTextMode(boolean mode) {
+		textMode = mode;
+	}
 
 }

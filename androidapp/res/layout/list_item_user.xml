@@ -11,7 +11,7 @@
 
 		<TextView android:id="@id/item_user_name"
 			android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
-			style="@style/Text.Name" android:text="Username" />
+			style="@style/Text.Name" />
 
 		<ImageView android:id="@id/item_user_flag" android:src="@drawable/i_mini_locked"
 			android:layout_toRightOf="@id/item_user_name"
@@ -19,11 +19,10 @@
 			android:layout_height="wrap_content" android:visibility="gone" android:layout_margin="3dp"/>
 
 		<TextView android:id="@id/item_user_date"
-			android:layout_alignParentRight="true" style="@style/Text.Meta"
-			android:text="2011.07.19 11:49" />
+			android:layout_alignParentRight="true" style="@style/Text.Meta" />
 
 		<TextView android:id="@id/item_user_text" style="@style/Text.Status"
-			android:layout_below="@id/item_user_name" android:text=" status content is here " />
+			android:layout_below="@id/item_user_name" />
 
 	</RelativeLayout>
 
