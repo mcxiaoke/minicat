@@ -208,6 +208,7 @@ public abstract class BaseActivity extends Activity implements
 			onLogoutClick();
 			break;
 		case MENU_ID_ABOUT:
+//			startActivity(new Intent(this, NewVersionPage.class));
 			onAboutClick();
 			break;
 		case MENU_ID_FEEDBACK:
@@ -272,7 +273,7 @@ public abstract class BaseActivity extends Activity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		option = menu.add(0, MENU_ID_OPTION, MENU_ID_OPTION, "应用设置");
+		option = menu.add(0, MENU_ID_OPTION, MENU_ID_OPTION, "功能设置");
 		option.setIcon(R.drawable.i_menu_option);
 
 		profile = menu.add(0, MENU_ID_PROFILE, MENU_ID_PROFILE, "我的空间");
@@ -293,7 +294,7 @@ public abstract class BaseActivity extends Activity implements
 		home = menu.add(0, MENU_ID_HOME, MENU_ID_HOME, "返回首页");
 		home.setIcon(R.drawable.i_menu_home);
 		
-		clear=menu.add(0,MENU_ID_CLEAR,MENU_ID_CLEAR,"清空草稿箱");
+		clear=menu.add(0,MENU_ID_CLEAR,MENU_ID_CLEAR,"清空草稿");
 		clear.setIcon(R.drawable.i_menu_clear);
 		
 		

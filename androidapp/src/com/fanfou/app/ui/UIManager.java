@@ -2,8 +2,6 @@ package com.fanfou.app.ui;
 
 import java.util.List;
 
-import net.londatiga.android.ActionItem;
-import net.londatiga.android.QuickAction;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
@@ -11,9 +9,12 @@ import android.view.View;
 import android.widget.BaseAdapter;
 
 import com.fanfou.app.App;
+import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
+import com.fanfou.lib.quickaction.ActionItem;
+import com.fanfou.lib.quickaction.QuickAction;
 
 /**
  * @author mcxiaoke
@@ -27,34 +28,43 @@ import com.fanfou.app.dialog.ConfirmDialog;
 public final class UIManager {
 	public static final int QUICK_ACTION_ID_REPLY = 0;
 	public static final int QUICK_ACTION_ID_DELETE = 1;
-	public static final int QUICK_ACTION_ID_FAVORITE = 2;
-	public static final int QUICK_ACTION_ID_UNFAVORITE = 3;
-	public static final int QUICK_ACTION_ID_RETWEET = 4;
-	public static final int QUICK_ACTION_ID_SHARE = 5;
-	public static final int QUICK_ACTION_ID_PROFILE = 6;
+	public static final int QUICK_ACTION_ID_RETWEET = 2;
+	public static final int QUICK_ACTION_ID_FAVORITE = 3;
+	public static final int QUICK_ACTION_ID_UNFAVORITE = 4;
+	public static final int QUICK_ACTION_ID_PROFILE = 5;
+	public static final int QUICK_ACTION_ID_SHARE = 6;
 
 	public static QuickAction makePopup(Context context, final Status status) {
-		ActionItem reply = new ActionItem(QUICK_ACTION_ID_REPLY, "回复",null);
+		ActionItem reply = new ActionItem(QUICK_ACTION_ID_REPLY, "回复", context
+				.getResources().getDrawable(R.drawable.ic_pop_reply));
 
-		ActionItem delete = new ActionItem(QUICK_ACTION_ID_DELETE, "删除",null);
+		ActionItem delete = new ActionItem(QUICK_ACTION_ID_DELETE, "删除",
+				context.getResources().getDrawable(R.drawable.ic_pop_delete));
 
-		ActionItem favorite = new ActionItem(QUICK_ACTION_ID_FAVORITE, "收藏",null);
+		ActionItem retweet = new ActionItem(QUICK_ACTION_ID_RETWEET, "转发",
+				context.getResources().getDrawable(R.drawable.ic_pop_retweet));
+
+		ActionItem favorite = new ActionItem(QUICK_ACTION_ID_FAVORITE, "收藏",
+				context.getResources().getDrawable(R.drawable.ic_pop_favorite));
+//		favorite.setSticky(true);
 
 		ActionItem unfavorite = new ActionItem(QUICK_ACTION_ID_UNFAVORITE,
-				"取消", null);
+				"取消", context.getResources().getDrawable(
+						R.drawable.ic_pop_unfavorite));
+//		unfavorite.setSticky(true);
 
-		ActionItem retweet = new ActionItem(QUICK_ACTION_ID_RETWEET, "转发",null);
+		ActionItem profile = new ActionItem(QUICK_ACTION_ID_PROFILE, "空间",
+				context.getResources().getDrawable(R.drawable.ic_pop_profile));
 
-		ActionItem share = new ActionItem(QUICK_ACTION_ID_SHARE, "分享",null);
-
-		ActionItem profile = new ActionItem(QUICK_ACTION_ID_PROFILE, "空间",null);
+		ActionItem share = new ActionItem(QUICK_ACTION_ID_SHARE, "分享", context
+				.getResources().getDrawable(R.drawable.ic_pop_share));
 
 		final boolean me = status.userId.equals(App.me.userId);
 
 		final QuickAction q = new QuickAction(context, QuickAction.HORIZONTAL);
 		q.addActionItem(me ? delete : reply);
-		q.addActionItem(status.favorited ? unfavorite : favorite);
 		q.addActionItem(retweet);
+		q.addActionItem(status.favorited ? unfavorite : favorite);
 		q.addActionItem(share);
 		q.addActionItem(profile);
 
@@ -65,38 +75,37 @@ public final class UIManager {
 			final Status s, final BaseAdapter adapter, final List<Status> ss) {
 
 		QuickAction q = makePopup(a, s);
-
 		q.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {
 
 			@Override
 			public void onItemClick(QuickAction source, int pos, int actionId) {
-				switch (pos) {
-				case 0:
-					if (s.userId.equals(App.me.userId)) {
-						final ConfirmDialog dialog = new ConfirmDialog(a,
-								"删除消息", "要删除这条消息吗？");
-						dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
-
-							@Override
-							public void onButton1Click() {
-								doDelete(a, s, adapter, ss);
-							}
-						});
-						dialog.show();
-					} else {
-						ActionManager.doReply(a, s);
-					}
+				switch (actionId) {
+				case QUICK_ACTION_ID_REPLY:
+					ActionManager.doReply(a, s);
 					break;
-				case 1:
+				case QUICK_ACTION_ID_DELETE:
+					final ConfirmDialog dialog = new ConfirmDialog(a, "删除消息",
+							"要删除这条消息吗？");
+					dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
+
+						@Override
+						public void onButton1Click() {
+							doDelete(a, s, adapter, ss);
+						}
+					});
+					dialog.show();
+					break;
+				case QUICK_ACTION_ID_FAVORITE:
+				case QUICK_ACTION_ID_UNFAVORITE:
 					UIManager.doFavorite(a, s, adapter);
 					break;
-				case 2:
+				case QUICK_ACTION_ID_RETWEET:
 					ActionManager.doRetweet(a, s);
 					break;
-				case 3:
+				case QUICK_ACTION_ID_SHARE:
 					ActionManager.doShare(a, s);
 					break;
-				case 4:
+				case QUICK_ACTION_ID_PROFILE:
 					ActionManager.doProfile(a, s);
 					break;
 				default:
@@ -104,47 +113,46 @@ public final class UIManager {
 				}
 			}
 		});
-		
+
 		q.show(v);
-		q.setAnimStyle(QuickAction.ANIM_REFLECT);
 	}
 
 	public static void showPopup(final Activity a, final Cursor c,
 			final View v, final Status s) {
 
 		QuickAction q = makePopup(a, s);
-
 		q.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {
 
 			@Override
 			public void onItemClick(QuickAction source, int pos, int actionId) {
-				switch (pos) {
-				case 0:
-					if (s.userId.equals(App.me.userId)) {
-						final ConfirmDialog dialog = new ConfirmDialog(a,
-								"删除消息", "要删除这条消息吗？");
-						dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
 
-							@Override
-							public void onButton1Click() {
-								doDelete(a, s, c);
-							}
-						});
-						dialog.show();
-					} else {
-						ActionManager.doReply(a, s);
-					}
+				switch (actionId) {
+				case QUICK_ACTION_ID_REPLY:
+					ActionManager.doReply(a, s);
 					break;
-				case 1:
+				case QUICK_ACTION_ID_DELETE:
+					final ConfirmDialog dialog = new ConfirmDialog(a, "删除消息",
+							"要删除这条消息吗？");
+					dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
+
+						@Override
+						public void onButton1Click() {
+							doDelete(a, s, c);
+						}
+					});
+					dialog.show();
+					break;
+				case QUICK_ACTION_ID_FAVORITE:
+				case QUICK_ACTION_ID_UNFAVORITE:
 					UIManager.doFavorite(a, s, c);
 					break;
-				case 2:
+				case QUICK_ACTION_ID_RETWEET:
 					ActionManager.doRetweet(a, s);
 					break;
-				case 3:
+				case QUICK_ACTION_ID_SHARE:
 					ActionManager.doShare(a, s);
 					break;
-				case 4:
+				case QUICK_ACTION_ID_PROFILE:
 					ActionManager.doProfile(a, s);
 					break;
 				default:

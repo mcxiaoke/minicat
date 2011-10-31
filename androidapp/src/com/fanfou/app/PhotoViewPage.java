@@ -71,7 +71,7 @@ public class PhotoViewPage extends BaseActivity {
 		if(action==null){
 			mPhotoPath = intent.getStringExtra(Commons.EXTRA_URL);			
 		}else if(action.equals(Intent.ACTION_VIEW)){
-			Uri uri=(Uri)intent.getData();
+			Uri uri=intent.getData();
 			if (uri.getScheme().equals("content")) {
 				mPhotoPath = IOHelper.getRealPathFromURI(this, uri);
 			} else {

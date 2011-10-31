@@ -10,7 +10,6 @@ import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -21,7 +20,6 @@ import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.ActionBar.Action;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.widget.EndlessListView;
 import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;

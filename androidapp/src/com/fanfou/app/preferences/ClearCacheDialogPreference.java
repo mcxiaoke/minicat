@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 
 import com.fanfou.app.App;
 import com.fanfou.app.util.IOHelper;
-import com.fanfou.app.util.Utils;
 
 public class ClearCacheDialogPreference extends DialogPreference {
 

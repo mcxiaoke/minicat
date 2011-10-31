@@ -1,13 +1,10 @@
 package com.fanfou.app.util;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.fanfou.app.App;
 import com.fanfou.app.api.Status;
 
 import android.text.Html;

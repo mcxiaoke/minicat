@@ -39,23 +39,23 @@
 
 				<ImageView android:id="@id/write_action_at"
 					android:layout_width="wrap_content" android:layout_height="wrap_content"
-					android:layout_weight="1" android:src="@drawable/toolbar_mention" />
+					android:layout_weight="1" android:src="@drawable/ic_bar_mention" />
 
 				<ImageView android:id="@id/write_action_draft"
 					android:layout_width="wrap_content" android:layout_height="wrap_content"
-					android:layout_weight="1" android:src="@drawable/i_bar_draft2" />
+					android:layout_weight="1" android:src="@drawable/ic_bar_draft" />
 
 				<ImageView android:id="@id/write_action_location"
 					android:layout_width="wrap_content" android:layout_height="wrap_content"
-					android:layout_weight="1" android:src="@drawable/toolbar_geo_off" />
+					android:layout_weight="1" android:src="@drawable/ic_bar_geooff" />
 
 				<ImageView android:id="@id/write_action_gallery"
 					android:layout_width="wrap_content" android:layout_height="wrap_content"
-					android:layout_weight="1" android:src="@drawable/toolbar_media" />
+					android:layout_weight="1" android:src="@drawable/ic_bar_gallery" />
 
 				<ImageView android:id="@id/write_action_camera"
 					android:layout_width="wrap_content" android:layout_height="wrap_content"
-					android:layout_weight="1" android:src="@drawable/toolbar_camera" />
+					android:layout_weight="1" android:src="@drawable/ic_bar_camera" />
 
 			</LinearLayout>
 

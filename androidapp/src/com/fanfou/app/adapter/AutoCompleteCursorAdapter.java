@@ -3,13 +3,11 @@ package com.fanfou.app.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.view.View;
-import android.widget.Filterable;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
 import com.fanfou.app.App;
 import com.fanfou.app.R;
-import com.fanfou.app.api.User;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
 
@@ -38,9 +36,9 @@ public class AutoCompleteCursorAdapter extends ResourceCursorAdapter {
 		// UserInfo.SCREEN_NAME};
 		// String where = UserInfo.OWNER_ID + " = '" + App.me.userId + "' AND "
 		// + UserInfo.SCREEN_NAME + " like '%" + constraint + "%'";
-		String where = UserInfo.OWNER_ID + " = '" + App.me.userId + "' AND "
+		String where = BasicColumns.OWNER_ID + " = '" + App.me.userId + "' AND "
 				+ UserInfo.SCREEN_NAME + " like '%" + constraint + "%' OR "
-				+ UserInfo.ID + " like '%" + constraint + "%'";
+				+ BasicColumns.ID + " like '%" + constraint + "%'";
 		return mContext.getContentResolver().query(UserInfo.CONTENT_URI, null,
 				where, null, null);
 	}

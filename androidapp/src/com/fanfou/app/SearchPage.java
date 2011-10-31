@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -20,9 +19,7 @@ import com.fanfou.app.adapter.SearchAdapter;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Search;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.ActionBar.Action;
 
 /**
  * @author mcxiaoke

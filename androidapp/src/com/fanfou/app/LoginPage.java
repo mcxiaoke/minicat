@@ -129,7 +129,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 		Activity mContext;
 
 		public RegisterAction(Activity context) {
-			super(R.drawable.i_register);
+			super(R.drawable.ic_register);
 			mContext = context;
 		}
 

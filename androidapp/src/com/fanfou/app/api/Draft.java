@@ -6,6 +6,7 @@ import com.fanfou.app.db.Contents.DraftInfo;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.provider.BaseColumns;
 import android.util.Log;
 
 /**
@@ -40,7 +41,7 @@ public class Draft implements Storable<Draft> {
 			return null;
 		}
 		Draft d=new Draft();
-		d.id=Parser.parseInt(c, DraftInfo._ID);
+		d.id=Parser.parseInt(c, BaseColumns._ID);
 		d.ownerId=Parser.parseString(c, DraftInfo.OWNER_ID);
 		d.text=Parser.parseString(c, DraftInfo.TEXT);
 		d.createdAt=Parser.parseDate(c, DraftInfo.CREATED_AT);

@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -514,7 +513,7 @@ final public class ImageHelper {
 	}
 
 	public static File prepareUploadFile(Context context, File file, int quality) {
-		File destFile = new File(IOHelper.getCacheDir(context),
+		File destFile = new File(IOHelper.getImageCacheDir(context),
 				"fanfouupload.jpg");
 		return compressForUpload(file.getPath(), destFile.getPath(),
 				IMAGE_MAX_WIDTH, quality);

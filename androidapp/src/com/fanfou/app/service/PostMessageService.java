@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.fanfou.app.App;
-import com.fanfou.app.HomePage;
 import com.fanfou.app.LoginPage;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
@@ -16,10 +15,7 @@ import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.IOHelper;
-import com.fanfou.app.util.IntentHelper;
-import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke

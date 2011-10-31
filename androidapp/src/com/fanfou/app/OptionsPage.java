@@ -15,7 +15,7 @@ import android.preference.PreferenceActivity;
 import android.util.Log;
 
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.update.AutoUpdateManager;
+import com.fanfou.app.service.DownloadService;
 import com.fanfou.app.update.VersionInfo;
 import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.IntentHelper;
@@ -32,6 +32,8 @@ public class OptionsPage extends PreferenceActivity implements
 		OnPreferenceClickListener, OnSharedPreferenceChangeListener {
 	public static final String TAG = "OptionsPage";
 
+	private boolean needRestart = false;
+
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -45,7 +47,7 @@ public class OptionsPage extends PreferenceActivity implements
 	@Override
 	protected void onPause() {
 		getPreferenceScreen().getSharedPreferences()
-		.unregisterOnSharedPreferenceChangeListener(this);
+				.unregisterOnSharedPreferenceChangeListener(this);
 		App.active = false;
 		super.onPause();
 	}
@@ -85,14 +87,15 @@ public class OptionsPage extends PreferenceActivity implements
 
 		ListPreference interval = (ListPreference) findPreference(getText(R.string.option_notification_interval));
 		interval.setSummary(interval.getEntry());
-		
-		Preference currentAccount=findPreference(getText(R.string.option_current_account));
-		currentAccount.setSummary(""+App.me.userScreenName+"("+App.me.userId+")");
+
+		Preference currentAccount = findPreference(getText(R.string.option_current_account));
+		currentAccount.setSummary("" + App.me.userScreenName + "("
+				+ App.me.userId + ")");
 
 		Preference checkUpdate = findPreference(getText(R.string.option_check_update));
 		checkUpdate.setOnPreferenceClickListener(this);
-		
-		Preference reset=findPreference(getText(R.string.option_clear_data_and_settings));
+
+		Preference reset = findPreference(getText(R.string.option_clear_data_and_settings));
 		reset.setOnPreferenceClickListener(this);
 
 		Preference feedback = findPreference(getText(R.string.option_feedback));
@@ -103,6 +106,15 @@ public class OptionsPage extends PreferenceActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+	}
+
+	@Override
+	public void finish() {
+		if (needRestart) {
+			android.os.Process.killProcess(android.os.Process.myPid());
+		}else{
+			super.finish();
+		}
 	}
 
 	private void checkUpdate() {
@@ -147,6 +159,7 @@ public class OptionsPage extends PreferenceActivity implements
 			} else {
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 			}
+			needRestart=true;
 		} else if (key.equals(getString(R.string.option_bottom_refresh_icon))) {
 			ListPreference lp = (ListPreference) p;
 			lp.setSummary(lp.getEntry());
@@ -156,8 +169,9 @@ public class OptionsPage extends PreferenceActivity implements
 			if (value.equals(value2) && !value.equals("none")) {
 				lp.setValue("none");
 				Utils.notify(this, "请重选，刷新图标和发消息图标不能处于同一位置");
+			}else{
+				needRestart=true;
 			}
-
 		} else if (key.equals(getString(R.string.option_bottom_write_icon))) {
 			ListPreference lp = (ListPreference) p;
 			lp.setSummary(lp.getEntry());
@@ -167,14 +181,16 @@ public class OptionsPage extends PreferenceActivity implements
 			if (value.equals(value2) && !value.equals("none")) {
 				lp.setValue("none");
 				Utils.notify(this, "请重选，发消息图标和刷新图标不能处于同一位置");
+			}else{
+				needRestart=true;
 			}
 		}
-
 		else if (p instanceof ListPreference) {
 			ListPreference lp = (ListPreference) p;
 			lp.setSummary(lp.getEntry());
 			setResult(RESULT_OK,
 					getIntent().putExtra(Commons.EXTRA_BOOLEAN, true));
+			needRestart=true;
 		}
 
 	}
@@ -206,12 +222,12 @@ public class OptionsPage extends PreferenceActivity implements
 			pd.dismiss();
 			if (App.DEBUG) {
 				if (info != null) {
-					AutoUpdateManager.showUpdateConfirmDialog(c, info);
+					DownloadService.showUpdateConfirmDialog(c, info);
 				}
 				return;
 			}
 			if (info != null && info.versionCode > App.me.appVersionCode) {
-				AutoUpdateManager.showUpdateConfirmDialog(c, info);
+				DownloadService.showUpdateConfirmDialog(c, info);
 			} else {
 				Utils.notify(c, "你使用的已经是最新版");
 			}
@@ -219,7 +235,7 @@ public class OptionsPage extends PreferenceActivity implements
 
 		@Override
 		protected VersionInfo doInBackground(Void... params) {
-			VersionInfo info = AutoUpdateManager.fetchVersionInfo();
+			VersionInfo info = DownloadService.fetchVersionInfo();
 			if (App.DEBUG) {
 				Log.i(TAG, "doInBackground " + info.toString());
 			}

@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 
-import com.fanfou.app.App;
 import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.IntentHelper;

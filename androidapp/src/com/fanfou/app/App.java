@@ -11,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.fanfou.app.api.Api;
@@ -21,7 +20,7 @@ import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.http.ApnType;
 import com.fanfou.app.http.NetworkState;
-import com.fanfou.app.service.CleanService;
+import com.fanfou.app.util.NetworkHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
@@ -167,6 +166,9 @@ public class App extends Application {
 	}
 
 	private void initAlarm() {
+		if(DEBUG){
+			NetworkHelper.doAutoUpdate(this);
+		}
 		Utils.setAutoClean(this);
 		Utils.setAutoUpdate(this);
 		Utils.setAutoComplete(this);

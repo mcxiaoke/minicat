@@ -47,8 +47,8 @@ public class AboutPage extends Activity implements OnClickListener{
 	private void setLayout() {
 		setContentView(R.layout.about);
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setLeftAction(new ActionBar.BackAction(this));
-		mActionBar.setTitle("关于");
+		mActionBar.setLeftAction(new ActionBar.HomeAction(this));
+//		mActionBar.setTitle("关于");
 		
 		mLogo=(ImageView) findViewById(R.id.about_icon);
 		mLogo.setOnClickListener(this);

@@ -7,19 +7,14 @@ import android.text.TextPaint;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
-import com.fanfou.app.db.Contents.BasicColumns;
-import com.fanfou.app.db.Contents.StatusInfo;
-import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
-import com.fanfou.app.util.StatusHelper;
 import com.fanfou.app.util.StringHelper;
 
 /**

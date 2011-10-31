@@ -1,19 +1,12 @@
 package com.fanfou.app.preferences;
 
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 
-import com.fanfou.app.App;
-import com.fanfou.app.db.Contents.DirectMessageInfo;
-import com.fanfou.app.db.Contents.DraftInfo;
-import com.fanfou.app.db.Contents.StatusInfo;
-import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.util.IOHelper;
-import com.fanfou.app.util.Utils;
 
 public class ClearDataDialogPreference extends DialogPreference {
 

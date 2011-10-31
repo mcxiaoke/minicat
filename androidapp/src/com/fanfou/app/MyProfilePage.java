@@ -20,7 +20,6 @@ import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.service.ActionService;
 import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.ActionBar.Action;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.StringHelper;

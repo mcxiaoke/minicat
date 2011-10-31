@@ -161,6 +161,8 @@ public final class AlarmHelper {
 				notification.sound = ringTone;
 			}
 		}
+		notification.defaults|=Notification.DEFAULT_LIGHTS;
+		
 		boolean vibrate = OptionHelper.readBoolean(context,
 				R.string.option_notification_vibrate, false);
 		if (vibrate) {

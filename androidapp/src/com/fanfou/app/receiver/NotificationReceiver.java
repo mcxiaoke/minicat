@@ -18,7 +18,6 @@ import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.util.AlarmHelper;
-import com.fanfou.app.util.StatusHelper;
 
 /**
  * @author mcxiaoke

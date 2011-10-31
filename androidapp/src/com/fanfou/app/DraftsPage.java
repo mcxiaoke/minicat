@@ -2,8 +2,6 @@ package com.fanfou.app;
 
 import java.io.File;
 
-import org.apache.http.client.utils.URIUtils;
-
 import com.fanfou.app.adapter.DraftsCursorAdaper;
 import com.fanfou.app.api.Draft;
 import com.fanfou.app.config.Commons;
@@ -15,12 +13,9 @@ import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
 
-import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -113,7 +108,7 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener{
 	private class SendAllAction extends AbstractAction {
 
 		public SendAllAction() {
-			super(R.drawable.i_sendall);
+			super(R.drawable.ic_sendall);
 		}
 
 		@Override

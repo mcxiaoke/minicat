@@ -1,8 +1,6 @@
 package com.fanfou.app.service;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,7 +18,6 @@ import com.fanfou.app.api.Draft;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.DraftInfo;
-import com.fanfou.app.http.ApnType;
 import com.fanfou.app.util.ImageHelper;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.NetworkHelper;
@@ -158,6 +155,7 @@ public class TaskQueueService extends Service {
 		// 草稿全部添加到队列
 		// 队列按先后顺序发送草稿
 		// 发送失败则添加到草稿箱
+		@Override
 		public void run() {
 			BlockingDeque<Draft> queue = new LinkedBlockingDeque<Draft>();
 			AtomicBoolean running = new AtomicBoolean(true);

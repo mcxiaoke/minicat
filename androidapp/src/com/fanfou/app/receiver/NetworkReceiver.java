@@ -12,7 +12,6 @@ import android.util.Log;
 import com.fanfou.app.App;
 import com.fanfou.app.http.ApnType;
 import com.fanfou.app.service.AutoCompleteService;
-import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.NetworkHelper;
 
 /**

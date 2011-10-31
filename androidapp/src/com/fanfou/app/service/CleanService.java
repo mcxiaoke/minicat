@@ -74,7 +74,7 @@ public class CleanService extends WakefulIntentService {
 
 	private void doCleanUserData() {
 		ContentResolver cr = getContentResolver();
-		String where = UserInfo.OWNER_ID + "!=?";
+		String where = BasicColumns.OWNER_ID + "!=?";
 		String[] whereArgs = new String[] { App.me.userId };
 		int result = cr.delete(UserInfo.CONTENT_URI, where, whereArgs);
 		if (App.DEBUG) {
@@ -83,7 +83,7 @@ public class CleanService extends WakefulIntentService {
 	}
 	
 	private void doCleanPhotos(){
-		IOHelper.deleteDir(IOHelper.getCacheDir(this), 10*1024);
+		IOHelper.deleteDir(IOHelper.getImageCacheDir(this), 10*1024);
 	}
 
 	private void doUpdateHome() {

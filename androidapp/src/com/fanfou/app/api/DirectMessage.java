@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.http.Response;
 import com.fanfou.app.http.ResponseCode;
@@ -111,11 +112,11 @@ public class DirectMessage implements Storable<DirectMessage> {
 			return null;
 		}
 		DirectMessage dm = new DirectMessage();
-		dm.id = Parser.parseString(c, DirectMessageInfo.ID);
-		dm.realId=Parser.parseLong(c, DirectMessageInfo.REAL_ID);
-		dm.ownerId = Parser.parseString(c, DirectMessageInfo.OWNER_ID);
+		dm.id = Parser.parseString(c, BasicColumns.ID);
+		dm.realId=Parser.parseLong(c, BasicColumns.REAL_ID);
+		dm.ownerId = Parser.parseString(c, BasicColumns.OWNER_ID);
 		dm.text = Parser.parseString(c, DirectMessageInfo.TEXT);
-		dm.createdAt = Parser.parseDate(c, DirectMessageInfo.CREATED_AT);
+		dm.createdAt = Parser.parseDate(c, BasicColumns.CREATED_AT);
 		dm.senderId = Parser.parseString(c, DirectMessageInfo.SENDER_ID);
 		dm.senderScreenName = Parser.parseString(c,
 				DirectMessageInfo.SENDER_SCREEN_NAME);
@@ -127,7 +128,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 		dm.recipientProfileImageUrl = Parser.parseString(c,
 				DirectMessageInfo.RECIPIENT_PROFILE_IMAGE_URL);
 
-		dm.type = Parser.parseInt(c, DirectMessageInfo.TYPE);
+		dm.type = Parser.parseInt(c, BasicColumns.TYPE);
 
 		dm.threadUserId = Parser.parseString(c,
 				DirectMessageInfo.THREAD_USER_ID);
@@ -157,10 +158,10 @@ public class DirectMessage implements Storable<DirectMessage> {
 		DirectMessage dm = null;
 		try {
 			dm = new DirectMessage();
-			dm.id = o.getString(DirectMessageInfo.ID);
+			dm.id = o.getString(BasicColumns.ID);
 			dm.realId=Parser.decodeMessageRealId(dm.id);
 			dm.text = o.getString(DirectMessageInfo.TEXT);
-			dm.createdAt = Parser.date(o.getString(DirectMessageInfo.CREATED_AT));
+			dm.createdAt = Parser.date(o.getString(BasicColumns.CREATED_AT));
 			dm.senderId = o.getString(DirectMessageInfo.SENDER_ID);
 			dm.senderScreenName = o
 					.getString(DirectMessageInfo.SENDER_SCREEN_NAME);
@@ -194,11 +195,11 @@ public class DirectMessage implements Storable<DirectMessage> {
 	@Override
 	public ContentValues toContentValues() {
 		ContentValues cv = new ContentValues();
-		cv.put(DirectMessageInfo.ID, this.id);
-		cv.put(DirectMessageInfo.REAL_ID, this.realId);
-		cv.put(DirectMessageInfo.OWNER_ID, this.ownerId);
+		cv.put(BasicColumns.ID, this.id);
+		cv.put(BasicColumns.REAL_ID, this.realId);
+		cv.put(BasicColumns.OWNER_ID, this.ownerId);
 		cv.put(DirectMessageInfo.TEXT, this.text);
-		cv.put(DirectMessageInfo.CREATED_AT, this.createdAt.getTime());
+		cv.put(BasicColumns.CREATED_AT, this.createdAt.getTime());
 		cv.put(DirectMessageInfo.SENDER_ID, this.senderId);
 		cv.put(DirectMessageInfo.RECIPIENT_ID, this.recipientId);
 		cv.put(DirectMessageInfo.SENDER_SCREEN_NAME, this.senderScreenName);
@@ -208,13 +209,13 @@ public class DirectMessage implements Storable<DirectMessage> {
 				this.senderProfileImageUrl);
 		cv.put(DirectMessageInfo.RECIPIENT_PROFILE_IMAGE_URL,
 				this.recipientProfileImageUrl);
-		cv.put(DirectMessageInfo.TYPE, this.type);
+		cv.put(BasicColumns.TYPE, this.type);
 
 		cv.put(DirectMessageInfo.THREAD_USER_ID, this.threadUserId);
 		cv.put(DirectMessageInfo.THREAD_USER_NAME, this.threadUserName);
 		cv.put(DirectMessageInfo.IS_READ, this.isRead);
 
-		cv.put(DirectMessageInfo.TIMESTAMP, new Date().getTime());
+		cv.put(BasicColumns.TIMESTAMP, new Date().getTime());
 
 		return cv;
 	}
@@ -222,9 +223,9 @@ public class DirectMessage implements Storable<DirectMessage> {
 	@Override
 	public String toString() {
 		// return toContentValues().toString();
-		return "[Message] " + DirectMessageInfo.ID + "=" + this.id + " "
+		return "[Message] " + BasicColumns.ID + "=" + this.id + " "
 				+ DirectMessageInfo.TEXT + "=" + this.text + " "
-				+ DirectMessageInfo.CREATED_AT + "=" + this.createdAt + " "
+				+ BasicColumns.CREATED_AT + "=" + this.createdAt + " "
 				+ DirectMessageInfo.SENDER_ID + "=" + this.senderId + " "
 				+ DirectMessageInfo.RECIPIENT_ID + "=" + this.recipientId + " ";
 	}

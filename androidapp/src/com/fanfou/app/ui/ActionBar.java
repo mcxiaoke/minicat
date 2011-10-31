@@ -9,14 +9,15 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fanfou.app.R;
-import com.fanfou.app.WritePage;
 import com.fanfou.app.api.Status;
+import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -35,7 +36,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
 	private Context mContext;
 	private LayoutInflater mInflater;
-	private RelativeLayout mActionBar;// 标题栏
+	private ViewGroup mActionBar;// 标题栏
 	private ImageView mLeftButton;// 饭否标志
 	private ImageView mRightButton;// 右边的动作图标
 	private ImageView mRefreshButton;// 右侧第二个图标，刷新
@@ -160,7 +161,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);
 
-		this.mActionBar = (RelativeLayout) mInflater.inflate(
+		this.mActionBar = (ViewGroup) mInflater.inflate(
 				R.layout.actionbar, null);
 		addView(mActionBar);
 		this.mLeftButton = (ImageView) mActionBar
@@ -223,6 +224,22 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
 		@Override
 		public void performAction(View view) {
+			context.finish();
+		}
+
+	}
+	
+	public static class HomeAction extends AbstractAction {
+		private Activity context;
+
+		public HomeAction(Activity mContext) {
+			super(R.drawable.i_logo);
+			this.context = mContext;
+		}
+
+		@Override
+		public void performAction(View view) {
+			IntentHelper.goHomePage(context, 0);
 			context.finish();
 		}
 

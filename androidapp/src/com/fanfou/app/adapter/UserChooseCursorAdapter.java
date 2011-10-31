@@ -2,9 +2,6 @@ package com.fanfou.app.adapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.text.TextPaint;
@@ -12,11 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CheckedTextView;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.CompoundButton;
-import android.widget.FilterQueryProvider;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 

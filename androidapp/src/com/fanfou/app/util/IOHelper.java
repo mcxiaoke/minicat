@@ -59,7 +59,7 @@ public final class IOHelper {
 		return cacheDir;
 	}
 
-	public static File getCacheDir(Context context) {
+	public static File getImageCacheDir(Context context) {
 		File cacheDir;
 		if (Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
@@ -123,7 +123,7 @@ public final class IOHelper {
 	}
 
 	public static void ClearCache(Context context) {
-		File target = getCacheDir(context);
+		File target = getImageCacheDir(context);
 		if (target.exists() == false) {
 			return;
 		}
@@ -141,7 +141,7 @@ public final class IOHelper {
 	}
 
 	public static void ClearBigPictures(Context context) {
-		deleteDir(getCacheDir(context), 6 * 1024);
+		deleteDir(getImageCacheDir(context), 6 * 1024);
 	}
 
 	public static void deleteDir(File target) {

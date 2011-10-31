@@ -237,7 +237,7 @@ public class MessageChatPage extends BaseActivity {
 	private class SendAction extends AbstractAction {
 
 		public SendAction() {
-			super(R.drawable.i_send);
+			super(R.drawable.ic_send);
 		}
 
 		@Override

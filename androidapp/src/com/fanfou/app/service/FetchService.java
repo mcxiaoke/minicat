@@ -232,7 +232,7 @@ public class FetchService extends BaseIntentService {
 	}
 
 	private Cursor initMessagesCursor(final boolean outbox) {
-		String where = DirectMessageInfo.TYPE + " = ? ";
+		String where = BasicColumns.TYPE + " = ? ";
 		String[] whereArgs = new String[] { String
 				.valueOf(outbox ? DirectMessage.TYPE_OUT
 						: DirectMessage.TYPE_IN) };
@@ -327,7 +327,7 @@ public class FetchService extends BaseIntentService {
 				// add at 2011.10.21
 				// if count=20, clear old statuses.
 				if (size == 20 && maxId == null) {
-					String where = StatusInfo.TYPE + " = ?";
+					String where = BasicColumns.TYPE + " = ?";
 					String[] whereArgs = new String[] { String.valueOf(mType) };
 					cr.delete(StatusInfo.CONTENT_URI, where, whereArgs);
 					if (App.DEBUG) {

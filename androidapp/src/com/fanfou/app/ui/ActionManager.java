@@ -3,8 +3,6 @@ package com.fanfou.app.ui;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;

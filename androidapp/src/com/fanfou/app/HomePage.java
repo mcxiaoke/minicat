@@ -37,8 +37,6 @@ import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.ActionManager;
-import com.fanfou.app.ui.ActionBar.Action;
 import com.fanfou.app.ui.UIManager;
 import com.fanfou.app.ui.viewpager.TitlePageIndicator;
 import com.fanfou.app.ui.viewpager.TitleProvider;

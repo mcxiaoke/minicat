@@ -4,19 +4,9 @@
 package com.fanfou.app.util;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.zip.GZIPInputStream;
-
-import org.apache.http.Header;
-import org.apache.http.HeaderElement;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpRequestInterceptor;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
@@ -28,7 +18,6 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
@@ -36,13 +25,10 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
-import org.apache.http.protocol.HttpContext;
-
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
@@ -50,7 +36,7 @@ import com.fanfou.app.R;
 import com.fanfou.app.http.ApnType;
 import com.fanfou.app.http.GzipResponseInterceptor;
 import com.fanfou.app.http.RequestRetryHandler;
-import com.fanfou.app.update.AutoUpdateManager;
+import com.fanfou.app.service.DownloadService;
 
 /**
  * @author mcxiaoke
@@ -227,17 +213,14 @@ public final class NetworkHelper {
 	}
 
 	public static void doAutoUpdate(Context context) {
+		if(App.DEBUG){
+			Log.e("NetworkHelper", "doAutoUpdate");
+		}
 		final Context c=context;
 		boolean autoUpdate = OptionHelper.readBoolean(context,
 				R.string.option_autoupdate, true);
-		if (autoUpdate) {
-			Thread task = new Thread() {
-				@Override
-				public void run() {
-					AutoUpdateManager.checkUpdate(c);
-				}
-			};
-			task.start();
+		if (App.DEBUG||autoUpdate) {
+			DownloadService.startCheck(context);
 		}
 	}
 

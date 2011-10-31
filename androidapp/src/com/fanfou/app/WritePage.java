@@ -12,6 +12,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Selection;
@@ -27,6 +28,7 @@ import com.fanfou.app.adapter.AutoCompleteCursorAdapter;
 import com.fanfou.app.api.Draft;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.dialog.ConfirmDialog;
@@ -286,7 +288,7 @@ public class WritePage extends BaseActivity {
 	private class SendAction extends AbstractAction {
 
 		public SendAction() {
-			super(R.drawable.i_send);
+			super(R.drawable.ic_send);
 		}
 
 		@Override
@@ -311,9 +313,9 @@ public class WritePage extends BaseActivity {
 		mAutoCompleteTextView.setTokenizer(new AtTokenizer());
 		mAutoCompleteTextView.setDropDownBackgroundResource(R.drawable.bg);
 		mAutoCompleteTextView.setDropDownAnchor(R.id.write_text);
-		String[] projection = new String[] { UserInfo._ID, UserInfo.ID,
+		String[] projection = new String[] { BaseColumns._ID, BasicColumns.ID,
 				UserInfo.SCREEN_NAME };
-		String where = UserInfo.TYPE + " = '" + User.TYPE_FRIENDS + "'";
+		String where = BasicColumns.TYPE + " = '" + User.TYPE_FRIENDS + "'";
 		Cursor c = managedQuery(UserInfo.CONTENT_URI, projection, where, null,
 				null);
 		mAdapter = new AutoCompleteCursorAdapter(this, c);
@@ -347,8 +349,8 @@ public class WritePage extends BaseActivity {
 		iPictureRemove.setOnClickListener(this);
 
 		iLocationIcon
-				.setImageResource(enableLocation ? R.drawable.toolbar_geo_on
-						: R.drawable.toolbar_geo_off);
+				.setImageResource(enableLocation ? R.drawable.ic_bar_geoon
+						: R.drawable.ic_bar_geooff);
 
 	}
 
@@ -476,11 +478,11 @@ public class WritePage extends BaseActivity {
 			log("location enable status=" + enableLocation);
 		if (enableLocation) {
 
-			iLocationIcon.setImageResource(R.drawable.toolbar_geo_on);
+			iLocationIcon.setImageResource(R.drawable.ic_bar_geoon);
 			mLocationManager.requestLocationUpdates(
 					LocationManager.NETWORK_PROVIDER, 0, 0, mLocationMonitor);
 		} else {
-			iLocationIcon.setImageResource(R.drawable.toolbar_geo_off);
+			iLocationIcon.setImageResource(R.drawable.ic_bar_geooff);
 			mLocationManager.removeUpdates(mLocationMonitor);
 		}
 	}

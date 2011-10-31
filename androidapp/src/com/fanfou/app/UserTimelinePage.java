@@ -2,12 +2,12 @@ package com.fanfou.app;
 
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.util.Utils;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.ResultReceiver;
 
 /**
  * @author mcxiaoke
@@ -18,7 +18,7 @@ public class UserTimelinePage extends BaseTimelineActivity {
 
 	@Override
 	protected Cursor getCursor() {
-		String where = StatusInfo.TYPE + "=? AND " + StatusInfo.USER_ID + "=? ";
+		String where = BasicColumns.TYPE + "=? AND " + StatusInfo.USER_ID + "=? ";
 		String[] whereArgs = new String[] { String.valueOf(getType()),
 				userId };
 		return managedQuery(StatusInfo.CONTENT_URI, StatusInfo.COLUMNS, where,

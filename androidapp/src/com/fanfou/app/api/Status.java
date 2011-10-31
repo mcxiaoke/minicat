@@ -10,13 +10,12 @@ import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.os.Parcel;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
-import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.http.Response;
@@ -154,10 +153,10 @@ public class Status implements Storable<Status> {
 			return null;
 		}
 		Status s = new Status();
-		s.createdAt = Parser.parseDate(c, StatusInfo.CREATED_AT);
-		s.id = Parser.parseString(c, StatusInfo.ID);
-		s.realId=Parser.parseLong(c, StatusInfo.REAL_ID);
-		s.ownerId = Parser.parseString(c, StatusInfo.OWNER_ID);
+		s.createdAt = Parser.parseDate(c, BasicColumns.CREATED_AT);
+		s.id = Parser.parseString(c, BasicColumns.ID);
+		s.realId=Parser.parseLong(c, BasicColumns.REAL_ID);
+		s.ownerId = Parser.parseString(c, BasicColumns.OWNER_ID);
 		s.text = Parser.parseString(c, StatusInfo.TEXT);
 		s.simpleText=Parser.parseString(c, StatusInfo.SIMPLE_TEXT);
 		s.special=Parser.parseBoolean(c, StatusInfo.SPECIAL);
@@ -178,7 +177,7 @@ public class Status implements Storable<Status> {
 		s.userProfileImageUrl = Parser.parseString(c,
 				StatusInfo.USER_PROFILE_IMAGE_URL);
 
-		s.type = Parser.parseInt(c, StatusInfo.TYPE);
+		s.type = Parser.parseInt(c, BasicColumns.TYPE);
 
 		s.truncated = Parser.parseBoolean(c, StatusInfo.TRUNCATED);
 		s.favorited = Parser.parseBoolean(c, StatusInfo.FAVORITED);
@@ -227,8 +226,8 @@ public class Status implements Storable<Status> {
 		}
 		try {
 			Status s = new Status();
-			s.createdAt = Parser.date(o.getString(StatusInfo.CREATED_AT));
-			s.id = o.getString(StatusInfo.ID);
+			s.createdAt = Parser.date(o.getString(BasicColumns.CREATED_AT));
+			s.id = o.getString(BasicColumns.ID);
 			s.text = o.getString(StatusInfo.TEXT);
 
 			s.source = Parser.parseSource(o.getString(StatusInfo.SOURCE));;
@@ -264,7 +263,7 @@ public class Status implements Storable<Status> {
 
 			if (o.has("user")) {
 				JSONObject uo = o.getJSONObject("user");
-				s.userId = uo.getString(StatusInfo.ID);
+				s.userId = uo.getString(BasicColumns.ID);
 				s.userScreenName = uo.getString(UserInfo.SCREEN_NAME);
 				s.userProfileImageUrl = uo
 						.getString(UserInfo.PROFILE_IMAGE_URL);
@@ -290,12 +289,12 @@ public class Status implements Storable<Status> {
 	@Override
 	public ContentValues toContentValues() {
 		ContentValues cv = new ContentValues();
-		cv.put(StatusInfo.CREATED_AT, this.createdAt.getTime());
-		cv.put(StatusInfo.ID, this.id);
+		cv.put(BasicColumns.CREATED_AT, this.createdAt.getTime());
+		cv.put(BasicColumns.ID, this.id);
 		
-		cv.put(StatusInfo.REAL_ID, this.realId);
+		cv.put(BasicColumns.REAL_ID, this.realId);
 		
-		cv.put(StatusInfo.OWNER_ID, this.ownerId);
+		cv.put(BasicColumns.OWNER_ID, this.ownerId);
 		cv.put(StatusInfo.TEXT, this.text);
 		cv.put(StatusInfo.SOURCE, this.source);
 		cv.put(StatusInfo.IN_REPLY_TO_STATUS_ID, this.inReplyToStatusId);
@@ -310,7 +309,7 @@ public class Status implements Storable<Status> {
 		cv.put(StatusInfo.USER_SCREEN_NAME, this.userScreenName);
 		cv.put(StatusInfo.USER_PROFILE_IMAGE_URL, this.userProfileImageUrl);
 
-		cv.put(StatusInfo.TYPE, this.type);
+		cv.put(BasicColumns.TYPE, this.type);
 
 		cv.put(StatusInfo.TRUNCATED, this.truncated);
 		cv.put(StatusInfo.FAVORITED, this.favorited);
@@ -322,16 +321,16 @@ public class Status implements Storable<Status> {
 		cv.put(StatusInfo.SIMPLE_TEXT, this.simpleText);
 		cv.put(StatusInfo.SPECIAL, this.special);
 		
-		cv.put(StatusInfo.TIMESTAMP, new Date().getTime());
+		cv.put(BasicColumns.TIMESTAMP, new Date().getTime());
 		return cv;
 	}
 
 	@Override
 	public String toString() {
 		// return toContentValues().toString();
-		return "[Status] " + StatusInfo.ID + "=" + this.id + " "
+		return "[Status] " + BasicColumns.ID + "=" + this.id + " "
 				+ StatusInfo.TEXT + "=" + this.text + " "
-				+ StatusInfo.CREATED_AT + "+" + this.createdAt + " "
+				+ BasicColumns.CREATED_AT + "+" + this.createdAt + " "
 				// +StatusInfo.SOURCE+"="+this.source+" "
 				// +StatusInfo.TRUNCATED+"="+this.truncated+" "
 				// +StatusInfo.IN_REPLY_TO_STATUS_ID+"="+this.inReplyToStatusId+" "

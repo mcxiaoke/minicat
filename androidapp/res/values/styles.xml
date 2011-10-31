@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<style name="Theme" parent="android:style/Theme.Light.NoTitleBar">
+	<style name="Theme" parent="@android:style/Theme.Light.NoTitleBar">
 		<item name="android:windowContentOverlay">@null</item>
 	</style>
 
-	<style name="ThemeBlack" parent="android:style/Theme.NoTitleBar">
+	<style name="ThemeBlack" parent="@android:style/Theme.NoTitleBar">
 		<item name="android:windowContentOverlay">@null</item>
 	</style>
 
@@ -15,7 +15,7 @@
 		<item name="android:windowBackground">@android:color/transparent</item>
 	</style>
 
-	<style name="Theme.AutoCompleteTextView">
+	<style name="Theme.AutoCompleteTextViewFix">
 		<item name="android:dropDownItemStyle">@style/Widget.DropDownItemLight</item>
 		<item name="android:autoCompleteTextViewStyle">@style/Widget.AutoCompleteTextViewLight</item>
 	</style>
@@ -49,13 +49,22 @@
 	<style name="Button">
 		<item name="android:gravity">center</item>
 	</style>
-	
+
 	<style name="Button.Blue">
 		<item name="android:layout_width">fill_parent</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:layout_weight">1</item>
 		<item name="android:background">@drawable/button_bg</item>
 		<item name="android:textColor">@color/solid_white</item>
+	</style>
+
+	<style name="Button.BlueBlack">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_weight">1</item>
+		<item name="android:background">@drawable/button_bg</item>
+		<item name="android:textColor">@color/solid_black</item>
+		<item name="android:textSize">@dimen/text_size_large</item>
 	</style>
 
 	<style name="Button.Blue.Big">

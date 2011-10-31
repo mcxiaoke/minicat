@@ -3,7 +3,6 @@ package com.fanfou.app.adapter;
 import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Draft;
-import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.StringHelper;
 
 import android.content.Context;

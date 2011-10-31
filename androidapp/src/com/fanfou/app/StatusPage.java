@@ -292,7 +292,7 @@ public class StatusPage extends BaseActivity {
 	}
 
 	private String getPhotoPath(String key) {
-		File file = new File(IOHelper.getCacheDir(mContext),
+		File file = new File(IOHelper.getImageCacheDir(mContext),
 				StringHelper.md5(key) + ".jpg");
 		if (App.DEBUG) {
 			log("loadFile path=" + file.getAbsolutePath());

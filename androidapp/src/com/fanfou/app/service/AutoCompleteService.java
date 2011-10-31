@@ -1,9 +1,7 @@
 package com.fanfou.app.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.util.Log;
 
@@ -12,7 +10,6 @@ import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.User;
-import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
 
 /**

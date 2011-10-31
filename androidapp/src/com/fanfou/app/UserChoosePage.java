@@ -25,12 +25,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.fanfou.app.adapter.UserChooseCursorAdapter;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
-import com.fanfou.app.ui.widget.EndlessListView;
-import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
 
@@ -93,7 +92,7 @@ public class UserChoosePage extends BaseActivity implements
 	}
 
 	protected void initCursorAdapter() {
-		String where = UserInfo.TYPE + "=? AND " + UserInfo.OWNER_ID + "=?";
+		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID + "=?";
 		String[] whereArgs = new String[] { String.valueOf(User.TYPE_FRIENDS),
 				App.me.userId };
 		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
@@ -184,7 +183,7 @@ public class UserChoosePage extends BaseActivity implements
 	private class ConfirmAction extends AbstractAction {
 
 		public ConfirmAction() {
-			super(R.drawable.i_ok);
+			super(R.drawable.ic_ok);
 		}
 
 		@Override
@@ -313,10 +312,10 @@ public class UserChoosePage extends BaseActivity implements
 
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
-		String where = UserInfo.TYPE + " = " + User.TYPE_FRIENDS + " AND "
-				+ UserInfo.OWNER_ID + " = '" + App.me.userId + "' AND ("
+		String where = BasicColumns.TYPE + " = " + User.TYPE_FRIENDS + " AND "
+				+ BasicColumns.OWNER_ID + " = '" + App.me.userId + "' AND ("
 				+ UserInfo.SCREEN_NAME + " like '%" + constraint + "%' OR "
-				+ UserInfo.ID + " like '%" + constraint + "%' )";
+				+ BasicColumns.ID + " like '%" + constraint + "%' )";
 		;
 		return managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				null, null);

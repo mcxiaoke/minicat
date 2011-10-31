@@ -10,10 +10,15 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
@@ -22,26 +27,32 @@ import android.webkit.MimeTypeMap;
 import android.widget.RemoteViews;
 
 import com.fanfou.app.App;
-import com.fanfou.app.HomePage;
-import com.fanfou.app.LoginPage;
+import com.fanfou.app.NewVersionPage;
 import com.fanfou.app.R;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.update.VersionInfo;
 import com.fanfou.app.util.IOHelper;
-import com.fanfou.app.util.IntentHelper;
+import com.fanfou.app.util.NetworkHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
- * @version 1.0 20110904
+ * @version 1.0 2011.09.04
+ * @version 2.0 2011.10.31
  * 
  */
 public class DownloadService extends WakefulIntentService {
+	public static final String APP_UPDATE_SITE = "http://apps.fanfou.com/android/update.json";
+
 	private static final int NOTIFICATION_PROGRESS_ID = 1;
 	private NotificationManager nm;
 	private Notification notification;
 	private RemoteViews remoteViews;
 	private Handler mHandler;
+
+	public static final int TYPE_CHECK = 0;
+	public static final int TYPE_DOWNLOAD = 1;
 
 	private void log(String message) {
 		Log.d("DownloadService", message);
@@ -49,15 +60,44 @@ public class DownloadService extends WakefulIntentService {
 
 	public DownloadService() {
 		super("DownloadService");
+		nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		mHandler = new Handler();
+	}
+	
+	public static void startDownload(Context context, String url) {
+		Intent intent = new Intent(context, DownloadService.class);
+		intent.putExtra(Commons.EXTRA_TYPE, TYPE_DOWNLOAD);
+		intent.putExtra(Commons.EXTRA_URL, url);
+		context.startService(intent);
+	}
+	
+	public static void startCheck(Context context){
+		Intent intent = new Intent(context, DownloadService.class);
+		intent.putExtra(Commons.EXTRA_TYPE, TYPE_CHECK);
+		context.startService(intent);
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		mHandler = new Handler();
-		String url = intent.getStringExtra(Commons.EXTRA_URL);
-		if (!StringHelper.isEmpty(url)) {
-			download(url);
+		int type = intent.getIntExtra(Commons.EXTRA_TYPE, TYPE_CHECK);
+		if (type == TYPE_CHECK) {
+			check();
+		} else if (type == TYPE_DOWNLOAD) {
+			String url = intent.getStringExtra(Commons.EXTRA_URL);
+			if (!StringHelper.isEmpty(url)) {
+				download(url);
+			}
+		}
+	}
+
+	private void check() {
+		VersionInfo info = fetchVersionInfo();
+		if (App.DEBUG && info != null) {
+			notifyUpdate(info, this);
+			return;
+		}
+		if (info != null && info.versionCode > App.me.appVersionCode) {
+			notifyUpdate(info, this);
 		}
 	}
 
@@ -77,7 +117,8 @@ public class DownloadService extends WakefulIntentService {
 				is = entity.getContent();
 				File file = new File(IOHelper.getDownloadDir(this),
 						"fanfou.apk");
-				fos = new FileOutputStream(file);
+				 fos = new FileOutputStream(file);
+//				fos = openFileOutput("fanfou.apk", MODE_PRIVATE);
 				byte[] buffer = new byte[20480];
 				int read = -1;
 
@@ -137,21 +178,6 @@ public class DownloadService extends WakefulIntentService {
 					progress);
 			nm.notify(NOTIFICATION_PROGRESS_ID, notification);
 		}
-
-		// if(progress<100){
-		// notification.contentView.setTextViewText(R.id.download_notification_text,
-		// "正在下载更新 "+progress+"%");
-		// notification.contentView.setInt(R.id.download_notification_progress,
-		// "setProgress", progress);
-		// nm.notify(NOTIFICATION_PROGRESS_ID, notification);
-		// }else{
-		// notification.contentView.setTextViewText(R.id.download_notification_text,
-		// "饭否客户端新版本下载完成，点击安装");
-		// notification.contentView.setInt(R.id.download_notification_progress,
-		// "setProgress", 100);
-		// notification.contentIntent=getInstallPendingIntent(fileName);
-		// nm.notify(NOTIFICATION_PROGRESS_ID, notification);
-		// }
 	}
 
 	@SuppressWarnings("unused")
@@ -166,6 +192,89 @@ public class DownloadService extends WakefulIntentService {
 			return pi;
 		}
 		return null;
+	}
+
+	public static VersionInfo fetchVersionInfo() {
+		HttpClient client = NetworkHelper.newHttpClient();
+		NetworkHelper.setProxy(client);
+		HttpGet request = new HttpGet(APP_UPDATE_SITE);
+		try {
+			HttpResponse response = client.execute(request);
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (App.DEBUG) {
+				Log.d("AutoUpdateManager", "statusCode=" + statusCode);
+			}
+			if (statusCode == 200) {
+				String content = EntityUtils.toString(response.getEntity(),
+						HTTP.UTF_8);
+				if (App.DEBUG) {
+					Log.d("AutoUpdateManager", "response=" + content);
+				}
+				return VersionInfo.parse(content);
+			}
+		} catch (IOException e) {
+			if (App.DEBUG) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			if (App.DEBUG) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
+	public static void notifyUpdate(VersionInfo info, Context context) {
+		String versionInfo = info.versionName + "(Build" + info.versionCode
+				+ ")";
+		NotificationManager nm = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		Notification notification = new Notification(R.drawable.ic_notify_home,
+				"饭否客户端，发现新版本：" + versionInfo, System.currentTimeMillis());
+
+		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+				getNewVersionIntent(context, info), 0);
+		notification.setLatestEventInfo(context, "饭否客户端有更新，点击查看更新内容", "版本号："
+				+ versionInfo, contentIntent);
+		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		nm.notify(2, notification);
+
+	}
+	
+	public static void showUpdateConfirmDialog(final Context context,
+			final VersionInfo info) {
+		DialogInterface.OnClickListener downListener = new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				startDownload(context, info.downloadUrl);
+			}
+		};
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		builder.setTitle("发现新版本，是否更新？").setCancelable(true)
+				.setNegativeButton("以后再说", null);
+		builder.setPositiveButton("立即更新", downListener);
+		StringBuffer sb = new StringBuffer();
+		sb.append("安装版本： ").append(App.me.appVersionName).append("(Build")
+				.append(App.me.appVersionCode).append(")");
+		sb.append("\n最新版本： ").append(info.versionName).append("(Build")
+				.append(info.versionCode).append(")");
+		sb.append("\n更新日期：").append(info.releaseDate);
+		sb.append("\n更新级别：").append(
+				info.forceUpdate ? "重要更新" : "一般更新");
+		sb.append("\n更新内容：\n").append(info.changelog);
+		builder.setMessage(sb.toString());
+		AlertDialog dialog = builder.create();
+		dialog.show();
+
+	}
+
+	public static Intent getNewVersionIntent(Context context,
+			final VersionInfo info) {
+		Intent intent = new Intent(context, NewVersionPage.class);
+		intent.putExtra(Commons.EXTRA_DATA, info);
+		// intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		return intent;
 	}
 
 }

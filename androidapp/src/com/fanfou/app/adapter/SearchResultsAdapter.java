@@ -6,10 +6,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -129,8 +129,8 @@ public class SearchResultsAdapter extends BaseArrayAdapter<Status> {
 				int start=m.start();
 				int end=m.end();
 				span.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.profile_relation_blue)), start, end,
-						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				span.setSpan(new StyleSpan(Typeface.BOLD), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+				span.setSpan(new StyleSpan(Typeface.BOLD), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 			}		
 		}
 		holder.contentText.setText(span);

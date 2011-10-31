@@ -1,7 +1,6 @@
 package com.fanfou.app.http;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.List;
 
 import org.apache.http.Header;

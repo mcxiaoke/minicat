@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Collection;
 
 import android.app.Activity;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -17,7 +16,6 @@ import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
@@ -35,11 +33,7 @@ import com.fanfou.app.R;
 import com.fanfou.app.StatusPage;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
-import com.fanfou.app.api.User;
-import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.db.Contents.StatusInfo;
-import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.service.AutoCompleteService;
 import com.fanfou.app.service.FetchService;
 

@@ -1,8 +1,6 @@
 package com.fanfou.app.cache;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
@@ -26,10 +24,8 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.fanfou.app.App;
-import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.ImageHelper;
 import com.fanfou.app.util.NetworkHelper;
-import com.fanfou.app.util.StringHelper;
 
 /**
  * @author mcxiaoke

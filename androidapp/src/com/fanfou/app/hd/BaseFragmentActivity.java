@@ -23,7 +23,6 @@ import com.fanfou.app.WritePage;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.http.ApnType;
-import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.Utils;
 

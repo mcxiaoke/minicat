@@ -16,7 +16,8 @@
  */
 package com.fanfou.app.ui.viewpager;
 
-import net.londatiga.android.R;
+import com.fanfou.app.R;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;

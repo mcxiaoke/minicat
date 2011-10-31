@@ -1,19 +1,21 @@
-/**
- * 
- */
 package com.fanfou.app.update;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.fanfou.app.App;
 
 /**
  * @author mcxiaoke
- * @version 1.0 20110904
+ * @version 1.0 2011.09.04
+ * @version 2.0 2011.10.31
  * 
  */
-public final class VersionInfo {
+public final class VersionInfo implements Parcelable {
+
 	public static final String TYPE_BUGFIX = "bugfix";
 	public static final String TYPE_MINOR = "minor";
 	public static final String TYPE_MAJOR = "major";
@@ -26,6 +28,15 @@ public final class VersionInfo {
 	public String versionType;// 升级类型：BUG修复，功能改进，重大更新
 	public String packageName;// 安装包文件名
 	public boolean forceUpdate;// 是否强制升级
+
+	public VersionInfo() {
+	}
+
+	public VersionInfo(Parcel in) {
+		this();
+		Bundle bundle = in.readBundle();
+		readFromBundle(bundle);
+	}
 
 	public static VersionInfo parse(String response) {
 		try {
@@ -48,18 +59,80 @@ public final class VersionInfo {
 		}
 	}
 
+	public static VersionInfo parseBundle(Bundle bundle) {
+		VersionInfo info = new VersionInfo();
+		info.versionCode = bundle.getInt("versionCode");
+		info.versionName = bundle.getString("versionName");
+		info.releaseDate = bundle.getString("releaseDate");
+		info.changelog = bundle.getString("changelog");
+		info.downloadUrl = bundle.getString("downloadUrl");
+		info.versionType = bundle.getString("versionType");
+		info.packageName = bundle.getString("packageName");
+		info.forceUpdate = bundle.getBoolean("forceUpdate");
+		if (info.versionCode > 0) {
+			return info;
+		} else {
+			return null;
+		}
+	}
+
+	public void readFromBundle(Bundle bundle) {
+		versionCode = bundle.getInt("versionCode");
+		versionName = bundle.getString("versionName");
+		releaseDate = bundle.getString("releaseDate");
+		changelog = bundle.getString("changelog");
+		downloadUrl = bundle.getString("downloadUrl");
+		versionType = bundle.getString("versionType");
+		packageName = bundle.getString("packageName");
+		forceUpdate = bundle.getBoolean("forceUpdate");
+	}
+
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("[VersionInfo] versionCode=" + versionCode);
 		sb.append("[VersionInfo] versionName=" + versionName);
 		sb.append("[VersionInfo] releaseDate=" + releaseDate);
+		sb.append("[VersionInfo] changelog=(" + changelog).append(")");
 		sb.append("[VersionInfo] downloadUrl=" + downloadUrl);
 		sb.append("[VersionInfo] versionType=" + versionType);
 		sb.append("[VersionInfo] packageName=" + packageName);
 		sb.append("[VersionInfo] forceUpdate=" + forceUpdate);
-		sb.append("[VersionInfo] changelog=(" + changelog).append(")");
 		return sb.toString();
 	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		Bundle bundle = new Bundle();
+		bundle.putInt("versionCode", versionCode);
+		bundle.putString("versionName", versionName);
+		bundle.putString("releaseDate", releaseDate);
+		bundle.putString("changelog", changelog);
+		bundle.putString("downloadUrl", downloadUrl);
+		bundle.putString("versionType", versionType);
+		bundle.putString("packageName", packageName);
+		bundle.putBoolean("forceUpdate", forceUpdate);
+		dest.writeBundle(bundle);
+	}
+
+	public static final Parcelable.Creator<VersionInfo> CREATOR = new Parcelable.Creator<VersionInfo>() {
+
+		@Override
+		public VersionInfo createFromParcel(Parcel source) {
+			Bundle bundle = source.readBundle();
+			return parseBundle(bundle);
+		}
+
+		@Override
+		public VersionInfo[] newArray(int size) {
+			return new VersionInfo[size];
+		}
+
+	};
 
 }
