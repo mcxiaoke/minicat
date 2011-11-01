@@ -136,7 +136,7 @@ public class PostStatusService extends WakefulIntentService {
 
 	private int showSendingNotification() {
 		int id = 0;
-		Notification notification = new Notification(R.drawable.ic_notify_home,
+		Notification notification = new Notification(R.drawable.ic_notify_icon,
 				"饭否消息正在发送...", System.currentTimeMillis());
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				new Intent(), 0);
@@ -149,7 +149,7 @@ public class PostStatusService extends WakefulIntentService {
 	private int showFailedNotification(String title, String message) {
 		doSaveDrafts();
 		int id = 1;
-		Notification notification = new Notification(R.drawable.ic_notify_home,
+		Notification notification = new Notification(R.drawable.ic_notify_icon,
 				title, System.currentTimeMillis());
 		Intent intent = new Intent(this, DraftsPage.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,

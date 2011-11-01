@@ -74,7 +74,7 @@ public class OAuth {
 	}
 
 	public OAuthToken getOAuthAccessToken(String username, String password)
-			throws ApiException, ClientProtocolException, IOException {
+			throws ApiException, IOException {
 		HttpGet request = new HttpGet(ACCESS_TOKEN_URL);
 		String authorization = getXAuthHeader(username, password,
 				request.getMethod(), ACCESS_TOKEN_URL);
@@ -92,8 +92,8 @@ public class OAuth {
 		if (statusCode == 200) {
 			return new OAuthToken(content);
 		} else {
-			if (App.DEBUG)
-				log("getOAuthAccessToken content=" + content);
+			if (App.DEBUG){
+				log("getOAuthAccessToken content=" + content);}
 			throw new ApiException(statusCode, "帐号或密码不正确，登录失败");
 		}
 	}

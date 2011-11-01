@@ -59,7 +59,7 @@ public final class AlarmHelper {
 		}
 		Calendar c = Calendar.getInstance();
 		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
-				c.get(Calendar.DAY_OF_MONTH), 10, 0);
+				c.get(Calendar.DAY_OF_MONTH), 20, 0);
 		c.add(Calendar.DATE, 3);
 		long interval = 3 * 24 * 3600 * 1000;
 		AlarmManager am = (AlarmManager) context
@@ -118,9 +118,11 @@ public final class AlarmHelper {
 		if (App.DEBUG) {
 			Log.i("AlarmHelper", "setAutoCompleteAlarm");
 		}
+		int hour = 6;
+		int minute = 0;
 		Calendar c = Calendar.getInstance();
 		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
-				c.get(Calendar.DAY_OF_MONTH), 10, 0);
+				c.get(Calendar.DAY_OF_MONTH), hour, minute);
 		c.add(Calendar.DATE, 1);
 		long interval = 3 * 24 * 3600 * 1000;
 		AlarmManager am = (AlarmManager) context

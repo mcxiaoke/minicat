@@ -59,7 +59,7 @@ final public class ImageHelper {
 	public static final int IMAGE_ORIGINAL_WIDTH = 800;
 	public static final int IMAGE_ORIGINAL_HEIGHT = 1600;
 
-	public static final int READ_BUFFER_SIZE = 32 * 1024; // 32KB
+	public static final int OUTPUT_BUFFER_SIZE=8196;
 
 	private static final float EDGE_START = 0.0f;
 	private static final float EDGE_END = 4.0f;
@@ -499,7 +499,7 @@ final public class ImageHelper {
 		BufferedOutputStream bos = null;
 		try {
 			if (!file.exists()) {
-				bos = new BufferedOutputStream(new FileOutputStream(file));
+				bos = new BufferedOutputStream(new FileOutputStream(file),OUTPUT_BUFFER_SIZE);
 				bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
 			}
 			result = true;

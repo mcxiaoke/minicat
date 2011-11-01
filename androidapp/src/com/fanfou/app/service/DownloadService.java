@@ -227,16 +227,15 @@ public class DownloadService extends WakefulIntentService {
 	}
 
 	public static void notifyUpdate(VersionInfo info, Context context) {
-		String versionInfo = info.versionName + "(Build" + info.versionCode
-				+ ")";
+		String versionInfo = info.versionName;
 		NotificationManager nm = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notification = new Notification(R.drawable.ic_notify_home,
+		Notification notification = new Notification(R.drawable.ic_notify_icon,
 				"饭否客户端有新版本：" + versionInfo, System.currentTimeMillis());
 
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
 				getNewVersionIntent(context, info), 0);
-		notification.setLatestEventInfo(context, "饭否客户端有新版本，版本号："
+		notification.setLatestEventInfo(context, "饭否客户端有新版本："
 				+ versionInfo, "点击查看更新内容", contentIntent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		nm.notify(2, notification);

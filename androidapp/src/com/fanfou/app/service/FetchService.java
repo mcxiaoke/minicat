@@ -1,5 +1,6 @@
 package com.fanfou.app.service;
 
+import java.io.BufferedOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -343,6 +344,7 @@ public class FetchService extends BaseIntentService {
 				// extract users and insert to db, replace original object.
 				extractUsers(statuses, mType);
 			}
+			BufferedOutputStream a;
 		} catch (ApiException e) {
 			if (App.DEBUG) {
 				log("doFetchStatuses [error]" + e.statusCode + ":"

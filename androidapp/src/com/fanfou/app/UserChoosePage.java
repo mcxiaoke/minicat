@@ -92,7 +92,8 @@ public class UserChoosePage extends BaseActivity implements
 	}
 
 	protected void initCursorAdapter() {
-		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID + "=?";
+		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
+				+ "=?";
 		String[] whereArgs = new String[] { String.valueOf(User.TYPE_FRIENDS),
 				App.me.userId };
 		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
@@ -179,7 +180,7 @@ public class UserChoosePage extends BaseActivity implements
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
 		mActionBar.setRightAction(new ConfirmAction());
 	}
-	
+
 	private class ConfirmAction extends AbstractAction {
 
 		public ConfirmAction() {
@@ -271,8 +272,17 @@ public class UserChoosePage extends BaseActivity implements
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
+			resetChoices();
 			mCursorAdapter.getFilter().filter(s.toString());
 		}
+	}
+	
+	private void resetChoices(){
+		SparseBooleanArray sba = mListView.getCheckedItemPositions();
+		for (int i = 0; i < sba.size(); i++) {
+			mCursorAdapter.setItemChecked(sba.keyAt(i), false);
+		}
+		mListView.clearChoices();
 	}
 
 	protected class MyResultHandler extends ResultReceiver {
@@ -324,20 +334,21 @@ public class UserChoosePage extends BaseActivity implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
+
 		SparseBooleanArray sba = mListView.getCheckedItemPositions();
 		mUserNames.clear();
-		int checkedNums = 0;
 		for (int i = 0; i < sba.size(); i++) {
-			mCursorAdapter.setItemChecked(sba.keyAt(i), sba.valueAt(i));
-			if (sba.valueAt(i)) {
-				final Cursor cc = (Cursor) mListView.getItemAtPosition(sba
-						.keyAt(i));
+			int key = sba.keyAt(i);
+			boolean value = sba.valueAt(i);
+			mCursorAdapter.setItemChecked(key, value);
+			if (App.DEBUG) {
+				log("sba.values i=" + i + " key=" + key + " value=" + value
+						+ " cursor.size=" + mCursor.getCount()
+						+ " adapter.size=" + mCursorAdapter.getCount());
+			}
+			if (value) {
+				final Cursor cc = (Cursor) mCursorAdapter.getItem(key);
 				final User uu = User.parse(cc);
-				if (App.DEBUG) {
-					log("onItemClick Checked userId=" + uu.id + " username="
-							+ uu.screenName);
-					checkedNums++;
-				}
 				mUserNames.add(uu.screenName);
 			}
 		}
@@ -348,10 +359,10 @@ public class UserChoosePage extends BaseActivity implements
 			initViewStub();
 		}
 
-		if (checkedNums > 0) {
-			mButtonGroup.setVisibility(View.VISIBLE);
-		} else {
+		if (mUserNames.isEmpty()) {
 			mButtonGroup.setVisibility(View.GONE);
+		} else {
+			mButtonGroup.setVisibility(View.VISIBLE);
 		}
 	}
 

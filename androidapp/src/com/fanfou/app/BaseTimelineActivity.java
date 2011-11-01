@@ -238,15 +238,18 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 				updateUI();
 				break;
 			case Commons.RESULT_CODE_ERROR:
-				if (!isInitialized) {
-					showContent();
-				}
 				String msg = resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
 				Utils.notify(mContext, msg);
-				if (doGetMore) {
-					mListView.onLoadMoreComplete();
+				if (!isInitialized) {
+					showContent();
+						mListView.onNoLoadMore();
+						mListView.onNoRefresh();
 				} else {
-					mListView.onRefreshComplete();
+					if (doGetMore) {
+						mListView.onLoadMoreComplete();
+					} else {
+						mListView.onRefreshComplete();
+					}
 				}
 				break;
 			default:

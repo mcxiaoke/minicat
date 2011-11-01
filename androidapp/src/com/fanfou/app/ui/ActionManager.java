@@ -284,8 +284,7 @@ public final class ActionManager {
 				case Commons.RESULT_CODE_ERROR:
 					String msg = resultData
 							.getString(Commons.EXTRA_ERROR_MESSAGE);
-					Utils.notify(activity.getApplicationContext(), "删除失败："
-							+ msg);
+					Utils.notify(activity.getApplicationContext(),msg);
 					onFailed(li, Commons.ACTION_STATUS_DELETE, "删除失败");
 					break;
 				default:
@@ -341,8 +340,7 @@ public final class ActionManager {
 				case Commons.RESULT_CODE_ERROR:
 					String msg = resultData
 							.getString(Commons.EXTRA_ERROR_MESSAGE);
-					Utils.notify(activity.getApplicationContext(), "收藏失败："
-							+ msg);
+					Utils.notify(activity.getApplicationContext(),msg);
 					onFailed(li, type, "收藏失败");
 					break;
 				default:
@@ -379,8 +377,7 @@ public final class ActionManager {
 				case Commons.RESULT_CODE_ERROR:
 					String msg = resultData
 							.getString(Commons.EXTRA_ERROR_MESSAGE);
-					Utils.notify(activity.getApplicationContext(), "删除失败："
-							+ msg);
+					Utils.notify(activity.getApplicationContext(),msg);
 					onFailed(li, Commons.ACTION_DIRECT_MESSAGE_DELETE, "删除失败");
 					break;
 				default:
