@@ -38,6 +38,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.0 2011.10.21
  * @version 2.0 2011.10.24
  * @version 2.1 2011.10.26
+ * @version 2.2 2011.11.01
  */
 public class UserChoosePage extends BaseActivity implements
 		FilterQueryProvider, OnItemClickListener {

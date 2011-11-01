@@ -14,6 +14,8 @@
 	<string name="login_signup_web">网站注册</string>
 	<string name="login_signup_sms">短信注册</string>
 	
+		<string name="connection_error_msg">网络连接好像有问题，请稍后重试</string>
+	
 		<string name="crash_toast_text">啊噢，客户端崩溃了，一份包含匿名数据的崩溃报告已经被发送给开发者用于分析出错原因 !</string>
 	
 	<string name="crash_mail_header">请点击发送邮件，报告以下匿名崩溃数据帮助饭否改进客户端：\n\n</string>

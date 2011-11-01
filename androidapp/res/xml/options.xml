@@ -78,7 +78,7 @@
 			android:entryValues="@array/photo_quality_values" android:key="@string/option_photo_quality"
 			android:summary="设置上传照片的质量" android:title="上传照片质量" />
 
-		<CheckBoxPreference android:defaultValue="true"
+		<CheckBoxPreference android:defaultValue="false"
 			android:key="@string/option_fetch_relationships" android:summary="个人空间显示对方是否关注你"
 			android:title="显示关注状态" />
 

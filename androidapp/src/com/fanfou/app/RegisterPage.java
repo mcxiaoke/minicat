@@ -227,7 +227,7 @@ public class RegisterPage extends Activity implements OnClickListener {
 				if (App.DEBUG) {
 					e.printStackTrace();
 				}
-				return new ResultInfo(REGISTER_IO_ERROR, "网络故障，请稍后重试");
+				return new ResultInfo(REGISTER_IO_ERROR,getString(R.string.connection_error_msg));
 			}
 		}
 

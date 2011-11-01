@@ -302,7 +302,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 			} catch (IOException e) {
 				if (App.DEBUG)
 					e.printStackTrace();
-				return new ResultInfo(LOGIN_IO_ERROR, "网络故障，请稍后重试");
+				return new ResultInfo(LOGIN_IO_ERROR, getString(R.string.connection_error_msg));
 			} catch (ApiException e) {
 				if (App.DEBUG)
 					e.printStackTrace();

@@ -13,6 +13,7 @@ import android.os.ResultReceiver;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
@@ -379,7 +380,7 @@ public class FetchService extends BaseIntentService {
 	private void handleError(ApiException e) {
 		String message=e.getMessage();
 		if(e.statusCode==ResponseCode.ERROR_NOT_CONNECTED||e.statusCode>=500){
-			message="网络连接异常，请稍后重试";
+			message=getString(R.string.connection_error_msg);
 		}
 		Bundle b = new Bundle();
 		b.putInt(Commons.EXTRA_ERROR_CODE, e.statusCode);
