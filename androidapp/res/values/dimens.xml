@@ -18,7 +18,7 @@
 	<dimen name="text_size_large">18sp</dimen>
 	<dimen name="text_size_xlarge">20sp</dimen>
 
-	<dimen name="bottom_margin">6dp</dimen>
+	<dimen name="bottom_margin">4dp</dimen>
 
 	<dimen name="actionbar_height">40dp</dimen>
 	<dimen name="icon_height">40dp</dimen>

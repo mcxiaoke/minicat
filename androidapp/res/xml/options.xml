@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 	android:title="设置">
 
-	<PreferenceScreen android:title="后台更新和通知">
+	<PreferenceScreen android:title="后台更新">
 
 		<PreferenceCategory android:title="后台更新">
 
@@ -50,10 +50,37 @@
 			<CheckBoxPreference android:defaultValue="true"
 				android:dependency="@string/option_notification_switch" android:key="@string/option_notification_vibrate"
 				android:summary="收到消息和私信时震动提示" android:title="震动" />
+
+			<CheckBoxPreference android:defaultValue="true"
+				android:dependency="@string/option_notification_switch" android:key="@string/option_notification_led"
+				android:summary="收到消息和私信时闪烁提示" android:title="LED" />
 		</PreferenceCategory>
 	</PreferenceScreen>
 
-	<PreferenceCategory android:title="界面">
+	<PreferenceScreen android:title="显示设置">
+
+		<CheckBoxPreference android:defaultValue="false"
+			android:key="@string/option_text_mode" android:summary="文本模式，不显示头像和图片"
+			android:title="使用文本模式" />
+
+		<ListPreference android:defaultValue="0"
+			android:dialogTitle="选择消息页面图片显示方式" android:entries="@array/pic_level"
+			android:entryValues="@array/pic_level_values" android:key="@string/option_pic_level"
+			android:summary="设置消息页面图片大小" android:title="消息图片预览" />
+
+		<ListPreference android:defaultValue="15"
+			android:dialogTitle="选择字体大小" android:entries="@array/font_size"
+			android:entryValues="@array/font_size_values" android:key="@string/option_fontsize"
+			android:summary="设置文本内容字体大小" android:title="文本字体大小" />
+
+		<ListPreference android:defaultValue="80"
+			android:dialogTitle="选择上传照片的质量" android:entries="@array/photo_quality"
+			android:entryValues="@array/photo_quality_values" android:key="@string/option_photo_quality"
+			android:summary="设置上传照片的质量" android:title="上传照片质量" />
+
+		<CheckBoxPreference android:defaultValue="true"
+			android:key="@string/option_fetch_relationships" android:summary="个人空间显示对方是否关注你"
+			android:title="显示关注状态" />
 
 		<CheckBoxPreference android:defaultValue="false"
 			android:key="@string/option_force_fullscreen" android:summary="隐藏系统状态栏"
@@ -63,39 +90,12 @@
 			android:key="@string/option_force_portrait" android:summary="强制竖屏显示"
 			android:title="锁定竖屏" />
 
-		<CheckBoxPreference android:defaultValue="false"
-			android:key="@string/option_text_mode" android:summary="文本模式，不显示头像和图片"
-			android:title="文本模式" />
+	</PreferenceScreen>
 
-		<CheckBoxPreference android:defaultValue="true"
-			android:key="@string/option_fetch_relationships" android:summary="个人页面显示对方是否关注你"
-			android:title="显示好友关系" />
-
-		<ListPreference android:defaultValue="15"
-			android:dialogTitle="选择消息字体大小" android:entries="@array/font_size"
-			android:entryValues="@array/font_size_values" android:key="@string/option_fontsize"
-			android:summary="设置消息字体大小" android:title="消息字体大小" />
-
-		<ListPreference android:defaultValue="0"
-			android:dialogTitle="选择消息页面图片显示方式" android:entries="@array/pic_level"
-			android:entryValues="@array/pic_level_values" android:key="@string/option_pic_level"
-			android:summary="设置消息页面图片大小" android:title="消息图片预览" />
-
-		<ListPreference android:defaultValue="right"
-			android:dialogTitle="设置刷新图标显示位置" android:entries="@array/bottom_icon_position"
-			android:entryValues="@array/bottom_icon_position_values" android:key="@string/option_bottom_refresh_icon"
-			android:summary="设置底部刷新图标" android:title="底部刷新图标" />
-
-		<ListPreference android:defaultValue="none"
-			android:dialogTitle="设置编辑图标显示位置" android:entries="@array/bottom_icon_position"
-			android:entryValues="@array/bottom_icon_position_values" android:key="@string/option_bottom_write_icon"
-			android:summary="底部编辑图标" android:title="底部编辑图标" />
-	</PreferenceCategory>
-
-	<PreferenceCategory android:title="功能">
+	<PreferenceScreen android:title="使用偏好">
 
 		<CheckBoxPreference android:defaultValue="false"
-			android:key="@string/option_refresh_on_open" android:summary="应用启动时刷新时间线"
+			android:key="@string/option_refresh_on_open" android:summary="客户端启动时刷新时间线"
 			android:title="启动时刷新" />
 
 		<CheckBoxPreference android:defaultValue="false"
@@ -112,12 +112,25 @@
 
 		<CheckBoxPreference android:defaultValue="true"
 			android:key="@string/option_autoupdate" android:summary="定时检测新版本"
-			android:title="自动升级" />
+			android:title="定时升级" />
 
-		<ListPreference android:defaultValue="80"
-			android:dialogTitle="选择上传照片的质量" android:entries="@array/photo_quality"
-			android:entryValues="@array/photo_quality_values" android:key="@string/option_photo_quality"
-			android:summary="设置上传照片的质量" android:title="上传照片质量" />
+	</PreferenceScreen>
+
+	<PreferenceScreen android:title="界面布局">
+
+		<ListPreference android:defaultValue="right"
+			android:dialogTitle="刷新图标位置" android:entries="@array/bottom_icon_position"
+			android:entryValues="@array/bottom_icon_position_values" android:key="@string/option_bottom_refresh_icon"
+			android:summary="设置底部刷新图标" android:title="底部刷新图标" />
+
+		<ListPreference android:defaultValue="none"
+			android:dialogTitle="编辑图标位置" android:entries="@array/bottom_icon_position"
+			android:entryValues="@array/bottom_icon_position_values" android:key="@string/option_bottom_write_icon"
+			android:summary="底部编辑图标" android:title="底部编辑图标" />
+
+	</PreferenceScreen>
+
+	<PreferenceScreen android:title="其它功能">
 
 		<com.fanfou.app.preferences.ClearDataDialogPreference
 			android:dialogMessage="是否要清空数据库中缓存的消息，私信和个人数据？（提示：客户端会自动清理过旧的数据，不建议手动清空）"
@@ -136,9 +149,10 @@
 			android:dialogTitle="重置数据" android:key="@string/option_clear_data_and_settings"
 			android:negativeButtonText="取消" android:positiveButtonText="确定"
 			android:summary="重置所有个人设置，数据和缓存" android:title="重置数据" />
-	</PreferenceCategory>
 
-	<PreferenceCategory android:title="信息">
+	</PreferenceScreen>
+
+	<PreferenceScreen android:title="软件信息">
 
 		<Preference android:key="@string/option_current_account"
 			android:title="当前帐号" />
@@ -151,10 +165,9 @@
 
 		<Preference android:key="@string/option_website"
 			android:summary="访问饭否网站获取更多信息" android:title="访问网站">
-
 			<intent android:action="android.intent.action.VIEW"
 				android:data="http://fanfou.com/" />
 		</Preference>
-	</PreferenceCategory>
+	</PreferenceScreen>
 
 </PreferenceScreen>

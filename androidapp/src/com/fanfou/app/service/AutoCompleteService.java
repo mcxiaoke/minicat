@@ -63,7 +63,7 @@ public class AutoCompleteService extends WakefulIntentService {
 			}
 		} catch (ApiException e) {
 			if (App.DEBUG) {
-				Log.e(TAG, e.getMessage());
+				Log.e(TAG, e.toString());
 				e.printStackTrace();
 			}
 		}

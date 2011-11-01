@@ -274,6 +274,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				iRefreshBottom.setLayoutParams(onLeft);
 			} else if (refreshPostion.equals("right")) {
 				iRefreshBottom.setLayoutParams(onRight);
+				
 			} else {
 				iRefreshBottom.setVisibility(View.GONE);
 			}

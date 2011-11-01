@@ -60,11 +60,11 @@ public class DownloadService extends WakefulIntentService {
 
 	public DownloadService() {
 		super("DownloadService");
-		nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		mHandler = new Handler();
+
 	}
 	
 	public static void startDownload(Context context, String url) {
+		
 		Intent intent = new Intent(context, DownloadService.class);
 		intent.putExtra(Commons.EXTRA_TYPE, TYPE_DOWNLOAD);
 		intent.putExtra(Commons.EXTRA_URL, url);
@@ -79,6 +79,8 @@ public class DownloadService extends WakefulIntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		mHandler = new Handler();
 		int type = intent.getIntExtra(Commons.EXTRA_TYPE, TYPE_CHECK);
 		if (type == TYPE_CHECK) {
 			check();
@@ -230,12 +232,12 @@ public class DownloadService extends WakefulIntentService {
 		NotificationManager nm = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		Notification notification = new Notification(R.drawable.ic_notify_home,
-				"饭否客户端，发现新版本：" + versionInfo, System.currentTimeMillis());
+				"饭否客户端有新版本：" + versionInfo, System.currentTimeMillis());
 
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
 				getNewVersionIntent(context, info), 0);
-		notification.setLatestEventInfo(context, "饭否客户端有更新，点击查看更新内容", "版本号："
-				+ versionInfo, contentIntent);
+		notification.setLatestEventInfo(context, "饭否客户端有新版本，版本号："
+				+ versionInfo, "点击查看更新内容", contentIntent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		nm.notify(2, notification);
 
@@ -251,9 +253,9 @@ public class DownloadService extends WakefulIntentService {
 			}
 		};
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setTitle("发现新版本，是否更新？").setCancelable(true)
+		builder.setTitle("发现新版本，是否升级？").setCancelable(true)
 				.setNegativeButton("以后再说", null);
-		builder.setPositiveButton("立即更新", downListener);
+		builder.setPositiveButton("立即升级", downListener);
 		StringBuffer sb = new StringBuffer();
 		sb.append("安装版本： ").append(App.me.appVersionName).append("(Build")
 				.append(App.me.appVersionCode).append(")");
@@ -261,7 +263,7 @@ public class DownloadService extends WakefulIntentService {
 				.append(info.versionCode).append(")");
 		sb.append("\n更新日期：").append(info.releaseDate);
 		sb.append("\n更新级别：").append(
-				info.forceUpdate ? "重要更新" : "一般更新");
+				info.forceUpdate ? "重要升级" : "一般升级");
 		sb.append("\n更新内容：\n").append(info.changelog);
 		builder.setMessage(sb.toString());
 		AlertDialog dialog = builder.create();
@@ -273,7 +275,6 @@ public class DownloadService extends WakefulIntentService {
 			final VersionInfo info) {
 		Intent intent = new Intent(context, NewVersionPage.class);
 		intent.putExtra(Commons.EXTRA_DATA, info);
-		// intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		return intent;
 	}
 

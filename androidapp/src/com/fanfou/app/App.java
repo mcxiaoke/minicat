@@ -5,6 +5,7 @@ import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
 import android.app.Application;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -20,6 +21,8 @@ import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.http.ApnType;
 import com.fanfou.app.http.NetworkState;
+import com.fanfou.app.service.AutoCompleteService;
+import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.NetworkHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
@@ -138,8 +141,6 @@ public class App extends Application {
 		this.sp = PreferenceManager.getDefaultSharedPreferences(this);
 		this.userId = OptionHelper.readString(this, R.string.option_userid,
 				null);
-		this.password = OptionHelper.readString(this, R.string.option_password,
-				null);
 		this.userScreenName = OptionHelper.readString(this,
 				R.string.option_username, null);
 		this.userProfileImage = OptionHelper.readString(this,
@@ -166,9 +167,6 @@ public class App extends Application {
 	}
 
 	private void initAlarm() {
-		if(DEBUG){
-			NetworkHelper.doAutoUpdate(this);
-		}
 		Utils.setAutoClean(this);
 		Utils.setAutoUpdate(this);
 		Utils.setAutoComplete(this);
@@ -188,12 +186,12 @@ public class App extends Application {
 			Log.d("App", "cleanSettings");
 		}
 		OptionHelper.remove(this, R.string.option_set_auto_clean);
+		OptionHelper.remove(this, R.string.option_set_auto_update);
 		OptionHelper.remove(this, R.string.option_set_auto_complete);
 		OptionHelper.remove(this, R.string.option_set_notification);
-		OptionHelper.remove(this, R.string.option_set_auto_update);
 	}
 
-	public synchronized void updateAccountInfo(User u,String password, String token, String tokenSecret) {
+	public synchronized void updateAccountInfo(User u, String token, String tokenSecret) {
 		user = u;
 		userId = u.id;
 		userScreenName = u.screenName;
@@ -204,10 +202,6 @@ public class App extends Application {
 		OptionHelper.saveString(this, R.string.option_profile_image,
 				u.profileImageUrl);
 		
-		if(!TextUtils.isEmpty(password)){
-			OptionHelper.saveString(this, R.string.option_password, password);
-			
-		}
 		if(!TextUtils.isEmpty(token)){
 			OptionHelper.saveString(this, R.string.option_oauth_token, token);
 			OptionHelper.saveString(this, R.string.option_oauth_token_secret, tokenSecret);
@@ -235,7 +229,6 @@ public class App extends Application {
 		oauthAccessToken=null;
 		oauthAccessTokenSecret=null;
 		OptionHelper.remove(this, R.string.option_userid);
-		OptionHelper.remove(this, R.string.option_password);
 		OptionHelper.remove(this, R.string.option_username);
 		OptionHelper.remove(this, R.string.option_profile_image);
 		OptionHelper.remove(this,R.string.option_oauth_token);

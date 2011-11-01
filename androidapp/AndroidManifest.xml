@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	android:installLocation="auto" package="com.fanfou.app"
-	android:versionCode="20111031" android:versionName="1.9">
+	android:versionCode="20111101" android:versionName="1.6.0">
 
 	<application android:icon="@drawable/icon" android:label="@string/app_name"
 		android:name=".App">
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".SplashPage"
 			android:theme="@style/Theme">
@@ -15,32 +15,37 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".LoginPage"
 			android:theme="@style/Theme" />
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".RegisterPage"
 			android:theme="@style/Theme">
 		</activity>
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".DraftsPage"
 			android:theme="@style/Theme">
 		</activity>
-		
+
+		<activity android:configChanges="keyboardHidden|orientation"
+			android:label="@string/app_name" android:name=".WebviewPage"
+			android:theme="@style/Theme">
+		</activity>
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".NewVersionPage"
 			android:theme="@style/Theme">
 		</activity>
-		
+
 		<activity android:label="@string/app_name" android:name=".HomePage"
 			android:launchMode="singleTask" android:theme="@style/Theme">
 			<meta-data android:name="android.app.default_searchable"
 				android:value=".SearchResultsPage" />
 		</activity>
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".SearchPage"
 			android:theme="@style/Theme">
@@ -53,11 +58,11 @@
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".AboutPage"
 			android:theme="@style/Theme" />
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_photoviewer_name" android:name=".PhotoViewPage"
 			android:theme="@style/ThemeBlack">
@@ -66,7 +71,7 @@
 				android:name="android.intent.category.BROWSABLE" /> <data android:mimeType="image/*" 
 				/> </intent-filter> -->
 		</activity>
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".StatusPage"
 			android:theme="@style/Theme">
@@ -76,11 +81,11 @@
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".UserChoosePage"
 			android:theme="@style/Theme" android:windowSoftInputMode="stateHidden" />
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".UserListPage"
 			android:theme="@style/Theme">
@@ -98,7 +103,7 @@
 				<data android:host="timeline" android:scheme="fanfou" />
 			</intent-filter>
 		</activity>
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".UserTimelinePage"
 			android:theme="@style/Theme">
@@ -112,7 +117,7 @@
 				<data android:host="timeline" android:scheme="fanfou" />
 			</intent-filter>
 		</activity>
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".UserFavoritesPage"
 			android:theme="@style/Theme">
@@ -126,19 +131,19 @@
 				<data android:host="favorites" android:scheme="fanfou" />
 			</intent-filter>
 		</activity>
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".ConversationPage"
 			android:theme="@style/Theme" />
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".RegisterPage"
 			android:theme="@style/Theme" />
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".MyProfilePage"
 			android:theme="@style/Theme" />
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".ProfilePage"
 			android:theme="@style/Theme">
@@ -152,11 +157,11 @@
 				<data android:host="user" android:scheme="fanfou" />
 			</intent-filter>
 		</activity>
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".MessageChatPage"
 			android:theme="@style/Theme" android:windowSoftInputMode="adjustResize" />
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_share_name" android:name=".WritePage"
 			android:launchMode="singleTask" android:theme="@style/Theme.AutoCompleteTextViewFix"
@@ -172,10 +177,10 @@
 				<data android:mimeType="image/*" />
 			</intent-filter>
 		</activity>
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".OptionsPage" />
-		
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:launchMode="singleTop"
 			android:name=".SearchResultsPage" android:theme="@style/Theme">
@@ -209,25 +214,25 @@
 				<action android:name="android.intent.action.BOOT_COMPLETED" />
 			</intent-filter>
 		</receiver>
-		
+
 		<receiver android:name=".receiver.AlarmReceiver">
 			<intent-filter>
 				<action android:name="com.fanfou.app.action.REPEAT" />
 			</intent-filter>
 		</receiver>
-		
+
 		<receiver android:name=".receiver.NotificationReceiver">
 			<intent-filter>
 				<action android:name="com.fanfou.app.action.NOTIFICATION" />
 			</intent-filter>
 		</receiver>
-		
+
 		<receiver android:name=".receiver.NetworkReceiver">
 			<intent-filter>
 				<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
 			</intent-filter>
 		</receiver>
-		
+
 	</application>
 
 	<uses-permission android:name="android.permission.INTERNET" />

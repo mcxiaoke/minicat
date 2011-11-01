@@ -15,8 +15,10 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.R;
+import com.fanfou.app.config.Commons;
 import com.fanfou.app.service.AutoCompleteService;
 import com.fanfou.app.service.CleanService;
+import com.fanfou.app.service.DownloadService;
 import com.fanfou.app.service.NotificationService;
 
 /**
@@ -27,6 +29,7 @@ import com.fanfou.app.service.NotificationService;
  * 
  */
 public final class AlarmHelper {
+	private static final String TAG=AlarmHelper.class.getSimpleName();
 	
 	public static void clearAlarms(Context context){
 		AlarmManager am = (AlarmManager) context
@@ -50,9 +53,19 @@ public final class AlarmHelper {
 	}
 	
 
-	public static void setUpdateTask(Context context) {
-		// TODO Auto-generated method stub
-		
+	public static void setAutoUpdateTask(Context context) {
+		if (App.DEBUG) {
+			Log.d(TAG, "setAutoUpdateTask");
+		}
+		Calendar c = Calendar.getInstance();
+		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
+				c.get(Calendar.DAY_OF_MONTH), 10, 0);
+		c.add(Calendar.DATE, 3);
+		long interval = 3 * 24 * 3600 * 1000;
+		AlarmManager am = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
+				interval, getAutoUpdatePendingIntent(context));
 	}
 
 	public static void setNotificationTaskOn(Context context) {
@@ -115,6 +128,14 @@ public final class AlarmHelper {
 		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
 				interval, getAutoCompletePendingIntent(context));
 	}
+	
+	private static PendingIntent getAutoUpdatePendingIntent(Context context) {
+		Intent intent = new Intent(context, DownloadService.class);
+		intent.putExtra(Commons.EXTRA_TYPE, DownloadService.TYPE_CHECK);
+		PendingIntent pi = PendingIntent.getService(context, 0, intent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+		return pi;
+	}
 
 	private static PendingIntent getAutoCompletePendingIntent(Context context) {
 		Intent intent = new Intent(context, AutoCompleteService.class);
@@ -161,7 +182,7 @@ public final class AlarmHelper {
 				notification.sound = ringTone;
 			}
 		}
-		notification.defaults|=Notification.DEFAULT_LIGHTS;
+		
 		
 		boolean vibrate = OptionHelper.readBoolean(context,
 				R.string.option_notification_vibrate, false);
@@ -169,6 +190,14 @@ public final class AlarmHelper {
 			notification.defaults |= Notification.DEFAULT_VIBRATE;
 		} else {
 			notification.vibrate = null;
+		}
+		
+		boolean led=OptionHelper.readBoolean(context, R.string.option_notification_led, false);
+		if(led){
+			notification.defaults|=Notification.DEFAULT_LIGHTS;
+		}else{
+			notification.ledOnMS=0;
+			notification.ledOffMS=0;
 		}
 	}
 

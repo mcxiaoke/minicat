@@ -46,7 +46,7 @@ public final class IntentHelper {
 		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
 				new String[] { context
 						.getString(R.string.config_feedback_email) });
-		context.startActivity(Intent.createChooser(emailIntent, "给饭否发送反馈"));
+		context.startActivity(Intent.createChooser(emailIntent, "发送反馈"));
 	}
 
 	public static void logIntent(String tag, Intent intent) {

@@ -38,39 +38,13 @@ public final class DeviceHelper {
 		String uuid = Settings.Secure.getString(context.getContentResolver(),
 				Settings.Secure.ANDROID_ID);
 		if (App.DEBUG)
-			Log.e("DeviceHelper", "generateUUID uuid=" + uuid);
+			Log.d("DeviceHelper", "generateUUID uuid=" + uuid);
 		if (uuid == null || uuid.equals("9774d56d682e549c")) {
 			uuid = UUID.randomUUID().toString();
 			if (App.DEBUG)
-				Log.e("DeviceHelper", "generateUUID randomid=" + uuid);
+				Log.d("DeviceHelper", "generateUUID randomid=" + uuid);
 		}
 		return uuid;
-	}
-
-	public static int getAppVersionCode(Context context) {
-		PackageManager pm = context.getPackageManager();
-		PackageInfo pi;
-		try {
-			pi = pm.getPackageInfo(context.getPackageName(), 0);
-		} catch (NameNotFoundException e) {
-			pi = new PackageInfo();
-			pi.versionName = "1.0";
-			pi.versionCode = 1;
-		}
-		return pi.versionCode;
-	}
-
-	public static String getAppVersionName(Context context) {
-		PackageManager pm = context.getPackageManager();
-		PackageInfo pi;
-		try {
-			pi = pm.getPackageInfo(context.getPackageName(), 0);
-		} catch (NameNotFoundException e) {
-			pi = new PackageInfo();
-			pi.versionName = "1.0";
-			pi.versionCode = 1;
-		}
-		return pi.versionName;
 	}
 
 	public static HashMap<String, String> getDeviceInfo(Context context) {

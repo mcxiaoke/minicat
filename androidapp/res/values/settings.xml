@@ -3,7 +3,6 @@
 
 	<string name="option_userid">userid</string>
 	<string name="option_username">screen_name</string>
-	<string name="option_password">password</string>
 	<string name="option_profile_image">profile_image</string>
 	
 	<string name="option_oauth_token">oauth_token</string>
@@ -54,6 +53,7 @@
 
 	<string name="option_notification_sound">notification_sound</string>
 	<string name="option_notification_vibrate">notification_vibrate</string>
+	<string name="option_notification_led">notification_led</string>
 	<string name="option_notification_ringtone">notification_ringtone</string>
 
 

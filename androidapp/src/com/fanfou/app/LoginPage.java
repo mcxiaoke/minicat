@@ -62,13 +62,12 @@ public final class LoginPage extends Activity implements OnClickListener {
 		Log.i(TAG, message);
 	}
 
-	private static final String USERNAME = "a";
-	private static final String PASSWORD = "b";
+	private static final String USERNAME = "username";
+	private static final String PASSWORD = "password";
 
 	private EditText editUsername;
 	private EditText editPassword;
 
-	// private Button mButtonRegister;
 	private Button mButtonSignin;
 	private ActionBar mActionBar;
 
@@ -279,7 +278,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 					}
 
 					if (u != null && !u.isNull()) {
-						App.me.updateAccountInfo(u, password, token.getToken(),
+						App.me.updateAccountInfo(u, token.getToken(),
 								token.getTokenSecret());
 						if (App.DEBUG)
 							log("xauth successful! ");

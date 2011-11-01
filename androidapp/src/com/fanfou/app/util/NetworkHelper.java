@@ -26,6 +26,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -36,6 +37,7 @@ import com.fanfou.app.R;
 import com.fanfou.app.http.ApnType;
 import com.fanfou.app.http.GzipResponseInterceptor;
 import com.fanfou.app.http.RequestRetryHandler;
+import com.fanfou.app.service.AutoCompleteService;
 import com.fanfou.app.service.DownloadService;
 
 /**
@@ -211,15 +213,16 @@ public final class NetworkHelper {
 		setProxy(client);
 		return client;
 	}
-
-	public static void doAutoUpdate(Context context) {
-		if(App.DEBUG){
-			Log.e("NetworkHelper", "doAutoUpdate");
-		}
-		final Context c=context;
+	
+	public static void startAutoComplete(Context context){
+		Intent intent = new Intent(context, AutoCompleteService.class);
+		context.startService(intent);
+	}
+	
+	public static void startUpdateCheck(Context context) {
 		boolean autoUpdate = OptionHelper.readBoolean(context,
 				R.string.option_autoupdate, true);
-		if (App.DEBUG||autoUpdate) {
+		if (autoUpdate) {
 			DownloadService.startCheck(context);
 		}
 	}

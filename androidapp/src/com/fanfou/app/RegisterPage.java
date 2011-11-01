@@ -56,7 +56,6 @@ public class RegisterPage extends Activity implements OnClickListener {
 	private RegisterPage mContext;
 
 	private String mNickName;
-	private String mUUID;
 	private String mPassword;
 	private String mPasswordConfirm;
 	private String mEmail;
@@ -86,8 +85,7 @@ public class RegisterPage extends Activity implements OnClickListener {
 	private void init() {
 		mContext = this;
 		Utils.initScreenConfig(this);
-		mUUID = DeviceHelper.uuid(this);
-		
+
 		g = GoogleAnalyticsTracker.getInstance();
 		g.startNewSession(getString(R.string.config_google_analytics_code),
 				this);
@@ -177,7 +175,6 @@ public class RegisterPage extends Activity implements OnClickListener {
 		}
 		
 		g.setCustomVar(1, "doRegisterEmail", mEmail);
-		g.setCustomVar(1, "doRegisterUUID", mUUID);
 		
 		int nickLength = mNickName.length();
 		if (nickLength < 2 || nickLength > 12) {
@@ -212,7 +209,7 @@ public class RegisterPage extends Activity implements OnClickListener {
 		@Override
 		protected ResultInfo doInBackground(Void... params) {
 			try {
-				User user = register(mEmail, mNickName, mPassword, mUUID);
+				User user = register(mEmail, mNickName, mPassword, DeviceHelper.uuid(mContext));
 				if (isCancelled) {
 					return new ResultInfo(REGISTER_CANCELLED);
 				}
@@ -279,7 +276,6 @@ public class RegisterPage extends Activity implements OnClickListener {
 
 		private void onRegisterSuccess(ResultInfo result) {
 			final User u = (User) result.content;
-			g.setCustomVar(2, "onRegisterSuccessUUID", mUUID);
 			g.setCustomVar(2, "onRegisterSuccessEmail", mEmail);
 			if (g != null) {
 				g.dispatch();
