@@ -239,7 +239,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
 		@Override
 		public void performAction(View view) {
-			IntentHelper.goHomePage(context, 0);
+			IntentHelper.goHomePage(context, -1);
 			context.finish();
 		}
 

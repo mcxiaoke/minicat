@@ -338,7 +338,7 @@ public abstract class BaseActivity extends Activity implements
 	}
 
 	protected void onHomeClick() {
-		IntentHelper.goHomePage(this, 0);
+		IntentHelper.goHomePage(this, -1);
 		finish();
 	}
 	

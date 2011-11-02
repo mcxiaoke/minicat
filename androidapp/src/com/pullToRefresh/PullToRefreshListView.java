@@ -12,6 +12,11 @@ import android.widget.TextView;
 
 import com.fanfou.app.R;
 
+/**
+ * @author mcxiaoke
+ * @version 1.1 2011.11.02
+ *
+ */
 public class PullToRefreshListView extends RelativeLayout {
 
 	private PullToRefreshComponent pullToRefresh;
@@ -26,8 +31,19 @@ public class PullToRefreshListView extends RelativeLayout {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.pull_to_refresh_list, this);
 		this.listView = (ListView) this.findViewById(android.R.id.list);
+		initializeListView();
+		
 		this.uiThreadHandler = new Handler();
-		this.initializePullToRefreshList();
+		initializePullToRefreshList();
+	}
+	
+	private void initializeListView(){
+		this.listView.setFastScrollEnabled(true);
+		this.listView.setHorizontalScrollBarEnabled(false);
+		this.listView.setVerticalScrollBarEnabled(false);
+		this.listView.setCacheColorHint(0);
+		this.listView.setSelector(getResources().getDrawable(R.drawable.list_selector));
+		this.listView.setDivider(getResources().getDrawable(R.drawable.separator));
 	}
 
 	private void initializePullToRefreshList() {

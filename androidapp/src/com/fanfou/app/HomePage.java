@@ -171,6 +171,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		mActionBar.setLeftAction(new HomeLogoAction());
 		mActionBar.setRightAction(new ActionBar.WriteAction(this, null));
 		mActionBar.setRefreshEnabled(this);
+		if(App.DEBUG){
+			mActionBar.setTitle("内部开发版");
+		}
 	}
 
 	private class HomeLogoAction extends ActionBar.AbstractAction {
@@ -357,7 +360,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		}
 	}
 
-	private synchronized void setBusy(boolean busy) {
+	private void setBusy(boolean busy) {
 		isBusy = busy;
 	}
 
@@ -560,25 +563,14 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		if (App.DEBUG) {
 			log("onNewIntent page=" + page);
 		}
-		mViewPager.setCurrentItem(page);
-		checkRefresh();
+		
+		if(page>=0){
+			mViewPager.setCurrentItem(page);
+		}
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_OPTION) {
-		// if (App.DEBUG) {
-		// log("onActivityResult resultCode=OK requestCode=REQUEST_CODE_OPTION");
-		// }
-		// if (data.getBooleanExtra(Commons.EXTRA_BOOLEAN, false)) {
-		// initAdapters();
-		// for (int i = 0; i < views.length; i++) {
-		// if (views[i] != null && adapters[i] != null) {
-		// views[i].setAdapter(adapters[i]);
-		// }
-		// }
-		// }
-		// }
 	}
 
 	@Override
@@ -783,8 +775,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		if (isBusy) {
 			return;
 		}
-		doRefresh();
 		startRefreshAnimation();
+		doRefresh();
 	}
 
 }

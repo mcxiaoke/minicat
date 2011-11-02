@@ -5,7 +5,6 @@ import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
 import android.app.Application;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -21,9 +20,6 @@ import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.http.ApnType;
 import com.fanfou.app.http.NetworkState;
-import com.fanfou.app.service.AutoCompleteService;
-import com.fanfou.app.util.AlarmHelper;
-import com.fanfou.app.util.NetworkHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
@@ -56,7 +52,7 @@ public class App extends Application {
 	// TODO contentprovider need modify use sqlite
 	// TODO add some flags to status model in db
 
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	public static App me;
 	public static boolean active = false;

@@ -1,6 +1,8 @@
 package com.fanfou.app;
 
 import com.fanfou.app.util.IntentHelper;
+import com.fanfou.app.util.OptionHelper;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.preference.PreferenceManager;

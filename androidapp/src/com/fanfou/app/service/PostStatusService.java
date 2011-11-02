@@ -31,6 +31,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.1 2011.10.25
  * @version 2.0 2011.10.27
  * @version 2.1 2011.10.28
+ * @version 2.2 2011.11.02
  * 
  */
 public class PostStatusService extends WakefulIntentService {
@@ -61,7 +62,9 @@ public class PostStatusService extends WakefulIntentService {
 		log("intent=" + intent);
 		this.nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		parseIntent(intent);
-		doSend();
+		if (doSend()) {
+			sendSuccessBroadcast();
+		}
 	}
 
 	private void parseIntent(Intent intent) {
@@ -78,7 +81,7 @@ public class PostStatusService extends WakefulIntentService {
 
 	private boolean doSend() {
 		showSendingNotification();
-		boolean res = true;
+		boolean res = false;
 		Api api = App.me.api;
 		try {
 			Status result = null;
@@ -114,11 +117,8 @@ public class PostStatusService extends WakefulIntentService {
 				}
 			}
 			nm.cancel(0);
-			if (result == null || result.isNull()) {
-				res = false;
-			} else {
+			if (result != null && !result.isNull()) {
 				res = true;
-				sendSuccessBroadcast();
 			}
 		} catch (ApiException e) {
 			if (App.DEBUG) {
@@ -127,7 +127,8 @@ public class PostStatusService extends WakefulIntentService {
 								+ e.getMessage());
 				e.printStackTrace();
 			}
-			showFailedNotification("消息未发送，已保存到草稿箱", getString(R.string.connection_error_msg));
+			showFailedNotification("消息未发送，已保存到草稿箱",
+					getString(R.string.connection_error_msg));
 		} finally {
 			nm.cancel(0);
 		}

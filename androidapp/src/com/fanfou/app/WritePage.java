@@ -519,7 +519,7 @@ public class WritePage extends BaseActivity {
 	private void startSendService() {
 		Intent i = new Intent(mContext, PostStatusService.class);
 		i.putExtra(Commons.EXTRA_TYPE, type);
-		i.putExtra(Commons.EXTRA_TEXT, content.substring(0, 160));
+		i.putExtra(Commons.EXTRA_TEXT, content);
 		i.putExtra(Commons.EXTRA_FILE, photo);
 		i.putExtra(Commons.EXTRA_LOCATION, mLocationString);
 		i.putExtra(Commons.EXTRA_IN_REPLY_TO_ID, inReplyToStatusId);
