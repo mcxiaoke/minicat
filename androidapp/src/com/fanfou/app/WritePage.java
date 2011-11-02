@@ -52,6 +52,7 @@ import com.fanfou.app.util.Utils;
  * @version 3.0 2011.10.27
  * @version 3.1 2011.10.28
  * @version 3.2 2011.10.29
+ * @version 3.3 2011.11.02
  * 
  */
 public class WritePage extends BaseActivity {
@@ -507,10 +508,6 @@ public class WritePage extends BaseActivity {
 			Utils.notify(this, "消息内容不能为空");
 			return;
 		}
-		if (wordsCount > 140) {
-			Utils.notify(this, "消息内容超过140字");
-			return;
-		}
 		if (!App.me.isLogin) {
 			Utils.notify(this, "未通过验证，请先登录");
 			return;
@@ -522,7 +519,7 @@ public class WritePage extends BaseActivity {
 	private void startSendService() {
 		Intent i = new Intent(mContext, PostStatusService.class);
 		i.putExtra(Commons.EXTRA_TYPE, type);
-		i.putExtra(Commons.EXTRA_TEXT, content);
+		i.putExtra(Commons.EXTRA_TEXT, content.substring(0, 160));
 		i.putExtra(Commons.EXTRA_FILE, photo);
 		i.putExtra(Commons.EXTRA_LOCATION, mLocationString);
 		i.putExtra(Commons.EXTRA_IN_REPLY_TO_ID, inReplyToStatusId);

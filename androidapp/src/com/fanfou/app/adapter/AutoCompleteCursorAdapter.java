@@ -13,15 +13,18 @@ import com.fanfou.app.db.Contents.UserInfo;
 
 /**
  * @author mcxiaoke
- * @version 1.0 20110828
+ * @version 1.0 2011.08.28
+ * @version 1.1 2011.11.02
  * 
  */
 public class AutoCompleteCursorAdapter extends ResourceCursorAdapter {
 	private Context mContext;
+	private Cursor mCursor;
 
 	public AutoCompleteCursorAdapter(Context context, Cursor c) {
 		super(context, R.layout.list_item_autocomplete, c);
 		mContext = context;
+		mCursor=c;
 	}
 
 	@Override
@@ -39,8 +42,13 @@ public class AutoCompleteCursorAdapter extends ResourceCursorAdapter {
 		String where = BasicColumns.OWNER_ID + " = '" + App.me.userId + "' AND "
 				+ UserInfo.SCREEN_NAME + " like '%" + constraint + "%' OR "
 				+ BasicColumns.ID + " like '%" + constraint + "%'";
-		return mContext.getContentResolver().query(UserInfo.CONTENT_URI, null,
+		Cursor oldCursor=mCursor;
+		mCursor= mContext.getContentResolver().query(UserInfo.CONTENT_URI, null,
 				where, null, null);
+		if(oldCursor!=null){
+			oldCursor.close();
+		}
+		return mCursor;
 	}
 
 	@Override

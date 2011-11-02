@@ -54,6 +54,7 @@ import com.fanfou.app.util.Utils;
  * @version 3.2 2011.10.25
  * @version 3.3 2011.10.27
  * @version 3.5 2011.10.29
+ * @version 3.6 2011.11.02
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
@@ -109,6 +110,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		setViewPager();
 		setCursors();
 		setAdapters();
+		checkRefresh();
 	}
 
 	private void init() {
@@ -524,8 +526,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				states[i] = null;
 			}
 		}
-
-		checkRefresh();
 	}
 
 	@Override
@@ -561,6 +561,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			log("onNewIntent page=" + page);
 		}
 		mViewPager.setCurrentItem(page);
+		checkRefresh();
 	}
 
 	@Override

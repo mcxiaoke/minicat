@@ -2,9 +2,9 @@
 <resources>
 
 	<string-array name="photo_quality">
-		<item>高质量(95%)</item>
-		<item>中等质量(80%)</item>
-		<item>低质量(70%)</item>
+		<item>高质量</item>
+		<item>中等质量</item>
+		<item>低质量</item>
 	</string-array>
 	<string-array name="photo_quality_values">
 		<item>95</item>

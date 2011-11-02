@@ -25,7 +25,8 @@ import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
- * @version 1.0 20110920
+ * @version 1.0 2011.09.20
+ * @version 1.1 2011.11.02
  * 
  */
 public class NotificationService extends BaseIntentService {
@@ -113,7 +114,7 @@ public class NotificationService extends BaseIntentService {
 
 			}
 		}
-		// mc.close();
+		 mc.close();
 	}
 
 	private void handleMention() throws ApiException {
@@ -134,7 +135,7 @@ public class NotificationService extends BaseIntentService {
 				}
 			}
 		}
-		// mc.close();
+		 mc.close();
 	}
 
 	private void handleHome() throws ApiException {
@@ -155,7 +156,7 @@ public class NotificationService extends BaseIntentService {
 				}
 			}
 		}
-		// mc.close();
+		 mc.close();
 	}
 
 	private void notifyStatusOne(int type, Status status) {

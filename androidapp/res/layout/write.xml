@@ -17,7 +17,7 @@
 				android:id="@id/write_text" android:layout_width="fill_parent"
 				android:layout_height="wrap_content" android:layout_margin="2dp"
 				android:layout_weight="1" android:background="@drawable/input_bg"
-				android:gravity="top|left" android:maxLength="150" android:maxLines="7"
+				android:gravity="top|left" android:maxLines="7"
 				android:minLines="5" android:padding="10dp" android:singleLine="false" />
 
 			<RelativeLayout android:id="@id/write_extras"

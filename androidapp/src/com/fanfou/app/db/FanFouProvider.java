@@ -541,6 +541,7 @@ public class FanFouProvider extends ContentProvider {
 				e.printStackTrace();
 			}
 		} finally {
+			ih.close();
 			db.endTransaction();
 		}
 		return numInserted;
@@ -657,6 +658,7 @@ public class FanFouProvider extends ContentProvider {
 				e.printStackTrace();
 			}
 		} finally {
+			ih.close();
 			db.endTransaction();
 
 		}

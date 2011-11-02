@@ -38,6 +38,7 @@ import android.util.Log;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.10.28
+ * @version 1.1 2011.11.02
  * 
  */
 public class TaskQueueService extends Service {
@@ -75,11 +76,15 @@ public class TaskQueueService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (App.DEBUG) {
-			log("onStartCommand");
-			IntentHelper.logIntent(TAG, intent);
+		if(intent==null){
+			stopSelf();
+		}else{
+			if (App.DEBUG) {
+				log("onStartCommand");
+				IntentHelper.logIntent(TAG, intent);
+			}
+			onCommandReceived(intent);
 		}
-		onCommandReceived(intent);
 		return START_STICKY;
 	}
 
@@ -203,6 +208,7 @@ public class TaskQueueService extends Service {
 	}
 
 	private void onCommandReceived(Intent intent) {
+		
 		int type = intent.getIntExtra(Commons.EXTRA_TYPE, TYPE_DEFAULT);
 		if (App.DEBUG) {
 			log("onCommandReceived type=" + type);

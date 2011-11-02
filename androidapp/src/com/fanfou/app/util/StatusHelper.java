@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.fanfou.app.App;
 import com.fanfou.app.api.Status;
 
 import android.text.Html;
@@ -139,6 +140,8 @@ public class StatusHelper {
 			}
 		}
 		names.add(status.userScreenName);
+		String name=App.me.userScreenName;
+		names.remove(name);
 		return names;
 	}
 }
