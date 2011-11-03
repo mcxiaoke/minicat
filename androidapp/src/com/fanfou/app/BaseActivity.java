@@ -18,10 +18,12 @@ import android.view.View.OnClickListener;
 
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
+import com.fanfou.app.hd.HomeScreen;
 import com.fanfou.app.http.ApnType;
 import com.fanfou.app.ui.ActionBar.OnRefreshClickListener;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.IntentHelper;
+import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -45,7 +47,7 @@ public abstract class BaseActivity extends Activity implements
 	protected BaseActivity mContext;
 	protected LayoutInflater mInflater;
 	protected boolean isActive = false;
-	
+
 	protected DisplayMetrics mDisplayMetrics;
 
 	private BroadcastReceiver mBroadcastReceiver;
@@ -62,9 +64,9 @@ public abstract class BaseActivity extends Activity implements
 		initialize();
 		initReceiver();
 	}
-	
-	private void initialize(){
-		mDisplayMetrics=new DisplayMetrics();
+
+	private void initialize() {
+		mDisplayMetrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
 	}
 
@@ -96,20 +98,20 @@ public abstract class BaseActivity extends Activity implements
 	protected boolean onBroadcastReceived(Intent intent) {
 		return true;
 	};
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	
-//	public void doLogout(){
-//		if(isTaskRoot()){
-//			IntentHelper.goLoginPage(this);
-//		}else{
-//			setResult(RESULT_LOGOUT);
-//		}
-//		finish();
-//	}
+
+	// public void doLogout(){
+	// if(isTaskRoot()){
+	// IntentHelper.goLoginPage(this);
+	// }else{
+	// setResult(RESULT_LOGOUT);
+	// }
+	// finish();
+	// }
 
 	@Override
 	protected void onResume() {
@@ -187,7 +189,7 @@ public abstract class BaseActivity extends Activity implements
 	protected static final int MENU_ID_FEEDBACK = 4; //
 	protected static final int MENU_ID_LOGOUT = 5; // 退出
 	protected static final int MENU_ID_HOME = 6; // 返回首页
-	
+
 	protected static final int MENU_ID_REFRESH = 7; // 返回首页
 	protected static final int MENU_ID_CLEAR = 8; // 返回首页
 
@@ -208,7 +210,7 @@ public abstract class BaseActivity extends Activity implements
 			onLogoutClick();
 			break;
 		case MENU_ID_ABOUT:
-//			startActivity(new Intent(this, NewVersionPage.class));
+			// startActivity(new Intent(this, NewVersionPage.class));
 			onAboutClick();
 			break;
 		case MENU_ID_FEEDBACK:
@@ -293,12 +295,9 @@ public abstract class BaseActivity extends Activity implements
 
 		home = menu.add(0, MENU_ID_HOME, MENU_ID_HOME, "返回首页");
 		home.setIcon(R.drawable.i_menu_home);
-		
-		clear=menu.add(0,MENU_ID_CLEAR,MENU_ID_CLEAR,"清空草稿");
-		clear.setIcon(R.drawable.i_menu_clear);
-		
-		
 
+		clear = menu.add(0, MENU_ID_CLEAR, MENU_ID_CLEAR, "清空草稿");
+		clear.setIcon(R.drawable.i_menu_clear);
 		return true;
 	}
 
@@ -341,11 +340,13 @@ public abstract class BaseActivity extends Activity implements
 		IntentHelper.goHomePage(this, -1);
 		finish();
 	}
-	
-	protected void onClearClick(){};
+
+	protected void onClearClick() {
+	};
 
 	protected void onLogoutClick() {
-		final ConfirmDialog dialog=new ConfirmDialog(this, "注销", "确定注销当前登录帐号吗？");
+		final ConfirmDialog dialog = new ConfirmDialog(this, "注销",
+				"确定注销当前登录帐号吗？");
 		dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
 
 			@Override

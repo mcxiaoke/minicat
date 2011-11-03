@@ -168,6 +168,10 @@
 			<intent android:action="android.intent.action.VIEW"
 				android:data="http://fanfou.com/" />
 		</Preference>
+
+		<CheckBoxPreference android:defaultValue="false"
+			android:key="@string/option_debug_on" android:summary="启用开发者模式(对发布版无效)"
+			android:title="开发模式" />
 	</PreferenceScreen>
 
 </PreferenceScreen>

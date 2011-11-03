@@ -46,7 +46,7 @@ import com.fanfou.app.service.DownloadService;
  * @version 2.0 2011.10.29
  * 
  */
-public final class NetworkHelper {
+final class NetworkHelper {
 
 	public static final int SOCKET_BUFFER_SIZE = 2048;
 	public static final int CONNECTION_TIMEOUT_MS = 5000;
@@ -212,19 +212,6 @@ public final class NetworkHelper {
 
 		setProxy(client);
 		return client;
-	}
-	
-	public static void startAutoComplete(Context context){
-		Intent intent = new Intent(context, AutoCompleteService.class);
-		context.startService(intent);
-	}
-	
-	public static void startUpdateCheck(Context context) {
-		boolean autoUpdate = OptionHelper.readBoolean(context,
-				R.string.option_autoupdate, true);
-		if (autoUpdate) {
-			DownloadService.startCheck(context);
-		}
 	}
 
 }

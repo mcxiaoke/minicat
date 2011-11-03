@@ -31,6 +31,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 			ITEM_TYPE_NONE };
 
 	private boolean colored;
+	private Cursor mCursor;
 
 	@Override
 	public int getItemViewType(int position) {
@@ -64,6 +65,10 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 	private void log(String message) {
 		Log.e(TAG, message);
 	}
+	
+	public StatusCursorAdapter(Context context) {
+		super(context, null, false);
+	}
 
 	public StatusCursorAdapter(Context context, Cursor c) {
 		super(context, c, false);
@@ -72,10 +77,24 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 	public StatusCursorAdapter(boolean colored, Context context, Cursor c) {
 		super(context, c, false);
 		this.colored = colored;
+		this.mCursor=c;
 	}
 
 	public StatusCursorAdapter(Activity context, Cursor c, boolean autoRequery) {
 		super(context, c, autoRequery);
+		this.mCursor=c;
+	}
+	
+	public void swapCursor(Cursor cursor){
+		if(cursor!=null){
+			mCursor=cursor;
+			changeCursor(mCursor);
+			mCursor.requery();
+		}else{
+			mCursor=null;
+			changeCursor(mCursor);
+			notifyDataSetChanged();
+		}
 	}
 
 	private void setTextStyle(ViewHolder holder) {

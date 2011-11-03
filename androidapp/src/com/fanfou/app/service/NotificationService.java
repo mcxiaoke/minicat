@@ -27,6 +27,7 @@ import com.fanfou.app.util.Utils;
  * @author mcxiaoke
  * @version 1.0 2011.09.20
  * @version 1.1 2011.11.02
+ * @version 1.2 2011.11.03
  * 
  */
 public class NotificationService extends BaseIntentService {
@@ -102,19 +103,22 @@ public class NotificationService extends BaseIntentService {
 		if (dms != null) {
 			int size = dms.size();
 			if (size > 0) {
-				getContentResolver().bulkInsert(DirectMessageInfo.CONTENT_URI,
-						Parser.toContentValuesArray(dms));
-				getContentResolver().notifyChange(
-						DirectMessageInfo.CONTENT_URI, null, false);
 				if (size == 1) {
+					DirectMessage dm = dms.get(0);
+					getContentResolver().insert(DirectMessageInfo.CONTENT_URI,
+							dm.toContentValues());
 					notifyDmOne(NOTIFICATION_TYPE_DM, dms.get(0));
 				} else {
+					getContentResolver().bulkInsert(
+							DirectMessageInfo.CONTENT_URI,
+							Parser.toContentValuesArray(dms));
 					notifyDmList(NOTIFICATION_TYPE_DM, size);
 				}
-
+				getContentResolver().notifyChange(
+						DirectMessageInfo.CONTENT_URI, null, false);
 			}
 		}
-		 mc.close();
+		mc.close();
 	}
 
 	private void handleMention() throws ApiException {
@@ -124,18 +128,21 @@ public class NotificationService extends BaseIntentService {
 		if (ss != null) {
 			int size = ss.size();
 			if (size > 0) {
-				getContentResolver().bulkInsert(StatusInfo.CONTENT_URI,
-						Parser.toContentValuesArray(ss));
-				getContentResolver().notifyChange(
-						StatusInfo.CONTENT_URI, null, false);
 				if (size == 1) {
-					notifyStatusOne(NOTIFICATION_TYPE_MENTION, ss.get(0));
+					Status s = ss.get(0);
+					getContentResolver().insert(StatusInfo.CONTENT_URI,
+							s.toContentValues());
+					notifyStatusOne(NOTIFICATION_TYPE_MENTION, s);
 				} else {
+					getContentResolver().bulkInsert(StatusInfo.CONTENT_URI,
+							Parser.toContentValuesArray(ss));
 					notifyStatusList(NOTIFICATION_TYPE_MENTION, size);
 				}
+				getContentResolver().bulkInsert(StatusInfo.CONTENT_URI,
+						Parser.toContentValuesArray(ss));
 			}
 		}
-		 mc.close();
+		mc.close();
 	}
 
 	private void handleHome() throws ApiException {
@@ -145,18 +152,21 @@ public class NotificationService extends BaseIntentService {
 		if (ss != null) {
 			int size = ss.size();
 			if (size > 0) {
-				getContentResolver().bulkInsert(StatusInfo.CONTENT_URI,
-						Parser.toContentValuesArray(ss));
-				getContentResolver().notifyChange(
-						StatusInfo.CONTENT_URI, null, false);
 				if (size == 1) {
+					Status s = ss.get(0);
+					getContentResolver().insert(StatusInfo.CONTENT_URI,
+							s.toContentValues());
 					notifyStatusOne(NOTIFICATION_TYPE_HOME, ss.get(0));
 				} else {
+					getContentResolver().bulkInsert(StatusInfo.CONTENT_URI,
+							Parser.toContentValuesArray(ss));
 					notifyStatusList(NOTIFICATION_TYPE_HOME, size);
 				}
+				getContentResolver().notifyChange(StatusInfo.CONTENT_URI, null,
+						false);
 			}
 		}
-		 mc.close();
+		mc.close();
 	}
 
 	private void notifyStatusOne(int type, Status status) {

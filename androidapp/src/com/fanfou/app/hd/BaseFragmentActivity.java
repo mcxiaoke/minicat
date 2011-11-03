@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.fanfou.app.App;
 import com.fanfou.app.HomePage;
@@ -22,8 +23,10 @@ import com.fanfou.app.SearchPage;
 import com.fanfou.app.WritePage;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.http.ApnType;
 import com.fanfou.app.ui.ActionManager;
+import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -40,59 +43,26 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 	Activity mContext;
 	LayoutInflater mInflater;
 	boolean isActive = false;
-	// NetworkReceiver mNetworkReceiver;
-	BroadcastReceiver mNotificationReceiver;
-	IntentFilter mNotificationFilter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.mContext = this;
 		this.mInflater = LayoutInflater.from(this);
-		this.mNotificationReceiver = new NotifyReceiver();
-		this.mNotificationFilter = new IntentFilter(
-				Actions.ACTION_NOTIFICATION);
-		mNotificationFilter.setPriority(1000);
-		// this.mNetworkReceiver=new NetworkReceiver();
 	}
-
-	private class NotifyReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (App.DEBUG) {
-				Log.d("NotificationReceiver", "active, broadcast received: "
-						+ intent.toString());
-			}
-			onReceived(intent);
-			abortBroadcast();
-		}
-
-	}
-
-	protected void onReceived(Intent intent) {
-	};
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		isActive = true;
 		App.active = true;
-		// IntentFilter filter = new IntentFilter();
-		// filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-		// filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
-		// registerReceiver(mNetworkReceiver, filter);
-		registerReceiver(mNotificationReceiver, mNotificationFilter);
 	}
 
-	//
 	@Override
 	protected void onPause() {
-		super.onPause();
 		isActive = false;
 		App.active = false;
-		// unregisterReceiver(mNetworkReceiver);
-		unregisterReceiver(mNotificationReceiver);
+		super.onPause();
 	}
 
 	@Override
@@ -110,10 +80,6 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 		super.onDestroy();
 	}
 
-	protected boolean isActive() {
-		return isActive;
-	}
-
 	protected static final int PAGE_NORMAL = 0;
 	protected static final int PAGE_HOME = 1;
 	protected static final int PAGE_LOGIN = 2;
@@ -122,57 +88,59 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 	protected static final int PAGE_TIMELINE = 5;
 	protected static final int PAGE_FRIENDS = 6;
 	protected static final int PAGE_FOLLOWERS = 7;
+	protected static final int PAGE_DRAFTS = 8;
 
 	protected int getPageType() {
 		return PAGE_NORMAL;
 	}
 
-	protected boolean isRootScreen() {
+	protected boolean isHomeScreen() {
 		return false;
 	}
 
 	protected boolean noConnection() {
-		return App.me.apnType != ApnType.NONE;
-		// if(App.me.connected){
-		// return false;
-		// }else{
-		// Utils.notify(this, "无可用的网络连接，请稍后重试");
-		// return true;
-		// }
+		return App.me.apnType == ApnType.NONE;
 	}
 
-	protected static final int MENU_ID_OPTION = 0; // 设置
-	protected static final int MENU_ID_PROFILE = 1; //
+	protected static final int MENU_ID_PROFILE = 0; //
+	protected static final int MENU_ID_OPTION = 1; // 设置
 	protected static final int MENU_ID_SEARCH = 2;
-	protected static final int MENU_ID_FEEDBACK = 3; //
-	protected static final int MENU_ID_ABOUT = 4; // 关于
-	protected static final int MENU_ID_EXIT = 5; // 退出
+	protected static final int MENU_ID_ABOUT = 3; // 关于
+	protected static final int MENU_ID_FEEDBACK = 4; //
+	protected static final int MENU_ID_LOGOUT = 5; // 退出
 	protected static final int MENU_ID_HOME = 6; // 返回首页
+
+	protected static final int MENU_ID_REFRESH = 7; // 返回首页
+	protected static final int MENU_ID_CLEAR = 8; // 返回首页
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		int id = item.getItemId();
 		switch (id) {
 		case MENU_ID_OPTION:
-			goOptionPage();
+			onOptionClick();
 			break;
 		case MENU_ID_PROFILE:
-			goProfilePage();
+			onProfileClick();
 			break;
 		case MENU_ID_SEARCH:
-			goSearchPage();
+			onSearchClick();
 			break;
-		case MENU_ID_EXIT:
-			doExit();
+		case MENU_ID_LOGOUT:
+			onLogoutClick();
 			break;
 		case MENU_ID_ABOUT:
-			goAboutPage();
+			// startActivity(new Intent(this, NewVersionPage.class));
+			onAboutClick();
 			break;
 		case MENU_ID_FEEDBACK:
-			doFeedback();
+			onFeedbackClick();
 			break;
 		case MENU_ID_HOME:
-			goBackHome();
+			onHomeClick();
+			break;
+		case MENU_ID_CLEAR:
+			onClearClick();
 			break;
 		default:
 			break;
@@ -189,22 +157,26 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 			menu.removeItem(MENU_ID_OPTION);
 			menu.removeItem(MENU_ID_PROFILE);
 			menu.removeItem(MENU_ID_SEARCH);
-			menu.removeItem(MENU_ID_EXIT);
+			menu.removeItem(MENU_ID_LOGOUT);
 			menu.removeItem(MENU_ID_ABOUT);
 			menu.removeItem(MENU_ID_FEEDBACK);
+			menu.removeItem(MENU_ID_CLEAR);
 			break;
 		case PAGE_HOME:
 			menu.removeItem(MENU_ID_HOME);
+			menu.removeItem(MENU_ID_CLEAR);
 			break;
 		case PAGE_LOGIN:
+			menu.clear();
+			break;
+		case PAGE_DRAFTS:
 			menu.removeItem(MENU_ID_OPTION);
 			menu.removeItem(MENU_ID_PROFILE);
 			menu.removeItem(MENU_ID_SEARCH);
-			menu.removeItem(MENU_ID_EXIT);
+			menu.removeItem(MENU_ID_LOGOUT);
 			menu.removeItem(MENU_ID_ABOUT);
 			menu.removeItem(MENU_ID_FEEDBACK);
 			menu.removeItem(MENU_ID_HOME);
-			break;
 		default:
 			break;
 		}
@@ -218,70 +190,83 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 	MenuItem about;
 	MenuItem feedback;
 	MenuItem home;
+	MenuItem clear;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		option = menu.add(0, MENU_ID_OPTION, MENU_ID_OPTION, "选项");
+		option = menu.add(0, MENU_ID_OPTION, MENU_ID_OPTION, "功能设置");
 		option.setIcon(R.drawable.i_menu_option);
 
-		profile = menu.add(0, MENU_ID_PROFILE, MENU_ID_PROFILE, "个人");
+		profile = menu.add(0, MENU_ID_PROFILE, MENU_ID_PROFILE, "我的空间");
 		profile.setIcon(R.drawable.i_menu_profile);
 
-		search = menu.add(0, MENU_ID_SEARCH, MENU_ID_SEARCH, "搜索");
+		search = menu.add(0, MENU_ID_SEARCH, MENU_ID_SEARCH, "热词搜索");
 		search.setIcon(R.drawable.i_menu_search);
 
-		logout = menu.add(0, MENU_ID_EXIT, MENU_ID_EXIT, "退出");
+		logout = menu.add(0, MENU_ID_LOGOUT, MENU_ID_LOGOUT, "注销登录");
 		logout.setIcon(R.drawable.i_menu_logout);
 
-		about = menu.add(0, MENU_ID_ABOUT, MENU_ID_ABOUT, "关于");
+		about = menu.add(0, MENU_ID_ABOUT, MENU_ID_ABOUT, "关于饭否");
 		about.setIcon(R.drawable.i_menu_about);
 
-		feedback = menu.add(0, MENU_ID_FEEDBACK, MENU_ID_FEEDBACK, "反馈");
+		feedback = menu.add(0, MENU_ID_FEEDBACK, MENU_ID_FEEDBACK, "意见反馈");
 		feedback.setIcon(R.drawable.i_menu_feedback);
 
-		home = menu.add(0, MENU_ID_HOME, MENU_ID_HOME, "首页");
+		home = menu.add(0, MENU_ID_HOME, MENU_ID_HOME, "返回首页");
 		home.setIcon(R.drawable.i_menu_home);
 
+		clear = menu.add(0, MENU_ID_CLEAR, MENU_ID_CLEAR, "清空草稿");
+		clear.setIcon(R.drawable.i_menu_clear);
 		return true;
 	}
 
-	protected void goBackHome() {
-		Intent intent = new Intent(mContext, HomePage.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
-	}
-
-	protected void goOptionPage() {
+	protected void onOptionClick() {
 		Intent intent = new Intent(this, OptionsPage.class);
 		startActivity(intent);
 	}
 
-	protected void goProfilePage() {
+	protected void onProfileClick() {
 		ActionManager.doMyProfile(this);
 	}
 
-	protected void goSearchPage() {
+	protected void onSearchClick() {
 		Intent intent = new Intent(this, SearchPage.class);
 		startActivity(intent);
 	}
 
-	protected void goAboutPage() {
+	protected void onAboutClick() {
 		Utils.goAboutPage(this);
 	}
 
-	protected void doFeedback() {
-		// IntentHelper.sendFeedback(this, "");
-
+	protected void onFeedbackClick() {
 		Intent intent = new Intent(this, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
-		intent.putExtra(Commons.EXTRA_TEXT, "@Android客户端 (" + Build.MODEL + "-"
-				+ Build.VERSION.RELEASE + ") #意见反馈# ");
+		intent.putExtra(Commons.EXTRA_TEXT,
+				getString(R.string.config_feedback_account) + " ("
+						+ Build.MODEL + "-" + Build.VERSION.RELEASE + ") ");
 		startActivity(intent);
 	}
 
-	private void doExit() {
-		Process.killProcess(Process.myPid());
+	protected void onHomeClick() {
+		IntentHelper.goHomePage(this, -1);
+		finish();
 	}
 
+	protected void onClearClick() {
+	};
+
+	protected void onLogoutClick() {
+		final ConfirmDialog dialog = new ConfirmDialog(this, "注销",
+				"确定注销当前登录帐号吗？");
+		dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
+
+			@Override
+			public void onButton1Click() {
+				IntentHelper.goLoginPage(mContext);
+				finish();
+			}
+		});
+		dialog.show();
+	}
 }

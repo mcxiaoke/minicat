@@ -23,13 +23,6 @@
 			android:layout_width="match_parent" android:layout_height="match_parent"
 			android:id="@+id/viewpager" android:layout_below="@id/viewindicator" />
 
-		<!-- <RelativeLayout android:id="@id/buttons" android:layout_width="fill_parent" 
-			android:layout_height="wrap_content"> <ImageView android:id="@+id/write_bottom" 
-			style="@style/Icon.Fixed" android:layout_alignParentLeft="true" android:src="@drawable/i_write_bottom" 
-			/> <ImageView android:id="@+id/refresh_bottom" style="@style/Icon.Fixed" 
-			android:layout_alignParentRight="true" android:src="@drawable/i_refresh_bottom" 
-			/> </RelativeLayout> -->
-
 		<ImageView android:id="@+id/write_bottom" style="@style/Icon.Fixed"
 			android:src="@drawable/i_write_bottom" />
 

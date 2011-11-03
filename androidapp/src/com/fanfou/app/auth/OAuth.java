@@ -14,8 +14,6 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.message.BasicHeader;
@@ -27,10 +25,16 @@ import android.util.Log;
 import com.fanfou.app.App;
 import com.fanfou.app.api.ApiConfig;
 import com.fanfou.app.api.ApiException;
+import com.fanfou.app.http.ConnectionManager;
+import com.fanfou.app.http.ConnectionRequest;
 import com.fanfou.app.http.Parameter;
 import com.fanfou.app.util.Base64;
-import com.fanfou.app.util.NetworkHelper;
 
+/**
+ * @author mcxiaoke
+ * @version 2.0 2011.11.03
+ *
+ */
 public class OAuth {
 
 	private static final String TAG = OAuth.class.getSimpleName();
@@ -75,15 +79,18 @@ public class OAuth {
 
 	public OAuthToken getOAuthAccessToken(String username, String password)
 			throws ApiException, IOException {
-		HttpGet request = new HttpGet(ACCESS_TOKEN_URL);
-		String authorization = getXAuthHeader(username, password,
-				request.getMethod(), ACCESS_TOKEN_URL);
-		if (App.DEBUG)
-			log("xauth authorization=" + authorization);
-		request.addHeader(new BasicHeader("Authorization", authorization));
-		HttpClient client = NetworkHelper.newHttpClient();
-		NetworkHelper.setProxy(client);
-		HttpResponse response = client.execute(request);
+		String authorization = getXAuthHeader(username, password,HttpGet.METHOD_NAME, ACCESS_TOKEN_URL);
+//		if (App.DEBUG)
+//			log("xauth authorization=" + authorization);
+//		HttpGet request = new HttpGet(ACCESS_TOKEN_URL);
+//		request.addHeader(new BasicHeader("Authorization", authorization));
+//		HttpClient client = NetworkHelper.newHttpClient();
+//		NetworkHelper.setProxy(client);
+//		HttpResponse response = client.execute(request);
+		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		builder.url(ACCESS_TOKEN_URL);
+		builder.header("Authorization", authorization);
+		HttpResponse response = ConnectionManager.execNoAuth(builder.build());
 		int statusCode = response.getStatusLine().getStatusCode();
 		String content = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
 		if (App.DEBUG)
@@ -118,8 +125,8 @@ public class OAuth {
 		oauthHeaderParams.add(new Parameter("x_auth_mode", "client_auth"));
 		// parseGetParams(url, oauthHeaderParams);
 		StringBuffer base = new StringBuffer(method).append("&")
-				.append(Parameter.encode(constructRequestURL(url))).append("&");
-		base.append(Parameter.encode(alignParams(oauthHeaderParams)));
+				.append(ConnectionRequest.encode(constructRequestURL(url))).append("&");
+		base.append(ConnectionRequest.encode(alignParams(oauthHeaderParams)));
 		String oauthBaseString = base.toString();
 		String signature = signature(oauthBaseString, null);
 		oauthHeaderParams.add(new Parameter("oauth_signature", signature));
@@ -167,8 +174,8 @@ public class OAuth {
 		oauthHeaderParams.add(new Parameter("oauth_version", "1.0"));
 		if (null != otoken) {
 			if (App.DEBUG)
-				log("add oauth token to header: oauth_token="
-						+ otoken.getToken());
+				log("getOAuthHeader() add oauth token to header: oauth_token="
+						+ otoken.getToken()+" oauth_token_secret="+otoken.getTokenSecret());
 			oauthHeaderParams.add(new Parameter("oauth_token", otoken
 					.getToken()));
 		}
@@ -176,13 +183,16 @@ public class OAuth {
 				oauthHeaderParams.size() + params.size());
 		signatureBaseParams.addAll(oauthHeaderParams);
 		if (method != HttpGet.METHOD_NAME && params != null
-				&& !Parameter.containsFile(params)) {
+				&& !ConnectionRequest.containsFile(params)) {
 			signatureBaseParams.addAll(params);
 		}
 		parseGetParams(url, signatureBaseParams);
+		if(App.DEBUG){
+			log("getOAuthHeader() url="+url);
+		}
 		StringBuffer base = new StringBuffer(method).append("&")
-				.append(Parameter.encode(constructRequestURL(url))).append("&");
-		base.append(Parameter.encode(alignParams(signatureBaseParams)));
+				.append(ConnectionRequest.encode(constructRequestURL(url))).append("&");
+		base.append(ConnectionRequest.encode(alignParams(signatureBaseParams)));
 		String oauthBaseString = base.toString();
 		String signature = signature(oauthBaseString, otoken);
 		oauthHeaderParams.add(new Parameter("oauth_signature", signature));
@@ -219,8 +229,8 @@ public class OAuth {
 		parseGetParams(url, signatureBaseParams);
 
 		StringBuffer base = new StringBuffer(method).append("&")
-				.append(Parameter.encode(constructRequestURL(url))).append("&");
-		base.append(Parameter.encode(alignParams(signatureBaseParams)));
+				.append(ConnectionRequest.encode(constructRequestURL(url))).append("&");
+		base.append(ConnectionRequest.encode(alignParams(signatureBaseParams)));
 
 		String oauthBaseString = base.toString();
 		String signature = signature(oauthBaseString, oauthToken);
@@ -238,16 +248,16 @@ public class OAuth {
 			Mac mac = Mac.getInstance(HMAC_SHA1);
 			SecretKeySpec spec;
 			if (null == token) {
-				String oauthSignature = Parameter
+				String oauthSignature = ConnectionRequest
 						.encode(ApiConfig.CONSUMER_SECRET) + "&";
 				spec = new SecretKeySpec(oauthSignature.getBytes(), HMAC_SHA1);
 			} else {
 				spec = token.getSecretKeySpec();
 				if (null == spec) {
-					String oauthSignature = Parameter
+					String oauthSignature = ConnectionRequest
 							.encode(ApiConfig.CONSUMER_SECRET)
 							+ "&"
-							+ Parameter.encode(token.getTokenSecret());
+							+ ConnectionRequest.encode(token.getTokenSecret());
 					spec = new SecretKeySpec(oauthSignature.getBytes(),
 							HMAC_SHA1);
 					token.setSecretKeySpec(spec);
@@ -283,11 +293,11 @@ public class OAuth {
 					}
 					buf.append(splitter);
 				}
-				buf.append(Parameter.encode(param.getName())).append("=");
+				buf.append(ConnectionRequest.encode(param.getName())).append("=");
 				if (quot) {
 					buf.append("\"");
 				}
-				buf.append(Parameter.encode(param.getValue()));
+				buf.append(ConnectionRequest.encode(param.getValue()));
 			}
 		}
 		if (buf.length() != 0) {

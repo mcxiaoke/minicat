@@ -52,7 +52,7 @@ public class App extends Application {
 	// TODO contentprovider need modify use sqlite
 	// TODO add some flags to status model in db
 
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 
 	public static App me;
 	public static boolean active = false;

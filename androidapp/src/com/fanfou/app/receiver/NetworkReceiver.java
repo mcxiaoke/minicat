@@ -10,15 +10,18 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.R;
 import com.fanfou.app.http.ApnType;
 import com.fanfou.app.service.AutoCompleteService;
+import com.fanfou.app.service.DownloadService;
 import com.fanfou.app.util.AlarmHelper;
-import com.fanfou.app.util.NetworkHelper;
+import com.fanfou.app.util.OptionHelper;
 
 /**
  * @author mcxiaoke
  * @version 2.0 2011.10.29
  * @version 2.5 2011.10.30
+ * @version 2.6 2011.11.03
  * 
  */
 public class NetworkReceiver extends BroadcastReceiver {
@@ -36,8 +39,21 @@ public class NetworkReceiver extends BroadcastReceiver {
 	
 	private void onWifiConnected(Context context){
 		// when wifi is connected, start fetch friends for autocomplete and check update.
-		NetworkHelper.startAutoComplete(context);
-		NetworkHelper.startUpdateCheck(context);
+		startAutoComplete(context);
+		startUpdateCheck(context);
+	}
+	
+	public static void startAutoComplete(Context context){
+		Intent intent = new Intent(context, AutoCompleteService.class);
+		context.startService(intent);
+	}
+	
+	public static void startUpdateCheck(Context context) {
+		boolean autoUpdate = OptionHelper.readBoolean(context,
+				R.string.option_autoupdate, true);
+		if (autoUpdate) {
+			DownloadService.startCheck(context);
+		}
 	}
 
 	private void handleConnectionStateChange(Context context,Intent intent) {

@@ -26,13 +26,14 @@ import com.fanfou.app.api.ResultInfo;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.AlertInfoDialog;
+import com.fanfou.app.http.ConnectionManager;
+import com.fanfou.app.http.ConnectionRequest;
 import com.fanfou.app.http.Parameter;
 import com.fanfou.app.http.Response;
 import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.util.DeviceHelper;
-import com.fanfou.app.util.NetworkHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
@@ -314,13 +315,14 @@ public class RegisterPage extends Activity implements OnClickListener {
 			for (Parameter parameter : params) {
 				Log.d("RegisterTask", parameter.toString());
 			}
-			HttpClient client = NetworkHelper.newHttpClient();
-			HttpPost request = new HttpPost(ApiConfig.URL_REGISTER);
-			request.setEntity(Parameter.encodeForPost(params));
+//			HttpClient client = NetworkHelper.newHttpClient();
+//			HttpPost request = new HttpPost(ApiConfig.URL_REGISTER);
+//			request.setEntity(ConnectionRequest.encodeForPost(params));
 
-			Log.d("RegisterTask", request.getURI().toString());
+//			Log.d("RegisterTask", request.getURI().toString());
 
-			HttpResponse response = client.execute(request);
+//			HttpResponse response = client.execute(request);
+			HttpResponse response=ConnectionManager.post(ApiConfig.URL_REGISTER, params);
 			Response res = new Response(response);
 			if (App.DEBUG) {
 				Log.d("RegisterTask", res.getContent());

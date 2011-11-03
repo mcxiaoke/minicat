@@ -21,7 +21,8 @@ import com.fanfou.app.util.AlarmHelper;
 
 /**
  * @author mcxiaoke
- * @version 1.0 20110921
+ * @version 1.0 2011.09.21
+ * @version 1.1 2011.11.03
  * 
  */
 public class NotificationReceiver extends BroadcastReceiver {
@@ -44,10 +45,10 @@ public class NotificationReceiver extends BroadcastReceiver {
 				Status status = (Status) intent
 						.getSerializableExtra(Commons.EXTRA_STATUS);
 				if (status != null) {
-					showHomeOneNotification(context, type, status);
+					showHomeOneNotification(context, status);
 				}
 			} else {
-				showHomeMoreNotification(context, type, count);
+				showHomeMoreNotification(context, count);
 			}
 			break;
 		case NotificationService.NOTIFICATION_TYPE_MENTION:
@@ -55,10 +56,10 @@ public class NotificationReceiver extends BroadcastReceiver {
 				Status status = (Status) intent
 						.getSerializableExtra(Commons.EXTRA_STATUS);
 				if (status != null) {
-					showMentionOneNotification(context, type, status);
+					showMentionOneNotification(context, status);
 				}
 			} else {
-				showMentionMoreNotification(context, type, count);
+				showMentionMoreNotification(context, count);
 			}
 			break;
 		case NotificationService.NOTIFICATION_TYPE_DM:
@@ -66,10 +67,10 @@ public class NotificationReceiver extends BroadcastReceiver {
 				final DirectMessage dm = (DirectMessage) intent
 						.getSerializableExtra(Commons.EXTRA_MESSAGE);
 				if (dm != null) {
-					showDmOneNotification(context, type, dm);
+					showDmOneNotification(context, dm);
 				}
 			} else {
-				showDmMoreNotification(context, type, count);
+				showDmMoreNotification(context, count);
 			}
 			break;
 		default:
@@ -77,10 +78,9 @@ public class NotificationReceiver extends BroadcastReceiver {
 		}
 	}
 
-	private static void showHomeOneNotification(Context context, int type,
-			Status status) {
+	private static void showHomeOneNotification(Context context,Status status) {
 		if (App.DEBUG) {
-			Log.i(TAG, "showHomeOneNotification type=" + type);
+			Log.i(TAG, "showHomeOneNotification");
 		}
 		String title = status.userScreenName;
 		String message = status.simpleText;
@@ -93,10 +93,9 @@ public class NotificationReceiver extends BroadcastReceiver {
 				message, R.drawable.ic_notify_home);
 	}
 
-	private static void showHomeMoreNotification(Context context, int type,
-			int count) {
+	private static void showHomeMoreNotification(Context context, int count) {
 		if (App.DEBUG) {
-			Log.i(TAG, "showHomeMoreNotification type=" + type + " count="
+			Log.i(TAG, "showHomeMoreNotification  count="
 					+ count);
 		}
 		String title = "饭否消息";
@@ -110,10 +109,9 @@ public class NotificationReceiver extends BroadcastReceiver {
 				message, R.drawable.ic_notify_home);
 	}
 
-	private static void showMentionOneNotification(Context context, int type,
-			Status status) {
+	private static void showMentionOneNotification(Context context,Status status) {
 		if (App.DEBUG) {
-			Log.i(TAG, "showMentionOneNotification type=" + type);
+			Log.i(TAG, "showMentionOneNotification");
 		}
 		String title = status.userScreenName + "@你的消息";
 		String message = status.simpleText;
@@ -126,10 +124,9 @@ public class NotificationReceiver extends BroadcastReceiver {
 				title, message, R.drawable.ic_notify_mention);
 	}
 
-	private static void showMentionMoreNotification(Context context, int type,
-			int count) {
+	private static void showMentionMoreNotification(Context context, int count) {
 		if (App.DEBUG) {
-			Log.i(TAG, "showMentionMoreNotification type=" + type + " count="
+			Log.i(TAG, "showMentionMoreNotification count="
 					+ count);
 		}
 		String title = "饭否消息";
@@ -143,10 +140,9 @@ public class NotificationReceiver extends BroadcastReceiver {
 				title, message, R.drawable.ic_notify_mention);
 	}
 
-	private static void showDmOneNotification(Context context, int type,
-			DirectMessage dm) {
+	private static void showDmOneNotification(Context context,DirectMessage dm) {
 		if (App.DEBUG) {
-			Log.i(TAG, "showDmOneNotification type=" + type);
+			Log.i(TAG, "showDmOneNotification");
 		}
 		Intent intent = new Intent(context, MessageChatPage.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
@@ -161,10 +157,9 @@ public class NotificationReceiver extends BroadcastReceiver {
 				message, R.drawable.ic_notify_dm);
 	}
 
-	private static void showDmMoreNotification(Context context, int type,
-			int count) {
+	private static void showDmMoreNotification(Context context, int count) {
 		if (App.DEBUG) {
-			Log.i(TAG, "showDmMoreNotification type=" + type + " count="
+			Log.i(TAG, "showDmMoreNotification count="
 					+ count);
 		}
 		String title = "饭否私信";

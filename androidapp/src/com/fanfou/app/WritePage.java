@@ -17,11 +17,14 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Selection;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.fanfou.app.adapter.AtTokenizer;
 import com.fanfou.app.adapter.AutoCompleteCursorAdapter;
@@ -310,7 +313,28 @@ public class WritePage extends BaseActivity {
 				wordsCount = content.length();
 				showCount(wordsCount);
 			}
-		});
+		});	
+		
+//		mAutoCompleteTextView.setOnEditorActionListener(new OnEditorActionListener() {
+//			
+//			@Override
+//			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//				switch (actionId) {
+//				case EditorInfo.IME_ACTION_DONE:
+//					break;
+//				case EditorInfo.IME_ACTION_GO:
+//					break;
+//				case EditorInfo.IME_ACTION_SEARCH:
+//					break;
+//				case EditorInfo.IME_ACTION_SEND:
+//					doSend();
+//				default:
+//					break;
+//				}
+//				return false;
+//			}
+//		});
+		
 		mAutoCompleteTextView.setTokenizer(new AtTokenizer());
 		mAutoCompleteTextView.setDropDownBackgroundResource(R.drawable.bg);
 		mAutoCompleteTextView.setDropDownAnchor(R.id.write_text);

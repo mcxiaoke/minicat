@@ -6,15 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
+
+import android.app.DownloadManager.Request;
 import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.cache.CacheManager;
-import com.fanfou.app.http.BaseClient;
-import com.fanfou.app.http.BasicClient;
-import com.fanfou.app.http.OAuthClient;
+import com.fanfou.app.http.ConnectionManager;
+import com.fanfou.app.http.ConnectionRequest;
 import com.fanfou.app.http.Parameter;
-import com.fanfou.app.http.Request;
 import com.fanfou.app.http.Response;
 import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.StringHelper;
@@ -31,11 +31,7 @@ public class ApiImpl implements Api, ResponseCode {
 	private static final boolean OAUTH_ON = true;
 	private static final String TAG = ApiImpl.class.getSimpleName();
 
-	private BaseClient mClient;
-
 	/**
-	 * log for debug
-	 * 
 	 * @param message
 	 */
 	private void log(String message) {
@@ -43,15 +39,7 @@ public class ApiImpl implements Api, ResponseCode {
 	}
 
 	public ApiImpl() {
-		if (App.DEBUG)
-			log("new api instance");
-		if (OAUTH_ON) {
-			mClient = new OAuthClient();
-		} else {
-			mClient = new BasicClient();
-		}
 	}
-
 
 	/**
 	 * exec http request
@@ -60,10 +48,10 @@ public class ApiImpl implements Api, ResponseCode {
 	 * @return response object
 	 * @throws ApiException
 	 */
-	private Response fetch(Request request) throws ApiException {
+	private Response fetch(ConnectionRequest request) throws ApiException {
 		try {
 			// long startTime = System.currentTimeMillis();
-			HttpResponse response = mClient.exec(request);
+			HttpResponse response = ConnectionManager.exec(request);
 			// if(App.DEBUG){
 			// long reqTime = System.currentTimeMillis() - startTime;
 			// Utils.logTime("fetch", reqTime);}
@@ -76,7 +64,8 @@ public class ApiImpl implements Api, ResponseCode {
 		} catch (IOException e) {
 			if (App.DEBUG)
 				e.printStackTrace();
-			throw new ApiException(ERROR_NOT_CONNECTED, e.toString(), e.getCause());
+			throw new ApiException(ERROR_NOT_CONNECTED, e.toString(),
+					e.getCause());
 		}
 	}
 
@@ -89,18 +78,7 @@ public class ApiImpl implements Api, ResponseCode {
 	 * @throws ApiException
 	 */
 	List<User> fetchUsers(String url, String userId) throws ApiException {
-		Request request = null;
-		if (StringHelper.isEmpty(userId)) {
-			request = new Request(url);
-		} else {
-			List<Parameter> params = new ArrayList<Parameter>();
-			params.add(new Parameter("id", userId));
-			request = new Request(url, params);
-		}
-		if (App.DEBUG)
-			log("fetchUsers()---request=" + request.toString());
-
-		Response response = fetch(request);
+		Response response = fetch(new ConnectionRequest.Builder().url(url).id(userId).build());
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("fetchUsers()---url=" + url + " userid=" + userId);
@@ -135,33 +113,14 @@ public class ApiImpl implements Api, ResponseCode {
 	List<Status> fetchStatuses(String url, int count, int page, String userId,
 			String sinceId, String maxId, boolean isHtml, int type)
 			throws ApiException {
-		List<Parameter> params = new ArrayList<Parameter>();
-		if (count > 0 && count < 20) {
-			params.add(new Parameter("count", count));
-		}
-		if (page > 0) {
-			params.add(new Parameter("page", page));
-		}
-		if (!StringHelper.isEmpty(userId)) {
-			params.add(new Parameter("id", userId));
-		}
-		if (!StringHelper.isEmpty(sinceId)) {
-			params.add(new Parameter("since_id", sinceId));
-		}
-		if (!StringHelper.isEmpty(maxId)) {
-			params.add(new Parameter("max_id", maxId));
-		}
-		if (isHtml) {
-			params.add(new Parameter("format", "html"));
-		}
-		Request request = new Request(url, params);
 		if (App.DEBUG) {
 			log("fetchStatuses()---url=" + url + " count=" + count + " page="
 					+ page + " userid=" + userId + " sinceId=" + sinceId
 					+ " maxid=" + maxId);
-			log("fetchStatuses()---request=" + request.toString());
 		}
-		Response response = fetch(request);
+		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
+		builder.url(url).count(count).page(page).id(userId).sinceId(sinceId).maxId(maxId).param("format", "html");
+		Response response = fetch(builder.build());
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("fetchStatuses()---statusCode=" + statusCode);
@@ -215,26 +174,15 @@ public class ApiImpl implements Api, ResponseCode {
 	 */
 	private Response doSingleIdAction(String url, String id, boolean isPost)
 			throws ApiException {
-		// if (Utils.isEmpty(id)) {
-		// throw new IllegalArgumentException("ID参数不能为空");
-		// }
-		Request request = null;
-		if (StringHelper.isEmpty(id)) {
-			request = new Request(url, isPost);
-		} else {
-			List<Parameter> params = new ArrayList<Parameter>();
-			params.add(new Parameter("id", id));
-			request = new Request(url, params, isPost);
-		}
-		if (App.DEBUG)
-			log("doSingleIdAction()---request=" + request.toString());
-		return fetch(request);
+		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
+		builder.url(url).id(id).post(isPost);
+		return fetch(builder.build());
 	}
 
 	@Override
 	public User verifyAccount() throws ApiException {
-		Request request = new Request(URL_VERIFY_CREDENTIALS);
-		Response response = fetch(request);
+		Response response = fetch(new ConnectionRequest.Builder().url(
+				URL_VERIFY_CREDENTIALS).build());
 		return User.parse(response);
 	}
 
@@ -327,8 +275,8 @@ public class ApiImpl implements Api, ResponseCode {
 		if (App.DEBUG) {
 			log("statusShow()---statusCode=" + statusCode);
 		}
-		Status s= Status.parse(response);
-		if(s!=null){
+		Status s = Status.parse(response);
+		if (s != null) {
 			CacheManager.put(s);
 		}
 		return s;
@@ -347,25 +295,14 @@ public class ApiImpl implements Api, ResponseCode {
 			log("statusUpdate() ---[status=(" + status + ") replyToStatusId="
 					+ inReplyToStatusId + " source=" + source + " location="
 					+ location + " repostStatusId=" + repostStatusId + " ]");
-		List<Parameter> params = new ArrayList<Parameter>();
-		params.add(new Parameter("status", status));
-		if (!StringHelper.isEmpty(inReplyToStatusId)) {
-			params.add(new Parameter("in_reply_to_status_id", inReplyToStatusId));
-		}
-		if (!StringHelper.isEmpty(source)) {
-			params.add(new Parameter("source", source));
-		}
-		if (!StringHelper.isEmpty(location)) {
-			params.add(new Parameter("location", location));
-		}
-		if (!StringHelper.isEmpty(repostStatusId)) {
-			params.add(new Parameter("repost_status_id", repostStatusId));
-		}
 
-		Request request = new Request(URL_STATUS_UPDATE, params, true);
-		if (App.DEBUG)
-			log("statusUpdate() request=" + request.toString());
-		Response response = fetch(request);
+		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
+		builder.url(URL_STATUS_UPDATE).post();
+		builder.status(status).location(location);
+		builder.param("in_reply_to_status_id", inReplyToStatusId);
+		builder.param("repost_status_id", repostStatusId);
+		builder.param("source", source);
+		Response response = fetch(builder.build());
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("statusUpdate()---statusCode=" + statusCode);
@@ -373,8 +310,7 @@ public class ApiImpl implements Api, ResponseCode {
 		if (StringHelper.isEmpty(response.getContent())) {
 			throw new ApiException(ERROR_DUPLICATE, "重复消息，发送失败");
 		}
-		Status s= Status.parse(response,Status.TYPE_HOME);
-		return s;
+		return Status.parse(response, Status.TYPE_HOME);
 	}
 
 	@Override
@@ -399,25 +335,19 @@ public class ApiImpl implements Api, ResponseCode {
 			log("upload()---photo=" + photo.getAbsolutePath() + " status="
 					+ status + " source=" + source + " location=" + location);
 		;
-		List<Parameter> params = new ArrayList<Parameter>();
-		params.add(new Parameter("photo", photo));
-		params.add(new Parameter("status", status));
-		if (!StringHelper.isEmpty(source)) {
-			params.add(new Parameter("source", source));
-		}
-		if (!StringHelper.isEmpty(location)) {
-			params.add(new Parameter("location", location));
-		}
-		Request request = new Request(URL_PHOTO_UPLOAD, params, true);
-		if (App.DEBUG)
-			log("photoUpload() request=" + request.toString());
-		Response response = fetch(request);
+
+		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
+		builder.url(URL_PHOTO_UPLOAD).post();
+		builder.status(status).location(location);
+		builder.param("photo", photo);
+		builder.param("source", source);
+
+		Response response = fetch(builder.build());
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("photoUpload()---statusCode=" + statusCode);
 		}
-		Status s= Status.parse(response,Status.TYPE_HOME);
-		return s;
+		return Status.parse(response, Status.TYPE_HOME);
 	}
 
 	@Override
@@ -428,18 +358,13 @@ public class ApiImpl implements Api, ResponseCode {
 				throw new IllegalArgumentException("搜索词不能为空");
 			return null;
 		}
-		List<Parameter> params = new ArrayList<Parameter>();
-		params.add(new Parameter("q", keyword));
-		if (!StringHelper.isEmpty(maxId)) {
-			params.add(new Parameter("max_id", maxId));
-		}
-		if (isHtml) {
-			params.add(new Parameter("format", "html"));
-		}
-		Request request = new Request(URL_SEARCH_PUBLIC, params);
-		if (App.DEBUG)
-			log("search() request=" + request.toString());
-		Response response = fetch(request);
+		
+		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
+		builder.url(URL_SEARCH_PUBLIC);
+		builder.param("q", keyword);
+		builder.param("max_id", maxId);
+		builder.param("format", "html");
+		Response response = fetch(builder.build());
 
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
@@ -451,15 +376,12 @@ public class ApiImpl implements Api, ResponseCode {
 
 	@Override
 	public List<Search> trends() throws ApiException {
-		Request request = new Request(URL_SEARCH_TRENDS);
-		log("trends() request=" + request.toString());
-		Response response = fetch(request);
+		Response response = fetch(new ConnectionRequest.Builder().url(URL_SEARCH_TRENDS).build());
 
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("trends()---statusCode=" + statusCode);
 		}
-
 		// handlerResponseError(response);
 		return Parser.trends(response);
 
@@ -467,10 +389,7 @@ public class ApiImpl implements Api, ResponseCode {
 
 	@Override
 	public List<Search> savedSearches() throws ApiException {
-		Request request = new Request(URL_SEARCH_SAVED);
-		if (App.DEBUG)
-			log("savedSearches() request=" + request.toString());
-		Response response = fetch(request);
+		Response response = fetch(new ConnectionRequest.Builder().url(URL_SEARCH_SAVED).build());
 
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
@@ -484,12 +403,8 @@ public class ApiImpl implements Api, ResponseCode {
 
 	@Override
 	public Search savedSearchShow(int id) throws ApiException {
-		List<Parameter> params = new ArrayList<Parameter>();
-		params.add(new Parameter("id", id));
-		Request request = new Request(URL_SEARCH_SAVED_ID, params);
-		if (App.DEBUG)
-			log("savedSearchShow() request=" + request.toString());
-		Response response = fetch(request);
+		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		Response response = fetch(builder.url(URL_SEARCH_SAVED_ID).param("id", id).build());
 
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
@@ -508,12 +423,11 @@ public class ApiImpl implements Api, ResponseCode {
 				throw new IllegalArgumentException("搜索词不能为空");
 			return null;
 		}
-		List<Parameter> params = new ArrayList<Parameter>();
-		params.add(new Parameter("query", query));
-		Request request = new Request(URL_SEARCH_SAVED_CREATE, params, true);
-		if (App.DEBUG)
-			log("savedSearchCreate() request=" + request.toString());
-		Response response = fetch(request);
+		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		builder.url(URL_SEARCH_SAVED_CREATE).post();
+		builder.param("query", query);
+		
+		Response response = fetch(builder.build());
 
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
@@ -525,12 +439,9 @@ public class ApiImpl implements Api, ResponseCode {
 
 	@Override
 	public Search savedSearchDelete(int id) throws ApiException {
-		List<Parameter> params = new ArrayList<Parameter>();
-		params.add(new Parameter("id", id));
-		Request request = new Request(URL_SEARCH_SAVED_DESTROY, params, true);
-		if (App.DEBUG)
-			log("savedSearchesDelete request=" + request.toString());
-		Response response = fetch(request);
+		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		builder.url(URL_SEARCH_SAVED_DESTROY).post().id(String.valueOf(id));
+		Response response = fetch(builder.build());
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("savedSearchDelete()---statusCode=" + statusCode);
@@ -542,15 +453,9 @@ public class ApiImpl implements Api, ResponseCode {
 
 	private List<User> fetchUsers(String url, String userId, int page)
 			throws ApiException {
-		List<Parameter> params = new ArrayList<Parameter>();
-		if (!StringHelper.isEmpty(userId)) {
-			params.add(new Parameter("id", userId));
-		}
-		if (page > 0) {
-			params.add(new Parameter("page", page));
-		}
-		Request request = new Request(url, params);
-		Response response = fetch(request);
+		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		builder.url(url).id(userId).page(page);
+		Response response = fetch(builder.build());
 
 		return User.parseUsers(response);
 	}
@@ -673,13 +578,11 @@ public class ApiImpl implements Api, ResponseCode {
 				throw new IllegalArgumentException("两个用户的ID都不能为空");
 			throw new ApiException(ERROR_NULL_TOKEN, "两个用户的ID都不能为空");
 		}
-		List<Parameter> params = new ArrayList<Parameter>();
-		params.add(new Parameter("user_a", userA));
-		params.add(new Parameter("user_b", userB));
-		Request request = new Request(URL_FRIENDSHIS_EXISTS, params);
-		if (App.DEBUG)
-			log("isFriends() request=" + request.toString());
-		Response response = fetch(request);
+		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		builder.url(URL_FRIENDSHIS_EXISTS);
+		builder.param("user_a", userA);
+		builder.param("user_b", userB);
+		Response response = fetch(builder.build());
 
 		int statusCode = response.statusCode;
 		if (App.DEBUG)
@@ -693,19 +596,12 @@ public class ApiImpl implements Api, ResponseCode {
 
 	private List<String> ids(String url, String userId, int count, int page)
 			throws ApiException {
-		List<Parameter> params = new ArrayList<Parameter>();
-		if (!StringHelper.isEmpty(userId)) {
-			params.add(new Parameter("id", userId));
-		}
-		if (count > 0) {
-			params.add(new Parameter("count", count));
-		}
-		if (page > 0) {
-			params.add(new Parameter("page", page));
-		}
-		Request request = new Request(url, params);
-
-		Response response = fetch(request);
+		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		builder.url(url);
+		builder.id(userId);
+		builder.count(count);
+		builder.page(page);
+		Response response = fetch(builder.build());
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("ids()---statusCode=" + statusCode);
@@ -730,29 +626,13 @@ public class ApiImpl implements Api, ResponseCode {
 
 	private List<DirectMessage> messages(String url, int count, int page,
 			String sinceId, String maxId) throws ApiException {
-		List<Parameter> params = new ArrayList<Parameter>();
-		if (count > 0 && count < 20) {
-			params.add(new Parameter("count", count));
-		}
-		if (page > 0) {
-			params.add(new Parameter("page", page));
-		}
-		if (!StringHelper.isEmpty(sinceId)) {
-			params.add(new Parameter("since_id", sinceId));
-		}
-		if (!StringHelper.isEmpty(maxId)) {
-			params.add(new Parameter("max_id", maxId));
-		}
-		Request request = new Request(url, params);
-		if (App.DEBUG)
-			log("messages() request=" + request.toString());
-		Response response = fetch(request);
+		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		builder.url(url).count(count).page(page).maxId(maxId).sinceId(sinceId);
+		Response response = fetch(builder.build());
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("messages()---statusCode=" + statusCode);
 		}
-
-		// handlerResponseError(response);
 		return DirectMessage.parseMessges(response);
 	}
 
@@ -794,28 +674,25 @@ public class ApiImpl implements Api, ResponseCode {
 				throw new IllegalArgumentException("收信人ID和私信内容都不能为空");
 			return null;
 		}
-		List<Parameter> params = new ArrayList<Parameter>();
-		params.add(new Parameter("user", userId));
-		params.add(new Parameter("text", text));
-		if (!StringHelper.isEmpty(inReplyToId)) {
-			params.add(new Parameter("in_reply_to_id", inReplyToId));
-		}
-		Request request = new Request(URL_DIRECT_MESSAGES_NEW, params, true);
-		if (App.DEBUG)
-			log("messageCreate() send request=" + request.toString());
-		Response response = fetch(request);
+		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		builder.url(URL_DIRECT_MESSAGES_NEW);
+		builder.post();
+		builder.param("user", userId);
+		builder.param("text", text);
+		builder.param("in_reply_to_id", inReplyToId);
+		Response response = fetch(builder.build());
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("messageCreate()---statusCode=" + statusCode);
 		}
 
-		DirectMessage dm= DirectMessage.parse(response);
-		if(dm!=null&&!dm.isNull()){
+		DirectMessage dm = DirectMessage.parse(response);
+		if (dm != null && !dm.isNull()) {
 			dm.type = DirectMessage.TYPE_OUT;
 			dm.threadUserId = dm.recipientId;
 			dm.threadUserName = dm.recipientScreenName;
 			return dm;
-		}else{
+		} else {
 			return null;
 		}
 	}

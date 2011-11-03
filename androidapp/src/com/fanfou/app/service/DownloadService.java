@@ -30,9 +30,9 @@ import com.fanfou.app.App;
 import com.fanfou.app.NewVersionPage;
 import com.fanfou.app.R;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.http.ConnectionManager;
 import com.fanfou.app.update.VersionInfo;
 import com.fanfou.app.util.IOHelper;
-import com.fanfou.app.util.NetworkHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
 
@@ -197,11 +197,13 @@ public class DownloadService extends WakefulIntentService {
 	}
 
 	public static VersionInfo fetchVersionInfo() {
-		HttpClient client = NetworkHelper.newHttpClient();
-		NetworkHelper.setProxy(client);
-		HttpGet request = new HttpGet(APP_UPDATE_SITE);
+//		HttpClient client = NetworkHelper.newHttpClient();
+//		NetworkHelper.setProxy(client);
+//		HttpGet request = new HttpGet(APP_UPDATE_SITE);
 		try {
-			HttpResponse response = client.execute(request);
+			
+//			HttpResponse response = client.execute(request);
+			HttpResponse response=ConnectionManager.get(APP_UPDATE_SITE);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (App.DEBUG) {
 				Log.d("AutoUpdateManager", "statusCode=" + statusCode);
