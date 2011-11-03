@@ -14,16 +14,14 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
-import org.apache.http.conn.params.ConnPerRoute;
+import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.message.BasicHeader;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -35,7 +33,6 @@ import android.util.Log;
 import com.fanfou.app.App;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.auth.OAuth;
-import com.fanfou.app.util.Base64;
 import com.fanfou.app.util.StringHelper;
 
 /**
@@ -57,6 +54,8 @@ public enum ConnectionManager {
 	public static final int SOCKET_BUFFER_SIZE = 2048;
 	public static final int CONNECTION_TIMEOUT_MS = 5000;
 	public static final int SOCKET_TIMEOUT_MS = 15000;
+	public static final int MAX_TOTAL_CONNECTIONS=20;
+	public static final int MAX_RETRY_TIMES=4;
 
 	private DefaultHttpClient client;
 
@@ -146,7 +145,6 @@ public enum ConnectionManager {
 	}
 
 	private static void setHeaders(HttpRequestBase request, List<Header> headers) {
-		request.addHeader("Accept-Encoding", "gzip, deflate");
 		if (headers != null) {
 			for (Header header : headers) {
 				request.setHeader(header);
@@ -155,20 +153,19 @@ public enum ConnectionManager {
 	}
 
 	private void prepareHttpClient() {
-		ConnPerRoute connPerRoute = new ConnPerRoute() {
-			@Override
-			public int getMaxForRoute(HttpRoute route) {
-				return 20;
-			}
-		};
 		HttpParams params = new BasicHttpParams();
+		ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(MAX_TOTAL_CONNECTIONS));
+		ConnManagerParams.setMaxTotalConnections(params, MAX_TOTAL_CONNECTIONS);
+		ConnManagerParams.setTimeout(params, SOCKET_TIMEOUT_MS);
+		
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-		ConnManagerParams.setMaxConnectionsPerRoute(params, connPerRoute);
 		HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+		
 		HttpConnectionParams
 				.setConnectionTimeout(params, CONNECTION_TIMEOUT_MS);
 		HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT_MS);
 		HttpConnectionParams.setSocketBufferSize(params, SOCKET_BUFFER_SIZE);
+		HttpConnectionParams.setTcpNoDelay(params, true);
 
 		SchemeRegistry schReg = new SchemeRegistry();
 		schReg.register(new Scheme("http", PlainSocketFactory
@@ -178,8 +175,9 @@ public enum ConnectionManager {
 		ClientConnectionManager manager = new ThreadSafeClientConnManager(
 				params, schReg);
 		client = new DefaultHttpClient(manager, params);
+		client.addRequestInterceptor(new GzipRequestInterceptor());
 		client.addResponseInterceptor(new GzipResponseInterceptor());
-		client.setHttpRequestRetryHandler(new RequestRetryHandler(3));
+		client.setHttpRequestRetryHandler(new RequestRetryHandler(MAX_RETRY_TIMES));
 	}
 
 	private static void setProxy(final HttpClient client) {
