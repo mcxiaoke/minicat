@@ -7,7 +7,7 @@ import java.util.zip.GZIPInputStream;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.HttpEntityWrapper;
 
-public class GzipDecompressingEntity extends HttpEntityWrapper {
+class GzipDecompressingEntity extends HttpEntityWrapper {
 
 	public GzipDecompressingEntity(final HttpEntity entity) {
 		super(entity);

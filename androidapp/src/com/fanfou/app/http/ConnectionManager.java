@@ -44,6 +44,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.4 2011.05.05
  * @version 1.5 2011.10.25
  * @version 2.0 2011.11.03
+ * @version 2.1 2011.11.04
  * 
  */
 public enum ConnectionManager {
@@ -51,20 +52,20 @@ public enum ConnectionManager {
 
 	private static final String TAG = ConnectionManager.class.getSimpleName();
 
-	public static final int SOCKET_BUFFER_SIZE = 2048;
+	public static final int SOCKET_BUFFER_SIZE = 4096;
 	public static final int CONNECTION_TIMEOUT_MS = 5000;
 	public static final int SOCKET_TIMEOUT_MS = 15000;
-	public static final int MAX_TOTAL_CONNECTIONS=20;
-	public static final int MAX_RETRY_TIMES=4;
+	public static final int MAX_TOTAL_CONNECTIONS = 20;
+	public static final int MAX_RETRY_TIMES = 4;
 
-	private DefaultHttpClient client;
+	private static DefaultHttpClient sClient;
+
+	static {
+		prepareHttpClient();
+	}
 
 	private void log(String message) {
 		Log.d(TAG, message);
-	}
-
-	private ConnectionManager() {
-		prepareHttpClient();
 	}
 
 	public static HttpResponse exec(ConnectionRequest cr) throws IOException,
@@ -98,7 +99,7 @@ public enum ConnectionManager {
 		}
 		setHeaders(request, cr.headers);
 		setOAuth(request, cr.params);
-		setProxy(client);
+		setProxy(sClient);
 		if (App.DEBUG) {
 			Header[] headers = request.getAllHeaders();
 			for (Header header : headers) {
@@ -106,7 +107,7 @@ public enum ConnectionManager {
 						+ header.getValue());
 			}
 		}
-		return client.execute(request);
+		return sClient.execute(request);
 	}
 
 	private HttpResponse openWithNoAuth(ConnectionRequest cr)
@@ -120,7 +121,7 @@ public enum ConnectionManager {
 			request = new HttpGet(cr.url);
 		}
 		setHeaders(request, cr.headers);
-		setProxy(client);
+		setProxy(sClient);
 		if (App.DEBUG) {
 			Header[] headers = request.getAllHeaders();
 			for (Header header : headers) {
@@ -128,39 +129,42 @@ public enum ConnectionManager {
 						+ header.getValue());
 			}
 		}
-		return client.execute(request);
+		return sClient.execute(request);
 	}
 
 	private HttpResponse getImpl(String url) throws IOException {
-		setProxy(client);
-		return client.execute(new HttpGet(url));
+		setProxy(sClient);
+		return sClient.execute(new HttpGet(url));
 	}
 
 	private HttpResponse postImpl(String url, List<Parameter> params)
 			throws IOException {
-		setProxy(client);
+		setProxy(sClient);
 		HttpPost post = new HttpPost(url);
 		post.setEntity(ConnectionRequest.encodeForPost(params));
-		return client.execute(new HttpGet(url));
+		return sClient.execute(new HttpGet(url));
 	}
 
 	private static void setHeaders(HttpRequestBase request, List<Header> headers) {
+		request.setHeader("User-Agent", "FanFou for Android/"
+				+ App.me.appVersionName);
 		if (headers != null) {
 			for (Header header : headers) {
-				request.setHeader(header);
+				request.addHeader(header);
 			}
 		}
 	}
 
-	private void prepareHttpClient() {
+	private static synchronized void prepareHttpClient() {
 		HttpParams params = new BasicHttpParams();
-		ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(MAX_TOTAL_CONNECTIONS));
+		ConnManagerParams.setMaxConnectionsPerRoute(params,
+				new ConnPerRouteBean(MAX_TOTAL_CONNECTIONS));
 		ConnManagerParams.setMaxTotalConnections(params, MAX_TOTAL_CONNECTIONS);
 		ConnManagerParams.setTimeout(params, SOCKET_TIMEOUT_MS);
-		
+
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 		HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-		
+
 		HttpConnectionParams
 				.setConnectionTimeout(params, CONNECTION_TIMEOUT_MS);
 		HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT_MS);
@@ -174,10 +178,11 @@ public enum ConnectionManager {
 				SSLSocketFactory.getSocketFactory(), 443));
 		ClientConnectionManager manager = new ThreadSafeClientConnManager(
 				params, schReg);
-		client = new DefaultHttpClient(manager, params);
-		client.addRequestInterceptor(new GzipRequestInterceptor());
-		client.addResponseInterceptor(new GzipResponseInterceptor());
-		client.setHttpRequestRetryHandler(new RequestRetryHandler(MAX_RETRY_TIMES));
+		sClient = new DefaultHttpClient(manager, params);
+		sClient.addRequestInterceptor(new GzipRequestInterceptor());
+		sClient.addResponseInterceptor(new GzipResponseInterceptor());
+		sClient.setHttpRequestRetryHandler(new RequestRetryHandler(
+				MAX_RETRY_TIMES));
 	}
 
 	private static void setProxy(final HttpClient client) {
@@ -211,15 +216,15 @@ public enum ConnectionManager {
 		if (StringHelper.isEmpty(App.me.oauthAccessToken)
 				|| StringHelper.isEmpty(App.me.oauthAccessTokenSecret)) {
 			throw new ApiException(ResponseCode.ERROR_AUTH_FAILED, "未通过验证，请登录");
-		}else{
+		} else {
 			OAuth oauth = new OAuth(App.me.oauthAccessToken,
 					App.me.oauthAccessTokenSecret);
-			oauth.signRequest(request, params);	
+			oauth.signRequest(request, params);
 		}
 	}
 
-	private static void setBasicAuth(HttpUriRequest request, List<Parameter> params)
-			throws ApiException {
+	private static void setBasicAuth(HttpUriRequest request,
+			List<Parameter> params) throws ApiException {
 		// if (null != username && null != password) {
 		// String basicAuth = "Basic "
 		// + Base64.encodeBytes((username + ":" + password).getBytes());

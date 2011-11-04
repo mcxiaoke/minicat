@@ -74,7 +74,7 @@ public class OAuth {
 	public void signRequest(HttpUriRequest request, List<Parameter> params) {
 		String authorization = getOAuthHeader(request.getMethod(), request
 				.getURI().toString(), params, oauthToken);
-		request.addHeader(new BasicHeader("Authorization", authorization));
+		request.setHeader(new BasicHeader("Authorization", authorization));
 	}
 
 	public OAuthToken getOAuthAccessToken(String username, String password)

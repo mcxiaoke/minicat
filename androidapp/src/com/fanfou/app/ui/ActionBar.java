@@ -26,7 +26,8 @@ import com.fanfou.app.util.Utils;
  * @version 2.0 2011.08.20
  * @version 3.0 2011.09.18
  * @version 3.5 2011.10.27
- *
+ * @version 3.6 2011.11.04
+ * 
  */
 public class ActionBar extends RelativeLayout implements OnClickListener {
 
@@ -93,16 +94,16 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 	public void removeRightIcon() {
 		mRightButton.setVisibility(View.GONE);
 	}
-	
-	public void setLeftActionEnabled(boolean enabled){
+
+	public void setLeftActionEnabled(boolean enabled) {
 		mLeftButton.setEnabled(enabled);
 	}
-	
-	public void setRightActionEnabled(boolean enabled){
+
+	public void setRightActionEnabled(boolean enabled) {
 		mRightButton.setEnabled(enabled);
 	}
-	
-	public void setRefreshActionEnabled(boolean enabled){
+
+	public void setRefreshActionEnabled(boolean enabled) {
 		mRefreshButton.setEnabled(enabled);
 	}
 
@@ -125,23 +126,35 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 	}
 
 	public void startAnimation() {
-		mRefreshButton.setOnClickListener(null);
-		mRefreshButton.setImageDrawable(null);
-		mRefreshButton.setBackgroundResource(R.drawable.animation_refresh);
-		AnimationDrawable frameAnimation = (AnimationDrawable) mRefreshButton
-				.getBackground();
-		frameAnimation.start();
+		post(new Runnable() {
+			@Override
+			public void run() {
+				mRefreshButton.setOnClickListener(null);
+				mRefreshButton.setImageDrawable(null);
+				mRefreshButton
+						.setBackgroundResource(R.drawable.animation_refresh);
+				AnimationDrawable frameAnimation = (AnimationDrawable) mRefreshButton
+						.getBackground();
+				frameAnimation.start();
+			}
+		});
 	}
 
 	public void stopAnimation() {
-		AnimationDrawable frameAnimation = (AnimationDrawable) mRefreshButton
-				.getBackground();
-		if (frameAnimation != null) {
-			frameAnimation.stop();
-			mRefreshButton.setBackgroundDrawable(null);
-			mRefreshButton.setImageResource(R.drawable.i_refresh);
-			mRefreshButton.setOnClickListener(this);
-		}
+		post(new Runnable() {
+			@Override
+			public void run() {
+				AnimationDrawable frameAnimation = (AnimationDrawable) mRefreshButton
+						.getBackground();
+				if (frameAnimation != null) {
+					frameAnimation.stop();
+					mRefreshButton.setBackgroundDrawable(null);
+					mRefreshButton.setImageResource(R.drawable.i_refresh);
+					mRefreshButton.setOnClickListener(ActionBar.this);
+				}
+			}
+		});
+
 	}
 
 	@Override
@@ -161,8 +174,8 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);
 
-		this.mActionBar = (ViewGroup) mInflater.inflate(
-				R.layout.actionbar, null);
+		this.mActionBar = (ViewGroup) mInflater.inflate(R.layout.actionbar,
+				null);
 		addView(mActionBar);
 		this.mLeftButton = (ImageView) mActionBar
 				.findViewById(R.id.actionbar_left);
@@ -228,7 +241,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 		}
 
 	}
-	
+
 	public static class HomeAction extends AbstractAction {
 		private Activity context;
 
@@ -260,8 +273,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 			try {
 				mContext.startActivity(mIntent);
 			} catch (ActivityNotFoundException e) {
-				Utils.notify(
-						mContext,R.string.actionbar_activity_not_found);
+				Utils.notify(mContext, R.string.actionbar_activity_not_found);
 			}
 		}
 	}
@@ -283,32 +295,32 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
 	}
 
-	public static class WriteAction extends AbstractAction{
+	public static class WriteAction extends AbstractAction {
 		private Context context;
 		private Status status;
 
 		public WriteAction(Context context, Status status) {
 			super(R.drawable.i_write);
-			this.context=context;
-			this.status=status;
+			this.context = context;
+			this.status = status;
 		}
 
 		@Override
 		public void performAction(View view) {
-			if(status==null){
+			if (status == null) {
 				ActionManager.doWrite(context, null);
-			}else{
+			} else {
 				ActionManager.doReply(context, status);
 			}
 		}
 	}
-	
+
 	public static class SearchAction extends AbstractAction {
 		private Activity mActivity;
 
 		public SearchAction(Activity activity) {
 			super(R.drawable.i_search);
-			this.mActivity=activity;
+			this.mActivity = activity;
 		}
 
 		@Override

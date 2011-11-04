@@ -55,6 +55,7 @@ import com.fanfou.app.util.Utils;
  * @version 3.3 2011.10.27
  * @version 3.5 2011.10.29
  * @version 3.6 2011.11.02
+ * @version 3.7 2011.11.04
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
@@ -171,7 +172,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		mActionBar.setLeftAction(new HomeLogoAction());
 		mActionBar.setRightAction(new ActionBar.WriteAction(this, null));
 		mActionBar.setRefreshEnabled(this);
-		if(App.DEBUG){
+		if (App.DEBUG) {
 			mActionBar.setTitle("内部开发版");
 		}
 	}
@@ -204,23 +205,37 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	private void startBottomAnimation() {
-		iRefreshBottom.setOnClickListener(null);
-		iRefreshBottom.setImageDrawable(null);
-		iRefreshBottom.setBackgroundResource(R.drawable.animation_refresh);
-		AnimationDrawable frameAnimation = (AnimationDrawable) iRefreshBottom
-				.getBackground();
-		frameAnimation.start();
+		iRefreshBottom.post(new Runnable() {
+			@Override
+			public void run() {
+				iRefreshBottom.setOnClickListener(null);
+				iRefreshBottom.setImageDrawable(null);
+				iRefreshBottom
+						.setBackgroundResource(R.drawable.animation_refresh);
+				AnimationDrawable frameAnimation = (AnimationDrawable) iRefreshBottom
+						.getBackground();
+				frameAnimation.start();
+			}
+		});
+
 	}
 
 	private void stopBottomAnimation() {
-		AnimationDrawable frameAnimation = (AnimationDrawable) iRefreshBottom
-				.getBackground();
-		if (frameAnimation != null) {
-			frameAnimation.stop();
-			iRefreshBottom.setBackgroundDrawable(null);
-			iRefreshBottom.setImageResource(R.drawable.i_refresh_bottom);
-			iRefreshBottom.setOnClickListener(this);
-		}
+		iRefreshBottom.post(new Runnable() {
+			@Override
+			public void run() {
+				AnimationDrawable frameAnimation = (AnimationDrawable) iRefreshBottom
+						.getBackground();
+				if (frameAnimation != null) {
+					frameAnimation.stop();
+					iRefreshBottom.setBackgroundDrawable(null);
+					iRefreshBottom
+							.setImageResource(R.drawable.i_refresh_bottom);
+					iRefreshBottom.setOnClickListener(HomePage.this);
+				}
+			}
+		});
+
 	}
 
 	private void setViewPager() {
@@ -279,7 +294,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				iRefreshBottom.setLayoutParams(onLeft);
 			} else if (refreshPostion.equals("right")) {
 				iRefreshBottom.setLayoutParams(onRight);
-				
+
 			} else {
 				iRefreshBottom.setVisibility(View.GONE);
 			}
@@ -563,8 +578,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		if (App.DEBUG) {
 			log("onNewIntent page=" + page);
 		}
-		
-		if(page>=0){
+
+		if (page >= 0) {
 			mViewPager.setCurrentItem(page);
 		}
 	}

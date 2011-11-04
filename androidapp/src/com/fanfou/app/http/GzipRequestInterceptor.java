@@ -12,7 +12,7 @@ import org.apache.http.protocol.HttpContext;
  * @version 1.0 2011.11.03
  *
  */
-public class GzipRequestInterceptor implements HttpRequestInterceptor {
+class GzipRequestInterceptor implements HttpRequestInterceptor {
 	 private static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
 	 private static final String ENCODING_GZIP = "gzip";
 

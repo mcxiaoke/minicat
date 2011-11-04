@@ -11,6 +11,9 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -83,6 +86,8 @@ public class StatusPage extends BaseActivity {
 
 	private TextView vThread;
 
+	private TextView vConversation;
+
 	private Handler mHandler;
 
 	private boolean isMe;
@@ -129,7 +134,7 @@ public class StatusPage extends BaseActivity {
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("消息");
-		mActionBar.setRightAction(new ActionBar.WriteAction(this,status));
+		mActionBar.setRightAction(new ActionBar.WriteAction(this, status));
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
 	}
 
@@ -149,6 +154,9 @@ public class StatusPage extends BaseActivity {
 		tDate = (TextView) findViewById(R.id.status_date);
 		tSource = (TextView) findViewById(R.id.status_source);
 		vThread = (TextView) findViewById(R.id.status_thread);
+
+		vConversation = (TextView) findViewById(R.id.status_conversation);
+		vConversation.setVisibility(View.GONE);
 
 		bReply = (ImageView) findViewById(R.id.status_action_reply);
 		bRepost = (ImageView) findViewById(R.id.status_action_retweet);
@@ -276,13 +284,44 @@ public class StatusPage extends BaseActivity {
 			onClickPhoto();
 			break;
 		case R.id.status_thread:
-			Intent intent = new Intent(mContext, ConversationPage.class);
-			intent.putExtra(Commons.EXTRA_STATUS, status);
-			mContext.startActivity(intent);
+			 Intent intent = new Intent(mContext, ConversationPage.class);
+			 intent.putExtra(Commons.EXTRA_STATUS, status);
+			 mContext.startActivity(intent);
+//			testAnimation();
 			break;
 		default:
 			break;
 		}
+	}
+
+	private void testAnimation() {
+		vConversation.setVisibility(View.VISIBLE);
+		vConversation
+				.setText("梵蒂冈范德萨更多撒第四个第四个第四个第四个第四个第四个第四个听歌个第四个第四个人人后台很热替换各位特务特务独德萨更多撒第四个第四个第四个第四个第四个第四个第四个听歌个第四个第四个人人后台很热替换各位特务特务独特维特维特我郭特维特维特我郭德纲德国队三个");
+		Animation animation = AnimationUtils.loadAnimation(this,
+				R.anim.scroll_from_top);
+		vConversation.setAnimation(animation);
+		animation.start();
+		animation.setAnimationListener(new AnimationListener() {
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				// TODO Auto-generated method stub
+
+			}
+		});
 	}
 
 	@Override

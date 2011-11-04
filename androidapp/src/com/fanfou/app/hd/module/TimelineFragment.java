@@ -1,20 +1,24 @@
 package com.fanfou.app.hd.module;
 
 import com.fanfou.app.App;
+import com.fanfou.app.R;
 import com.fanfou.app.adapter.StatusCursorAdapter;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.StatusInfo;
+import com.pullToRefresh.PullToRefreshComponent;
 
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
 /**
@@ -26,11 +30,11 @@ public class TimelineFragment extends ListFragment implements
 		LoaderCallbacks<Cursor> {
 
 	private static final String TAG = TimelineFragment.class.getSimpleName();
-	
-	public static final int TYPE_HOME=0;
-	public static final int TYPE_MENTION=1;
-	public static final int TYPE_PUBLIC=2;
-	public static final int TYPE_ME=3;
+
+	public static final int TYPE_HOME = 0;
+	public static final int TYPE_MENTION = 1;
+	public static final int TYPE_PUBLIC = 2;
+	public static final int TYPE_ME = 3;
 
 	private int type;
 
@@ -86,8 +90,8 @@ public class TimelineFragment extends ListFragment implements
 			return null;
 		}
 	}
-	
-	private CursorLoader createHomeCursor(){
+
+	private CursorLoader createHomeCursor() {
 		String where = BasicColumns.TYPE + "=?";
 		String[] whereArgs = new String[] { String.valueOf(Status.TYPE_HOME) };
 		Uri uri = StatusInfo.CONTENT_URI;
@@ -97,8 +101,8 @@ public class TimelineFragment extends ListFragment implements
 		return new CursorLoader(getActivity(), uri, StatusInfo.COLUMNS, where,
 				whereArgs, null);
 	}
-	
-	private CursorLoader createMentionCursor(){
+
+	private CursorLoader createMentionCursor() {
 		String where = BasicColumns.TYPE + "=?";
 		String[] whereArgs = new String[] { String.valueOf(Status.TYPE_MENTION) };
 		Uri uri = StatusInfo.CONTENT_URI;
@@ -108,10 +112,12 @@ public class TimelineFragment extends ListFragment implements
 		return new CursorLoader(getActivity(), uri, StatusInfo.COLUMNS, where,
 				whereArgs, null);
 	}
-	
-	private CursorLoader createUserCursor(){
-		String where = StatusInfo.TYPE + "=? AND "+StatusInfo.USER_ID+" =? ";
-		String[] whereArgs = new String[] { String.valueOf(Status.TYPE_USER),App.me.userId };
+
+	private CursorLoader createUserCursor() {
+		String where = StatusInfo.TYPE + "=? AND " + StatusInfo.USER_ID
+				+ " =? ";
+		String[] whereArgs = new String[] { String.valueOf(Status.TYPE_USER),
+				App.me.userId };
 		Uri uri = StatusInfo.CONTENT_URI;
 		if (App.DEBUG) {
 			log("onCreateLoader");
@@ -119,8 +125,8 @@ public class TimelineFragment extends ListFragment implements
 		return new CursorLoader(getActivity(), uri, StatusInfo.COLUMNS, where,
 				whereArgs, null);
 	}
-	
-	private CursorLoader createPublicCursor(){
+
+	private CursorLoader createPublicCursor() {
 		String where = BasicColumns.TYPE + "=?";
 		String[] whereArgs = new String[] { String.valueOf(Status.TYPE_PUBLIC) };
 		Uri uri = StatusInfo.CONTENT_URI;

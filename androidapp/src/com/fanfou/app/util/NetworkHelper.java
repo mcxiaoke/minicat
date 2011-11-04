@@ -35,8 +35,6 @@ import android.util.Log;
 import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.http.ApnType;
-import com.fanfou.app.http.GzipResponseInterceptor;
-import com.fanfou.app.http.RequestRetryHandler;
 import com.fanfou.app.service.AutoCompleteService;
 import com.fanfou.app.service.DownloadService;
 
@@ -182,7 +180,7 @@ final class NetworkHelper {
 		}
 	}
 
-	public static DefaultHttpClient newHttpClient() {
+static DefaultHttpClient newHttpClient() {
 		ConnPerRoute connPerRoute = new ConnPerRoute() {
 			@Override
 			public int getMaxForRoute(HttpRoute route) {
@@ -207,10 +205,8 @@ final class NetworkHelper {
 		ClientConnectionManager manager = new ThreadSafeClientConnManager(
 				params, schReg);
 		DefaultHttpClient client = new DefaultHttpClient(manager, params);
-		client.addResponseInterceptor(new GzipResponseInterceptor());
-		client.setHttpRequestRetryHandler(new RequestRetryHandler(3));
-
-		setProxy(client);
+//		client.addResponseInterceptor(new GzipResponseInterceptor());
+//		client.setHttpRequestRetryHandler(new RequestRetryHandler(3));
 		return client;
 	}
 

@@ -31,6 +31,7 @@ import com.fanfou.app.util.ImageHelper;
  * @author mcxiaoke
  * @version 1.0 2011.09.23
  * @version 2.0 2011.09.27
+ * @version 2.1 2011.11.04
  * 
  */
 public class ImageLoader implements Runnable, IImageLoader {
@@ -41,7 +42,7 @@ public class ImageLoader implements Runnable, IImageLoader {
 	private static final String EXTRA_BITMAP = "bitmap";
 	private static final int MESSAGE_FINISH = 0;
 	private static final int MESSAGE_ERROR = 1;
-	private static final int CORE_POOL_SIZE = 4;
+	private static final int CORE_POOL_SIZE = 2;
 
 	private final ExecutorService mExecutorService = Executors
 			.newFixedThreadPool(CORE_POOL_SIZE);

@@ -15,7 +15,7 @@ import com.fanfou.app.R;
 /**
  * @author mcxiaoke
  * @version 1.1 2011.11.02
- *
+ * 
  */
 public class PullToRefreshListView extends RelativeLayout {
 
@@ -25,6 +25,17 @@ public class PullToRefreshListView extends RelativeLayout {
 	private Handler uiThreadHandler;
 	private ListView listView;
 
+	public PullToRefreshListView(Context context) {
+		super(context);
+		LayoutInflater inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		inflater.inflate(R.layout.pull_to_refresh_list, this);
+		this.listView = (ListView) this.findViewById(android.R.id.list);
+		initializeListView();
+		this.uiThreadHandler = new Handler();
+		initializePullToRefreshList();
+	}
+
 	public PullToRefreshListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		LayoutInflater inflater = (LayoutInflater) context
@@ -32,18 +43,20 @@ public class PullToRefreshListView extends RelativeLayout {
 		inflater.inflate(R.layout.pull_to_refresh_list, this);
 		this.listView = (ListView) this.findViewById(android.R.id.list);
 		initializeListView();
-		
+
 		this.uiThreadHandler = new Handler();
 		initializePullToRefreshList();
 	}
-	
-	private void initializeListView(){
+
+	private void initializeListView() {
 		this.listView.setFastScrollEnabled(true);
 		this.listView.setHorizontalScrollBarEnabled(false);
 		this.listView.setVerticalScrollBarEnabled(false);
 		this.listView.setCacheColorHint(0);
-		this.listView.setSelector(getResources().getDrawable(R.drawable.list_selector));
-		this.listView.setDivider(getResources().getDrawable(R.drawable.separator));
+		this.listView.setSelector(getResources().getDrawable(
+				R.drawable.list_selector));
+		this.listView.setDivider(getResources().getDrawable(
+				R.drawable.separator));
 	}
 
 	private void initializePullToRefreshList() {
@@ -118,6 +131,10 @@ public class PullToRefreshListView extends RelativeLayout {
 						PullToRefreshListView.this.invalidate();
 					}
 				});
+
+				// PullToRefreshListView.this
+				// .setRefreshing(PullToRefreshListView.this.upperButton);
+				// PullToRefreshListView.this.invalidate();
 				listener.doRefresh();
 			}
 		});
@@ -148,6 +165,10 @@ public class PullToRefreshListView extends RelativeLayout {
 						PullToRefreshListView.this.invalidate();
 					}
 				});
+
+				// PullToRefreshListView.this
+				// .setRefreshing(PullToRefreshListView.this.lowerButton);
+				// PullToRefreshListView.this.invalidate();
 				listener.doRefresh();
 			}
 		});

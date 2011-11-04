@@ -82,7 +82,7 @@ public class MyProfilePage extends BaseActivity {
 			userId = user.id;
 		} else {
 			userId = App.me.userId;
-			user = CacheManager.getUser(userId);
+			user = CacheManager.getUser(this,userId);
 		}
 		if (StringHelper.isEmpty(userId)) {
 			log("用户ID不能为空");

@@ -64,6 +64,10 @@
 				android:layout_height="wrap_content" android:textSize="@dimen/text_size_medium"
 				android:layout_alignParentRight="true" android:text="查看对话"
 				style="@style/StatusThread" />
+			
+			<TextView android:id="@+id/status_conversation"  android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:textSize="@dimen/text_size_medium"
+				 android:layout_below="@id/status_thread" android:background="@color/sky_blue"/>
 
 		</RelativeLayout>
 
