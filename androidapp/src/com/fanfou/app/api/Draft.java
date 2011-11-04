@@ -11,14 +11,35 @@ import android.util.Log;
 
 /**
  * @author mcxiaoke
- * @version 1.0 2011.10
- * .26
- *
+ * @version 1.0 2011.10.26
+ * @version 1.1 2011.11.04
+ * 
  */
 public class Draft implements Storable<Draft> {
-	
-	public static final int TYPE_NONE=0;
-	public static final int ID_NONE=0;
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Draft) {
+			Draft d = (Draft) o;
+			if (id == d.id && text.equals(d.text)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return id + text.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return "id=" + id + " text= " + text + " filepath=" + filePath;
+	}
+
+	public static final int TYPE_NONE = 0;
+	public static final int ID_NONE = 0;
 
 	private static final long serialVersionUID = 8363607193025710949L;
 
@@ -35,19 +56,19 @@ public class Draft implements Storable<Draft> {
 	public int type;
 	public String replyTo;
 	public String filePath;
-	
-	public static Draft parse(Cursor c){
-		if(c==null){
+
+	public static Draft parse(Cursor c) {
+		if (c == null) {
 			return null;
 		}
-		Draft d=new Draft();
-		d.id=Parser.parseInt(c, BaseColumns._ID);
-		d.ownerId=Parser.parseString(c, DraftInfo.OWNER_ID);
-		d.text=Parser.parseString(c, DraftInfo.TEXT);
-		d.createdAt=Parser.parseDate(c, DraftInfo.CREATED_AT);
-		d.type=Parser.parseInt(c, DraftInfo.TYPE);
-		d.replyTo=Parser.parseString(c, DraftInfo.REPLY_TO);
-		d.filePath=Parser.parseString(c, DraftInfo.FILE_PATH);
+		Draft d = new Draft();
+		d.id = Parser.parseInt(c, BaseColumns._ID);
+		d.ownerId = Parser.parseString(c, DraftInfo.OWNER_ID);
+		d.text = Parser.parseString(c, DraftInfo.TEXT);
+		d.createdAt = Parser.parseDate(c, DraftInfo.CREATED_AT);
+		d.type = Parser.parseInt(c, DraftInfo.TYPE);
+		d.replyTo = Parser.parseString(c, DraftInfo.REPLY_TO);
+		d.filePath = Parser.parseString(c, DraftInfo.FILE_PATH);
 		return d;
 	}
 

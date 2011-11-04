@@ -27,6 +27,7 @@ import com.fanfou.app.adapter.BaseCursorAdapter;
 import com.fanfou.app.adapter.MessageCursorAdapter;
 import com.fanfou.app.adapter.StatusCursorAdapter;
 import com.fanfou.app.adapter.ViewsAdapter;
+import com.fanfou.app.api.Api;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Actions;
@@ -35,6 +36,7 @@ import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.dialog.ConfirmDialog;
+import com.fanfou.app.service.FetchService;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.UIManager;
@@ -391,8 +393,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			return;
 		}
 		Bundle b = new Bundle();
-		b.putInt(Commons.EXTRA_COUNT, 0);
-		b.putInt(Commons.EXTRA_PAGE, 0);
+		b.putInt(Commons.EXTRA_COUNT, Api.DEFAULT_TIMELINE_COUNT);
 		b.putBoolean(Commons.EXTRA_FORMAT, false);
 		ResultReceiver receiver = new HomeResultReceiver(page, doGetMore);
 		;
@@ -408,7 +409,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				sinceId = Utils.getSinceId(cursor);
 				b.putString(Commons.EXTRA_SINCE_ID, sinceId);
 			}
-			Utils.startFetchService(this, Status.TYPE_HOME, receiver, b);
+			FetchService.start(this, Status.TYPE_HOME, receiver, b);
 			break;
 		case 1:
 			if (doGetMore) {
@@ -419,15 +420,15 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				b.putString(Commons.EXTRA_SINCE_ID, sinceId);
 			}
 			b.putString(Commons.EXTRA_SINCE_ID, sinceId);
-			Utils.startFetchService(this, Status.TYPE_MENTION, receiver, b);
+			FetchService.start(this, Status.TYPE_MENTION, receiver, b);
 			break;
 		case 2:
 			b.putBoolean(Commons.EXTRA_BOOLEAN, doGetMore);
-			Utils.startFetchService(this, DirectMessage.TYPE_ALL, receiver, b);
+			FetchService.start(this, DirectMessage.TYPE_ALL, receiver, b);
 			break;
 		case 3:
 			if (!doGetMore) {
-				Utils.startFetchService(this, Status.TYPE_PUBLIC, receiver, b);
+				FetchService.start(this, Status.TYPE_PUBLIC, receiver, b);
 			}
 			break;
 		default:

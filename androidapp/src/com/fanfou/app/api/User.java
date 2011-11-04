@@ -28,6 +28,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.2 2011.05.02
  * @version 1.3 2011.07.21
  * @version 1.4 2011.10.21
+ * @version 1.5 2011.11.04
  * 
  */
 public class User implements Storable<User> {
@@ -274,6 +275,22 @@ public class User implements Storable<User> {
 				+ " " + UserInfo.LAST_STATUS_ID + "=" + lastStatusId + " "
 				+ UserInfo.LAST_STATUS_TEXT + "=" + lastStatusText + " "
 				+ BasicColumns.TYPE + "=" + type + " ";
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if(o instanceof User){
+			User u=(User) o;
+			if(id.equals(u.id)){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return id.hashCode();
 	}
 
 }

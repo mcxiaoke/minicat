@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.R;
+import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Parser;
@@ -20,6 +21,7 @@ import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
+import com.fanfou.app.http.ApnType;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.Utils;
 
@@ -28,6 +30,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.0 2011.09.20
  * @version 1.1 2011.11.02
  * @version 1.2 2011.11.03
+ * @version 1.3 2011.11.04
  * 
  */
 public class NotificationService extends BaseIntentService {
@@ -36,6 +39,10 @@ public class NotificationService extends BaseIntentService {
 	public static final int NOTIFICATION_TYPE_HOME = Status.TYPE_HOME;
 	public static final int NOTIFICATION_TYPE_MENTION = Status.TYPE_MENTION; // @消息
 	public static final int NOTIFICATION_TYPE_DM = DirectMessage.TYPE_IN; // 私信
+	
+	private static final int DEFAULT_COUNT=Api.DEFAULT_TIMELINE_COUNT;
+	private static final int MAX_COUNT=Api.MAX_TIMELINE_COUNT;
+	private static final int DEFAULT_PAGE=0;
 
 	private PowerManager.WakeLock mWakeLock;
 
@@ -68,23 +75,28 @@ public class NotificationService extends BaseIntentService {
 				R.string.option_notification_mention, false);
 		boolean home = OptionHelper.readBoolean(this,
 				R.string.option_notification_home, false);
+		
+		int count=DEFAULT_COUNT;
+		if(App.me.apnType==ApnType.WIFI){
+			count=MAX_COUNT;
+		}
 		try {
 			if (dm) {
-				handleDm();
+				handleDm(count);
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(500);
 				} catch (InterruptedException e) {
 				}
 			}
 			if (mention) {
-				handleMention();
+				handleMention(count);
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(500);
 				} catch (InterruptedException e) {
 				}
 			}
 			if (home) {
-				handleHome();
+				handleHome(count);
 
 			}
 		} catch (ApiException e) {
@@ -96,9 +108,9 @@ public class NotificationService extends BaseIntentService {
 		}
 	}
 
-	private void handleDm() throws ApiException {
+	private void handleDm(int count) throws ApiException {
 		Cursor mc = initCursor(DirectMessage.TYPE_IN);
-		List<DirectMessage> dms = App.me.api.messagesInbox(0, 0,
+		List<DirectMessage> dms = App.me.api.messagesInbox(count, DEFAULT_PAGE,
 				Utils.getDmSinceId(mc), null);
 		if (dms != null) {
 			int size = dms.size();
@@ -121,9 +133,9 @@ public class NotificationService extends BaseIntentService {
 		mc.close();
 	}
 
-	private void handleMention() throws ApiException {
+	private void handleMention(int count) throws ApiException {
 		Cursor mc = initCursor(Status.TYPE_MENTION);
-		List<Status> ss = App.me.api.mentions(0, 0, Utils.getSinceId(mc), null,
+		List<Status> ss = App.me.api.mentions(count, DEFAULT_PAGE, Utils.getSinceId(mc), null,
 				true);
 		if (ss != null) {
 			int size = ss.size();
@@ -145,9 +157,9 @@ public class NotificationService extends BaseIntentService {
 		mc.close();
 	}
 
-	private void handleHome() throws ApiException {
+	private void handleHome(int count) throws ApiException {
 		Cursor mc = initCursor(Status.TYPE_HOME);
-		List<Status> ss = App.me.api.homeTimeline(0, 0, Utils.getSinceId(mc),
+		List<Status> ss = App.me.api.homeTimeline(count, DEFAULT_PAGE, Utils.getSinceId(mc),
 				null, true);
 		if (ss != null) {
 			int size = ss.size();

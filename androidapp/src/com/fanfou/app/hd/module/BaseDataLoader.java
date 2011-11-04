@@ -1,4 +1,4 @@
-package com.fanfou.app.loader;
+package com.fanfou.app.hd.module;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;

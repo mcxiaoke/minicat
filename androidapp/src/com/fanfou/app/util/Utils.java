@@ -85,15 +85,6 @@ public final class Utils {
 		imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
 	}
 
-	public static void startFetchService(Context context, int type,
-			ResultReceiver receiver, Bundle bundle) {
-		Intent serviceIntent = new Intent(context, FetchService.class);
-		serviceIntent.putExtra(Commons.EXTRA_TYPE, type);
-		serviceIntent.putExtra(Commons.EXTRA_BUNDLE, bundle);
-		serviceIntent.putExtra(Commons.EXTRA_RECEIVER, receiver);
-		context.startService(serviceIntent);
-	}
-
 	public static void goStatusPage(Context context, String id) {
 		if (!StringHelper.isEmpty(id)) {
 			Intent intent = new Intent(context, StatusPage.class);

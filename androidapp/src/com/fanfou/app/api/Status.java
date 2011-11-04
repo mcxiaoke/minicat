@@ -32,6 +32,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.4 2011.07.21
  * @version 1.5 2011.10.19
  * @version 1.6 2011.10.21
+ * @version 1.7 2011.11.04
  * 
  */
 public class Status implements Storable<Status> {
@@ -85,6 +86,7 @@ public class Status implements Storable<Status> {
 	public boolean special;
 	
 	public User user;
+	public Photo photo;
 
 	public Status() {
 	}
@@ -255,9 +257,10 @@ public class Status implements Storable<Status> {
 
 			if (o.has("photo")) {
 				JSONObject po = o.getJSONObject("photo");
-				s.photoImageUrl = po.getString(StatusInfo.PHOTO_IMAGE_URL);
-				s.photoLargeUrl = po.getString(StatusInfo.PHOTO_LARGE_URL);
-				s.photoThumbUrl = po.getString(StatusInfo.PHOTO_THUMB_URL);
+				s.photo=Photo.parse(po);
+				s.photoImageUrl = s.photo.imageUrl;
+				s.photoLargeUrl = s.photo.largeUrl;
+				s.photoThumbUrl = s.photo.thumbUrl;
 				s.hasPhoto = true;
 			}
 
@@ -323,6 +326,22 @@ public class Status implements Storable<Status> {
 		
 		cv.put(BasicColumns.TIMESTAMP, new Date().getTime());
 		return cv;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o instanceof Status){
+			Status s=(Status) o;
+			if(id.equals(s.id)){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return id.hashCode();
 	}
 
 	@Override

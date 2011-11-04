@@ -43,7 +43,6 @@ public class App extends Application {
 	// TODO new list fragment for home page
 	// TODO new tabs ui for home page
 	// TODO new layout and ui for pad
-	// TODO user photo album and ui
 	// TODO timeline filter and local search
 	// TODO edit profile feature and ui
 	// TODO widgets support
@@ -52,7 +51,7 @@ public class App extends Application {
 	// TODO contentprovider need modify use sqlite
 	// TODO add some flags to status model in db
 
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 
 	public static App me;
 	public static boolean active = false;
@@ -106,12 +105,18 @@ public class App extends Application {
 		this.api = new ApiImpl();
 
 		if (DEBUG) {
-			java.util.logging.Logger.getLogger("org.apache.http").setLevel(
-					java.util.logging.Level.FINEST);
-			java.util.logging.Logger.getLogger("org.apache.http.wire")
-					.setLevel(java.util.logging.Level.FINER);
-			java.util.logging.Logger.getLogger("org.apache.http.headers")
-					.setLevel(java.util.logging.Level.OFF);
+			java.util.logging.Logger.getLogger("org.apache.http").setLevel(java.util.logging.Level.FINEST);
+			java.util.logging.Logger.getLogger("org.apache.http.wire").setLevel(java.util.logging.Level.FINER);
+			java.util.logging.Logger.getLogger("org.apache.http.headers").setLevel(java.util.logging.Level.OFF);
+			java.util.logging.Logger.getLogger("httpclient.wire.header").setLevel(java.util.logging.Level.FINEST);
+			java.util.logging.Logger.getLogger("httpclient.wire.content").setLevel(java.util.logging.Level.FINEST);
+			
+			// and shell command
+			//adb shell setprop log.tag.org.apache.http VERBOSE
+			//adb shell setprop log.tag.org.apache.http.wire VERBOSE
+			//adb shell setprop log.tag.org.apache.http.headers VERBOSE
+			//adb shell setprop log.tag.httpclient.wire.header VERBOSE
+			//adb shell setprop log.tag.httpclient.wire.content VERBOSE
 		}
 	}
 

@@ -24,6 +24,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.0 2011.05.15
  * @version 1.1 2011.05.17
  * @version 1.2 2011.10.28
+ * @version 1.3 2011.11.04
  * 
  */
 public class ApiImpl implements Api, ResponseCode {
@@ -119,7 +120,19 @@ public class ApiImpl implements Api, ResponseCode {
 					+ " maxid=" + maxId);
 		}
 		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
-		builder.url(url).count(count).page(page).id(userId).sinceId(sinceId).maxId(maxId).param("format", "html");
+		builder.url(url).count(count).page(page).id(userId).sinceId(sinceId).maxId(maxId);
+		
+		// count<=0,count>60时返回60条
+		//count>=0&&count<=60时返回count条
+//		int c=count;
+//		if(c<1||c>ApiConfig.MAX_COUNT){
+//			c=ApiConfig.MAX_COUNT;
+//		}
+//		builder.count(c);
+		
+		if(isHtml){
+			builder.param("format", "html");
+		}
 		Response response = fetch(builder.build());
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
@@ -594,6 +607,7 @@ public class ApiImpl implements Api, ResponseCode {
 
 	}
 
+	// 最大2000
 	private List<String> ids(String url, String userId, int count, int page)
 			throws ApiException {
 		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
@@ -628,6 +642,15 @@ public class ApiImpl implements Api, ResponseCode {
 			String sinceId, String maxId) throws ApiException {
 		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
 		builder.url(url).count(count).page(page).maxId(maxId).sinceId(sinceId);
+		
+		// count<=0,count>60时返回60条
+		//count>=0&&count<=60时返回count条
+//		int c=count;
+//		if(c<1||c>ApiConfig.MAX_COUNT){
+//			c=ApiConfig.MAX_COUNT;
+//		}
+//		builder.count(c);
+		
 		Response response = fetch(builder.build());
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
@@ -742,7 +765,7 @@ public class ApiImpl implements Api, ResponseCode {
 	@Override
 	public List<Status> photosTimeline(int count, int page, String userId,
 			String sinceId, String maxId, boolean isHtml) throws ApiException {
-		return null;
+		return fetchStatuses(URL_PHOTO_USER_TIMELINE, count, page, userId, sinceId, maxId, isHtml, Status.TYPE_USER);
 	}
 
 }

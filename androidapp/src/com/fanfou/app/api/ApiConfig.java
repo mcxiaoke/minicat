@@ -6,6 +6,7 @@ package com.fanfou.app.api;
  * @version 1.1 2011.05.04
  * @version 1.2 2011.05.15
  * @version 1.3 2011.10.18
+ * @version 1.4 2011.11.04
  * 
  */
 public interface ApiConfig {
@@ -16,6 +17,10 @@ public interface ApiConfig {
 	public static final String HOST = "http://fanfou.com/";
 	public static final String API_BASE = "http://api.fanfou.com/";
 	public static final String EXTENSION = ".json";
+	public static final int MAX_TIMELINE_COUNT=60;
+	public static final int DEFAULT_TIMELINE_COUNT=20;
+	public static final int MAX_USERS_COUNT=100;
+	public static final int MAX_IDS_COUNT=2000;
 
 	// verify account
 	public static final String URL_VERIFY_CREDENTIALS = API_BASE
@@ -79,6 +84,9 @@ public interface ApiConfig {
 	// POST METHOD
 	public static final String URL_PHOTO_UPLOAD = API_BASE + "photos/upload"
 			+ EXTENSION;
+	
+	// user timeline only contains photos
+	public static final String URL_PHOTO_USER_TIMELINE=API_BASE+"photos/user_timeline"+EXTENSION;
 
 	// search for public timeline
 	// param q -- search keywords

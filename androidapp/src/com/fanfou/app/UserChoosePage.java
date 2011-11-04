@@ -23,10 +23,12 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.fanfou.app.adapter.UserChooseCursorAdapter;
+import com.fanfou.app.api.Api;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
+import com.fanfou.app.service.FetchService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
@@ -209,7 +211,8 @@ public class UserChoosePage extends BaseActivity implements
 		Bundle b = new Bundle();
 		b.putString(Commons.EXTRA_ID, App.me.userId);
 		b.putInt(Commons.EXTRA_PAGE, page);
-		Utils.startFetchService(this, User.TYPE_FRIENDS, mResultReceiver, b);
+		b.putInt(Commons.EXTRA_COUNT, Api.MAX_USERS_COUNT);
+		FetchService.start(this, User.TYPE_FRIENDS, mResultReceiver, b);
 	}
 
 	protected void updateUI() {

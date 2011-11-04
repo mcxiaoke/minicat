@@ -27,6 +27,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.5 2011.05.20
  * @version 1.6 2011.07.22
  * @version 1.7 2011.10.21
+ * @version 1.8 2011.11.04
  * 
  */
 public class DirectMessage implements Storable<DirectMessage> {
@@ -218,6 +219,22 @@ public class DirectMessage implements Storable<DirectMessage> {
 		cv.put(BasicColumns.TIMESTAMP, new Date().getTime());
 
 		return cv;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o instanceof DirectMessage){
+			DirectMessage dm=(DirectMessage) o;
+			if(id.equals(dm.id)){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return id.hashCode();
 	}
 
 	@Override

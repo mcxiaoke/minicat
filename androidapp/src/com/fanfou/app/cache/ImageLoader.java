@@ -127,8 +127,7 @@ public class ImageLoader implements Runnable, IImageLoader {
 			bitmap = mCache.get(task.url);
 		}
 		if (bitmap != null) {
-			task.imageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(
-					bitmap, 6));
+			task.imageView.setImageBitmap(bitmap);
 		} else {
 			task.imageView.setImageResource(iconId);
 			addToQueue(task, new InternelCallback(task.imageView));

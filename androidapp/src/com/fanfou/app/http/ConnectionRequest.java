@@ -18,12 +18,16 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.fanfou.app.App;
+import com.fanfou.app.api.ApiConfig;
 import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.11.03
+ * @version 1.1 2011.11.04
  * 
  */
 public final class ConnectionRequest {
@@ -87,7 +91,9 @@ public final class ConnectionRequest {
 		}
 		
 		public Builder page(int page){
-			this.params.add(new Parameter("page", page));
+			if(page>0){
+				this.params.add(new Parameter("page", page));
+			}
 			return this;
 		}
 		

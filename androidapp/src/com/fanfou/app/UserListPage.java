@@ -14,11 +14,13 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.fanfou.app.adapter.UserCursorAdapter;
+import com.fanfou.app.api.Api;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
+import com.fanfou.app.service.FetchService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.widget.EndlessListView;
@@ -178,7 +180,8 @@ public class UserListPage extends BaseActivity implements OnRefreshListener{
 		Bundle b = new Bundle();
 		b.putString(Commons.EXTRA_ID, userId);
 		b.putInt(Commons.EXTRA_PAGE, page);
-		Utils.startFetchService(this, type, mResultReceiver, b);
+		b.putInt(Commons.EXTRA_COUNT, Api.MAX_USERS_COUNT);
+		FetchService.start(this, type, mResultReceiver, b);
 	}
 
 	protected void updateUI() {
