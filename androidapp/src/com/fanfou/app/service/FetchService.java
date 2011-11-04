@@ -52,7 +52,6 @@ public class FetchService extends BaseIntentService {
 	}
 
 	private int mType;
-	private Bundle mBundle;
 
 	public FetchService() {
 		super("FetchService");
@@ -80,7 +79,7 @@ public class FetchService extends BaseIntentService {
 			break;
 		case User.TYPE_FRIENDS:
 		case User.TYPE_FOLLOWERS:
-			fetchFriendsOrFollowers(mBundle);
+			fetchFriendsOrFollowers(bundle);
 			break;
 		default:
 			break;
@@ -159,7 +158,7 @@ public class FetchService extends BaseIntentService {
 			count=Api.DEFAULT_TIMELINE_COUNT;
 		}
 		
-		boolean doGetMore = mBundle.getBoolean(Commons.EXTRA_BOOLEAN);
+		boolean doGetMore = bundle.getBoolean(Commons.EXTRA_BOOLEAN);
 		if (doGetMore) {
 			sendCountMessage(fetchOldDirectMessages(count));
 		} else {
