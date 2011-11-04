@@ -5,6 +5,11 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
+/**
+ * @author mcxiaoke
+ * @version 1.1 2011.11.04
+ *
+ */
 public class ViewsAdapter extends PagerAdapter {
 	private View[] mViews;
 
@@ -14,12 +19,13 @@ public class ViewsAdapter extends PagerAdapter {
 
 	@Override
 	public int getCount() {
-		return mViews.length;
+//		return mViews.length;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
 	public Object instantiateItem(View container, int position) {
-		View view = mViews[position];
+		View view = mViews[position%mViews.length];
 		((ViewPager) container).addView(view);
 		return view;
 	}

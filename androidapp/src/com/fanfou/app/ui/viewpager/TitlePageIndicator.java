@@ -19,6 +19,7 @@ package com.fanfou.app.ui.viewpager;
 
 import java.util.ArrayList;
 
+import com.fanfou.app.HomePage;
 import com.fanfou.app.R;
 
 import android.content.Context;
@@ -40,6 +41,12 @@ import android.view.View;
  * (if exist), the title of the current select view (centered) and the title of
  * the right view (if exist). When the user scrolls the ViewPager then titles
  * are also scrolled.
+ */
+/**
+ * @author mcxiaoke
+ * @version 1.1 2011.08.20
+ * @version 1.2 2011.11.04
+ *
  */
 public class TitlePageIndicator extends View implements PageIndicator {
 	/**
@@ -450,8 +457,8 @@ public class TitlePageIndicator extends View implements PageIndicator {
 		}
 	}
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
+//	@Override
+	public boolean onTouchEvent2(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			final int count = getPageCount();
 			final int width = getWidth();
@@ -652,7 +659,7 @@ public class TitlePageIndicator extends View implements PageIndicator {
 
 	@Override
 	public int getPageCount() {
-		return mViewPager.getAdapter().getCount();
+		return HomePage.NUMS_OF_PAGE;
 	}
 
 	@Override

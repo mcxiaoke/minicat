@@ -58,6 +58,7 @@ import com.fanfou.app.util.Utils;
  * @version 3.5 2011.10.29
  * @version 3.6 2011.11.02
  * @version 3.7 2011.11.04
+ * @version 4.0 2011.11.04
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
@@ -729,15 +730,23 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	@Override
 	public void onPageScrolled(int position, float positionOffset,
 			int positionOffsetPixels) {
-		mPageIndicator.onPageScrolled(position, positionOffset,
-				positionOffsetPixels);
+//		if (App.DEBUG) {
+//			log("onPageScrolled position=" + position + " offset="
+//					+ positionOffset + " offsetpixels=" + positionOffsetPixels);
+//		}
+//		int page = position % NUMS_OF_PAGE;
+//		mPageIndicator.onPageScrolled(page, positionOffset,
+//				positionOffsetPixels);
 	}
 
 	@Override
 	public void onPageSelected(int position) {
-		mCurrentPage = position;
-		mPageIndicator.onPageSelected(position);
-		// mActionBar.setTitle(PAGE_TITLES[position]);
+		mCurrentPage = position % NUMS_OF_PAGE;
+		if (App.DEBUG) {
+			log("onPageSelected position=" + position);
+			log("onPageSelected mCurrentPage=" + mCurrentPage);
+		}
+		mPageIndicator.onPageSelected(mCurrentPage);
 	}
 
 	@Override
@@ -780,7 +789,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	@Override
 	public String getTitle(int position) {
-		return PAGE_TITLES[position];
+		return PAGE_TITLES[position % NUMS_OF_PAGE];
 	}
 
 	@Override
