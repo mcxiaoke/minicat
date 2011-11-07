@@ -78,7 +78,7 @@
 
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".StatusPage"
-			android:theme="@style/Theme">
+			android:theme="@style/Theme" android:launchMode="singleTask">
 			<intent-filter>
 				<action android:name="com.fanfou.app.action.STATUS" />
 

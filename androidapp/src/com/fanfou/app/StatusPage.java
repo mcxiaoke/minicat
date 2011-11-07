@@ -41,6 +41,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.2 2011.10.28
  * @version 2.3 2011.10.29
  * @version 2.4 2011.11.04
+ * @version 2.5 2011.11.07
  * 
  */
 public class StatusPage extends BaseActivity {
@@ -96,16 +97,23 @@ public class StatusPage extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		parseIntent();
-
 		mLoader = App.me.getImageLoader();
 		mHandler = new Handler();
 
 		setContentView(R.layout.status);
 		setActionBar();
 		setLayout();
+		parseIntent();
 		updateUI();
 
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		setIntent(intent);
+		parseIntent();
+		updateUI();
+		
 	}
 
 	private void updateFavoriteButton() {
@@ -148,8 +156,6 @@ public class StatusPage extends BaseActivity {
 		TextPaint tp = tUserName.getPaint();
 		tp.setFakeBoldText(true);
 
-		tUserName.setText(status.userScreenName);
-
 		tContent = (TextView) findViewById(R.id.status_text);
 		iPhoto = (ImageView) findViewById(R.id.status_photo);
 		tDate = (TextView) findViewById(R.id.status_date);
@@ -175,6 +181,7 @@ public class StatusPage extends BaseActivity {
 
 	private void updateUI() {
 		if (status != null) {
+
 			boolean textMode = OptionHelper.readBoolean(this,
 					R.string.option_text_mode, false);
 			if (textMode) {
@@ -183,6 +190,8 @@ public class StatusPage extends BaseActivity {
 				mLoader.set(status.userProfileImageUrl, iUserHead,
 						R.drawable.default_head);
 			}
+			
+			tUserName.setText(status.userScreenName);
 
 			StatusHelper.setStatus(tContent, status.text);
 			checkPhoto(textMode, status);
@@ -218,6 +227,7 @@ public class StatusPage extends BaseActivity {
 			return;
 		}
 
+		iPhoto.setVisibility(View.VISIBLE);
 		iPhoto.setOnClickListener(this);
 
 		// 先检查本地是否有大图缓存
@@ -293,36 +303,6 @@ public class StatusPage extends BaseActivity {
 		default:
 			break;
 		}
-	}
-
-	private void testAnimation() {
-		vConversation.setVisibility(View.VISIBLE);
-		vConversation
-				.setText("梵蒂冈范德萨更多撒第四个第四个第四个第四个第四个第四个第四个听歌个第四个第四个人人后台很热替换各位特务特务独德萨更多撒第四个第四个第四个第四个第四个第四个第四个听歌个第四个第四个人人后台很热替换各位特务特务独特维特维特我郭特维特维特我郭德纲德国队三个");
-		Animation animation = AnimationUtils.loadAnimation(this,
-				R.anim.scroll_from_top);
-		vConversation.setAnimation(animation);
-		animation.start();
-		animation.setAnimationListener(new AnimationListener() {
-
-			@Override
-			public void onAnimationStart(Animation animation) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				// TODO Auto-generated method stub
-
-			}
-		});
 	}
 
 	@Override

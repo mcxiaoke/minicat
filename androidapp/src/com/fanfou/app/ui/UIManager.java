@@ -23,6 +23,7 @@ import com.fanfou.lib.quickaction.QuickAction;
  * @version 1.2 2011.10.27
  * @version 1.3 2011.10.28
  * @version 2.0 2011.10.29
+ * @version 2.1 2011.11.07
  * 
  */
 public final class UIManager {
@@ -162,6 +163,51 @@ public final class UIManager {
 		});
 		q.show(v);
 	}
+	
+	public static void showPopup(final Activity a, final View v, final Status s,final BaseAdapter adapter) {
+
+		QuickAction q = makePopup(a, s);
+		q.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {
+
+			@Override
+			public void onItemClick(QuickAction source, int pos, int actionId) {
+
+				switch (actionId) {
+				case QUICK_ACTION_ID_REPLY:
+					ActionManager.doReply(a, s);
+					break;
+				case QUICK_ACTION_ID_DELETE:
+					final ConfirmDialog dialog = new ConfirmDialog(a, "删除消息",
+							"要删除这条消息吗？");
+					dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
+
+						@Override
+						public void onButton1Click() {
+							doDelete(a, s, adapter);
+						}
+					});
+					dialog.show();
+					break;
+				case QUICK_ACTION_ID_FAVORITE:
+				case QUICK_ACTION_ID_UNFAVORITE:
+					doFavorite(a, s, adapter);
+					break;
+				case QUICK_ACTION_ID_RETWEET:
+					ActionManager.doRetweet(a, s);
+					break;
+				case QUICK_ACTION_ID_SHARE:
+					ActionManager.doShare(a, s);
+					break;
+				case QUICK_ACTION_ID_PROFILE:
+					ActionManager.doProfile(a, s);
+					break;
+				default:
+					break;
+				}
+			}
+		});
+		q.show(v);
+	}
 
 	public static void doDelete(final Activity activity, final Status s,
 			final BaseAdapter adapter, final List<Status> ss) {
@@ -181,6 +227,16 @@ public final class UIManager {
 			@Override
 			public void onActionSuccess(int type, String message) {
 				c.requery();
+			}
+		};
+		ActionManager.doStatusDelete(activity, s.id, li);
+	}
+	
+	public static void doDelete(final Activity activity, final Status s, final BaseAdapter adapter) {
+		ResultHandler li = new ResultHandler() {
+			@Override
+			public void onActionSuccess(int type, String message) {
+				adapter.notifyDataSetChanged();
 			}
 		};
 		ActionManager.doStatusDelete(activity, s.id, li);
