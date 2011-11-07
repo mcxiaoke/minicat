@@ -23,6 +23,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.2 2011.10.28
  * @version 1.3 2011.11.04
  * @version 1.4 2011.11.07
+ * @version 2.0 2011.11.07
  * 
  */
 public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
@@ -549,7 +550,6 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	// 此方法API未实现
 	public User userBlock(String userId) throws ApiException {
 		Response response = doPostIdAction(URL_BLOCKS_CREATE, userId);
 		int statusCode = response.statusCode;
@@ -566,7 +566,6 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	// 此方法API未实现
 	public User userUnblock(String userId) throws ApiException {
 		Response response = doPostIdAction(URL_BLOCKS_DESTROY, userId);
 		int statusCode = response.statusCode;
@@ -763,7 +762,77 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 	@Override
 	public List<Status> photosTimeline(int count, int page, String userId,
 			String sinceId, String maxId, boolean isHtml) throws ApiException {
-		return fetchStatuses(URL_PHOTO_USER_TIMELINE, count, page, userId, sinceId, maxId, isHtml, Status.TYPE_USER);
+		List<Status> ss= fetchStatuses(URL_PHOTO_USER_TIMELINE, count, page, userId, sinceId, maxId, isHtml, Status.TYPE_USER);
+		if (App.DEBUG) {
+			log("photosTimeline()");
+		}
+		return ss;
+	}
+
+	@Override
+	public User updateProfile(String description, String name, String location,
+			String url, String email) throws ApiException {
+		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		builder.url(URL_ACCOUNT_UPDATE_PROFILE).post();
+		builder.param("description",description);
+		builder.param("name",name);
+		builder.param("location", location);
+		builder.param("url", url);
+		builder.param("email", email);
+		Response response=fetch(builder.build());
+		int statusCode = response.statusCode;
+		if (App.DEBUG) {
+			log("updateProfile()---statusCode=" + statusCode);
+		}
+		return User.parse(response);
+	}
+
+	@Override
+	public User updateProfileImage(File image) throws ApiException {
+		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		builder.url(URL_ACCOUNT_UPDATE_PROFILE_IMAGE).post();
+		builder.param("image",image);
+		Response response=fetch(builder.build());
+		int statusCode = response.statusCode;
+		if (App.DEBUG) {
+			log("updateProfileImage()---statusCode=" + statusCode);
+		}
+		return User.parse(response);
+	}
+
+	@Override
+	public User userIsBlocked(String userId) throws ApiException {
+		Response response= doPostIdAction(URL_BLOCKS_EXISTS, userId);
+		int statusCode = response.statusCode;
+		if (App.DEBUG) {
+			log("userIsBlocked()---statusCode=" + statusCode);
+		}
+		return User.parse(response);
+	}
+
+	@Override
+	public List<User> userBlockedList(int count, int page) throws ApiException {
+		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		builder.url(URL_BLOCKS_USERS);
+		builder.count(count).page(page);
+		Response response= fetch(builder.build());
+		int statusCode = response.statusCode;
+		if (App.DEBUG) {
+			log("userBlockedList()---statusCode=" + statusCode);
+		}	
+		return User.parseUsers(response);
+	}
+
+	@Override
+	public List<String> userBlockedIDs() throws ApiException {
+		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		builder.url(URL_BLOCKS_IDS);
+		Response response= fetch(builder.build());
+		int statusCode = response.statusCode;
+		if (App.DEBUG) {
+			log("userBlockedIDs()---statusCode=" + statusCode);
+		}
+		return Parser.ids(response);
 	}
 
 }

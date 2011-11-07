@@ -8,6 +8,7 @@ package com.fanfou.app.api;
  * @version 1.3 2011.10.18
  * @version 1.4 2011.11.04
  * @version 1.5 2011.11.07
+ * @version 1.6 2011.11.07
  * 
  */
 public interface FanFouApiConfig {
@@ -18,17 +19,18 @@ public interface FanFouApiConfig {
 	public static final String HOST = "http://fanfou.com/";
 	public static final String API_BASE = "http://api.fanfou.com/";
 	public static final String EXTENSION = ".json";
-	public static final int MAX_TIMELINE_COUNT=60;
-	public static final int DEFAULT_TIMELINE_COUNT=20;
-	public static final int MAX_USERS_COUNT=100;
-	public static final int MAX_IDS_COUNT=2000;
+	public static final int MAX_TIMELINE_COUNT = 60;
+	public static final int DEFAULT_TIMELINE_COUNT = 20;
+	public static final int MAX_USERS_COUNT = 100;
+	public static final int MAX_IDS_COUNT = 2000;
 
 	// verify account
 	public static final String URL_VERIFY_CREDENTIALS = API_BASE
 			+ "account/verify_credentials" + EXTENSION;
-	
+
 	// register
-	public static final String URL_REGISTER=API_BASE+"account/register"+EXTENSION;
+	public static final String URL_REGISTER = API_BASE + "account/register"
+			+ EXTENSION;
 
 	// public timeline
 	// param count -- 1-20
@@ -53,9 +55,10 @@ public interface FanFouApiConfig {
 			+ "statuses/replies" + EXTENSION;
 	public static final String URL_TIMELINE_MENTIONS = API_BASE
 			+ "statuses/mentions" + EXTENSION;
-	
+
 	// timeline contains photos
-	public static final String URL_TIMELINE_PHOTOS=API_BASE+"photos/user_timeline"+EXTENSION;
+	public static final String URL_TIMELINE_PHOTOS = API_BASE
+			+ "photos/user_timeline" + EXTENSION;
 
 	// show a status, param id -- status id
 	public static final String URL_STATUS_SHOW = API_BASE + "statuses/show/id"
@@ -85,9 +88,10 @@ public interface FanFouApiConfig {
 	// POST METHOD
 	public static final String URL_PHOTO_UPLOAD = API_BASE + "photos/upload"
 			+ EXTENSION;
-	
+
 	// user timeline only contains photos
-	public static final String URL_PHOTO_USER_TIMELINE=API_BASE+"photos/user_timeline"+EXTENSION;
+	public static final String URL_PHOTO_USER_TIMELINE = API_BASE
+			+ "photos/user_timeline" + EXTENSION;
 
 	// search for public timeline
 	// param q -- search keywords
@@ -201,6 +205,37 @@ public interface FanFouApiConfig {
 			+ EXTENSION;
 	public static final String URL_BLOCKS_DESTROY = API_BASE + "blocks/destroy"
 			+ EXTENSION;
+
+	// show blocking list
+	// param count count 0-60, default is 20
+	// param page page >=0
+	public static final String URL_BLOCKS_USERS = API_BASE + "blocks/blocking"
+			+ EXTENSION;
+
+	public static final String URL_BLOCKS_IDS = API_BASE + "blocks/ids"
+			+ EXTENSION;
+
+	// show user is or not in my blocks
+	// param id userId
+	// POST METHOD
+	public static final String URL_BLOCKS_EXISTS = API_BASE + "blocks/exists"
+			+ EXTENSION;
+
+	// update my profile
+	// param url
+	// param location
+	// param description
+	// param name realname
+	// param email email
+	// POST METHOD
+	public static final String URL_ACCOUNT_UPDATE_PROFILE = API_BASE
+			+ "account/update_profile" + EXTENSION;
+
+	// update my profile image
+	// param image photo file
+	// POST METHOD
+	public static final String URL_ACCOUNT_UPDATE_PROFILE_IMAGE = API_BASE
+			+ "account/update_profile_image" + EXTENSION;
 
 	// test api
 	public static final String URL_TEST = API_BASE + "test" + EXTENSION;

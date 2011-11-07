@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	android:installLocation="auto" package="com.fanfou.app"
-	android:versionCode="20111105" android:versionName="1.6.5">
+	android:versionCode="20111107" android:versionName="1.6.6">
 
 	<application android:icon="@drawable/icon" android:label="@string/app_name"
 		android:name=".App">

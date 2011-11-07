@@ -9,6 +9,7 @@ import java.util.List;
  * @version 1.1 2011.05.15
  * @version 1.2 2011.10.18
  * @version 1.3 2011.10.28
+ * @version 1.4 2011.11.07
  * 
  */
 public interface Api {
@@ -25,6 +26,26 @@ public interface Api {
 	 * @throws ApiException
 	 */
 	User verifyAccount() throws ApiException;
+	
+	/**
+	 *  update user profile
+	 * @param description 
+	 * @param name realname
+	 * @param location
+	 * @param url
+	 * @param email account email, not recommand.
+	 * @return
+	 * @throws ApiException
+	 */
+	User updateProfile(String description, String name, String location, String url, String email) throws ApiException;
+	
+	/**
+	 *  udpate user profile image
+	 * @param image image file
+	 * @return
+	 * @throws ApiException
+	 */
+	User updateProfileImage(File image) throws ApiException;
 
 	// public timeline
 	// count -- status count
@@ -301,6 +322,28 @@ public interface Api {
 	 * @throws ApiException
 	 */
 	User userUnblock(String userId) throws ApiException;
+	
+	/** 
+	 * check user is or not blocked.
+	 * @param userId target user id
+	 * @return 
+	 * @throws ApiException
+	 */
+	User userIsBlocked(String userId) throws ApiException;
+	
+	/**
+	 *  fetch user list blocked by me
+	 * @return
+	 * @throws ApiException
+	 */
+	List<User> userBlockedList(int count, int page) throws ApiException;
+	
+	/**
+	 *  fetch user ids list blocked by me
+	 * @return
+	 * @throws ApiException
+	 */
+	List<String> userBlockedIDs() throws ApiException;
 
 	/**
 	 * check two users is or not friends, check a is or not follow b.
