@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -41,6 +42,7 @@ import com.fanfou.app.util.Utils;
  * @version 3.2 2011.10.24
  * @version 3.3 2011.10.28
  * @version 4.0 2011.11.04
+ * @version 4.1 2011.11.07
  * 
  */
 public class FetchService extends BaseIntentService {
@@ -101,7 +103,7 @@ public class FetchService extends BaseIntentService {
 	private void fetchFriendsOrFollowers(Bundle bundle) {
 		String ownerId = bundle.getString(Commons.EXTRA_ID);
 		int page = bundle.getInt(Commons.EXTRA_PAGE);
-		int count=bundle.getInt(Commons.EXTRA_COUNT);
+		int count = bundle.getInt(Commons.EXTRA_COUNT);
 		if (App.DEBUG)
 			log("fetchFriendsOrFollowers ownerId=" + ownerId + " page=" + page);
 
@@ -118,7 +120,7 @@ public class FetchService extends BaseIntentService {
 				if (App.DEBUG)
 					log("fetchFriendsOrFollowers size=" + size);
 				ContentResolver cr = getContentResolver();
-				int nums=cr.bulkInsert(UserInfo.CONTENT_URI,
+				int nums = cr.bulkInsert(UserInfo.CONTENT_URI,
 						Parser.toContentValuesArray(users));
 				sendCountMessage(nums);
 			} else {
@@ -133,7 +135,7 @@ public class FetchService extends BaseIntentService {
 	}
 
 	private void sendCountMessage(int size) {
-		if(receiver!=null){
+		if (receiver != null) {
 			Bundle update = new Bundle();
 			update.putInt(Commons.EXTRA_TYPE, mType);
 			update.putInt(Commons.EXTRA_COUNT, size);
@@ -143,22 +145,22 @@ public class FetchService extends BaseIntentService {
 
 	private void fetchDirectMessages(Bundle bundle) {
 		int count = bundle.getInt(Commons.EXTRA_COUNT);
-//		int page = bundle.getInt(Commons.EXTRA_PAGE);
+		// int page = bundle.getInt(Commons.EXTRA_PAGE);
 		// fix count issue;
 		// count<=0,count>60时返回60条
-		//count>=0&&count<=60时返回count条
-//		if(count<1||count>Api.MAX_TIMELINE_COUNT){
-//			count=ApiConfig.MAX_TIMELINE_COUNT;
-//		}
-		
+		// count>=0&&count<=60时返回count条
+		// if(count<1||count>Api.MAX_TIMELINE_COUNT){
+		// count=ApiConfig.MAX_TIMELINE_COUNT;
+		// }
+
 		// TODO
 		// 暂时忽略count参数
-		if(App.me.apnType==ApnType.WIFI){
-			count=FanFouApiConfig.MAX_TIMELINE_COUNT;
-		}else{
-			count=FanFouApiConfig.DEFAULT_TIMELINE_COUNT;
+		if (App.me.apnType == ApnType.WIFI) {
+			count = FanFouApiConfig.MAX_TIMELINE_COUNT;
+		} else {
+			count = FanFouApiConfig.DEFAULT_TIMELINE_COUNT;
 		}
-		
+
 		boolean doGetMore = bundle.getBoolean(Commons.EXTRA_BOOLEAN);
 		if (doGetMore) {
 			sendCountMessage(fetchOldDirectMessages(count));
@@ -175,13 +177,13 @@ public class FetchService extends BaseIntentService {
 			String inboxSinceId = Utils.getDmSinceId(ic);
 			String outboxSinceId = Utils.getDmSinceId(oc);
 			List<DirectMessage> messages = new ArrayList<DirectMessage>();
-			List<DirectMessage> in = api
-					.messagesInbox(count, 0, inboxSinceId, null);
+			List<DirectMessage> in = api.messagesInbox(count, 0, inboxSinceId,
+					null);
 			if (in != null && in.size() > 0) {
 				messages.addAll(in);
 			}
-			List<DirectMessage> out = api.messagesOutbox(count, 0, outboxSinceId,
-					null);
+			List<DirectMessage> out = api.messagesOutbox(count, 0,
+					outboxSinceId, null);
 			if (out != null && out.size() > 0) {
 				messages.addAll(out);
 			}
@@ -189,7 +191,7 @@ public class FetchService extends BaseIntentService {
 				ContentResolver cr = getContentResolver();
 				int size = messages.size();
 				log("doFetchMessagesRefresh size()=" + size);
-				int nums=cr.bulkInsert(DirectMessageInfo.CONTENT_URI,
+				int nums = cr.bulkInsert(DirectMessageInfo.CONTENT_URI,
 						Parser.toContentValuesArray(messages));
 				sendCountMessage(nums);
 				return nums;
@@ -217,7 +219,8 @@ public class FetchService extends BaseIntentService {
 			String inboxMaxId = Utils.getDmMaxId(ic);
 			String outboxMaxid = Utils.getDmMaxId(oc);
 			List<DirectMessage> messages = new ArrayList<DirectMessage>();
-			List<DirectMessage> in = api.messagesInbox(count, 0, null, inboxMaxId);
+			List<DirectMessage> in = api.messagesInbox(count, 0, null,
+					inboxMaxId);
 			if (in != null && in.size() > 0) {
 				messages.addAll(in);
 			}
@@ -230,7 +233,7 @@ public class FetchService extends BaseIntentService {
 				ContentResolver cr = getContentResolver();
 				int size = messages.size();
 				log("doFetchMessagesMore size()=" + size);
-				int nums=cr.bulkInsert(DirectMessageInfo.CONTENT_URI,
+				int nums = cr.bulkInsert(DirectMessageInfo.CONTENT_URI,
 						Parser.toContentValuesArray(messages));
 				sendCountMessage(nums);
 				return nums;
@@ -296,24 +299,23 @@ public class FetchService extends BaseIntentService {
 		String userId = bundle.getString(Commons.EXTRA_ID);
 		String sinceId = bundle.getString(Commons.EXTRA_SINCE_ID);
 		String maxId = bundle.getString(Commons.EXTRA_MAX_ID);
-		
-		
+
 		int count = bundle.getInt(Commons.EXTRA_COUNT);
 		// fix count issue;
 		// count<=0,count>60时返回60条
-		//count>=0&&count<=60时返回count条
-//		if(count<1||count>Api.MAX_TIMELINE_COUNT){
-//			count=ApiConfig.MAX_TIMELINE_COUNT;
-//		}
-		
-		//TODO 
+		// count>=0&&count<=60时返回count条
+		// if(count<1||count>Api.MAX_TIMELINE_COUNT){
+		// count=ApiConfig.MAX_TIMELINE_COUNT;
+		// }
+
+		// TODO
 		// 暂时忽略count参数
-		if(App.me.apnType==ApnType.WIFI){
-			count=FanFouApiConfig.MAX_TIMELINE_COUNT;
-		}else{
-			count=FanFouApiConfig.DEFAULT_TIMELINE_COUNT;
-		}	
-		
+		if (App.me.apnType == ApnType.WIFI) {
+			count = FanFouApiConfig.MAX_TIMELINE_COUNT;
+		} else {
+			count = FanFouApiConfig.DEFAULT_TIMELINE_COUNT;
+		}
+
 		boolean format = true;
 		try {
 			switch (mType) {
@@ -359,25 +361,26 @@ public class FetchService extends BaseIntentService {
 					Log.d(TAG, "fetchTimeline received items count=" + size);
 				}
 				ContentResolver cr = getContentResolver();
-				
+
 				// add at 2011.10.21
 				// if count=20, clear old statuses.
 				if (size >= count && maxId == null) {
 					String where = BasicColumns.TYPE + " = ?";
 					String[] whereArgs = new String[] { String.valueOf(mType) };
-					int delete=cr.delete(StatusInfo.CONTENT_URI, where, whereArgs);
+					int delete = cr.delete(StatusInfo.CONTENT_URI, where,
+							whereArgs);
 					if (App.DEBUG) {
-						Log.d(TAG,
-								"fetchTimeline items count = "+count+" ,remove "+delete+" old statuses.");
+						Log.d(TAG, "fetchTimeline items count = " + count
+								+ " ,remove " + delete + " old statuses.");
 					}
-				}	
-				
-				int insertedCount=cr.bulkInsert(StatusInfo.CONTENT_URI,
+				}
+
+				int insertedCount = cr.bulkInsert(StatusInfo.CONTENT_URI,
 						Parser.toContentValuesArray(statuses));
 				sendCountMessage(insertedCount);
-				
+
 				// extract users and insert to db, replace original object.
-				insertUsersFromStatus(statuses, mType);
+//				updateUsersFromStatus(statuses, mType);
 			}
 			BufferedOutputStream a;
 		} catch (ApiException e) {
@@ -389,34 +392,37 @@ public class FetchService extends BaseIntentService {
 			handleError(e);
 		}
 	}
-	
+
 	// add at 2011.10.28
-	private int insertUsersFromStatus(List<Status> ss, int type){
-		int result=0;
-		boolean isFriends=type==Status.TYPE_HOME;
-		ArrayList<User> us=new ArrayList<User>();
+	private int updateUsersFromStatus(List<Status> ss, int type) {
+		ArrayList<User> us = new ArrayList<User>();
+		ContentValues cv = new ContentValues();
 		for (Status s : ss) {
-			User u=s.user;
-			if(u!=null){
-				if(isFriends){
-					u.type=User.TYPE_FRIENDS;
-				}
+			User u = s.user;
+			if (u != null) {
 				us.add(s.user);
+				cv.put(UserInfo.SCREEN_NAME, u.screenName);
+				cv.put(UserInfo.PROFILE_IMAGE_URL, u.profileImageUrl);
+				cv.put(UserInfo.URL, u.url);
+				cv.put(UserInfo.DESCRIPTION, u.description);
+				getContentResolver().update(UserInfo.CONTENT_URI, cv, UserInfo.ID+"=?", new String[]{u.id});
 			}
 		}
-		result=getContentResolver().bulkInsert(UserInfo.CONTENT_URI, Parser.toContentValuesArray(us));
-		if(App.DEBUG){
-			log("extractUsers from status list , result="+result+" isFriends="+isFriends);
+		int result = getContentResolver().bulkInsert(UserInfo.CONTENT_URI,
+				Parser.toContentValuesArray(us));
+		if (App.DEBUG) {
+			log("extractUsers from status list , result=" + result);
 		}
 		return result;
 	}
 
 	private void handleError(ApiException e) {
 
-		if(receiver!=null){
-			String message=e.getMessage();
-			if(e.statusCode==ResponseCode.ERROR_NOT_CONNECTED||e.statusCode>=500){
-				message=getString(R.string.connection_error_msg);
+		if (receiver != null) {
+			String message = e.getMessage();
+			if (e.statusCode == ResponseCode.ERROR_NOT_CONNECTED
+					|| e.statusCode >= 500) {
+				message = getString(R.string.connection_error_msg);
 			}
 			Bundle b = new Bundle();
 			b.putInt(Commons.EXTRA_ERROR_CODE, e.statusCode);
@@ -424,7 +430,7 @@ public class FetchService extends BaseIntentService {
 			receiver.send(Commons.RESULT_CODE_ERROR, b);
 		}
 	}
-	
+
 	public static void start(Context context, int type,
 			ResultReceiver receiver, Bundle bundle) {
 		Intent serviceIntent = new Intent(context, FetchService.class);

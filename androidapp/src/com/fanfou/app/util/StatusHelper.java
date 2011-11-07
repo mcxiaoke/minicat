@@ -112,8 +112,7 @@ public class StatusHelper {
 	public static void setStatus(TextView textView, String text) {
 		String processedText = preprocessText(text);
 		textView.setText(Html.fromHtml(processedText), BufferType.SPANNABLE);
-		Linkify.addLinks(textView, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES
-				| Linkify.MAP_ADDRESSES);
+		Linkify.addLinks(textView, Linkify.ALL);
 		linkifyUsers(textView);
 		linkifyTags(textView);
 		userLinks.clear();

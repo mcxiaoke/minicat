@@ -13,6 +13,7 @@ import android.provider.BaseColumns;
  * @version 5.0 2011.10.20
  * @version 5.1 2011.10.25
  * @version 5.5 2011.10.26
+ * @version 5.6 2011.11.07
  *
  */
 public final class Contents {
@@ -113,7 +114,7 @@ public final class Contents {
             + LAST_STATUS_TEXT+" integer, "     
             + TYPE+" integer not null, "
             + TIMESTAMP+" integer not null, " 
-            + "unique ( "+ID+","+TYPE+" ) on conflict replace );";
+            + "unique ( "+ID+","+TYPE+" ) on conflict ignore );";
 //            + "unique ( "+ID+","+TYPE+","+OWNER_ID+") on conflict ignore );";
     }
     

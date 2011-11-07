@@ -3,6 +3,7 @@ package com.fanfou.app.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.TextPaint;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,9 +28,20 @@ public class MessageCursorAdapter extends BaseCursorAdapter {
 	private static final int ITEM_TYPE_ME = 0;
 	private static final int ITEM_TYPE_NONE = 1;
 	private static final int[] TYPES = new int[] { ITEM_TYPE_ME, ITEM_TYPE_NONE };
+	private boolean autoLink;
 
 	private void log(String message) {
 		Log.e(TAG, message);
+	}
+	
+	public MessageCursorAdapter(Context context, Cursor c) {
+		super(context, c, false);
+		this.autoLink=false;
+	}
+
+	public MessageCursorAdapter(Context context, Cursor c, boolean autoRequery, boolean autoLink) {
+		super(context, c, autoRequery);
+		this.autoLink=autoLink;
 	}
 
 	@Override
@@ -62,6 +74,10 @@ public class MessageCursorAdapter extends BaseCursorAdapter {
 		holder.dateText.setTextSize(fontSize - 4);
 		TextPaint tp = holder.nameText.getPaint();
 		tp.setFakeBoldText(true);
+		
+		if(autoLink){
+			holder.contentText.setAutoLinkMask(Linkify.ALL);
+		}
 	}
 
 	@Override
@@ -112,14 +128,6 @@ public class MessageCursorAdapter extends BaseCursorAdapter {
 		holder.nameText.setText(dm.senderScreenName);
 		holder.dateText.setText(DateTimeHelper.getInterval(dm.createdAt));
 		holder.contentText.setText(dm.text);
-	}
-
-	public MessageCursorAdapter(Context context, Cursor c) {
-		super(context, c, false);
-	}
-
-	public MessageCursorAdapter(Context context, Cursor c, boolean autoRequery) {
-		super(context, c, autoRequery);
 	}
 
 	@Override

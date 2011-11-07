@@ -9,12 +9,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.inputmethod.EditorInfo;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.fanfou.app.adapter.MessageCursorAdapter;
 import com.fanfou.app.api.DirectMessage;
@@ -29,6 +33,7 @@ import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.IntentHelper;
+import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
 
@@ -37,6 +42,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.0 2011.10.08
  * @version 1.1 2011.10.25
  * @version 1.2 2011.10.26
+ * @version 1.3 2011.11.07
  * 
  */
 public class MessageChatPage extends BaseActivity {
@@ -119,6 +125,26 @@ public class MessageChatPage extends BaseActivity {
 
 		mSendButton = (Button) findViewById(R.id.button_ok);
 		mSendButton.setOnClickListener(this);
+		
+//		boolean sendOnEnter=OptionHelper.readBoolean(this, R.string.option_send_on_enter, false);
+//		if(sendOnEnter){
+//			mEditText.setImeOptions(EditorInfo.IME_ACTION_SEND);
+//			mEditText.setOnEditorActionListener(new OnEditorActionListener() {
+//			@Override
+//			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//				switch (actionId) {
+//				case EditorInfo.IME_ACTION_SEND:
+//					doSend(false);
+//					return true;
+//				default:
+//					break;
+//				}
+//				return false;
+//			}
+//		});
+//		}else{
+//			mEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+//		}
 	}
 
 	private void setActionBar() {
@@ -130,7 +156,7 @@ public class MessageChatPage extends BaseActivity {
 
 	private void setListView() {
 		initCursor();
-		mCursorAdapter = new MessageCursorAdapter(this, mCursor, true);
+		mCursorAdapter = new MessageCursorAdapter(this, mCursor, true,true);
 
 		mListView = (ListView) findViewById(R.id.list);
 		registerForContextMenu(mListView);
@@ -227,11 +253,12 @@ public class MessageChatPage extends BaseActivity {
 	}
 
 	private void doDelete(DirectMessage dm) {
-		if (dm.type == DirectMessage.TYPE_OUT) {
-			ActionManager.doMessageDelete(this, dm.id, null, false);
-		} else {
-			Utils.notify(this, "只能删除你自己发送的私信");
-		}
+		ActionManager.doMessageDelete(this, dm.id, null, false);
+//		if (dm.type == DirectMessage.TYPE_OUT) {
+//			ActionManager.doMessageDelete(this, dm.id, null, false);
+//		} else {
+//			Utils.notify(this, "只能删除你自己发送的私信");
+//		}
 	}
 
 	private class SendAction extends AbstractAction {

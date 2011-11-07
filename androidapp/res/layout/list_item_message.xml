@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:padding="2dp" >
+	android:padding="2dp" android:descendantFocusability="blocksDescendants">
 
 	<ImageView android:id="@id/item_message_head"
 		android:layout_alignParentLeft="true" style="@style/Image.Head" />
@@ -19,8 +19,7 @@
 
 		</RelativeLayout>
 
-		<TextView android:id="@id/item_message_text" style="@style/Text.Status"
-			android:text=" message content is here " />
+		<TextView android:id="@id/item_message_text" style="@style/Text.Status" />
 
 		<RelativeLayout android:layout_width="fill_parent"
 			android:layout_height="wrap_content">

@@ -19,6 +19,7 @@ import com.fanfou.app.util.StringHelper;
  * @author mcxiaoke
  * @version 1.0 2011.06.04
  * @version 1.5 2011.10.24
+ * @version 1.6 2011.11.07
  * 
  */
 public class UserCursorAdapter extends BaseCursorAdapter {
@@ -57,7 +58,7 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 		setHeadImage(mContext, holder.headIcon);
 		setTextStyle(holder);
 		view.setTag(holder);
-		bindView(view, context, cursor);
+//		bindView(view, context, cursor);
 		return view;
 	}
 
@@ -91,6 +92,8 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 			String dateStr = DateTimeHelper.formatDate(u.lastStatusCreatedAt);
 			holder.dateText.setText(dateStr);
 		} else {
+			holder.contentText.setText("");
+			holder.dateText.setText("");
 		}
 
 	}

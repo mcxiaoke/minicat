@@ -37,6 +37,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.5 2011.10.26
  * @version 3.0 2011.10.28
  * @version 3.1 2011.10.30
+ * @version 3.2 2011.11.07
  * 
  */
 public class FanFouProvider extends ContentProvider {
@@ -49,9 +50,12 @@ public class FanFouProvider extends ContentProvider {
 
 	private SQLiteHelper dbHelper;
 
-	public static final String ORDERBY_DATE_DESC = BasicColumns.CREATED_AT
-			+ " DESC";
+
 	public static final String ORDERBY_DATE = BasicColumns.CREATED_AT;
+	public static final String ORDERBY_DATE_DESC = BasicColumns.CREATED_AT+ " DESC";
+	
+	public static final String ORDERBY_STATUSES_COUNT=UserInfo.STATUSES_COUNT;
+	public static final String ORDERBY_STATUSES_COUNT_DESC=UserInfo.STATUSES_COUNT+" DESC";
 
 	public static final int USERS_ALL = 1;// 查询全部用户信息，可附加条件参数
 	public static final int USER_SEARCH = 2; // 搜索用户，未实现

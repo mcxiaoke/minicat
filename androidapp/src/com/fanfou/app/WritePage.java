@@ -21,6 +21,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethod;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -56,6 +57,7 @@ import com.fanfou.app.util.Utils;
  * @version 3.1 2011.10.28
  * @version 3.2 2011.10.29
  * @version 3.3 2011.11.02
+ * @version 3.4 2011.11.07
  * 
  */
 public class WritePage extends BaseActivity {
@@ -315,25 +317,25 @@ public class WritePage extends BaseActivity {
 			}
 		});	
 		
-//		mAutoCompleteTextView.setOnEditorActionListener(new OnEditorActionListener() {
-//			
+//		boolean sendOnEnter=OptionHelper.readBoolean(this, R.string.option_send_on_enter, false);
+//		if(sendOnEnter){
+//			mAutoCompleteTextView.setImeOptions(EditorInfo.IME_ACTION_SEND);
+//			mAutoCompleteTextView.setOnEditorActionListener(new OnEditorActionListener() {
 //			@Override
 //			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 //				switch (actionId) {
-//				case EditorInfo.IME_ACTION_DONE:
-//					break;
-//				case EditorInfo.IME_ACTION_GO:
-//					break;
-//				case EditorInfo.IME_ACTION_SEARCH:
-//					break;
 //				case EditorInfo.IME_ACTION_SEND:
 //					doSend();
+//					return true;
 //				default:
 //					break;
 //				}
 //				return false;
 //			}
 //		});
+//		}else{
+//			mAutoCompleteTextView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+//		}
 		
 		mAutoCompleteTextView.setTokenizer(new AtTokenizer());
 		mAutoCompleteTextView.setDropDownBackgroundResource(R.drawable.bg);

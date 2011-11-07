@@ -27,6 +27,7 @@ import com.fanfou.app.api.Api;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.service.FetchService;
@@ -42,6 +43,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.0 2011.10.24
  * @version 2.1 2011.10.26
  * @version 2.2 2011.11.01
+ * @version 2.3 2011.11.07
  */
 public class UserChoosePage extends BaseActivity implements
 		FilterQueryProvider, OnItemClickListener {
@@ -55,8 +57,6 @@ public class UserChoosePage extends BaseActivity implements
 	private View mButtonGroup;
 	private Button okButton;
 	private Button cancelButton;
-
-	private TextChangeListener mTextChangeListener;
 
 	protected Cursor mCursor;
 	protected UserChooseCursorAdapter mCursorAdapter;
@@ -90,7 +90,6 @@ public class UserChoosePage extends BaseActivity implements
 		mUserNames = new ArrayList<String>();
 		mHandler = new ResultHandler();
 		mResultReceiver = new MyResultHandler(mHandler);
-		mTextChangeListener = new MyTextWatcher();
 		initCursorAdapter();
 
 	}
@@ -100,6 +99,7 @@ public class UserChoosePage extends BaseActivity implements
 				+ "=?";
 		String[] whereArgs = new String[] { String.valueOf(User.TYPE_FRIENDS),
 				App.me.userId };
+		String orderBy=FanFouProvider.ORDERBY_STATUSES_COUNT;
 		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				whereArgs, null);
 
@@ -141,7 +141,7 @@ public class UserChoosePage extends BaseActivity implements
 		mEmptyView = (ViewGroup) findViewById(R.id.empty);
 
 		mEditText = (EditText) findViewById(R.id.choose_input);
-		mEditText.addTextChangedListener(mTextChangeListener);
+		mEditText.addTextChangedListener(new MyTextWatcher());
 
 		setListView();
 	}

@@ -10,6 +10,8 @@ import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -19,11 +21,13 @@ import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.service.FetchService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
+import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.ui.widget.EndlessListView;
 import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
 import com.fanfou.app.util.StringHelper;
@@ -33,13 +37,16 @@ import com.fanfou.app.util.Utils;
  * @author mcxiaoke
  * @version 1.0 2011.06.10
  * @version 1.5 2011.10.29
+ * @version 2.0 2011.11.07
  * 
  */
-public class UserListPage extends BaseActivity implements OnRefreshListener{
+public class UserListPage extends BaseActivity implements OnRefreshListener,FilterQueryProvider{
 
 	protected ActionBar mActionBar;
 	protected EndlessListView mListView;
 	protected ViewGroup mEmptyView;
+	
+	protected EditText mEditText;
 
 	protected Cursor mCursor;
 	protected UserCursorAdapter mCursorAdapter;
@@ -87,6 +94,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener{
 		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
 				+ "=?";
 		String[] whereArgs = new String[] { String.valueOf(type), userId };
+		String orderBy=FanFouProvider.ORDERBY_DATE_DESC;
 		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				whereArgs, null);
 	}
@@ -115,17 +123,37 @@ public class UserListPage extends BaseActivity implements OnRefreshListener{
 	}
 
 	private void setLayout() {
-		setContentView(R.layout.list);
+		setContentView(R.layout.list_users);
 		setActionBar();
 
 		mEmptyView = (ViewGroup) findViewById(R.id.empty);
+		
+		mEditText = (EditText) findViewById(R.id.choose_input);
+		mEditText.addTextChangedListener(new MyTextWatcher());
 
 		mListView = (EndlessListView) findViewById(R.id.list);
 		mListView.setOnRefreshListener(this);
-		// mListView.setOnItemClickListener(this);
 
 		mCursorAdapter = new UserCursorAdapter(mContext, mCursor);
+		mCursorAdapter.setFilterQueryProvider(this);
+		
+		
 		mListView.setAdapter(mCursorAdapter);
+		mListView.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				mListView.setSelection(1);
+			}
+		});
+	}
+	
+	private class MyTextWatcher extends TextChangeListener {
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before,
+				int count) {
+			mCursorAdapter.getFilter().filter(s.toString());
+		}
 	}
 
 	/**
@@ -302,4 +330,18 @@ public class UserListPage extends BaseActivity implements OnRefreshListener{
 			ActionManager.doProfile(mContext, u);
 		}
 	}
+	
+	
+	@Override
+	public Cursor runQuery(CharSequence constraint) {
+		String where = UserInfo.TYPE + " = " + type + " AND "
+				+ UserInfo.OWNER_ID + " = '" + App.me.userId + "' AND ("
+				+ UserInfo.SCREEN_NAME + " like '%" + constraint + "%' OR "
+				+ UserInfo.ID + " like '%" + constraint + "%' )";
+		;
+		return managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
+				null, null);
+	}
+	
+	
 }

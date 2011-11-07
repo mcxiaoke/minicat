@@ -27,6 +27,7 @@
 	<string name="option_refresh_on_open">refresh_on_open</string>
 	<string name="option_refresh_after_send">refresh_after_send</string>
 	<string name="option_save_on_back_press">save_on_back_press</string>
+	<string name="option_send_on_enter">send_on_enter</string>
 	<string name="option_confirm_on_exit">confirm_on_exit</string>
 	<string name="option_feedback">feedback</string>
 	<string name="option_debug_on">debug_on</string>

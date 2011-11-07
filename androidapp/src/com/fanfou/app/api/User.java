@@ -211,6 +211,34 @@ public class User implements Storable<User> {
 			log("User.parse id=" + u.id);
 		return u;
 	}
+	
+	public ContentValues toSimpleContentValues() {
+		User u = this;
+		ContentValues cv = new ContentValues();
+
+		cv.put(UserInfo.SCREEN_NAME, u.screenName);
+		cv.put(UserInfo.LOCATION, u.location);
+		cv.put(UserInfo.GENDER, u.gender);
+		cv.put(UserInfo.BIRTHDAY, u.birthday);
+		cv.put(UserInfo.DESCRIPTION, u.description);
+		cv.put(UserInfo.PROFILE_IMAGE_URL, u.profileImageUrl);
+		cv.put(UserInfo.URL, u.url);
+		cv.put(UserInfo.PROTECTED, u.protect);
+		cv.put(UserInfo.FOLLOWERS_COUNT, u.followersCount);
+		cv.put(UserInfo.FRIENDS_COUNT, u.friendsCount);
+		cv.put(UserInfo.FAVORITES_COUNT, u.favouritesCount);
+		cv.put(UserInfo.STATUSES_COUNT, u.statusesCount);
+		cv.put(UserInfo.FOLLOWING, u.following);
+
+		if (u.lastStatusId != null) {
+			cv.put(UserInfo.LAST_STATUS_CREATED_AT,
+					u.lastStatusCreatedAt.getTime());
+			cv.put(UserInfo.LAST_STATUS_ID, u.lastStatusId);
+			cv.put(UserInfo.LAST_STATUS_TEXT, u.lastStatusText);
+		}
+		cv.put(BasicColumns.TIMESTAMP, new Date().getTime());
+		return cv;
+	}
 
 	@Override
 	public ContentValues toContentValues() {
