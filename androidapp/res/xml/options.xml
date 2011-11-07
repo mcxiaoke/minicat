@@ -92,34 +92,6 @@
 
 	</PreferenceScreen>
 
-	<PreferenceScreen android:title="使用偏好">
-
-		<CheckBoxPreference android:defaultValue="false"
-			android:key="@string/option_refresh_on_open" android:summary="客户端启动时刷新时间线"
-			android:title="启动时刷新" />
-
-		<CheckBoxPreference android:defaultValue="false"
-			android:key="@string/option_refresh_after_send" android:summary="发消息成功后刷新时间线"
-			android:title="发消息后刷新" />
-
-		<CheckBoxPreference android:defaultValue="true"
-			android:key="@string/option_save_on_back_press" android:summary="保存未发送消息为草稿"
-			android:title="保存草稿" />
-<!-- 		
-		<CheckBoxPreference android:defaultValue="false"
-			android:key="@string/option_send_on_enter" android:summary="按回车键发送消息和私信"
-			android:title="回车键发送" /> -->
-
-		<CheckBoxPreference android:defaultValue="false"
-			android:key="@string/option_confirm_on_exit" android:summary="退出客户端时需要确认"
-			android:title="退出确认" />
-
-		<CheckBoxPreference android:defaultValue="true"
-			android:key="@string/option_autoupdate" android:summary="定时检测新版本"
-			android:title="定时升级" />
-
-	</PreferenceScreen>
-
 	<PreferenceScreen android:title="界面布局">
 
 		<ListPreference android:defaultValue="right"
@@ -131,6 +103,36 @@
 			android:dialogTitle="编辑图标位置" android:entries="@array/bottom_icon_position"
 			android:entryValues="@array/bottom_icon_position_values" android:key="@string/option_bottom_write_icon"
 			android:summary="底部编辑图标" android:title="底部编辑图标" />
+
+	</PreferenceScreen>
+
+	<PreferenceScreen android:title="使用偏好">
+
+		<CheckBoxPreference android:defaultValue="false"
+			android:key="@string/option_refresh_on_open" android:summary="客户端启动时刷新时间线"
+			android:title="启动时刷新" />
+
+		<CheckBoxPreference android:defaultValue="false"
+			android:key="@string/option_refresh_after_send" android:summary="发消息成功后刷新时间线"
+			android:title="发消息后刷新" />
+
+		<CheckBoxPreference android:defaultValue="false"
+			android:key="@string/option_fast_scroll_on" android:summary="显示列表快速拖动滑块"
+			android:title="快速拖动" />
+
+		<CheckBoxPreference android:defaultValue="true"
+			android:key="@string/option_save_on_back_press" android:summary="保存未发送消息为草稿"
+			android:title="保存草稿" />
+		<!-- <CheckBoxPreference android:defaultValue="false" android:key="@string/option_send_on_enter" 
+			android:summary="按回车键发送消息和私信" android:title="回车键发送" /> -->
+
+		<CheckBoxPreference android:defaultValue="false"
+			android:key="@string/option_confirm_on_exit" android:summary="退出客户端时需要确认"
+			android:title="退出确认" />
+
+		<CheckBoxPreference android:defaultValue="true"
+			android:key="@string/option_autoupdate" android:summary="定时检测新版本"
+			android:title="定时升级" />
 
 	</PreferenceScreen>
 
@@ -173,9 +175,8 @@
 				android:data="http://fanfou.com/" />
 		</Preference>
 
-<!-- 		<CheckBoxPreference android:defaultValue="false"
-			android:key="@string/option_debug_on" android:summary="启用开发者模式(对发布版无效)"
-			android:title="开发模式" /> -->
+		<!-- <CheckBoxPreference android:defaultValue="false" android:key="@string/option_debug_on" 
+			android:summary="启用开发者模式(对发布版无效)" android:title="开发模式" /> -->
 	</PreferenceScreen>
 
 </PreferenceScreen>

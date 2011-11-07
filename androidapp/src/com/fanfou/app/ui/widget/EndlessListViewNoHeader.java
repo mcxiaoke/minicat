@@ -14,7 +14,12 @@ import android.widget.TextView;
 
 import com.fanfou.app.App;
 import com.fanfou.app.R;
+import com.fanfou.app.util.OptionHelper;
 
+/**
+ * @author mcxiaoke
+ *
+ */
 public class EndlessListViewNoHeader extends ListView implements
 		OnItemClickListener {
 	private static final String TAG = EndlessListViewNoHeader.class
@@ -59,10 +64,15 @@ public class EndlessListViewNoHeader extends ListView implements
 
 	private void init(Context context) {
 		mContext = context;
-//		setFastScrollEnabled(true);
 		setHorizontalScrollBarEnabled(false);
 		setVerticalScrollBarEnabled(false);
 		setOnItemClickListener(this);
+		
+		boolean fastScroll=OptionHelper.readBoolean(context, R.string.option_fast_scroll_on, false);
+		if(fastScroll){
+			setFastScrollEnabled(true);
+		}
+		
 		initHeaderAndFooter();
 	}
 
