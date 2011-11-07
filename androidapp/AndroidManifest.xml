@@ -45,7 +45,7 @@
 		</activity>
 
 		<activity android:label="@string/app_name" android:name=".HomePage"
-			android:launchMode="singleTask" android:theme="@style/Theme">
+			android:launchMode="singleTask" android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation">
 			<meta-data android:name="android.app.default_searchable"
 				android:value=".SearchResultsPage" />
 		</activity>

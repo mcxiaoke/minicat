@@ -33,6 +33,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.1 2011.10.19
  * @version 2.1 2011.10.25
  * @version 2.2 2011.10.27
+ * @version 2.3 2011.11.07
  * 
  */
 public abstract class BaseActivity extends Activity implements
@@ -263,40 +264,31 @@ public abstract class BaseActivity extends Activity implements
 		return true;
 	}
 
-	MenuItem option;
-	MenuItem profile;
-	MenuItem search;
-	MenuItem logout;
-	MenuItem about;
-	MenuItem feedback;
-	MenuItem home;
-	MenuItem clear;
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		option = menu.add(0, MENU_ID_OPTION, MENU_ID_OPTION, "功能设置");
+		MenuItem option = menu.add(0, MENU_ID_OPTION, MENU_ID_OPTION, "功能设置");
 		option.setIcon(R.drawable.i_menu_option);
 
-		profile = menu.add(0, MENU_ID_PROFILE, MENU_ID_PROFILE, "我的空间");
+		MenuItem profile = menu.add(0, MENU_ID_PROFILE, MENU_ID_PROFILE, "我的空间");
 		profile.setIcon(R.drawable.i_menu_profile);
 
-		search = menu.add(0, MENU_ID_SEARCH, MENU_ID_SEARCH, "热词搜索");
+		MenuItem search = menu.add(0, MENU_ID_SEARCH, MENU_ID_SEARCH, "热词搜索");
 		search.setIcon(R.drawable.i_menu_search);
 
-		logout = menu.add(0, MENU_ID_LOGOUT, MENU_ID_LOGOUT, "注销登录");
+		MenuItem logout = menu.add(0, MENU_ID_LOGOUT, MENU_ID_LOGOUT, "注销登录");
 		logout.setIcon(R.drawable.i_menu_logout);
 
-		about = menu.add(0, MENU_ID_ABOUT, MENU_ID_ABOUT, "关于饭否");
+		MenuItem about = menu.add(0, MENU_ID_ABOUT, MENU_ID_ABOUT, "关于饭否");
 		about.setIcon(R.drawable.i_menu_about);
 
-		feedback = menu.add(0, MENU_ID_FEEDBACK, MENU_ID_FEEDBACK, "意见反馈");
+		MenuItem feedback = menu.add(0, MENU_ID_FEEDBACK, MENU_ID_FEEDBACK, "意见反馈");
 		feedback.setIcon(R.drawable.i_menu_feedback);
 
-		home = menu.add(0, MENU_ID_HOME, MENU_ID_HOME, "返回首页");
+		MenuItem home = menu.add(0, MENU_ID_HOME, MENU_ID_HOME, "返回首页");
 		home.setIcon(R.drawable.i_menu_home);
 
-		clear = menu.add(0, MENU_ID_CLEAR, MENU_ID_CLEAR, "清空草稿");
+		MenuItem clear = menu.add(0, MENU_ID_CLEAR, MENU_ID_CLEAR, "清空草稿");
 		clear.setIcon(R.drawable.i_menu_clear);
 		return true;
 	}

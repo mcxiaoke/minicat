@@ -28,6 +28,7 @@ import com.fanfou.app.util.StringHelper;
  * @author mcxiaoke
  * @version 1.0 2011.07.18
  * @version 1.2 2011.10.29
+ * @version 1.3 2011.11.07
  * 
  */
 public class MyProfilePage extends BaseActivity {

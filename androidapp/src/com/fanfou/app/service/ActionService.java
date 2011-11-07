@@ -91,7 +91,7 @@ public class ActionService extends BaseIntentService {
 		if(u==null||u.isNull()){
 			return;
 		}
-		context.getContentResolver().update(Uri.parse(StatusInfo.CONTENT_URI+"/id/"+u.id), u.toSimpleContentValues(), null, null);
+		context.getContentResolver().update(Uri.parse(UserInfo.CONTENT_URI+"/id/"+u.id), u.toSimpleContentValues(), null, null);
 	}
 
 	private void performAction(String id, int type) {

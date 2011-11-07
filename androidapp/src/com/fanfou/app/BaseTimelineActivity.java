@@ -167,9 +167,8 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 	protected void updateUI() {
 		if (mCursor != null) {
 			mCursor.requery();
+			mListView.setSelection(1);
 		}
-		// mCursorAdapter.getFilter().filter("今天");
-
 	}
 
 	private static final String LIST_STATE = "listState";
