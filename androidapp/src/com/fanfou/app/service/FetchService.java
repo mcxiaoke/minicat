@@ -18,6 +18,7 @@ import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
@@ -153,9 +154,9 @@ public class FetchService extends BaseIntentService {
 		// TODO
 		// 暂时忽略count参数
 		if(App.me.apnType==ApnType.WIFI){
-			count=Api.MAX_TIMELINE_COUNT;
+			count=FanFouApiConfig.MAX_TIMELINE_COUNT;
 		}else{
-			count=Api.DEFAULT_TIMELINE_COUNT;
+			count=FanFouApiConfig.DEFAULT_TIMELINE_COUNT;
 		}
 		
 		boolean doGetMore = bundle.getBoolean(Commons.EXTRA_BOOLEAN);
@@ -308,9 +309,9 @@ public class FetchService extends BaseIntentService {
 		//TODO 
 		// 暂时忽略count参数
 		if(App.me.apnType==ApnType.WIFI){
-			count=Api.MAX_TIMELINE_COUNT;
+			count=FanFouApiConfig.MAX_TIMELINE_COUNT;
 		}else{
-			count=Api.DEFAULT_TIMELINE_COUNT;
+			count=FanFouApiConfig.DEFAULT_TIMELINE_COUNT;
 		}	
 		
 		boolean format = true;

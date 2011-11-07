@@ -14,6 +14,7 @@ import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Actions;
@@ -40,8 +41,8 @@ public class NotificationService extends BaseIntentService {
 	public static final int NOTIFICATION_TYPE_MENTION = Status.TYPE_MENTION; // @消息
 	public static final int NOTIFICATION_TYPE_DM = DirectMessage.TYPE_IN; // 私信
 	
-	private static final int DEFAULT_COUNT=Api.DEFAULT_TIMELINE_COUNT;
-	private static final int MAX_COUNT=Api.MAX_TIMELINE_COUNT;
+	private static final int DEFAULT_COUNT=FanFouApiConfig.DEFAULT_TIMELINE_COUNT;
+	private static final int MAX_COUNT=FanFouApiConfig.MAX_TIMELINE_COUNT;
 	private static final int DEFAULT_PAGE=0;
 
 	private PowerManager.WakeLock mWakeLock;

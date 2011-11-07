@@ -24,6 +24,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.fanfou.app.adapter.UserChooseCursorAdapter;
 import com.fanfou.app.api.Api;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
@@ -211,7 +212,7 @@ public class UserChoosePage extends BaseActivity implements
 		Bundle b = new Bundle();
 		b.putString(Commons.EXTRA_ID, App.me.userId);
 		b.putInt(Commons.EXTRA_PAGE, page);
-		b.putInt(Commons.EXTRA_COUNT, Api.MAX_USERS_COUNT);
+		b.putInt(Commons.EXTRA_COUNT, FanFouApiConfig.MAX_USERS_COUNT);
 		FetchService.start(this, User.TYPE_FRIENDS, mResultReceiver, b);
 	}
 

@@ -29,6 +29,7 @@ import com.fanfou.app.adapter.StatusCursorAdapter;
 import com.fanfou.app.adapter.ViewsAdapter;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.DirectMessage;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
@@ -59,6 +60,7 @@ import com.fanfou.app.util.Utils;
  * @version 3.6 2011.11.02
  * @version 3.7 2011.11.04
  * @version 4.0 2011.11.04
+ * @version 4.1 2011.11.07
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
@@ -87,6 +89,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	private BaseCursorAdapter[] adapters = new BaseCursorAdapter[NUMS_OF_PAGE];
 
 	private Parcelable[] states = new Parcelable[NUMS_OF_PAGE];
+	
+	private boolean[] initializeState=new boolean[NUMS_OF_PAGE];
 
 	private static final String[] PAGE_TITLES = new String[] { "我的主页", "提到我的",
 			"我的私信", "随便看看" };
@@ -394,7 +398,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			return;
 		}
 		Bundle b = new Bundle();
-		b.putInt(Commons.EXTRA_COUNT, Api.DEFAULT_TIMELINE_COUNT);
+		b.putInt(Commons.EXTRA_COUNT, FanFouApiConfig.DEFAULT_TIMELINE_COUNT);
 		b.putBoolean(Commons.EXTRA_FORMAT, false);
 		ResultReceiver receiver = new HomeResultReceiver(page, doGetMore);
 		;
@@ -739,6 +743,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 //				positionOffsetPixels);
 	}
 
+	
+	
 	@Override
 	public void onPageSelected(int position) {
 		mCurrentPage = position % NUMS_OF_PAGE;
@@ -747,6 +753,13 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			log("onPageSelected mCurrentPage=" + mCurrentPage);
 		}
 		mPageIndicator.onPageSelected(mCurrentPage);
+		
+		
+		if(cursors[mCurrentPage].getCount()==0){
+			onRefreshClick();
+		}
+		
+		
 	}
 
 	@Override

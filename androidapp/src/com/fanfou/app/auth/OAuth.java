@@ -23,7 +23,7 @@ import org.apache.http.util.EntityUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
-import com.fanfou.app.api.ApiConfig;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.http.ConnectionManager;
 import com.fanfou.app.http.ConnectionRequest;
@@ -43,13 +43,13 @@ public class OAuth {
 		Log.d(TAG, message);
 	}
 
-	public static final String REQUEST_TOKEN_URL = ApiConfig.HOST
+	public static final String REQUEST_TOKEN_URL = FanFouApiConfig.HOST
 			+ "oauth/request_token";
-	public static final String AUTHENTICATE_URL = ApiConfig.HOST
+	public static final String AUTHENTICATE_URL = FanFouApiConfig.HOST
 			+ "oauth/authenticate";
-	public static final String AUTHORIZE_URL = ApiConfig.HOST
+	public static final String AUTHORIZE_URL = FanFouApiConfig.HOST
 			+ "oauth/authorize";
-	public static final String ACCESS_TOKEN_URL = ApiConfig.HOST
+	public static final String ACCESS_TOKEN_URL = FanFouApiConfig.HOST
 			+ "oauth/access_token";
 
 	public static final String X_AUTH_USERNAME = "x_auth_username";
@@ -115,7 +115,7 @@ public class OAuth {
 		long nonce = System.nanoTime() + RAND.nextInt();
 		List<Parameter> oauthHeaderParams = new ArrayList<Parameter>();
 		oauthHeaderParams.add(new Parameter("oauth_consumer_key",
-				ApiConfig.CONSUMER_KEY));
+				FanFouApiConfig.CONSUMER_KEY));
 		oauthHeaderParams.add(OAUTH_SIGNATURE_METHOD);
 		oauthHeaderParams.add(new Parameter("oauth_timestamp", timestamp));
 		oauthHeaderParams.add(new Parameter("oauth_nonce", nonce));
@@ -167,7 +167,7 @@ public class OAuth {
 		long nonce = timestamp + RAND.nextInt();
 		List<Parameter> oauthHeaderParams = new ArrayList<Parameter>();
 		oauthHeaderParams.add(new Parameter("oauth_consumer_key",
-				ApiConfig.CONSUMER_KEY));
+				FanFouApiConfig.CONSUMER_KEY));
 		oauthHeaderParams.add(OAUTH_SIGNATURE_METHOD);
 		oauthHeaderParams.add(new Parameter("oauth_timestamp", timestamp));
 		oauthHeaderParams.add(new Parameter("oauth_nonce", nonce));
@@ -205,7 +205,7 @@ public class OAuth {
 
 		List<Parameter> oauthHeaderParams = new ArrayList<Parameter>(5);
 		oauthHeaderParams.add(new Parameter("oauth_consumer_key",
-				ApiConfig.CONSUMER_KEY));
+				FanFouApiConfig.CONSUMER_KEY));
 		oauthHeaderParams.add(OAUTH_SIGNATURE_METHOD);
 		oauthHeaderParams.add(new Parameter("oauth_timestamp", timestamp));
 		oauthHeaderParams.add(new Parameter("oauth_nonce", nonce));
@@ -249,13 +249,13 @@ public class OAuth {
 			SecretKeySpec spec;
 			if (null == token) {
 				String oauthSignature = ConnectionRequest
-						.encode(ApiConfig.CONSUMER_SECRET) + "&";
+						.encode(FanFouApiConfig.CONSUMER_SECRET) + "&";
 				spec = new SecretKeySpec(oauthSignature.getBytes(), HMAC_SHA1);
 			} else {
 				spec = token.getSecretKeySpec();
 				if (null == spec) {
 					String oauthSignature = ConnectionRequest
-							.encode(ApiConfig.CONSUMER_SECRET)
+							.encode(FanFouApiConfig.CONSUMER_SECRET)
 							+ "&"
 							+ ConnectionRequest.encode(token.getTokenSecret());
 					spec = new SecretKeySpec(oauthSignature.getBytes(),
@@ -338,7 +338,7 @@ public class OAuth {
 
 	@Override
 	public int hashCode() {
-		return ApiConfig.CONSUMER_KEY.hashCode();
+		return FanFouApiConfig.CONSUMER_KEY.hashCode();
 	}
 
 	@Override

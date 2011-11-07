@@ -2,19 +2,16 @@ package com.fanfou.app.api;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
 
-import android.app.DownloadManager.Request;
 import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.http.ConnectionManager;
 import com.fanfou.app.http.ConnectionRequest;
-import com.fanfou.app.http.Parameter;
 import com.fanfou.app.http.Response;
 import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.StringHelper;
@@ -25,12 +22,13 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.1 2011.05.17
  * @version 1.2 2011.10.28
  * @version 1.3 2011.11.04
+ * @version 1.4 2011.11.07
  * 
  */
-public class ApiImpl implements Api, ResponseCode {
+public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 	// oauth is on or off
 	private static final boolean OAUTH_ON = true;
-	private static final String TAG = ApiImpl.class.getSimpleName();
+	private static final String TAG = FanFouApi.class.getSimpleName();
 
 	/**
 	 * @param message
@@ -39,7 +37,7 @@ public class ApiImpl implements Api, ResponseCode {
 		Log.d(TAG, message);
 	}
 
-	public ApiImpl() {
+	public FanFouApi() {
 	}
 
 	/**

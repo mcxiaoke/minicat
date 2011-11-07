@@ -7,9 +7,10 @@ package com.fanfou.app.api;
  * @version 1.2 2011.05.15
  * @version 1.3 2011.10.18
  * @version 1.4 2011.11.04
+ * @version 1.5 2011.11.07
  * 
  */
-public interface ApiConfig {
+public interface FanFouApiConfig {
 
 	public static final String CONSUMER_KEY = "c403d5a51bde9cce58fe31f4cec06b0a";
 	public static final String CONSUMER_SECRET = "5da0bcda353f7d2fe8e3de01e3c97741";

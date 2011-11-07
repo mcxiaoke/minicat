@@ -19,7 +19,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import com.fanfou.app.api.ApiConfig;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.ResultInfo;
@@ -322,7 +322,7 @@ public class RegisterPage extends Activity implements OnClickListener {
 //			Log.d("RegisterTask", request.getURI().toString());
 
 //			HttpResponse response = client.execute(request);
-			HttpResponse response=ConnectionManager.post(ApiConfig.URL_REGISTER, params);
+			HttpResponse response=ConnectionManager.post(FanFouApiConfig.URL_REGISTER, params);
 			Response res = new Response(response);
 			if (App.DEBUG) {
 				Log.d("RegisterTask", res.getContent());

@@ -1,6 +1,7 @@
 package com.fanfou.app;
 
 import com.fanfou.app.api.Api;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
@@ -36,7 +37,7 @@ public class UserTimelinePage extends BaseTimelineActivity {
 			String sinceId = Utils.getSinceId(mCursor);
 			b.putString(Commons.EXTRA_SINCE_ID, sinceId);
 		}
-		b.putInt(Commons.EXTRA_COUNT, Api.DEFAULT_TIMELINE_COUNT);
+		b.putInt(Commons.EXTRA_COUNT, FanFouApiConfig.DEFAULT_TIMELINE_COUNT);
 		FetchService.start(this, getType(), receiver, b);
 	}
 

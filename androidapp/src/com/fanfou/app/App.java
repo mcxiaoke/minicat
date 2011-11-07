@@ -14,7 +14,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.api.Api;
-import com.fanfou.app.api.ApiImpl;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.cache.ImageLoader;
@@ -102,7 +102,7 @@ public class App extends Application {
 		NetworkState state = new NetworkState(this);
 		apnType = state.getApnType();
 		this.imageLoader = new ImageLoader(this);
-		this.api = new ApiImpl();
+		this.api = new FanFouApi();
 
 		if (DEBUG) {
 			java.util.logging.Logger.getLogger("org.apache.http").setLevel(java.util.logging.Level.FINEST);

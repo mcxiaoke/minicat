@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.fanfou.app.adapter.UserCursorAdapter;
 import com.fanfou.app.api.Api;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
@@ -180,7 +181,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener{
 		Bundle b = new Bundle();
 		b.putString(Commons.EXTRA_ID, userId);
 		b.putInt(Commons.EXTRA_PAGE, page);
-		b.putInt(Commons.EXTRA_COUNT, Api.MAX_USERS_COUNT);
+		b.putInt(Commons.EXTRA_COUNT, FanFouApiConfig.MAX_USERS_COUNT);
 		FetchService.start(this, type, mResultReceiver, b);
 	}
 

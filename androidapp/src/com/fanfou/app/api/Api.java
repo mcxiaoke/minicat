@@ -11,7 +11,7 @@ import java.util.List;
  * @version 1.3 2011.10.28
  * 
  */
-public interface Api extends ApiConfig {
+public interface Api {
 
 	// account verify
 	// for basic auth key is username, value is password

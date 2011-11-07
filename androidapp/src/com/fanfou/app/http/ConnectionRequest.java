@@ -21,7 +21,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
-import com.fanfou.app.api.ApiConfig;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.util.Utils;
 
 /**
