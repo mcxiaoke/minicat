@@ -16,6 +16,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
@@ -47,6 +48,7 @@ import com.fanfou.app.App;
  * @version 1.0 2011.06.05
  * @version 2.0 2011.09.23
  * @version 3.0 2011.10.29
+ * @version 3.1 2011.11.08
  * 
  */
 final public class ImageHelper {
@@ -56,10 +58,11 @@ final public class ImageHelper {
 	public static final int IMAGE_QUALITY_LOW = 70;
 	public static final int IMAGE_MAX_WIDTH = 500;// 640 596
 	public static final int IMAGE_MAX_HEIGHT = 1192;// 1320 1192
+	public static final int PROFILE_IMAGE_WIDTH = 100;
 	public static final int IMAGE_ORIGINAL_WIDTH = 800;
 	public static final int IMAGE_ORIGINAL_HEIGHT = 1600;
 
-	public static final int OUTPUT_BUFFER_SIZE=8196;
+	public static final int OUTPUT_BUFFER_SIZE = 8196;
 
 	private static final float EDGE_START = 0.0f;
 	private static final float EDGE_END = 4.0f;
@@ -499,7 +502,8 @@ final public class ImageHelper {
 		BufferedOutputStream bos = null;
 		try {
 			if (!file.exists()) {
-				bos = new BufferedOutputStream(new FileOutputStream(file),OUTPUT_BUFFER_SIZE);
+				bos = new BufferedOutputStream(new FileOutputStream(file),
+						OUTPUT_BUFFER_SIZE);
 				bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
 			}
 			result = true;
@@ -519,6 +523,13 @@ final public class ImageHelper {
 				IMAGE_MAX_WIDTH, quality);
 	}
 
+	public static File prepareProfileImage(Context context, File file) {
+		File destFile = new File(IOHelper.getImageCacheDir(context),
+				"fanfouprofileimage.jpg");
+		return compressForUpload(file.getPath(), destFile.getPath(),
+				PROFILE_IMAGE_WIDTH, IMAGE_QUALITY_MEDIUM);
+	}
+
 	private static File compressForUpload(String srcFileName,
 			String destFileName, int maxWidth, int quality) {
 		if (quality > IMAGE_QUALITY_HIGH) {
@@ -533,8 +544,12 @@ final public class ImageHelper {
 		}
 		OutputStream os = null;
 		try {
-			os=new FileOutputStream(destFileName);
-			bitmap.compress(Bitmap.CompressFormat.JPEG, quality, os);
+			os = new FileOutputStream(destFileName);
+			Bitmap.CompressFormat format = CompressFormat.JPEG;
+			if (srcFileName.toLowerCase().lastIndexOf("png") > -1) {
+				format = CompressFormat.PNG;
+			}
+			bitmap.compress(format, quality, os);
 		} catch (FileNotFoundException e) {
 			if (App.DEBUG) {
 				e.printStackTrace();
@@ -562,15 +577,15 @@ final public class ImageHelper {
 
 		Matrix m = new Matrix();
 		if (bmpt.getWidth() > maxDim || bmpt.getHeight() > maxDim) {
-			float scale=1.0f;
-			float s1=(float)bmpt.getWidth()/(float)maxDim;
-			float s2=(float)bmpt.getHeight()/(float)maxDim;
-			if(s1>s2){
-				scale=s1;
-			}else{
-				scale=s2;
+			float scale = 1.0f;
+			float s1 = (float) bmpt.getWidth() / (float) maxDim;
+			float s2 = (float) bmpt.getHeight() / (float) maxDim;
+			if (s1 > s2) {
+				scale = s1;
+			} else {
+				scale = s2;
 			}
-			m.postScale(scale,scale);
+			m.postScale(scale, scale);
 		}
 		int sdk = new Integer(Build.VERSION.SDK).intValue();
 		if (sdk > 4) {

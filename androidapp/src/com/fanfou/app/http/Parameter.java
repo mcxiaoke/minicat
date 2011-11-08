@@ -1,11 +1,8 @@
 package com.fanfou.app.http;
 
 import java.io.File;
-import java.io.InputStream;
 import java.io.Serializable;
-import java.util.List;
 import org.apache.http.NameValuePair;
-import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -46,17 +43,17 @@ public final class Parameter implements NameValuePair, Serializable,
 		this.name = name;
 		this.value = String.valueOf(value);
 	}
-	
+
 	public Parameter(String name, File file) {
-		assert(file!=null);
+		assert (file != null);
 		this.name = name;
 		this.file = file;
-		this.value=file.getName();
+		this.value = file.getName();
 	}
-	
-	public Parameter(NameValuePair pair){
-		this.name=pair.getName();
-		this.value=pair.getValue();
+
+	public Parameter(NameValuePair pair) {
+		this.name = pair.getName();
+		this.value = pair.getValue();
 	}
 
 	@Override
@@ -74,7 +71,7 @@ public final class Parameter implements NameValuePair, Serializable,
 	}
 
 	public boolean isFile() {
-		return file!=null;
+		return file != null;
 	}
 
 	@Override

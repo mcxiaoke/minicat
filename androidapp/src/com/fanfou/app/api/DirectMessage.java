@@ -61,7 +61,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 	public String threadUserId;
 	public String threadUserName;
 	public boolean isRead;
-	
+
 	public long realId;
 
 	public User sender = null;
@@ -114,7 +114,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 		}
 		DirectMessage dm = new DirectMessage();
 		dm.id = Parser.parseString(c, BasicColumns.ID);
-		dm.realId=Parser.parseLong(c, BasicColumns.REAL_ID);
+		dm.realId = Parser.parseLong(c, BasicColumns.REAL_ID);
 		dm.ownerId = Parser.parseString(c, BasicColumns.OWNER_ID);
 		dm.text = Parser.parseString(c, DirectMessageInfo.TEXT);
 		dm.createdAt = Parser.parseDate(c, BasicColumns.CREATED_AT);
@@ -160,7 +160,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 		try {
 			dm = new DirectMessage();
 			dm.id = o.getString(BasicColumns.ID);
-			dm.realId=Parser.decodeMessageRealId(dm.id);
+			dm.realId = Parser.decodeMessageRealId(dm.id);
 			dm.text = o.getString(DirectMessageInfo.TEXT);
 			dm.createdAt = Parser.date(o.getString(BasicColumns.CREATED_AT));
 			dm.senderId = o.getString(DirectMessageInfo.SENDER_ID);
@@ -220,12 +220,12 @@ public class DirectMessage implements Storable<DirectMessage> {
 
 		return cv;
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
-		if(o instanceof DirectMessage){
-			DirectMessage dm=(DirectMessage) o;
-			if(id.equals(dm.id)){
+		if (o instanceof DirectMessage) {
+			DirectMessage dm = (DirectMessage) o;
+			if (id.equals(dm.id)) {
 				return true;
 			}
 		}

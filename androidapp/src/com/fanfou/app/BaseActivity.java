@@ -18,12 +18,10 @@ import android.view.View.OnClickListener;
 
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
-import com.fanfou.app.hd.HomeScreen;
 import com.fanfou.app.http.ApnType;
 import com.fanfou.app.ui.ActionBar.OnRefreshClickListener;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.IntentHelper;
-import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -43,7 +41,7 @@ public abstract class BaseActivity extends Activity implements
 	public static final int STATE_NORMAL = 1;
 	public static final int STATE_EMPTY = 2;
 
-	protected static final int REQUEST_CODE_OPTION = 0;
+	protected static final int REQUEST_CODE_OPTION = 100;
 
 	protected BaseActivity mContext;
 	protected LayoutInflater mInflater;
@@ -270,7 +268,8 @@ public abstract class BaseActivity extends Activity implements
 		MenuItem option = menu.add(0, MENU_ID_OPTION, MENU_ID_OPTION, "功能设置");
 		option.setIcon(R.drawable.i_menu_option);
 
-		MenuItem profile = menu.add(0, MENU_ID_PROFILE, MENU_ID_PROFILE, "我的空间");
+		MenuItem profile = menu
+				.add(0, MENU_ID_PROFILE, MENU_ID_PROFILE, "我的空间");
 		profile.setIcon(R.drawable.i_menu_profile);
 
 		MenuItem search = menu.add(0, MENU_ID_SEARCH, MENU_ID_SEARCH, "热词搜索");
@@ -282,7 +281,8 @@ public abstract class BaseActivity extends Activity implements
 		MenuItem about = menu.add(0, MENU_ID_ABOUT, MENU_ID_ABOUT, "关于饭否");
 		about.setIcon(R.drawable.i_menu_about);
 
-		MenuItem feedback = menu.add(0, MENU_ID_FEEDBACK, MENU_ID_FEEDBACK, "意见反馈");
+		MenuItem feedback = menu.add(0, MENU_ID_FEEDBACK, MENU_ID_FEEDBACK,
+				"意见反馈");
 		feedback.setIcon(R.drawable.i_menu_feedback);
 
 		MenuItem home = menu.add(0, MENU_ID_HOME, MENU_ID_HOME, "返回首页");

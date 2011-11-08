@@ -13,15 +13,12 @@ import com.fanfou.app.config.Commons;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.GridView;
-import android.widget.ListView;
 
 /**
  * @author mcxiaoke
@@ -72,7 +69,8 @@ public class PhotosAlbumFragment extends Fragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		root = (ViewGroup) inflater.inflate(R.layout.fragment_album, container,false);
+		root = (ViewGroup) inflater.inflate(R.layout.fragment_album, container,
+				false);
 		mGridView = (GridView) root.findViewById(R.id.grid_album);
 		if (App.DEBUG) {
 			log("onCreateView mGridView=" + mGridView);
@@ -106,7 +104,7 @@ public class PhotosAlbumFragment extends Fragment implements
 			log("onLoadFinished data.size=" + data.size());
 		}
 		photos = data;
-		 mAdapter.setData(photos);
+		mAdapter.setData(photos);
 	}
 
 	@Override

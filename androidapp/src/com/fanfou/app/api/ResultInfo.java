@@ -8,6 +8,11 @@ import java.io.Serializable;
  * 
  */
 public final class ResultInfo implements Serializable {
+	public static final int CODE_ERROR = -1;
+	public static final int CODE_SUCCESS = 0;
+	public static final int CODE_FAILED = 1;
+	public static final int CODE_CANCELED = 2;;
+
 	private static final long serialVersionUID = 4195237447592568873L;
 	public final int code;
 	public final String message;

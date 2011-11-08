@@ -3,8 +3,6 @@ package com.fanfou.app;
 import com.fanfou.app.hd.HomeScreen;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
-import com.fanfou.app.util.Utils;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,7 +32,7 @@ public class SplashPage extends Activity {
 				} else {
 					IntentHelper.goHomePage(this, 0);
 				}
-			}else{
+			} else {
 				IntentHelper.goHomePage(this, 0);
 			}
 		} else {

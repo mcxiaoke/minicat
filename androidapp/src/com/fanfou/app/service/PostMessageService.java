@@ -89,7 +89,8 @@ public class PostMessageService extends BaseIntentService {
 								+ e.getMessage());
 			}
 			IOHelper.copyToClipBoard(this, content);
-			showFailedNotification("私信未发送，内容已保存到剪贴板", getString(R.string.connection_error_msg));
+			showFailedNotification("私信未发送，内容已保存到剪贴板",
+					getString(R.string.connection_error_msg));
 		} finally {
 			nm.cancel(12);
 		}
@@ -139,7 +140,7 @@ public class PostMessageService extends BaseIntentService {
 	}
 
 	private void sendSuccessBroadcast() {
-		Intent intent = new Intent(Actions.ACTION_MESSAGE_SEND);
+		Intent intent = new Intent(Actions.ACTION_MESSAGE_SENT);
 		intent.setPackage(getPackageName());
 		sendOrderedBroadcast(intent, null);
 	}

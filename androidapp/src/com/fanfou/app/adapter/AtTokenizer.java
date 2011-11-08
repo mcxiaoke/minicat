@@ -48,7 +48,7 @@ public class AtTokenizer implements Tokenizer {
 						Object.class, sp, 0);
 				return sp;
 			} else {
-				return text+" ";
+				return text + " ";
 			}
 		}
 	}

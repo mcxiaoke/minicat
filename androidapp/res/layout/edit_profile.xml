@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent" android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<com.fanfou.app.ui.ActionBar android:id="@id/actionbar"
+		style="@style/ActionBar" />
+
+	<ScrollView android:layout_width="match_parent"
+		android:layout_height="match_parent" android:scrollbars="none"
+		android:background="@drawable/bg" android:padding="6dp">
+
+		<LinearLayout android:orientation="vertical"
+			android:layout_width="match_parent" android:layout_height="match_parent">
+
+			<LinearLayout android:layout_width="match_parent"
+				android:layout_height="wrap_content" android:orientation="horizontal">
+				<ImageView style="@style/Image.Head" android:id="@+id/profile_image"
+					android:src="@drawable/default_head" />
+
+				<Button style="@style/Button.Blue.Middle" android:id="@+id/profile_image_edit"
+					android:text="修改头像" android:layout_margin="5dp" />
+			</LinearLayout>
+
+			<TextView style="@style/Text.ItemName" android:id="@+id/profile_name"
+				android:text="昵称" />
+
+			<EditText style="@style/EditText.InfoOneLine" android:id="@+id/profile_name_edit" />
+
+			<TextView style="@style/Text.ItemName" android:id="@+id/profile_url"
+				android:text="个人网址" />
+
+			<EditText style="@style/EditText.InfoOneLine" android:id="@+id/profile_url_edit"
+				android:inputType="textUri" />
+
+			<TextView style="@style/Text.ItemName" android:id="@+id/profile_location"
+				android:text="所在地" />
+
+			<EditText style="@style/EditText.InfoOneLine" android:id="@+id/profile_location_edit" />
+
+			<TextView style="@style/Text.ItemName" android:id="@+id/profile_description"
+				android:text="自述" />
+
+			<EditText style="@style/EditText.InfoMultiLine" android:id="@+id/profile_description_edit"
+				android:minLines="4" android:gravity="left|top"/>
+
+			<include layout="@layout/two_button_group"
+				android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+		</LinearLayout>
+
+	</ScrollView>
+
+</LinearLayout>
+
+
+

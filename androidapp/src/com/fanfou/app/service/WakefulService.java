@@ -8,7 +8,7 @@ import android.os.PowerManager;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.10.28
- *
+ * 
  */
 public abstract class WakefulService extends Service {
 	public static final String LOCK_NAME_STATIC = "WakeLock.Static";
@@ -23,8 +23,10 @@ public abstract class WakefulService extends Service {
 
 	private static synchronized PowerManager.WakeLock getLock(Context context) {
 		if (mLockStatic == null) {
-			PowerManager mgr = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-			mLockStatic = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, LOCK_NAME_STATIC);
+			PowerManager mgr = (PowerManager) context
+					.getSystemService(Context.POWER_SERVICE);
+			mLockStatic = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+					LOCK_NAME_STATIC);
 			mLockStatic.setReferenceCounted(true);
 		}
 		return mLockStatic;
@@ -34,7 +36,8 @@ public abstract class WakefulService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		PowerManager mgr = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		mLockLocal = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, LOCK_NAME_LOCAL);
+		mLockLocal = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+				LOCK_NAME_LOCAL);
 		mLockLocal.setReferenceCounted(true);
 	}
 
@@ -44,7 +47,7 @@ public abstract class WakefulService extends Service {
 		super.onStart(intent, startId);
 		getLock(this).release();
 	}
-	
+
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		return super.onStartCommand(intent, flags, startId);

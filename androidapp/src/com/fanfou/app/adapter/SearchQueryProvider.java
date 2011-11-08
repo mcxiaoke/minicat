@@ -8,7 +8,7 @@ import android.widget.FilterQueryProvider;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.10.24
- *
+ * 
  */
 public class SearchQueryProvider implements FilterQueryProvider {
 	private final Context mContext;
@@ -16,18 +16,19 @@ public class SearchQueryProvider implements FilterQueryProvider {
 	public final String[] mProjection;
 	public final String mContent;
 	public final String mSortOrder;
-	
+
 	public final String mWhere;
 	public final String[] mWhereArgs;
-	
-	public SearchQueryProvider(Context context, Uri uri, String[] projection, String where, String[] whereArgs, String content, String sortOrder){
-		this.mContext=context;
-		this.mUri=uri;
-		this.mProjection=projection;
-		this.mWhere=where;
-		this.mWhereArgs=whereArgs;
-		this.mContent=content;
-		this.mSortOrder=sortOrder;
+
+	public SearchQueryProvider(Context context, Uri uri, String[] projection,
+			String where, String[] whereArgs, String content, String sortOrder) {
+		this.mContext = context;
+		this.mUri = uri;
+		this.mProjection = projection;
+		this.mWhere = where;
+		this.mWhereArgs = whereArgs;
+		this.mContent = content;
+		this.mSortOrder = sortOrder;
 	}
 
 	@Override
@@ -35,19 +36,19 @@ public class SearchQueryProvider implements FilterQueryProvider {
 		String selection = mWhere;
 		String selectionArgs[] = mWhereArgs;
 		if (constraint != null) {
-			if(mWhere!=null){
-				selection += " AND "+mContent + " LIKE ?";
+			if (mWhere != null) {
+				selection += " AND " + mContent + " LIKE ?";
 				String filter = constraint.toString() + "%";
 				selectionArgs = new String[] { filter };
-			}else{
+			} else {
 				selection = mContent + " LIKE ?";
 				String filter = constraint.toString() + "%";
 				selectionArgs = new String[] { filter };
 			}
 
 		}
-		return mContext.getContentResolver().query(mUri, mProjection, selection,
-				selectionArgs, mSortOrder);
+		return mContext.getContentResolver().query(mUri, mProjection,
+				selection, selectionArgs, mSortOrder);
 	}
 
 }

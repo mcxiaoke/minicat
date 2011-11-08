@@ -13,8 +13,8 @@ import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
-import com.fanfou.lib.quickaction.ActionItem;
-import com.fanfou.lib.quickaction.QuickAction;
+import com.lib.quickaction.ActionItem;
+import com.lib.quickaction.QuickAction;
 
 /**
  * @author mcxiaoke
@@ -47,12 +47,12 @@ public final class UIManager {
 
 		ActionItem favorite = new ActionItem(QUICK_ACTION_ID_FAVORITE, "收藏",
 				context.getResources().getDrawable(R.drawable.ic_pop_favorite));
-//		favorite.setSticky(true);
+		// favorite.setSticky(true);
 
 		ActionItem unfavorite = new ActionItem(QUICK_ACTION_ID_UNFAVORITE,
 				"取消", context.getResources().getDrawable(
 						R.drawable.ic_pop_unfavorite));
-//		unfavorite.setSticky(true);
+		// unfavorite.setSticky(true);
 
 		ActionItem profile = new ActionItem(QUICK_ACTION_ID_PROFILE, "空间",
 				context.getResources().getDrawable(R.drawable.ic_pop_profile));
@@ -163,8 +163,9 @@ public final class UIManager {
 		});
 		q.show(v);
 	}
-	
-	public static void showPopup(final Activity a, final View v, final Status s,final BaseAdapter adapter) {
+
+	public static void showPopup(final Activity a, final View v,
+			final Status s, final BaseAdapter adapter) {
 
 		QuickAction q = makePopup(a, s);
 		q.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {
@@ -231,8 +232,9 @@ public final class UIManager {
 		};
 		ActionManager.doStatusDelete(activity, s.id, li);
 	}
-	
-	public static void doDelete(final Activity activity, final Status s, final BaseAdapter adapter) {
+
+	public static void doDelete(final Activity activity, final Status s,
+			final BaseAdapter adapter) {
 		ResultHandler li = new ResultHandler() {
 			@Override
 			public void onActionSuccess(int type, String message) {

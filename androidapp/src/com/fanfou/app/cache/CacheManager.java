@@ -19,15 +19,15 @@ import com.fanfou.app.db.Contents.UserInfo;
  * 
  */
 public final class CacheManager {
-	
-	private static final String TAG=CacheManager.class.getSimpleName();
-	
+
+	private static final String TAG = CacheManager.class.getSimpleName();
+
 	private static UserCache sUserCache;
 	private static StatusCache sStatusCache;
 
 	static {
 		sUserCache = new UserCache();
-		sStatusCache=new StatusCache();
+		sStatusCache = new StatusCache();
 	}
 
 	public static void put(User user) {
@@ -35,7 +35,7 @@ public final class CacheManager {
 			sUserCache.put(user.id, user);
 		}
 	}
-	
+
 	public static void put(Status status) {
 		if (status != null) {
 			sStatusCache.put(status.id, status);
@@ -43,61 +43,61 @@ public final class CacheManager {
 	}
 
 	public static User getUser(String key) {
-		if(App.DEBUG){
-			Log.v("CacheManager", "get user from cache : "+key);
+		if (App.DEBUG) {
+			Log.v("CacheManager", "get user from cache : " + key);
 		}
 		return sUserCache.get(key);
 	}
-	
+
 	public static Status getStatus(String key) {
-		if(App.DEBUG){
-			Log.v("CacheManager", "get status from cache : "+key);
+		if (App.DEBUG) {
+			Log.v("CacheManager", "get status from cache : " + key);
 		}
 		return sStatusCache.get(key);
 	}
-	
+
 	public static User getUser(Context context, String key) {
-		if(App.DEBUG){
-			Log.v("CacheManager", "get user from cache : "+key);
+		if (App.DEBUG) {
+			Log.v("CacheManager", "get user from cache : " + key);
 		}
-		User user= sUserCache.get(key);
-		if(user==null){
-			user=queryUser(context, key);
-			if(user!=null){
-				if(App.DEBUG){
-					Log.v("CacheManager", "cache user from db : "+key);
+		User user = sUserCache.get(key);
+		if (user == null) {
+			user = queryUser(context, key);
+			if (user != null) {
+				if (App.DEBUG) {
+					Log.v("CacheManager", "cache user from db : " + key);
 				}
 				put(user);
 			}
 		}
 		return user;
 	}
-	
+
 	public static Status getStatus(Context context, String key) {
-		if(App.DEBUG){
-			Log.v("CacheManager", "get status from cache : "+key);
+		if (App.DEBUG) {
+			Log.v("CacheManager", "get status from cache : " + key);
 		}
-		Status status= sStatusCache.get(key);
-		
-		if(status==null){
-			status=queryStatus(context, key);
-			if(status!=null){
-				if(App.DEBUG){
-					Log.v("CacheManager", "cache status from db : "+key);
+		Status status = sStatusCache.get(key);
+
+		if (status == null) {
+			status = queryStatus(context, key);
+			if (status != null) {
+				if (App.DEBUG) {
+					Log.v("CacheManager", "cache status from db : " + key);
 				}
 				put(status);
 			}
 		}
 		return status;
 	}
-	
+
 	public static User queryUser(Context context, final String id) {
 		final Uri uri = Uri.parse(UserInfo.CONTENT_URI + "/id/" + id);
 		final Cursor cursor = context.getContentResolver().query(uri, null,
 				null, null, null);
 		if (cursor != null && cursor.moveToFirst()) {
-			if(App.DEBUG){
-				Log.d(TAG,"queryUser cursor.size="+cursor.getCount());
+			if (App.DEBUG) {
+				Log.d(TAG, "queryUser cursor.size=" + cursor.getCount());
 			}
 			return User.parse(cursor);
 		}
@@ -113,6 +113,5 @@ public final class CacheManager {
 		}
 		return null;
 	}
-	
-	
+
 }

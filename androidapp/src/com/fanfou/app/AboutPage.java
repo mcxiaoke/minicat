@@ -20,12 +20,12 @@ import com.fanfou.app.util.Utils;
  * @version 1.1 2011.10.26
  * 
  */
-public class AboutPage extends Activity implements OnClickListener{
+public class AboutPage extends Activity implements OnClickListener {
 	public static final String COPYRIGHT = "\u00a9";
 	public static final String REGISTERED = "\u00ae";
 
 	private ActionBar mActionBar;
-	
+
 	private ImageView mLogo;
 
 	private TextView mTitle;
@@ -48,9 +48,9 @@ public class AboutPage extends Activity implements OnClickListener{
 		setContentView(R.layout.about);
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setLeftAction(new ActionBar.HomeAction(this));
-//		mActionBar.setTitle("关于");
-		
-		mLogo=(ImageView) findViewById(R.id.about_icon);
+		// mActionBar.setTitle("关于");
+
+		mLogo = (ImageView) findViewById(R.id.about_icon);
 		mLogo.setOnClickListener(this);
 
 		mTitle = (TextView) findViewById(R.id.about_title);
@@ -97,9 +97,9 @@ public class AboutPage extends Activity implements OnClickListener{
 
 	@Override
 	public void onClick(View v) {
-		if(v.getId()==R.id.about_icon){
-			Uri uri = Uri.parse("market://details?id="+getPackageName());
-			Intent intent=new Intent(Intent.ACTION_VIEW);
+		if (v.getId() == R.id.about_icon) {
+			Uri uri = Uri.parse("market://details?id=" + getPackageName());
+			Intent intent = new Intent(Intent.ACTION_VIEW);
 			intent.setData(uri);
 			startActivity(intent);
 		}

@@ -38,7 +38,7 @@ public abstract class BaseCursorAdapter extends CursorAdapter {
 	IImageLoader mLoader;
 	private int fontSize;
 	private boolean textMode;
-	
+
 	protected void setHeadImage(Context context, ImageView headIcon) {
 		if (textMode) {
 			headIcon.setVisibility(View.GONE);
@@ -71,8 +71,10 @@ public abstract class BaseCursorAdapter extends CursorAdapter {
 		this.mInflater = LayoutInflater.from(mContext);
 		this.mCursor = c;
 		this.mLoader = App.me.getImageLoader();
-		this.textMode=OptionHelper.readBoolean(mContext, R.string.option_text_mode, false);
-		this.fontSize = OptionHelper.parseInt(mContext, R.string.option_fontsize,
+		this.textMode = OptionHelper.readBoolean(mContext,
+				R.string.option_text_mode, false);
+		this.fontSize = OptionHelper.parseInt(mContext,
+				R.string.option_fontsize,
 				mContext.getString(R.string.config_fontsize_default));
 	}
 
@@ -91,21 +93,21 @@ public abstract class BaseCursorAdapter extends CursorAdapter {
 	}
 
 	abstract int getLayoutId();
-	
-	public int getFontSize(){
+
+	public int getFontSize() {
 		return fontSize;
 	}
-	
-	public void setFontSize(int size){
-		fontSize=size;
+
+	public void setFontSize(int size) {
+		fontSize = size;
 	}
-	
-	public boolean isTextMode(){
+
+	public boolean isTextMode() {
 		return textMode;
 	}
-	
-	public void setTextMode(boolean mode){
-		textMode=mode;
+
+	public void setTextMode(boolean mode) {
+		textMode = mode;
 	}
 
 }

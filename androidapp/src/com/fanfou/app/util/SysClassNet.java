@@ -1,6 +1,5 @@
 package com.fanfou.app.util;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -8,7 +7,7 @@ import java.io.RandomAccessFile;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.10.27
- *
+ * 
  */
 public class SysClassNet {
 

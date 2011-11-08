@@ -80,7 +80,7 @@ public class NewVersionPage extends Activity implements View.OnClickListener {
 	private void setActionBar() {
 		mBar = (ActionBar) findViewById(R.id.actionbar);
 		mBar.setLeftAction(new ActionBar.HomeAction(this));
-//		mBar.setTitle("饭否版本升级");
+		// mBar.setTitle("饭否版本升级");
 	}
 
 	private void updateUI() {
@@ -106,7 +106,7 @@ public class NewVersionPage extends Activity implements View.OnClickListener {
 		int id = v.getId();
 		switch (id) {
 		case R.id.button1:
-			if(mVersionInfo!=null){
+			if (mVersionInfo != null) {
 				DownloadService.startDownload(this, mVersionInfo.downloadUrl);
 			}
 			finish();

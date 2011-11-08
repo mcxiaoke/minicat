@@ -37,7 +37,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		int type = intent.getIntExtra(Commons.EXTRA_TYPE, -1);
 		int count = intent.getIntExtra(Commons.EXTRA_COUNT, 1);
 		if (App.DEBUG) {
-			Log.i(TAG, "broadcast received type=" + type + " count=" + count);
+			Log.d(TAG, "broadcast received type=" + type + " count=" + count);
 		}
 		switch (type) {
 		case NotificationService.NOTIFICATION_TYPE_HOME:
@@ -78,9 +78,9 @@ public class NotificationReceiver extends BroadcastReceiver {
 		}
 	}
 
-	private static void showHomeOneNotification(Context context,Status status) {
+	private static void showHomeOneNotification(Context context, Status status) {
 		if (App.DEBUG) {
-			Log.i(TAG, "showHomeOneNotification");
+			Log.d(TAG, "showHomeOneNotification");
 		}
 		String title = status.userScreenName;
 		String message = status.simpleText;
@@ -95,8 +95,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
 	private static void showHomeMoreNotification(Context context, int count) {
 		if (App.DEBUG) {
-			Log.i(TAG, "showHomeMoreNotification  count="
-					+ count);
+			Log.d(TAG, "showHomeMoreNotification  count=" + count);
 		}
 		String title = "饭否消息";
 		String message = "收到" + count + "条来自好友的消息";
@@ -109,7 +108,8 @@ public class NotificationReceiver extends BroadcastReceiver {
 				message, R.drawable.ic_notify_home);
 	}
 
-	private static void showMentionOneNotification(Context context,Status status) {
+	private static void showMentionOneNotification(Context context,
+			Status status) {
 		if (App.DEBUG) {
 			Log.i(TAG, "showMentionOneNotification");
 		}
@@ -126,8 +126,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
 	private static void showMentionMoreNotification(Context context, int count) {
 		if (App.DEBUG) {
-			Log.i(TAG, "showMentionMoreNotification count="
-					+ count);
+			Log.d(TAG, "showMentionMoreNotification count=" + count);
 		}
 		String title = "饭否消息";
 		String message = "收到" + count + "条提到你的消息";
@@ -140,9 +139,9 @@ public class NotificationReceiver extends BroadcastReceiver {
 				title, message, R.drawable.ic_notify_mention);
 	}
 
-	private static void showDmOneNotification(Context context,DirectMessage dm) {
+	private static void showDmOneNotification(Context context, DirectMessage dm) {
 		if (App.DEBUG) {
-			Log.i(TAG, "showDmOneNotification");
+			Log.d(TAG, "showDmOneNotification");
 		}
 		Intent intent = new Intent(context, MessageChatPage.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
@@ -159,8 +158,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
 	private static void showDmMoreNotification(Context context, int count) {
 		if (App.DEBUG) {
-			Log.i(TAG, "showDmMoreNotification count="
-					+ count);
+			Log.d(TAG, "showDmMoreNotification count=" + count);
 		}
 		String title = "饭否私信";
 		String message = "收到" + count + "条发给你的私信";

@@ -62,16 +62,16 @@ public class DownloadService extends WakefulIntentService {
 		super("DownloadService");
 
 	}
-	
+
 	public static void startDownload(Context context, String url) {
-		
+
 		Intent intent = new Intent(context, DownloadService.class);
 		intent.putExtra(Commons.EXTRA_TYPE, TYPE_DOWNLOAD);
 		intent.putExtra(Commons.EXTRA_URL, url);
 		context.startService(intent);
 	}
-	
-	public static void startCheck(Context context){
+
+	public static void startCheck(Context context) {
 		Intent intent = new Intent(context, DownloadService.class);
 		intent.putExtra(Commons.EXTRA_TYPE, TYPE_CHECK);
 		context.startService(intent);
@@ -119,8 +119,8 @@ public class DownloadService extends WakefulIntentService {
 				is = entity.getContent();
 				File file = new File(IOHelper.getDownloadDir(this),
 						"fanfou.apk");
-				 fos = new FileOutputStream(file);
-//				fos = openFileOutput("fanfou.apk", MODE_PRIVATE);
+				fos = new FileOutputStream(file);
+				// fos = openFileOutput("fanfou.apk", MODE_PRIVATE);
 				byte[] buffer = new byte[20480];
 				int read = -1;
 
@@ -197,13 +197,13 @@ public class DownloadService extends WakefulIntentService {
 	}
 
 	public static VersionInfo fetchVersionInfo() {
-//		HttpClient client = NetworkHelper.newHttpClient();
-//		NetworkHelper.setProxy(client);
-//		HttpGet request = new HttpGet(APP_UPDATE_SITE);
+		// HttpClient client = NetworkHelper.newHttpClient();
+		// NetworkHelper.setProxy(client);
+		// HttpGet request = new HttpGet(APP_UPDATE_SITE);
 		try {
-			
-//			HttpResponse response = client.execute(request);
-			HttpResponse response=ConnectionManager.get(APP_UPDATE_SITE);
+
+			// HttpResponse response = client.execute(request);
+			HttpResponse response = ConnectionManager.get(APP_UPDATE_SITE);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (App.DEBUG) {
 				Log.d("AutoUpdateManager", "statusCode=" + statusCode);
@@ -237,13 +237,13 @@ public class DownloadService extends WakefulIntentService {
 
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
 				getNewVersionIntent(context, info), 0);
-		notification.setLatestEventInfo(context, "饭否客户端有新版本："
-				+ versionInfo, "点击查看更新内容", contentIntent);
+		notification.setLatestEventInfo(context, "饭否客户端有新版本：" + versionInfo,
+				"点击查看更新内容", contentIntent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		nm.notify(2, notification);
 
 	}
-	
+
 	public static void showUpdateConfirmDialog(final Context context,
 			final VersionInfo info) {
 		DialogInterface.OnClickListener downListener = new DialogInterface.OnClickListener() {
@@ -263,8 +263,7 @@ public class DownloadService extends WakefulIntentService {
 		sb.append("\n最新版本： ").append(info.versionName).append("(Build")
 				.append(info.versionCode).append(")");
 		sb.append("\n更新日期：").append(info.releaseDate);
-		sb.append("\n更新级别：").append(
-				info.forceUpdate ? "重要升级" : "一般升级");
+		sb.append("\n更新级别：").append(info.forceUpdate ? "重要升级" : "一般升级");
 		sb.append("\n更新内容：\n").append(info.changelog);
 		builder.setMessage(sb.toString());
 		AlertDialog dialog = builder.create();

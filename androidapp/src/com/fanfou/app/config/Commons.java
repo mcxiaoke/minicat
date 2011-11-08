@@ -9,6 +9,7 @@ package com.fanfou.app.config;
  * @author mcxiaoke
  * @version 1.0 2011.07.18
  * @version 1.5 2011.10.10
+ * @version 1.6 2011.11.08
  * 
  */
 public interface Commons {
@@ -21,14 +22,19 @@ public interface Commons {
 	public static final String EXTRA_RECEIVER = "extra_receiver";
 	public static final String EXTRA_BUNDLE = "extra_bundle";
 	public static final String EXTRA_BOOLEAN = "extra_boolean";
-	
+
+	public static final String EXTRA_SOURCE = "extra_source";
+	public static final String EXTRA_ENUM = "extra_enum";
+
+	public static final String EXTRA_INTEGER = "extra_integer";
+
 	public static final String EXTRA_DRAFT = "extra_draft";
 	public static final String EXTRA_DRAFT_ID = "extra_draft_id";
-	
-	public static final String EXTRA_GAP_TIME="extra_gap_time";
-	public static final String EXTRA_GAP_ID="extra_gap_id";
-	public static final String EXTRA_GAP_UP_STATUS="extra_gap_up_status";
-	public static final String EXTRA_GAP_DOWN_STATUS="extra_gap_down_status";
+
+	public static final String EXTRA_GAP_TIME = "extra_gap_time";
+	public static final String EXTRA_GAP_ID = "extra_gap_id";
+	public static final String EXTRA_GAP_UP_STATUS = "extra_gap_up_status";
+	public static final String EXTRA_GAP_DOWN_STATUS = "extra_gap_down_status";
 
 	public static final String EXTRA_ERROR = "extra_error";
 	public static final String EXTRA_ERROR_CODE = "extra_error_code";
@@ -85,7 +91,7 @@ public interface Commons {
 	public static final int USER_TYPE_FRIENDS = 41;
 	public static final int USER_TYPE_FOLLOWERS = 42;
 	public static final int USER_TYPE_ALL = 43;
-//	public static final int USER_AUTO_COMPLETE = 45;
+	// public static final int USER_AUTO_COMPLETE = 45;
 
 	public static final int ACTION_STATUS_SHOW = 101;
 	public static final int ACTION_STATUS_CREATE = 102;
@@ -102,7 +108,6 @@ public interface Commons {
 
 	public static final int ACTION_DIRECT_MESSAGE_SHOW = 141;
 	public static final int ACTION_DIRECT_MESSAGE_DELETE = 142;
-	public static final int ACTION_DIRECT_MESSAGE_CREATE=143;
-	
+	public static final int ACTION_DIRECT_MESSAGE_CREATE = 143;
 
 }

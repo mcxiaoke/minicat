@@ -138,7 +138,7 @@ public class ConversationPage extends BaseActivity implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		final Status s=(Status) parent.getItemAtPosition(position);
+		final Status s = (Status) parent.getItemAtPosition(position);
 		showPopup(view, s);
 		return true;
 	}

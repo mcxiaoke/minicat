@@ -39,9 +39,9 @@ public class PhotoViewPage extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		parseIntent(getIntent());
-		
+
 		if (TextUtils.isEmpty(mPhotoPath)) {
 			finish();
 			return;
@@ -54,31 +54,31 @@ public class PhotoViewPage extends BaseActivity {
 		mTouchImageView = (TouchImageView) findViewById(R.id.photoview_pic);
 		mSave = (TextView) findViewById(R.id.photoview_save);
 		mClose = (TextView) findViewById(R.id.photoview_close);
-		mShare=(TextView) findViewById(R.id.photoview_share);
+		mShare = (TextView) findViewById(R.id.photoview_share);
 		mSave.setOnClickListener(this);
 		mClose.setOnClickListener(this);
 		mShare.setOnClickListener(this);
 		Bitmap bitmap = BitmapFactory.decodeFile(mPhotoPath);
 		if (bitmap != null) {
 			mTouchImageView.setImageBitmap(bitmap);
-		}else{
+		} else {
 			finish();
 		}
 	}
-	
-	private void parseIntent(Intent intent){
-		String action=intent.getAction();
-		if(action==null){
-			mPhotoPath = intent.getStringExtra(Commons.EXTRA_URL);			
-		}else if(action.equals(Intent.ACTION_VIEW)){
-			Uri uri=intent.getData();
+
+	private void parseIntent(Intent intent) {
+		String action = intent.getAction();
+		if (action == null) {
+			mPhotoPath = intent.getStringExtra(Commons.EXTRA_URL);
+		} else if (action.equals(Intent.ACTION_VIEW)) {
+			Uri uri = intent.getData();
 			if (uri.getScheme().equals("content")) {
 				mPhotoPath = IOHelper.getRealPathFromURI(this, uri);
 			} else {
 				mPhotoPath = uri.getPath();
 			}
 		}
-		
+
 	}
 
 	@Override
@@ -88,12 +88,12 @@ public class PhotoViewPage extends BaseActivity {
 			finish();
 		} else if (id == R.id.photoview_save) {
 			savePhoto();
-		}else if(id==R.id.photoview_share){
+		} else if (id == R.id.photoview_share) {
 			sharePhoto();
 		}
 	}
-	
-	private void sharePhoto(){
+
+	private void sharePhoto() {
 		ActionManager.doShare(this, new File(mPhotoPath));
 	}
 
@@ -107,9 +107,9 @@ public class PhotoViewPage extends BaseActivity {
 		File file = new File(mPhotoPath);
 		if (file.exists()) {
 			File dest = new File(IOHelper.getPhotoDir(this), file.getName());
-			if(dest.exists()){
+			if (dest.exists()) {
 				Utils.notify(this, "照片已保存到 " + dest.getAbsolutePath());
-			}else{
+			} else {
 				try {
 					IOHelper.copyFile(file, dest);
 					Utils.notify(this, "照片已保存到 " + dest.getAbsolutePath());
@@ -117,7 +117,7 @@ public class PhotoViewPage extends BaseActivity {
 					if (App.DEBUG) {
 						e.printStackTrace();
 					}
-				}		
+				}
 			}
 		}
 	}

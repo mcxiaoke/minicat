@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -27,7 +25,6 @@ import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.AlertInfoDialog;
 import com.fanfou.app.http.ConnectionManager;
-import com.fanfou.app.http.ConnectionRequest;
 import com.fanfou.app.http.Parameter;
 import com.fanfou.app.http.Response;
 import com.fanfou.app.http.ResponseCode;
@@ -106,7 +103,7 @@ public class RegisterPage extends Activity implements OnClickListener {
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setLeftAction(new ActionBar.BackAction(this));
-//		mActionBar.setTitle("注册饭否帐号");
+		// mActionBar.setTitle("注册饭否帐号");
 	}
 
 	private void setTextChangeListener() {
@@ -174,9 +171,9 @@ public class RegisterPage extends Activity implements OnClickListener {
 			Utils.notify(this, " 注册资料未填写完整");
 			return;
 		}
-		
+
 		g.setCustomVar(1, "doRegisterEmail", mEmail);
-		
+
 		int nickLength = mNickName.length();
 		if (nickLength < 2 || nickLength > 12) {
 			Utils.notify(this, "昵称为2～12字符");
@@ -210,7 +207,8 @@ public class RegisterPage extends Activity implements OnClickListener {
 		@Override
 		protected ResultInfo doInBackground(Void... params) {
 			try {
-				User user = register(mEmail, mNickName, mPassword, DeviceHelper.uuid(mContext));
+				User user = register(mEmail, mNickName, mPassword,
+						DeviceHelper.uuid(mContext));
 				if (isCancelled) {
 					return new ResultInfo(REGISTER_CANCELLED);
 				}
@@ -228,7 +226,8 @@ public class RegisterPage extends Activity implements OnClickListener {
 				if (App.DEBUG) {
 					e.printStackTrace();
 				}
-				return new ResultInfo(REGISTER_IO_ERROR,getString(R.string.connection_error_msg));
+				return new ResultInfo(REGISTER_IO_ERROR,
+						getString(R.string.connection_error_msg));
 			}
 		}
 
@@ -281,10 +280,12 @@ public class RegisterPage extends Activity implements OnClickListener {
 			if (g != null) {
 				g.dispatch();
 			}
-			final String message="你的临时ID是["+u.id+"]，你的昵称是["+u.screenName+"]，请访问饭否网站修改个人网址，完善你的个人介绍，点击确定直接登录";
-			final AlertInfoDialog dialog=new AlertInfoDialog(mContext, "注册成功", message);
+			final String message = "你的临时ID是[" + u.id + "]，你的昵称是["
+					+ u.screenName + "]，请访问饭否网站修改个人网址，完善你的个人介绍，点击确定直接登录";
+			final AlertInfoDialog dialog = new AlertInfoDialog(mContext,
+					"注册成功", message);
 			dialog.setOnClickListener(new AlertInfoDialog.OnOKClickListener() {
-				
+
 				@Override
 				public void onOKClick() {
 					Intent data = new Intent();
@@ -315,14 +316,15 @@ public class RegisterPage extends Activity implements OnClickListener {
 			for (Parameter parameter : params) {
 				Log.d("RegisterTask", parameter.toString());
 			}
-//			HttpClient client = NetworkHelper.newHttpClient();
-//			HttpPost request = new HttpPost(ApiConfig.URL_REGISTER);
-//			request.setEntity(ConnectionRequest.encodeForPost(params));
+			// HttpClient client = NetworkHelper.newHttpClient();
+			// HttpPost request = new HttpPost(ApiConfig.URL_REGISTER);
+			// request.setEntity(ConnectionRequest.encodeForPost(params));
 
-//			Log.d("RegisterTask", request.getURI().toString());
+			// Log.d("RegisterTask", request.getURI().toString());
 
-//			HttpResponse response = client.execute(request);
-			HttpResponse response=ConnectionManager.post(FanFouApiConfig.URL_REGISTER, params);
+			// HttpResponse response = client.execute(request);
+			HttpResponse response = ConnectionManager.post(
+					FanFouApiConfig.URL_REGISTER, params);
 			Response res = new Response(response);
 			if (App.DEBUG) {
 				Log.d("RegisterTask", res.getContent());

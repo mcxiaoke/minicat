@@ -15,7 +15,7 @@ import com.fanfou.app.util.Utils;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.10.28
- *
+ * 
  */
 public class ResetAppDialogPreference extends DialogPreference {
 
@@ -62,7 +62,7 @@ public class ResetAppDialogPreference extends DialogPreference {
 			if (result.booleanValue() == true) {
 				Utils.notify(c, "数据和设置已全部重置");
 				IntentHelper.goLoginPage(c);
-//				android.os.Process.killProcess(android.os.Process.myPid());
+				// android.os.Process.killProcess(android.os.Process.myPid());
 			}
 		}
 
@@ -72,7 +72,7 @@ public class ResetAppDialogPreference extends DialogPreference {
 			OptionHelper.clearSettings(c);
 			IOHelper.cleanDB(c);
 			IOHelper.ClearCache(c);
-			
+
 			return true;
 		}
 	}

@@ -1,27 +1,18 @@
 package com.fanfou.app.hd;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Process;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-
 import com.fanfou.app.App;
-import com.fanfou.app.HomePage;
 import com.fanfou.app.OptionsPage;
 import com.fanfou.app.R;
 import com.fanfou.app.SearchPage;
 import com.fanfou.app.WritePage;
-import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.http.ApnType;

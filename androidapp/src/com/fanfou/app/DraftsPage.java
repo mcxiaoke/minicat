@@ -28,7 +28,7 @@ import android.widget.AdapterView.OnItemClickListener;
  * @version 1.1 2011.10.28
  * 
  */
-public class DraftsPage extends BaseActivity implements OnItemClickListener{
+public class DraftsPage extends BaseActivity implements OnItemClickListener {
 	private ActionBar mBar;
 	private ListView mListView;
 
@@ -58,10 +58,10 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener{
 	private void setListView() {
 		mCursor = managedQuery(DraftInfo.CONTENT_URI, DraftInfo.COLUMNS, null,
 				null, null);
-		if(mCursor.getCount()==0){
+		if (mCursor.getCount() == 0) {
 			mBar.setRightActionEnabled(false);
 		}
-		
+
 		mAdapter = new DraftsCursorAdaper(this, mCursor);
 		mListView = (ListView) findViewById(R.id.list);
 		mListView.setAdapter(mAdapter);
@@ -117,15 +117,16 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener{
 		}
 
 	}
-	
-	private void startTaskQueueService(){
-		Intent service=new Intent(this, TaskQueueService.class);
+
+	private void startTaskQueueService() {
+		Intent service = new Intent(this, TaskQueueService.class);
 		service.putExtra(Commons.EXTRA_TYPE, TaskQueueService.TYPE_DRAFTS_LIST);
 		startService(service);
 	}
 
 	private void doSendAll() {
-		final ConfirmDialog dialog=new ConfirmDialog(this, "发送所有", "确定发送所有草稿吗？");
+		final ConfirmDialog dialog = new ConfirmDialog(this, "发送所有",
+				"确定发送所有草稿吗？");
 		dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
 
 			@Override
@@ -140,29 +141,29 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener{
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		final Cursor c=(Cursor) parent.getItemAtPosition(position);
-		if(c!=null){
-			final Draft draft=Draft.parse(c);
+		final Cursor c = (Cursor) parent.getItemAtPosition(position);
+		if (c != null) {
+			final Draft draft = Draft.parse(c);
 			goWritePage(draft);
 		}
 	}
-	
-	private void goWritePage(final Draft draft){
-		if(draft==null){
+
+	private void goWritePage(final Draft draft) {
+		if (draft == null) {
 			return;
 		}
-		
-		Intent intent=new Intent(this, WritePage.class);
+
+		Intent intent = new Intent(this, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TYPE, draft.type);
 		intent.putExtra(Commons.EXTRA_TEXT, draft.text);
 		intent.putExtra(Commons.EXTRA_DRAFT_ID, draft.id);
 		intent.putExtra(Commons.EXTRA_IN_REPLY_TO_ID, draft.replyTo);
-		if(!StringHelper.isEmpty(draft.filePath)){
+		if (!StringHelper.isEmpty(draft.filePath)) {
 			intent.putExtra(Commons.EXTRA_FILE, new File(draft.filePath));
 		}
 		startActivity(intent);
 		finish();
-		
+
 	}
 
 }

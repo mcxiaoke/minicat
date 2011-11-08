@@ -65,7 +65,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 	private void log(String message) {
 		Log.e(TAG, message);
 	}
-	
+
 	public StatusCursorAdapter(Context context) {
 		super(context, null, false);
 	}
@@ -77,28 +77,28 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 	public StatusCursorAdapter(boolean colored, Context context, Cursor c) {
 		super(context, c, false);
 		this.colored = colored;
-		this.mCursor=c;
+		this.mCursor = c;
 	}
 
 	public StatusCursorAdapter(Activity context, Cursor c, boolean autoRequery) {
 		super(context, c, autoRequery);
-		this.mCursor=c;
+		this.mCursor = c;
 	}
-	
-	public void swapCursor(Cursor cursor){
-		if(cursor!=null){
-			mCursor=cursor;
+
+	public void swapCursor(Cursor cursor) {
+		if (cursor != null) {
+			mCursor = cursor;
 			changeCursor(mCursor);
 			mCursor.requery();
-		}else{
-			mCursor=null;
+		} else {
+			mCursor = null;
 			changeCursor(mCursor);
 			notifyDataSetChanged();
 		}
 	}
 
 	private void setTextStyle(ViewHolder holder) {
-		int fontSize=getFontSize();
+		int fontSize = getFontSize();
 		holder.contentText.setTextSize(fontSize);
 		holder.nameText.setTextSize(fontSize);
 		holder.metaText.setTextSize(fontSize - 4);
@@ -110,7 +110,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		View view = mInflater.inflate(getLayoutId(), null);
 		ViewHolder holder = new ViewHolder(view);
-		setHeadImage(mContext,holder.headIcon);
+		setHeadImage(mContext, holder.headIcon);
 		setTextStyle(holder);
 		view.setTag(holder);
 		bindView(view, context, cursor);
@@ -131,8 +131,8 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 		}
 
 		holder.headIcon.setTag(s.userProfileImageUrl);
-		
-		if(!isTextMode()){
+
+		if (!isTextMode()) {
 			mLoader.set(s.userProfileImageUrl, holder.headIcon,
 					R.drawable.default_head);
 			holder.headIcon.setOnClickListener(new View.OnClickListener() {

@@ -12,9 +12,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -51,13 +48,14 @@ public class ImageLoader implements Runnable, IImageLoader {
 	private final ConcurrentHashMap<ImageLoaderTask, ImageLoaderCallback> mCallbackMap = new ConcurrentHashMap<ImageLoaderTask, ImageLoaderCallback>();
 	public final ImageCache mCache;
 	private final Handler mHandler;
-//	private final DefaultHttpClient mHttpClient;
+
+	// private final DefaultHttpClient mHttpClient;
 
 	public ImageLoader(Context context) {
 		this.mCache = new ImageCache(context);
 		this.mHandler = new ImageDownloadHandler();
 		this.mExecutorService.submit(this);
-//		this.mHttpClient = NetworkHelper.newHttpClient();
+		// this.mHttpClient = NetworkHelper.newHttpClient();
 	}
 
 	@Override
@@ -101,7 +99,7 @@ public class ImageLoader implements Runnable, IImageLoader {
 		return null;
 
 	}
-	
+
 	@Override
 	public File loadFile(String key) {
 		return null;
@@ -127,7 +125,8 @@ public class ImageLoader implements Runnable, IImageLoader {
 			bitmap = mCache.get(task.url);
 		}
 		if (bitmap != null) {
-			task.imageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap, 6));
+			task.imageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(
+					bitmap, 6));
 		} else {
 			task.imageView.setImageResource(iconId);
 			addToQueue(task, new InternelCallback(task.imageView));
@@ -201,10 +200,10 @@ public class ImageLoader implements Runnable, IImageLoader {
 	}
 
 	private Bitmap downloadImage(String url) throws IOException {
-//		NetworkHelper.setProxy(mHttpClient);
-//		HttpGet request = new HttpGet(url);
-//		HttpResponse response = mHttpClient.execute(request);
-		HttpResponse response=ConnectionManager.get(url);
+		// NetworkHelper.setProxy(mHttpClient);
+		// HttpGet request = new HttpGet(url);
+		// HttpResponse response = mHttpClient.execute(request);
+		HttpResponse response = ConnectionManager.get(url);
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (App.DEBUG) {
 			Log.d(TAG, "downloadImage() statusCode=" + statusCode + " [" + url

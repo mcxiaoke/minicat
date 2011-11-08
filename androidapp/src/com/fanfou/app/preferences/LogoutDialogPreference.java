@@ -11,13 +11,14 @@ import com.fanfou.app.util.IntentHelper;
  * @author mcxiaoke
  * @version 1.0 2011.09.10
  * @version 1.1 2011.10.25
- *
+ * 
  */
 public class LogoutDialogPreference extends DialogPreference {
 
 	public LogoutDialogPreference(BaseActivity context, AttributeSet attrs) {
 		super(context, attrs);
-		setSummary("当前登录帐号:"+App.me.userScreenName+"("+App.me.userId+")");
+		setSummary("当前登录帐号:" + App.me.userScreenName + "(" + App.me.userId
+				+ ")");
 	}
 
 	@Override
@@ -27,8 +28,8 @@ public class LogoutDialogPreference extends DialogPreference {
 			doLogout();
 		}
 	}
-	
-	private void doLogout(){
+
+	private void doLogout() {
 		IntentHelper.goLoginPage(context);
 	}
 }

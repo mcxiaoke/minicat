@@ -11,7 +11,6 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.R;
-import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.FanFouApiConfig;
@@ -23,6 +22,7 @@ import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.http.ApnType;
+import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.Utils;
 
@@ -40,10 +40,10 @@ public class NotificationService extends BaseIntentService {
 	public static final int NOTIFICATION_TYPE_HOME = Status.TYPE_HOME;
 	public static final int NOTIFICATION_TYPE_MENTION = Status.TYPE_MENTION; // @消息
 	public static final int NOTIFICATION_TYPE_DM = DirectMessage.TYPE_IN; // 私信
-	
-	private static final int DEFAULT_COUNT=FanFouApiConfig.DEFAULT_TIMELINE_COUNT;
-	private static final int MAX_COUNT=FanFouApiConfig.MAX_TIMELINE_COUNT;
-	private static final int DEFAULT_PAGE=0;
+
+	private static final int DEFAULT_COUNT = FanFouApiConfig.DEFAULT_TIMELINE_COUNT;
+	private static final int MAX_COUNT = FanFouApiConfig.MAX_TIMELINE_COUNT;
+	private static final int DEFAULT_PAGE = 0;
 
 	private PowerManager.WakeLock mWakeLock;
 
@@ -70,16 +70,23 @@ public class NotificationService extends BaseIntentService {
 		if (App.DEBUG) {
 			Log.i(TAG, "onHandleIntent");
 		}
+
+		boolean flag = OptionHelper.readBoolean(this,
+				R.string.option_notification, false);
+		if (!flag) {
+			return;
+		}
+
 		boolean dm = OptionHelper.readBoolean(this,
 				R.string.option_notification_dm, false);
 		boolean mention = OptionHelper.readBoolean(this,
 				R.string.option_notification_mention, false);
 		boolean home = OptionHelper.readBoolean(this,
 				R.string.option_notification_home, false);
-		
-		int count=DEFAULT_COUNT;
-		if(App.me.apnType==ApnType.WIFI){
-			count=MAX_COUNT;
+
+		int count = DEFAULT_COUNT;
+		if (App.me.apnType == ApnType.WIFI) {
+			count = MAX_COUNT;
 		}
 		try {
 			if (dm) {
@@ -116,6 +123,9 @@ public class NotificationService extends BaseIntentService {
 		if (dms != null) {
 			int size = dms.size();
 			if (size > 0) {
+				if (App.DEBUG) {
+					Log.d(TAG, "handleDm() size=" + size);
+				}
 				if (size == 1) {
 					DirectMessage dm = dms.get(0);
 					getContentResolver().insert(DirectMessageInfo.CONTENT_URI,
@@ -136,11 +146,14 @@ public class NotificationService extends BaseIntentService {
 
 	private void handleMention(int count) throws ApiException {
 		Cursor mc = initCursor(Status.TYPE_MENTION);
-		List<Status> ss = App.me.api.mentions(count, DEFAULT_PAGE, Utils.getSinceId(mc), null,
-				true);
+		List<Status> ss = App.me.api.mentions(count, DEFAULT_PAGE,
+				Utils.getSinceId(mc), null, true);
 		if (ss != null) {
 			int size = ss.size();
 			if (size > 0) {
+				if (App.DEBUG) {
+					Log.d(TAG, "handleMention() size=" + size);
+				}
 				if (size == 1) {
 					Status s = ss.get(0);
 					getContentResolver().insert(StatusInfo.CONTENT_URI,
@@ -160,11 +173,14 @@ public class NotificationService extends BaseIntentService {
 
 	private void handleHome(int count) throws ApiException {
 		Cursor mc = initCursor(Status.TYPE_HOME);
-		List<Status> ss = App.me.api.homeTimeline(count, DEFAULT_PAGE, Utils.getSinceId(mc),
-				null, true);
+		List<Status> ss = App.me.api.homeTimeline(count, DEFAULT_PAGE,
+				Utils.getSinceId(mc), null, true);
 		if (ss != null) {
 			int size = ss.size();
 			if (size > 0) {
+				if (App.DEBUG) {
+					Log.d(TAG, "handleHome() size=" + size);
+				}
 				if (size == 1) {
 					Status s = ss.get(0);
 					getContentResolver().insert(StatusInfo.CONTENT_URI,
@@ -217,8 +233,9 @@ public class NotificationService extends BaseIntentService {
 			return;
 		}
 		if (App.DEBUG) {
-			Log.i(TAG, "sendStatusNotification type=" + type + " count="
-					+ count + " status=" + (status == null ? "null" : status));
+			Log.d(TAG, "sendStatusNotification type=" + type + " count="
+					+ count + " status=" + (status == null ? "null" : status)
+					+ " active=" + App.active);
 		}
 		Intent intent = new Intent();
 		intent.putExtra(Commons.EXTRA_TYPE, type);
@@ -235,8 +252,8 @@ public class NotificationService extends BaseIntentService {
 			return;
 		}
 		if (App.DEBUG) {
-			Log.i(TAG, "sendMessageNotification type=" + type + " count="
-					+ count);
+			Log.d(TAG, "sendMessageNotification type=" + type + " count="
+					+ count + " active=" + App.active);
 		}
 		Intent intent = new Intent();
 		intent.putExtra(Commons.EXTRA_TYPE, type);
@@ -249,6 +266,10 @@ public class NotificationService extends BaseIntentService {
 	private void broadcast(Intent intent) {
 		intent.setPackage(getPackageName());
 		sendOrderedBroadcast(intent, null);
+		if (App.DEBUG) {
+			Log.d(TAG, "broadcast() ");
+			IntentHelper.logIntent(TAG, intent);
+		}
 	}
 
 }

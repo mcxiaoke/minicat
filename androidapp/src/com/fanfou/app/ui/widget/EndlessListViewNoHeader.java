@@ -18,7 +18,7 @@ import com.fanfou.app.util.OptionHelper;
 
 /**
  * @author mcxiaoke
- *
+ * 
  */
 public class EndlessListViewNoHeader extends ListView implements
 		OnItemClickListener {
@@ -67,12 +67,13 @@ public class EndlessListViewNoHeader extends ListView implements
 		setHorizontalScrollBarEnabled(false);
 		setVerticalScrollBarEnabled(false);
 		setOnItemClickListener(this);
-		
-		boolean fastScroll=OptionHelper.readBoolean(context, R.string.option_fast_scroll_on, false);
-		if(fastScroll){
+
+		boolean fastScroll = OptionHelper.readBoolean(context,
+				R.string.option_fast_scroll_on, false);
+		if (fastScroll) {
 			setFastScrollEnabled(true);
 		}
-		
+
 		initHeaderAndFooter();
 	}
 

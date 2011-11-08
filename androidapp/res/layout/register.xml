@@ -28,7 +28,7 @@
 
 			<EditText android:id="@+id/register_password" style="@style/EditText.Login"
 				android:layout_below="@id/actionbar" android:hint="输入密码"
-				android:password="true" />
+				android:password="true" android:inputType="textPassword"/>
 
 			<EditText android:id="@+id/register_password_confirm" style="@style/EditText.Login"
 				android:password="true" android:inputType="textPassword"

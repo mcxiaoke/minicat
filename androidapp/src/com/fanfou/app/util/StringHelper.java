@@ -34,8 +34,8 @@ import com.fanfou.app.App;
  * 
  */
 public class StringHelper {
-	
-	public static String toString (List<String> array){
+
+	public static String toString(List<String> array) {
 		if (array == null || array.size() == 0) {
 			return "";
 		}

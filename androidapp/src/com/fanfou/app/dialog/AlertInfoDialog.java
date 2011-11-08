@@ -17,15 +17,14 @@ import android.widget.TextView;
  * @version 1.0 2011.10.26
  * 
  */
-public class AlertInfoDialog extends Dialog implements
-		View.OnClickListener {
+public class AlertInfoDialog extends Dialog implements View.OnClickListener {
 
 	private Context mContext;
 
 	private TextView mTitleView;
 	private TextView mTextView;
 	private Button mButtonOk;
-	
+
 	private CharSequence mTitle;
 	private CharSequence mText;
 
@@ -34,34 +33,34 @@ public class AlertInfoDialog extends Dialog implements
 	public AlertInfoDialog(Context context, String title, String text) {
 		super(context, R.style.Dialog);
 		this.mContext = context;
-		this.mTitle=title;
-		this.mText=text;
+		this.mTitle = title;
+		this.mText = text;
 	}
-	
-	private void init(){
+
+	private void init() {
 		setContentView(R.layout.dialog_alert);
-		
+
 		mTitleView = (TextView) findViewById(R.id.title);
-		TextPaint tp=mTitleView.getPaint();
+		TextPaint tp = mTitleView.getPaint();
 		tp.setFakeBoldText(true);
 		mTitleView.setText(mTitle);
-		
+
 		mTextView = (TextView) findViewById(R.id.text);
 		mTextView.setText(mText);
-		
+
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonOk.setOnClickListener(this);
-		
+
 	}
-	
+
 	protected void setBlurEffect() {
 		Window window = getWindow();
 		WindowManager.LayoutParams lp = window.getAttributes();
-//		 lp.alpha=0.8f;
+		// lp.alpha=0.8f;
 		lp.dimAmount = 0.6f;
 		window.setAttributes(lp);
 		window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-//		window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
+		// window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
 	}
 
 	@Override
@@ -73,23 +72,23 @@ public class AlertInfoDialog extends Dialog implements
 
 	@Override
 	public void setTitle(CharSequence title) {
-		mTitle=title;
+		mTitle = title;
 		mTitleView.setText(mTitle);
 	}
 
 	@Override
 	public void setTitle(int resId) {
-		mTitle=mContext.getResources().getText(resId);
+		mTitle = mContext.getResources().getText(resId);
 		mTitleView.setText(mTitle);
 	}
 
 	public void setMessage(CharSequence message) {
-		mText=message;
+		mText = message;
 		mTextView.setText(mText);
 	}
 
 	public void setMessage(int resId) {
-		mText=mContext.getResources().getText(resId);
+		mText = mContext.getResources().getText(resId);
 		mTextView.setText(mText);
 	}
 
@@ -99,11 +98,11 @@ public class AlertInfoDialog extends Dialog implements
 
 	@Override
 	public void onClick(View v) {
-		int id=v.getId();
+		int id = v.getId();
 		switch (id) {
 		case R.id.button_ok:
 			cancel();
-			if(mClickListener!=null){
+			if (mClickListener != null) {
 				mClickListener.onOKClick();
 			}
 			break;
@@ -111,10 +110,9 @@ public class AlertInfoDialog extends Dialog implements
 			break;
 		}
 	}
-	
-	
-	public static interface OnOKClickListener{
+
+	public static interface OnOKClickListener {
 		public void onOKClick();
 	}
-	
+
 }

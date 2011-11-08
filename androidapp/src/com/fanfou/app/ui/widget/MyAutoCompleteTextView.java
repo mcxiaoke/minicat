@@ -8,7 +8,7 @@ import android.widget.MultiAutoCompleteTextView;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.10.24
- *
+ * 
  */
 public class MyAutoCompleteTextView extends MultiAutoCompleteTextView {
 

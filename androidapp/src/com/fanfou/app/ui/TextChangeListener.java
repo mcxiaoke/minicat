@@ -15,7 +15,8 @@ public abstract class TextChangeListener implements TextWatcher {
 	}
 
 	@Override
-	public abstract void onTextChanged(CharSequence s, int start, int before, int count);
+	public abstract void onTextChanged(CharSequence s, int start, int before,
+			int count);
 
 	@Override
 	public void afterTextChanged(Editable s) {

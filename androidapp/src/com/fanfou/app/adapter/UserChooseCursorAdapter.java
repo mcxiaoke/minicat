@@ -22,9 +22,10 @@ import com.fanfou.app.api.User;
  * @version 1.5 2011.10.25
  * 
  */
-public class UserChooseCursorAdapter extends BaseCursorAdapter{
-	private static final String tag = UserChooseCursorAdapter.class.getSimpleName();
-	
+public class UserChooseCursorAdapter extends BaseCursorAdapter {
+	private static final String tag = UserChooseCursorAdapter.class
+			.getSimpleName();
+
 	private ArrayList<Boolean> mStates;
 	private HashMap<Integer, Boolean> mStateMap;
 
@@ -37,21 +38,22 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter{
 		init();
 	}
 
-	public UserChooseCursorAdapter(Context context, Cursor c, boolean autoRequery) {
+	public UserChooseCursorAdapter(Context context, Cursor c,
+			boolean autoRequery) {
 		super(context, c, autoRequery);
 		init();
 	}
-	
-	private void init(){
-		mStates=new ArrayList<Boolean>();
-		mStateMap=new HashMap<Integer, Boolean>();
+
+	private void init() {
+		mStates = new ArrayList<Boolean>();
+		mStateMap = new HashMap<Integer, Boolean>();
 	}
-	
-	public ArrayList<Boolean> getCheckedStates(){
+
+	public ArrayList<Boolean> getCheckedStates() {
 		return mStates;
 	}
-	
-	public void setItemChecked(int position,boolean checked){
+
+	public void setItemChecked(int position, boolean checked) {
 		mStateMap.put(position, checked);
 	}
 
@@ -61,7 +63,7 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter{
 	}
 
 	private void setTextStyle(ViewHolder holder) {
-		int fontSize=getFontSize();
+		int fontSize = getFontSize();
 		holder.nameText.setTextSize(fontSize);
 		TextPaint tp = holder.nameText.getPaint();
 		tp.setFakeBoldText(true);
@@ -71,7 +73,7 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter{
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		View view = mInflater.inflate(getLayoutId(), null);
 		ViewHolder holder = new ViewHolder(view);
-		setHeadImage(mContext,holder.headIcon);
+		setHeadImage(mContext, holder.headIcon);
 		setTextStyle(holder);
 		view.setTag(holder);
 		bindView(view, context, cursor);
@@ -82,24 +84,25 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter{
 	public void bindView(View view, Context context, Cursor cursor) {
 		View row = view;
 		final User u = User.parse(cursor);
-		
+
 		final ViewHolder holder = (ViewHolder) row.getTag();
-		
-		if(!isTextMode()){
-			mLoader.set(u.profileImageUrl, holder.headIcon, R.drawable.default_head);
+
+		if (!isTextMode()) {
+			mLoader.set(u.profileImageUrl, holder.headIcon,
+					R.drawable.default_head);
 		}
 		holder.nameText.setText(u.screenName);
 		holder.idText.setText(u.id);
-		
-		Boolean b=mStateMap.get(cursor.getPosition());
-		if(b==null||b==Boolean.FALSE){
+
+		Boolean b = mStateMap.get(cursor.getPosition());
+		if (b == null || b == Boolean.FALSE) {
 			holder.checkBox.setChecked(false);
-		}else{
+		} else {
 			holder.checkBox.setChecked(true);
 		}
 	}
-	
-	public void setChecked(int position){
+
+	public void setChecked(int position) {
 	}
 
 	private static class ViewHolder {
@@ -107,14 +110,14 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter{
 		ImageView headIcon = null;
 		TextView nameText = null;
 		TextView idText = null;
-		CheckBox checkBox=null;
+		CheckBox checkBox = null;
 
 		ViewHolder(View base) {
 			this.headIcon = (ImageView) base.findViewById(R.id.item_user_head);
 			this.nameText = (TextView) base.findViewById(R.id.item_user_name);
-			this.idText = (TextView) base
-					.findViewById(R.id.item_user_id);
-			this.checkBox=(CheckBox) base.findViewById(R.id.item_user_checkbox);
+			this.idText = (TextView) base.findViewById(R.id.item_user_id);
+			this.checkBox = (CheckBox) base
+					.findViewById(R.id.item_user_checkbox);
 		}
 	}
 

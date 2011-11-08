@@ -1,7 +1,9 @@
-package com.fanfou.lib.quickaction;
+package com.lib.quickaction;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.lib.quickaction.R;
 
 import android.content.Context;
 import android.graphics.Rect;

@@ -49,7 +49,7 @@ public class TaskQueueService extends Service {
 	private NotificationManager mNM;
 	private ExecutorService mExecutorService;
 	private TaskHandler mHandler;
-//	private HttpClient mHttpClient;
+	// private HttpClient mHttpClient;
 	private Api api;
 
 	private void log(String message) {
@@ -62,7 +62,7 @@ public class TaskQueueService extends Service {
 		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		mExecutorService = Executors.newFixedThreadPool(CORE_POOL_SIZE);
 		mHandler = new TaskHandler();
-//		mHttpClient = NetworkHelper.newHttpClient();
+		// mHttpClient = NetworkHelper.newHttpClient();
 		api = App.me.api;
 	}
 
@@ -73,9 +73,9 @@ public class TaskQueueService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if(intent==null){
+		if (intent == null) {
 			stopSelf();
-		}else{
+		} else {
 			if (App.DEBUG) {
 				log("onStartCommand");
 				IntentHelper.logIntent(TAG, intent);
@@ -205,7 +205,7 @@ public class TaskQueueService extends Service {
 	}
 
 	private void onCommandReceived(Intent intent) {
-		
+
 		int type = intent.getIntExtra(Commons.EXTRA_TYPE, TYPE_DEFAULT);
 		if (App.DEBUG) {
 			log("onCommandReceived type=" + type);

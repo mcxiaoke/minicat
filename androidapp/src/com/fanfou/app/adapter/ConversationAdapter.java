@@ -12,14 +12,14 @@ import com.fanfou.app.util.DateTimeHelper;
  * @author mcxiaoke
  * @version 1.0 2011.10.25
  * @version 1.1 2011.10.26
- *
+ * 
  */
 public class ConversationAdapter extends StatusArrayAdapter {
 
 	public ConversationAdapter(Context context, List<Status> ss) {
 		super(context, ss);
 	}
-	
+
 	@Override
 	protected String getDateString(Date date) {
 		return DateTimeHelper.formatDate(date);

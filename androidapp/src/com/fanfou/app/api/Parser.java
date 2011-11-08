@@ -374,7 +374,7 @@ public final class Parser implements ResponseCode {
 	public static int parseInt(Cursor c, String columnName) {
 		return c.getInt(c.getColumnIndex(columnName));
 	}
-	
+
 	public static long parseLong(Cursor c, String columnName) {
 		return c.getLong(c.getColumnIndex(columnName));
 	}

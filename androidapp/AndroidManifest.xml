@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	android:installLocation="auto" package="com.fanfou.app"
-	android:versionCode="20111107" android:versionName="1.6.6">
+	android:installLocation="internalOnly" package="com.fanfou.app"
+	android:versionCode="20111108" android:versionName="1.7.0">
 
 	<application android:icon="@drawable/icon" android:label="@string/app_name"
 		android:name=".App">
@@ -45,7 +45,8 @@
 		</activity>
 
 		<activity android:label="@string/app_name" android:name=".HomePage"
-			android:launchMode="singleTask" android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation">
+			android:launchMode="singleTask" android:theme="@style/Theme"
+			android:configChanges="keyboardHidden|orientation">
 			<meta-data android:name="android.app.default_searchable"
 				android:value=".SearchResultsPage" />
 		</activity>
@@ -63,6 +64,10 @@
 			</intent-filter>
 		</activity>
 
+		<activity android:label="@string/app_name" android:name=".EditProfilePage"
+			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation">
+		</activity>
+
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".AboutPage"
 			android:theme="@style/Theme" />
@@ -78,10 +83,9 @@
 
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".StatusPage"
-			android:theme="@style/Theme" android:launchMode="singleTask">
+			android:theme="@style/Theme">
 			<intent-filter>
 				<action android:name="com.fanfou.app.action.STATUS" />
-
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
@@ -146,7 +150,14 @@
 
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".MyProfilePage"
-			android:theme="@style/Theme" />
+			android:theme="@style/Theme">
+
+			<intent-filter>
+				<action android:name="com.fanfou.app.action.PROFILE" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+
+		</activity>
 
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".ProfilePage"
@@ -180,6 +191,22 @@
 				<category android:name="android.intent.category.DEFAULT" />
 				<data android:mimeType="image/*" />
 			</intent-filter>
+
+			<intent-filter>
+				<action android:name="com.fanfou.app.action.SEND" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+
+			<intent-filter>
+				<action android:name="com.fanfou.app.action.GALLERY" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+
+			<intent-filter>
+				<action android:name="com.fanfou.app.action.CAMERA" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+
 		</activity>
 
 		<activity android:configChanges="keyboardHidden|orientation"
@@ -235,6 +262,15 @@
 			<intent-filter>
 				<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
 			</intent-filter>
+		</receiver>
+
+		<receiver android:name=".SimpleAppWidget" android:label="@string/app_name"
+			android:icon="@drawable/icon">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/simplewidget" />
 		</receiver>
 
 	</application>

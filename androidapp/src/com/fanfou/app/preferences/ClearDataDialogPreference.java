@@ -51,15 +51,15 @@ public class ClearDataDialogPreference extends DialogPreference {
 			super.onPostExecute(result);
 			pd.dismiss();
 			if (result.booleanValue() == true) {
-//				Utils.notify(c, "程序数据已清空");
+				// Utils.notify(c, "程序数据已清空");
 				android.os.Process.killProcess(android.os.Process.myPid());
 			}
 		}
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
-				IOHelper.cleanDB(c);
-				return true;
+			IOHelper.cleanDB(c);
+			return true;
 		}
 	}
 

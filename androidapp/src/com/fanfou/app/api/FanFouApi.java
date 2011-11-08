@@ -26,7 +26,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.0 2011.11.07
  * 
  */
-public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
+public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	// oauth is on or off
 	private static final boolean OAUTH_ON = true;
 	private static final String TAG = FanFouApi.class.getSimpleName();
@@ -78,7 +78,8 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 	 * @throws ApiException
 	 */
 	List<User> fetchUsers(String url, String userId) throws ApiException {
-		Response response = fetch(new ConnectionRequest.Builder().url(url).id(userId).build());
+		Response response = fetch(new ConnectionRequest.Builder().url(url)
+				.id(userId).build());
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("fetchUsers()---url=" + url + " userid=" + userId);
@@ -119,17 +120,18 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 					+ " maxid=" + maxId);
 		}
 		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
-		builder.url(url).count(count).page(page).id(userId).sinceId(sinceId).maxId(maxId);
-		
+		builder.url(url).count(count).page(page).id(userId).sinceId(sinceId)
+				.maxId(maxId);
+
 		// count<=0,count>60时返回60条
-		//count>=0&&count<=60时返回count条
-//		int c=count;
-//		if(c<1||c>ApiConfig.MAX_COUNT){
-//			c=ApiConfig.MAX_COUNT;
-//		}
-//		builder.count(c);
-		
-		if(isHtml){
+		// count>=0&&count<=60时返回count条
+		// int c=count;
+		// if(c<1||c>ApiConfig.MAX_COUNT){
+		// c=ApiConfig.MAX_COUNT;
+		// }
+		// builder.count(c);
+
+		if (isHtml) {
 			builder.param("format", "html");
 		}
 		Response response = fetch(builder.build());
@@ -370,7 +372,7 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 				throw new IllegalArgumentException("搜索词不能为空");
 			return null;
 		}
-		
+
 		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(URL_SEARCH_PUBLIC);
 		builder.param("q", keyword);
@@ -388,7 +390,8 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 
 	@Override
 	public List<Search> trends() throws ApiException {
-		Response response = fetch(new ConnectionRequest.Builder().url(URL_SEARCH_TRENDS).build());
+		Response response = fetch(new ConnectionRequest.Builder().url(
+				URL_SEARCH_TRENDS).build());
 
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
@@ -401,7 +404,8 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 
 	@Override
 	public List<Search> savedSearches() throws ApiException {
-		Response response = fetch(new ConnectionRequest.Builder().url(URL_SEARCH_SAVED).build());
+		Response response = fetch(new ConnectionRequest.Builder().url(
+				URL_SEARCH_SAVED).build());
 
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
@@ -415,8 +419,9 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 
 	@Override
 	public Search savedSearchShow(int id) throws ApiException {
-		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
-		Response response = fetch(builder.url(URL_SEARCH_SAVED_ID).param("id", id).build());
+		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
+		Response response = fetch(builder.url(URL_SEARCH_SAVED_ID)
+				.param("id", id).build());
 
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
@@ -435,10 +440,10 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 				throw new IllegalArgumentException("搜索词不能为空");
 			return null;
 		}
-		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(URL_SEARCH_SAVED_CREATE).post();
 		builder.param("query", query);
-		
+
 		Response response = fetch(builder.build());
 
 		int statusCode = response.statusCode;
@@ -451,7 +456,7 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 
 	@Override
 	public Search savedSearchDelete(int id) throws ApiException {
-		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(URL_SEARCH_SAVED_DESTROY).post().id(String.valueOf(id));
 		Response response = fetch(builder.build());
 		int statusCode = response.statusCode;
@@ -465,7 +470,7 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 
 	private List<User> fetchUsers(String url, String userId, int page)
 			throws ApiException {
-		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(url).id(userId).page(page);
 		Response response = fetch(builder.build());
 
@@ -588,7 +593,7 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 				throw new IllegalArgumentException("两个用户的ID都不能为空");
 			throw new ApiException(ERROR_NULL_TOKEN, "两个用户的ID都不能为空");
 		}
-		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(URL_FRIENDSHIS_EXISTS);
 		builder.param("user_a", userA);
 		builder.param("user_b", userB);
@@ -607,7 +612,7 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 	// 最大2000
 	private List<String> ids(String url, String userId, int count, int page)
 			throws ApiException {
-		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(url);
 		builder.id(userId);
 		builder.count(count);
@@ -637,17 +642,17 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 
 	private List<DirectMessage> messages(String url, int count, int page,
 			String sinceId, String maxId) throws ApiException {
-		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(url).count(count).page(page).maxId(maxId).sinceId(sinceId);
-		
+
 		// count<=0,count>60时返回60条
-		//count>=0&&count<=60时返回count条
-//		int c=count;
-//		if(c<1||c>ApiConfig.MAX_COUNT){
-//			c=ApiConfig.MAX_COUNT;
-//		}
-//		builder.count(c);
-		
+		// count>=0&&count<=60时返回count条
+		// int c=count;
+		// if(c<1||c>ApiConfig.MAX_COUNT){
+		// c=ApiConfig.MAX_COUNT;
+		// }
+		// builder.count(c);
+
 		Response response = fetch(builder.build());
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
@@ -694,7 +699,7 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 				throw new IllegalArgumentException("收信人ID和私信内容都不能为空");
 			return null;
 		}
-		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(URL_DIRECT_MESSAGES_NEW);
 		builder.post();
 		builder.param("user", userId);
@@ -762,7 +767,8 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 	@Override
 	public List<Status> photosTimeline(int count, int page, String userId,
 			String sinceId, String maxId, boolean isHtml) throws ApiException {
-		List<Status> ss= fetchStatuses(URL_PHOTO_USER_TIMELINE, count, page, userId, sinceId, maxId, isHtml, Status.TYPE_USER);
+		List<Status> ss = fetchStatuses(URL_PHOTO_USER_TIMELINE, count, page,
+				userId, sinceId, maxId, isHtml, Status.TYPE_USER);
 		if (App.DEBUG) {
 			log("photosTimeline()");
 		}
@@ -771,15 +777,14 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 
 	@Override
 	public User updateProfile(String description, String name, String location,
-			String url, String email) throws ApiException {
-		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+			String url) throws ApiException {
+		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(URL_ACCOUNT_UPDATE_PROFILE).post();
-		builder.param("description",description);
-		builder.param("name",name);
+		builder.param("description", description);
+		builder.param("name", name);
 		builder.param("location", location);
 		builder.param("url", url);
-		builder.param("email", email);
-		Response response=fetch(builder.build());
+		Response response = fetch(builder.build());
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("updateProfile()---statusCode=" + statusCode);
@@ -789,10 +794,10 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 
 	@Override
 	public User updateProfileImage(File image) throws ApiException {
-		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(URL_ACCOUNT_UPDATE_PROFILE_IMAGE).post();
-		builder.param("image",image);
-		Response response=fetch(builder.build());
+		builder.param("image", image);
+		Response response = fetch(builder.build());
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("updateProfileImage()---statusCode=" + statusCode);
@@ -802,7 +807,7 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 
 	@Override
 	public User userIsBlocked(String userId) throws ApiException {
-		Response response= doPostIdAction(URL_BLOCKS_EXISTS, userId);
+		Response response = doPostIdAction(URL_BLOCKS_EXISTS, userId);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("userIsBlocked()---statusCode=" + statusCode);
@@ -812,22 +817,22 @@ public class FanFouApi implements Api,FanFouApiConfig, ResponseCode {
 
 	@Override
 	public List<User> userBlockedList(int count, int page) throws ApiException {
-		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(URL_BLOCKS_USERS);
 		builder.count(count).page(page);
-		Response response= fetch(builder.build());
+		Response response = fetch(builder.build());
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("userBlockedList()---statusCode=" + statusCode);
-		}	
+		}
 		return User.parseUsers(response);
 	}
 
 	@Override
 	public List<String> userBlockedIDs() throws ApiException {
-		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(URL_BLOCKS_IDS);
-		Response response= fetch(builder.build());
+		Response response = fetch(builder.build());
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("userBlockedIDs()---statusCode=" + statusCode);

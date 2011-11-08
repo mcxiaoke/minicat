@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal" android:layout_width="match_parent"
+	android:layout_height="match_parent" android:layout_margin="@dimen/widget_margin"
+	android:background="@drawable/bg" android:gravity="center">
+
+	<Button android:id="@+id/button1" android:layout_width="48dp" android:layout_height="48dp"
+		android:layout_margin="2dp" android:background="@drawable/button_bg"
+		android:text="首页" android:textColor="@color/solid_white" />
+
+	<Button android:id="@+id/button2" android:layout_width="48dp" android:layout_height="48dp"
+		android:layout_margin="2dp" android:background="@drawable/button_bg"
+		android:text="看看" android:textColor="@color/solid_white" />
+
+	<Button android:id="@+id/button3" android:layout_width="48dp" android:layout_height="48dp"
+		android:layout_margin="2dp" android:background="@drawable/button_bg"
+		android:text="编辑" android:textColor="@color/solid_white" />
+
+	<Button android:id="@+id/button4" android:layout_width="48dp" android:layout_height="48dp"
+		android:layout_margin="2dp" android:background="@drawable/button_bg"
+		android:text="图片" android:textColor="@color/solid_white" />
+
+	<Button android:id="@+id/button5" android:layout_width="48dp" android:layout_height="48dp"
+		android:layout_margin="2dp" android:background="@drawable/button_bg"
+		android:text="拍照" android:textColor="@color/solid_white" />
+
+</LinearLayout>

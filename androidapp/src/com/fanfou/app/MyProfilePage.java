@@ -29,6 +29,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.0 2011.07.18
  * @version 1.2 2011.10.29
  * @version 1.3 2011.11.07
+ * @version 1.4 2011.11.08
  * 
  */
 public class MyProfilePage extends BaseActivity {
@@ -44,6 +45,8 @@ public class MyProfilePage extends BaseActivity {
 	private ImageView mProtected;
 
 	private TextView mDescription;
+
+	private ViewGroup mHeadView;
 
 	private ViewGroup mStatusesView;
 	private TextView mStatusesInfo;
@@ -83,7 +86,7 @@ public class MyProfilePage extends BaseActivity {
 			userId = user.id;
 		} else {
 			userId = App.me.userId;
-			user = CacheManager.getUser(this,userId);
+			user = CacheManager.getUser(this, userId);
 		}
 		if (StringHelper.isEmpty(userId)) {
 			log("用户ID不能为空");
@@ -116,6 +119,8 @@ public class MyProfilePage extends BaseActivity {
 
 		mDescription = (TextView) findViewById(R.id.user_description);
 
+		mHeadView = (ViewGroup) findViewById(R.id.user_headview);
+
 		mStatusesView = (ViewGroup) findViewById(R.id.user_statuses_view);
 		mStatusesInfo = (TextView) findViewById(R.id.user_statuses);
 		mFavoritesView = (ViewGroup) findViewById(R.id.user_favorites_view);
@@ -125,6 +130,7 @@ public class MyProfilePage extends BaseActivity {
 		mFollowersView = (ViewGroup) findViewById(R.id.user_followers_view);
 		mFollowersInfo = (TextView) findViewById(R.id.user_followers);
 
+		mHeadView.setOnClickListener(this);
 		mStatusesView.setOnClickListener(this);
 		mFavoritesView.setOnClickListener(this);
 		mFriendsView.setOnClickListener(this);
@@ -237,6 +243,30 @@ public class MyProfilePage extends BaseActivity {
 		}
 	}
 
+	private static final int REQUEST_CODE_UPDATE_PROFILE = 0;
+
+	private void goEditProfilePage() {
+		Intent intent = new Intent(this, EditProfilePage.class);
+		intent.putExtra(Commons.EXTRA_USER, user);
+		startActivityForResult(intent, REQUEST_CODE_UPDATE_PROFILE);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK) {
+			if (requestCode == REQUEST_CODE_UPDATE_PROFILE) {
+				User result = (User) data
+						.getSerializableExtra(Commons.EXTRA_USER);
+				if (result != null) {
+					user = result;
+					userId = user.id;
+					updateUI();
+				}
+			}
+		}
+	}
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -252,16 +282,19 @@ public class MyProfilePage extends BaseActivity {
 		case R.id.user_followers_view:
 			ActionManager.doShowFollowers(this, user);
 			break;
-		case R.id.user_location_view:
-			break;
-		case R.id.user_site_view:
+		case R.id.user_headview:
+			goEditProfilePage();
 			break;
 		default:
 			break;
 		}
-		
+
 	}
-	
+
+	private void goBlockingListPage() {
+
+	}
+
 	@Override
 	public void onRefreshClick() {
 		if (isBusy) {
@@ -321,6 +354,9 @@ public class MyProfilePage extends BaseActivity {
 				int type = resultData.getInt(Commons.EXTRA_TYPE);
 				if (type == Commons.ACTION_USER_SHOW) {
 					stopRefreshAnimation();
+				}
+				if (!isInitialized) {
+					showContent();
 				}
 				String msg = resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
 				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();

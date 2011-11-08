@@ -18,7 +18,7 @@ import com.fanfou.app.util.OptionHelper;
 
 /**
  * @author mcxiaoke
- *
+ * 
  */
 public class EndlessListView extends ListView implements OnItemClickListener {
 	private static final String TAG = EndlessListView.class.getSimpleName();
@@ -81,9 +81,10 @@ public class EndlessListView extends ListView implements OnItemClickListener {
 		setCacheColorHint(0);
 		setSelector(getResources().getDrawable(R.drawable.list_selector));
 		setDivider(getResources().getDrawable(R.drawable.separator));
-		
-		boolean fastScroll=OptionHelper.readBoolean(context, R.string.option_fast_scroll_on, false);
-		if(fastScroll){
+
+		boolean fastScroll = OptionHelper.readBoolean(context,
+				R.string.option_fast_scroll_on, false);
+		if (fastScroll) {
 			setFastScrollEnabled(true);
 		}
 

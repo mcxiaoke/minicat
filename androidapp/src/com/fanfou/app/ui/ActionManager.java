@@ -86,7 +86,7 @@ public final class ActionManager {
 		context.startService(intent);
 
 	}
-	
+
 	public static void doShowDrafts(Context context) {
 		Intent intent = new Intent(context, DraftsPage.class);
 		context.startActivity(intent);
@@ -185,15 +185,15 @@ public final class ActionManager {
 		intent.setType("text/plain");
 		intent.putExtra(Intent.EXTRA_SUBJECT, "来自" + status.userScreenName
 				+ "的饭否消息");
-		intent.putExtra(Intent.EXTRA_TEXT,status.simpleText);
+		intent.putExtra(Intent.EXTRA_TEXT, status.simpleText);
 		context.startActivity(Intent.createChooser(intent, "分享"));
 	}
-	
+
 	public static void doShare(Context context, File image) {
 		if (App.DEBUG) {
-			Log.d(TAG, "doShare: image is "+image);
+			Log.d(TAG, "doShare: image is " + image);
 		}
-		if (image == null ) {
+		if (image == null) {
 			return;
 		}
 		Intent intent = new Intent(Intent.ACTION_SEND);
@@ -203,14 +203,14 @@ public final class ActionManager {
 	}
 
 	public static void doReply(Context context, Status status) {
-		
+
 		if (status != null) {
 			if (App.DEBUG) {
 				Log.d(TAG, "doReply: status is null.");
 			}
-			HashSet<String> names=StatusHelper.getMentionedNames(status);
-			StringBuilder sb=new StringBuilder();
-			Iterator<String> i=names.iterator();
+			HashSet<String> names = StatusHelper.getMentionedNames(status);
+			StringBuilder sb = new StringBuilder();
+			Iterator<String> i = names.iterator();
 			while (i.hasNext()) {
 				String name = i.next();
 				sb.append("@").append(name).append(" ");
@@ -220,10 +220,10 @@ public final class ActionManager {
 			intent.putExtra(Commons.EXTRA_TEXT, sb.toString());
 			intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_REPLY);
 			context.startActivity(intent);
-		}else{
+		} else {
 			doWrite(context, null);
 		}
-		
+
 	}
 
 	public static void doWrite(Context context, String text) {
@@ -240,7 +240,8 @@ public final class ActionManager {
 		Intent intent = new Intent(context, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_REPOST);
 		intent.putExtra(Commons.EXTRA_IN_REPLY_TO_ID, status.id);
-		intent.putExtra(Commons.EXTRA_TEXT, "转@"+status.userScreenName+" "+status.simpleText);
+		intent.putExtra(Commons.EXTRA_TEXT, "转@" + status.userScreenName + " "
+				+ status.simpleText);
 		context.startActivity(intent);
 	}
 
@@ -284,7 +285,7 @@ public final class ActionManager {
 				case Commons.RESULT_CODE_ERROR:
 					String msg = resultData
 							.getString(Commons.EXTRA_ERROR_MESSAGE);
-					Utils.notify(activity.getApplicationContext(),msg);
+					Utils.notify(activity.getApplicationContext(), msg);
 					onFailed(li, Commons.ACTION_STATUS_DELETE, "删除失败");
 					break;
 				default:
@@ -340,7 +341,7 @@ public final class ActionManager {
 				case Commons.RESULT_CODE_ERROR:
 					String msg = resultData
 							.getString(Commons.EXTRA_ERROR_MESSAGE);
-					Utils.notify(activity.getApplicationContext(),msg);
+					Utils.notify(activity.getApplicationContext(), msg);
 					onFailed(li, type, "收藏失败");
 					break;
 				default:
@@ -350,9 +351,9 @@ public final class ActionManager {
 		};
 		startService(activity, type, status.id, receiver);
 	}
-	
-	public static void doMessageDelete(final Activity activity, final String id,
-			final ResultListener li, final boolean finish) {
+
+	public static void doMessageDelete(final Activity activity,
+			final String id, final ResultListener li, final boolean finish) {
 		if (StringHelper.isEmpty(id)) {
 			if (App.DEBUG) {
 				Log.d(TAG, "doMessageDelete: status id is null.");
@@ -377,7 +378,7 @@ public final class ActionManager {
 				case Commons.RESULT_CODE_ERROR:
 					String msg = resultData
 							.getString(Commons.EXTRA_ERROR_MESSAGE);
-					Utils.notify(activity.getApplicationContext(),msg);
+					Utils.notify(activity.getApplicationContext(), msg);
 					onFailed(li, Commons.ACTION_DIRECT_MESSAGE_DELETE, "删除失败");
 					break;
 				default:
@@ -385,7 +386,8 @@ public final class ActionManager {
 				}
 			}
 		};
-		startService(activity, Commons.ACTION_DIRECT_MESSAGE_DELETE, id, receiver);
+		startService(activity, Commons.ACTION_DIRECT_MESSAGE_DELETE, id,
+				receiver);
 	}
 
 	public static void doMessage(Context context, final User user) {

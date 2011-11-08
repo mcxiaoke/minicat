@@ -21,7 +21,7 @@
 					android:layout_alignParentLeft="true" />
 
 				<TextView android:id="@id/user_name" style="@style/Text.NameBig"
-					android:layout_toRightOf="@id/user_head" android:text="mcxiaoke" />
+					android:layout_toRightOf="@id/user_head" />
 
 				<TextView android:id="@id/user_relationship" style="@style/Text.MetaBig"
 					android:layout_alignLeft="@id/user_name" android:layout_below="@id/user_name"
@@ -29,7 +29,7 @@
 
 				<ImageView android:id="@id/user_protected" style="@style/Icon.Mini"
 					android:layout_toRightOf="@id/user_name"
-					android:layout_alignBottom="@id/user_name" android:src="@drawable/i_mini_locked"/>
+					android:layout_alignBottom="@id/user_name" android:src="@drawable/i_mini_locked" />
 
 			</RelativeLayout>
 
@@ -39,7 +39,7 @@
 				<View android:layout_width="wrap_content"
 					android:layout_height="0dp" android:layout_weight="1" />
 				<TextView android:id="@id/user_statuses" style="@style/Text.Small"
-					android:text="123456" android:layout_alignParentRight="true" />
+					android:layout_alignParentRight="true" />
 			</LinearLayout>
 
 			<LinearLayout style="@style/Profile.Item" android:id="@id/user_favorites_view">
@@ -47,8 +47,7 @@
 					android:text="我的收藏" />
 				<View android:layout_width="wrap_content"
 					android:layout_height="0dp" android:layout_weight="1" />
-				<TextView android:id="@id/user_favorites" style="@style/Text.Small"
-					android:text="123" />
+				<TextView android:id="@id/user_favorites" style="@style/Text.Small" />
 			</LinearLayout>
 
 			<LinearLayout style="@style/Profile.Item" android:id="@id/user_friends_view">
@@ -56,8 +55,7 @@
 					android:text="我关注的人" />
 				<View android:layout_width="wrap_content"
 					android:layout_height="0dp" android:layout_weight="1" />
-				<TextView android:id="@id/user_friends" style="@style/Text.Small"
-					android:text="1856" />
+				<TextView android:id="@id/user_friends" style="@style/Text.Small" />
 			</LinearLayout>
 
 			<LinearLayout style="@style/Profile.Item" android:id="@id/user_followers_view">
@@ -65,19 +63,18 @@
 					android:text="关注我的人" />
 				<View android:layout_width="wrap_content"
 					android:layout_height="0dp" android:layout_weight="1" />
-				<TextView android:id="@id/user_followers" style="@style/Text.Small"
-					android:text="156" />
+				<TextView android:id="@id/user_followers" style="@style/Text.Small" />
 			</LinearLayout>
 
 			<TextView android:id="@id/user_description"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:background="@drawable/text_white_bg" style="@style/Text.Medium"
 				android:padding="6dp" android:layout_margin="8dp" />
-				
-				<TextView android:id="@id/user_extrainfo"
+
+			<TextView android:id="@id/user_extrainfo"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:background="@drawable/text_white_bg" style="@style/Text.Medium"
-				android:padding="6dp" android:layout_margin="8dp" android:autoLink="web"/>
+				android:padding="6dp" android:layout_margin="8dp" android:autoLink="web" />
 
 		</LinearLayout>
 	</ScrollView>

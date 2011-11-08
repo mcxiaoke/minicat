@@ -245,7 +245,7 @@ public final class IOHelper {
 		ContentResolver cr = context.getContentResolver();
 		cr.insert(UserInfo.CONTENT_URI, u.toContentValues());
 	}
-	
+
 	public static void cleanDB(Context context) {
 		ContentResolver cr = context.getContentResolver();
 		cr.delete(StatusInfo.CONTENT_URI, null, null);

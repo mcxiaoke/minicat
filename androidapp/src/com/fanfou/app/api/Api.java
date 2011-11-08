@@ -26,22 +26,28 @@ public interface Api {
 	 * @throws ApiException
 	 */
 	User verifyAccount() throws ApiException;
-	
+
 	/**
-	 *  update user profile
-	 * @param description 
-	 * @param name realname
+	 * update user profile
+	 * 
+	 * @param description
+	 * @param name
+	 *            realname
 	 * @param location
 	 * @param url
-	 * @param email account email, not recommand.
+	 * @param email
+	 *            account email, not recommand.
 	 * @return
 	 * @throws ApiException
 	 */
-	User updateProfile(String description, String name, String location, String url, String email) throws ApiException;
-	
+	User updateProfile(String description, String name, String location,
+			String url) throws ApiException;
+
 	/**
-	 *  udpate user profile image
-	 * @param image image file
+	 * udpate user profile image
+	 * 
+	 * @param image
+	 *            image file
 	 * @return
 	 * @throws ApiException
 	 */
@@ -87,8 +93,10 @@ public interface Api {
 	 */
 	List<Status> userTimeline(int count, int page, String userId,
 			String sinceId, String maxId, boolean isHtml) throws ApiException;
-	
-	/** user timeline contains photos
+
+	/**
+	 * user timeline contains photos
+	 * 
 	 * @param count
 	 * @param page
 	 * @param userId
@@ -98,7 +106,8 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Status> photosTimeline(int count, int page, String userId, String sinceId, String maxId, boolean isHtml) throws ApiException;
+	List<Status> photosTimeline(int count, int page, String userId,
+			String sinceId, String maxId, boolean isHtml) throws ApiException;
 
 	// mention timeline
 	/**
@@ -114,7 +123,6 @@ public interface Api {
 	 */
 	List<Status> mentions(int count, int page, String sinceId, String maxId,
 			boolean isHtml) throws ApiException;
-	
 
 	// replies timeline
 	/**
@@ -322,24 +330,28 @@ public interface Api {
 	 * @throws ApiException
 	 */
 	User userUnblock(String userId) throws ApiException;
-	
-	/** 
+
+	/**
 	 * check user is or not blocked.
-	 * @param userId target user id
-	 * @return 
+	 * 
+	 * @param userId
+	 *            target user id
+	 * @return
 	 * @throws ApiException
 	 */
 	User userIsBlocked(String userId) throws ApiException;
-	
+
 	/**
-	 *  fetch user list blocked by me
+	 * fetch user list blocked by me
+	 * 
 	 * @return
 	 * @throws ApiException
 	 */
 	List<User> userBlockedList(int count, int page) throws ApiException;
-	
+
 	/**
-	 *  fetch user ids list blocked by me
+	 * fetch user ids list blocked by me
+	 * 
 	 * @return
 	 * @throws ApiException
 	 */

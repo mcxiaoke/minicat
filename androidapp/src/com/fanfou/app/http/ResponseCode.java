@@ -28,5 +28,5 @@ public interface ResponseCode {
 	public static final int ERROR_AUTH_EMPTY = -4;
 	public static final int ERROR_PARSE_FAILED = -5;
 	public static final int ERROR_DUPLICATE = -6;
-	
+
 }

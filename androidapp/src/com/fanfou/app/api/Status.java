@@ -80,11 +80,11 @@ public class Status implements Storable<Status> {
 	public boolean isThread;
 	public boolean hasPhoto;
 	public String simpleText;
-	
+
 	public long realId;
-	
+
 	public boolean special;
-	
+
 	public User user;
 	public Photo photo;
 
@@ -157,11 +157,11 @@ public class Status implements Storable<Status> {
 		Status s = new Status();
 		s.createdAt = Parser.parseDate(c, BasicColumns.CREATED_AT);
 		s.id = Parser.parseString(c, BasicColumns.ID);
-		s.realId=Parser.parseLong(c, BasicColumns.REAL_ID);
+		s.realId = Parser.parseLong(c, BasicColumns.REAL_ID);
 		s.ownerId = Parser.parseString(c, BasicColumns.OWNER_ID);
 		s.text = Parser.parseString(c, StatusInfo.TEXT);
-		s.simpleText=Parser.parseString(c, StatusInfo.SIMPLE_TEXT);
-		s.special=Parser.parseBoolean(c, StatusInfo.SPECIAL);
+		s.simpleText = Parser.parseString(c, StatusInfo.SIMPLE_TEXT);
+		s.special = Parser.parseBoolean(c, StatusInfo.SPECIAL);
 		s.source = Parser.parseString(c, StatusInfo.SOURCE);
 		s.inReplyToStatusId = Parser.parseString(c,
 				StatusInfo.IN_REPLY_TO_STATUS_ID);
@@ -185,7 +185,7 @@ public class Status implements Storable<Status> {
 		s.favorited = Parser.parseBoolean(c, StatusInfo.FAVORITED);
 
 		s.isRead = Parser.parseBoolean(c, StatusInfo.IS_READ);
-		
+
 		s.isThread = Parser.parseBoolean(c, StatusInfo.IS_THREAD);
 		s.hasPhoto = Parser.parseBoolean(c, StatusInfo.HAS_PHOTO);
 		return s;
@@ -232,7 +232,8 @@ public class Status implements Storable<Status> {
 			s.id = o.getString(BasicColumns.ID);
 			s.text = o.getString(StatusInfo.TEXT);
 
-			s.source = Parser.parseSource(o.getString(StatusInfo.SOURCE));;
+			s.source = Parser.parseSource(o.getString(StatusInfo.SOURCE));
+			;
 			s.truncated = o.getBoolean(StatusInfo.TRUNCATED);
 			s.inReplyToStatusId = o.getString(StatusInfo.IN_REPLY_TO_STATUS_ID);
 			s.inReplyToUserId = o.getString(StatusInfo.IN_REPLY_TO_USER_ID);
@@ -243,21 +244,20 @@ public class Status implements Storable<Status> {
 			s.type = type;
 
 			s.ownerId = App.me.userId;
-			
-			s.realId=Parser.decodeStatusRealId(s.id);
 
-			
+			s.realId = Parser.decodeStatusRealId(s.id);
+
 			s.simpleText = StatusHelper.getSimpifiedText(s.text);
-			
-			s.special=false;
-			
+
+			s.special = false;
+
 			if (!TextUtils.isEmpty(s.inReplyToStatusId)) {
 				s.isThread = true;
 			}
 
 			if (o.has("photo")) {
 				JSONObject po = o.getJSONObject("photo");
-				s.photo=Photo.parse(po);
+				s.photo = Photo.parse(po);
 				s.photoImageUrl = s.photo.imageUrl;
 				s.photoLargeUrl = s.photo.largeUrl;
 				s.photoThumbUrl = s.photo.thumbUrl;
@@ -270,7 +270,7 @@ public class Status implements Storable<Status> {
 				s.userScreenName = uo.getString(UserInfo.SCREEN_NAME);
 				s.userProfileImageUrl = uo
 						.getString(UserInfo.PROFILE_IMAGE_URL);
-				 s.user = User.parse(uo);
+				s.user = User.parse(uo);
 				// s.userId = s.user.id;
 				// s.userScreenName = s.user.screenName;
 				// s.userProfileImageUrl = s.user.profileImageUrl;
@@ -294,9 +294,9 @@ public class Status implements Storable<Status> {
 		ContentValues cv = new ContentValues();
 		cv.put(BasicColumns.CREATED_AT, this.createdAt.getTime());
 		cv.put(BasicColumns.ID, this.id);
-		
+
 		cv.put(BasicColumns.REAL_ID, this.realId);
-		
+
 		cv.put(BasicColumns.OWNER_ID, this.ownerId);
 		cv.put(StatusInfo.TEXT, this.text);
 		cv.put(StatusInfo.SOURCE, this.source);
@@ -318,21 +318,21 @@ public class Status implements Storable<Status> {
 		cv.put(StatusInfo.FAVORITED, this.favorited);
 
 		cv.put(StatusInfo.IS_READ, this.isRead);
-		
+
 		cv.put(StatusInfo.IS_THREAD, this.isThread);
 		cv.put(StatusInfo.HAS_PHOTO, this.hasPhoto);
 		cv.put(StatusInfo.SIMPLE_TEXT, this.simpleText);
 		cv.put(StatusInfo.SPECIAL, this.special);
-		
+
 		cv.put(BasicColumns.TIMESTAMP, new Date().getTime());
 		return cv;
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
-		if(o instanceof Status){
-			Status s=(Status) o;
-			if(id.equals(s.id)){
+		if (o instanceof Status) {
+			Status s = (Status) o;
+			if (id.equals(s.id)) {
 				return true;
 			}
 		}

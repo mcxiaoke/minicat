@@ -26,17 +26,13 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
 
 import com.fanfou.app.App;
-import com.fanfou.app.R;
 import com.fanfou.app.http.ApnType;
-import com.fanfou.app.service.AutoCompleteService;
-import com.fanfou.app.service.DownloadService;
 
 /**
  * @author mcxiaoke
@@ -115,6 +111,7 @@ final class NetworkHelper {
 			return domain;
 		}
 	}
+
 	/**
 	 * Build and return a user-agent string that can identify this application
 	 * to remote servers. Contains the package name and version code.
@@ -133,7 +130,7 @@ final class NetworkHelper {
 		}
 	}
 
-	public static void setProxy(final HttpParams params,final ApnType type) {
+	public static void setProxy(final HttpParams params, final ApnType type) {
 		if (type == ApnType.CTWAP) {
 			if (App.DEBUG) {
 				Log.d("setProxy", "set proxy for ctwap");
@@ -180,7 +177,7 @@ final class NetworkHelper {
 		}
 	}
 
-static DefaultHttpClient newHttpClient() {
+	static DefaultHttpClient newHttpClient() {
 		ConnPerRoute connPerRoute = new ConnPerRoute() {
 			@Override
 			public int getMaxForRoute(HttpRoute route) {
@@ -189,7 +186,7 @@ static DefaultHttpClient newHttpClient() {
 		};
 		HttpParams params = new BasicHttpParams();
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-//		ConnManagerParams.setTimeout(params, CONNECTION_TIMEOUT_MS);
+		// ConnManagerParams.setTimeout(params, CONNECTION_TIMEOUT_MS);
 		ConnManagerParams.setMaxConnectionsPerRoute(params, connPerRoute);
 		HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
 		HttpConnectionParams
@@ -205,8 +202,8 @@ static DefaultHttpClient newHttpClient() {
 		ClientConnectionManager manager = new ThreadSafeClientConnManager(
 				params, schReg);
 		DefaultHttpClient client = new DefaultHttpClient(manager, params);
-//		client.addResponseInterceptor(new GzipResponseInterceptor());
-//		client.setHttpRequestRetryHandler(new RequestRetryHandler(3));
+		// client.addResponseInterceptor(new GzipResponseInterceptor());
+		// client.setHttpRequestRetryHandler(new RequestRetryHandler(3));
 		return client;
 	}
 

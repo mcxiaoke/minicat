@@ -6,6 +6,7 @@ import org.acra.annotation.ReportsCrashes;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -67,32 +68,30 @@ public class App extends Application {
 	public String password;
 	public String userScreenName;
 	public String userProfileImage;
-
 	public String oauthAccessToken;
 	public String oauthAccessTokenSecret;
-
 	public int appVersionCode;
 	public String appVersionName;
-
 	public ApnType apnType;
-
 	public SharedPreferences sp;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
 		init();
 		initAppInfo();
 		initPreferences();
 		versionCheck();
-		if (isLogin) {
-			initAlarm();
-		}
+		initAlarm();
 
 		ACRA.init(this);
-		
-		if(DEBUG){
-			Log.d("App", "uid="+android.os.Process.myUid()+" pid="+android.os.Process.myPid()+" tid="+android.os.Process.myTid());
+
+		if (DEBUG) {
+			Log.d("App",
+					"uid=" + android.os.Process.myUid() + " pid="
+							+ android.os.Process.myPid() + " tid="
+							+ android.os.Process.myTid());
 		}
 
 	}
@@ -100,23 +99,28 @@ public class App extends Application {
 	private void init() {
 		App.me = this;
 		NetworkState state = new NetworkState(this);
-		apnType = state.getApnType();
+		this.apnType = state.getApnType();
 		this.imageLoader = new ImageLoader(this);
 		this.api = new FanFouApi();
 
 		if (DEBUG) {
-			java.util.logging.Logger.getLogger("org.apache.http").setLevel(java.util.logging.Level.FINEST);
-			java.util.logging.Logger.getLogger("org.apache.http.wire").setLevel(java.util.logging.Level.FINER);
-			java.util.logging.Logger.getLogger("org.apache.http.headers").setLevel(java.util.logging.Level.OFF);
-			java.util.logging.Logger.getLogger("httpclient.wire.header").setLevel(java.util.logging.Level.FINEST);
-			java.util.logging.Logger.getLogger("httpclient.wire.content").setLevel(java.util.logging.Level.FINEST);
-			
+			java.util.logging.Logger.getLogger("org.apache.http").setLevel(
+					java.util.logging.Level.FINEST);
+			java.util.logging.Logger.getLogger("org.apache.http.wire")
+					.setLevel(java.util.logging.Level.FINER);
+			java.util.logging.Logger.getLogger("org.apache.http.headers")
+					.setLevel(java.util.logging.Level.OFF);
+			java.util.logging.Logger.getLogger("httpclient.wire.header")
+					.setLevel(java.util.logging.Level.FINEST);
+			java.util.logging.Logger.getLogger("httpclient.wire.content")
+					.setLevel(java.util.logging.Level.FINEST);
+
 			// and shell command
-			//adb shell setprop log.tag.org.apache.http VERBOSE
-			//adb shell setprop log.tag.org.apache.http.wire VERBOSE
-			//adb shell setprop log.tag.org.apache.http.headers VERBOSE
-			//adb shell setprop log.tag.httpclient.wire.header VERBOSE
-			//adb shell setprop log.tag.httpclient.wire.content VERBOSE
+			// adb shell setprop log.tag.org.apache.http VERBOSE
+			// adb shell setprop log.tag.org.apache.http.wire VERBOSE
+			// adb shell setprop log.tag.org.apache.http.headers VERBOSE
+			// adb shell setprop log.tag.httpclient.wire.header VERBOSE
+			// adb shell setprop log.tag.httpclient.wire.content VERBOSE
 		}
 	}
 
@@ -136,6 +140,9 @@ public class App extends Application {
 	}
 
 	private void initAppInfo() {
+		if (DEBUG) {
+			Log.d("App", "initAppInfo");
+		}
 		PackageManager pm = getPackageManager();
 		PackageInfo pi;
 		try {
@@ -150,6 +157,12 @@ public class App extends Application {
 	}
 
 	private void initAlarm() {
+		if (!isLogin) {
+			return;
+		}
+		if (DEBUG) {
+			Log.d("App", "initAlarm");
+		}
 		Utils.setAutoClean(this);
 		Utils.setAutoUpdate(this);
 		Utils.setAutoComplete(this);
@@ -157,42 +170,55 @@ public class App extends Application {
 	}
 
 	private void versionCheck() {
+		if (DEBUG) {
+			Log.d("App", "versionCheck");
+		}
 		if (OptionHelper.readInt(this, R.string.option_old_version_code, 0) < appVersionCode) {
+			cleanSettings();
 			OptionHelper.saveInt(this, R.string.option_old_version_code,
 					appVersionCode);
-			cleanSettings();
 		}
 	}
 
 	private void cleanSettings() {
-		if(DEBUG){
+		if (DEBUG) {
 			Log.d("App", "cleanSettings");
 		}
-		OptionHelper.remove(this, R.string.option_set_auto_clean);
-		OptionHelper.remove(this, R.string.option_set_auto_update);
-		OptionHelper.remove(this, R.string.option_set_auto_complete);
-		OptionHelper.remove(this, R.string.option_set_notification);
+		Editor editor = sp.edit();
+		editor.remove(getString(R.string.option_set_auto_clean));
+		editor.remove(getString(R.string.option_set_auto_update));
+		editor.remove(getString(R.string.option_set_auto_complete));
+		editor.remove(getString(R.string.option_set_notification));
+		editor.commit();
 	}
 
-	public synchronized void updateAccountInfo(User u, String token, String tokenSecret) {
-		user = u;
-		userId = u.id;
-		userScreenName = u.screenName;
-		userProfileImage = u.profileImageUrl;
-		
-		OptionHelper.saveString(this, R.string.option_userid, u.id);
-		OptionHelper.saveString(this, R.string.option_username, u.screenName);
-		OptionHelper.saveString(this, R.string.option_profile_image,
-				u.profileImageUrl);
-		
-		if(!TextUtils.isEmpty(token)){
-			OptionHelper.saveString(this, R.string.option_oauth_token, token);
-			OptionHelper.saveString(this, R.string.option_oauth_token_secret, tokenSecret);
+	public synchronized void updateAccountInfo(User u, String token,
+			String tokenSecret) {
+		if (DEBUG) {
+			Log.d("App", "updateAccountInfo");
 		}
-		isLogin=true;
+		user = u;
+		userId = u.id;
+		userScreenName = u.screenName;
+		userProfileImage = u.profileImageUrl;
+		Editor editor = sp.edit();
+		editor.putString(getString(R.string.option_userid), u.id);
+		editor.putString(getString(R.string.option_username), u.screenName);
+		editor.putString(getString(R.string.option_profile_image),
+				u.profileImageUrl);
+		if (!TextUtils.isEmpty(token)) {
+			editor.putString(getString(R.string.option_oauth_token), token);
+			editor.putString(getString(R.string.option_oauth_token_secret),
+					tokenSecret);
+		}
+		editor.commit();
+		isLogin = true;
 	}
-	
+
 	public synchronized void updateUserInfo(User u) {
+		if (DEBUG) {
+			Log.d("App", "updateAccountInfo u");
+		}
 		user = u;
 		userId = u.id;
 		userScreenName = u.screenName;
@@ -202,20 +228,25 @@ public class App extends Application {
 		OptionHelper.saveString(this, R.string.option_profile_image,
 				u.profileImageUrl);
 	}
-	
-	public synchronized void removeAccountInfo(){
-		isLogin=false;
-		user=null;
-		userId=null;
-		userScreenName=null;
-		userProfileImage=null;
-		oauthAccessToken=null;
-		oauthAccessTokenSecret=null;
-		OptionHelper.remove(this, R.string.option_userid);
-		OptionHelper.remove(this, R.string.option_username);
-		OptionHelper.remove(this, R.string.option_profile_image);
-		OptionHelper.remove(this,R.string.option_oauth_token);
-		OptionHelper.remove(this, R.string.option_oauth_token_secret);
+
+	public synchronized void removeAccountInfo() {
+		if (DEBUG) {
+			Log.d("App", "removeAccountInfo");
+		}
+		isLogin = false;
+		user = null;
+		userId = null;
+		userScreenName = null;
+		userProfileImage = null;
+		oauthAccessToken = null;
+		oauthAccessTokenSecret = null;
+		Editor editor = sp.edit();
+		editor.remove(getString(R.string.option_userid));
+		editor.remove(getString(R.string.option_username));
+		editor.remove(getString(R.string.option_profile_image));
+		editor.remove(getString(R.string.option_oauth_token));
+		editor.remove(getString(R.string.option_oauth_token_secret));
+		editor.commit();
 	}
 
 	public IImageLoader getImageLoader() {
@@ -224,8 +255,8 @@ public class App extends Application {
 		}
 		return imageLoader;
 	}
-	
-	public void clearImageTasks(){
+
+	public void clearImageTasks() {
 		if (imageLoader != null) {
 			imageLoader.clearQueue();
 		}

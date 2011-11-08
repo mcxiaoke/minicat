@@ -241,8 +241,8 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 				Utils.notify(mContext, msg);
 				if (!isInitialized) {
 					showContent();
-						mListView.onNoLoadMore();
-						mListView.onNoRefresh();
+					mListView.onNoLoadMore();
+					mListView.onNoRefresh();
 				} else {
 					if (doGetMore) {
 						mListView.onLoadMoreComplete();

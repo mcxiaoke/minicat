@@ -18,10 +18,6 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 
 import android.text.TextUtils;
-import android.util.Log;
-
-import com.fanfou.app.App;
-import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -31,7 +27,7 @@ import com.fanfou.app.util.Utils;
  * 
  */
 public final class ConnectionRequest {
-	
+
 	public final boolean post;
 	public final List<Parameter> params;
 	public final List<Header> headers;
@@ -79,94 +75,94 @@ public final class ConnectionRequest {
 			this.url = url;
 			return this;
 		}
-		
-		public Builder post(){
-			this.post=true;
+
+		public Builder post() {
+			this.post = true;
 			return this;
 		}
-		
-		public Builder post(boolean post){
-			this.post=post;
+
+		public Builder post(boolean post) {
+			this.post = post;
 			return this;
 		}
-		
-		public Builder page(int page){
-			if(page>0){
+
+		public Builder page(int page) {
+			if (page > 0) {
 				this.params.add(new Parameter("page", page));
 			}
 			return this;
 		}
-		
-		public Builder count(int count){
+
+		public Builder count(int count) {
 			this.params.add(new Parameter("count", count));
 			return this;
 		}
-		
-		public Builder id(String id){
-			if(!TextUtils.isEmpty(id)){
+
+		public Builder id(String id) {
+			if (!TextUtils.isEmpty(id)) {
 				this.params.add(new Parameter("id", id));
 			}
 			return this;
 		}
-		
-		public Builder status(String status){
-			if(!TextUtils.isEmpty(status)){
+
+		public Builder status(String status) {
+			if (!TextUtils.isEmpty(status)) {
 				this.params.add(new Parameter("status", status));
 			}
 			return this;
 		}
-		
-		public Builder location(String location){
-			if(!TextUtils.isEmpty(location)){
+
+		public Builder location(String location) {
+			if (!TextUtils.isEmpty(location)) {
 				this.params.add(new Parameter("location", location));
 			}
 			return this;
 		}
-		
-		public Builder sinceId(String sinceId){
-			if(!TextUtils.isEmpty(sinceId)){
+
+		public Builder sinceId(String sinceId) {
+			if (!TextUtils.isEmpty(sinceId)) {
 				this.params.add(new Parameter("since_id", sinceId));
 			}
 			return this;
 		}
-		
-		public Builder maxId(String maxId){
-			if(!TextUtils.isEmpty(maxId)){
+
+		public Builder maxId(String maxId) {
+			if (!TextUtils.isEmpty(maxId)) {
 				this.params.add(new Parameter("max_id", maxId));
 			}
 			return this;
 		}
 
 		public Builder param(String name, String value) {
-			if(!TextUtils.isEmpty(name)&&!TextUtils.isEmpty(value)){
+			if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(value)) {
 				this.params.add(new Parameter(name, value));
 			}
 			return this;
 		}
-		
+
 		public Builder param(String name, int value) {
-			if(!TextUtils.isEmpty(name)){
+			if (!TextUtils.isEmpty(name)) {
 				this.params.add(new Parameter(name, value));
 			}
 			return this;
 		}
-		
+
 		public Builder param(String name, long value) {
-			if(!TextUtils.isEmpty(name)){
+			if (!TextUtils.isEmpty(name)) {
 				this.params.add(new Parameter(name, value));
 			}
 			return this;
 		}
-		
+
 		public Builder param(String name, boolean value) {
-			if(!TextUtils.isEmpty(name)){
+			if (!TextUtils.isEmpty(name)) {
 				this.params.add(new Parameter(name, value));
 			}
 			return this;
 		}
-		
+
 		public Builder param(String name, File value) {
-			if(!TextUtils.isEmpty(name)&&value!=null){
+			if (!TextUtils.isEmpty(name) && value != null) {
 				this.params.add(new Parameter(name, value));
 			}
 			return this;
@@ -176,19 +172,19 @@ public final class ConnectionRequest {
 			this.params.add(new Parameter(pair));
 			return this;
 		}
-		
+
 		public Builder param(Parameter param) {
 			this.params.add(param);
 			return this;
 		}
-		
-		public Builder params(List<Parameter> params){
+
+		public Builder params(List<Parameter> params) {
 			this.params.addAll(params);
 			return this;
 		}
 
 		public Builder header(String name, String value) {
-			if(!TextUtils.isEmpty(name) && !TextUtils.isEmpty(value)){
+			if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(value)) {
 				this.headers.add(new BasicHeader(name, value));
 			}
 			return this;
@@ -198,8 +194,8 @@ public final class ConnectionRequest {
 			this.headers.add(header);
 			return this;
 		}
-		
-		public Builder headers(List<Header> headers){
+
+		public Builder headers(List<Header> headers) {
 			this.headers.addAll(headers);
 			return this;
 		}
@@ -227,7 +223,8 @@ public final class ConnectionRequest {
 			if (i > 0) {
 				buf.append("&");
 			}
-			buf.append(encode(p.getName())).append("=").append(encode(p.getValue()));
+			buf.append(encode(p.getName())).append("=")
+					.append(encode(p.getValue()));
 		}
 		return buf.toString();
 	}
@@ -292,7 +289,7 @@ public final class ConnectionRequest {
 		}
 		return buf.toString();
 	}
-	
+
 	public static boolean containsFile(Parameter[] params) {
 		boolean containsFile = false;
 		if (null == params) {
@@ -320,7 +317,7 @@ public final class ConnectionRequest {
 		}
 		return containsFile;
 	}
-	
+
 	public static Parameter[] getParameterArray(String name, String value) {
 		return new Parameter[] { new Parameter(name, value) };
 	}

@@ -10,7 +10,7 @@ import android.widget.TextView;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.10.28
- *
+ * 
  */
 public class ScrollingTextView extends TextView {
 

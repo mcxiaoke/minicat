@@ -69,7 +69,7 @@ public class User implements Storable<User> {
 	public String lastStatusId;
 	public String lastStatusText;
 	public Date lastStatusCreatedAt = null;
-	
+
 	public long realId;
 
 	@Override
@@ -119,7 +119,7 @@ public class User implements Storable<User> {
 
 		user.createdAt = Parser.parseDate(c, BasicColumns.CREATED_AT);
 		user.id = Parser.parseString(c, BasicColumns.ID);
-		user.realId=Parser.parseLong(c, BasicColumns.REAL_ID);
+		user.realId = Parser.parseLong(c, BasicColumns.REAL_ID);
 		user.ownerId = Parser.parseString(c, BasicColumns.OWNER_ID);
 		user.name = Parser.parseString(c, UserInfo.NAME);
 		user.screenName = Parser.parseString(c, UserInfo.SCREEN_NAME);
@@ -171,7 +171,7 @@ public class User implements Storable<User> {
 		try {
 			u = new User();
 			u.id = o.getString(BasicColumns.ID);
-			u.realId=Parser.decodeUserRealId(u.id);
+			u.realId = Parser.decodeUserRealId(u.id);
 			u.name = o.getString(UserInfo.NAME);
 			u.screenName = o.getString(UserInfo.SCREEN_NAME);
 			u.location = o.getString(UserInfo.LOCATION);
@@ -191,7 +191,7 @@ public class User implements Storable<User> {
 			u.utcOffset = o.getInt(UserInfo.UTC_OFFSET);
 
 			u.type = Commons.TYPE_NONE;
-			u.ownerId=App.me.userId;
+			u.ownerId = App.me.userId;
 
 			if (o.has("status")) {
 				JSONObject so = o.getJSONObject("status");
@@ -211,7 +211,7 @@ public class User implements Storable<User> {
 			log("User.parse id=" + u.id);
 		return u;
 	}
-	
+
 	public ContentValues toSimpleContentValues() {
 		User u = this;
 		ContentValues cv = new ContentValues();
@@ -307,9 +307,9 @@ public class User implements Storable<User> {
 
 	@Override
 	public boolean equals(Object o) {
-		if(o instanceof User){
-			User u=(User) o;
-			if(id.equals(u.id)){
+		if (o instanceof User) {
+			User u = (User) o;
+			if (id.equals(u.id)) {
 				return true;
 			}
 		}

@@ -23,7 +23,6 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.fanfou.app.adapter.UserChooseCursorAdapter;
-import com.fanfou.app.api.Api;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
@@ -35,7 +34,6 @@ import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -99,7 +97,7 @@ public class UserChoosePage extends BaseActivity implements
 				+ "=?";
 		String[] whereArgs = new String[] { String.valueOf(User.TYPE_FRIENDS),
 				App.me.userId };
-		String orderBy=FanFouProvider.ORDERBY_STATUSES_COUNT;
+		String orderBy = FanFouProvider.ORDERBY_STATUSES_COUNT;
 		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				whereArgs, null);
 
@@ -281,8 +279,8 @@ public class UserChoosePage extends BaseActivity implements
 			mCursorAdapter.getFilter().filter(s.toString());
 		}
 	}
-	
-	private void resetChoices(){
+
+	private void resetChoices() {
 		SparseBooleanArray sba = mListView.getCheckedItemPositions();
 		for (int i = 0; i < sba.size(); i++) {
 			mCursorAdapter.setItemChecked(sba.keyAt(i), false);

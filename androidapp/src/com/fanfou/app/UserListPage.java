@@ -8,20 +8,13 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.os.ResultReceiver;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-
 import com.fanfou.app.adapter.UserCursorAdapter;
-import com.fanfou.app.api.Api;
-import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
@@ -46,12 +39,13 @@ import com.fanfou.app.util.Utils;
  * @version 2.0 2011.11.07
  * 
  */
-public class UserListPage extends BaseActivity implements OnRefreshListener,FilterQueryProvider{
+public class UserListPage extends BaseActivity implements OnRefreshListener,
+		FilterQueryProvider {
 
 	protected ActionBar mActionBar;
 	protected EndlessListView mListView;
 	protected ViewGroup mEmptyView;
-	
+
 	protected EditText mEditText;
 
 	protected Cursor mCursor;
@@ -100,7 +94,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,Filt
 		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
 				+ "=?";
 		String[] whereArgs = new String[] { String.valueOf(type), userId };
-		String orderBy=FanFouProvider.ORDERBY_DATE_DESC;
+		String orderBy = FanFouProvider.ORDERBY_DATE_DESC;
 		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				whereArgs, null);
 	}
@@ -133,7 +127,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,Filt
 		setActionBar();
 
 		mEmptyView = (ViewGroup) findViewById(R.id.empty);
-		
+
 		mEditText = (EditText) findViewById(R.id.choose_input);
 		mEditText.addTextChangedListener(new MyTextWatcher());
 
@@ -142,19 +136,19 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,Filt
 
 		mCursorAdapter = new UserCursorAdapter(mContext, mCursor);
 		mCursorAdapter.setFilterQueryProvider(this);
-		
+
 		mListView.setAdapter(mCursorAdapter);
 		registerForContextMenu(mListView);
-		
+
 		mListView.post(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				mListView.setSelection(1);
 			}
 		});
 	}
-	
+
 	private class MyTextWatcher extends TextChangeListener {
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before,
@@ -168,8 +162,8 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,Filt
 	 */
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		
-		if(user!=null){
+
+		if (user != null) {
 			if (type == User.TYPE_FRIENDS) {
 				mActionBar.setTitle(user.screenName + "关注的人");
 			} else if (type == User.TYPE_FOLLOWERS) {
@@ -227,13 +221,13 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,Filt
 			mCursor.requery();
 		}
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
 		App.me.clearImageTasks();
 	}
-	
+
 	private static final String LIST_STATE = "listState";
 	private Parcelable mState = null;
 
@@ -337,38 +331,43 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,Filt
 			ActionManager.doProfile(mContext, u);
 		}
 	}
-	
-//	private static final int CONTEXT_MENU_ID_TIMELINE=1001;
-//	private static final int CONTEXT_MENU_ID_FAVORITES=1002;
-//	private static final int CONTEXT_MENU_ID_FRIENDS=1003;
-//	private static final int CONTEXT_MENU_ID_FOLLOWERS=1004;
-//	private static final int CONTEXT_MENU_ID_FOLLOW=1005;
-//	private static final int CONTEXT_MENU_ID_UNFOLLOW=1006;
-//	private static final int CONTEXT_MENU_ID_BLOCK=1007;
-	
-//	@Override
-//	public void onCreateContextMenu(ContextMenu menu, View v,
-//			ContextMenuInfo menuInfo) {
-//		MenuItem timeline=menu.add(0, CONTEXT_MENU_ID_TIMELINE, CONTEXT_MENU_ID_TIMELINE, "查看消息");
-//		MenuItem favorites=menu.add(0, CONTEXT_MENU_ID_FAVORITES, CONTEXT_MENU_ID_FAVORITES, "查看收藏");
-//		MenuItem friends=menu.add(0, CONTEXT_MENU_ID_FRIENDS, CONTEXT_MENU_ID_FRIENDS, "查看关注的人");
-//		MenuItem followers=menu.add(0, CONTEXT_MENU_ID_FOLLOWERS, CONTEXT_MENU_ID_FOLLOWERS, "查看关注者");
-//		MenuItem follow=menu.add(0, CONTEXT_MENU_ID_FOLLOW, CONTEXT_MENU_ID_FOLLOW, "添加关注");
-//		MenuItem unfollow=menu.add(0, CONTEXT_MENU_ID_UNFOLLOW,CONTEXT_MENU_ID_UNFOLLOW, "取消关注");
-//		MenuItem delete=menu.add(0, CONTEXT_MENU_ID_BLOCK, CONTEXT_MENU_ID_BLOCK, "删除关注");
-//	}
-	
-	
+
+	// private static final int CONTEXT_MENU_ID_TIMELINE=1001;
+	// private static final int CONTEXT_MENU_ID_FAVORITES=1002;
+	// private static final int CONTEXT_MENU_ID_FRIENDS=1003;
+	// private static final int CONTEXT_MENU_ID_FOLLOWERS=1004;
+	// private static final int CONTEXT_MENU_ID_FOLLOW=1005;
+	// private static final int CONTEXT_MENU_ID_UNFOLLOW=1006;
+	// private static final int CONTEXT_MENU_ID_BLOCK=1007;
+
+	// @Override
+	// public void onCreateContextMenu(ContextMenu menu, View v,
+	// ContextMenuInfo menuInfo) {
+	// MenuItem timeline=menu.add(0, CONTEXT_MENU_ID_TIMELINE,
+	// CONTEXT_MENU_ID_TIMELINE, "查看消息");
+	// MenuItem favorites=menu.add(0, CONTEXT_MENU_ID_FAVORITES,
+	// CONTEXT_MENU_ID_FAVORITES, "查看收藏");
+	// MenuItem friends=menu.add(0, CONTEXT_MENU_ID_FRIENDS,
+	// CONTEXT_MENU_ID_FRIENDS, "查看关注的人");
+	// MenuItem followers=menu.add(0, CONTEXT_MENU_ID_FOLLOWERS,
+	// CONTEXT_MENU_ID_FOLLOWERS, "查看关注者");
+	// MenuItem follow=menu.add(0, CONTEXT_MENU_ID_FOLLOW,
+	// CONTEXT_MENU_ID_FOLLOW, "添加关注");
+	// MenuItem unfollow=menu.add(0,
+	// CONTEXT_MENU_ID_UNFOLLOW,CONTEXT_MENU_ID_UNFOLLOW, "取消关注");
+	// MenuItem delete=menu.add(0, CONTEXT_MENU_ID_BLOCK, CONTEXT_MENU_ID_BLOCK,
+	// "删除关注");
+	// }
+
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
-		String where = UserInfo.TYPE + " = " + type + " AND "
-				+ UserInfo.OWNER_ID + " = '" + App.me.userId + "' AND ("
+		String where = BasicColumns.TYPE + " = " + type + " AND "
+				+ BasicColumns.OWNER_ID + " = '" + App.me.userId + "' AND ("
 				+ UserInfo.SCREEN_NAME + " like '%" + constraint + "%' OR "
-				+ UserInfo.ID + " like '%" + constraint + "%' )";
+				+ BasicColumns.ID + " like '%" + constraint + "%' )";
 		;
 		return managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				null, null);
 	}
-	
-	
+
 }

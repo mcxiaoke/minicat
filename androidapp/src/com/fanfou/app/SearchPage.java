@@ -27,7 +27,7 @@ import com.fanfou.app.ui.ActionBar;
  * @version 2.0 2011.10.21
  * 
  */
-public class SearchPage extends BaseActivity implements OnItemClickListener{
+public class SearchPage extends BaseActivity implements OnItemClickListener {
 	private ActionBar mActionBar;
 
 	private ListView mListView;
@@ -40,7 +40,7 @@ public class SearchPage extends BaseActivity implements OnItemClickListener{
 		super.onCreate(savedInstanceState);
 		parseIntent();
 		setLayout();
-//		onSearchRequested();
+		// onSearchRequested();
 		fetchHotwords();
 	}
 
@@ -54,10 +54,10 @@ public class SearchPage extends BaseActivity implements OnItemClickListener{
 	private void setLayout() {
 		setContentView(R.layout.search);
 		setActionBar();
-		mEmptyView=findViewById(R.id.empty);
-		TextView tv=(TextView) findViewById(R.id.empty_text);
+		mEmptyView = findViewById(R.id.empty);
+		TextView tv = (TextView) findViewById(R.id.empty_text);
 		tv.setText("热词载入中...");
-		
+
 		mListView = (ListView) findViewById(R.id.list);
 		mListView.setOnItemClickListener(this);
 	}
@@ -72,7 +72,7 @@ public class SearchPage extends BaseActivity implements OnItemClickListener{
 	private void showHotwords() {
 		mEmptyView.setVisibility(View.GONE);
 		mListView.setVisibility(View.VISIBLE);
-		
+
 		mAdapter = new SearchAdapter(this, mHotwords);
 		mListView.setAdapter(mAdapter);
 		mAdapter.notifyDataSetChanged();

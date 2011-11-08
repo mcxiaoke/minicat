@@ -16,7 +16,7 @@ import com.fanfou.app.db.Contents.UserInfo;
  * @version 3.1 2011.10.27
  * @version 3.2 2011.10.28
  * @version 3.3 2011.11.07
- *
+ * 
  */
 public class SQLiteHelper extends SQLiteOpenHelper {
 	public static final String TAG = "SQLiteHelper";

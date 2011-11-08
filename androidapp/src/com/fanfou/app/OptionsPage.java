@@ -112,7 +112,7 @@ public class OptionsPage extends PreferenceActivity implements
 	public void finish() {
 		if (needRestart) {
 			android.os.Process.killProcess(android.os.Process.myPid());
-		}else{
+		} else {
 			super.finish();
 		}
 	}
@@ -148,18 +148,27 @@ public class OptionsPage extends PreferenceActivity implements
 		if (key.equals(getString(R.string.option_notification))) {
 			CheckBoxPreference cp = (CheckBoxPreference) p;
 			if (cp.isChecked()) {
-				AlarmHelper.setNotificationTaskOn(this);
+				String s = sp.getString(
+						getString(R.string.option_notification_interval), "5");
+				int intervel = Integer.parseInt(s);
+				AlarmHelper.setNotificationTaskOn(this, intervel);
 			} else {
 				AlarmHelper.setNotificationTaskOff(this);
 			}
-		} else if (key.equals(getString(R.string.option_force_portrait))) {
+		} else if (key.equals(getString(R.string.option_notification_interval))) {
+			String s = sp.getString(key, "5");
+			int intervel = Integer.parseInt(s);
+			AlarmHelper.setNotificationTaskOn(this, intervel);
+		}
+
+		else if (key.equals(getString(R.string.option_force_portrait))) {
 			CheckBoxPreference cp = (CheckBoxPreference) p;
 			if (cp.isChecked()) {
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			} else {
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 			}
-			needRestart=true;
+			needRestart = true;
 		} else if (key.equals(getString(R.string.option_bottom_refresh_icon))) {
 			ListPreference lp = (ListPreference) p;
 			lp.setSummary(lp.getEntry());
@@ -169,8 +178,8 @@ public class OptionsPage extends PreferenceActivity implements
 			if (value.equals(value2) && !value.equals("none")) {
 				lp.setValue("none");
 				Utils.notify(this, "请重选，刷新图标和发消息图标不能处于同一位置");
-			}else{
-				needRestart=true;
+			} else {
+				needRestart = true;
 			}
 		} else if (key.equals(getString(R.string.option_bottom_write_icon))) {
 			ListPreference lp = (ListPreference) p;
@@ -181,16 +190,15 @@ public class OptionsPage extends PreferenceActivity implements
 			if (value.equals(value2) && !value.equals("none")) {
 				lp.setValue("none");
 				Utils.notify(this, "请重选，发消息图标和刷新图标不能处于同一位置");
-			}else{
-				needRestart=true;
+			} else {
+				needRestart = true;
 			}
-		}
-		else if (p instanceof ListPreference) {
+		} else if (p instanceof ListPreference) {
 			ListPreference lp = (ListPreference) p;
 			lp.setSummary(lp.getEntry());
 			setResult(RESULT_OK,
 					getIntent().putExtra(Commons.EXTRA_BOOLEAN, true));
-			needRestart=true;
+			needRestart = true;
 		}
 
 	}

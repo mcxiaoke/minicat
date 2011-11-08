@@ -1,24 +1,19 @@
 package com.fanfou.app.hd.module;
 
 import com.fanfou.app.App;
-import com.fanfou.app.R;
 import com.fanfou.app.adapter.StatusCursorAdapter;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.StatusInfo;
-import com.pullToRefresh.PullToRefreshComponent;
-
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
 
 /**
@@ -114,7 +109,7 @@ public class TimelineFragment extends ListFragment implements
 	}
 
 	private CursorLoader createUserCursor() {
-		String where = StatusInfo.TYPE + "=? AND " + StatusInfo.USER_ID
+		String where = BasicColumns.TYPE + "=? AND " + StatusInfo.USER_ID
 				+ " =? ";
 		String[] whereArgs = new String[] { String.valueOf(Status.TYPE_USER),
 				App.me.userId };

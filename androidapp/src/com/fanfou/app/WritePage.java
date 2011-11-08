@@ -17,20 +17,16 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Selection;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethod;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
-
 import com.fanfou.app.adapter.AtTokenizer;
 import com.fanfou.app.adapter.AutoCompleteCursorAdapter;
 import com.fanfou.app.api.Draft;
 import com.fanfou.app.api.User;
+import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DraftInfo;
@@ -58,6 +54,7 @@ import com.fanfou.app.util.Utils;
  * @version 3.2 2011.10.29
  * @version 3.3 2011.11.02
  * @version 3.4 2011.11.07
+ * @version 4.0 2011.11.08
  * 
  */
 public class WritePage extends BaseActivity {
@@ -100,13 +97,14 @@ public class WritePage extends BaseActivity {
 	private boolean enableLocation;
 
 	private String inReplyToStatusId;
-	private int draftId;
 	private String text;
 	private int type;
 
 	public static final int TYPE_NORMAL = 0;
 	public static final int TYPE_REPLY = 1;
 	public static final int TYPE_REPOST = 2;
+	public static final int TYPE_GALLERY = 3;
+	public static final int TYPE_CAMERA = 4;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -247,35 +245,55 @@ public class WritePage extends BaseActivity {
 			if (action == null) {
 				type = intent.getIntExtra(Commons.EXTRA_TYPE, TYPE_NORMAL);
 				text = intent.getStringExtra(Commons.EXTRA_TEXT);
-				draftId = intent.getIntExtra(Commons.EXTRA_DRAFT_ID, -1);
 				inReplyToStatusId = intent
 						.getStringExtra(Commons.EXTRA_IN_REPLY_TO_ID);
 				File file = (File) intent
 						.getSerializableExtra(Commons.EXTRA_FILE);
+				int draftId = intent.getIntExtra(Commons.EXTRA_DRAFT_ID, -1);
 				parsePhoto(file);
-			} else if (action.equals(Intent.ACTION_SEND)) {
+				updateUI();
+				deleteDraft(draftId);
+			} else if (action.equals(Intent.ACTION_SEND)
+					|| action.equals(Actions.ACTION_SEND)) {
 				Bundle extras = intent.getExtras();
-				text = extras.getString(Intent.EXTRA_TEXT);
-				Uri uri = extras.getParcelable(Intent.EXTRA_STREAM);
-				parsePhoto(uri);
+				if (extras != null) {
+					text = extras.getString(Intent.EXTRA_TEXT);
+					Uri uri = extras.getParcelable(Intent.EXTRA_STREAM);
+					parsePhoto(uri);
+					updateUI();
+				}
+			} else if (action.equals(Actions.ACTION_SEND_FROM_GALLERY)) {
+				type = TYPE_GALLERY;
+				startAddPicture();
+			} else if (action.equals(Actions.ACTION_SEND_FROM_CAMERA)) {
+				type = TYPE_CAMERA;
+				startCameraShot();
 			}
+
 			if (App.DEBUG) {
 				log("intent type=" + type);
 				log("intent text=" + text);
 			}
 		}
-		mAutoCompleteTextView.setText(text);
-		if (type != TYPE_REPOST) {
-			Selection.setSelection(mAutoCompleteTextView.getText(),
-					mAutoCompleteTextView.getText().length());
+	}
+
+	private void updateUI() {
+		if (!StringHelper.isEmpty(text)) {
+			mAutoCompleteTextView.setText(text);
+			if (type != TYPE_REPOST) {
+				Selection.setSelection(mAutoCompleteTextView.getText(),
+						mAutoCompleteTextView.getText().length());
+			}
 		}
 		if (photoUri != null) {
 			showPreview();
 		}
+	}
 
-		if (draftId >= 0) {
+	private void deleteDraft(int id) {
+		if (id >= 0) {
 			getContentResolver().delete(
-					ContentUris.withAppendedId(DraftInfo.CONTENT_URI, draftId),
+					ContentUris.withAppendedId(DraftInfo.CONTENT_URI, id),
 					null, null);
 		}
 	}
@@ -315,28 +333,31 @@ public class WritePage extends BaseActivity {
 				wordsCount = content.length();
 				showCount(wordsCount);
 			}
-		});	
-		
-//		boolean sendOnEnter=OptionHelper.readBoolean(this, R.string.option_send_on_enter, false);
-//		if(sendOnEnter){
-//			mAutoCompleteTextView.setImeOptions(EditorInfo.IME_ACTION_SEND);
-//			mAutoCompleteTextView.setOnEditorActionListener(new OnEditorActionListener() {
-//			@Override
-//			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//				switch (actionId) {
-//				case EditorInfo.IME_ACTION_SEND:
-//					doSend();
-//					return true;
-//				default:
-//					break;
-//				}
-//				return false;
-//			}
-//		});
-//		}else{
-//			mAutoCompleteTextView.setImeOptions(EditorInfo.IME_ACTION_DONE);
-//		}
-		
+		});
+
+		// boolean sendOnEnter=OptionHelper.readBoolean(this,
+		// R.string.option_send_on_enter, false);
+		// if(sendOnEnter){
+		// mAutoCompleteTextView.setImeOptions(EditorInfo.IME_ACTION_SEND);
+		// mAutoCompleteTextView.setOnEditorActionListener(new
+		// OnEditorActionListener() {
+		// @Override
+		// public boolean onEditorAction(TextView v, int actionId, KeyEvent
+		// event) {
+		// switch (actionId) {
+		// case EditorInfo.IME_ACTION_SEND:
+		// doSend();
+		// return true;
+		// default:
+		// break;
+		// }
+		// return false;
+		// }
+		// });
+		// }else{
+		// mAutoCompleteTextView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+		// }
+
 		mAutoCompleteTextView.setTokenizer(new AtTokenizer());
 		mAutoCompleteTextView.setDropDownBackgroundResource(R.drawable.bg);
 		mAutoCompleteTextView.setDropDownAnchor(R.id.write_text);
@@ -375,9 +396,8 @@ public class WritePage extends BaseActivity {
 
 		iPictureRemove.setOnClickListener(this);
 
-		iLocationIcon
-				.setImageResource(enableLocation ? R.drawable.ic_bar_geoon
-						: R.drawable.ic_bar_geooff);
+		iLocationIcon.setImageResource(enableLocation ? R.drawable.ic_bar_geoon
+				: R.drawable.ic_bar_geooff);
 
 	}
 

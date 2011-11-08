@@ -12,8 +12,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.ResultReceiver;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.WindowManager;
@@ -34,8 +32,6 @@ import com.fanfou.app.StatusPage;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.service.AutoCompleteService;
-import com.fanfou.app.service.FetchService;
 
 /**
  * 
@@ -49,6 +45,8 @@ import com.fanfou.app.service.FetchService;
  * 
  */
 public final class Utils {
+
+	private static final String TAG = "Utils";
 
 	/**
 	 * @param c
@@ -249,40 +247,52 @@ public final class Utils {
 	public static void setAutoClean(Context context) {
 		boolean isSet = OptionHelper.readBoolean(context,
 				R.string.option_set_auto_clean, false);
+		if (App.DEBUG) {
+			Log.d(TAG, "setAutoClean flag=" + isSet);
+		}
 		if (!isSet) {
+			AlarmHelper.setCleanTask(context);
 			OptionHelper.saveBoolean(context, R.string.option_set_auto_clean,
 					true);
-			AlarmHelper.setCleanTask(context);
 		}
 	}
 
 	public static void setAutoUpdate(Context context) {
 		boolean isSet = OptionHelper.readBoolean(context,
 				R.string.option_set_auto_update, false);
-		if (isSet) {
-			OptionHelper.saveBoolean(context,
-					R.string.option_set_auto_update, true);
+		if (App.DEBUG) {
+			Log.d(TAG, "setAutoUpdate flag=" + isSet);
+		}
+		if (!isSet) {
 			AlarmHelper.setAutoUpdateTask(context);
+			OptionHelper.saveBoolean(context, R.string.option_set_auto_update,
+					true);
 		}
 	}
 
 	public static void setAutoComplete(Context context) {
 		boolean isSet = OptionHelper.readBoolean(context,
 				R.string.option_set_auto_complete, false);
+		if (App.DEBUG) {
+			Log.d(TAG, "setAutoComplete flag=" + isSet);
+		}
 		if (!isSet) {
+			AlarmHelper.setAutoCompleteTask(context);
 			OptionHelper.saveBoolean(context,
 					R.string.option_set_auto_complete, true);
-			AlarmHelper.setAutoCompleteTask(context);
 		}
 	}
 
 	public static void setAutoNotification(Context context) {
 		boolean isSet = OptionHelper.readBoolean(context,
 				R.string.option_set_notification, false);
+		if (App.DEBUG) {
+			Log.d(TAG, "setAutoNotification flag=" + isSet);
+		}
 		if (!isSet) {
+			AlarmHelper.setNotificationTaskOn(context, 5);
 			OptionHelper.saveBoolean(context, R.string.option_set_notification,
 					true);
-			AlarmHelper.setNotificationTaskOn(context);
 		}
 	}
 

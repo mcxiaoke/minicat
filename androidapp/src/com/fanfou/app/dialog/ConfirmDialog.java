@@ -37,18 +37,18 @@ public class ConfirmDialog extends Dialog implements View.OnClickListener {
 		this.mContext = context;
 		this.mTitle = title;
 		this.mText = text;
-		
+
 		init();
 	}
 
 	protected void setBlurEffect() {
 		Window window = getWindow();
 		WindowManager.LayoutParams lp = window.getAttributes();
-//		 lp.alpha=0.8f;
+		// lp.alpha=0.8f;
 		lp.dimAmount = 0.6f;
 		window.setAttributes(lp);
 		window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-//		window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
+		// window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
 	}
 
 	private void init() {
@@ -74,7 +74,7 @@ public class ConfirmDialog extends Dialog implements View.OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setBlurEffect();
-		
+
 	}
 
 	@Override
@@ -93,12 +93,12 @@ public class ConfirmDialog extends Dialog implements View.OnClickListener {
 		mText = message;
 		mTextView.setText(mText);
 	}
-	
-	public void setButton1Text(CharSequence text){
+
+	public void setButton1Text(CharSequence text) {
 		mButton1.setText(text);
 	}
-	
-	public void setButton2Text(CharSequence text){
+
+	public void setButton2Text(CharSequence text) {
 		mButton2.setText(text);
 	}
 
@@ -134,10 +134,11 @@ public class ConfirmDialog extends Dialog implements View.OnClickListener {
 
 	public static interface ClickHandler {
 		public void onButton1Click();
+
 		public void onButton2Click();
 	}
-	
-	public abstract static class AbstractClickHandler implements ClickHandler{
+
+	public abstract static class AbstractClickHandler implements ClickHandler {
 
 		@Override
 		public void onButton1Click() {
@@ -146,7 +147,7 @@ public class ConfirmDialog extends Dialog implements View.OnClickListener {
 		@Override
 		public void onButton2Click() {
 		}
-		
+
 	}
 
 }

@@ -16,33 +16,30 @@ import com.fanfou.app.hd.module.TimelineFragment;
  * 
  */
 public class HomeScreen extends BaseFragmentActivity {
-	
-	private static final String TAG=HomeScreen.class.getSimpleName();
-	
-	private static final int NUMS_OF_PAGE=4;
-	
+
+	private static final String TAG = HomeScreen.class.getSimpleName();
+
+	private static final int NUMS_OF_PAGE = 4;
+
 	private ViewPager mViewPager;
 	private PagerViewAdapter mViewAdapter;
 
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.screen_home);
-		
-		
-		mViewAdapter=new PagerViewAdapter(getSupportFragmentManager());
-		mViewPager=(ViewPager) findViewById(R.id.viewpager);
-		mViewPager.setAdapter(mViewAdapter);
-		
 
-//		ListFragment fragment = new TimelineFragment();
-//
-//		FragmentManager manager = getSupportFragmentManager();
-//		FragmentTransaction transaction = manager.beginTransaction();
-//		transaction.add(R.id.home_container, fragment);
-//		transaction.commit();
+		mViewAdapter = new PagerViewAdapter(getSupportFragmentManager());
+		mViewPager = (ViewPager) findViewById(R.id.viewpager);
+		mViewPager.setAdapter(mViewAdapter);
+
+		// ListFragment fragment = new TimelineFragment();
+		//
+		// FragmentManager manager = getSupportFragmentManager();
+		// FragmentTransaction transaction = manager.beginTransaction();
+		// transaction.add(R.id.home_container, fragment);
+		// transaction.commit();
 
 	}
 
@@ -60,12 +57,12 @@ public class HomeScreen extends BaseFragmentActivity {
 	protected int getPageType() {
 		return PAGE_HOME;
 	}
-	
-	private void log(String message){
+
+	private void log(String message) {
 		Log.d(TAG, message);
 	}
-	
-	private static class PagerViewAdapter extends FragmentPagerAdapter{
+
+	private static class PagerViewAdapter extends FragmentPagerAdapter {
 
 		public PagerViewAdapter(FragmentManager fm) {
 			super(fm);
@@ -80,7 +77,7 @@ public class HomeScreen extends BaseFragmentActivity {
 		public int getCount() {
 			return NUMS_OF_PAGE;
 		}
-		
+
 	}
 
 }

@@ -42,11 +42,11 @@ public class SaveConfirmDialog extends Dialog implements View.OnClickListener {
 	protected void setBlurEffect() {
 		Window window = getWindow();
 		WindowManager.LayoutParams lp = window.getAttributes();
-//		 lp.alpha=0.8f;
+		// lp.alpha=0.8f;
 		lp.dimAmount = 0.6f;
 		window.setAttributes(lp);
 		window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-//		window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
+		// window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
 	}
 
 	private void init() {
@@ -62,8 +62,8 @@ public class SaveConfirmDialog extends Dialog implements View.OnClickListener {
 
 		mButtonSave = (Button) findViewById(R.id.button_save);
 		mButtonSave.setOnClickListener(this);
-		
-		mButtonDisCard=(Button) findViewById(R.id.button_discard);
+
+		mButtonDisCard = (Button) findViewById(R.id.button_discard);
 		mButtonDisCard.setOnClickListener(this);
 
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
@@ -130,6 +130,7 @@ public class SaveConfirmDialog extends Dialog implements View.OnClickListener {
 
 	public static interface OnButtonClickListener {
 		public void onSaveClick();
+
 		public void onDiscardClick();
 	}
 

@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -70,7 +69,7 @@ public class SearchResultsAdapter extends BaseArrayAdapter<Status> {
 	}
 
 	private void setTextStyle(ViewHolder holder) {
-		int fontSize=getFontSize();
+		int fontSize = getFontSize();
 		holder.contentText.setTextSize(fontSize);
 		holder.nameText.setTextSize(fontSize);
 		holder.metaText.setTextSize(fontSize - 4);
@@ -93,7 +92,7 @@ public class SearchResultsAdapter extends BaseArrayAdapter<Status> {
 
 		final Status s = mStatus.get(position);
 
-		if(!isTextMode()){
+		if (!isTextMode()) {
 			mLoader.set(s.userProfileImageUrl, holder.headIcon,
 					R.drawable.default_head);
 			holder.headIcon.setOnClickListener(new View.OnClickListener() {
@@ -120,18 +119,19 @@ public class SearchResultsAdapter extends BaseArrayAdapter<Status> {
 		}
 
 		holder.nameText.setText(s.userScreenName);
-		
-		SpannableStringBuilder span = new SpannableStringBuilder(
-				s.simpleText);
+
+		SpannableStringBuilder span = new SpannableStringBuilder(s.simpleText);
 		if (!StringHelper.isEmpty(mKeyword)) {
-			Matcher m=mPattern.matcher(span);
-			while(m.find()){
-				int start=m.start();
-				int end=m.end();
-				span.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.profile_relation_blue)), start, end,
+			Matcher m = mPattern.matcher(span);
+			while (m.find()) {
+				int start = m.start();
+				int end = m.end();
+				span.setSpan(new ForegroundColorSpan(mContext.getResources()
+						.getColor(R.color.profile_relation_blue)), start, end,
 						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				span.setSpan(new StyleSpan(Typeface.BOLD), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			}		
+				span.setSpan(new StyleSpan(Typeface.BOLD), start, end,
+						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			}
 		}
 		holder.contentText.setText(span);
 
@@ -169,10 +169,9 @@ public class SearchResultsAdapter extends BaseArrayAdapter<Status> {
 		return R.layout.list_item_status;
 	}
 
-
 	public void updateDataAndUI(List<Status> ss, String keyword) {
 		mKeyword = keyword;
-		mPattern=Pattern.compile(mKeyword);
+		mPattern = Pattern.compile(mKeyword);
 		mStatus = ss;
 		notifyDataSetChanged();
 	}

@@ -380,7 +380,7 @@ public class FetchService extends BaseIntentService {
 				sendCountMessage(insertedCount);
 
 				// extract users and insert to db, replace original object.
-//				updateUsersFromStatus(statuses, mType);
+				// updateUsersFromStatus(statuses, mType);
 			}
 			BufferedOutputStream a;
 		} catch (ApiException e) {
@@ -405,7 +405,8 @@ public class FetchService extends BaseIntentService {
 				cv.put(UserInfo.PROFILE_IMAGE_URL, u.profileImageUrl);
 				cv.put(UserInfo.URL, u.url);
 				cv.put(UserInfo.DESCRIPTION, u.description);
-				getContentResolver().update(UserInfo.CONTENT_URI, cv, UserInfo.ID+"=?", new String[]{u.id});
+				getContentResolver().update(UserInfo.CONTENT_URI, cv,
+						BasicColumns.ID + "=?", new String[] { u.id });
 			}
 		}
 		int result = getContentResolver().bulkInsert(UserInfo.CONTENT_URI,

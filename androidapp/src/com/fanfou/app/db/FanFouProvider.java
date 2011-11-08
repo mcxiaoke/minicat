@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.DatabaseUtils.InsertHelper;
@@ -17,6 +18,7 @@ import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
+import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
@@ -50,20 +52,21 @@ public class FanFouProvider extends ContentProvider {
 
 	private SQLiteHelper dbHelper;
 
-
 	public static final String ORDERBY_DATE = BasicColumns.CREATED_AT;
-	public static final String ORDERBY_DATE_DESC = BasicColumns.CREATED_AT+ " DESC";
-	
-	public static final String ORDERBY_STATUSES_COUNT=UserInfo.STATUSES_COUNT;
-	public static final String ORDERBY_STATUSES_COUNT_DESC=UserInfo.STATUSES_COUNT+" DESC";
+	public static final String ORDERBY_DATE_DESC = BasicColumns.CREATED_AT
+			+ " DESC";
+
+	public static final String ORDERBY_STATUSES_COUNT = UserInfo.STATUSES_COUNT;
+	public static final String ORDERBY_STATUSES_COUNT_DESC = UserInfo.STATUSES_COUNT
+			+ " DESC";
 
 	public static final int USERS_ALL = 1;// 查询全部用户信息，可附加条件参数
 	public static final int USER_SEARCH = 2; // 搜索用户，未实现
 	public static final int USER_ID = 3; // 根据ID查询单个用户
 	public static final int USER_TYPE = 4;
-	
-	public static final int USER_SEARCH_SUGGEST=7;
-	public static final int USER_REFRESH_SHORTCUT=8;
+
+	public static final int USER_SEARCH_SUGGEST = 7;
+	public static final int USER_REFRESH_SHORTCUT = 8;
 
 	public static final int STATUSES_ALL = 21;
 	public static final int STATUS_SEARCH_LOCAL = 22;
@@ -106,13 +109,18 @@ public class FanFouProvider extends ContentProvider {
 				USER_ID);
 		sUriMatcher.addURI(Contents.AUTHORITY, UserInfo.URI_PATH + "/type/#",
 				USER_TYPE);
-		
+
 		// add for user info search in search box
-		sUriMatcher.addURI(Contents.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY, USER_SEARCH_SUGGEST);
-		sUriMatcher.addURI(Contents.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", USER_SEARCH_SUGGEST);
-		sUriMatcher.addURI(Contents.AUTHORITY, SearchManager.SUGGEST_URI_PATH_SHORTCUT, USER_REFRESH_SHORTCUT);
-		sUriMatcher.addURI(Contents.AUTHORITY, SearchManager.SUGGEST_URI_PATH_SHORTCUT + "/*", USER_REFRESH_SHORTCUT);
-		
+		sUriMatcher.addURI(Contents.AUTHORITY,
+				SearchManager.SUGGEST_URI_PATH_QUERY, USER_SEARCH_SUGGEST);
+		sUriMatcher.addURI(Contents.AUTHORITY,
+				SearchManager.SUGGEST_URI_PATH_QUERY + "/*",
+				USER_SEARCH_SUGGEST);
+		sUriMatcher.addURI(Contents.AUTHORITY,
+				SearchManager.SUGGEST_URI_PATH_SHORTCUT, USER_REFRESH_SHORTCUT);
+		sUriMatcher.addURI(Contents.AUTHORITY,
+				SearchManager.SUGGEST_URI_PATH_SHORTCUT + "/*",
+				USER_REFRESH_SHORTCUT);
 
 		sUriMatcher.addURI(Contents.AUTHORITY, StatusInfo.URI_PATH,
 				STATUSES_ALL);
@@ -425,8 +433,10 @@ public class FanFouProvider extends ContentProvider {
 					numInserted++;
 				}
 			}
+			if (App.DEBUG) {
+				log("bulkInsertData insert rows=" + numInserted);
+			}
 			db.setTransactionSuccessful();
-			// numInserted += values.length;
 		} catch (Exception e) {
 			if (App.DEBUG) {
 				e.printStackTrace();
@@ -439,10 +449,6 @@ public class FanFouProvider extends ContentProvider {
 	}
 
 	private int bulkInsertUsers(ContentValues[] values) {
-		if (App.DEBUG) {
-			log("bulkInsertUsers()");
-		}
-
 		int numInserted = 0;
 		final SQLiteDatabase db = dbHelper.getWritableDatabase();
 		InsertHelper ih = new InsertHelper(db, UserInfo.TABLE_NAME);
@@ -532,14 +538,11 @@ public class FanFouProvider extends ContentProvider {
 				if (result > -1) {
 					numInserted++;
 				}
-				if (App.DEBUG) {
-					log("bulkInsertUsers insert: user.id= "
-							+ value.getAsString(UserInfo.ID) + " result="
-							+ result);
-				}
+			}
+			if (App.DEBUG) {
+				log("bulkInsertUsers insert rows=" + numInserted);
 			}
 			db.setTransactionSuccessful();
-			// numInserted = values.length;
 		} catch (Exception e) {
 			if (App.DEBUG) {
 				e.printStackTrace();
@@ -552,9 +555,6 @@ public class FanFouProvider extends ContentProvider {
 	}
 
 	private int bulkInsertStatuses(ContentValues[] values) {
-		if (App.DEBUG) {
-			log("bulkInsertStatuses()");
-		}
 		int numInserted = 0;
 		final SQLiteDatabase db = dbHelper.getWritableDatabase();
 		InsertHelper ih = new InsertHelper(db, StatusInfo.TABLE_NAME);
@@ -649,11 +649,10 @@ public class FanFouProvider extends ContentProvider {
 				if (result > -1) {
 					numInserted++;
 				}
-				if (App.DEBUG) {
-					log("bulkInsertStatuses insert: status.id= "
-							+ value.getAsString(StatusInfo.ID) + " result="
-							+ result);
-				}
+
+			}
+			if (App.DEBUG) {
+				log("bulkInsertStatuses insert rows=" + numInserted);
 			}
 			db.setTransactionSuccessful();
 			// numInserted = values.length;
@@ -1003,6 +1002,38 @@ public class FanFouProvider extends ContentProvider {
 		// log("update() notifyChange() rowId: " + id + " uri: " + uri);
 		getContext().getContentResolver().notifyChange(uri, null);
 		return count;
+	}
+
+	// 更新用户信息
+	public static int updateUserInfo(Context context, User u) {
+		if (u == null || u.isNull()) {
+			return -1;
+		}
+		int result = context.getContentResolver().update(
+				Uri.parse(UserInfo.CONTENT_URI + "/id/" + u.id),
+				u.toSimpleContentValues(), null, null);
+		if (App.DEBUG) {
+			Log.d(TAG, "updateUserInfo id=" + u.id + " updated rows: " + result);
+		}
+		return result;
+	}
+
+	public static int updateStatusProfileImageUrl(Context context, User u) {
+		if (u == null || u.isNull()) {
+			return -1;
+		}
+		ContentValues values = new ContentValues();
+		values.put(StatusInfo.USER_PROFILE_IMAGE_URL, u.profileImageUrl);
+		String where = StatusInfo.USER_ID + " =? ";
+		String[] whereArgs = new String[] { u.id };
+		int result = context.getContentResolver().update(
+				StatusInfo.CONTENT_URI, values, where, whereArgs);
+		if (App.DEBUG) {
+			Log.d(TAG, "updateStatusProfileImageUrl id=" + u.id
+					+ " updated rows: " + result);
+		}
+		return result;
+
 	}
 
 }

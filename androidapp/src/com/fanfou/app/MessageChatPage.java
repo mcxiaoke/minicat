@@ -9,17 +9,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.inputmethod.EditorInfo;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
-
 import com.fanfou.app.adapter.MessageCursorAdapter;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.config.Actions;
@@ -33,7 +28,6 @@ import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.IntentHelper;
-import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
 
@@ -83,7 +77,7 @@ public class MessageChatPage extends BaseActivity {
 
 	private void initSendSuccessReceiver() {
 		mSendSuccessReceiver = new SendSuccessReceiver();
-		mSendSuccessFilter = new IntentFilter(Actions.ACTION_MESSAGE_SEND);
+		mSendSuccessFilter = new IntentFilter(Actions.ACTION_MESSAGE_SENT);
 		mSendSuccessFilter.setPriority(1000);
 	}
 
@@ -125,26 +119,28 @@ public class MessageChatPage extends BaseActivity {
 
 		mSendButton = (Button) findViewById(R.id.button_ok);
 		mSendButton.setOnClickListener(this);
-		
-//		boolean sendOnEnter=OptionHelper.readBoolean(this, R.string.option_send_on_enter, false);
-//		if(sendOnEnter){
-//			mEditText.setImeOptions(EditorInfo.IME_ACTION_SEND);
-//			mEditText.setOnEditorActionListener(new OnEditorActionListener() {
-//			@Override
-//			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//				switch (actionId) {
-//				case EditorInfo.IME_ACTION_SEND:
-//					doSend(false);
-//					return true;
-//				default:
-//					break;
-//				}
-//				return false;
-//			}
-//		});
-//		}else{
-//			mEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-//		}
+
+		// boolean sendOnEnter=OptionHelper.readBoolean(this,
+		// R.string.option_send_on_enter, false);
+		// if(sendOnEnter){
+		// mEditText.setImeOptions(EditorInfo.IME_ACTION_SEND);
+		// mEditText.setOnEditorActionListener(new OnEditorActionListener() {
+		// @Override
+		// public boolean onEditorAction(TextView v, int actionId, KeyEvent
+		// event) {
+		// switch (actionId) {
+		// case EditorInfo.IME_ACTION_SEND:
+		// doSend(false);
+		// return true;
+		// default:
+		// break;
+		// }
+		// return false;
+		// }
+		// });
+		// }else{
+		// mEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+		// }
 	}
 
 	private void setActionBar() {
@@ -156,11 +152,11 @@ public class MessageChatPage extends BaseActivity {
 
 	private void setListView() {
 		initCursor();
-		mCursorAdapter = new MessageCursorAdapter(this, mCursor, true,true);
+		mCursorAdapter = new MessageCursorAdapter(this, mCursor, true, true);
 
 		mListView = (ListView) findViewById(R.id.list);
 		registerForContextMenu(mListView);
-		
+
 		mListView.setCacheColorHint(0);
 		mListView.setHorizontalScrollBarEnabled(false);
 		mListView.setVerticalScrollBarEnabled(false);
@@ -254,11 +250,11 @@ public class MessageChatPage extends BaseActivity {
 
 	private void doDelete(DirectMessage dm) {
 		ActionManager.doMessageDelete(this, dm.id, null, false);
-//		if (dm.type == DirectMessage.TYPE_OUT) {
-//			ActionManager.doMessageDelete(this, dm.id, null, false);
-//		} else {
-//			Utils.notify(this, "只能删除你自己发送的私信");
-//		}
+		// if (dm.type == DirectMessage.TYPE_OUT) {
+		// ActionManager.doMessageDelete(this, dm.id, null, false);
+		// } else {
+		// Utils.notify(this, "只能删除你自己发送的私信");
+		// }
 	}
 
 	private class SendAction extends AbstractAction {
@@ -283,7 +279,7 @@ public class MessageChatPage extends BaseActivity {
 		if (finish) {
 			Utils.hideKeyboard(this, mEditText);
 			finish();
-		}else{
+		} else {
 			mEditText.setText("");
 		}
 	}

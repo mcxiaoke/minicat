@@ -1,4 +1,4 @@
-package com.fanfou.lib.quickaction;
+package com.lib.quickaction;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;

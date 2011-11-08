@@ -52,7 +52,8 @@ public class AutoCompleteService extends WakefulIntentService {
 					if (App.DEBUG)
 						log("doFetchAutoComplete page==" + page
 								+ " result.size=" + result.size());
-					getContentResolver().bulkInsert(UserInfo.CONTENT_URI, Parser.toContentValuesArray(result));
+					getContentResolver().bulkInsert(UserInfo.CONTENT_URI,
+							Parser.toContentValuesArray(result));
 					size += result.size();
 					if (page >= 10) {
 						hasNext = false;

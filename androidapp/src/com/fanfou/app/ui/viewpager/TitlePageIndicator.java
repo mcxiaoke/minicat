@@ -46,7 +46,7 @@ import android.view.View;
  * @author mcxiaoke
  * @version 1.1 2011.08.20
  * @version 1.2 2011.11.04
- *
+ * 
  */
 public class TitlePageIndicator extends View implements PageIndicator {
 	/**
@@ -457,7 +457,7 @@ public class TitlePageIndicator extends View implements PageIndicator {
 		}
 	}
 
-//	@Override
+	// @Override
 	public boolean onTouchEvent2(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			final int count = getPageCount();

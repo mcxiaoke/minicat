@@ -11,9 +11,6 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -113,7 +110,7 @@ public class StatusPage extends BaseActivity {
 		setIntent(intent);
 		parseIntent();
 		updateUI();
-		
+
 	}
 
 	private void updateFavoriteButton() {
@@ -190,7 +187,7 @@ public class StatusPage extends BaseActivity {
 				mLoader.set(status.userProfileImageUrl, iUserHead,
 						R.drawable.default_head);
 			}
-			
+
 			tUserName.setText(status.userScreenName);
 
 			StatusHelper.setStatus(tContent, status.text);
@@ -295,10 +292,10 @@ public class StatusPage extends BaseActivity {
 			onClickPhoto();
 			break;
 		case R.id.status_thread:
-			 Intent intent = new Intent(mContext, ConversationPage.class);
-			 intent.putExtra(Commons.EXTRA_STATUS, status);
-			 mContext.startActivity(intent);
-//			testAnimation();
+			Intent intent = new Intent(mContext, ConversationPage.class);
+			intent.putExtra(Commons.EXTRA_STATUS, status);
+			mContext.startActivity(intent);
+			// testAnimation();
 			break;
 		default:
 			break;

@@ -14,7 +14,6 @@ import com.fanfou.app.R;
 import com.fanfou.app.http.ApnType;
 import com.fanfou.app.service.AutoCompleteService;
 import com.fanfou.app.service.DownloadService;
-import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.OptionHelper;
 
 /**
@@ -31,23 +30,24 @@ public class NetworkReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		String action = intent.getAction();
 		if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-			handleConnectionStateChange(context,intent);
+			handleConnectionStateChange(context, intent);
 		} else if (action.equals(WifiManager.WIFI_STATE_CHANGED_ACTION)) {
 			handleWifiStateChange(context, intent);
 		}
 	}
-	
-	private void onWifiConnected(Context context){
-		// when wifi is connected, start fetch friends for autocomplete and check update.
+
+	private void onWifiConnected(Context context) {
+		// when wifi is connected, start fetch friends for autocomplete and
+		// check update.
 		startAutoComplete(context);
 		startUpdateCheck(context);
 	}
-	
-	public static void startAutoComplete(Context context){
+
+	public static void startAutoComplete(Context context) {
 		Intent intent = new Intent(context, AutoCompleteService.class);
 		context.startService(intent);
 	}
-	
+
 	public static void startUpdateCheck(Context context) {
 		boolean autoUpdate = OptionHelper.readBoolean(context,
 				R.string.option_autoupdate, true);
@@ -56,7 +56,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 		}
 	}
 
-	private void handleConnectionStateChange(Context context,Intent intent) {
+	private void handleConnectionStateChange(Context context, Intent intent) {
 		boolean disconnected = intent.getBooleanExtra(
 				ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
 		if (App.DEBUG) {

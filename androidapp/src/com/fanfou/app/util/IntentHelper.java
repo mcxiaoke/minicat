@@ -12,14 +12,14 @@ import com.fanfou.app.R;
 import com.fanfou.app.config.Commons;
 
 public final class IntentHelper {
-	
-	public static void goHomePage(Context context, final int page ) {
+
+	public static void goHomePage(Context context, final int page) {
 		Intent intent = new Intent(context, HomePage.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.putExtra(Commons.EXTRA_PAGE, page);
 		context.startActivity(intent);
 	}
-	
+
 	public static void goLoginPage(Context context) {
 		App.me.removeAccountInfo();
 		App.me.clearImageTasks();
@@ -70,7 +70,5 @@ public final class IntentHelper {
 		}
 		Log.i(tag, sb.toString());
 	}
-
-
 
 }

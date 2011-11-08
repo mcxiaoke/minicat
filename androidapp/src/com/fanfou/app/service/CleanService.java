@@ -38,13 +38,13 @@ public class CleanService extends WakefulIntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		if (!App.active) {
-//			doUpdateHome();
-//			doUpdateMention();
-//			doCleanAction();
-			 doCleanStatusData();
-			 doCleanMessageData();
-			 doCleanUserData();
-			 doCleanPhotos();
+			// doUpdateHome();
+			// doUpdateMention();
+			// doCleanAction();
+			doCleanStatusData();
+			doCleanMessageData();
+			doCleanUserData();
+			doCleanPhotos();
 		}
 	}
 
@@ -81,9 +81,9 @@ public class CleanService extends WakefulIntentService {
 			Log.d("CleanService", "cleaned user items count=" + result);
 		}
 	}
-	
-	private void doCleanPhotos(){
-		IOHelper.deleteDir(IOHelper.getImageCacheDir(this), 10*1024);
+
+	private void doCleanPhotos() {
+		IOHelper.deleteDir(IOHelper.getImageCacheDir(this), 10 * 1024);
 	}
 
 	private void doUpdateHome() {

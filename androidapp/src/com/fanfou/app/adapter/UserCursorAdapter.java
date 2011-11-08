@@ -43,7 +43,7 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 	}
 
 	private void setTextStyle(ViewHolder holder) {
-		int fontSize=getFontSize();
+		int fontSize = getFontSize();
 		holder.contentText.setTextSize(fontSize);
 		holder.nameText.setTextSize(fontSize);
 		holder.dateText.setTextSize(fontSize - 3);
@@ -58,7 +58,7 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 		setHeadImage(mContext, holder.headIcon);
 		setTextStyle(holder);
 		view.setTag(holder);
-//		bindView(view, context, cursor);
+		// bindView(view, context, cursor);
 		return view;
 	}
 

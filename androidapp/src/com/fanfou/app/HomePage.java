@@ -27,7 +27,6 @@ import com.fanfou.app.adapter.BaseCursorAdapter;
 import com.fanfou.app.adapter.MessageCursorAdapter;
 import com.fanfou.app.adapter.StatusCursorAdapter;
 import com.fanfou.app.adapter.ViewsAdapter;
-import com.fanfou.app.api.Api;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
@@ -61,6 +60,7 @@ import com.fanfou.app.util.Utils;
  * @version 3.7 2011.11.04
  * @version 4.0 2011.11.04
  * @version 4.1 2011.11.07
+ * @version 4.2 2011.11.08
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
@@ -82,6 +82,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	private int mCurrentPage;
 
+	private int initPage;
+
 	private EndlessListViewNoHeader[] views = new EndlessListViewNoHeader[NUMS_OF_PAGE];
 
 	private Cursor[] cursors = new Cursor[NUMS_OF_PAGE];
@@ -89,8 +91,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	private BaseCursorAdapter[] adapters = new BaseCursorAdapter[NUMS_OF_PAGE];
 
 	private Parcelable[] states = new Parcelable[NUMS_OF_PAGE];
-	
-	private boolean[] initializeState=new boolean[NUMS_OF_PAGE];
+
+	private boolean[] initializeState = new boolean[NUMS_OF_PAGE];
 
 	private static final String[] PAGE_TITLES = new String[] { "我的主页", "提到我的",
 			"我的私信", "随便看看" };
@@ -124,11 +126,13 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	private void init() {
 		mHandler = new Handler();
 		initSendSuccessReceiver();
+
+		initPage = getIntent().getIntExtra(Commons.EXTRA_PAGE, 0);
 	}
 
 	private void initSendSuccessReceiver() {
 		mSendSuccessReceiver = new SendSuccessReceiver();
-		mSendSuccessFilter = new IntentFilter(Actions.ACTION_STATUS_SEND);
+		mSendSuccessFilter = new IntentFilter(Actions.ACTION_STATUS_SENT);
 		// mSendSuccessFilter.addAction(Actions.ACTION_MESSAGE_SEND);
 		mSendSuccessFilter.setPriority(1000);
 	}
@@ -247,17 +251,19 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	private void setViewPager() {
 		if (App.DEBUG) {
-			log("setViewFlow page=" + mCurrentPage);
+			log("setViewPager initPage=" + initPage);
 		}
-		int page = getIntent().getIntExtra(Commons.EXTRA_PAGE, 0);
 		mViewAdapter = new ViewsAdapter(views);
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);
 		mViewPager.setOnPageChangeListener(this);
 		mViewPager.setAdapter(mViewAdapter);
 		mPageIndicator = (TitlePageIndicator) findViewById(R.id.viewindicator);
 		mPageIndicator.setTitleProvider(this);
-		mPageIndicator.setViewPager(mViewPager, page);
-		mViewPager.setCurrentItem(page);
+
+		if (initPage > 0) {
+			mPageIndicator.setViewPager(mViewPager, initPage);
+			mViewPager.setCurrentItem(initPage);
+		}
 
 	}
 
@@ -458,7 +464,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	@Override
 	protected IntentFilter getIntentFilter() {
 		IntentFilter filter = new IntentFilter();
-		filter.addAction(Actions.ACTION_STATUS_SEND);
+		filter.addAction(Actions.ACTION_STATUS_SENT);
 		filter.addAction(Actions.ACTION_NOTIFICATION);
 		return filter;
 	}
@@ -466,9 +472,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	@Override
 	protected boolean onBroadcastReceived(Intent intent) {
 		String action = intent.getAction();
-		if (action.equals(Actions.ACTION_STATUS_SEND)) {
+		if (action.equals(Actions.ACTION_STATUS_SENT)) {
 			if (App.DEBUG) {
-				log("onBroadcastReceived ACTION_STATUS_SEND");
+				log("onBroadcastReceived ACTION_STATUS_SENT");
 			}
 			boolean needRefresh = OptionHelper.readBoolean(this,
 					R.string.option_refresh_after_send, false);
@@ -580,13 +586,13 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		setIntent(intent);
-		int page = getIntent().getIntExtra(Commons.EXTRA_PAGE, 0);
+		initPage = getIntent().getIntExtra(Commons.EXTRA_PAGE, 0);
 		if (App.DEBUG) {
-			log("onNewIntent page=" + page);
+			log("onNewIntent page=" + initPage);
 		}
 
-		if (page >= 0) {
-			mViewPager.setCurrentItem(page);
+		if (initPage >= 0) {
+			mViewPager.setCurrentItem(initPage);
 		}
 	}
 
@@ -734,32 +740,29 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	@Override
 	public void onPageScrolled(int position, float positionOffset,
 			int positionOffsetPixels) {
-//		if (App.DEBUG) {
-//			log("onPageScrolled position=" + position + " offset="
-//					+ positionOffset + " offsetpixels=" + positionOffsetPixels);
-//		}
-//		int page = position % NUMS_OF_PAGE;
-//		mPageIndicator.onPageScrolled(page, positionOffset,
-//				positionOffsetPixels);
+		// if (App.DEBUG) {
+		// log("onPageScrolled position=" + position + " offset="
+		// + positionOffset + " offsetpixels=" + positionOffsetPixels);
+		// }
+		// int page = position % NUMS_OF_PAGE;
+		// mPageIndicator.onPageScrolled(page, positionOffset,
+		// positionOffsetPixels);
 	}
 
-	
-	
 	@Override
 	public void onPageSelected(int position) {
 		mCurrentPage = position % NUMS_OF_PAGE;
 		if (App.DEBUG) {
-			log("onPageSelected position=" + position);
-			log("onPageSelected mCurrentPage=" + mCurrentPage);
+			log("onPageSelected() position=" + position);
+			log("onPageSelected() mCurrentPage=" + mCurrentPage);
 		}
 		mPageIndicator.onPageSelected(mCurrentPage);
-		
-		
-		if(cursors[mCurrentPage].getCount()==0){
+
+		if (cursors[mCurrentPage] != null
+				&& cursors[mCurrentPage].getCount() == 0) {
 			onRefreshClick();
 		}
-		
-		
+
 	}
 
 	@Override

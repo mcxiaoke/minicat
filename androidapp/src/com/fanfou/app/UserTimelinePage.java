@@ -1,6 +1,5 @@
 package com.fanfou.app;
 
-import com.fanfou.app.api.Api;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Commons;
@@ -15,15 +14,15 @@ import android.os.Bundle;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.10.21
- *
+ * 
  */
 public class UserTimelinePage extends BaseTimelineActivity {
 
 	@Override
 	protected Cursor getCursor() {
-		String where = BasicColumns.TYPE + "=? AND " + StatusInfo.USER_ID + "=? ";
-		String[] whereArgs = new String[] { String.valueOf(getType()),
-				userId };
+		String where = BasicColumns.TYPE + "=? AND " + StatusInfo.USER_ID
+				+ "=? ";
+		String[] whereArgs = new String[] { String.valueOf(getType()), userId };
 		return managedQuery(StatusInfo.CONTENT_URI, StatusInfo.COLUMNS, where,
 				whereArgs, null);
 	}
@@ -45,8 +44,8 @@ public class UserTimelinePage extends BaseTimelineActivity {
 	protected String getPageTitle() {
 		return "消息";
 	}
-	
-	protected int getType(){
+
+	protected int getType() {
 		return Status.TYPE_USER;
 	}
 

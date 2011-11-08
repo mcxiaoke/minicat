@@ -33,7 +33,7 @@ import com.fanfou.app.util.Base64;
 /**
  * @author mcxiaoke
  * @version 2.0 2011.11.03
- *
+ * 
  */
 public class OAuth {
 
@@ -79,15 +79,16 @@ public class OAuth {
 
 	public OAuthToken getOAuthAccessToken(String username, String password)
 			throws ApiException, IOException {
-		String authorization = getXAuthHeader(username, password,HttpGet.METHOD_NAME, ACCESS_TOKEN_URL);
-//		if (App.DEBUG)
-//			log("xauth authorization=" + authorization);
-//		HttpGet request = new HttpGet(ACCESS_TOKEN_URL);
-//		request.addHeader(new BasicHeader("Authorization", authorization));
-//		HttpClient client = NetworkHelper.newHttpClient();
-//		NetworkHelper.setProxy(client);
-//		HttpResponse response = client.execute(request);
-		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		String authorization = getXAuthHeader(username, password,
+				HttpGet.METHOD_NAME, ACCESS_TOKEN_URL);
+		// if (App.DEBUG)
+		// log("xauth authorization=" + authorization);
+		// HttpGet request = new HttpGet(ACCESS_TOKEN_URL);
+		// request.addHeader(new BasicHeader("Authorization", authorization));
+		// HttpClient client = NetworkHelper.newHttpClient();
+		// NetworkHelper.setProxy(client);
+		// HttpResponse response = client.execute(request);
+		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(ACCESS_TOKEN_URL);
 		builder.header("Authorization", authorization);
 		HttpResponse response = ConnectionManager.execNoAuth(builder.build());
@@ -99,8 +100,9 @@ public class OAuth {
 		if (statusCode == 200) {
 			return new OAuthToken(content);
 		} else {
-			if (App.DEBUG){
-				log("getOAuthAccessToken content=" + content);}
+			if (App.DEBUG) {
+				log("getOAuthAccessToken content=" + content);
+			}
 			throw new ApiException(statusCode, "帐号或密码不正确，登录失败");
 		}
 	}
@@ -125,7 +127,8 @@ public class OAuth {
 		oauthHeaderParams.add(new Parameter("x_auth_mode", "client_auth"));
 		// parseGetParams(url, oauthHeaderParams);
 		StringBuffer base = new StringBuffer(method).append("&")
-				.append(ConnectionRequest.encode(constructRequestURL(url))).append("&");
+				.append(ConnectionRequest.encode(constructRequestURL(url)))
+				.append("&");
 		base.append(ConnectionRequest.encode(alignParams(oauthHeaderParams)));
 		String oauthBaseString = base.toString();
 		String signature = signature(oauthBaseString, null);
@@ -175,7 +178,8 @@ public class OAuth {
 		if (null != otoken) {
 			if (App.DEBUG)
 				log("getOAuthHeader() add oauth token to header: oauth_token="
-						+ otoken.getToken()+" oauth_token_secret="+otoken.getTokenSecret());
+						+ otoken.getToken() + " oauth_token_secret="
+						+ otoken.getTokenSecret());
 			oauthHeaderParams.add(new Parameter("oauth_token", otoken
 					.getToken()));
 		}
@@ -187,11 +191,12 @@ public class OAuth {
 			signatureBaseParams.addAll(params);
 		}
 		parseGetParams(url, signatureBaseParams);
-		if(App.DEBUG){
-			log("getOAuthHeader() url="+url);
+		if (App.DEBUG) {
+			log("getOAuthHeader() url=" + url);
 		}
 		StringBuffer base = new StringBuffer(method).append("&")
-				.append(ConnectionRequest.encode(constructRequestURL(url))).append("&");
+				.append(ConnectionRequest.encode(constructRequestURL(url)))
+				.append("&");
 		base.append(ConnectionRequest.encode(alignParams(signatureBaseParams)));
 		String oauthBaseString = base.toString();
 		String signature = signature(oauthBaseString, otoken);
@@ -229,7 +234,8 @@ public class OAuth {
 		parseGetParams(url, signatureBaseParams);
 
 		StringBuffer base = new StringBuffer(method).append("&")
-				.append(ConnectionRequest.encode(constructRequestURL(url))).append("&");
+				.append(ConnectionRequest.encode(constructRequestURL(url)))
+				.append("&");
 		base.append(ConnectionRequest.encode(alignParams(signatureBaseParams)));
 
 		String oauthBaseString = base.toString();
@@ -293,7 +299,8 @@ public class OAuth {
 					}
 					buf.append(splitter);
 				}
-				buf.append(ConnectionRequest.encode(param.getName())).append("=");
+				buf.append(ConnectionRequest.encode(param.getName())).append(
+						"=");
 				if (quot) {
 					buf.append("\"");
 				}

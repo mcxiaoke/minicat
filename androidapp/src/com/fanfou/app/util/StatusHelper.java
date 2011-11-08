@@ -17,7 +17,7 @@ import android.widget.TextView.BufferType;
  * @author mcxiaoke
  * @version 1.0 2011.06.01
  * @version 1.5 2011.10.26
- *
+ * 
  */
 public class StatusHelper {
 	private static final String TAG = "StatusHelper";
@@ -126,7 +126,7 @@ public class StatusHelper {
 	 * @return 消息中@的人的列表，按顺序存放
 	 */
 	public static HashSet<String> getMentionedNames(Status status) {
-		HashSet<String> names=new HashSet<String>();
+		HashSet<String> names = new HashSet<String>();
 
 		final Pattern p = Pattern.compile("@(.*?)\\s");
 		final int MAX_NAME_LENGTH = 12;
@@ -139,7 +139,7 @@ public class StatusHelper {
 			}
 		}
 		names.add(status.userScreenName);
-		String name=App.me.userScreenName;
+		String name = App.me.userScreenName;
 		names.remove(name);
 		return names;
 	}

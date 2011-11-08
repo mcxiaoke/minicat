@@ -1,9 +1,7 @@
 package com.fanfou.app.service;
 
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +16,7 @@ import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
@@ -30,7 +29,8 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.0 2011.06.15
  * @version 3.0 2011.10.28
  * @version 3.1 2011.11.07
- *
+ * @version 3.2 2011.11.08
+ * 
  */
 public class ActionService extends BaseIntentService {
 	private static final String TAG = ActionService.class.getSimpleName();
@@ -85,14 +85,6 @@ public class ActionService extends BaseIntentService {
 		}
 
 	}
-	
-	// 更新用户信息
-	public static void updateUserInfo(Context context, User u){
-		if(u==null||u.isNull()){
-			return;
-		}
-		context.getContentResolver().update(Uri.parse(UserInfo.CONTENT_URI+"/id/"+u.id), u.toSimpleContentValues(), null, null);
-	}
 
 	private void performAction(String id, int type) {
 		Api api = App.me.api;
@@ -106,7 +98,7 @@ public class ActionService extends BaseIntentService {
 				if (s == null || s.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
-					updateUserInfo(this, s.user);
+					FanFouProvider.updateUserInfo(this, s.user);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
 					data.putSerializable(Commons.EXTRA_STATUS, s);
@@ -123,9 +115,8 @@ public class ActionService extends BaseIntentService {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
 					ContentResolver cr = getContentResolver();
-					Uri uri=Uri.parse(StatusInfo.CONTENT_URI+"/id/"+id);
-					int result = cr.delete(uri, null,
-							null);
+					Uri uri = Uri.parse(StatusInfo.CONTENT_URI + "/id/" + id);
+					int result = cr.delete(uri, null, null);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
 					data.putSerializable(Commons.EXTRA_STATUS, s);
@@ -145,7 +136,7 @@ public class ActionService extends BaseIntentService {
 					values.put(StatusInfo.FAVORITED, true);
 					int result = cr.update(StatusInfo.CONTENT_URI, values,
 							where, whereArgs);
-					updateUserInfo(this, s.user);
+					FanFouProvider.updateUserInfo(this, s.user);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
 					data.putSerializable(Commons.EXTRA_STATUS, s);
@@ -165,7 +156,7 @@ public class ActionService extends BaseIntentService {
 					values.put(StatusInfo.FAVORITED, false);
 					int result = cr.update(StatusInfo.CONTENT_URI, values,
 							where, whereArgs);
-					updateUserInfo(this, s.user);
+					FanFouProvider.updateUserInfo(this, s.user);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
 					data.putSerializable(Commons.EXTRA_STATUS, s);
@@ -178,13 +169,11 @@ public class ActionService extends BaseIntentService {
 				if (u == null || u.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
-					updateUserInfo(this, u);
+					FanFouProvider.updateUserInfo(this, u);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
 					data.putSerializable(Commons.EXTRA_USER, u);
 					receiver.send(Commons.RESULT_CODE_FINISH, data);
-					
-					updateUserInfo(this, u);
 				}
 			}
 				break;
@@ -195,7 +184,8 @@ public class ActionService extends BaseIntentService {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
 					u.type = User.TYPE_FRIENDS;
-					getContentResolver().insert(UserInfo.CONTENT_URI, u.toContentValues());
+					getContentResolver().insert(UserInfo.CONTENT_URI,
+							u.toContentValues());
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
 					data.putSerializable(Commons.EXTRA_USER, u);
@@ -233,7 +223,8 @@ public class ActionService extends BaseIntentService {
 				if (u == null || u.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
-					getContentResolver().delete(UserInfo.CONTENT_URI, where, whereArgs);
+					getContentResolver().delete(UserInfo.CONTENT_URI, where,
+							whereArgs);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
 					data.putSerializable(Commons.EXTRA_USER, u);
@@ -253,8 +244,7 @@ public class ActionService extends BaseIntentService {
 				}
 			}
 				break;
-			case Commons.ACTION_DIRECT_MESSAGE_DELETE:
-			{
+			case Commons.ACTION_DIRECT_MESSAGE_DELETE: {
 				// 删除消息
 				// 404 说明消息不存在
 				// 403 说明不是你的消息，无权限删除
@@ -263,8 +253,8 @@ public class ActionService extends BaseIntentService {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
 					ContentResolver cr = getContentResolver();
-					int result = cr.delete(DirectMessageInfo.CONTENT_URI, where,
-							whereArgs);
+					int result = cr.delete(DirectMessageInfo.CONTENT_URI,
+							where, whereArgs);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
 					data.putSerializable(Commons.EXTRA_MESSAGE, dm);
@@ -286,9 +276,10 @@ public class ActionService extends BaseIntentService {
 						"performAction: id=" + id + " type=" + type
 								+ e.getMessage());
 			}
-			String message=e.getMessage();
-			if(e.statusCode==ResponseCode.ERROR_NOT_CONNECTED||e.statusCode>=500){
-				message=getString(R.string.connection_error_msg);
+			String message = e.getMessage();
+			if (e.statusCode == ResponseCode.ERROR_NOT_CONNECTED
+					|| e.statusCode >= 500) {
+				message = getString(R.string.connection_error_msg);
 			}
 			Bundle b = new Bundle();
 			b.putInt(Commons.EXTRA_TYPE, type);

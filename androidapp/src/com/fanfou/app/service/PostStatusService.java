@@ -176,7 +176,7 @@ public class PostStatusService extends WakefulIntentService {
 	}
 
 	private void sendSuccessBroadcast() {
-		Intent intent = new Intent(Actions.ACTION_STATUS_SEND);
+		Intent intent = new Intent(Actions.ACTION_STATUS_SENT);
 		intent.setPackage(getPackageName());
 		sendOrderedBroadcast(intent, null);
 	}

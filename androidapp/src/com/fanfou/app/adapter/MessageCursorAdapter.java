@@ -33,15 +33,16 @@ public class MessageCursorAdapter extends BaseCursorAdapter {
 	private void log(String message) {
 		Log.e(TAG, message);
 	}
-	
+
 	public MessageCursorAdapter(Context context, Cursor c) {
 		super(context, c, false);
-		this.autoLink=false;
+		this.autoLink = false;
 	}
 
-	public MessageCursorAdapter(Context context, Cursor c, boolean autoRequery, boolean autoLink) {
+	public MessageCursorAdapter(Context context, Cursor c, boolean autoRequery,
+			boolean autoLink) {
 		super(context, c, autoRequery);
-		this.autoLink=autoLink;
+		this.autoLink = autoLink;
 	}
 
 	@Override
@@ -68,14 +69,14 @@ public class MessageCursorAdapter extends BaseCursorAdapter {
 	}
 
 	private void setTextStyle(ViewHolder holder) {
-		int fontSize=getFontSize();
+		int fontSize = getFontSize();
 		holder.contentText.setTextSize(fontSize);
 		holder.nameText.setTextSize(fontSize);
 		holder.dateText.setTextSize(fontSize - 4);
 		TextPaint tp = holder.nameText.getPaint();
 		tp.setFakeBoldText(true);
-		
-		if(autoLink){
+
+		if (autoLink) {
 			holder.contentText.setAutoLinkMask(Linkify.ALL);
 		}
 	}
@@ -84,7 +85,7 @@ public class MessageCursorAdapter extends BaseCursorAdapter {
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		View view = mInflater.inflate(getLayoutId(), null);
 		ViewHolder holder = new ViewHolder(view);
-		setHeadImage(mContext,holder.headIcon);
+		setHeadImage(mContext, holder.headIcon);
 		setTextStyle(holder);
 		view.setTag(holder);
 		bindView(view, context, cursor);
@@ -102,7 +103,7 @@ public class MessageCursorAdapter extends BaseCursorAdapter {
 			row.setBackgroundColor(0x33999999);
 		}
 
-		if(!isTextMode()){
+		if (!isTextMode()) {
 			mLoader.set(dm.senderProfileImageUrl, holder.headIcon,
 					R.drawable.default_head);
 		}

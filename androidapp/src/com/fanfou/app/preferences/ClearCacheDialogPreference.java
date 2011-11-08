@@ -52,7 +52,7 @@ public class ClearCacheDialogPreference extends DialogPreference {
 			super.onPostExecute(result);
 			pd.dismiss();
 			if (result.booleanValue() == true) {
-//				Utils.notify(c, "缓存图片已清空");
+				// Utils.notify(c, "缓存图片已清空");
 				android.os.Process.killProcess(android.os.Process.myPid());
 			}
 		}
