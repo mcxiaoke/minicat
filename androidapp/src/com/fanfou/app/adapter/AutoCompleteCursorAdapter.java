@@ -39,9 +39,9 @@ public class AutoCompleteCursorAdapter extends ResourceCursorAdapter {
 		// UserInfo.SCREEN_NAME};
 		// String where = UserInfo.OWNER_ID + " = '" + App.me.userId + "' AND "
 		// + UserInfo.SCREEN_NAME + " like '%" + constraint + "%'";
-		String where = BasicColumns.OWNER_ID + " = '" + App.me.userId
+		String where = UserInfo.OWNER_ID + " = '" + App.me.userId
 				+ "' AND " + UserInfo.SCREEN_NAME + " like '%" + constraint
-				+ "%' OR " + BasicColumns.ID + " like '%" + constraint + "%'";
+				+ "%' OR " + UserInfo.ID + " like '%" + constraint + "%'";
 		Cursor oldCursor = mCursor;
 		mCursor = mContext.getContentResolver().query(UserInfo.CONTENT_URI,
 				null, where, null, null);

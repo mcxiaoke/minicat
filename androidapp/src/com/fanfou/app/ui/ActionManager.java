@@ -15,7 +15,7 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.DraftsPage;
-import com.fanfou.app.MessageChatPage;
+import com.fanfou.app.SendPage;
 import com.fanfou.app.MyProfilePage;
 import com.fanfou.app.ProfilePage;
 import com.fanfou.app.UserFavoritesPage;
@@ -38,6 +38,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.2 2011.10.27
  * @version 1.3 2011.10.28
  * @version 2.0 2011.10.29
+ * @version 2.1 2011.11.09
  * 
  */
 public final class ActionManager {
@@ -232,6 +233,11 @@ public final class ActionManager {
 		intent.putExtra(Commons.EXTRA_TEXT, text);
 		context.startActivity(intent);
 	}
+	
+	public static void doSend(Context context) {
+		Intent intent = new Intent(context, SendPage.class);
+		context.startActivity(intent);
+	}
 
 	public static void doRetweet(Context context, Status status) {
 		if (status == null || status.isNull()) {
@@ -391,7 +397,7 @@ public final class ActionManager {
 	}
 
 	public static void doMessage(Context context, final User user) {
-		final Intent intent = new Intent(context, MessageChatPage.class);
+		final Intent intent = new Intent(context, SendPage.class);
 		intent.putExtra(Commons.EXTRA_USER_ID, user.id);
 		intent.putExtra(Commons.EXTRA_USER_NAME, user.screenName);
 		context.startActivity(intent);

@@ -46,7 +46,7 @@ public class SearchPage extends BaseActivity implements OnItemClickListener {
 
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setTitle("热词和搜索");
+		mActionBar.setTitle("搜索");
 		mActionBar.setLeftAction(new ActionBar.BackAction(this));
 		mActionBar.setRightAction(new ActionBar.SearchAction(this));
 	}

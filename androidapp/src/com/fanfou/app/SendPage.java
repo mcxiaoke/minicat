@@ -6,26 +6,41 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.BaseColumns;
+import android.text.Selection;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewStub;
+import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.MultiAutoCompleteTextView;
+
+import com.fanfou.app.adapter.AtTokenizer;
+import com.fanfou.app.adapter.AutoCompleteCursorAdapter;
 import com.fanfou.app.adapter.MessageCursorAdapter;
+import com.fanfou.app.adapter.SpaceTokenizer;
 import com.fanfou.app.api.DirectMessage;
+import com.fanfou.app.api.User;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
+import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.service.PostMessageService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.ui.TextChangeListener;
+import com.fanfou.app.ui.widget.MyAutoCompleteTextView;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.StringHelper;
@@ -39,15 +54,20 @@ import com.fanfou.app.util.Utils;
  * @version 1.3 2011.11.07
  * 
  */
-public class MessageChatPage extends BaseActivity {
+public class SendPage extends BaseActivity {
 
-	private static final String TAG = MessageChatPage.class.getSimpleName();
+	private static final String TAG = SendPage.class.getSimpleName();
 	private String mUserId;
 	private String mUserName;
 
 	private Cursor mCursor;
 	private ListView mListView;
 	private MessageCursorAdapter mCursorAdapter;
+
+	private ViewStub mViewStub;
+	private ViewGroup mSelectView;
+	private ImageView mSelectButton;
+	private MultiAutoCompleteTextView mSelectAutoComplete;
 
 	private ActionBar mActionBar;
 
@@ -63,16 +83,10 @@ public class MessageChatPage extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (parseIntent()) {
-			initSendSuccessReceiver();
-			setLayout();
-			setActionBar();
-			setListView();
-			updateUI();
-		} else {
-			finish();
-			return;
-		}
+		parseIntent();
+		initSendSuccessReceiver();
+		setLayout();
+		checkUserId();
 	}
 
 	private void initSendSuccessReceiver() {
@@ -101,46 +115,93 @@ public class MessageChatPage extends BaseActivity {
 		return true;
 	}
 
-	private boolean parseIntent() {
+	private void parseIntent() {
 		Intent intent = getIntent();
 		mUserId = intent.getStringExtra(Commons.EXTRA_USER_ID);
 		mUserName = intent.getStringExtra(Commons.EXTRA_USER_NAME);
-
 		if (App.DEBUG) {
 			IntentHelper.logIntent(TAG, intent);
 		}
-		return !StringHelper.isEmpty(mUserId);
 	}
 
 	private void setLayout() {
-		setContentView(R.layout.chat);
+		setContentView(R.layout.send);
+		setActionBar();
 		mEditText = (EditText) findViewById(R.id.msgchat_input);
-		mEditText.addTextChangedListener(textMonitor);
+		mEditText.addTextChangedListener(new TextChangeListener() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				mContent = s.toString();
+			}
+		});
 
 		mSendButton = (Button) findViewById(R.id.button_ok);
 		mSendButton.setOnClickListener(this);
 
-		// boolean sendOnEnter=OptionHelper.readBoolean(this,
-		// R.string.option_send_on_enter, false);
-		// if(sendOnEnter){
-		// mEditText.setImeOptions(EditorInfo.IME_ACTION_SEND);
-		// mEditText.setOnEditorActionListener(new OnEditorActionListener() {
-		// @Override
-		// public boolean onEditorAction(TextView v, int actionId, KeyEvent
-		// event) {
-		// switch (actionId) {
-		// case EditorInfo.IME_ACTION_SEND:
-		// doSend(false);
-		// return true;
-		// default:
-		// break;
-		// }
-		// return false;
-		// }
-		// });
-		// }else{
-		// mEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-		// }
+		mListView = (ListView) findViewById(R.id.list);
+		mViewStub = (ViewStub) findViewById(R.id.stub);
+
+	}
+
+	private void checkUserId() {
+		if (App.DEBUG) {
+			Log.d(TAG, "checkUserId userId=" + mUserId);
+		}
+		if (StringHelper.isEmpty(mUserId)) {
+			mSelectView = (ViewGroup) mViewStub.inflate();
+			mSelectButton = (ImageView) findViewById(R.id.send_select_button);
+			mSelectButton.setOnClickListener(this);
+			setAutoComplete();
+		} else {
+			setListView();
+			updateUI();
+		}
+	}
+	
+	private void setAutoComplete(){
+		mSelectAutoComplete = (MultiAutoCompleteTextView) findViewById(R.id.send_select_edit);
+		mSelectAutoComplete.setTokenizer(new SpaceTokenizer());
+		mSelectAutoComplete.setDropDownBackgroundResource(R.drawable.bg);
+		String[] projection = new String[] { BaseColumns._ID, BasicColumns.ID,
+				UserInfo.SCREEN_NAME };
+		String where = BasicColumns.TYPE + " = '" + User.TYPE_FRIENDS + "'";
+		Cursor c = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where, null,
+				null);
+		mSelectAutoComplete.setAdapter(new AutoCompleteCursorAdapter(this, c));
+		mSelectAutoComplete.addTextChangedListener(new TextChangeListener() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				mUserId=null;
+				mUserName=null;
+			}
+		});
+		
+		mSelectAutoComplete.setOnItemClickListener(new ListView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				if(App.DEBUG){
+					Log.d(TAG, "onItemClick position="+position);
+				}
+				final Cursor c=(Cursor) parent.getItemAtPosition(position);
+				if(c!=null){
+					final User user=User.parse(c);
+					if(user!=null&&!user.isNull()){
+						mUserId=user.id;
+						mUserName=user.screenName;
+						if(App.DEBUG){
+							Log.d(TAG, "onItemClick user.id="+user.id);
+						}
+					}
+				}
+			}
+		});
+		
 	}
 
 	private void setActionBar() {
@@ -152,11 +213,8 @@ public class MessageChatPage extends BaseActivity {
 
 	private void setListView() {
 		initCursor();
-		mCursorAdapter = new MessageCursorAdapter(this, mCursor, true, true);
-
-		mListView = (ListView) findViewById(R.id.list);
 		registerForContextMenu(mListView);
-
+		mCursorAdapter = new MessageCursorAdapter(this, mCursor, true, true);
 		mListView.setCacheColorHint(0);
 		mListView.setHorizontalScrollBarEnabled(false);
 		mListView.setVerticalScrollBarEnabled(false);
@@ -173,10 +231,6 @@ public class MessageChatPage extends BaseActivity {
 		String orderBy = BasicColumns.CREATED_AT;
 		mCursor = managedQuery(DirectMessageInfo.CONTENT_URI,
 				DirectMessageInfo.COLUMNS, where, whereArgs, orderBy);
-
-		if (mCursor != null && mCursor.getCount() == 0) {
-			mActionBar.setTitle("给" + mUserName + "写私信");
-		}
 	}
 
 	private void updateUI() {
@@ -204,9 +258,30 @@ public class MessageChatPage extends BaseActivity {
 		case R.id.button_ok:
 			doSend(false);
 			break;
-
+		case R.id.send_select_button:
+			startSelectUser();
+			break;
 		default:
 			break;
+		}
+	}
+	
+	private static final int REQUEST_CODE_SELECT_USER=2001;
+	private void startSelectUser(){
+		Intent intent=new Intent(this, UserSelectPage.class);
+		startActivityForResult(intent, REQUEST_CODE_SELECT_USER);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(resultCode==RESULT_OK){
+			if(requestCode==REQUEST_CODE_SELECT_USER){
+				mUserId=data.getStringExtra(Commons.EXTRA_USER_ID);
+				mUserName=data.getStringExtra(Commons.EXTRA_USER_NAME);
+				mSelectAutoComplete.setText(mUserName);
+				Selection.setSelection(mSelectAutoComplete.getEditableText(), mSelectAutoComplete.getEditableText().length());
+			}
 		}
 	}
 
@@ -275,6 +350,11 @@ public class MessageChatPage extends BaseActivity {
 			Utils.notify(this, "私信内容不能为空");
 			return;
 		}
+		if (StringHelper.isEmpty(mUserId)) {
+			Utils.notify(this, "请选择收件人");
+			return;
+		}
+		
 		startSendService();
 		if (finish) {
 			Utils.hideKeyboard(this, mEditText);
@@ -291,15 +371,6 @@ public class MessageChatPage extends BaseActivity {
 		i.putExtra(Commons.EXTRA_TEXT, mContent);
 		startService(i);
 	}
-
-	private TextChangeListener textMonitor = new TextChangeListener() {
-
-		@Override
-		public void onTextChanged(CharSequence s, int start, int before,
-				int count) {
-			mContent = s.toString();
-		}
-	};
 
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {

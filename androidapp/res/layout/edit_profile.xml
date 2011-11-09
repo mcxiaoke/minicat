@@ -14,12 +14,10 @@
 			android:layout_width="match_parent" android:layout_height="match_parent">
 
 			<LinearLayout android:layout_width="match_parent"
-				android:layout_height="wrap_content" android:orientation="horizontal">
+				android:layout_height="wrap_content" android:orientation="horizontal" android:id="@+id/profile_image_area">
+				
 				<ImageView style="@style/Image.Head" android:id="@+id/profile_image"
 					android:src="@drawable/default_head" />
-
-				<Button style="@style/Button.Blue.Middle" android:id="@+id/profile_image_edit"
-					android:text="修改头像" android:layout_margin="5dp" />
 			</LinearLayout>
 
 			<TextView style="@style/Text.ItemName" android:id="@+id/profile_name"
@@ -42,7 +40,7 @@
 				android:text="自述" />
 
 			<EditText style="@style/EditText.InfoMultiLine" android:id="@+id/profile_description_edit"
-				android:minLines="4" android:gravity="left|top"/>
+				android:minLines="4" android:gravity="left|top" />
 
 			<include layout="@layout/two_button_group"
 				android:layout_width="match_parent" android:layout_height="wrap_content" />

@@ -25,7 +25,7 @@ import android.widget.Toast;
 
 import com.fanfou.app.AboutPage;
 import com.fanfou.app.App;
-import com.fanfou.app.MessageChatPage;
+import com.fanfou.app.SendPage;
 import com.fanfou.app.PhotoViewPage;
 import com.fanfou.app.R;
 import com.fanfou.app.StatusPage;
@@ -103,7 +103,7 @@ public final class Utils {
 		if (c != null) {
 			final DirectMessage dm = DirectMessage.parse(c);
 			if (dm != null) {
-				final Intent intent = new Intent(context, MessageChatPage.class);
+				final Intent intent = new Intent(context, SendPage.class);
 				intent.putExtra(Commons.EXTRA_USER_ID, dm.senderId);
 				intent.putExtra(Commons.EXTRA_USER_NAME, dm.senderScreenName);
 				context.startActivity(intent);

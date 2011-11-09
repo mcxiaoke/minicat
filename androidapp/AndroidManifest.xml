@@ -174,8 +174,12 @@
 		</activity>
 
 		<activity android:configChanges="keyboardHidden|orientation"
-			android:label="@string/app_name" android:name=".MessageChatPage"
+			android:label="@string/app_name" android:name=".SendPage"
 			android:theme="@style/Theme" android:windowSoftInputMode="adjustResize" />
+		
+		<activity android:configChanges="keyboardHidden|orientation"
+			android:label="@string/app_name" android:name=".UserSelectPage"
+			android:theme="@style/Theme" />
 
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_share_name" android:name=".WritePage"

@@ -14,33 +14,31 @@ import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.fanfou.app.adapter.UserCursorAdapter;
 import com.fanfou.app.api.FanFouApiConfig;
-import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
+import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.service.FetchService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.ui.widget.EndlessListView;
 import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
-import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
- * @version 1.0 2011.06.10
- * @version 1.5 2011.10.29
- * @version 1.6 2011.11.07
- * @version 2.0 2011.11.07
- * @version 2.1 2011.11.09
+ * @version 1.0 2011.11.09
  * 
  */
-public class UserListPage extends BaseActivity implements OnRefreshListener,
+
+// select direct message target
+public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 		FilterQueryProvider {
 
 	protected ActionBar mActionBar;
@@ -55,16 +53,11 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	protected Handler mHandler;
 	protected ResultReceiver mResultReceiver;
 
-	protected String userId;
-	protected String userName;
-	protected User user;
-	protected int type;
-
-	protected int page = 1;
-
 	private boolean isInitialized = false;
+	
+	private int page=1;
 
-	private static final String tag = UserListPage.class.getSimpleName();
+	private static final String tag = UserSelectPage.class.getSimpleName();
 
 	private void log(String message) {
 		Log.i(tag, message);
@@ -75,13 +68,9 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 		super.onCreate(savedInstanceState);
 		if (App.DEBUG)
 			log("onCreate");
-		if (parseIntent()) {
 			initialize();
 			setLayout();
 			initCheckState();
-		} else {
-			finish();
-		}
 	}
 
 	protected void initialize() {
@@ -94,7 +83,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	protected void initCursor() {
 		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
 				+ "=?";
-		String[] whereArgs = new String[] { String.valueOf(type), userId };
+		String[] whereArgs = new String[] { String.valueOf(User.TYPE_FRIENDS), App.me.userId };
 		String orderBy = FanFouProvider.ORDERBY_DATE_DESC;
 		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				whereArgs, null);
@@ -163,28 +152,9 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	 */
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		if (user != null) {
-			if (type == User.TYPE_FRIENDS) {
-				mActionBar.setTitle("我关注的人");
-			} else if (type == User.TYPE_FOLLOWERS) {
-				mActionBar.setTitle("关注我的人");
-			}
-		}
+		mActionBar.setTitle("我关注的人");
 
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
-	}
-
-	protected boolean parseIntent() {
-		Intent intent = getIntent();
-		type = intent.getIntExtra(Commons.EXTRA_TYPE, Status.TYPE_USER);
-		user = (User) intent.getSerializableExtra(Commons.EXTRA_USER);
-		if (user == null) {
-			userId = intent.getStringExtra(Commons.EXTRA_ID);
-		} else {
-			userId = user.id;
-			userName = user.screenName;
-		}
-		return !StringHelper.isEmpty(userId);
 	}
 
 	protected void doRefresh() {
@@ -202,16 +172,11 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 			Utils.notify(this, "未通过验证，请登录");
 			return;
 		}
-		if (userId == null) {
-			if (App.DEBUG)
-				log("userId is null");
-			return;
-		}
 		Bundle b = new Bundle();
-		b.putString(Commons.EXTRA_ID, userId);
+		b.putString(Commons.EXTRA_ID, App.me.userId);
 		b.putInt(Commons.EXTRA_PAGE, page);
 		b.putInt(Commons.EXTRA_COUNT, FanFouApiConfig.MAX_USERS_COUNT);
-		FetchService.start(this, type, mResultReceiver, b);
+		FetchService.start(this, User.TYPE_FRIENDS, mResultReceiver, b);
 	}
 
 	protected void updateUI() {
@@ -287,10 +252,6 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 				int code = resultData.getInt(Commons.EXTRA_ERROR_CODE);
 				String msg = resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
 				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
-				// if(code==ResponseCode.HTTP_FORBIDDEN||code==ResponseCode.HTTP_NOT_FOUND){
-				// finish();
-				// return;
-				// }
 				if (!isInitialized) {
 					showContent();
 					mListView.onNoRefresh();
@@ -328,41 +289,22 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 		if (u != null) {
 			if (App.DEBUG)
 				log("userId=" + u.id + " username=" + u.screenName);
-			ActionManager.doProfile(mContext, u);
+			onSelected(u);
 		}
 	}
-
-	// private static final int CONTEXT_MENU_ID_TIMELINE=1001;
-	// private static final int CONTEXT_MENU_ID_FAVORITES=1002;
-	// private static final int CONTEXT_MENU_ID_FRIENDS=1003;
-	// private static final int CONTEXT_MENU_ID_FOLLOWERS=1004;
-	// private static final int CONTEXT_MENU_ID_FOLLOW=1005;
-	// private static final int CONTEXT_MENU_ID_UNFOLLOW=1006;
-	// private static final int CONTEXT_MENU_ID_BLOCK=1007;
-
-	// @Override
-	// public void onCreateContextMenu(ContextMenu menu, View v,
-	// ContextMenuInfo menuInfo) {
-	// MenuItem timeline=menu.add(0, CONTEXT_MENU_ID_TIMELINE,
-	// CONTEXT_MENU_ID_TIMELINE, "查看消息");
-	// MenuItem favorites=menu.add(0, CONTEXT_MENU_ID_FAVORITES,
-	// CONTEXT_MENU_ID_FAVORITES, "查看收藏");
-	// MenuItem friends=menu.add(0, CONTEXT_MENU_ID_FRIENDS,
-	// CONTEXT_MENU_ID_FRIENDS, "查看关注的人");
-	// MenuItem followers=menu.add(0, CONTEXT_MENU_ID_FOLLOWERS,
-	// CONTEXT_MENU_ID_FOLLOWERS, "查看关注者");
-	// MenuItem follow=menu.add(0, CONTEXT_MENU_ID_FOLLOW,
-	// CONTEXT_MENU_ID_FOLLOW, "添加关注");
-	// MenuItem unfollow=menu.add(0,
-	// CONTEXT_MENU_ID_UNFOLLOW,CONTEXT_MENU_ID_UNFOLLOW, "取消关注");
-	// MenuItem delete=menu.add(0, CONTEXT_MENU_ID_BLOCK, CONTEXT_MENU_ID_BLOCK,
-	// "删除关注");
-	// }
+	
+	private void onSelected(User user){
+		Intent intent=new Intent();
+		intent.putExtra(Commons.EXTRA_USER_ID, user.id);
+		intent.putExtra(Commons.EXTRA_USER_NAME, user.screenName);
+		setResult(RESULT_OK, intent);
+		finish();
+	}
 
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
-		String where = BasicColumns.TYPE + " = " + type + " AND "
-				+ BasicColumns.OWNER_ID + " = '" + userId + "' AND ("
+		String where = BasicColumns.TYPE + " = " + User.TYPE_FRIENDS + " AND "
+				+ BasicColumns.OWNER_ID + " = '" + App.me.userId + "' AND ("
 				+ UserInfo.SCREEN_NAME + " like '%" + constraint + "%' OR "
 				+ BasicColumns.ID + " like '%" + constraint + "%' )";
 		;

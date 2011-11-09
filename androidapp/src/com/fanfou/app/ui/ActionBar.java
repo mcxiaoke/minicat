@@ -309,6 +309,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 		public void performAction(View view) {
 			if (status == null) {
 				ActionManager.doWrite(context, null);
+//				ActionManager.doSend(context);
 			} else {
 				ActionManager.doReply(context, status);
 			}

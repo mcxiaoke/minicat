@@ -26,16 +26,19 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.11.07
  * @version 1.5 2011.11.08
+ * @version 1.6 2011.11.09
  * 
  */
 public class EditProfilePage extends BaseActivity {
@@ -50,8 +53,6 @@ public class EditProfilePage extends BaseActivity {
 
 	private ImageView mHeadView;
 
-	private Button mHeadEdit;
-
 	private Button mButtonOK;
 	private Button mButtonCancel;
 
@@ -59,6 +60,11 @@ public class EditProfilePage extends BaseActivity {
 	private EditText mDescriptionEdit;
 	private EditText mUrlEdit;
 	private EditText mLocationEdit;
+	
+	private TextView mNameLabel;
+	private TextView mDescriptionLabel;
+	private TextView mUrlLabel;
+	private TextView mLocationLabel;
 
 	private String mName;
 	private String mDescription;
@@ -96,17 +102,30 @@ public class EditProfilePage extends BaseActivity {
 		mButtonCancel.setOnClickListener(this);
 
 		mHeadView = (ImageView) findViewById(R.id.profile_image);
-
-		mHeadEdit = (Button) findViewById(R.id.profile_image_edit);
-		mHeadEdit.setOnClickListener(this);
+		mHeadView.setOnClickListener(this);
 
 		mNameEdit = (EditText) findViewById(R.id.profile_name_edit);
 		mDescriptionEdit = (EditText) findViewById(R.id.profile_description_edit);
 		mUrlEdit = (EditText) findViewById(R.id.profile_url_edit);
 		mLocationEdit = (EditText) findViewById(R.id.profile_location_edit);
+		
+		mNameLabel=(TextView) findViewById(R.id.profile_name);
+		mDescriptionLabel=(TextView) findViewById(R.id.profile_description);
+		mUrlLabel=(TextView) findViewById(R.id.profile_url);
+		mLocationLabel=(TextView) findViewById(R.id.profile_location);
+		
+		setFakedBold(mNameLabel);
+		setFakedBold(mDescriptionLabel);
+		setFakedBold(mUrlLabel);
+		setFakedBold(mLocationLabel);
 
 		setTextChangeListener();
 
+	}
+	
+	private void setFakedBold(TextView tv){
+		TextPaint tp=tv.getPaint();
+		tp.setFakeBoldText(true);
 	}
 
 	private void setTextChangeListener() {
@@ -150,7 +169,6 @@ public class EditProfilePage extends BaseActivity {
 
 	private void updateUI() {
 		mBar.setTitle("编辑个人资料");
-		mHeadEdit.setText("修改头像");
 		mNameEdit.setText(user.screenName);
 		mDescriptionEdit.setText(user.description);
 		mUrlEdit.setText(user.url);
@@ -164,7 +182,7 @@ public class EditProfilePage extends BaseActivity {
 		if (App.DEBUG) {
 			log("updateProfileImagePreview() url=" + user.profileImageUrl);
 		}
-		mLoader.set(user.profileImageUrl, mHeadView);
+		mLoader.set(user.profileImageUrl, mHeadView,R.drawable.default_head);
 		mHeadView.invalidate();
 
 	}
@@ -240,7 +258,7 @@ public class EditProfilePage extends BaseActivity {
 	public void onClick(View v) {
 		int id = v.getId();
 		switch (id) {
-		case R.id.profile_image_edit:
+		case R.id.profile_image:
 			startEditProfileImage();
 			break;
 		case R.id.button_ok:
