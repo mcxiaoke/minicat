@@ -46,6 +46,7 @@ import android.view.View;
  * @author mcxiaoke
  * @version 1.1 2011.08.20
  * @version 1.2 2011.11.04
+ * @version 1.3 2011.11.08
  * 
  */
 public class TitlePageIndicator extends View implements PageIndicator {
@@ -332,14 +333,18 @@ public class TitlePageIndicator extends View implements PageIndicator {
 
 		// Verify if the current view must be clipped to the screen
 		RectF curPageBound = bounds.get(mCurrentPage);
-		float curPageWidth = curPageBound.right - curPageBound.left;
-		if (curPageBound.left < leftClip) {
-			// Try to clip to the screen (left side)
-			clipViewOnTheLeft(curPageBound, curPageWidth, left);
-		}
-		if (curPageBound.right > rightClip) {
-			// Try to clip to the screen (right side)
-			clipViewOnTheRight(curPageBound, curPageWidth, right);
+		
+		// fix null pointer exception
+		if(curPageBound!=null){
+			float curPageWidth = curPageBound.right - curPageBound.left;
+			if (curPageBound.left < leftClip) {
+				// Try to clip to the screen (left side)
+				clipViewOnTheLeft(curPageBound, curPageWidth, left);
+			}
+			if (curPageBound.right > rightClip) {
+				// Try to clip to the screen (right side)
+				clipViewOnTheRight(curPageBound, curPageWidth, right);
+			}
 		}
 
 		// Left views starting from the current position

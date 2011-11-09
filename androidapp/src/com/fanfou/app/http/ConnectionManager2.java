@@ -45,13 +45,12 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.5 2011.10.25
  * @version 2.0 2011.11.03
  * @version 2.1 2011.11.04
- * @version 3.0 2011.11.09
  * 
  */
-public final class ConnectionManager {
-	
+public enum ConnectionManager2 {
+	INSTANCE;
 
-	private static final String TAG = ConnectionManager.class.getSimpleName();
+	private static final String TAG = ConnectionManager2.class.getSimpleName();
 
 	public static final int SOCKET_BUFFER_SIZE = 4096;
 	public static final int CONNECTION_TIMEOUT_MS = 10000;
@@ -59,38 +58,33 @@ public final class ConnectionManager {
 	public static final int MAX_TOTAL_CONNECTIONS = 20;
 	public static final int MAX_RETRY_TIMES = 4;
 
-	private DefaultHttpClient httpClient;
-	private static ConnectionManager INSTANCE=new ConnectionManager();
+	private static DefaultHttpClient sClient;
+
+	static {
+		prepareHttpClient();
+	}
 
 	private void log(String message) {
 		Log.d(TAG, message);
 	}
-	
-	public static ConnectionManager getInstance(){
-		return INSTANCE;
-	}
-	
-	private ConnectionManager(){
-		prepareHttpClient();
-	}
 
 	public static HttpResponse exec(ConnectionRequest cr) throws IOException,
 			ApiException {
-		return getInstance().open(cr);
+		return INSTANCE.open(cr);
 	}
 
 	public static HttpResponse execNoAuth(ConnectionRequest cr)
 			throws IOException, ApiException {
-		return getInstance().openWithNoAuth(cr);
+		return INSTANCE.openWithNoAuth(cr);
 	}
 
 	public static HttpResponse get(String url) throws IOException {
-		return getInstance().getImpl(url);
+		return INSTANCE.getImpl(url);
 	}
 
 	public static HttpResponse post(String url, List<Parameter> params)
 			throws IOException {
-		return getInstance().postImpl(url, params);
+		return INSTANCE.postImpl(url, params);
 	}
 
 	private HttpResponse open(ConnectionRequest cr) throws IOException,
@@ -105,7 +99,7 @@ public final class ConnectionManager {
 		}
 		setHeaders(request, cr.headers);
 		setOAuth(request, cr.params);
-		setProxy(httpClient);
+		setProxy(sClient);
 		if (App.DEBUG) {
 			Header[] headers = request.getAllHeaders();
 			for (Header header : headers) {
@@ -113,7 +107,7 @@ public final class ConnectionManager {
 						+ header.getValue());
 			}
 		}
-		return httpClient.execute(request);
+		return sClient.execute(request);
 	}
 
 	private HttpResponse openWithNoAuth(ConnectionRequest cr)
@@ -127,7 +121,7 @@ public final class ConnectionManager {
 			request = new HttpGet(cr.url);
 		}
 		setHeaders(request, cr.headers);
-		setProxy(httpClient);
+		setProxy(sClient);
 		if (App.DEBUG) {
 			Header[] headers = request.getAllHeaders();
 			for (Header header : headers) {
@@ -135,20 +129,20 @@ public final class ConnectionManager {
 						+ header.getValue());
 			}
 		}
-		return httpClient.execute(request);
+		return sClient.execute(request);
 	}
 
 	private HttpResponse getImpl(String url) throws IOException {
-		setProxy(httpClient);
-		return httpClient.execute(new HttpGet(url));
+		setProxy(sClient);
+		return sClient.execute(new HttpGet(url));
 	}
 
 	private HttpResponse postImpl(String url, List<Parameter> params)
 			throws IOException {
-		setProxy(httpClient);
+		setProxy(sClient);
 		HttpPost post = new HttpPost(url);
 		post.setEntity(ConnectionRequest.encodeForPost(params));
-		return httpClient.execute(new HttpGet(url));
+		return sClient.execute(new HttpGet(url));
 	}
 
 	private static void setHeaders(HttpRequestBase request, List<Header> headers) {
@@ -161,7 +155,7 @@ public final class ConnectionManager {
 		}
 	}
 
-	private synchronized void prepareHttpClient() {
+	private static synchronized void prepareHttpClient() {
 		HttpParams params = new BasicHttpParams();
 		ConnManagerParams.setMaxConnectionsPerRoute(params,
 				new ConnPerRouteBean(MAX_TOTAL_CONNECTIONS));
@@ -184,10 +178,10 @@ public final class ConnectionManager {
 				SSLSocketFactory.getSocketFactory(), 443));
 		ClientConnectionManager manager = new ThreadSafeClientConnManager(
 				params, schReg);
-		httpClient = new DefaultHttpClient(manager, params);
-		httpClient.addRequestInterceptor(new GzipRequestInterceptor());
-		httpClient.addResponseInterceptor(new GzipResponseInterceptor());
-		httpClient.setHttpRequestRetryHandler(new RequestRetryHandler(
+		sClient = new DefaultHttpClient(manager, params);
+		sClient.addRequestInterceptor(new GzipRequestInterceptor());
+		sClient.addResponseInterceptor(new GzipResponseInterceptor());
+		sClient.setHttpRequestRetryHandler(new RequestRetryHandler(
 				MAX_RETRY_TIMES));
 	}
 

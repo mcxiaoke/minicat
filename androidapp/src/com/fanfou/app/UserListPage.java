@@ -37,6 +37,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.5 2011.10.29
  * @version 1.6 2011.11.07
  * @version 2.0 2011.11.07
+ * @version 2.1 2011.11.09
  * 
  */
 public class UserListPage extends BaseActivity implements OnRefreshListener,
@@ -362,7 +363,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
 		String where = BasicColumns.TYPE + " = " + type + " AND "
-				+ BasicColumns.OWNER_ID + " = '" + App.me.userId + "' AND ("
+				+ BasicColumns.OWNER_ID + " = '" + userId + "' AND ("
 				+ UserInfo.SCREEN_NAME + " like '%" + constraint + "%' OR "
 				+ BasicColumns.ID + " like '%" + constraint + "%' )";
 		;

@@ -132,7 +132,7 @@ public class ImageCache implements ICache<Bitmap> {
 		String filename = StringHelper.md5(key) + ".jpg";
 		File file = new File(IOHelper.getImageCacheDir(mContext), filename);
 		if (App.DEBUG) {
-			Log.i(TAG, "save image: " + filename);
+			Log.d(TAG, "save image: " + filename);
 		}
 		return ImageHelper.writeToFile(file, bitmap);
 	}
