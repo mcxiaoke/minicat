@@ -185,9 +185,9 @@ public class ProfilePage extends BaseActivity {
 	 */
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		// mActionBar.setRightAction(new WriteAction());
+		mActionBar.setTitle("我的空间");
+		 mActionBar.setRightAction(new WriteAction());
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
-		mActionBar.setRefreshEnabled(this);
 	}
 
 	private class WriteAction extends AbstractAction {
@@ -226,7 +226,6 @@ public class ProfilePage extends BaseActivity {
 			return;
 		}
 		noPermission = !user.following && user.protect;
-		mActionBar.setTitle(user.screenName + "的空间");
 
 		if (App.DEBUG)
 			log("updateUI user.name=" + user.screenName);

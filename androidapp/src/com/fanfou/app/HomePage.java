@@ -61,6 +61,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.0 2011.11.04
  * @version 4.1 2011.11.07
  * @version 4.2 2011.11.08
+ * @version 4.3 2011.11.09
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,

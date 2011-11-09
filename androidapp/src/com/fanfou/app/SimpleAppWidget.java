@@ -93,6 +93,11 @@ public class SimpleAppWidget extends AppWidgetProvider {
 		Intent intent = new Intent(context, MyProfilePage.class);
 		return getPendingIntent(context, intent);
 	}
+	
+	private PendingIntent getSearchPendingIntent(Context context) {
+		Intent intent = new Intent(context, SearchPage.class);
+		return getPendingIntent(context, intent);
+	}
 
 	private PendingIntent getPendingIntent(Context context, Intent intent) {
 		PendingIntent pi = PendingIntent.getActivity(context, 0, intent, 0);

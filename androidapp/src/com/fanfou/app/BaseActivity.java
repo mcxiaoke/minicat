@@ -41,8 +41,6 @@ public abstract class BaseActivity extends Activity implements
 	public static final int STATE_NORMAL = 1;
 	public static final int STATE_EMPTY = 2;
 
-	protected static final int REQUEST_CODE_OPTION = 100;
-
 	protected BaseActivity mContext;
 	protected LayoutInflater mInflater;
 	protected boolean isActive = false;

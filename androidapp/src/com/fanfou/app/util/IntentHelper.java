@@ -51,14 +51,14 @@ public final class IntentHelper {
 
 	public static void logIntent(String tag, Intent intent) {
 		if (intent == null) {
-			Log.i(tag, "intent is null.");
+			Log.d(tag, "intent is null.");
 		}
 		StringBuffer sb = new StringBuffer();
-		sb.append(" intent.getAction():" + intent.getAction());
-		sb.append(" intent.getData():" + intent.getData());
-		sb.append(" intent.getDataString():" + intent.getDataString());
-		sb.append(" intent.getScheme():" + intent.getScheme());
-		sb.append(" intent.getType():" + intent.getType());
+		sb.append("Action:" + intent.getAction());
+		sb.append("Data:" + intent.getData());
+		sb.append("DataStr:" + intent.getDataString());
+		sb.append("Scheme:" + intent.getScheme());
+		sb.append("Type:" + intent.getType());
 		Bundle extras = intent.getExtras();
 		if (extras != null && !extras.isEmpty()) {
 			for (String key : extras.keySet()) {

@@ -10,7 +10,7 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.HomePage;
-import com.fanfou.app.MessageChatPage;
+import com.fanfou.app.SendPage;
 import com.fanfou.app.R;
 import com.fanfou.app.StatusPage;
 import com.fanfou.app.api.DirectMessage;
@@ -143,7 +143,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		if (App.DEBUG) {
 			Log.d(TAG, "showDmOneNotification");
 		}
-		Intent intent = new Intent(context, MessageChatPage.class);
+		Intent intent = new Intent(context, SendPage.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
 		intent.putExtra(Commons.EXTRA_USER_ID, dm.senderId);
 		intent.putExtra(Commons.EXTRA_USER_NAME, dm.senderScreenName);

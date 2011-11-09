@@ -11,11 +11,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.ui.ActionManager;
-import com.fanfou.app.ui.widget.TouchImageView;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.Utils;
 
@@ -24,6 +24,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.0 2011.08.28
  * @version 2.0 2011.10.12
  * @version 2.1 2011.10.27
+ * @version 2.2 2011.11.09
  * 
  */
 public class PhotoViewPage extends BaseActivity {
@@ -31,7 +32,7 @@ public class PhotoViewPage extends BaseActivity {
 	private static final String TAG = PhotoViewPage.class.getSimpleName();
 	private String mPhotoPath;
 
-	private TouchImageView mTouchImageView;
+	private ImageView mImageView;
 	private TextView mSave;
 	private TextView mClose;
 	private TextView mShare;
@@ -47,11 +48,12 @@ public class PhotoViewPage extends BaseActivity {
 			return;
 		}
 		if (App.DEBUG) {
-			Log.i(TAG, "mPhotoPath=" + mPhotoPath);
+			Log.d(TAG, "mPhotoPath=" + mPhotoPath);
 		}
 
 		setContentView(R.layout.photoview);
-		mTouchImageView = (TouchImageView) findViewById(R.id.photoview_pic);
+		mImageView = (ImageView) findViewById(R.id.photoview_pic);
+		
 		mSave = (TextView) findViewById(R.id.photoview_save);
 		mClose = (TextView) findViewById(R.id.photoview_close);
 		mShare = (TextView) findViewById(R.id.photoview_share);
@@ -60,7 +62,10 @@ public class PhotoViewPage extends BaseActivity {
 		mShare.setOnClickListener(this);
 		Bitmap bitmap = BitmapFactory.decodeFile(mPhotoPath);
 		if (bitmap != null) {
-			mTouchImageView.setImageBitmap(bitmap);
+			if (App.DEBUG) {
+				Log.d(TAG, "Bitmap width=" + bitmap.getWidth()+" height="+bitmap.getHeight());
+			}
+			mImageView.setImageBitmap(bitmap);
 		} else {
 			finish();
 		}

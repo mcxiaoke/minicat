@@ -71,7 +71,6 @@ public class WritePage extends BaseActivity {
 
 	private ActionBar mActionBar;
 	private MyAutoCompleteTextView mAutoCompleteTextView;
-	private CursorAdapter mAdapter;
 
 	private View mPictureView;
 	private ImageView iPicturePrieview;
@@ -363,14 +362,12 @@ public class WritePage extends BaseActivity {
 
 		mAutoCompleteTextView.setTokenizer(new AtTokenizer());
 		mAutoCompleteTextView.setDropDownBackgroundResource(R.drawable.bg);
-		mAutoCompleteTextView.setDropDownAnchor(R.id.write_text);
-		String[] projection = new String[] { BaseColumns._ID, BasicColumns.ID,
+		String[] projection = new String[] { UserInfo._ID, UserInfo.ID,
 				UserInfo.SCREEN_NAME };
 		String where = BasicColumns.TYPE + " = '" + User.TYPE_FRIENDS + "'";
-		Cursor c = managedQuery(UserInfo.CONTENT_URI, projection, where, null,
+		Cursor c = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where, null,
 				null);
-		mAdapter = new AutoCompleteCursorAdapter(this, c);
-		mAutoCompleteTextView.setAdapter(mAdapter);
+		mAutoCompleteTextView.setAdapter(new AutoCompleteCursorAdapter(this, c));
 	}
 
 	private void setLayout() {
