@@ -88,7 +88,6 @@ public class MessageCursorAdapter extends BaseCursorAdapter {
 		setHeadImage(mContext, holder.headIcon);
 		setTextStyle(holder);
 		view.setTag(holder);
-		bindView(view, context, cursor);
 		return view;
 	}
 

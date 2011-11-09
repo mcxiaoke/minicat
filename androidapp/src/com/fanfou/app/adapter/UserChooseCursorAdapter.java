@@ -14,12 +14,15 @@ import android.widget.TextView;
 
 import com.fanfou.app.R;
 import com.fanfou.app.api.User;
+import com.fanfou.app.util.DateTimeHelper;
+import com.fanfou.app.util.StringHelper;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.10.21
  * @version 1.1 2011.10.24
  * @version 1.5 2011.10.25
+ * @version 1.6 2011.11.09
  * 
  */
 public class UserChooseCursorAdapter extends BaseCursorAdapter {
@@ -74,9 +77,8 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter {
 		View view = mInflater.inflate(getLayoutId(), null);
 		ViewHolder holder = new ViewHolder(view);
 		setHeadImage(mContext, holder.headIcon);
-		setTextStyle(holder);
+//		setTextStyle(holder);
 		view.setTag(holder);
-		bindView(view, context, cursor);
 		return view;
 	}
 
@@ -91,8 +93,16 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter {
 			mLoader.set(u.profileImageUrl, holder.headIcon,
 					R.drawable.default_head);
 		}
+		
+		if (u.protect) {
+			holder.lockIcon.setVisibility(View.VISIBLE);
+		} else {
+			holder.lockIcon.setVisibility(View.GONE);
+		}
 		holder.nameText.setText(u.screenName);
-		holder.idText.setText(u.id);
+		holder.idText.setText("("+u.id+")");
+		holder.genderText.setText(u.gender);
+		holder.locationText.setText(u.location);
 
 		Boolean b = mStateMap.get(cursor.getPosition());
 		if (b == null || b == Boolean.FALSE) {
@@ -107,14 +117,20 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter {
 
 	private static class ViewHolder {
 
-		ImageView headIcon = null;
-		TextView nameText = null;
-		TextView idText = null;
-		CheckBox checkBox = null;
+		final ImageView headIcon;
+		final ImageView lockIcon;
+		final TextView nameText;
+		final TextView idText;
+		final TextView genderText;
+		final TextView locationText;
+		final CheckBox checkBox;
 
 		ViewHolder(View base) {
 			this.headIcon = (ImageView) base.findViewById(R.id.item_user_head);
+			this.lockIcon = (ImageView) base.findViewById(R.id.item_user_flag);
 			this.nameText = (TextView) base.findViewById(R.id.item_user_name);
+			this.genderText = (TextView) base.findViewById(R.id.item_user_gender);
+			this.locationText = (TextView) base.findViewById(R.id.item_user_location);
 			this.idText = (TextView) base.findViewById(R.id.item_user_id);
 			this.checkBox = (CheckBox) base
 					.findViewById(R.id.item_user_checkbox);

@@ -24,6 +24,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.3 2011.11.04
  * @version 1.4 2011.11.07
  * @version 2.0 2011.11.07
+ * @version 2.1 2011.11.09
  * 
  */
 public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
@@ -806,7 +807,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public User userIsBlocked(String userId) throws ApiException {
+	public User isBlocked(String userId) throws ApiException {
 		Response response = doPostIdAction(URL_BLOCKS_EXISTS, userId);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {

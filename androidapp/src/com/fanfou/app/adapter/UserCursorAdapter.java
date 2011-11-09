@@ -20,6 +20,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.0 2011.06.04
  * @version 1.5 2011.10.24
  * @version 1.6 2011.11.07
+ * @version 1.7 2011.11.09
  * 
  */
 public class UserCursorAdapter extends BaseCursorAdapter {
@@ -44,9 +45,10 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 
 	private void setTextStyle(ViewHolder holder) {
 		int fontSize = getFontSize();
-		holder.contentText.setTextSize(fontSize);
+		holder.genderText.setTextSize(fontSize);
+		holder.locationText.setTextSize(fontSize);
 		holder.nameText.setTextSize(fontSize);
-		holder.dateText.setTextSize(fontSize - 3);
+		holder.dateText.setTextSize(fontSize - 2);
 		TextPaint tp = holder.nameText.getPaint();
 		tp.setFakeBoldText(true);
 	}
@@ -56,7 +58,7 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 		View view = mInflater.inflate(getLayoutId(), null);
 		ViewHolder holder = new ViewHolder(view);
 		setHeadImage(mContext, holder.headIcon);
-		setTextStyle(holder);
+//		setTextStyle(holder);
 		view.setTag(holder);
 		// bindView(view, context, cursor);
 		return view;
@@ -86,33 +88,34 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 			holder.lockIcon.setVisibility(View.GONE);
 		}
 		holder.nameText.setText(u.screenName);
-
-		if (!StringHelper.isEmpty(u.lastStatusId)) {
-			holder.contentText.setText(u.lastStatusText);
-			String dateStr = DateTimeHelper.formatDate(u.lastStatusCreatedAt);
-			holder.dateText.setText(dateStr);
-		} else {
-			holder.contentText.setText("");
-			holder.dateText.setText("");
-		}
+		holder.idText.setText("("+u.id+")");
+		holder.dateText.setText(DateTimeHelper.formatDateOnly(u.createdAt));
+		holder.genderText.setText(u.gender);
+		holder.locationText.setText(u.location);
 
 	}
 
 	private static class ViewHolder {
 
-		ImageView headIcon = null;
-		ImageView lockIcon = null;
-		TextView nameText = null;
-		TextView contentText = null;
-		TextView dateText = null;
+		final ImageView headIcon;
+		final ImageView lockIcon;
+		final TextView nameText;
+		final TextView idText;
+		final TextView dateText;
+		final TextView genderText;
+		final TextView locationText;
 
 		ViewHolder(View base) {
 			this.headIcon = (ImageView) base.findViewById(R.id.item_user_head);
 			this.lockIcon = (ImageView) base.findViewById(R.id.item_user_flag);
 			this.nameText = (TextView) base.findViewById(R.id.item_user_name);
-			this.contentText = (TextView) base
-					.findViewById(R.id.item_user_text);
+			this.idText = (TextView) base.findViewById(R.id.item_user_id);
 			this.dateText = (TextView) base.findViewById(R.id.item_user_date);
+			this.genderText = (TextView) base
+					.findViewById(R.id.item_user_gender);
+			this.locationText = (TextView) base
+					.findViewById(R.id.item_user_location);
+
 		}
 	}
 

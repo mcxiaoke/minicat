@@ -264,7 +264,7 @@
 			</intent-filter>
 		</receiver>
 
-		<receiver android:name=".SimpleAppWidget" android:label="@string/app_name"
+		<receiver android:name=".SimpleAppWidget" android:label="@string/app_simple_widget_name"
 			android:icon="@drawable/icon">
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

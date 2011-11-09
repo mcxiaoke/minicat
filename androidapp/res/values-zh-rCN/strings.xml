@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">饭否</string>
+	<string name="app_simple_widget_name">饭否小部件</string>
 	<string name="app_share_name">分享到饭否</string>
 	<string name="app_photoviewer_name">饭否照片查看器</string>
 	

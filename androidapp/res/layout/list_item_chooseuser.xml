@@ -1,43 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:descendantFocusability="blocksDescendants"
-	android:orientation="horizontal" android:gravity="center_vertical"
-	android:padding="2dp" >
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:descendantFocusability="blocksDescendants" android:orientation="horizontal"
+	android:gravity="center_vertical" android:padding="2dp">
 
-	<ImageView
-		android:id="@id/item_user_head"
-		style="@style/Image.Head" />
+	<ImageView android:id="@id/item_user_head" style="@style/Image.Head" />
 
-	<RelativeLayout
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/item_user_head"
-		android:layout_weight="1"
-		android:padding="4dp" >
+	<RelativeLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_toRightOf="@id/item_user_head"
+		android:layout_weight="1" android:padding="4dp">
 
-		<TextView
-			android:id="@id/item_user_name"
-			style="@style/Text.Name"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentTop="true"
-			android:text="Username" />
+		<TextView android:id="@id/item_user_name"
+			android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
+			style="@style/Text.NameBig" />
 
-		<TextView
-			android:id="@id/item_user_id"
-			style="@style/Text.Info"
-			android:layout_below="@id/item_user_name"
-			android:text="useid" />
+		<TextView android:id="@id/item_user_id" style="@style/Text.MetaBig"
+			android:layout_toRightOf="@id/item_user_name"
+			android:layout_marginRight="10dp" android:layout_alignBottom="@id/item_user_name" />
+
+		<ImageView android:id="@id/item_user_flag" android:src="@drawable/i_mini_locked"
+			android:layout_toRightOf="@id/item_user_id"
+			android:layout_alignBottom="@id/item_user_name" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:visibility="gone"
+			android:layout_margin="3dp" />
+
+		<TextView android:id="@id/item_user_gender" style="@style/Text.MetaBig"
+			android:layout_below="@id/item_user_name" android:paddingRight="10dp" />
+
+		<TextView android:id="@id/item_user_location" style="@style/Text.MetaBig"
+			android:layout_below="@id/item_user_name" android:layout_toRightOf="@id/item_user_gender"
+			android:layout_alignBottom="@id/item_user_gender" />
 	</RelativeLayout>
 
-	<CheckBox
-		android:id="@+id/item_user_checkbox"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:clickable="false"
-		android:focusable="false"
-		android:focusableInTouchMode="false" 
-		android:button="@drawable/checkbox_bg"/>
+	<CheckBox android:id="@+id/item_user_checkbox"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:clickable="false" android:focusable="false"
+		android:focusableInTouchMode="false" android:button="@drawable/checkbox_bg" />
 
 </LinearLayout>

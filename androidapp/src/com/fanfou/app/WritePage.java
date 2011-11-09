@@ -197,14 +197,17 @@ public class WritePage extends BaseActivity {
 	}
 
 	private void showCount(int count) {
-		if (count >= 140) {
+		if (count > 140) {
 			tWordsCount.setTextColor(getResources().getColorStateList(
 					R.color.write_count_alert_text));
+			tWordsCount.setText("字数超标：" + (count-140));
 		} else {
+			
 			tWordsCount.setTextColor(getResources().getColorStateList(
 					R.color.write_count_text));
+			tWordsCount.setText("剩余字数：" + (140 - count));
 		}
-		tWordsCount.setText("剩余字数：" + (140 - count));
+		
 	}
 
 	private void parsePhoto(Uri uri) {
@@ -544,9 +547,12 @@ public class WritePage extends BaseActivity {
 		if (App.DEBUG) {
 			log("doAddUserNames: " + names);
 		}
-		mAutoCompleteTextView.setText(content + names);
-		Editable editable = mAutoCompleteTextView.getEditableText();
-		Selection.setSelection(editable, editable.length());
+		if(!StringHelper.isEmpty(names)){
+			mAutoCompleteTextView.setText(names);
+			Editable editable = mAutoCompleteTextView.getEditableText();
+			Selection.setSelection(editable, editable.length());
+		}
+
 	}
 
 	private void doSend() {

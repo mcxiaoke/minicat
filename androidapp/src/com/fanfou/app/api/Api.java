@@ -10,6 +10,7 @@ import java.util.List;
  * @version 1.2 2011.10.18
  * @version 1.3 2011.10.28
  * @version 1.4 2011.11.07
+ * @version 1.5 2011.11.09
  * 
  */
 public interface Api {
@@ -339,7 +340,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	User userIsBlocked(String userId) throws ApiException;
+	User isBlocked(String userId) throws ApiException;
 
 	/**
 	 * fetch user list blocked by me

@@ -22,6 +22,8 @@
 	<item type="id" name="item_user_head" />
 	<item type="id" name="item_user_text" />
 	<item type="id" name="item_user_date" />
+	<item type="id" name="item_user_gender" />
+	<item type="id" name="item_user_location" />
 
 	<item type="id" name="item_status" />
 	<item type="id" name="item_status_head" />

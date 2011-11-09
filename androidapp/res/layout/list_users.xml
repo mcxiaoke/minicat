@@ -19,7 +19,7 @@
 		android:textSize="@dimen/text_size_medium"
 		android:background="@drawable/input_bg"
 		android:hint="输入文字搜索用户"
-		android:padding="8dp" android:singleLine="true" android:gravity="center_vertical"/>
+		android:padding="10dp" android:singleLine="true" android:gravity="center_vertical"/>
 
 	<com.fanfou.app.ui.widget.EndlessListView
 		android:id="@id/list" android:layout_width="fill_parent"
