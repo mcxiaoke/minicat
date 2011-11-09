@@ -59,6 +59,7 @@ public class SendPage extends BaseActivity {
 	private static final String TAG = SendPage.class.getSimpleName();
 	private String mUserId;
 	private String mUserName;
+	private String mSelectInput;
 
 	private Cursor mCursor;
 	private ListView mListView;
