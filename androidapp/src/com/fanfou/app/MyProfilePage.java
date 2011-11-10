@@ -1,5 +1,7 @@
 package com.fanfou.app;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -71,29 +73,15 @@ public class MyProfilePage extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (parseIntent()) {
+		parseIntent();
 			initialize();
 			setLayout();
 			initCheckState();
-		} else {
-			finish();
-		}
 	}
 
-	private boolean parseIntent() {
-		user = App.me.user;
-		if (user != null && !user.isNull()) {
-			userId = user.id;
-		} else {
-			userId = App.me.userId;
-			user = CacheManager.getUser(this, userId);
-		}
-		if (StringHelper.isEmpty(userId)) {
-			log("用户ID不能为空");
-			return false;
-		} else {
-			return true;
-		}
+	private void parseIntent() {
+		userId = App.me.userId;
+		user = CacheManager.getUser(this, userId);
 	}
 
 	private void initialize() {
@@ -119,7 +107,7 @@ public class MyProfilePage extends BaseActivity {
 
 		mDescription = (TextView) findViewById(R.id.user_description);
 
-		mHeadView = (ViewGroup) findViewById(R.id.user_headview);
+//		mHeadView = (ViewGroup) findViewById(R.id.user_headview);
 
 		mStatusesView = (ViewGroup) findViewById(R.id.user_statuses_view);
 		mStatusesInfo = (TextView) findViewById(R.id.user_statuses);
@@ -130,7 +118,7 @@ public class MyProfilePage extends BaseActivity {
 		mFollowersView = (ViewGroup) findViewById(R.id.user_followers_view);
 		mFollowersInfo = (TextView) findViewById(R.id.user_followers);
 
-		mHeadView.setOnClickListener(this);
+//		mHeadView.setOnClickListener(this);
 		mStatusesView.setOnClickListener(this);
 		mFavoritesView.setOnClickListener(this);
 		mFriendsView.setOnClickListener(this);
@@ -143,8 +131,22 @@ public class MyProfilePage extends BaseActivity {
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("我的空间");
-//		mActionBar.setRefreshEnabled(this);
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
+		mActionBar.setRightAction(new EditProfileAction());
+	}
+	
+	private class EditProfileAction extends ActionBar.AbstractAction{
+		public EditProfileAction() {
+			super(R.drawable.ic_sethead);
+		}
+
+		@Override
+		public void performAction(View view) {
+			if(user!=null){
+				goEditProfilePage(mContext, user);
+			}
+		}
+		
 	}
 
 	protected void initCheckState() {
@@ -245,10 +247,10 @@ public class MyProfilePage extends BaseActivity {
 
 	private static final int REQUEST_CODE_UPDATE_PROFILE = 0;
 
-	private void goEditProfilePage() {
-		Intent intent = new Intent(this, EditProfilePage.class);
+	private static void goEditProfilePage(Activity context, final User user) {
+		Intent intent = new Intent(context, EditProfilePage.class);
 		intent.putExtra(Commons.EXTRA_USER, user);
-		startActivityForResult(intent, REQUEST_CODE_UPDATE_PROFILE);
+		context.startActivityForResult(intent, REQUEST_CODE_UPDATE_PROFILE);
 	}
 
 	@Override
@@ -283,7 +285,7 @@ public class MyProfilePage extends BaseActivity {
 			ActionManager.doShowFollowers(this, user);
 			break;
 		case R.id.user_headview:
-			goEditProfilePage();
+//			goEditProfilePage(this,user);
 			break;
 		default:
 			break;

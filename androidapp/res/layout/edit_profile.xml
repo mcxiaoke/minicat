@@ -8,16 +8,20 @@
 
 	<ScrollView android:layout_width="match_parent"
 		android:layout_height="match_parent" android:scrollbars="none"
-		android:background="@drawable/bg" android:padding="6dp">
+		android:background="@drawable/bg" android:padding="6dp" >
 
 		<LinearLayout android:orientation="vertical"
 			android:layout_width="match_parent" android:layout_height="match_parent">
 
 			<LinearLayout android:layout_width="match_parent"
-				android:layout_height="wrap_content" android:orientation="horizontal" android:id="@+id/profile_image_area">
-				
+				android:layout_height="wrap_content" android:orientation="horizontal"
+				android:id="@+id/profile_image_area" android:gravity="center_vertical" android:layout_marginLeft="4dp">
+
 				<ImageView style="@style/Image.Head" android:id="@+id/profile_image"
 					android:src="@drawable/default_head" />
+
+				<ImageView style="@style/Icon.Action" android:id="@+id/profile_image_edit"
+					android:src="@drawable/ic_edit_profile_image" android:layout_marginLeft="10dp"/>
 			</LinearLayout>
 
 			<TextView style="@style/Text.ItemName" android:id="@+id/profile_name"

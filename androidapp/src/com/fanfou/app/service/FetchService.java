@@ -44,6 +44,7 @@ import com.fanfou.app.util.Utils;
  * @version 3.3 2011.10.28
  * @version 4.0 2011.11.04
  * @version 4.1 2011.11.07
+ * @version 4.2 2011.11.10
  * 
  */
 public class FetchService extends BaseIntentService {
@@ -389,10 +390,9 @@ public class FetchService extends BaseIntentService {
 		}
 	}
 
-	// add at 2011.10.28
-	private int updateUsersFromStatus(List<Status> ss, int type) {
+	private int updateUsersFromStatus(List<Status> statuses, int type) {
 		ArrayList<User> us = new ArrayList<User>();
-		for (Status s : ss) {
+		for (Status s : statuses) {
 			User u = s.user;
 			if (u != null) {
 //				ContentValues cv = new ContentValues();
@@ -403,8 +403,7 @@ public class FetchService extends BaseIntentService {
 //				cv.put(UserInfo.DESCRIPTION, u.description);
 //				int result=getContentResolver().update(UserInfo.CONTENT_URI, cv,
 //						UserInfo.ID + "=?", new String[] { u.id });
-				int result=FanFouProvider.updateUserInfo(this, u);
-				if(result<0){
+				if(!FanFouProvider.updateUserInfo(this, u)){
 					if (App.DEBUG) {
 						log("extractUsers from status list , udpate failed, insert it");
 					}
@@ -413,7 +412,7 @@ public class FetchService extends BaseIntentService {
 			}
 		}
 		int result = getContentResolver().bulkInsert(UserInfo.CONTENT_URI,
-				Parser.toContentValuesArray(ss));
+				Parser.toContentValuesArray(us));
 		if (App.DEBUG) {
 			log("extractUsers from status list , insert result=" + result);
 		}

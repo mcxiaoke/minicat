@@ -21,7 +21,7 @@ public class AutoCompleteService extends WakefulIntentService {
 	private static final String TAG = AutoCompleteService.class.getSimpleName();
 
 	public void log(String message) {
-		Log.i(TAG, message);
+		Log.d(TAG, message);
 	}
 
 	public AutoCompleteService() {
@@ -64,7 +64,7 @@ public class AutoCompleteService extends WakefulIntentService {
 			}
 		} catch (ApiException e) {
 			if (App.DEBUG) {
-				Log.e(TAG, e.toString());
+				Log.e(TAG, ""+e);
 				e.printStackTrace();
 			}
 		}

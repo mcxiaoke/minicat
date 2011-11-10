@@ -35,10 +35,10 @@ import com.fanfou.app.util.StringHelper;
  */
 public class DirectMessage implements Storable<DirectMessage> {
 
-	public static final String tag = DirectMessage.class.getSimpleName();
+	public static final String TAG = DirectMessage.class.getSimpleName();
 
 	private static void log(String message) {
-		Log.i(tag, message);
+		Log.d(TAG, message);
 	}
 
 	private static final long serialVersionUID = 7135927428287533074L;

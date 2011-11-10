@@ -990,24 +990,39 @@ public class FanFouProvider extends ContentProvider {
 		default:
 			throw new IllegalArgumentException("update() Unknown URI " + uri);
 		}
-
-		// log("update() notifyChange() rowId: " + id + " uri: " + uri);
+		if(App.DEBUG){
+			if(count>0){
+				log("update() result uri="+uri+" id="+id+" count="+count);
+			}
+		}
 		getContext().getContentResolver().notifyChange(uri, null);
 		return count;
 	}
 
 	// 更新用户信息
-	public static int updateUserInfo(Context context, User u) {
+	public static boolean updateUserInfo(Context context, User u) {
 		if (u == null || u.isNull()) {
-			return -1;
+			return false;
 		}
-		int result = context.getContentResolver().update(
-				Uri.parse(UserInfo.CONTENT_URI + "/id/" + u.id),
-				u.toSimpleContentValues(), null, null);
+		Uri uri=Uri.parse(UserInfo.CONTENT_URI + "/id/" + u.id);
+		int result = context.getContentResolver().update(uri, u.toContentValues(), null, null);
 		if (App.DEBUG) {
-			Log.d(TAG, "updateUserInfo id=" + u.id + " updated rows: " + result);
+			if(result>0){
+				Log.d(TAG, "updateUserInfo id=" + u.id + " updated rows: " + result+" uri="+uri);
+			}
 		}
-		return result;
+		return result>0;
+	}
+	
+	// 插入用户信息
+	public static void insertUserInfo(Context context, User u) {
+		if (u == null || u.isNull()) {
+			return;
+		}
+		Uri uri=context.getContentResolver().insert(UserInfo.CONTENT_URI, u.toContentValues());
+		if (App.DEBUG) {
+			Log.d(TAG, "insertUserInfo uri=" + uri);
+		}
 	}
 
 	public static int updateStatusProfileImageUrl(Context context, User u) {

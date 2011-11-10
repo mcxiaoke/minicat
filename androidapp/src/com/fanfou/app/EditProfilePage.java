@@ -52,6 +52,7 @@ public class EditProfilePage extends BaseActivity {
 	private ActionBar mBar;
 
 	private ImageView mHeadView;
+	private ImageView mHeadEdit;
 
 	private Button mButtonOK;
 	private Button mButtonCancel;
@@ -103,6 +104,9 @@ public class EditProfilePage extends BaseActivity {
 
 		mHeadView = (ImageView) findViewById(R.id.profile_image);
 		mHeadView.setOnClickListener(this);
+		
+		mHeadEdit=(ImageView) findViewById(R.id.profile_image_edit);
+		mHeadEdit.setOnClickListener(this);
 
 		mNameEdit = (EditText) findViewById(R.id.profile_name_edit);
 		mDescriptionEdit = (EditText) findViewById(R.id.profile_description_edit);
@@ -249,7 +253,8 @@ public class EditProfilePage extends BaseActivity {
 		if (map.size() > 0) {
 			new UpdateProfileTask(this).execute(map);
 		} else {
-			Utils.notify(this, "无任何修改");
+//			Utils.notify(this, "无任何修改");
+			finish();
 		}
 
 	}
@@ -259,6 +264,7 @@ public class EditProfilePage extends BaseActivity {
 		int id = v.getId();
 		switch (id) {
 		case R.id.profile_image:
+		case R.id.profile_image_edit:
 			startEditProfileImage();
 			break;
 		case R.id.button_ok:
