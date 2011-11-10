@@ -65,7 +65,7 @@
 		</activity>
 
 		<activity android:label="@string/app_name" android:name=".EditProfilePage"
-			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation">
+			android:theme="@style/Theme" android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="adjustResize">
 		</activity>
 
 		<activity android:configChanges="keyboardHidden|orientation"
@@ -175,7 +175,7 @@
 
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".SendPage"
-			android:theme="@style/Theme" android:windowSoftInputMode="adjustResize" />
+			android:theme="@style/Theme.AutoCompleteTextViewFix" android:windowSoftInputMode="adjustResize" />
 		
 		<activity android:configChanges="keyboardHidden|orientation"
 			android:label="@string/app_name" android:name=".UserSelectPage"
