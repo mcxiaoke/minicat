@@ -46,7 +46,7 @@ public class PhotosAlbumFragment extends Fragment implements
 		}
 		Bundle b = new Bundle();
 		b.putString(Commons.EXTRA_USER_ID, user.id);
-		b.putSerializable(Commons.EXTRA_USER, user);
+		b.putParcelable(Commons.EXTRA_USER, user);
 		PhotosAlbumFragment fragment = new PhotosAlbumFragment();
 		fragment.setArguments(b);
 		return fragment;
@@ -60,7 +60,7 @@ public class PhotosAlbumFragment extends Fragment implements
 		}
 		Bundle b = getArguments();
 		if (b != null) {
-			user = (User) b.getSerializable(Commons.EXTRA_USER);
+			user = (User) b.getParcelable(Commons.EXTRA_USER);
 			userId = b.getString(Commons.EXTRA_USER_ID);
 		}
 

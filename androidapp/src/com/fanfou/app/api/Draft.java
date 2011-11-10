@@ -6,6 +6,8 @@ import com.fanfou.app.db.Contents.DraftInfo;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.provider.BaseColumns;
 import android.util.Log;
 
@@ -13,24 +15,18 @@ import android.util.Log;
  * @author mcxiaoke
  * @version 1.0 2011.10.26
  * @version 1.1 2011.11.04
+ * @version 2.0 2011.11.10
  * 
  */
 public class Draft implements Storable<Draft> {
 
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof Draft) {
-			Draft d = (Draft) o;
-			if (id == d.id && text.equals(d.text)) {
-				return true;
-			}
-		}
-		return false;
+	public Draft() {
+
 	}
 
-	@Override
-	public int hashCode() {
-		return id + text.hashCode();
+	public Draft(Parcel in) {
+		ContentValues cv = in.readParcelable(null);
+		fromContentValues(cv);
 	}
 
 	@Override
@@ -88,5 +84,57 @@ public class Draft implements Storable<Draft> {
 		cv.put(DraftInfo.FILE_PATH, filePath);
 		return cv;
 	}
+
+	@Override
+	public void fromContentValues(ContentValues values) {
+		ContentValues cv = values;
+		ownerId = cv.getAsString(DraftInfo.OWNER_ID);
+		text = cv.getAsString(DraftInfo.TEXT);
+		createdAt = new Date(cv.getAsLong(DraftInfo.CREATED_AT));
+		type = cv.getAsInteger(DraftInfo.TYPE);
+		replyTo = cv.getAsString(DraftInfo.REPLY_TO);
+		filePath = cv.getAsString(DraftInfo.FILE_PATH);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Draft) {
+			Draft d = (Draft) o;
+			if (id == d.id && text.equals(d.text)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return id + text.hashCode();
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		ContentValues cv = toContentValues();
+		dest.writeParcelable(cv, flags);
+	}
+
+	public static final Parcelable.Creator<Draft> CREATOR = new Parcelable.Creator<Draft>() {
+
+		@Override
+		public Draft createFromParcel(Parcel source) {
+			return new Draft(source);
+		}
+
+		@Override
+		public Draft[] newArray(int size) {
+			// TODO Auto-generated method stub
+			return new Draft[size];
+		}
+	};
 
 }

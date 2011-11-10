@@ -30,6 +30,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 3.0 2011.10.28
  * @version 3.1 2011.11.07
  * @version 3.2 2011.11.08
+ * @version 3.5 2011.11.10
  * 
  */
 public class ActionService extends BaseIntentService {
@@ -101,7 +102,7 @@ public class ActionService extends BaseIntentService {
 					FanFouProvider.updateUserInfo(this, s.user);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
-					data.putSerializable(Commons.EXTRA_STATUS, s);
+					data.putParcelable(Commons.EXTRA_STATUS, s);
 					receiver.send(Commons.RESULT_CODE_FINISH, data);
 				}
 			}
@@ -119,7 +120,7 @@ public class ActionService extends BaseIntentService {
 					int result = cr.delete(uri, null, null);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
-					data.putSerializable(Commons.EXTRA_STATUS, s);
+					data.putParcelable(Commons.EXTRA_STATUS, s);
 					receiver.send(Commons.RESULT_CODE_FINISH, data);
 				}
 			}
@@ -139,7 +140,7 @@ public class ActionService extends BaseIntentService {
 					FanFouProvider.updateUserInfo(this, s.user);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
-					data.putSerializable(Commons.EXTRA_STATUS, s);
+					data.putParcelable(Commons.EXTRA_STATUS, s);
 					receiver.send(Commons.RESULT_CODE_FINISH, data);
 				}
 			}
@@ -159,7 +160,7 @@ public class ActionService extends BaseIntentService {
 					FanFouProvider.updateUserInfo(this, s.user);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
-					data.putSerializable(Commons.EXTRA_STATUS, s);
+					data.putParcelable(Commons.EXTRA_STATUS, s);
 					receiver.send(Commons.RESULT_CODE_FINISH, data);
 				}
 			}
@@ -172,7 +173,7 @@ public class ActionService extends BaseIntentService {
 					FanFouProvider.updateUserInfo(this, u);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
-					data.putSerializable(Commons.EXTRA_USER, u);
+					data.putParcelable(Commons.EXTRA_USER, u);
 					receiver.send(Commons.RESULT_CODE_FINISH, data);
 				}
 			}
@@ -188,7 +189,7 @@ public class ActionService extends BaseIntentService {
 							u.toContentValues());
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
-					data.putSerializable(Commons.EXTRA_USER, u);
+					data.putParcelable(Commons.EXTRA_USER, u);
 					receiver.send(Commons.RESULT_CODE_FINISH, data);
 				}
 				break;
@@ -210,7 +211,7 @@ public class ActionService extends BaseIntentService {
 					// int result = cr.update(uri, values, null, null);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
-					data.putSerializable(Commons.EXTRA_USER, u);
+					data.putParcelable(Commons.EXTRA_USER, u);
 					receiver.send(Commons.RESULT_CODE_FINISH, data);
 					// 取消关注后要清空该用户名下的消息
 					cr.delete(StatusInfo.CONTENT_URI,
@@ -227,7 +228,7 @@ public class ActionService extends BaseIntentService {
 							whereArgs);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
-					data.putSerializable(Commons.EXTRA_USER, u);
+					data.putParcelable(Commons.EXTRA_USER, u);
 					receiver.send(Commons.RESULT_CODE_FINISH, data);
 				}
 			}
@@ -239,7 +240,7 @@ public class ActionService extends BaseIntentService {
 				} else {
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
-					data.putSerializable(Commons.EXTRA_USER, u);
+					data.putParcelable(Commons.EXTRA_USER, u);
 					receiver.send(Commons.RESULT_CODE_FINISH, data);
 				}
 			}
@@ -257,7 +258,7 @@ public class ActionService extends BaseIntentService {
 							where, whereArgs);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
-					data.putSerializable(Commons.EXTRA_MESSAGE, dm);
+					data.putParcelable(Commons.EXTRA_MESSAGE, dm);
 					receiver.send(Commons.RESULT_CODE_FINISH, data);
 				}
 			}

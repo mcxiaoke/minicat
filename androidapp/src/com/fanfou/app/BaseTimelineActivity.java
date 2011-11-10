@@ -126,7 +126,7 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 
 	protected boolean parseIntent() {
 		Intent intent = getIntent();
-		user = (User) intent.getSerializableExtra(Commons.EXTRA_USER);
+		user = (User) intent.getParcelableExtra(Commons.EXTRA_USER);
 		if (user == null) {
 			userId = intent.getStringExtra(Commons.EXTRA_ID);
 		} else {

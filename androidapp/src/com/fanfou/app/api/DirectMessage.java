@@ -10,6 +10,9 @@ import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
@@ -66,6 +69,15 @@ public class DirectMessage implements Storable<DirectMessage> {
 
 	public User sender = null;
 	public User recipient = null;
+	
+	public DirectMessage() {
+
+	}
+
+	public DirectMessage(Parcel in) {
+		ContentValues cv = in.readParcelable(null);
+		fromContentValues(cv);
+	}
 
 	@Override
 	public int compareTo(DirectMessage another) {
@@ -114,7 +126,6 @@ public class DirectMessage implements Storable<DirectMessage> {
 		}
 		DirectMessage dm = new DirectMessage();
 		dm.id = Parser.parseString(c, BasicColumns.ID);
-		dm.realId = Parser.parseLong(c, BasicColumns.REAL_ID);
 		dm.ownerId = Parser.parseString(c, BasicColumns.OWNER_ID);
 		dm.text = Parser.parseString(c, DirectMessageInfo.TEXT);
 		dm.createdAt = Parser.parseDate(c, BasicColumns.CREATED_AT);
@@ -136,6 +147,10 @@ public class DirectMessage implements Storable<DirectMessage> {
 		dm.threadUserName = Parser.parseString(c,
 				DirectMessageInfo.THREAD_USER_NAME);
 		dm.isRead = Parser.parseBoolean(c, DirectMessageInfo.IS_READ);
+		
+		if(TextUtils.isEmpty(dm.id)){
+			return null;
+		}
 
 		return dm;
 	}
@@ -196,29 +211,54 @@ public class DirectMessage implements Storable<DirectMessage> {
 	@Override
 	public ContentValues toContentValues() {
 		ContentValues cv = new ContentValues();
+		
 		cv.put(BasicColumns.ID, this.id);
-		cv.put(BasicColumns.REAL_ID, this.realId);
 		cv.put(BasicColumns.OWNER_ID, this.ownerId);
 		cv.put(DirectMessageInfo.TEXT, this.text);
 		cv.put(BasicColumns.CREATED_AT, this.createdAt.getTime());
+		
 		cv.put(DirectMessageInfo.SENDER_ID, this.senderId);
 		cv.put(DirectMessageInfo.RECIPIENT_ID, this.recipientId);
+		
 		cv.put(DirectMessageInfo.SENDER_SCREEN_NAME, this.senderScreenName);
 		cv.put(DirectMessageInfo.RECIPIENT_SCREEN_NAME,
 				this.recipientScreenName);
+		
 		cv.put(DirectMessageInfo.SENDER_PROFILE_IMAGE_URL,
 				this.senderProfileImageUrl);
 		cv.put(DirectMessageInfo.RECIPIENT_PROFILE_IMAGE_URL,
 				this.recipientProfileImageUrl);
+		
 		cv.put(BasicColumns.TYPE, this.type);
 
 		cv.put(DirectMessageInfo.THREAD_USER_ID, this.threadUserId);
 		cv.put(DirectMessageInfo.THREAD_USER_NAME, this.threadUserName);
 		cv.put(DirectMessageInfo.IS_READ, this.isRead);
-
-		cv.put(BasicColumns.TIMESTAMP, new Date().getTime());
-
+		
 		return cv;
+	}
+	
+	@Override
+	public void fromContentValues(ContentValues values) {
+		ContentValues cv = new ContentValues();
+		id=cv.getAsString(DirectMessageInfo.ID);
+		ownerId=cv.getAsString(DirectMessageInfo.OWNER_ID);
+		text=cv.getAsString(DirectMessageInfo.TEXT);
+		createdAt=new Date(cv.getAsLong(DirectMessageInfo.CREATED_AT));
+		
+		senderId=cv.getAsString(DirectMessageInfo.SENDER_ID);
+		senderScreenName=cv.getAsString(DirectMessageInfo.SENDER_SCREEN_NAME);
+		senderProfileImageUrl=cv.getAsString(DirectMessageInfo.SENDER_PROFILE_IMAGE_URL);
+		
+		recipientId=cv.getAsString(DirectMessageInfo.RECIPIENT_ID);
+		recipientScreenName=cv.getAsString(DirectMessageInfo.RECIPIENT_SCREEN_NAME);
+		recipientProfileImageUrl=cv.getAsString(DirectMessageInfo.RECIPIENT_PROFILE_IMAGE_URL);
+		
+		type=cv.getAsInteger(DirectMessageInfo.TYPE);
+		threadUserId=cv.getAsString(DirectMessageInfo.THREAD_USER_ID);
+		threadUserName=cv.getAsString(DirectMessageInfo.THREAD_USER_NAME);
+		isRead=cv.getAsBoolean(DirectMessageInfo.IS_READ);
+		
 	}
 
 	@Override
@@ -239,12 +279,39 @@ public class DirectMessage implements Storable<DirectMessage> {
 
 	@Override
 	public String toString() {
-		// return toContentValues().toString();
 		return "[Message] " + BasicColumns.ID + "=" + this.id + " "
 				+ DirectMessageInfo.TEXT + "=" + this.text + " "
 				+ BasicColumns.CREATED_AT + "=" + this.createdAt + " "
 				+ DirectMessageInfo.SENDER_ID + "=" + this.senderId + " "
 				+ DirectMessageInfo.RECIPIENT_ID + "=" + this.recipientId + " ";
 	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		ContentValues cv=toContentValues();
+		dest.writeParcelable(cv, flags);
+	}
+
+	public static final Parcelable.Creator<DirectMessage> CREATOR = new Parcelable.Creator<DirectMessage>() {
+
+		@Override
+		public DirectMessage createFromParcel(Parcel source) {
+			return new DirectMessage(source);
+		}
+
+		@Override
+		public DirectMessage[] newArray(int size) {
+			return new DirectMessage[size];
+		}
+	};
+
+
+
+
 
 }

@@ -177,7 +177,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	protected boolean parseIntent() {
 		Intent intent = getIntent();
 		type = intent.getIntExtra(Commons.EXTRA_TYPE, Status.TYPE_USER);
-		user = (User) intent.getSerializableExtra(Commons.EXTRA_USER);
+		user = (User) intent.getParcelableExtra(Commons.EXTRA_USER);
 		if (user == null) {
 			userId = intent.getStringExtra(Commons.EXTRA_ID);
 		} else {

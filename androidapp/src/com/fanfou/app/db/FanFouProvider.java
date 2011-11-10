@@ -40,6 +40,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 3.0 2011.10.28
  * @version 3.1 2011.10.30
  * @version 3.2 2011.11.07
+ * @version 3.5 2011.11.10
  * 
  */
 public class FanFouProvider extends ContentProvider {
@@ -454,7 +455,6 @@ public class FanFouProvider extends ContentProvider {
 		InsertHelper ih = new InsertHelper(db, UserInfo.TABLE_NAME);
 
 		int id = ih.getColumnIndex(UserInfo.ID);
-		int realId = ih.getColumnIndex(UserInfo.REAL_ID);
 		int ownerId = ih.getColumnIndex(UserInfo.OWNER_ID);
 		int name = ih.getColumnIndex(UserInfo.NAME);
 
@@ -484,7 +484,6 @@ public class FanFouProvider extends ContentProvider {
 				.getColumnIndex(UserInfo.LAST_STATUS_CREATED_AT);
 
 		int type = ih.getColumnIndex(UserInfo.TYPE);
-		int timestamp = ih.getColumnIndex(UserInfo.TIMESTAMP);
 
 		try {
 			db.beginTransaction();
@@ -492,7 +491,6 @@ public class FanFouProvider extends ContentProvider {
 				ih.prepareForInsert();
 
 				ih.bind(id, value.getAsString(UserInfo.ID));
-				ih.bind(realId, value.getAsLong(UserInfo.REAL_ID));
 				ih.bind(ownerId, value.getAsString(UserInfo.OWNER_ID));
 
 				ih.bind(screenName, value.getAsString(UserInfo.SCREEN_NAME));
@@ -531,7 +529,6 @@ public class FanFouProvider extends ContentProvider {
 				}
 
 				ih.bind(type, value.getAsInteger(UserInfo.TYPE));
-				ih.bind(timestamp, value.getAsLong(UserInfo.TIMESTAMP));
 				ih.bind(name, value.getAsString(UserInfo.NAME));
 
 				long result = ih.execute();
@@ -559,16 +556,14 @@ public class FanFouProvider extends ContentProvider {
 		final SQLiteDatabase db = dbHelper.getWritableDatabase();
 		InsertHelper ih = new InsertHelper(db, StatusInfo.TABLE_NAME);
 
+
+
 		int id = ih.getColumnIndex(StatusInfo.ID);
-
-		int realId = ih.getColumnIndex(StatusInfo.REAL_ID);
-
-		int special = ih.getColumnIndex(StatusInfo.SPECIAL);
-
 		int ownerId = ih.getColumnIndex(StatusInfo.OWNER_ID);
 		int createdAt = ih.getColumnIndex(StatusInfo.CREATED_AT);
 
 		int text = ih.getColumnIndex(StatusInfo.TEXT);
+		int simpleText = ih.getColumnIndex(StatusInfo.SIMPLE_TEXT);
 		int source = ih.getColumnIndex(StatusInfo.SOURCE);
 
 		int inReplyToStatusId = ih
@@ -576,10 +571,7 @@ public class FanFouProvider extends ContentProvider {
 		int inReplyToUserId = ih.getColumnIndex(StatusInfo.IN_REPLY_TO_USER_ID);
 		int inReplyToScreenName = ih
 				.getColumnIndex(StatusInfo.IN_REPLY_TO_SCREEN_NAME);
-
-		int truncated = ih.getColumnIndex(StatusInfo.TRUNCATED);
-		int favorited = ih.getColumnIndex(StatusInfo.FAVORITED);
-
+		
 		int photoImageUrl = ih.getColumnIndex(StatusInfo.PHOTO_IMAGE_URL);
 		int photoThumbUrl = ih.getColumnIndex(StatusInfo.PHOTO_THUMB_URL);
 		int photoLargeUrl = ih.getColumnIndex(StatusInfo.PHOTO_LARGE_URL);
@@ -589,14 +581,16 @@ public class FanFouProvider extends ContentProvider {
 		int userProfileImageUrl = ih
 				.getColumnIndex(StatusInfo.USER_PROFILE_IMAGE_URL);
 
-		int type = ih.getColumnIndex(StatusInfo.TYPE);
-		int isRead = ih.getColumnIndex(StatusInfo.IS_READ);
+		int truncated = ih.getColumnIndex(StatusInfo.TRUNCATED);
+		int favorited = ih.getColumnIndex(StatusInfo.FAVORITED);
+		int isSelf=ih.getColumnIndex(StatusInfo.IS_SELF);
 
+		int isRead = ih.getColumnIndex(StatusInfo.IS_READ);
 		int isThread = ih.getColumnIndex(StatusInfo.IS_THREAD);
 		int hasPhoto = ih.getColumnIndex(StatusInfo.HAS_PHOTO);
-		int simpleText = ih.getColumnIndex(StatusInfo.SIMPLE_TEXT);
-
-		int timestamp = ih.getColumnIndex(StatusInfo.TIMESTAMP);
+		int special = ih.getColumnIndex(StatusInfo.SPECIAL);
+		
+		int type = ih.getColumnIndex(StatusInfo.TYPE);
 
 		try {
 			db.beginTransaction();
@@ -604,14 +598,13 @@ public class FanFouProvider extends ContentProvider {
 				ih.prepareForInsert();
 
 				ih.bind(id, value.getAsString(StatusInfo.ID));
-				ih.bind(realId, value.getAsLong(StatusInfo.REAL_ID));
 				ih.bind(ownerId, value.getAsString(StatusInfo.OWNER_ID));
 				ih.bind(createdAt, value.getAsLong(StatusInfo.CREATED_AT));
 
 				ih.bind(text, value.getAsString(StatusInfo.TEXT));
+				ih.bind(simpleText, value.getAsString(StatusInfo.SIMPLE_TEXT));
 				ih.bind(source, value.getAsString(StatusInfo.SOURCE));
 
-				ih.bind(special, value.getAsBoolean(StatusInfo.SPECIAL));
 
 				ih.bind(inReplyToStatusId,
 						value.getAsString(StatusInfo.IN_REPLY_TO_STATUS_ID));
@@ -619,9 +612,6 @@ public class FanFouProvider extends ContentProvider {
 						value.getAsString(StatusInfo.IN_REPLY_TO_USER_ID));
 				ih.bind(inReplyToScreenName,
 						value.getAsString(StatusInfo.IN_REPLY_TO_SCREEN_NAME));
-
-				ih.bind(truncated, value.getAsBoolean(StatusInfo.TRUNCATED));
-				ih.bind(favorited, value.getAsBoolean(StatusInfo.FAVORITED));
 
 				ih.bind(photoImageUrl,
 						value.getAsString(StatusInfo.PHOTO_IMAGE_URL));
@@ -635,15 +625,17 @@ public class FanFouProvider extends ContentProvider {
 						value.getAsString(StatusInfo.USER_SCREEN_NAME));
 				ih.bind(userProfileImageUrl,
 						value.getAsString(StatusInfo.USER_PROFILE_IMAGE_URL));
+				
+				ih.bind(truncated, value.getAsBoolean(StatusInfo.TRUNCATED));
+				ih.bind(favorited, value.getAsBoolean(StatusInfo.FAVORITED));
+				ih.bind(isSelf, value.getAsBoolean(StatusInfo.IS_SELF));
 
-				ih.bind(type, value.getAsInteger(StatusInfo.TYPE));
 				ih.bind(isRead, value.getAsBoolean(StatusInfo.IS_READ));
-
 				ih.bind(isThread, value.getAsBoolean(StatusInfo.IS_THREAD));
 				ih.bind(hasPhoto, value.getAsBoolean(StatusInfo.HAS_PHOTO));
-				ih.bind(simpleText, value.getAsString(StatusInfo.SIMPLE_TEXT));
-
-				ih.bind(timestamp, value.getAsLong(StatusInfo.TIMESTAMP));
+				ih.bind(special, value.getAsBoolean(StatusInfo.SPECIAL));
+				
+				ih.bind(type, value.getAsInteger(StatusInfo.TYPE));
 
 				long result = ih.execute();
 				if (result > -1) {

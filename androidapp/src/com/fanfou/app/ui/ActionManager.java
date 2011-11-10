@@ -336,7 +336,7 @@ public final class ActionManager {
 					break;
 				case Commons.RESULT_CODE_FINISH:
 					Status result = (Status) resultData
-							.getSerializable(Commons.EXTRA_STATUS);
+							.getParcelable(Commons.EXTRA_STATUS);
 					String text = result.favorited ? "收藏成功" : "取消收藏成功";
 					Utils.notify(activity.getApplicationContext(), text);
 					onSuccess(li, type, text);

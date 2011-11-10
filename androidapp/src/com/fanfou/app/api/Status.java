@@ -10,6 +10,8 @@ import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -33,16 +35,17 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.5 2011.10.19
  * @version 1.6 2011.10.21
  * @version 1.7 2011.11.04
+ * @version 2.0 2011.11.10
  * 
  */
 public class Status implements Storable<Status> {
 
 	private static final long serialVersionUID = -7878720905855956354L;
 
-	public static final String tag = Status.class.getSimpleName();
+	public static final String TAG = Status.class.getSimpleName();
 
 	private static void log(String message) {
-		Log.d(tag, message);
+		Log.d(TAG, message);
 	}
 
 	public static final int TYPE_HOME = Commons.STATUS_TYPE_HOME;
@@ -52,12 +55,14 @@ public class Status implements Storable<Status> {
 	public static final int TYPE_FAVORITES = Commons.STATUS_TYPE_FAVORITES;
 	public static final int TYPE_SEARCH = Commons.STATUS_TYPE_SEARCH;
 
-	public Date createdAt;
-
 	public String id;
 	public String ownerId;
+	public Date createdAt;
+
 	public String text;
+	public String simpleText;
 	public String source;
+
 	public String inReplyToStatusId;
 	public String inReplyToUserId;
 	public String inReplyToScreenName;
@@ -70,25 +75,26 @@ public class Status implements Storable<Status> {
 	public String userScreenName;
 	public String userProfileImageUrl;
 
-	public int type;
-
 	public boolean truncated;
 	public boolean favorited;
+	public boolean self;
 
 	public boolean isRead;
-
 	public boolean isThread;
 	public boolean hasPhoto;
-	public String simpleText;
-
-	public long realId;
-
 	public boolean special;
+
+	public int type;
 
 	public User user;
 	public Photo photo;
 
 	public Status() {
+	}
+
+	public Status(Parcel in) {
+		ContentValues cv = in.readParcelable(null);
+		fromContentValues(cv);
 	}
 
 	@Override
@@ -155,14 +161,15 @@ public class Status implements Storable<Status> {
 			return null;
 		}
 		Status s = new Status();
-		s.createdAt = Parser.parseDate(c, BasicColumns.CREATED_AT);
+
 		s.id = Parser.parseString(c, BasicColumns.ID);
-		s.realId = Parser.parseLong(c, BasicColumns.REAL_ID);
 		s.ownerId = Parser.parseString(c, BasicColumns.OWNER_ID);
+		s.createdAt = Parser.parseDate(c, BasicColumns.CREATED_AT);
+
 		s.text = Parser.parseString(c, StatusInfo.TEXT);
 		s.simpleText = Parser.parseString(c, StatusInfo.SIMPLE_TEXT);
-		s.special = Parser.parseBoolean(c, StatusInfo.SPECIAL);
 		s.source = Parser.parseString(c, StatusInfo.SOURCE);
+
 		s.inReplyToStatusId = Parser.parseString(c,
 				StatusInfo.IN_REPLY_TO_STATUS_ID);
 		s.inReplyToUserId = Parser.parseString(c,
@@ -179,15 +186,20 @@ public class Status implements Storable<Status> {
 		s.userProfileImageUrl = Parser.parseString(c,
 				StatusInfo.USER_PROFILE_IMAGE_URL);
 
-		s.type = Parser.parseInt(c, BasicColumns.TYPE);
-
 		s.truncated = Parser.parseBoolean(c, StatusInfo.TRUNCATED);
 		s.favorited = Parser.parseBoolean(c, StatusInfo.FAVORITED);
+		s.self = Parser.parseBoolean(c, StatusInfo.IS_SELF);
 
 		s.isRead = Parser.parseBoolean(c, StatusInfo.IS_READ);
-
 		s.isThread = Parser.parseBoolean(c, StatusInfo.IS_THREAD);
 		s.hasPhoto = Parser.parseBoolean(c, StatusInfo.HAS_PHOTO);
+		s.special = Parser.parseBoolean(c, StatusInfo.SPECIAL);
+
+		s.type = Parser.parseInt(c, BasicColumns.TYPE);
+
+		if (TextUtils.isEmpty(s.id)) {
+			return null;
+		}
 		return s;
 
 	}
@@ -205,16 +217,15 @@ public class Status implements Storable<Status> {
 	}
 
 	public static Status parse(String content, int type) throws ApiException {
-		JSONObject o = null;
 		try {
-			o = new JSONObject(content);
+			JSONObject o = new JSONObject(content);
+			return parse(o, type);
 		} catch (JSONException e) {
 			if (App.DEBUG)
 				e.printStackTrace();
 			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED,
 					e.getMessage(), e);
 		}
-		return parse(o, type);
 	}
 
 	public static Status parse(JSONObject o) throws ApiException {
@@ -222,38 +233,34 @@ public class Status implements Storable<Status> {
 	}
 
 	public static Status parse(JSONObject o, int type) throws ApiException {
-		// Log.e(TAG, "Parser.status()");
 		if (o == null) {
 			return null;
 		}
 		try {
 			Status s = new Status();
-			s.createdAt = Parser.date(o.getString(BasicColumns.CREATED_AT));
+			
 			s.id = o.getString(BasicColumns.ID);
-			s.text = o.getString(StatusInfo.TEXT);
+			s.ownerId = App.me.userId;
+			s.createdAt = Parser.date(o.getString(BasicColumns.CREATED_AT));
 
+			s.text = o.getString(StatusInfo.TEXT);
+			s.simpleText = StatusHelper.getSimpifiedText(s.text);
 			s.source = Parser.parseSource(o.getString(StatusInfo.SOURCE));
 			;
-			s.truncated = o.getBoolean(StatusInfo.TRUNCATED);
 			s.inReplyToStatusId = o.getString(StatusInfo.IN_REPLY_TO_STATUS_ID);
 			s.inReplyToUserId = o.getString(StatusInfo.IN_REPLY_TO_USER_ID);
 			s.inReplyToScreenName = o
 					.getString(StatusInfo.IN_REPLY_TO_SCREEN_NAME);
+
 			s.favorited = o.getBoolean(StatusInfo.FAVORITED);
+			s.truncated = o.getBoolean(StatusInfo.TRUNCATED);
+			s.self = o.getBoolean(StatusInfo.IS_SELF);
 
-			s.type = type;
-
-			s.ownerId = App.me.userId;
-
-			s.realId = Parser.decodeStatusRealId(s.id);
-
-			s.simpleText = StatusHelper.getSimpifiedText(s.text);
-
-			s.special = false;
-
+			s.isRead = false;
 			if (!TextUtils.isEmpty(s.inReplyToStatusId)) {
 				s.isThread = true;
 			}
+			s.special = false;
 
 			if (o.has("photo")) {
 				JSONObject po = o.getJSONObject("photo");
@@ -271,15 +278,10 @@ public class Status implements Storable<Status> {
 				s.userProfileImageUrl = uo
 						.getString(UserInfo.PROFILE_IMAGE_URL);
 				s.user = User.parse(uo);
-				// s.userId = s.user.id;
-				// s.userScreenName = s.user.screenName;
-				// s.userProfileImageUrl = s.user.profileImageUrl;
-
-				// if(s.userId.equalsIgnoreCase(App.userId)){
-				// s.isSelf=true;
-				// }
-
 			}
+
+			s.type = type;
+			
 			return s;
 		} catch (JSONException e) {
 			if (App.DEBUG)
@@ -292,18 +294,19 @@ public class Status implements Storable<Status> {
 	@Override
 	public ContentValues toContentValues() {
 		ContentValues cv = new ContentValues();
-		cv.put(BasicColumns.CREATED_AT, this.createdAt.getTime());
+
 		cv.put(BasicColumns.ID, this.id);
-
-		cv.put(BasicColumns.REAL_ID, this.realId);
-
 		cv.put(BasicColumns.OWNER_ID, this.ownerId);
+		cv.put(BasicColumns.CREATED_AT, this.createdAt.getTime());
+		
 		cv.put(StatusInfo.TEXT, this.text);
 		cv.put(StatusInfo.SOURCE, this.source);
+		cv.put(StatusInfo.SIMPLE_TEXT, this.simpleText);
+		
 		cv.put(StatusInfo.IN_REPLY_TO_STATUS_ID, this.inReplyToStatusId);
 		cv.put(StatusInfo.IN_REPLY_TO_USER_ID, this.inReplyToUserId);
 		cv.put(StatusInfo.IN_REPLY_TO_SCREEN_NAME, this.inReplyToScreenName);
-
+		
 		cv.put(StatusInfo.PHOTO_IMAGE_URL, this.photoImageUrl);
 		cv.put(StatusInfo.PHOTO_THUMB_URL, this.photoThumbUrl);
 		cv.put(StatusInfo.PHOTO_LARGE_URL, this.photoLargeUrl);
@@ -312,20 +315,55 @@ public class Status implements Storable<Status> {
 		cv.put(StatusInfo.USER_SCREEN_NAME, this.userScreenName);
 		cv.put(StatusInfo.USER_PROFILE_IMAGE_URL, this.userProfileImageUrl);
 
-		cv.put(BasicColumns.TYPE, this.type);
-
 		cv.put(StatusInfo.TRUNCATED, this.truncated);
 		cv.put(StatusInfo.FAVORITED, this.favorited);
+		cv.put(StatusInfo.IS_SELF, this.self);
 
 		cv.put(StatusInfo.IS_READ, this.isRead);
-
 		cv.put(StatusInfo.IS_THREAD, this.isThread);
 		cv.put(StatusInfo.HAS_PHOTO, this.hasPhoto);
-		cv.put(StatusInfo.SIMPLE_TEXT, this.simpleText);
 		cv.put(StatusInfo.SPECIAL, this.special);
 
-		cv.put(BasicColumns.TIMESTAMP, new Date().getTime());
+		cv.put(BasicColumns.TYPE, this.type);
+
 		return cv;
+	}
+
+	@Override
+	public void fromContentValues(ContentValues values) {
+		ContentValues cv = values;
+
+		id = cv.getAsString(StatusInfo.ID);
+		ownerId = cv.getAsString(StatusInfo.OWNER_ID);
+		createdAt = new Date(cv.getAsLong(StatusInfo.CREATED_AT));
+		
+		text = cv.getAsString(StatusInfo.TEXT);
+		simpleText = cv.getAsString(StatusInfo.SIMPLE_TEXT);
+		source = cv.getAsString(StatusInfo.SOURCE);
+		
+		inReplyToStatusId = cv.getAsString(StatusInfo.IN_REPLY_TO_STATUS_ID);
+		inReplyToUserId = cv.getAsString(StatusInfo.IN_REPLY_TO_USER_ID);
+		inReplyToScreenName = cv
+				.getAsString(StatusInfo.IN_REPLY_TO_SCREEN_NAME);
+		
+		photoImageUrl = cv.getAsString(StatusInfo.PHOTO_IMAGE_URL);
+		photoThumbUrl = cv.getAsString(StatusInfo.PHOTO_THUMB_URL);
+		photoLargeUrl = cv.getAsString(StatusInfo.PHOTO_LARGE_URL);
+
+		userId = cv.getAsString(StatusInfo.USER_ID);
+		userScreenName = cv.getAsString(StatusInfo.USER_SCREEN_NAME);
+		userProfileImageUrl = cv.getAsString(StatusInfo.USER_PROFILE_IMAGE_URL);
+
+		truncated = cv.getAsBoolean(StatusInfo.TRUNCATED);
+		favorited = cv.getAsBoolean(StatusInfo.FAVORITED);
+		self = cv.getAsBoolean(StatusInfo.IS_SELF);
+
+		isRead = cv.getAsBoolean(StatusInfo.IS_READ);
+		isThread = cv.getAsBoolean(StatusInfo.IS_THREAD);
+		hasPhoto = cv.getAsBoolean(StatusInfo.HAS_PHOTO);
+		special = cv.getAsBoolean(StatusInfo.SPECIAL);
+
+		type = cv.getAsInteger(StatusInfo.TYPE);
 	}
 
 	@Override
@@ -365,28 +403,28 @@ public class Status implements Storable<Status> {
 		// +StatusInfo.TYPE+"="+this.type+" ";
 	}
 
-	// @Override
-	// public int describeContents() {
-	// return 0;
-	// }
-	//
-	// @Override
-	// public void writeToParcel(Parcel dest, int flags) {
-	//
-	// }
-	//
-	// public static final Parcelable.Creator<Status> CREATOR=new
-	// Parcelable.Creator<Status>() {
-	//
-	// @Override
-	// public Status createFromParcel(Parcel source) {
-	// return null;
-	// }
-	//
-	// @Override
-	// public Status[] newArray(int size) {
-	// return new Status[size];
-	// }
-	// };
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		ContentValues cv = toContentValues();
+		dest.writeParcelable(cv, flags);
+	}
+
+	public static final Parcelable.Creator<Status> CREATOR = new Parcelable.Creator<Status>() {
+
+		@Override
+		public Status createFromParcel(Parcel source) {
+			return new Status(source);
+		}
+
+		@Override
+		public Status[] newArray(int size) {
+			return new Status[size];
+		}
+	};
 
 }

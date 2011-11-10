@@ -7,14 +7,18 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.fanfou.app.App;
 import com.fanfou.app.api.ApiException;
 
 /**
  * @author mcxiaoke
- * @version 1.0 20110610
- * @version 2.0 20110905
+ * @version 1.0 2011.06.10
+ * @version 2.0 2011.09.05
+ * @version 3.0 2011.11.10
  * 
  */
 public class Response implements ResponseCode {
@@ -38,30 +42,8 @@ public class Response implements ResponseCode {
 
 	public final String getContent() throws ApiException {
 		if (content == null) {
-			// BufferedReader br = null;
-			// InputStream stream = null;
-			// ByteArrayOutputStream bas=new ByteArrayOutputStream();
 			try {
-				// long st = System.currentTimeMillis();
-				// entity.writeTo(bas);
-				// content=bas.toString(HTTP.UTF_8);
 				content = EntityUtils.toString(entity, HTTP.UTF_8);
-				// if(App.DEBUG){
-				// Utils.logTime("getContent", System.currentTimeMillis() - st);
-				// }
-				// stream = response.getEntity().getContent();
-				// if (null == stream) {
-				// return null;
-				// }
-				// br = new BufferedReader(new InputStreamReader(stream,
-				// "UTF-8"));
-				// StringBuffer buf = new StringBuffer();
-				// String line;
-				// while ((line = br.readLine()) != null) {
-				// buf.append(line).append("\n");
-				// }
-				// content = buf.toString();
-				// stream.close();
 				used = true;
 			} catch (IOException e) {
 				if (App.DEBUG) {
@@ -69,12 +51,25 @@ public class Response implements ResponseCode {
 				}
 				throw new ApiException(ERROR_NOT_CONNECTED, e.getMessage(), e);
 			} finally {
-				// IOHelper.forceClose(bas);
-				// IOHelper.forceClose(stream);
-				// IOHelper.forceClose(br);
 			}
 		}
 		return content;
+	}
+	
+	public final JSONObject getJSONObject() throws ApiException{
+		try {
+			return new JSONObject(getContent());
+		} catch (JSONException e) {
+			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED, e);
+		}
+	}
+	
+	public final JSONArray getJSONArray() throws ApiException{
+		try {
+			return new JSONArray(getContent());
+		} catch (JSONException e) {
+			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED, e);
+		}
 	}
 
 	@Override

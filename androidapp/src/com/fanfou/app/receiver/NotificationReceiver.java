@@ -43,7 +43,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		case NotificationService.NOTIFICATION_TYPE_HOME:
 			if (count == 1) {
 				Status status = (Status) intent
-						.getSerializableExtra(Commons.EXTRA_STATUS);
+						.getParcelableExtra(Commons.EXTRA_STATUS);
 				if (status != null) {
 					showHomeOneNotification(context, status);
 				}
@@ -54,7 +54,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		case NotificationService.NOTIFICATION_TYPE_MENTION:
 			if (count == 1) {
 				Status status = (Status) intent
-						.getSerializableExtra(Commons.EXTRA_STATUS);
+						.getParcelableExtra(Commons.EXTRA_STATUS);
 				if (status != null) {
 					showMentionOneNotification(context, status);
 				}
@@ -65,7 +65,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		case NotificationService.NOTIFICATION_TYPE_DM:
 			if (count == 1) {
 				final DirectMessage dm = (DirectMessage) intent
-						.getSerializableExtra(Commons.EXTRA_MESSAGE);
+						.getParcelableExtra(Commons.EXTRA_MESSAGE);
 				if (dm != null) {
 					showDmOneNotification(context, dm);
 				}

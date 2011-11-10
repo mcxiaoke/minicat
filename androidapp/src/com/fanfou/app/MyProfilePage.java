@@ -257,7 +257,7 @@ public class MyProfilePage extends BaseActivity {
 		if (resultCode == RESULT_OK) {
 			if (requestCode == REQUEST_CODE_UPDATE_PROFILE) {
 				User result = (User) data
-						.getSerializableExtra(Commons.EXTRA_USER);
+						.getParcelableExtra(Commons.EXTRA_USER);
 				if (result != null) {
 					user = result;
 					userId = user.id;
@@ -332,8 +332,7 @@ public class MyProfilePage extends BaseActivity {
 				if (resultData != null) {
 					log("result ok, update ui");
 					int type = resultData.getInt(Commons.EXTRA_TYPE);
-					User result = (User) resultData
-							.getSerializable(Commons.EXTRA_USER);
+					User result = (User) resultData.getParcelable(Commons.EXTRA_USER);
 					if (result != null) {
 						App.me.updateUserInfo(result);
 						user = result;

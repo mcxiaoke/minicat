@@ -89,7 +89,7 @@ public class ConversationPage extends BaseActivity implements
 
 	protected boolean parseIntent() {
 		Intent intent = getIntent();
-		mStatus = (Status) intent.getSerializableExtra(Commons.EXTRA_STATUS);
+		mStatus = (Status) intent.getParcelableExtra(Commons.EXTRA_STATUS);
 		return mStatus != null;
 	}
 

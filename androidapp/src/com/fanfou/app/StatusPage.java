@@ -124,7 +124,7 @@ public class StatusPage extends BaseActivity {
 	private void parseIntent() {
 		Intent intent = getIntent();
 		statusId = intent.getStringExtra(Commons.EXTRA_STATUS_ID);
-		status = (Status) intent.getSerializableExtra(Commons.EXTRA_STATUS);
+		status = (Status) intent.getParcelableExtra(Commons.EXTRA_STATUS);
 
 		if (status == null && statusId != null) {
 			status = CacheManager.getStatus(this, statusId);

@@ -97,7 +97,7 @@ public class ProfilePage extends BaseActivity {
 		String action = intent.getAction();
 		if (action == null) {
 			userId = intent.getStringExtra(Commons.EXTRA_ID);
-			user = (User) intent.getSerializableExtra(Commons.EXTRA_USER);
+			user = (User) intent.getParcelableExtra(Commons.EXTRA_USER);
 			if (user != null) {
 				userId = user.id;
 			}
@@ -105,7 +105,7 @@ public class ProfilePage extends BaseActivity {
 			Bundle extras = intent.getExtras();
 			if (extras != null) {
 				userId = extras.getString(Commons.EXTRA_ID);
-				user = (User) extras.getSerializable(Commons.EXTRA_USER);
+				user = (User) extras.getParcelable(Commons.EXTRA_USER);
 				if (user != null) {
 					userId = user.id;
 				}
@@ -444,8 +444,7 @@ public class ProfilePage extends BaseActivity {
 					if (App.DEBUG)
 						log("result ok, update ui");
 					int type = resultData.getInt(Commons.EXTRA_TYPE);
-					User result = (User) resultData
-							.getSerializable(Commons.EXTRA_USER);
+					User result = (User) resultData.getParcelable(Commons.EXTRA_USER);
 					if (result != null) {
 						user = result;
 					}

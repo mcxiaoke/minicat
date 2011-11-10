@@ -86,7 +86,7 @@ public class EditProfilePage extends BaseActivity {
 	}
 
 	private void parseIntent() {
-		user = (User) getIntent().getSerializableExtra(Commons.EXTRA_USER);
+		user = (User) getIntent().getParcelableExtra(Commons.EXTRA_USER);
 	}
 
 	private void setLayout() {
