@@ -68,10 +68,14 @@
 			android:entryValues="@array/pic_level_values" android:key="@string/option_pic_level"
 			android:summary="设置消息页面图片大小" android:title="消息图片预览" />
 
-		<ListPreference android:defaultValue="15"
+<!-- 		<ListPreference android:defaultValue="15"
 			android:dialogTitle="选择字体大小" android:entries="@array/font_size"
 			android:entryValues="@array/font_size_values" android:key="@string/option_fontsize"
-			android:summary="设置文本内容字体大小" android:title="文本字体大小" />
+			android:summary="设置文本内容字体大小" android:title="文本字体大小" /> -->
+		
+			<com.fanfou.app.preferences.SeekBarPreference
+		android:title="文本字体大小" android:summary="设置文本内容字体大小" android:dialogTitle="选择字体大小" android:text="号" android:key="@string/option_fontsize"
+		android:defaultValue="15" android:max="28" />
 
 		<ListPreference android:defaultValue="80"
 			android:dialogTitle="选择上传照片的质量" android:entries="@array/photo_quality"

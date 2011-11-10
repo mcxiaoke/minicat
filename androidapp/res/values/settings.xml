@@ -63,5 +63,7 @@
 	<string name="option_notification_dm">notification_dm</string>
 	<string name="option_notification_mention">notification_mention</string>
 	<string name="option_notification_home">notification_home</string>
+	
+		<string name="option_test_key">test_key</string>
 
 </resources>

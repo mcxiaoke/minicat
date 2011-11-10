@@ -18,6 +18,7 @@ import com.fanfou.app.util.OptionHelper;
  * @version 1.0 2011.06.01
  * @version 1.5 2011.10.24
  * @version 1.6 2011.10.30
+ * @version 1.7 2011.11.10
  * 
  */
 public abstract class BaseCursorAdapter extends CursorAdapter {
@@ -73,9 +74,11 @@ public abstract class BaseCursorAdapter extends CursorAdapter {
 		this.mLoader = App.me.getImageLoader();
 		this.textMode = OptionHelper.readBoolean(mContext,
 				R.string.option_text_mode, false);
-		this.fontSize = OptionHelper.parseInt(mContext,
-				R.string.option_fontsize,
-				mContext.getString(R.string.config_fontsize_default));
+//		this.fontSize = OptionHelper.parseInt(mContext,
+//				R.string.option_fontsize,
+//				mContext.getString(R.string.config_fontsize_default));
+		
+		this.fontSize=OptionHelper.readInt(context, R.string.option_fontsize, context.getResources().getInteger(R.integer.defaultFontSize));
 	}
 
 	@Override

@@ -12,7 +12,7 @@
 		android:id="@id/actionbar_title" android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:layout_centerInParent="true"
 		android:paddingLeft="4dp" android:paddingRight="4dp"
-		android:textColor="@color/solid_white" android:textSize="@dimen/text_size_medium" />
+		android:textColor="@color/solid_white" android:textSize="@dimen/text_size_large" />
 
 	<ImageView android:id="@id/actionbar_refresh"
 		android:layout_centerVertical="true" android:layout_width="wrap_content"

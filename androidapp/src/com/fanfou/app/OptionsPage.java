@@ -10,11 +10,13 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.util.Log;
 
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.preferences.SeekBarPreference;
 import com.fanfou.app.service.DownloadService;
 import com.fanfou.app.update.VersionInfo;
 import com.fanfou.app.util.AlarmHelper;
@@ -26,10 +28,12 @@ import com.fanfou.app.util.Utils;
  * @author mcxiaoke
  * @version 1.0 2011.06.11
  * @version 1.1 2011.10.25
+ * @version 1.5 2011.11.10
  * 
  */
 public class OptionsPage extends PreferenceActivity implements
-		OnPreferenceClickListener, OnSharedPreferenceChangeListener {
+		OnPreferenceClickListener, OnSharedPreferenceChangeListener,
+		OnPreferenceChangeListener {
 	public static final String TAG = "OptionsPage";
 
 	private boolean needRestart = false;
@@ -68,8 +72,6 @@ public class OptionsPage extends PreferenceActivity implements
 
 		addPreferencesFromResource(R.xml.options);
 
-		ListPreference fontsize = (ListPreference) findPreference(getText(R.string.option_fontsize));
-		fontsize.setSummary(fontsize.getEntry());
 
 		ListPreference photoQuality = (ListPreference) findPreference(getText(R.string.option_photo_quality));
 		photoQuality.setSummary(photoQuality.getEntry());
@@ -83,21 +85,22 @@ public class OptionsPage extends PreferenceActivity implements
 		ListPreference bottomRefreshIcon = (ListPreference) findPreference(getText(R.string.option_bottom_refresh_icon));
 		bottomRefreshIcon.setSummary(bottomRefreshIcon.getEntry());
 
-		Preference notification = findPreference(getText(R.string.option_notification));
-
 		ListPreference interval = (ListPreference) findPreference(getText(R.string.option_notification_interval));
 		interval.setSummary(interval.getEntry());
+		
+		
 
 		Preference currentAccount = findPreference(getText(R.string.option_current_account));
 		currentAccount.setSummary("" + App.me.userScreenName + "("
 				+ App.me.userId + ")");
+		
 
 		Preference checkUpdate = findPreference(getText(R.string.option_check_update));
 		checkUpdate.setOnPreferenceClickListener(this);
-
+		
 		Preference reset = findPreference(getText(R.string.option_clear_data_and_settings));
 		reset.setOnPreferenceClickListener(this);
-
+		
 		Preference feedback = findPreference(getText(R.string.option_feedback));
 		feedback.setOnPreferenceClickListener(this);
 
@@ -140,6 +143,12 @@ public class OptionsPage extends PreferenceActivity implements
 			feedback();
 		}
 		return true;
+	}
+
+	@Override
+	public boolean onPreferenceChange(Preference preference, Object newValue) {
+		return false;
+
 	}
 
 	@Override
@@ -193,7 +202,14 @@ public class OptionsPage extends PreferenceActivity implements
 			} else {
 				needRestart = true;
 			}
-		} else if (p instanceof ListPreference) {
+		} else if (key.equals(getString(R.string.option_fontsize))) {
+			SeekBarPreference skp = (SeekBarPreference) p;
+			int value=sp.getInt(key, getResources().getInteger(R.integer.defaultFontSize));
+			skp.setSummary(value+"号");
+			needRestart = true;
+		}
+
+		else if (p instanceof ListPreference) {
 			ListPreference lp = (ListPreference) p;
 			lp.setSummary(lp.getEntry());
 			setResult(RESULT_OK,
