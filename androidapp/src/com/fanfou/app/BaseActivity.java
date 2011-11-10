@@ -18,7 +18,7 @@ import android.view.View.OnClickListener;
 
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
-import com.fanfou.app.http.ApnType;
+import com.fanfou.app.App.ApnType;
 import com.fanfou.app.ui.ActionBar.OnRefreshClickListener;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.IntentHelper;

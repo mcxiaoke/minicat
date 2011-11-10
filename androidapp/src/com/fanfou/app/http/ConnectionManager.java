@@ -31,6 +31,7 @@ import org.apache.http.protocol.HTTP;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.App.ApnType;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.auth.OAuth;
 import com.fanfou.app.util.StringHelper;

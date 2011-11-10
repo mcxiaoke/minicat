@@ -20,7 +20,7 @@ import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.DraftInfo;
-import com.fanfou.app.http.ApnType;
+import com.fanfou.app.App.ApnType;
 import com.fanfou.app.util.ImageHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;

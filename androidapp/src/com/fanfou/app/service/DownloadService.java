@@ -43,6 +43,8 @@ import com.fanfou.app.util.Utils;
  * 
  */
 public class DownloadService extends WakefulIntentService {
+	private static final String TAG=DownloadService.class.getSimpleName();
+	
 	public static final String APP_UPDATE_SITE = "http://apps.fanfou.com/android/update.json";
 
 	private static final int NOTIFICATION_PROGRESS_ID = 1;
@@ -206,13 +208,13 @@ public class DownloadService extends WakefulIntentService {
 			HttpResponse response = ConnectionManager.get(APP_UPDATE_SITE);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (App.DEBUG) {
-				Log.d("AutoUpdateManager", "statusCode=" + statusCode);
+				Log.d(TAG, "statusCode=" + statusCode);
 			}
 			if (statusCode == 200) {
 				String content = EntityUtils.toString(response.getEntity(),
 						HTTP.UTF_8);
 				if (App.DEBUG) {
-					Log.d("AutoUpdateManager", "response=" + content);
+					Log.d(TAG, "response=" + content);
 				}
 				return VersionInfo.parse(content);
 			}

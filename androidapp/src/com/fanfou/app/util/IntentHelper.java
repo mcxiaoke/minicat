@@ -54,19 +54,19 @@ public final class IntentHelper {
 			Log.d(tag, "intent is null.");
 		}
 		StringBuffer sb = new StringBuffer();
-		sb.append("Action:" + intent.getAction());
-		sb.append("Data:" + intent.getData());
-		sb.append("DataStr:" + intent.getDataString());
-		sb.append("Scheme:" + intent.getScheme());
-		sb.append("Type:" + intent.getType());
+		sb.append("\nAction:" + intent.getAction());
+		sb.append("\nData:" + intent.getData());
+		sb.append("\nDataStr:" + intent.getDataString());
+		sb.append("\nScheme:" + intent.getScheme());
+		sb.append("\nType:" + intent.getType());
 		Bundle extras = intent.getExtras();
 		if (extras != null && !extras.isEmpty()) {
 			for (String key : extras.keySet()) {
 				Object value = extras.get(key);
-				sb.append(" EXTRA: {" + key + "::" + value + "}");
+				sb.append("\nEXTRA: {" + key + "::" + value + "}");
 			}
 		} else {
-			sb.append(" NO EXTRAS");
+			sb.append("\nNO EXTRAS");
 		}
 		Log.i(tag, sb.toString());
 	}

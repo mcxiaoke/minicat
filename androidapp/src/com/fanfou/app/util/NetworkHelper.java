@@ -32,7 +32,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
 
 import com.fanfou.app.App;
-import com.fanfou.app.http.ApnType;
+import com.fanfou.app.App.ApnType;
 
 /**
  * @author mcxiaoke

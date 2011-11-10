@@ -10,10 +10,11 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.App.ApnType;
 import com.fanfou.app.R;
-import com.fanfou.app.http.ApnType;
 import com.fanfou.app.service.AutoCompleteService;
 import com.fanfou.app.service.DownloadService;
+import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
 
 /**
@@ -21,6 +22,7 @@ import com.fanfou.app.util.OptionHelper;
  * @version 2.0 2011.10.29
  * @version 2.5 2011.10.30
  * @version 2.6 2011.11.03
+ * @version 2.7 2011.11.10
  * 
  */
 public class NetworkReceiver extends BroadcastReceiver {
@@ -61,13 +63,19 @@ public class NetworkReceiver extends BroadcastReceiver {
 				ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
 		if (App.DEBUG) {
 			Log.v(TAG, "onReceive disconnected =  " + disconnected);
+			IntentHelper.logIntent(TAG, intent);
 		}
 		if (disconnected) {
 			App.me.apnType = ApnType.NONE;
+			if (App.DEBUG) {
+				Log.v(TAG, "onReceive apnType=" + App.me.apnType.name());
+			}
 			return;
 		}
+
 		NetworkInfo info = (NetworkInfo) intent
 				.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+
 		if (info != null && info.isConnectedOrConnecting()) {
 			if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
 				App.me.apnType = ApnType.NET;
@@ -85,16 +93,20 @@ public class NetworkReceiver extends BroadcastReceiver {
 					}
 				}
 			} else if (info.getType() == ConnectivityManager.TYPE_WIFI) {
-				App.me.apnType = ApnType.WIFI;
-				onWifiConnected(context);
 				if (App.DEBUG) {
 					Log.d(TAG, "type=TYPE_WIFI ");
 				}
+				App.me.apnType = ApnType.WIFI;
+				onWifiConnected(context);
 			}
 		} else {
+//			App.me.apnType = ApnType.NONE;
 			if (App.DEBUG) {
-				Log.v(TAG, "NetworkInfo is null.");
+				Log.v(TAG, "onReceive NetworkInfo is null.");
 			}
+		}
+		if (App.DEBUG) {
+			Log.v(TAG, "onReceive apnType=" + App.me.apnType.name());
 		}
 	}
 

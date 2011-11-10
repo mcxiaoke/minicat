@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.App.ApnType;
 
 /**
  * 网络连接状态判断，是否连接，接入点，WIFI等，
@@ -21,7 +22,7 @@ public class NetworkState {
 	/**
 	 * 字符串标志，是否为WAP接入点
 	 */
-	private static final String tag = NetworkState.class.getSimpleName();
+	private static final String TAG = NetworkState.class.getSimpleName();
 	private ConnectivityManager cm;
 	private String apnTypeName = "cmnet";
 	private ApnType apnType = ApnType.NET;
@@ -33,7 +34,7 @@ public class NetworkState {
 	 *            调试信息内容
 	 */
 	private void log(String message) {
-		Log.d(tag, message);
+		Log.d(TAG, message);
 	}
 
 	/**
@@ -70,6 +71,7 @@ public class NetworkState {
 					}
 				}
 			} else {
+				apnType=ApnType.NONE;
 			}
 		} catch (Exception e) {
 		}

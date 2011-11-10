@@ -122,7 +122,11 @@ public class OptionsPage extends PreferenceActivity implements
 
 	private void checkUpdate() {
 		if (App.DEBUG) {
-			Log.i(TAG, "checkUpdate");
+			Log.d(TAG, "checkUpdate");
+		}
+		if(App.me.apnType==com.fanfou.app.App.ApnType.NONE){
+			Utils.notify(this, "无网络连接，请稍后重试");
+			return;
 		}
 		new CheckTask(this).execute();
 	}
@@ -134,7 +138,7 @@ public class OptionsPage extends PreferenceActivity implements
 	@Override
 	public boolean onPreferenceClick(Preference preference) {
 		if (App.DEBUG) {
-			Log.i(TAG, "onPreferenceClick key=" + preference.getKey());
+			Log.d(TAG, "onPreferenceClick key=" + preference.getKey());
 		}
 		if (preference.getKey().equals(getString(R.string.option_check_update))) {
 			checkUpdate();
@@ -261,7 +265,7 @@ public class OptionsPage extends PreferenceActivity implements
 		protected VersionInfo doInBackground(Void... params) {
 			VersionInfo info = DownloadService.fetchVersionInfo();
 			if (App.DEBUG) {
-				Log.i(TAG, "doInBackground " + info.toString());
+				Log.d(TAG, "doInBackground " + info);
 			}
 			return info;
 		}

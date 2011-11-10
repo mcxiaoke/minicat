@@ -24,7 +24,11 @@ public abstract class WakefulIntentService extends IntentService {
 		super.onCreate();
 		PowerManager mgr = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		mWakeLock = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
-		mWakeLock.acquire();
+		try {
+			mWakeLock.acquire();
+		} catch (SecurityException e) {
+		}
+		
 	}
 
 	@Override

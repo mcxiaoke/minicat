@@ -28,7 +28,7 @@ import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
-import com.fanfou.app.http.ApnType;
+import com.fanfou.app.App.ApnType;
 import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.Utils;
 

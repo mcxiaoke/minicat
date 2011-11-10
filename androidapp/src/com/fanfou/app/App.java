@@ -5,11 +5,14 @@ import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -19,7 +22,6 @@ import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.cache.ImageLoader;
-import com.fanfou.app.http.ApnType;
 import com.fanfou.app.http.NetworkState;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
@@ -33,6 +35,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.0 2011.09.22
  * @version 4.5 2011.10.25
  * @version 4.6 2011.10.27
+ * @version 5.0 2011.11.10
  * 
  */
 
@@ -98,8 +101,7 @@ public class App extends Application {
 
 	private void init() {
 		App.me = this;
-		NetworkState state = new NetworkState(this);
-		this.apnType = state.getApnType();
+		this.apnType = getApnType(this);
 		this.imageLoader = new ImageLoader(this);
 		this.api = new FanFouApi();
 
@@ -265,6 +267,53 @@ public class App extends Application {
 	public void shutdownImageLoader() {
 		if (imageLoader != null) {
 			imageLoader.shutdown();
+		}
+	}
+	
+	public static ApnType getApnType(Context context) {
+		ApnType type=ApnType.NET;
+		try {
+			ConnectivityManager cm=(ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo info = cm.getActiveNetworkInfo();
+			if (App.DEBUG) {
+				Log.d("App","NetworkInfo: "+info);
+			}
+			if (info != null && info.isConnectedOrConnecting()) {
+				if (info.getType() == ConnectivityManager.TYPE_WIFI) {
+					type = ApnType.WIFI;
+				} else if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
+					String apnTypeName = info.getExtraInfo();
+					if (!TextUtils.isEmpty(apnTypeName)) {
+						if (apnTypeName.equals("3gnet")) {
+							type = ApnType.HSDPA;
+						} else if (apnTypeName.equals("ctwap")) {
+							type = ApnType.CTWAP;
+						} else if (apnTypeName.contains("wap")) {
+							type = ApnType.WAP;
+						}
+					}
+				}
+			} else {
+				type=ApnType.NONE;
+			}
+		} catch (Exception e) {
+		}
+		return type;
+	}
+	
+	public static enum ApnType {
+		WIFI("wifi"), HSDPA("hsdpa"), NET("net"), WAP("wap"), CTWAP("ctwap"), NONE(
+				"none"), ;
+
+		private String tag;
+
+		ApnType(String tag) {
+			this.tag = tag;
+		}
+
+		@Override
+		public String toString() {
+			return tag;
 		}
 	}
 
