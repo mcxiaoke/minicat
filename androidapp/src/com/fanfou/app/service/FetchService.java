@@ -28,6 +28,7 @@ import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
+import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.App.ApnType;
 import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.Utils;
@@ -153,8 +154,6 @@ public class FetchService extends BaseIntentService {
 		// count=ApiConfig.MAX_TIMELINE_COUNT;
 		// }
 
-		// TODO
-		// 暂时忽略count参数
 		if (App.me.apnType == ApnType.WIFI) {
 			count = FanFouApiConfig.MAX_TIMELINE_COUNT;
 		} else {
@@ -308,8 +307,6 @@ public class FetchService extends BaseIntentService {
 		// count=ApiConfig.MAX_TIMELINE_COUNT;
 		// }
 
-		// TODO
-		// 暂时忽略count参数
 		if (App.me.apnType == ApnType.WIFI) {
 			count = FanFouApiConfig.MAX_TIMELINE_COUNT;
 		} else {
@@ -380,9 +377,8 @@ public class FetchService extends BaseIntentService {
 				sendCountMessage(insertedCount);
 
 				// extract users and insert to db, replace original object.
-				// updateUsersFromStatus(statuses, mType);
+				 updateUsersFromStatus(statuses, mType);
 			}
-			BufferedOutputStream a;
 		} catch (ApiException e) {
 			if (App.DEBUG) {
 				log("fetchTimeline [error]" + e.statusCode + ":"
@@ -396,23 +392,30 @@ public class FetchService extends BaseIntentService {
 	// add at 2011.10.28
 	private int updateUsersFromStatus(List<Status> ss, int type) {
 		ArrayList<User> us = new ArrayList<User>();
-		ContentValues cv = new ContentValues();
 		for (Status s : ss) {
 			User u = s.user;
 			if (u != null) {
-				us.add(s.user);
-				cv.put(UserInfo.SCREEN_NAME, u.screenName);
-				cv.put(UserInfo.PROFILE_IMAGE_URL, u.profileImageUrl);
-				cv.put(UserInfo.URL, u.url);
-				cv.put(UserInfo.DESCRIPTION, u.description);
-				getContentResolver().update(UserInfo.CONTENT_URI, cv,
-						BasicColumns.ID + "=?", new String[] { u.id });
+//				ContentValues cv = new ContentValues();
+//				cv.put(UserInfo.SCREEN_NAME, u.screenName);
+//				cv.put(UserInfo.PROFILE_IMAGE_URL, u.profileImageUrl);
+//				cv.put(UserInfo.URL, u.url);
+//				cv.put(UserInfo.LOCATION, u.location);
+//				cv.put(UserInfo.DESCRIPTION, u.description);
+//				int result=getContentResolver().update(UserInfo.CONTENT_URI, cv,
+//						UserInfo.ID + "=?", new String[] { u.id });
+				int result=FanFouProvider.updateUserInfo(this, u);
+				if(result<0){
+					if (App.DEBUG) {
+						log("extractUsers from status list , udpate failed, insert it");
+					}
+					us.add(s.user);
+				}
 			}
 		}
 		int result = getContentResolver().bulkInsert(UserInfo.CONTENT_URI,
-				Parser.toContentValuesArray(us));
+				Parser.toContentValuesArray(ss));
 		if (App.DEBUG) {
-			log("extractUsers from status list , result=" + result);
+			log("extractUsers from status list , insert result=" + result);
 		}
 		return result;
 	}
