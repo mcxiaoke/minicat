@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.config.Commons;
@@ -32,6 +33,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.4 2011.10.21
  * @version 1.5 2011.11.04
  * @version 2.0 2011.11.10
+ * @version 2.1 2011.11.11
  * 
  */
 public class User implements Storable<User> {
@@ -66,10 +68,6 @@ public class User implements Storable<User> {
 	public int utcOffset;
 
 	public int type;
-
-	public String lastStatusId;
-	public String lastStatusText;
-	public Date lastStatusCreatedAt;
 	
 	private User (){
 	}
@@ -135,15 +133,6 @@ public class User implements Storable<User> {
 		user.notifications = Parser.parseBoolean(c, UserInfo.NOTIFICATIONS);
 		user.utcOffset = Parser.parseInt(c, UserInfo.UTC_OFFSET);
 		user.type = Parser.parseInt(c, BasicColumns.TYPE);
-
-		user.lastStatusId = Parser.parseString(c, UserInfo.LAST_STATUS_ID);
-		user.lastStatusText = Parser.parseString(c, UserInfo.LAST_STATUS_TEXT);
-		user.lastStatusCreatedAt = Parser.parseDate(c,
-				UserInfo.LAST_STATUS_CREATED_AT);
-		
-		if(TextUtils.isEmpty(user.id)){
-			return null;
-		}
 		return user;
 	}
 
@@ -179,14 +168,6 @@ public class User implements Storable<User> {
 
 			user.type = Commons.TYPE_NONE;
 			user.ownerId = App.me.userId;
-
-			if (o.has("status")) {
-				JSONObject so = o.getJSONObject("status");
-				String d = so.getString(BasicColumns.CREATED_AT);
-				user.lastStatusCreatedAt = Parser.date(d);
-				user.lastStatusId = so.getString(BasicColumns.ID);
-				user.lastStatusText = so.getString(StatusInfo.TEXT);
-			}
 			return user;
 		} catch (Exception e) {
 			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED,
@@ -215,12 +196,6 @@ public class User implements Storable<User> {
 		
 		cv.put(UserInfo.FOLLOWING, u.following);
 
-		if (u.lastStatusId != null) {
-			cv.put(UserInfo.LAST_STATUS_CREATED_AT,
-					u.lastStatusCreatedAt.getTime());
-			cv.put(UserInfo.LAST_STATUS_ID, u.lastStatusId);
-			cv.put(UserInfo.LAST_STATUS_TEXT, u.lastStatusText);
-		}
 		return cv;
 	}
 
@@ -255,13 +230,6 @@ public class User implements Storable<User> {
 		
 		cv.put(UserInfo.TYPE, u.type);
 
-		if (u.lastStatusId != null) {
-			cv.put(UserInfo.LAST_STATUS_CREATED_AT,
-					u.lastStatusCreatedAt.getTime());
-			cv.put(UserInfo.LAST_STATUS_ID, u.lastStatusId);
-			cv.put(UserInfo.LAST_STATUS_TEXT, u.lastStatusText);
-		}
-
 		return cv;
 	}
 	
@@ -293,10 +261,6 @@ public class User implements Storable<User> {
 		
 		type=cv.getAsInteger(UserInfo.TYPE);
 		
-		lastStatusId=cv.getAsString(UserInfo.LAST_STATUS_ID);
-		lastStatusText=cv.getAsString(UserInfo.LAST_STATUS_TEXT);
-		lastStatusCreatedAt=new Date(cv.getAsLong(UserInfo.LAST_STATUS_CREATED_AT));
-		
 	}
 
 	@Override
@@ -317,9 +281,6 @@ public class User implements Storable<User> {
 				+ UserInfo.NOTIFICATIONS + "=" + notifications + " "
 				+ BasicColumns.CREATED_AT + "=" + createdAt + " "
 				+ UserInfo.UTC_OFFSET + "=" + utcOffset + " "
-				+ UserInfo.LAST_STATUS_CREATED_AT + "=" + lastStatusCreatedAt
-				+ " " + UserInfo.LAST_STATUS_ID + "=" + lastStatusId + " "
-				+ UserInfo.LAST_STATUS_TEXT + "=" + lastStatusText + " "
 				+ BasicColumns.TYPE + "=" + type + " ";
 	}
 

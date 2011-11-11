@@ -88,8 +88,6 @@ public class UserArrayAdapter extends BaseArrayAdapter<User> {
 		}
 		holder.nameText.setText(u.screenName);
 		holder.idText.setText("(" + u.id + ")");
-		holder.contentText.setText(u.lastStatusText);
-		// log("userid="+u.id+" u.createdAt="+u.createdAt);
 		holder.dateText.setText("创建时间："
 				+ DateTimeHelper.formatDateOnly(u.createdAt));
 
@@ -102,7 +100,6 @@ public class UserArrayAdapter extends BaseArrayAdapter<User> {
 		ImageView lockIcon = null;
 		TextView nameText = null;
 		TextView idText = null;
-		TextView contentText = null;
 		TextView dateText = null;
 
 		ViewHolder(View base) {
@@ -110,8 +107,6 @@ public class UserArrayAdapter extends BaseArrayAdapter<User> {
 			this.lockIcon = (ImageView) base.findViewById(R.id.item_user_flag);
 			this.nameText = (TextView) base.findViewById(R.id.item_user_name);
 			this.idText = (TextView) base.findViewById(R.id.item_user_id);
-			this.contentText = (TextView) base
-					.findViewById(R.id.item_user_text);
 			this.dateText = (TextView) base.findViewById(R.id.item_user_date);
 		}
 	}

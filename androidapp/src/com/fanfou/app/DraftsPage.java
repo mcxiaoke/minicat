@@ -26,6 +26,7 @@ import android.widget.AdapterView.OnItemClickListener;
  * @author mcxiaoke
  * @version 1.0 2011.10.27
  * @version 1.1 2011.10.28
+ * @version 1.2 2011.11.11
  * 
  */
 public class DraftsPage extends BaseActivity implements OnItemClickListener {
@@ -103,6 +104,7 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 		getContentResolver().delete(DraftInfo.CONTENT_URI, null, null);
 		mCursor.requery();
 		Utils.notify(this, "草稿箱已清空");
+		finish();
 	}
 
 	private class SendAllAction extends AbstractAction {

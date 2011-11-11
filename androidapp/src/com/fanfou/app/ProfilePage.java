@@ -39,6 +39,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.2 2011.10.27
  * @version 1.3 2011.10.28
  * @version 1.4 2011.10.29
+ * @version 1.5 2011.11.11
  * 
  */
 public class ProfilePage extends BaseActivity {
@@ -186,8 +187,8 @@ public class ProfilePage extends BaseActivity {
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("我的空间");
-		 mActionBar.setRightAction(new WriteAction());
 		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
+		mActionBar.setRightAction(new WriteAction());
 	}
 
 	private class WriteAction extends AbstractAction {
@@ -198,7 +199,8 @@ public class ProfilePage extends BaseActivity {
 
 		@Override
 		public void performAction(View view) {
-			ActionManager.doWrite(mContext, "@" + user.screenName + " ");
+			ActionManager.doWrite(mContext);
+
 		}
 	}
 
@@ -444,7 +446,8 @@ public class ProfilePage extends BaseActivity {
 					if (App.DEBUG)
 						log("result ok, update ui");
 					int type = resultData.getInt(Commons.EXTRA_TYPE);
-					User result = (User) resultData.getParcelable(Commons.EXTRA_USER);
+					User result = (User) resultData
+							.getParcelable(Commons.EXTRA_USER);
 					if (result != null) {
 						user = result;
 					}

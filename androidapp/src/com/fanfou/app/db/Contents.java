@@ -15,6 +15,7 @@ import android.provider.BaseColumns;
  * @version 5.5 2011.10.26
  * @version 5.6 2011.11.07
  * @version 6.0 2011.11.10
+ * @version 6.1 2011.11.11
  * 
  */
 public final class Contents {
@@ -55,16 +56,11 @@ public final class Contents {
 		public static final String NOTIFICATIONS = "notifications";
 		public static final String UTC_OFFSET = "utc_offset";
 
-		public static final String LAST_STATUS_CREATED_AT = "status_created_at";
-		public static final String LAST_STATUS_ID = "status_id";
-		public static final String LAST_STATUS_TEXT = "status_text";
-
 		public static final String COLUMNS[] = { _ID, ID, OWNER_ID, NAME,
 				SCREEN_NAME, LOCATION, GENDER, BIRTHDAY, DESCRIPTION,
 				PROFILE_IMAGE_URL, URL, PROTECTED, FOLLOWERS_COUNT,
 				FRIENDS_COUNT, FAVORITES_COUNT, STATUSES_COUNT, FOLLOWING,
-				NOTIFICATIONS, CREATED_AT, UTC_OFFSET, LAST_STATUS_CREATED_AT,
-				LAST_STATUS_ID, LAST_STATUS_TEXT, TYPE, };
+				NOTIFICATIONS, CREATED_AT, UTC_OFFSET,TYPE, };
 
 		public static final String CREATE_TABLE = "create table " + TABLE_NAME
 				+ " ( " + _ID + " integer primary key autoincrement, " + ID
@@ -80,8 +76,7 @@ public final class Contents {
 				+ " integer not null, " + FOLLOWING + " boolean not null, "
 				+ NOTIFICATIONS + " boolean not null, " + CREATED_AT
 				+ " integer not null, " + UTC_OFFSET + " integer not null, "
-				+ LAST_STATUS_CREATED_AT + " integer, " + LAST_STATUS_ID
-				+ " text, " + LAST_STATUS_TEXT + " integer, " + TYPE
+				+ TYPE
 				+ " integer not null, " + "unique ( " + ID + "," + TYPE
 				+ " ) on conflict ignore );";
 		// + "unique ( "+ID+","+TYPE+","+OWNER_ID+") on conflict ignore );";

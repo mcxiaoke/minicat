@@ -2,6 +2,7 @@ package com.fanfou.app.service;
 
 import java.io.BufferedOutputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import android.content.ContentResolver;
@@ -45,6 +46,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.0 2011.11.04
  * @version 4.1 2011.11.07
  * @version 4.2 2011.11.10
+ * @version 4.3 2011.11.11
  * 
  */
 public class FetchService extends BaseIntentService {
@@ -376,9 +378,7 @@ public class FetchService extends BaseIntentService {
 				int insertedCount = cr.bulkInsert(StatusInfo.CONTENT_URI,
 						Parser.toContentValuesArray(statuses));
 				sendCountMessage(insertedCount);
-
-				// extract users and insert to db, replace original object.
-				 updateUsersFromStatus(statuses, mType);
+				updateUsersFromStatus(statuses, mType);
 			}
 		} catch (ApiException e) {
 			if (App.DEBUG) {
@@ -391,19 +391,14 @@ public class FetchService extends BaseIntentService {
 	}
 
 	private int updateUsersFromStatus(List<Status> statuses, int type) {
+		if (type == Status.TYPE_USER || type == Status.TYPE_FAVORITES) {
+			return 0;
+		}
 		ArrayList<User> us = new ArrayList<User>();
 		for (Status s : statuses) {
 			User u = s.user;
 			if (u != null) {
-//				ContentValues cv = new ContentValues();
-//				cv.put(UserInfo.SCREEN_NAME, u.screenName);
-//				cv.put(UserInfo.PROFILE_IMAGE_URL, u.profileImageUrl);
-//				cv.put(UserInfo.URL, u.url);
-//				cv.put(UserInfo.LOCATION, u.location);
-//				cv.put(UserInfo.DESCRIPTION, u.description);
-//				int result=getContentResolver().update(UserInfo.CONTENT_URI, cv,
-//						UserInfo.ID + "=?", new String[] { u.id });
-				if(!FanFouProvider.updateUserInfo(this, u)){
+				if (!FanFouProvider.updateUserInfo(this, u)) {
 					if (App.DEBUG) {
 						log("extractUsers from status list , udpate failed, insert it");
 					}
@@ -411,10 +406,14 @@ public class FetchService extends BaseIntentService {
 				}
 			}
 		}
-		int result = getContentResolver().bulkInsert(UserInfo.CONTENT_URI,
-				Parser.toContentValuesArray(us));
-		if (App.DEBUG) {
-			log("extractUsers from status list , insert result=" + result);
+
+		int result = 0;
+		if (us.size() > 0) {
+			result = getContentResolver().bulkInsert(UserInfo.CONTENT_URI,
+					Parser.toContentValuesArray(us));
+			if (App.DEBUG) {
+				log("extractUsers from status list , insert result=" + result);
+			}
 		}
 		return result;
 	}

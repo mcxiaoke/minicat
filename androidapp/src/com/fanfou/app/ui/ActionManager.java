@@ -39,6 +39,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.3 2011.10.28
  * @version 2.0 2011.10.29
  * @version 2.1 2011.11.09
+ * @version 2.2 2011.11.11
  * 
  */
 public final class ActionManager {
@@ -231,6 +232,12 @@ public final class ActionManager {
 		Intent intent = new Intent(context, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
 		intent.putExtra(Commons.EXTRA_TEXT, text);
+		context.startActivity(intent);
+	}
+	
+	public static void doWrite(Context context) {
+		Intent intent = new Intent(context, WritePage.class);
+		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
 		context.startActivity(intent);
 	}
 	

@@ -41,6 +41,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 3.1 2011.10.30
  * @version 3.2 2011.11.07
  * @version 3.5 2011.11.10
+ * @version 3.6 2011.11.11
  * 
  */
 public class FanFouProvider extends ContentProvider {
@@ -478,11 +479,6 @@ public class FanFouProvider extends ContentProvider {
 		int createdAt = ih.getColumnIndex(UserInfo.CREATED_AT);
 		int utcOffset = ih.getColumnIndex(UserInfo.UTC_OFFSET);
 
-		int lastStatusId = ih.getColumnIndex(UserInfo.LAST_STATUS_ID);
-		int lastStatusText = ih.getColumnIndex(UserInfo.LAST_STATUS_TEXT);
-		int lastStatusCreatedAt = ih
-				.getColumnIndex(UserInfo.LAST_STATUS_CREATED_AT);
-
 		int type = ih.getColumnIndex(UserInfo.TYPE);
 
 		try {
@@ -518,15 +514,6 @@ public class FanFouProvider extends ContentProvider {
 						value.getAsBoolean(UserInfo.NOTIFICATIONS));
 				ih.bind(createdAt, value.getAsLong(UserInfo.CREATED_AT));
 				ih.bind(utcOffset, value.getAsInteger(UserInfo.UTC_OFFSET));
-
-				if (value.containsKey(UserInfo.LAST_STATUS_CREATED_AT)) {
-					ih.bind(lastStatusId,
-							value.getAsString(UserInfo.LAST_STATUS_ID));
-					ih.bind(lastStatusText,
-							value.getAsString(UserInfo.LAST_STATUS_TEXT));
-					ih.bind(lastStatusCreatedAt,
-							value.getAsLong(UserInfo.LAST_STATUS_CREATED_AT));
-				}
 
 				ih.bind(type, value.getAsInteger(UserInfo.TYPE));
 				ih.bind(name, value.getAsString(UserInfo.NAME));
