@@ -10,12 +10,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
+/**
+ * @author mcxiaoke
+ * @version 1.0 2011.11.08
+ * @version 1.5 2011.11.11
+ *
+ */
 public class SimpleAppWidget extends AppWidgetProvider {
-
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		super.onReceive(context, intent);
-	}
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
@@ -24,28 +25,14 @@ public class SimpleAppWidget extends AppWidgetProvider {
 
 		RemoteViews views = new RemoteViews(context.getPackageName(),
 				R.layout.simplewidget);
-		views.setOnClickPendingIntent(R.id.button1,
+		views.setOnClickPendingIntent(R.id.widget_home,
 				getHomePendingIntent(context));
-		views.setOnClickPendingIntent(R.id.button2,
-				getPublicPendingIntent(context));
-		views.setOnClickPendingIntent(R.id.button3,
+		views.setOnClickPendingIntent(R.id.widget_write,
 				getWritePendingIntent(context));
-		views.setOnClickPendingIntent(R.id.button4,
-				getGalleryPendingIntent(context));
-		views.setOnClickPendingIntent(R.id.button5,
+		views.setOnClickPendingIntent(R.id.widget_camera,
 				getCameraPendingIntent(context));
 		appWidgetManager.updateAppWidget(appWidgetIds, views);
 
-	}
-
-	@Override
-	public void onEnabled(Context context) {
-		super.onEnabled(context);
-	}
-
-	@Override
-	public void onDisabled(Context context) {
-		super.onDisabled(context);
 	}
 
 	private PendingIntent getHomePendingIntent(Context context) {
