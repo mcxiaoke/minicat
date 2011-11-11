@@ -11,6 +11,7 @@ import java.util.List;
  * @version 1.3 2011.10.28
  * @version 1.4 2011.11.07
  * @version 1.5 2011.11.09
+ * @version 1.6 2011.11.11
  * 
  */
 public interface Api {
@@ -151,6 +152,15 @@ public interface Api {
 	 */
 	List<Status> favorites(int count, int page, String userId, boolean isHtml)
 			throws ApiException;
+	
+	/**
+	 *  msg context timeline
+	 * @param id status id
+	 * @param isHtml
+	 * @return
+	 * @throws ApiException
+	 */
+	List<Status> contextTimeline(String id, boolean isHtml) throws ApiException;
 
 	/**
 	 * action: favorite

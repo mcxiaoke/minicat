@@ -32,6 +32,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.1 2011.10.26
  * @version 1.2 2011.10.28
  * @version 1.3 2011.11.07
+ * @version 2.0 2011.11.11
  * 
  */
 public class ConversationPage extends BaseActivity implements
@@ -69,7 +70,6 @@ public class ConversationPage extends BaseActivity implements
 
 	protected void initialize() {
 		mThread = new ArrayList<Status>();
-		mThread.add(mStatus);
 		mStatusAdapter = new ConversationAdapter(this, mThread);
 	}
 
@@ -84,7 +84,9 @@ public class ConversationPage extends BaseActivity implements
 		mListView.setOnRefreshListener(this);
 		mListView.setOnItemLongClickListener(this);
 		mListView.setAdapter(mStatusAdapter);
-		mListView.removeHeader();
+		mListView.setHeaderDividersEnabled(false);
+		mListView.setFooterDividersEnabled(false);
+		mListView.removeFooter();
 	}
 
 	protected boolean parseIntent() {
@@ -104,7 +106,7 @@ public class ConversationPage extends BaseActivity implements
 
 	private void doFetchThreads() {
 		new FetchTask().execute();
-		mListView.setLoading();
+		mListView.setRefreshing();
 	}
 
 	@Override
@@ -144,61 +146,37 @@ public class ConversationPage extends BaseActivity implements
 	}
 
 	private void showPopup(final View view, final Status s) {
-		if (s == null) {
-			return;
+		if (s != null) {
+			UIManager.showPopup(mContext, view, s, mStatusAdapter);
 		}
-		UIManager.showPopup(mContext, view, s, mStatusAdapter);
 	}
 
-	private class FetchTask extends
-			AsyncTask<Void, com.fanfou.app.api.Status, Boolean> {
+	private class FetchTask
+			extends
+			AsyncTask<Void, com.fanfou.app.api.Status, List<Status>> {
 
 		@Override
-		protected Boolean doInBackground(Void... params) {
+		protected List<com.fanfou.app.api.Status> doInBackground(Void... params) {
 			Api api = App.me.api;
-			boolean flag = true;
-			String inReplyToStatusId = mStatus.inReplyToStatusId;
+			String id = mStatus.id;
 			try {
-				while (flag) {
-					if (!StringHelper.isEmpty(inReplyToStatusId)) {
-						com.fanfou.app.api.Status result = CacheManager
-								.getStatus(mContext, inReplyToStatusId);
-						if (result == null || result.isNull()) {
-							result = api.statusShow(inReplyToStatusId);
-						}
-						if (result != null && !result.isNull()) {
-							publishProgress(result);
-							if (StringHelper.isEmpty(result.inReplyToStatusId)) {
-								flag = false;
-							} else {
-								inReplyToStatusId = result.inReplyToStatusId;
-							}
-						}
-					}
-
+				if (!StringHelper.isEmpty(id)) {
+					return api.contextTimeline(id, true);
 				}
 			} catch (ApiException e) {
 				if (App.DEBUG) {
 					e.printStackTrace();
 				}
-				return false;
 			}
-
-			return true;
+			return null;
 		}
 
 		@Override
-		protected void onProgressUpdate(com.fanfou.app.api.Status... values) {
-			com.fanfou.app.api.Status result = values[0];
-			mThread.add(result);
-			// Collections.sort(mThread);
-			mStatusAdapter.notifyDataSetChanged();
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			mListView.onNoLoadMore();
-			mListView.setFooterDividersEnabled(false);
+		protected void onPostExecute(List<com.fanfou.app.api.Status> result) {
+			if(result!=null&&result.size()>0){
+				mThread.addAll(result);
+			}
+			mListView.onNoRefresh();
 		}
 
 	}

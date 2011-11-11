@@ -36,6 +36,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.6 2011.10.21
  * @version 1.7 2011.11.04
  * @version 2.0 2011.11.10
+ * @version 2.1 2011.11.11
  * 
  */
 public class Status implements Storable<Status> {
@@ -54,6 +55,7 @@ public class Status implements Storable<Status> {
 	public static final int TYPE_USER = Commons.STATUS_TYPE_USER;
 	public static final int TYPE_FAVORITES = Commons.STATUS_TYPE_FAVORITES;
 	public static final int TYPE_SEARCH = Commons.STATUS_TYPE_SEARCH;
+	public static final int TYPE_CONTEXT=Commons.STATUS_TYPE_CONTEXT;
 
 	public String id;
 	public String ownerId;
@@ -111,7 +113,7 @@ public class Status implements Storable<Status> {
 		if (App.DEBUG) {
 			log("parseStatuses response");
 		}
-		return Status.parseStatuses(r.getContent(), type);
+		return Status.parseStatuses(r.getJSONArray(), type);
 	}
 
 	public static List<Status> parseStatuses(String content, int type)

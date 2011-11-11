@@ -97,6 +97,13 @@ public final class ConnectionRequest {
 			this.params.add(new Parameter("count", count));
 			return this;
 		}
+		
+		public Builder format(boolean isHtml) {
+			if(isHtml){
+				this.params.add(new Parameter("format", "html"));
+			}
+			return this;
+		}
 
 		public Builder id(String id) {
 			if (!TextUtils.isEmpty(id)) {

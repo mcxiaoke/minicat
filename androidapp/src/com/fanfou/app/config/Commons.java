@@ -10,6 +10,7 @@ package com.fanfou.app.config;
  * @version 1.0 2011.07.18
  * @version 1.5 2011.10.10
  * @version 1.6 2011.11.08
+ * @version 1.7 2011.11.11
  * 
  */
 public interface Commons {
@@ -83,6 +84,7 @@ public interface Commons {
 	public static final int STATUS_TYPE_FAVORITES = 5;
 	public static final int STATUS_TYPE_PUBLIC = 6;
 	public static final int STATUS_TYPE_SEARCH = 7;
+	public static final int STATUS_TYPE_CONTEXT = 8;
 
 	public static final int DIRECT_MESSAGE_TYPE_INBOX = 21;
 	public static final int DIRECT_MESSAGE_TYPE_OUTBOX = 22;

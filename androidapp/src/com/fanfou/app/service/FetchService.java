@@ -307,7 +307,7 @@ public class FetchService extends BaseIntentService {
 		List<Status> statuses = null;
 
 		int page = bundle.getInt(Commons.EXTRA_PAGE);
-		String userId = bundle.getString(Commons.EXTRA_ID);
+		String id = bundle.getString(Commons.EXTRA_ID);
 		String sinceId = bundle.getString(Commons.EXTRA_SINCE_ID);
 		String maxId = bundle.getString(Commons.EXTRA_MAX_ID);
 
@@ -348,13 +348,18 @@ public class FetchService extends BaseIntentService {
 			case Status.TYPE_FAVORITES:
 				if (App.DEBUG)
 					Log.d(TAG, "fetchTimeline TYPE_FAVORITES");
-				statuses = api.favorites(count, page, userId, format);
+				statuses = api.favorites(count, page, id, format);
 				break;
 			case Status.TYPE_USER:
 				if (App.DEBUG)
 					Log.d(TAG, "fetchTimeline TYPE_USER");
-				statuses = api.userTimeline(count, page, userId, sinceId,
+				statuses = api.userTimeline(count, page, id, sinceId,
 						maxId, format);
+				break;
+			case Status.TYPE_CONTEXT:
+				if (App.DEBUG)
+					Log.d(TAG, "fetchTimeline TYPE_CONTEXT");
+				statuses=api.contextTimeline(id, format);
 				break;
 			default:
 				break;

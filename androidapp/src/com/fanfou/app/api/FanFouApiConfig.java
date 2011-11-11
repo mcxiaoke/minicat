@@ -9,6 +9,7 @@ package com.fanfou.app.api;
  * @version 1.4 2011.11.04
  * @version 1.5 2011.11.07
  * @version 1.6 2011.11.07
+ * @version 1.7 2011.11.11
  * 
  */
 public interface FanFouApiConfig {
@@ -55,6 +56,9 @@ public interface FanFouApiConfig {
 			+ "statuses/replies" + EXTENSION;
 	public static final String URL_TIMELINE_MENTIONS = API_BASE
 			+ "statuses/mentions" + EXTENSION;
+	
+	public static final String URL_TIMELINE_CONTEXT = API_BASE
+	+ "statuses/context_timeline" + EXTENSION;
 
 	// timeline contains photos
 	public static final String URL_TIMELINE_PHOTOS = API_BASE

@@ -25,6 +25,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.4 2011.11.07
  * @version 2.0 2011.11.07
  * @version 2.1 2011.11.09
+ * @version 2.2 2011.11.11
  * 
  */
 public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
@@ -230,6 +231,16 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 			String maxId, boolean isHtml) throws ApiException {
 		List<Status> ss = fetchStatuses(URL_TIMELINE_MENTIONS, count, page,
 				null, sinceId, maxId, isHtml, Status.TYPE_MENTION);
+		return ss;
+	}
+	
+	@Override
+	public List<Status> contextTimeline(String id, boolean isHtml)
+			throws ApiException {
+		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		builder.url(URL_TIMELINE_CONTEXT).id(id).format(isHtml);
+		Response response=fetch(builder.build());
+		List<Status> ss =  Status.parseStatuses(response, Status.TYPE_CONTEXT);
 		return ss;
 	}
 
