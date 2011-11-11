@@ -1,12 +1,9 @@
 package com.fanfou.app.service;
 
-import java.io.BufferedOutputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -16,6 +13,7 @@ import android.os.ResultReceiver;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.App.ApnType;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
@@ -30,7 +28,6 @@ import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.db.FanFouProvider;
-import com.fanfou.app.App.ApnType;
 import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.Utils;
 
@@ -120,12 +117,24 @@ public class FetchService extends BaseIntentService {
 				users = api.usersFollowers(ownerId, page);
 			}
 			if (users != null && users.size() > 0) {
+				
 				int size = users.size();
 				if (App.DEBUG)
 					log("fetchFriendsOrFollowers size=" + size);
 				ContentResolver cr = getContentResolver();
+				if(page<=1&&ownerId!=null){
+					String where=UserInfo.OWNER_ID+" =? ";
+					String[] whereArgs=new String[]{ownerId};
+					int deletedNums=cr.delete(UserInfo.CONTENT_URI, where, whereArgs);
+					if(App.DEBUG){
+						log("fetchFriendsOrFollowers refresh , delete old rows, num="+deletedNums);
+					}
+				}
 				int nums = cr.bulkInsert(UserInfo.CONTENT_URI,
 						Parser.toContentValuesArray(users));
+				if(App.DEBUG){
+					log("fetchFriendsOrFollowers refresh ,insert rows, num="+nums);
+				}
 				sendCountMessage(nums);
 			} else {
 				sendCountMessage(0);

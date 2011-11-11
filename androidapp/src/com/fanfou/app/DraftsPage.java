@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -91,7 +92,9 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		return super.onCreateOptionsMenu(menu);
+		MenuItem clear = menu.add(0, MENU_ID_CLEAR, MENU_ID_CLEAR, "清空草稿");
+		clear.setIcon(R.drawable.i_menu_clear);
+		return true;
 	}
 
 	@Override
@@ -100,7 +103,7 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 	}
 
 	@Override
-	protected void onClearClick() {
+	protected void onMenuClearClick() {
 		getContentResolver().delete(DraftInfo.CONTENT_URI, null, null);
 		mCursor.requery();
 		Utils.notify(this, "草稿箱已清空");

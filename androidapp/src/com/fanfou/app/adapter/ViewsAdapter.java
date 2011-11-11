@@ -8,19 +8,26 @@ import android.view.View;
 /**
  * @author mcxiaoke
  * @version 1.1 2011.11.04
+ * @version 1.2 2011.11.11
  * 
  */
 public class ViewsAdapter extends PagerAdapter {
 	private View[] mViews;
+	private boolean endless;
 
 	public ViewsAdapter(View[] views) {
 		this.mViews = views;
+		this.endless=false;
+	}
+	
+	public ViewsAdapter(View[] views, boolean endless) {
+		this.mViews = views;
+		this.endless=endless;
 	}
 
 	@Override
 	public int getCount() {
-		// return mViews.length;
-		return Integer.MAX_VALUE;
+		return endless?Integer.MAX_VALUE:mViews.length;
 	}
 
 	@Override

@@ -47,9 +47,12 @@ import android.view.View;
  * @version 1.1 2011.08.20
  * @version 1.2 2011.11.04
  * @version 1.3 2011.11.08
+ * @version 1.4 2011.11.11
  * 
  */
 public class TitlePageIndicator extends View implements PageIndicator {
+
+	private static final String TAG = TitlePageIndicator.class.getSimpleName();
 	/**
 	 * Percentage indicating what percentage of the screen width away from
 	 * center should the underline be fully faded. A value of 0.25 means that
@@ -316,16 +319,12 @@ public class TitlePageIndicator extends View implements PageIndicator {
 		final int height = getHeight();
 		final int right = left + width;
 		final float rightClip = right - mClipPadding;
+		final float offsetPercent = 1.0f * mCurrentOffset / width;
 
 		int page = mCurrentPage;
-		float offsetPercent;
-		// if (mCurrentOffset <= halfWidth) {
-		offsetPercent = 1.0f * mCurrentOffset / width;
-		// }
-		// else {
-		// page += 1;
-		// offsetPercent = 1.0f * (width - mCurrentOffset) / width;
-		// }
+		if (mCurrentOffset > halfWidth) {
+			page ++;
+		}
 		final boolean currentSelected = (offsetPercent <= SELECTION_FADE_PERCENTAGE);
 		final boolean currentBold = (offsetPercent <= BOLD_FADE_PERCENTAGE);
 		final float selectedPercent = (SELECTION_FADE_PERCENTAGE - offsetPercent)
@@ -333,9 +332,9 @@ public class TitlePageIndicator extends View implements PageIndicator {
 
 		// Verify if the current view must be clipped to the screen
 		RectF curPageBound = bounds.get(mCurrentPage);
-		
+
 		// fix null pointer exception
-		if(curPageBound!=null){
+		if (curPageBound != null) {
 			float curPageWidth = curPageBound.right - curPageBound.left;
 			if (curPageBound.left < leftClip) {
 				// Try to clip to the screen (left side)
@@ -385,6 +384,19 @@ public class TitlePageIndicator extends View implements PageIndicator {
 				}
 			}
 		}
+
+		// if(App.DEBUG){
+		// Log.e(TAG,
+		// "===============================================================");
+		// Log.e(TAG, "onDraw() mCurrentPage="+mCurrentPage);
+		// Log.e(TAG, "onDraw() ");
+		// Log.e(TAG, "onDraw() ");
+		// Log.e(TAG, "onDraw() ");
+		// Log.e(TAG, "onDraw() ");
+		// Log.e(TAG, "onDraw() ");
+		// Log.e(TAG,
+		// "===============================================================");
+		// }
 
 		// Now draw views
 		for (int i = 0; i < count; i++) {
@@ -579,7 +591,6 @@ public class TitlePageIndicator extends View implements PageIndicator {
 		if (mViewPager == null) {
 			throw new IllegalStateException("ViewPager has not been bound.");
 		}
-		// mViewPager.setCurrentItem(item);
 		mCurrentPage = item;
 		invalidate();
 	}
@@ -587,14 +598,14 @@ public class TitlePageIndicator extends View implements PageIndicator {
 	@Override
 	public void onPageScrolled(int position, float positionOffset,
 			int positionOffsetPixels) {
-		mCurrentPage = position;
+		mCurrentPage = position%HomePage.NUMS_OF_PAGE;
 		mCurrentOffset = positionOffsetPixels;
 		invalidate();
 	}
 
 	@Override
 	public void onPageSelected(int position) {
-		mCurrentPage = position;
+		mCurrentPage = position%HomePage.NUMS_OF_PAGE;
 		invalidate();
 	}
 

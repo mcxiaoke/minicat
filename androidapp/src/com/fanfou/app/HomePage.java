@@ -17,6 +17,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -62,6 +64,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.1 2011.11.07
  * @version 4.2 2011.11.08
  * @version 4.3 2011.11.09
+ * @version 4.4 2011.11.11
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
@@ -98,6 +101,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	private static final String[] PAGE_TITLES = new String[] { "我的主页", "提到我的",
 			"我的私信", "随便看看" };
 
+	private boolean endlessScroll;
+
 	public static final String TAG = "HomePage";
 
 	BroadcastReceiver mSendSuccessReceiver;
@@ -112,6 +117,11 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		super.onCreate(savedInstanceState);
 		if (App.DEBUG)
 			log("onCreate()");
+		// if (!App.me.isLogin) {
+		// IntentHelper.goLoginPage(this);
+		// finish();
+		// return;
+		// }
 
 		init();
 		setContentView(R.layout.home);
@@ -254,7 +264,10 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		if (App.DEBUG) {
 			log("setViewPager initPage=" + initPage);
 		}
-		mViewAdapter = new ViewsAdapter(views);
+
+		endlessScroll = OptionHelper.readBoolean(this,
+				R.string.option_page_scroll_endless, false);
+		mViewAdapter = new ViewsAdapter(views, endlessScroll);
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);
 		mViewPager.setOnPageChangeListener(this);
 		mViewPager.setAdapter(mViewAdapter);
@@ -608,6 +621,30 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		super.onConfigurationChanged(newConfig);
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuItem option = menu.add(0, MENU_ID_OPTION, MENU_ID_OPTION, "功能设置");
+		option.setIcon(R.drawable.i_menu_option);
+
+		MenuItem profile = menu
+				.add(0, MENU_ID_PROFILE, MENU_ID_PROFILE, "我的空间");
+		profile.setIcon(R.drawable.i_menu_profile);
+
+		MenuItem search = menu.add(0, MENU_ID_SEARCH, MENU_ID_SEARCH, "热词搜索");
+		search.setIcon(R.drawable.i_menu_search);
+
+		MenuItem logout = menu.add(0, MENU_ID_LOGOUT, MENU_ID_LOGOUT, "注销登录");
+		logout.setIcon(R.drawable.i_menu_logout);
+
+		MenuItem about = menu.add(0, MENU_ID_ABOUT, MENU_ID_ABOUT, "关于饭否");
+		about.setIcon(R.drawable.i_menu_about);
+
+		MenuItem feedback = menu.add(0, MENU_ID_FEEDBACK, MENU_ID_FEEDBACK,
+				"意见反馈");
+		feedback.setIcon(R.drawable.i_menu_feedback);
+		return true;
+	}
+
 	private long lastPressTime = 0;
 
 	@SuppressWarnings("unused")
@@ -741,24 +778,17 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	@Override
 	public void onPageScrolled(int position, float positionOffset,
 			int positionOffsetPixels) {
-		// if (App.DEBUG) {
-		// log("onPageScrolled position=" + position + " offset="
-		// + positionOffset + " offsetpixels=" + positionOffsetPixels);
-		// }
-		// int page = position % NUMS_OF_PAGE;
-		// mPageIndicator.onPageScrolled(page, positionOffset,
-		// positionOffsetPixels);
+//		if (!endlessScroll) {
+			mPageIndicator.onPageScrolled(position, positionOffset,
+					positionOffsetPixels);
+//		}
+
 	}
 
 	@Override
 	public void onPageSelected(int position) {
 		mCurrentPage = position % NUMS_OF_PAGE;
-		if (App.DEBUG) {
-			log("onPageSelected() position=" + position);
-			log("onPageSelected() mCurrentPage=" + mCurrentPage);
-		}
 		mPageIndicator.onPageSelected(mCurrentPage);
-
 		if (cursors[mCurrentPage] != null
 				&& cursors[mCurrentPage].getCount() == 0) {
 			onRefreshClick();

@@ -32,6 +32,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.1 2011.10.25
  * @version 2.2 2011.10.27
  * @version 2.3 2011.11.07
+ * @version 2.4 2011.11.11
  * 
  */
 public abstract class BaseActivity extends Activity implements
@@ -179,115 +180,80 @@ public abstract class BaseActivity extends Activity implements
 		return App.me.apnType == ApnType.NONE;
 	}
 
-	protected static final int MENU_ID_PROFILE = 0; //
-	protected static final int MENU_ID_OPTION = 1; // 设置
+	protected static final int MENU_ID_PROFILE = 0;
+	protected static final int MENU_ID_OPTION = 1; 
 	protected static final int MENU_ID_SEARCH = 2;
-	protected static final int MENU_ID_ABOUT = 3; // 关于
-	protected static final int MENU_ID_FEEDBACK = 4; //
-	protected static final int MENU_ID_LOGOUT = 5; // 退出
-	protected static final int MENU_ID_HOME = 6; // 返回首页
-
-	protected static final int MENU_ID_REFRESH = 7; // 返回首页
-	protected static final int MENU_ID_CLEAR = 8; // 返回首页
+	protected static final int MENU_ID_ABOUT = 3;
+	protected static final int MENU_ID_FEEDBACK = 4;
+	protected static final int MENU_ID_LOGOUT = 5;
+	protected static final int MENU_ID_HOME = 6; 
+	protected static final int MENU_ID_CLEAR = 7;
+	protected static final int MENU_ID_REFRESH = 8; 
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		int id = item.getItemId();
 		switch (id) {
 		case MENU_ID_OPTION:
-			onOptionClick();
+			onMenuOptionClick();
 			break;
 		case MENU_ID_PROFILE:
-			onProfileClick();
+			onMenuProfileClick();
 			break;
 		case MENU_ID_SEARCH:
-			onSearchClick();
+			onMenuSearchClick();
 			break;
 		case MENU_ID_LOGOUT:
-			onLogoutClick();
+			onMenuLogoutClick();
 			break;
 		case MENU_ID_ABOUT:
-			// startActivity(new Intent(this, NewVersionPage.class));
-			onAboutClick();
+			onMenuAboutClick();
 			break;
 		case MENU_ID_FEEDBACK:
-			onFeedbackClick();
+			onMenuFeedbackClick();
 			break;
 		case MENU_ID_HOME:
-			onHomeClick();
+			onMenuHomeClick();
 			break;
 		case MENU_ID_CLEAR:
-			onClearClick();
+			onMenuClearClick();
+			break;
+		case MENU_ID_REFRESH:
 			break;
 		default:
 			break;
 		}
-
 		return super.onMenuItemSelected(featureId, item);
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		int type = getPageType();
-		switch (type) {
-		case PAGE_NORMAL:
-			menu.removeItem(MENU_ID_OPTION);
-			menu.removeItem(MENU_ID_PROFILE);
-			menu.removeItem(MENU_ID_SEARCH);
-			menu.removeItem(MENU_ID_LOGOUT);
-			menu.removeItem(MENU_ID_ABOUT);
-			menu.removeItem(MENU_ID_FEEDBACK);
-			menu.removeItem(MENU_ID_CLEAR);
-			break;
-		case PAGE_HOME:
-			menu.removeItem(MENU_ID_HOME);
-			menu.removeItem(MENU_ID_CLEAR);
-			break;
-		case PAGE_LOGIN:
-			menu.clear();
-			break;
-		case PAGE_DRAFTS:
-			menu.removeItem(MENU_ID_OPTION);
-			menu.removeItem(MENU_ID_PROFILE);
-			menu.removeItem(MENU_ID_SEARCH);
-			menu.removeItem(MENU_ID_LOGOUT);
-			menu.removeItem(MENU_ID_ABOUT);
-			menu.removeItem(MENU_ID_FEEDBACK);
-			menu.removeItem(MENU_ID_HOME);
-		default:
-			break;
-		}
-		return true;
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		MenuItem option = menu.add(0, MENU_ID_OPTION, MENU_ID_OPTION, "功能设置");
-		option.setIcon(R.drawable.i_menu_option);
-
-		MenuItem profile = menu
-				.add(0, MENU_ID_PROFILE, MENU_ID_PROFILE, "我的空间");
-		profile.setIcon(R.drawable.i_menu_profile);
-
-		MenuItem search = menu.add(0, MENU_ID_SEARCH, MENU_ID_SEARCH, "热词搜索");
-		search.setIcon(R.drawable.i_menu_search);
-
-		MenuItem logout = menu.add(0, MENU_ID_LOGOUT, MENU_ID_LOGOUT, "注销登录");
-		logout.setIcon(R.drawable.i_menu_logout);
-
-		MenuItem about = menu.add(0, MENU_ID_ABOUT, MENU_ID_ABOUT, "关于饭否");
-		about.setIcon(R.drawable.i_menu_about);
-
-		MenuItem feedback = menu.add(0, MENU_ID_FEEDBACK, MENU_ID_FEEDBACK,
-				"意见反馈");
-		feedback.setIcon(R.drawable.i_menu_feedback);
+//		MenuItem option = menu.add(0, MENU_ID_OPTION, MENU_ID_OPTION, "功能设置");
+//		option.setIcon(R.drawable.i_menu_option);
+//
+//		MenuItem profile = menu
+//				.add(0, MENU_ID_PROFILE, MENU_ID_PROFILE, "我的空间");
+//		profile.setIcon(R.drawable.i_menu_profile);
+//
+//		MenuItem search = menu.add(0, MENU_ID_SEARCH, MENU_ID_SEARCH, "热词搜索");
+//		search.setIcon(R.drawable.i_menu_search);
+//
+//		MenuItem logout = menu.add(0, MENU_ID_LOGOUT, MENU_ID_LOGOUT, "注销登录");
+//		logout.setIcon(R.drawable.i_menu_logout);
+//
+//		MenuItem about = menu.add(0, MENU_ID_ABOUT, MENU_ID_ABOUT, "关于饭否");
+//		about.setIcon(R.drawable.i_menu_about);
+//
+//		MenuItem feedback = menu.add(0, MENU_ID_FEEDBACK, MENU_ID_FEEDBACK,
+//				"意见反馈");
+//		feedback.setIcon(R.drawable.i_menu_feedback);
 
 		MenuItem home = menu.add(0, MENU_ID_HOME, MENU_ID_HOME, "返回首页");
 		home.setIcon(R.drawable.i_menu_home);
-
-		MenuItem clear = menu.add(0, MENU_ID_CLEAR, MENU_ID_CLEAR, "清空草稿");
-		clear.setIcon(R.drawable.i_menu_clear);
+//
+//		MenuItem clear = menu.add(0, MENU_ID_CLEAR, MENU_ID_CLEAR, "清空草稿");
+//		clear.setIcon(R.drawable.i_menu_clear);
 		return true;
 	}
 
@@ -299,25 +265,25 @@ public abstract class BaseActivity extends Activity implements
 	public void onClick(View v) {
 	}
 
-	protected void onOptionClick() {
+	protected void onMenuOptionClick() {
 		Intent intent = new Intent(this, OptionsPage.class);
 		startActivity(intent);
 	}
 
-	protected void onProfileClick() {
+	protected void onMenuProfileClick() {
 		ActionManager.doMyProfile(this);
 	}
 
-	protected void onSearchClick() {
+	protected void onMenuSearchClick() {
 		Intent intent = new Intent(this, SearchPage.class);
 		startActivity(intent);
 	}
 
-	protected void onAboutClick() {
+	protected void onMenuAboutClick() {
 		Utils.goAboutPage(this);
 	}
 
-	protected void onFeedbackClick() {
+	protected void onMenuFeedbackClick() {
 		Intent intent = new Intent(this, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
 		intent.putExtra(Commons.EXTRA_TEXT,
@@ -326,15 +292,19 @@ public abstract class BaseActivity extends Activity implements
 		startActivity(intent);
 	}
 
-	protected void onHomeClick() {
+	protected void onMenuHomeClick() {
 		IntentHelper.goHomePage(this, -1);
 		finish();
 	}
 
-	protected void onClearClick() {
+	protected void onMenuClearClick() {
+	};
+	
+	protected void onMenuRefreshClick(){
+		
 	};
 
-	protected void onLogoutClick() {
+	protected void onMenuLogoutClick() {
 		final ConfirmDialog dialog = new ConfirmDialog(this, "注销",
 				"确定注销当前登录帐号吗？");
 		dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {

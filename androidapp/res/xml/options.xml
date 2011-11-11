@@ -111,6 +111,10 @@
 	</PreferenceScreen>
 
 	<PreferenceScreen android:title="使用偏好">
+		
+<!-- 		<CheckBoxPreference android:defaultValue="true"
+			android:key="@string/option_show_splash_screen" android:summary="启动时显示闪屏画面"
+			android:title="显示启动画面" /> -->
 
 		<CheckBoxPreference android:defaultValue="false"
 			android:key="@string/option_refresh_on_open" android:summary="客户端启动时刷新时间线"
@@ -123,12 +127,14 @@
 		<CheckBoxPreference android:defaultValue="false"
 			android:key="@string/option_fast_scroll_on" android:summary="显示列表快速拖动滑块"
 			android:title="快速拖动" />
+		
+		<CheckBoxPreference android:defaultValue="false"
+			android:key="@string/option_page_scroll_endless" android:summary="页面切换使用循环滚动"
+			android:title="循环滚动" />
 
 		<CheckBoxPreference android:defaultValue="true"
 			android:key="@string/option_save_on_back_press" android:summary="保存未发送消息为草稿"
 			android:title="保存草稿" />
-		<!-- <CheckBoxPreference android:defaultValue="false" android:key="@string/option_send_on_enter" 
-			android:summary="按回车键发送消息和私信" android:title="回车键发送" /> -->
 
 		<CheckBoxPreference android:defaultValue="false"
 			android:key="@string/option_confirm_on_exit" android:summary="退出客户端时需要确认"

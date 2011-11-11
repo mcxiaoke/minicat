@@ -72,7 +72,6 @@ public class OptionsPage extends PreferenceActivity implements
 
 		addPreferencesFromResource(R.xml.options);
 
-
 		ListPreference photoQuality = (ListPreference) findPreference(getText(R.string.option_photo_quality));
 		photoQuality.setSummary(photoQuality.getEntry());
 
@@ -87,20 +86,17 @@ public class OptionsPage extends PreferenceActivity implements
 
 		ListPreference interval = (ListPreference) findPreference(getText(R.string.option_notification_interval));
 		interval.setSummary(interval.getEntry());
-		
-		
 
 		Preference currentAccount = findPreference(getText(R.string.option_current_account));
 		currentAccount.setSummary("" + App.me.userScreenName + "("
 				+ App.me.userId + ")");
-		
 
 		Preference checkUpdate = findPreference(getText(R.string.option_check_update));
 		checkUpdate.setOnPreferenceClickListener(this);
-		
+
 		Preference reset = findPreference(getText(R.string.option_clear_data_and_settings));
 		reset.setOnPreferenceClickListener(this);
-		
+
 		Preference feedback = findPreference(getText(R.string.option_feedback));
 		feedback.setOnPreferenceClickListener(this);
 
@@ -124,7 +120,7 @@ public class OptionsPage extends PreferenceActivity implements
 		if (App.DEBUG) {
 			Log.d(TAG, "checkUpdate");
 		}
-		if(App.me.apnType==com.fanfou.app.App.ApnType.NONE){
+		if (App.me.apnType == com.fanfou.app.App.ApnType.NONE) {
 			Utils.notify(this, "无网络连接，请稍后重试");
 			return;
 		}
@@ -172,16 +168,15 @@ public class OptionsPage extends PreferenceActivity implements
 			String s = sp.getString(key, "5");
 			int intervel = Integer.parseInt(s);
 			AlarmHelper.setNotificationTaskOn(this, intervel);
-		}
-
-		else if (key.equals(getString(R.string.option_force_portrait))) {
+		} else if (key.equals(getString(R.string.option_page_scroll_endless))) {
+			needRestart = true;
+		} else if (key.equals(getString(R.string.option_force_portrait))) {
 			CheckBoxPreference cp = (CheckBoxPreference) p;
 			if (cp.isChecked()) {
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			} else {
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 			}
-			needRestart = true;
 		} else if (key.equals(getString(R.string.option_bottom_refresh_icon))) {
 			ListPreference lp = (ListPreference) p;
 			lp.setSummary(lp.getEntry());
@@ -208,11 +203,11 @@ public class OptionsPage extends PreferenceActivity implements
 			}
 		} else if (key.equals(getString(R.string.option_fontsize))) {
 			SeekBarPreference skp = (SeekBarPreference) p;
-			int value=sp.getInt(key, getResources().getInteger(R.integer.defaultFontSize));
-			skp.setSummary(value+"号");
+			int value = sp.getInt(key,
+					getResources().getInteger(R.integer.defaultFontSize));
+			skp.setSummary(value + "号");
 			needRestart = true;
 		}
-
 		else if (p instanceof ListPreference) {
 			ListPreference lp = (ListPreference) p;
 			lp.setSummary(lp.getEntry());
