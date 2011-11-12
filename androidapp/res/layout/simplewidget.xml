@@ -2,17 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="horizontal" android:layout_width="match_parent"
 	android:layout_height="wrap_content" android:layout_margin="@dimen/widget_margin"
-	android:background="@drawable/bg" android:gravity="center" android:padding="8dp">
+	android:background="@drawable/simple_widget_bg" android:gravity="center">
 
 	<ImageView android:id="@+id/widget_home"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:layout_marginRight="5dp" android:src="@drawable/ic_bar_mention"/>
+		android:src="@drawable/simple_widget_home" android:paddingRight="4dp"/>
 
 	<ImageView android:id="@+id/widget_write"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:layout_marginRight="5dp" android:src="@drawable/ic_bar_gallery"/>
+		android:src="@drawable/simple_widget_write"  android:paddingRight="4dp"/>
 
 	<ImageView android:id="@+id/widget_camera"
-		android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/ic_bar_camera"/>
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:src="@drawable/simple_widget_camera"  android:paddingLeft="4dp"/>
 
 </LinearLayout>

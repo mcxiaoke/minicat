@@ -26,7 +26,7 @@ public class SimpleAppWidget extends AppWidgetProvider {
 		RemoteViews views = new RemoteViews(context.getPackageName(),
 				R.layout.simplewidget);
 		views.setOnClickPendingIntent(R.id.widget_home,
-				getHomePendingIntent(context));
+				getSplashPendingIntent(context));
 		views.setOnClickPendingIntent(R.id.widget_write,
 				getWritePendingIntent(context));
 		views.setOnClickPendingIntent(R.id.widget_camera,
@@ -35,8 +35,8 @@ public class SimpleAppWidget extends AppWidgetProvider {
 
 	}
 
-	private PendingIntent getHomePendingIntent(Context context) {
-		Intent intent = new Intent(context, HomePage.class);
+	private PendingIntent getSplashPendingIntent(Context context) {
+		Intent intent = new Intent(context, SplashPage.class);
 		return getPendingIntent(context, intent);
 	}
 
