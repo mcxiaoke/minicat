@@ -248,20 +248,22 @@ public class Status implements Storable<Status> {
 			s.text = o.getString(StatusInfo.TEXT);
 			s.simpleText = StatusHelper.getSimpifiedText(s.text);
 			s.source = Parser.parseSource(o.getString(StatusInfo.SOURCE));
-			;
-			s.inReplyToStatusId = o.getString(StatusInfo.IN_REPLY_TO_STATUS_ID);
-			s.inReplyToUserId = o.getString(StatusInfo.IN_REPLY_TO_USER_ID);
-			s.inReplyToScreenName = o
-					.getString(StatusInfo.IN_REPLY_TO_SCREEN_NAME);
+			
+			if(o.has(StatusInfo.IN_REPLY_TO_STATUS_ID)){
+				s.inReplyToStatusId = o.getString(StatusInfo.IN_REPLY_TO_STATUS_ID);
+				s.inReplyToUserId = o.getString(StatusInfo.IN_REPLY_TO_USER_ID);
+				s.inReplyToScreenName = o
+						.getString(StatusInfo.IN_REPLY_TO_SCREEN_NAME);
+				if (!TextUtils.isEmpty(s.inReplyToStatusId)) {
+					s.isThread = true;
+				}
+			}
 
 			s.favorited = o.getBoolean(StatusInfo.FAVORITED);
 			s.truncated = o.getBoolean(StatusInfo.TRUNCATED);
 			s.self = o.getBoolean(StatusInfo.IS_SELF);
-
+			
 			s.isRead = false;
-			if (!TextUtils.isEmpty(s.inReplyToStatusId)) {
-				s.isThread = true;
-			}
 			s.special = false;
 
 			if (o.has("photo")) {
