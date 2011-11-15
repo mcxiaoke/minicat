@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">饭否</string>
-	<string name="app_simple_widget_name">饭否小部件</string>
 	<string name="app_share_name">分享到饭否</string>
 	<string name="app_photoviewer_name">饭否照片查看器</string>
 	
 	<string name="search_hint">搜索饭否网站消息</string>
-
-	<string name="pull_to_refresh_pull_label">下拉刷新</string>
-	<string name="pull_to_refresh_release_label">松开刷新</string>
-	<string name="pull_to_refresh_refreshing_label">载入中...</string>
-	<string name="pull_to_refresh_tap_label">点击刷新</string>
 	
 	<string name="login_signup_web">网站注册</string>
 	<string name="login_signup_sms">短信注册</string>

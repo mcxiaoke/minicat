@@ -1,5 +1,10 @@
-package com.fanfou.app;
+package com.fanfou.app.widget;
 
+import com.fanfou.app.HomePage;
+import com.fanfou.app.MyProfilePage;
+import com.fanfou.app.R;
+import com.fanfou.app.SearchPage;
+import com.fanfou.app.SplashPage;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
 
@@ -14,9 +19,9 @@ import android.widget.RemoteViews;
  * @author mcxiaoke
  * @version 1.0 2011.11.08
  * @version 1.5 2011.11.11
- *
+ * 
  */
-public class SimpleAppWidget extends AppWidgetProvider {
+public class WidgetSmall extends AppWidgetProvider {
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
@@ -24,11 +29,13 @@ public class SimpleAppWidget extends AppWidgetProvider {
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
 
 		RemoteViews views = new RemoteViews(context.getPackageName(),
-				R.layout.simplewidget);
+				R.layout.widget_small);
 		views.setOnClickPendingIntent(R.id.widget_home,
 				getSplashPendingIntent(context));
 		views.setOnClickPendingIntent(R.id.widget_write,
 				getWritePendingIntent(context));
+		views.setOnClickPendingIntent(R.id.widget_gallery,
+				getGalleryPendingIntent(context));
 		views.setOnClickPendingIntent(R.id.widget_camera,
 				getCameraPendingIntent(context));
 		appWidgetManager.updateAppWidget(appWidgetIds, views);
@@ -80,7 +87,7 @@ public class SimpleAppWidget extends AppWidgetProvider {
 		Intent intent = new Intent(context, MyProfilePage.class);
 		return getPendingIntent(context, intent);
 	}
-	
+
 	private PendingIntent getSearchPendingIntent(Context context) {
 		Intent intent = new Intent(context, SearchPage.class);
 		return getPendingIntent(context, intent);

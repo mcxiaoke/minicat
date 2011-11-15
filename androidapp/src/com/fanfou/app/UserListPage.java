@@ -170,8 +170,6 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 				mActionBar.setTitle("关注我的人");
 			}
 		}
-
-		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
 	}
 
 	protected boolean parseIntent() {

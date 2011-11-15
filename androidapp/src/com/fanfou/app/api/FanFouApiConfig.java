@@ -18,7 +18,9 @@ public interface FanFouApiConfig {
 	public static final String CONSUMER_SECRET = "5da0bcda353f7d2fe8e3de01e3c97741";
 
 	public static final String HOST = "http://fanfou.com/";
-	public static final String API_BASE = "http://api.fanfou.com/";
+	public static final String API_BASE_DOMAIN = "http://api.fanfou.com/";
+	public static final String API_BASE_IP = "http://58.83.129.19/";
+	public static final String API_BASE = API_BASE_DOMAIN;
 	public static final String EXTENSION = ".json";
 	public static final int MAX_TIMELINE_COUNT = 60;
 	public static final int DEFAULT_TIMELINE_COUNT = 20;

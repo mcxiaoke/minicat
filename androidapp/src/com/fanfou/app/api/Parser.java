@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -21,6 +20,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.text.Html;
 import android.util.Log;
 
 import com.fanfou.app.App;
@@ -35,6 +35,7 @@ import com.fanfou.app.util.DateTimeHelper;
  * @version 1.2 2011.05.17
  * @version 1.3 2011.10.19
  * @version 1.4 2011.11.11
+ * @version 1.5 2011.11.15
  * 
  */
 public final class Parser implements ResponseCode {
@@ -158,8 +159,8 @@ public final class Parser implements ResponseCode {
 	public static Search trend(JSONObject o) throws ApiException {
 		try {
 			Search t = new Search();
-			t.name = o.getString(NAME);
-			t.query = o.getString(QUERY);
+			t.name = Html.fromHtml(o.getString(NAME)).toString();
+			t.query = Html.fromHtml(o.getString(QUERY)).toString();
 			return t;
 		} catch (JSONException e) {
 			if (App.DEBUG)
@@ -452,24 +453,25 @@ public final class Parser implements ResponseCode {
 		return values;
 
 	}
-	
+
 	public static <T> ContentValues[] toContentValuesArray(
 			Set<? extends Storable<T>> t) {
 		if (t == null || t.size() == 0) {
 			return null;
 		}
-		
-		ArrayList<Storable<T>> s=new ArrayList<Storable<T>>();
+
+		ArrayList<Storable<T>> s = new ArrayList<Storable<T>>();
 		s.addAll(t);
 		return toContentValuesArray(s);
-		
-//		ArrayList<ContentValues> values=new ArrayList<ContentValues>();
-//		Iterator<? extends Storable<T>> i=t.iterator();
-//		while (i.hasNext()) {
-//			Storable<T> st=i.next();
-//			values.add(st.toContentValues());
-//		}
-//		return (ContentValues[]) values.toArray(new ContentValues[values.size()]);
+
+		// ArrayList<ContentValues> values=new ArrayList<ContentValues>();
+		// Iterator<? extends Storable<T>> i=t.iterator();
+		// while (i.hasNext()) {
+		// Storable<T> st=i.next();
+		// values.add(st.toContentValues());
+		// }
+		// return (ContentValues[]) values.toArray(new
+		// ContentValues[values.size()]);
 
 	}
 

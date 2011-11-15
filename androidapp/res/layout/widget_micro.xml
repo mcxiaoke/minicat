@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal" android:layout_width="match_parent"
+	android:layout_height="wrap_content" android:background="@drawable/widget_bg"
+	android:gravity="center" android:layout_margin="@dimen/widget_margin" android:padding="@dimen/widget_padding">
+
+	<ImageView android:id="@+id/widget_write"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:src="@drawable/widget_ic_write" />
+
+</LinearLayout>

@@ -153,8 +153,6 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("我关注的人");
-
-		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
 	}
 
 	protected void doRefresh() {

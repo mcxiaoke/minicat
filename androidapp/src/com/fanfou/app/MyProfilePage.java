@@ -131,7 +131,6 @@ public class MyProfilePage extends BaseActivity {
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("我的空间");
-		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
 		mActionBar.setRightAction(new EditProfileAction());
 	}
 	

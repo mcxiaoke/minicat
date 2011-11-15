@@ -131,7 +131,6 @@ public class SearchResultsPage extends BaseActivity implements
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("搜索结果");
 		mActionBar.setTitleClickListener(this);
-		mActionBar.setLeftAction(new ActionBar.BackAction(this));
 		mActionBar.setRightAction(new ActionBar.SearchAction(this));
 	}
 

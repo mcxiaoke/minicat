@@ -101,7 +101,6 @@ public class ConversationPage extends BaseActivity implements
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("对话");
-		mActionBar.setLeftAction(new ActionBar.BackAction(this));
 	}
 
 	private void doFetchThreads() {

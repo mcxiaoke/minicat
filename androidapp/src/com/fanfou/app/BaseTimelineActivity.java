@@ -118,7 +118,6 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitleClickListener(this);
 		mActionBar.setRightAction(this);
-		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
 		if (user != null) {
 			mActionBar.setTitle(getPageTitle());
 		}
@@ -291,7 +290,7 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 		Intent intent = new Intent(this, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
 		if (user != null) {
-			intent.putExtra(Commons.EXTRA_TEXT, "@" + user.name + " "); // 此时设置会报空指针
+			intent.putExtra(Commons.EXTRA_TEXT, "@" + user.screenName + " "); // 此时设置会报空指针
 		}
 		startActivity(intent);
 	}

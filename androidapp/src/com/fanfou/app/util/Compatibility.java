@@ -5,12 +5,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import com.fanfou.app.App;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 
@@ -95,7 +99,7 @@ public class Compatibility {
 	 * @param apiLevel
 	 * @return
 	 */
-	public static int getAPILevel() {
+	private static int getAPILevel() {
 		int apiLevel;
 		try {
 			Field SDK_INT = Build.VERSION.class.getField("SDK_INT");

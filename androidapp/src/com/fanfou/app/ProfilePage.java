@@ -187,7 +187,6 @@ public class ProfilePage extends BaseActivity {
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("我的空间");
-		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
 		mActionBar.setRightAction(new WriteAction());
 	}
 
@@ -263,7 +262,7 @@ public class ProfilePage extends BaseActivity {
 
 		if (!noPermission) {
 			boolean need = OptionHelper.readBoolean(this,
-					R.string.option_fetch_relationships, true);
+					R.string.option_fetch_relationships, false);
 			if (need) {
 				doFetchRelationshipInfo();
 			}

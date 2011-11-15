@@ -102,7 +102,6 @@ public class RegisterPage extends Activity implements OnClickListener {
 
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setLeftAction(new ActionBar.BackAction(this));
 		// mActionBar.setTitle("注册饭否帐号");
 	}
 

@@ -67,11 +67,6 @@
 			android:dialogTitle="选择消息页面图片显示方式" android:entries="@array/pic_level"
 			android:entryValues="@array/pic_level_values" android:key="@string/option_pic_level"
 			android:summary="设置消息页面图片大小" android:title="消息图片预览" />
-
-<!-- 		<ListPreference android:defaultValue="15"
-			android:dialogTitle="选择字体大小" android:entries="@array/font_size"
-			android:entryValues="@array/font_size_values" android:key="@string/option_fontsize"
-			android:summary="设置文本内容字体大小" android:title="文本字体大小" /> -->
 		
 			<com.fanfou.app.preferences.SeekBarPreference
 		android:title="文本字体大小" android:summary="设置文本内容字体大小" android:dialogTitle="选择字体大小" android:text="号" android:key="@string/option_fontsize"
@@ -141,8 +136,8 @@
 			android:title="退出确认" />
 
 		<CheckBoxPreference android:defaultValue="true"
-			android:key="@string/option_autoupdate" android:summary="定时检测新版本"
-			android:title="定时升级" />
+			android:key="@string/option_autoupdate" android:summary="自动检测新版本"
+			android:title="自动升级" />
 
 	</PreferenceScreen>
 

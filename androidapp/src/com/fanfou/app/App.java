@@ -23,6 +23,7 @@ import com.fanfou.app.api.User;
 import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.http.NetworkState;
+import com.fanfou.app.util.Compatibility;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
@@ -63,12 +64,8 @@ public class App extends Application {
 	private IImageLoader imageLoader;
 	public Api api;
 
-	public boolean verified;
 	public boolean isLogin;
-
-	public User user;
 	public String userId;
-	public String password;
 	public String userScreenName;
 	public String userProfileImage;
 	public String oauthAccessToken;
@@ -81,22 +78,12 @@ public class App extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
 		init();
 		initAppInfo();
 		initPreferences();
 		versionCheck();
 		initAlarm();
-
 		ACRA.init(this);
-
-		if (DEBUG) {
-			Log.d("App",
-					"uid=" + android.os.Process.myUid() + " pid="
-							+ android.os.Process.myPid() + " tid="
-							+ android.os.Process.myTid());
-		}
-
 	}
 
 	private void init() {
@@ -145,6 +132,7 @@ public class App extends Application {
 		if (DEBUG) {
 			Log.d("App", "initAppInfo");
 		}
+		
 		PackageManager pm = getPackageManager();
 		PackageInfo pi;
 		try {
@@ -199,7 +187,6 @@ public class App extends Application {
 		if (DEBUG) {
 			Log.d("App", "updateAccountInfo");
 		}
-		user = u;
 		userId = u.id;
 		userScreenName = u.screenName;
 		userProfileImage = u.profileImageUrl;
@@ -221,7 +208,6 @@ public class App extends Application {
 		if (DEBUG) {
 			Log.d("App", "updateAccountInfo u");
 		}
-		user = u;
 		userId = u.id;
 		userScreenName = u.screenName;
 		userProfileImage = u.profileImageUrl;
@@ -236,7 +222,6 @@ public class App extends Application {
 			Log.d("App", "removeAccountInfo");
 		}
 		isLogin = false;
-		user = null;
 		userId = null;
 		userScreenName = null;
 		userProfileImage = null;

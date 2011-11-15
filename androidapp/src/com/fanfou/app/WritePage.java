@@ -7,9 +7,11 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
@@ -55,6 +57,7 @@ import com.fanfou.app.util.Utils;
  * @version 3.3 2011.11.02
  * @version 3.4 2011.11.07
  * @version 4.0 2011.11.08
+ * @version 4.1 2011.11.15
  * 
  */
 public class WritePage extends BaseActivity {
@@ -115,10 +118,10 @@ public class WritePage extends BaseActivity {
 
 	private void initialize() {
 		enableLocation = OptionHelper.readBoolean(this,
-				R.string.option_location_enable, false);
-		mLocationMonitor = new LocationMonitor();
+				R.string.option_location_enable, true);
 		mLocationManager = (LocationManager) this
 				.getSystemService(Context.LOCATION_SERVICE);
+		mLocationMonitor = new LocationMonitor();
 
 		if (mDisplayMetrics.heightPixels < 600) {
 			getWindow().setSoftInputMode(
@@ -307,7 +310,6 @@ public class WritePage extends BaseActivity {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("写消息");
 		mActionBar.setRightAction(new SendAction());
-		mActionBar.setLeftAction(new ActionBar.BackAction(this));
 
 	}
 
@@ -405,8 +407,7 @@ public class WritePage extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 		if (enableLocation) {
-			mLocationManager.requestLocationUpdates(
-					LocationManager.NETWORK_PROVIDER, 0, 0, mLocationMonitor);
+			mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationMonitor);
 		}
 	}
 
@@ -420,6 +421,9 @@ public class WritePage extends BaseActivity {
 
 	@Override
 	public void onBackPressed() {
+		if(App.DEBUG){
+			log("onBackPressed content="+content);
+		}
 		if (StringHelper.isEmpty(content)) {
 			super.onBackPressed();
 		} else {
@@ -445,7 +449,7 @@ public class WritePage extends BaseActivity {
 			ActionManager.doShowDrafts(this);
 			break;
 		case R.id.write_action_location:
-			switchGeoStatus();
+			switchLocation();
 			break;
 		case R.id.write_action_gallery:
 			startAddPicture();
@@ -517,17 +521,15 @@ public class WritePage extends BaseActivity {
 				REQUEST_PHOTO_LIBRARY);
 	}
 
-	private void switchGeoStatus() {
+	private void switchLocation() {
 		enableLocation = !enableLocation;
 		OptionHelper.saveBoolean(this, R.string.option_location_enable,
 				enableLocation);
 		if (App.DEBUG)
 			log("location enable status=" + enableLocation);
 		if (enableLocation) {
-
 			iLocationIcon.setImageResource(R.drawable.ic_bar_geoon);
-			mLocationManager.requestLocationUpdates(
-					LocationManager.NETWORK_PROVIDER, 0, 0, mLocationMonitor);
+			mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationMonitor);
 		} else {
 			iLocationIcon.setImageResource(R.drawable.ic_bar_geooff);
 			mLocationManager.removeUpdates(mLocationMonitor);
@@ -545,8 +547,8 @@ public class WritePage extends BaseActivity {
 			log("doAddUserNames: " + names);
 		}
 		if(!StringHelper.isEmpty(names)){
-			mAutoCompleteTextView.setText(names);
 			Editable editable = mAutoCompleteTextView.getEditableText();
+			editable.append(names);
 			Selection.setSelection(editable, editable.length());
 		}
 

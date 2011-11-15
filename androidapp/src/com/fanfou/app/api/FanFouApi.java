@@ -53,7 +53,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	private Response fetch(ConnectionRequest request) throws ApiException {
 		try {
 			// long startTime = System.currentTimeMillis();
-			HttpResponse response = ConnectionManager.exec(request);
+			HttpResponse response = ConnectionManager.execWithOAuth(request);
 			// if(App.DEBUG){
 			// long reqTime = System.currentTimeMillis() - startTime;
 			// Utils.logTime("fetch", reqTime);}
@@ -123,7 +123,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		}
 		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(url).count(count).page(page).id(userId).sinceId(sinceId)
-				.maxId(maxId);
+				.maxId(maxId).param("mode", "noprofile");
 
 		// count<=0,count>60时返回60条
 		// count>=0&&count<=60时返回count条
@@ -191,14 +191,14 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	private Response doSingleIdAction(String url, String id, boolean isPost)
 			throws ApiException {
 		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
-		builder.url(url).id(id).post(isPost);
+		builder.url(url).id(id).post(isPost).param("mode", "noprofile");
 		return fetch(builder.build());
 	}
 
 	@Override
 	public User verifyAccount() throws ApiException {
 		Response response = fetch(new ConnectionRequest.Builder().url(
-				URL_VERIFY_CREDENTIALS).build());
+				URL_VERIFY_CREDENTIALS).param("mode", "noprofile").build());
 		return User.parse(response);
 	}
 
@@ -233,14 +233,14 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 				null, sinceId, maxId, isHtml, Status.TYPE_MENTION);
 		return ss;
 	}
-	
+
 	@Override
 	public List<Status> contextTimeline(String id, boolean isHtml)
 			throws ApiException {
-		ConnectionRequest.Builder builder=new ConnectionRequest.Builder();
+		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(URL_TIMELINE_CONTEXT).id(id).format(isHtml);
-		Response response=fetch(builder.build());
-		List<Status> ss =  Status.parseStatuses(response, Status.TYPE_CONTEXT);
+		Response response = fetch(builder.build());
+		List<Status> ss = Status.parseStatuses(response, Status.TYPE_CONTEXT);
 		return ss;
 	}
 
@@ -483,7 +483,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	private List<User> fetchUsers(String url, String userId, int page)
 			throws ApiException {
 		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
-		builder.url(url).id(userId).page(page);
+		builder.url(url).id(userId).page(page).param("mode", "noprofile");
 		Response response = fetch(builder.build());
 
 		return User.parseUsers(response);
@@ -655,7 +655,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	private List<DirectMessage> messages(String url, int count, int page,
 			String sinceId, String maxId) throws ApiException {
 		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
-		builder.url(url).count(count).page(page).maxId(maxId).sinceId(sinceId);
+		builder.url(url).count(count).page(page).maxId(maxId).sinceId(sinceId).param("mode", "noprofile");
 
 		// count<=0,count>60时返回60条
 		// count>=0&&count<=60时返回count条

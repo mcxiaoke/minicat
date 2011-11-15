@@ -207,7 +207,6 @@ public class SendPage extends BaseActivity {
 
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setLeftAction(new ActionBar.BackAction(this));
 		mActionBar.setTitle("写私信");
 		mActionBar.setRightAction(new SendAction());
 	}

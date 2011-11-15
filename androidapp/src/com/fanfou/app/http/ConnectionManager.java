@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRouteBean;
@@ -28,6 +29,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
+import android.net.http.AndroidHttpClient;
 import android.util.Log;
 
 import com.fanfou.app.App;
@@ -47,49 +49,48 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.0 2011.11.03
  * @version 2.1 2011.11.04
  * @version 3.0 2011.11.09
+ * @version 3.1 2011.11.15
  * 
  */
 public final class ConnectionManager {
-	
 
 	private static final String TAG = ConnectionManager.class.getSimpleName();
 
 	public static final int SOCKET_BUFFER_SIZE = 8192;
-	public static final int CONNECTION_TIMEOUT_MS = 10000;
-	public static final int SOCKET_TIMEOUT_MS = 15000;
-	public static final int MAX_TOTAL_CONNECTIONS = 20;
+	public static final int CONNECTION_TIMEOUT_MS = 20000;
+	public static final int SOCKET_TIMEOUT_MS = 20000;
+	public static final int MAX_TOTAL_CONNECTIONS = 40;
 	public static final int MAX_RETRY_TIMES = 3;
 
 	private DefaultHttpClient httpClient;
-	private static ConnectionManager INSTANCE=new ConnectionManager();
+	private static ConnectionManager INSTANCE = new ConnectionManager();
 
 	private void log(String message) {
 		Log.d(TAG, message);
 	}
-	
-	
+
 	// get the single instance
-	private static ConnectionManager getInstance(){
+	private static ConnectionManager getInstance() {
 		return INSTANCE;
 	}
-	
+
 	// get new instance
-	public static ConnectionManager newInstance(){
+	public static ConnectionManager newInstance() {
 		return new ConnectionManager();
 	}
-	
-	private ConnectionManager(){
+
+	private ConnectionManager() {
 		prepareHttpClient();
+	}
+
+	public static HttpResponse execWithOAuth(ConnectionRequest cr)
+			throws IOException, ApiException {
+		return getInstance().openWithOAuth(cr);
 	}
 
 	public static HttpResponse exec(ConnectionRequest cr) throws IOException,
 			ApiException {
 		return getInstance().open(cr);
-	}
-
-	public static HttpResponse execNoAuth(ConnectionRequest cr)
-			throws IOException, ApiException {
-		return getInstance().openWithNoAuth(cr);
 	}
 
 	public static HttpResponse get(String url) throws IOException {
@@ -101,8 +102,8 @@ public final class ConnectionManager {
 		return getInstance().postImpl(url, params);
 	}
 
-	private HttpResponse open(ConnectionRequest cr) throws IOException,
-			ApiException {
+	private HttpResponse openWithOAuth(ConnectionRequest cr)
+			throws IOException, ApiException {
 
 		HttpRequestBase request = null;
 		if (cr.entity != null) {
@@ -124,8 +125,8 @@ public final class ConnectionManager {
 		return httpClient.execute(request);
 	}
 
-	private HttpResponse openWithNoAuth(ConnectionRequest cr)
-			throws IOException, ApiException {
+	private HttpResponse open(ConnectionRequest cr) throws IOException,
+			ApiException {
 
 		HttpRequestBase request = null;
 		if (cr.entity != null) {
@@ -160,8 +161,6 @@ public final class ConnectionManager {
 	}
 
 	private static void setHeaders(HttpRequestBase request, List<Header> headers) {
-		request.setHeader("User-Agent", "FanFou for Android/"
-				+ App.me.appVersionName);
 		if (headers != null) {
 			for (Header header : headers) {
 				request.addHeader(header);
@@ -171,19 +170,24 @@ public final class ConnectionManager {
 
 	private synchronized void prepareHttpClient() {
 		HttpParams params = new BasicHttpParams();
-		ConnManagerParams.setMaxConnectionsPerRoute(params,
-				new ConnPerRouteBean(MAX_TOTAL_CONNECTIONS));
-		ConnManagerParams.setMaxTotalConnections(params, MAX_TOTAL_CONNECTIONS);
-		ConnManagerParams.setTimeout(params, SOCKET_TIMEOUT_MS);
 
+		HttpConnectionParams.setStaleCheckingEnabled(params, false);
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 		HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-
+		HttpProtocolParams.setUseExpectContinue(params, true);
 		HttpConnectionParams
 				.setConnectionTimeout(params, CONNECTION_TIMEOUT_MS);
 		HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT_MS);
 		HttpConnectionParams.setSocketBufferSize(params, SOCKET_BUFFER_SIZE);
 		HttpConnectionParams.setTcpNoDelay(params, true);
+		HttpProtocolParams.setUserAgent(params, "FanFou for Android/"
+				+ App.me.appVersionName);
+
+		HttpClientParams.setRedirecting(params, false);
+
+		ConnManagerParams.setMaxConnectionsPerRoute(params,
+				new ConnPerRouteBean(MAX_TOTAL_CONNECTIONS));
+		ConnManagerParams.setMaxTotalConnections(params, MAX_TOTAL_CONNECTIONS);
 
 		SchemeRegistry schReg = new SchemeRegistry();
 		schReg.register(new Scheme("http", PlainSocketFactory
@@ -231,23 +235,24 @@ public final class ConnectionManager {
 				|| StringHelper.isEmpty(App.me.oauthAccessTokenSecret)) {
 			throw new ApiException(ResponseCode.ERROR_AUTH_FAILED, "未通过验证，请登录");
 		} else {
+			// request.addHeader("Host", "api.fanfou.com");
 			OAuth oauth = new OAuth(App.me.oauthAccessToken,
 					App.me.oauthAccessTokenSecret);
 			oauth.signRequest(request, params);
 		}
 	}
 
-	private static void setBasicAuth(HttpUriRequest request,
-			List<Parameter> params) throws ApiException {
-		// if (null != username && null != password) {
-		// String basicAuth = "Basic "
-		// + Base64.encodeBytes((username + ":" + password).getBytes());
-		// BasicHeader header = new BasicHeader("Authorization", basicAuth);
-		// request.setHeader(header);
-		// } else {
-		// throw new ApiException(ResponseCode.ERROR_AUTH_EMPTY,
-		// "username and password must not be empty.");
-		// }
-	}
+	// private static void setBasicAuth(HttpUriRequest request,
+	// List<Parameter> params) throws ApiException {
+	// if (null != username && null != password) {
+	// String basicAuth = "Basic "
+	// + Base64.encodeBytes((username + ":" + password).getBytes());
+	// BasicHeader header = new BasicHeader("Authorization", basicAuth);
+	// request.setHeader(header);
+	// } else {
+	// throw new ApiException(ResponseCode.ERROR_AUTH_EMPTY,
+	// "username and password must not be empty.");
+	// }
+	// }
 
 }

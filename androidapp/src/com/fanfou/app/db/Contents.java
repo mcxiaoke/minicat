@@ -39,7 +39,6 @@ public final class Contents {
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/vnd.fanfou.user";
 
-		public static final String NAME = "name";
 		public static final String SCREEN_NAME = "screen_name";
 		public static final String LOCATION = "location";
 		public static final String GENDER = "gender";
@@ -53,18 +52,16 @@ public final class Contents {
 		public static final String FAVORITES_COUNT = "favourites_count";
 		public static final String STATUSES_COUNT = "statuses_count";
 		public static final String FOLLOWING = "following";
-		public static final String NOTIFICATIONS = "notifications";
-		public static final String UTC_OFFSET = "utc_offset";
 
-		public static final String COLUMNS[] = { _ID, ID, OWNER_ID, NAME,
+		public static final String COLUMNS[] = { _ID, ID, OWNER_ID,
 				SCREEN_NAME, LOCATION, GENDER, BIRTHDAY, DESCRIPTION,
 				PROFILE_IMAGE_URL, URL, PROTECTED, FOLLOWERS_COUNT,
 				FRIENDS_COUNT, FAVORITES_COUNT, STATUSES_COUNT, FOLLOWING,
-				NOTIFICATIONS, CREATED_AT, UTC_OFFSET,TYPE, };
+				CREATED_AT,TYPE, };
 
 		public static final String CREATE_TABLE = "create table " + TABLE_NAME
 				+ " ( " + _ID + " integer primary key autoincrement, " + ID
-				+ " text not null, " + NAME + " text not null, " + OWNER_ID
+				+ " text not null, " + OWNER_ID
 				+ " text , " + SCREEN_NAME + " text not null, " + LOCATION
 				+ " text not null, " + GENDER + " text not null, " + BIRTHDAY
 				+ " text not null, " + DESCRIPTION + " text not null, "
@@ -74,8 +71,8 @@ public final class Contents {
 				+ " integer not null, " + FAVORITES_COUNT
 				+ " integer not null, " + STATUSES_COUNT
 				+ " integer not null, " + FOLLOWING + " boolean not null, "
-				+ NOTIFICATIONS + " boolean not null, " + CREATED_AT
-				+ " integer not null, " + UTC_OFFSET + " integer not null, "
+				+ CREATED_AT
+				+ " integer not null, "
 				+ TYPE
 				+ " integer not null, " + "unique ( " + ID + "," + TYPE
 				+ " ) on conflict ignore );";

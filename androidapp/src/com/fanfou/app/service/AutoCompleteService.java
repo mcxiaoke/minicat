@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.App.ApnType;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Parser;
@@ -34,11 +35,14 @@ public class AutoCompleteService extends WakefulIntentService {
 	}
 
 	private void doFetchAutoComplete() {
+		if (App.DEBUG)
+			log("doFetchAutoComplete");
 		if (!App.me.isLogin) {
 			return;
 		}
-		if (App.DEBUG)
-			log("doFetchAutoComplete");
+		if(App.me.apnType==ApnType.NONE){
+			return;
+		}
 		Api api = App.me.api;
 		try {
 			int size = 0;

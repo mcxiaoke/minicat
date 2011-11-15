@@ -42,6 +42,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 3.2 2011.11.07
  * @version 3.5 2011.11.10
  * @version 3.6 2011.11.11
+ * @version 3.7 2011.11.15
  * 
  */
 public class FanFouProvider extends ContentProvider {
@@ -457,7 +458,6 @@ public class FanFouProvider extends ContentProvider {
 
 		int id = ih.getColumnIndex(UserInfo.ID);
 		int ownerId = ih.getColumnIndex(UserInfo.OWNER_ID);
-		int name = ih.getColumnIndex(UserInfo.NAME);
 
 		int screenName = ih.getColumnIndex(UserInfo.SCREEN_NAME);
 		int location = ih.getColumnIndex(UserInfo.LOCATION);
@@ -475,9 +475,7 @@ public class FanFouProvider extends ContentProvider {
 		int statusesCount = ih.getColumnIndex(UserInfo.STATUSES_COUNT);
 
 		int following = ih.getColumnIndex(UserInfo.FOLLOWING);
-		int notifications = ih.getColumnIndex(UserInfo.NOTIFICATIONS);
 		int createdAt = ih.getColumnIndex(UserInfo.CREATED_AT);
-		int utcOffset = ih.getColumnIndex(UserInfo.UTC_OFFSET);
 
 		int type = ih.getColumnIndex(UserInfo.TYPE);
 
@@ -510,13 +508,8 @@ public class FanFouProvider extends ContentProvider {
 						value.getAsInteger(UserInfo.STATUSES_COUNT));
 
 				ih.bind(following, value.getAsBoolean(UserInfo.FOLLOWING));
-				ih.bind(notifications,
-						value.getAsBoolean(UserInfo.NOTIFICATIONS));
 				ih.bind(createdAt, value.getAsLong(UserInfo.CREATED_AT));
-				ih.bind(utcOffset, value.getAsInteger(UserInfo.UTC_OFFSET));
-
 				ih.bind(type, value.getAsInteger(UserInfo.TYPE));
-				ih.bind(name, value.getAsString(UserInfo.NAME));
 
 				long result = ih.execute();
 				if (result > -1) {

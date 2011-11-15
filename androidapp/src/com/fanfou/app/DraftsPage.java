@@ -53,7 +53,6 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 	private void setActionBar() {
 		mBar = (ActionBar) findViewById(R.id.actionbar);
 		mBar.setTitle("草稿箱");
-		mBar.setLeftAction(new ActionBar.BackAction(this));
 		mBar.setRightAction(new SendAllAction());
 	}
 
@@ -124,9 +123,7 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 	}
 
 	private void startTaskQueueService() {
-		Intent service = new Intent(this, TaskQueueService.class);
-		service.putExtra(Commons.EXTRA_TYPE, TaskQueueService.TYPE_DRAFTS_LIST);
-		startService(service);
+		startService(new Intent(this, TaskQueueService.class));
 	}
 
 	private void doSendAll() {

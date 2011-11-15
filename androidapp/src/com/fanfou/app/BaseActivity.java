@@ -21,6 +21,7 @@ import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.App.ApnType;
 import com.fanfou.app.ui.ActionBar.OnRefreshClickListener;
 import com.fanfou.app.ui.ActionManager;
+import com.fanfou.app.util.Compatibility;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.Utils;
 
@@ -33,6 +34,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.2 2011.10.27
  * @version 2.3 2011.11.07
  * @version 2.4 2011.11.11
+ * @version 2.5 2011.11.15
  * 
  */
 public abstract class BaseActivity extends Activity implements
@@ -138,20 +140,6 @@ public abstract class BaseActivity extends Activity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && Build.VERSION.SDK_INT < 7
-				&& event.getRepeatCount() == 0) {
-			onBackPressed();
-		}
-		return super.onKeyDown(keyCode, event);
-	}
-
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
 	}
 
 	protected boolean isActive() {

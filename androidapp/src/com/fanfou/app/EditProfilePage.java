@@ -94,7 +94,6 @@ public class EditProfilePage extends BaseActivity {
 		setContentView(R.layout.edit_profile);
 
 		mBar = (ActionBar) findViewById(R.id.actionbar);
-		mBar.setLeftAction(new ActionBar.BackAction(this));
 
 		mButtonOK = (Button) findViewById(R.id.button_ok);
 		mButtonOK.setOnClickListener(this);

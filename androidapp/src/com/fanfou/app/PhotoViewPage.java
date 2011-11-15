@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.ui.ActionManager;
+import com.fanfou.app.util.Compatibility;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.Utils;
 
@@ -53,7 +54,7 @@ public class PhotoViewPage extends BaseActivity {
 
 		setContentView(R.layout.photoview);
 		mImageView = (ImageView) findViewById(R.id.photoview_pic);
-		
+
 		mSave = (TextView) findViewById(R.id.photoview_save);
 		mClose = (TextView) findViewById(R.id.photoview_close);
 		mShare = (TextView) findViewById(R.id.photoview_share);
@@ -63,7 +64,8 @@ public class PhotoViewPage extends BaseActivity {
 		Bitmap bitmap = BitmapFactory.decodeFile(mPhotoPath);
 		if (bitmap != null) {
 			if (App.DEBUG) {
-				Log.d(TAG, "Bitmap width=" + bitmap.getWidth()+" height="+bitmap.getHeight());
+				Log.d(TAG, "Bitmap width=" + bitmap.getWidth() + " height="
+						+ bitmap.getHeight());
 			}
 			mImageView.setImageBitmap(bitmap);
 		} else {

@@ -179,7 +179,6 @@ public class UserChoosePage extends BaseActivity implements
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("我关注的人");
-		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
 		mActionBar.setRightAction(new ConfirmAction());
 	}
 

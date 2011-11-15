@@ -227,21 +227,6 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
 	}
 
-	public static class BackAction extends AbstractAction {
-		private Activity context;
-
-		public BackAction(Activity mContext) {
-			super(R.drawable.i_back);
-			this.context = mContext;
-		}
-
-		@Override
-		public void performAction(View view) {
-			context.finish();
-		}
-
-	}
-
 	public static class HomeAction extends AbstractAction {
 		private Activity context;
 

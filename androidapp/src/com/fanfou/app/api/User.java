@@ -34,6 +34,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.5 2011.11.04
  * @version 2.0 2011.11.10
  * @version 2.1 2011.11.11
+ * @version 2.5 2011.11.15
  * 
  */
 public class User implements Storable<User> {
@@ -46,7 +47,6 @@ public class User implements Storable<User> {
 	public Date createdAt;
 	public String id;
 	public String ownerId;
-	public String name;
 	
 	public String screenName;
 	public String location;
@@ -64,12 +64,10 @@ public class User implements Storable<User> {
 	public int statusesCount;
 	
 	public boolean following;
-	public boolean notifications;
-	public int utcOffset;
 
 	public int type;
 	
-	private User (){
+	public User (){
 	}
 	
 	public User(Parcel in){
@@ -115,7 +113,6 @@ public class User implements Storable<User> {
 		user.createdAt = Parser.parseDate(c, BasicColumns.CREATED_AT);
 		user.id = Parser.parseString(c, BasicColumns.ID);
 		user.ownerId = Parser.parseString(c, BasicColumns.OWNER_ID);
-		user.name = Parser.parseString(c, UserInfo.NAME);
 		user.screenName = Parser.parseString(c, UserInfo.SCREEN_NAME);
 		user.location = Parser.parseString(c, UserInfo.LOCATION);
 		user.gender = Parser.parseString(c, UserInfo.GENDER);
@@ -130,8 +127,6 @@ public class User implements Storable<User> {
 		user.favouritesCount = Parser.parseInt(c, UserInfo.FAVORITES_COUNT);
 		user.statusesCount = Parser.parseInt(c, UserInfo.STATUSES_COUNT);
 		user.following = Parser.parseBoolean(c, UserInfo.FOLLOWING);
-		user.notifications = Parser.parseBoolean(c, UserInfo.NOTIFICATIONS);
-		user.utcOffset = Parser.parseInt(c, UserInfo.UTC_OFFSET);
 		user.type = Parser.parseInt(c, BasicColumns.TYPE);
 		return user;
 	}
@@ -148,7 +143,6 @@ public class User implements Storable<User> {
 		try {
 			User user=new User();
 			user.id = o.getString(BasicColumns.ID);
-			user.name = o.getString(UserInfo.NAME);
 			user.screenName = o.getString(UserInfo.SCREEN_NAME);
 			user.location = o.getString(UserInfo.LOCATION);
 			user.gender = o.getString(UserInfo.GENDER);
@@ -162,9 +156,7 @@ public class User implements Storable<User> {
 			user.favouritesCount = o.getInt(UserInfo.FAVORITES_COUNT);
 			user.statusesCount = o.getInt(UserInfo.STATUSES_COUNT);
 			user.following = o.getBoolean(UserInfo.FOLLOWING);
-			user.notifications = o.getBoolean(UserInfo.NOTIFICATIONS);
 			user.createdAt = Parser.date(o.getString(BasicColumns.CREATED_AT));
-			user.utcOffset = o.getInt(UserInfo.UTC_OFFSET);
 
 			user.type = Commons.TYPE_NONE;
 			user.ownerId = App.me.userId;
@@ -206,7 +198,6 @@ public class User implements Storable<User> {
 
 		cv.put(UserInfo.ID, u.id);
 		cv.put(UserInfo.OWNER_ID, u.ownerId);
-		cv.put(UserInfo.NAME, u.name);
 
 		cv.put(UserInfo.SCREEN_NAME, u.screenName);
 		cv.put(UserInfo.LOCATION, u.location);
@@ -224,9 +215,7 @@ public class User implements Storable<User> {
 		cv.put(UserInfo.STATUSES_COUNT, u.statusesCount);
 
 		cv.put(UserInfo.FOLLOWING, u.following);
-		cv.put(UserInfo.NOTIFICATIONS, u.notifications);
 		cv.put(UserInfo.CREATED_AT, u.createdAt.getTime());
-		cv.put(UserInfo.UTC_OFFSET, u.utcOffset);
 		
 		cv.put(UserInfo.TYPE, u.type);
 
@@ -237,7 +226,6 @@ public class User implements Storable<User> {
 	public void fromContentValues(ContentValues cv) {	
 		id=cv.getAsString(UserInfo.ID);
 		ownerId=cv.getAsString(UserInfo.OWNER_ID);
-		name=cv.getAsString(UserInfo.NAME);
 		
 		screenName=cv.getAsString(UserInfo.SCREEN_NAME);
 		location=cv.getAsString(UserInfo.LOCATION);
@@ -255,9 +243,7 @@ public class User implements Storable<User> {
 		statusesCount=cv.getAsInteger(UserInfo.STATUSES_COUNT);
 		
 		following=cv.getAsBoolean(UserInfo.FOLLOWING);
-		notifications=cv.getAsBoolean(UserInfo.NOTIFICATIONS);
 		createdAt=new Date(cv.getAsLong(UserInfo.CREATED_AT));
-		utcOffset=cv.getAsInteger(UserInfo.UTC_OFFSET);
 		
 		type=cv.getAsInteger(UserInfo.TYPE);
 		
@@ -266,8 +252,7 @@ public class User implements Storable<User> {
 	@Override
 	public String toString() {
 		return "[User] " + BasicColumns.ID + "=" + id + " "
-				+ UserInfo.SCREEN_NAME + "=" + screenName + " " + UserInfo.NAME
-				+ "=" + name + " " + UserInfo.LOCATION + "=" + location + " "
+				+ UserInfo.SCREEN_NAME + "=" + screenName + " " + UserInfo.LOCATION + "=" + location + " "
 				+ UserInfo.GENDER + "=" + gender + " " + UserInfo.BIRTHDAY
 				+ "=" + birthday + " " + UserInfo.DESCRIPTION + "="
 				+ description + " " + UserInfo.PROFILE_IMAGE_URL + "="
@@ -278,9 +263,7 @@ public class User implements Storable<User> {
 				+ UserInfo.FAVORITES_COUNT + "=" + favouritesCount + " "
 				+ UserInfo.STATUSES_COUNT + "=" + statusesCount + " "
 				+ UserInfo.FOLLOWING + "=" + following + " "
-				+ UserInfo.NOTIFICATIONS + "=" + notifications + " "
 				+ BasicColumns.CREATED_AT + "=" + createdAt + " "
-				+ UserInfo.UTC_OFFSET + "=" + utcOffset + " "
 				+ BasicColumns.TYPE + "=" + type + " ";
 	}
 

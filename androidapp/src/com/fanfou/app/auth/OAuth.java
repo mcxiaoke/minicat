@@ -91,7 +91,7 @@ public class OAuth {
 		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(ACCESS_TOKEN_URL);
 		builder.header("Authorization", authorization);
-		HttpResponse response = ConnectionManager.execNoAuth(builder.build());
+		HttpResponse response = ConnectionManager.exec(builder.build());
 		int statusCode = response.getStatusLine().getStatusCode();
 		String content = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
 		if (App.DEBUG)
@@ -195,7 +195,7 @@ public class OAuth {
 			log("getOAuthHeader() url=" + url);
 		}
 		StringBuffer base = new StringBuffer(method).append("&")
-				.append(ConnectionRequest.encode(constructRequestURL(url)))
+				.append(ConnectionRequest.encode(constructFanFouRequestURL(url)))
 				.append("&");
 		base.append(ConnectionRequest.encode(alignParams(signatureBaseParams)));
 		String oauthBaseString = base.toString();
@@ -334,6 +334,15 @@ public class OAuth {
 		url = baseURL + url.substring(slashIndex);
 
 		return url;
+	}
+	
+	public static String constructFanFouRequestURL(String url) {
+		int index = url.indexOf("?");
+		if (-1 != index) {
+			url = url.substring(0, index);
+		}
+		int slashIndex = url.indexOf("/", 8);
+		return "http://api.fanfou.com" + url.substring(slashIndex);
 	}
 
 	@Override

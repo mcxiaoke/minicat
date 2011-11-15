@@ -22,6 +22,7 @@ import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
+import com.fanfou.app.util.Compatibility;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -141,7 +142,6 @@ public class StatusPage extends BaseActivity {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("消息");
 		mActionBar.setRightAction(new ActionBar.WriteAction(this, status));
-		mActionBar.setLeftAction(new ActionBar.BackAction(mContext));
 	}
 
 	private void setLayout() {
