@@ -130,6 +130,10 @@
 		<CheckBoxPreference android:defaultValue="true"
 			android:key="@string/option_save_on_back_press" android:summary="保存未发送消息为草稿"
 			android:title="保存草稿" />
+		
+		<CheckBoxPreference android:defaultValue="true"
+			android:key="@string/option_play_sound_effect" android:summary="时间线有新消息时播放音效"
+			android:title="音效反馈" />
 
 		<CheckBoxPreference android:defaultValue="false"
 			android:key="@string/option_confirm_on_exit" android:summary="退出客户端时需要确认"

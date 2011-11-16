@@ -99,6 +99,11 @@ public class ActionService extends BaseIntentService {
 				if (s == null || s.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
+
+					if (!FanFouProvider.updateUserInfo(this, s.user)) {
+						FanFouProvider.insertUserInfo(this, s.user);
+					}
+
 					FanFouProvider.updateUserInfo(this, s.user);
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
@@ -170,13 +175,15 @@ public class ActionService extends BaseIntentService {
 				if (u == null || u.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
+					if (!FanFouProvider.updateUserInfo(this, u)) {
+						FanFouProvider.insertUserInfo(this, u);
+					}
+
 					Bundle data = new Bundle();
 					data.putInt(Commons.EXTRA_TYPE, type);
 					data.putParcelable(Commons.EXTRA_USER, u);
 					receiver.send(Commons.RESULT_CODE_FINISH, data);
-					if (!FanFouProvider.updateUserInfo(this, u)) {
-						FanFouProvider.insertUserInfo(this, u);
-					}
+
 				}
 			}
 				break;

@@ -29,6 +29,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.0 2011.06.11
  * @version 1.1 2011.10.25
  * @version 1.5 2011.11.10
+ * @version 1.6 2011.11.16
  * 
  */
 public class OptionsPage extends PreferenceActivity implements
@@ -208,7 +209,9 @@ public class OptionsPage extends PreferenceActivity implements
 			skp.setSummary(value + "号");
 			needRestart = true;
 		}
-		else if (p instanceof ListPreference) {
+		if (key.equals(getString(R.string.option_play_sound_effect))) {
+			needRestart = true;
+		} else if (p instanceof ListPreference) {
 			ListPreference lp = (ListPreference) p;
 			lp.setSummary(lp.getEntry());
 			setResult(RESULT_OK,

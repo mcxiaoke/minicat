@@ -1,30 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
 
-	<ScrollView android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:layout_centerInParent="true">
-		<ImageView android:id="@+id/photoview_pic"
-			android:layout_width="wrap_content" android:layout_height="wrap_content" />
-	</ScrollView>
-	
-	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:orientation="horizontal"
-		android:gravity="center_horizontal" android:layout_alignParentBottom="true">
-		<TextView android:layout_width="fill_parent" android:id="@+id/photoview_close"
-			android:layout_height="wrap_content" android:text="关闭"
-			android:textColor="@color/soft_white" android:textSize="@dimen/text_size_large"
-			android:padding="10dp" android:layout_weight="1" android:gravity="center" />
+	<com.fanfou.app.ui.imagezoom.ImageViewTouch
+		android:id="@+id/photoview_pic" android:scaleType="fitCenter"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:layout_centerInParent="true" />
 
-		<TextView android:layout_width="fill_parent" android:id="@+id/photoview_share"
-			android:layout_height="wrap_content" android:text="分享"
-			android:textColor="@color/soft_white" android:textSize="@dimen/text_size_large"
-			android:padding="10dp" android:layout_weight="1" android:gravity="center" />
-
-		<TextView android:layout_width="fill_parent" android:id="@+id/photoview_save"
-			android:layout_height="wrap_content" android:text="保存"
-			android:textColor="@color/soft_white" android:textSize="@dimen/text_size_large"
-			android:padding="10dp" android:layout_weight="1" android:gravity="center" />
-	</LinearLayout>
-	
 </RelativeLayout>

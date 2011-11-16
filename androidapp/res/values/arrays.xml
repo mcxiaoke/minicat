@@ -54,7 +54,8 @@
 	</string-array>
 	<string-array name="notification_interval">
 		<item>1分钟</item>
-		<item>5分钟(推荐)</item>
+		<item>3分钟</item>
+		<item>5分钟</item>
 		<item>10分钟</item>
 		<item>15分钟</item>
 		<item>30分钟</item>
@@ -62,6 +63,7 @@
 	</string-array>
 	<string-array name="notification_interval_values">
 		<item>1</item>
+		<item>3</item>
 		<item>5</item>
 		<item>10</item>
 		<item>15</item>

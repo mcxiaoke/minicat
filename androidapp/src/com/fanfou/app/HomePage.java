@@ -48,6 +48,7 @@ import com.fanfou.app.ui.widget.EndlessListViewNoHeader;
 import com.fanfou.app.ui.widget.EndlessListViewNoHeader.OnLoadDataListener;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
+import com.fanfou.app.util.SoundManager;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -65,6 +66,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.2 2011.11.08
  * @version 4.3 2011.11.09
  * @version 4.4 2011.11.11
+ * @version 4.5 2011.11.16
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
@@ -102,6 +104,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			"我的私信", "随便看看" };
 
 	private boolean endlessScroll;
+	private boolean soundEffect;
 
 	public static final String TAG = "HomePage";
 
@@ -135,10 +138,21 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	private void init() {
+		initPage = getIntent().getIntExtra(Commons.EXTRA_PAGE, 0);
+
+		endlessScroll = OptionHelper.readBoolean(this,
+				R.string.option_page_scroll_endless, false);
+		soundEffect=OptionHelper.readBoolean(mContext,
+				R.string.option_play_sound_effect, true);
 		mHandler = new Handler();
 		initSendSuccessReceiver();
+		initSoundManager();
+	}
 
-		initPage = getIntent().getIntExtra(Commons.EXTRA_PAGE, 0);
+	private void initSoundManager() {
+		SoundManager.getInstance();
+		SoundManager.initSounds(this);
+		SoundManager.loadSounds();
 	}
 
 	private void initSendSuccessReceiver() {
@@ -265,8 +279,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			log("setViewPager initPage=" + initPage);
 		}
 
-		endlessScroll = OptionHelper.readBoolean(this,
-				R.string.option_page_scroll_endless, false);
 		mViewAdapter = new ViewsAdapter(views, endlessScroll);
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);
 		mViewPager.setOnPageChangeListener(this);
@@ -509,6 +521,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 					if (count > 0) {
 						views[0].setSelection(0);
 						Utils.notify(this, count + "条新消息");
+						if (soundEffect) {
+							SoundManager.playSound(1, 0);
+						}
 					}
 				}
 				break;
@@ -518,6 +533,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 					if (count > 0) {
 						views[1].setSelection(0);
 						Utils.notify(this, count + "条新@消息");
+						if (soundEffect) {
+							SoundManager.playSound(1, 0);
+						}
 					}
 				}
 				break;
@@ -527,6 +545,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 					if (count > 0) {
 						views[2].setSelection(0);
 						Utils.notify(this, count + "条新私信");
+						if (soundEffect) {
+							SoundManager.playSound(1, 0);
+						}
 					}
 				}
 				break;
@@ -677,12 +698,19 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			setBusy(false);
 			switch (resultCode) {
 			case Commons.RESULT_CODE_FINISH:
+				int count = resultData.getInt(Commons.EXTRA_COUNT);
 				if (doGetMore) {
 					if (i < NUMS_OF_PAGE - 1) {
 						views[i].onLoadMoreComplete();
 					}
 					cursors[i].requery();
 				} else {
+					if (count > 0) {
+						Utils.notify(mContext, count + "条新消息");
+						if (soundEffect) {
+							SoundManager.playSound(1, 0);
+						}
+					}
 					stopRefreshAnimation();
 					if (i < NUMS_OF_PAGE - 1) {
 						views[i].addFooter();
@@ -690,6 +718,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 					cursors[i].requery();
 					views[i].setSelection(0);
 				}
+
 				break;
 			case Commons.RESULT_CODE_ERROR:
 				String errorMessage = resultData
@@ -778,10 +807,10 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	@Override
 	public void onPageScrolled(int position, float positionOffset,
 			int positionOffsetPixels) {
-//		if (!endlessScroll) {
-			mPageIndicator.onPageScrolled(position, positionOffset,
-					positionOffsetPixels);
-//		}
+		// if (!endlessScroll) {
+		mPageIndicator.onPageScrolled(position, positionOffset,
+				positionOffsetPixels);
+		// }
 
 	}
 

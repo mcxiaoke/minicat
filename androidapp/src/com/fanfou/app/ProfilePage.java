@@ -40,6 +40,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.3 2011.10.28
  * @version 1.4 2011.10.29
  * @version 1.5 2011.11.11
+ * @version 1.6 2011.11.16
  * 
  */
 public class ProfilePage extends BaseActivity {
@@ -107,9 +108,6 @@ public class ProfilePage extends BaseActivity {
 			if (extras != null) {
 				userId = extras.getString(Commons.EXTRA_ID);
 				user = (User) extras.getParcelable(Commons.EXTRA_USER);
-				if (user != null) {
-					userId = user.id;
-				}
 			}
 		} else if (action.equals(Intent.ACTION_VIEW)) {
 			Uri data = intent.getData();
@@ -120,10 +118,9 @@ public class ProfilePage extends BaseActivity {
 		if (user == null && userId != null) {
 			user = CacheManager.getUser(this, userId);
 		}
-		if (StringHelper.isEmpty(userId)) {
-			if (App.DEBUG)
-				log("用户ID不能为空");
-			finish();
+
+		if (user != null) {
+			userId = user.id;
 		}
 
 	}

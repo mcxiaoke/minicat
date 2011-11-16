@@ -5,19 +5,17 @@ import java.io.IOException;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.ui.ActionManager;
-import com.fanfou.app.util.Compatibility;
+import com.fanfou.app.ui.imagezoom.ImageViewTouch;
 import com.fanfou.app.util.IOHelper;
+import com.fanfou.app.util.ImageHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -26,22 +24,21 @@ import com.fanfou.app.util.Utils;
  * @version 2.0 2011.10.12
  * @version 2.1 2011.10.27
  * @version 2.2 2011.11.09
+ * @version 3.0 2011.11.16
  * 
  */
 public class PhotoViewPage extends BaseActivity {
 
 	private static final String TAG = PhotoViewPage.class.getSimpleName();
 	private String mPhotoPath;
+	private Bitmap bitmap;
 
-	private ImageView mImageView;
-	private TextView mSave;
-	private TextView mClose;
-	private TextView mShare;
+	private ImageViewTouch mImageView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		setContentView(R.layout.photoview);
 		parseIntent(getIntent());
 
 		if (TextUtils.isEmpty(mPhotoPath)) {
@@ -51,26 +48,25 @@ public class PhotoViewPage extends BaseActivity {
 		if (App.DEBUG) {
 			Log.d(TAG, "mPhotoPath=" + mPhotoPath);
 		}
-
-		setContentView(R.layout.photoview);
-		mImageView = (ImageView) findViewById(R.id.photoview_pic);
-
-		mSave = (TextView) findViewById(R.id.photoview_save);
-		mClose = (TextView) findViewById(R.id.photoview_close);
-		mShare = (TextView) findViewById(R.id.photoview_share);
-		mSave.setOnClickListener(this);
-		mClose.setOnClickListener(this);
-		mShare.setOnClickListener(this);
-		Bitmap bitmap = BitmapFactory.decodeFile(mPhotoPath);
-		if (bitmap != null) {
+		
+		try {
+			bitmap = ImageHelper.loadFromUri(this, mPhotoPath, 1600, 1600);
 			if (App.DEBUG) {
 				Log.d(TAG, "Bitmap width=" + bitmap.getWidth() + " height="
 						+ bitmap.getHeight());
 			}
-			mImageView.setImageBitmap(bitmap);
-		} else {
-			finish();
+			mImageView.setImageBitmapReset(bitmap, true);
+		} catch (IOException e) {
+			if(App.DEBUG){
+				Log.e(TAG, ""+e);
+			}
 		}
+	}
+
+	@Override
+	public void onContentChanged() {
+		super.onContentChanged();
+		mImageView = (ImageViewTouch) findViewById(R.id.photoview_pic);
 	}
 
 	private void parseIntent(Intent intent) {
@@ -89,25 +85,25 @@ public class PhotoViewPage extends BaseActivity {
 	}
 
 	@Override
-	public void onClick(View v) {
-		int id = v.getId();
-		if (id == R.id.photoview_close) {
-			finish();
-		} else if (id == R.id.photoview_save) {
-			savePhoto();
-		} else if (id == R.id.photoview_share) {
-			sharePhoto();
-		}
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		return super.onMenuItemSelected(featureId, item);
 	}
 
-	private void sharePhoto() {
-		ActionManager.doShare(this, new File(mPhotoPath));
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public void finish() {
 		super.finish();
 		overridePendingTransition(R.anim.zoom_enter_2, R.anim.zoom_exit_2);
+	}
+
+	@Override
+	protected void onDestroy() {
+		ImageHelper.releaseBitmap(bitmap);
+		super.onDestroy();
 	}
 
 	private void savePhoto() {
