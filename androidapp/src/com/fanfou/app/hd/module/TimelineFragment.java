@@ -134,7 +134,7 @@ public class TimelineFragment extends ListFragment implements
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
-		mCursorAdapter.swapCursor(newCursor);
+		mCursorAdapter.switchCursor(newCursor);
 		if (App.DEBUG) {
 			log("onLoadFinished " + mCursorAdapter.getCount());
 		}
@@ -142,7 +142,7 @@ public class TimelineFragment extends ListFragment implements
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
-		mCursorAdapter.swapCursor(null);
+		mCursorAdapter.switchCursor(null);
 		if (App.DEBUG) {
 			log("onLoaderReset");
 		}

@@ -85,7 +85,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 		this.mCursor = c;
 	}
 
-	public void swapCursor(Cursor cursor) {
+	public void switchCursor(Cursor cursor) {
 		if (cursor != null) {
 			mCursor = cursor;
 			changeCursor(mCursor);

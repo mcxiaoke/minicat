@@ -142,7 +142,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 		endlessScroll = OptionHelper.readBoolean(this,
 				R.string.option_page_scroll_endless, false);
-		soundEffect=OptionHelper.readBoolean(mContext,
+		soundEffect = OptionHelper.readBoolean(mContext,
 				R.string.option_play_sound_effect, true);
 		mHandler = new Handler();
 		initSendSuccessReceiver();
@@ -513,43 +513,45 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				log("onBroadcastReceived ACTION_NOTIFICATION");
 			}
 			int type = intent.getIntExtra(Commons.EXTRA_TYPE, -1);
-			int count = intent.getIntExtra(Commons.EXTRA_COUNT, 1);
+			int count = intent.getIntExtra(Commons.EXTRA_COUNT, 0);
 			switch (type) {
 			case NotificationService.NOTIFICATION_TYPE_HOME:
-				if (cursors[0] != null) {
-					cursors[0].requery();
-					if (count > 0) {
-						views[0].setSelection(0);
-						Utils.notify(this, count + "条新消息");
-						if (soundEffect) {
-							SoundManager.playSound(1, 0);
-						}
+				if (count > 0) {
+					if (cursors[0] != null) {
+						cursors[0].requery();
+					}
+					views[0].setSelection(0);
+					Utils.notify(this, count + "条新消息");
+					if (soundEffect) {
+						SoundManager.playSound(1, 0);
 					}
 				}
 				break;
 			case NotificationService.NOTIFICATION_TYPE_MENTION:
-				if (cursors[1] != null) {
-					cursors[1].requery();
-					if (count > 0) {
-						views[1].setSelection(0);
-						Utils.notify(this, count + "条新@消息");
-						if (soundEffect) {
-							SoundManager.playSound(1, 0);
-						}
+				if (count > 0) {
+					if (cursors[1] != null) {
+						cursors[1].requery();
+					}
+					views[1].setSelection(0);
+					Utils.notify(this, count + "条新@消息");
+					if (soundEffect) {
+						SoundManager.playSound(1, 0);
 					}
 				}
+
 				break;
 			case NotificationService.NOTIFICATION_TYPE_DM:
-				if (cursors[2] != null) {
-					cursors[2].requery();
-					if (count > 0) {
-						views[2].setSelection(0);
-						Utils.notify(this, count + "条新私信");
-						if (soundEffect) {
-							SoundManager.playSound(1, 0);
-						}
+				if (count > 0) {
+					if (cursors[2] != null) {
+						cursors[2].requery();
+					}
+					views[2].setSelection(0);
+					Utils.notify(this, count + "条新私信");
+					if (soundEffect) {
+						SoundManager.playSound(1, 0);
 					}
 				}
+
 				break;
 			default:
 				break;
@@ -705,20 +707,20 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 					}
 					cursors[i].requery();
 				} else {
+
+					stopRefreshAnimation();
+					if (i < NUMS_OF_PAGE - 1) {
+						views[i].addFooter();
+					}
 					if (count > 0) {
 						Utils.notify(mContext, count + "条新消息");
 						if (soundEffect) {
 							SoundManager.playSound(1, 0);
 						}
+						cursors[i].requery();
+						views[i].setSelection(0);
 					}
-					stopRefreshAnimation();
-					if (i < NUMS_OF_PAGE - 1) {
-						views[i].addFooter();
-					}
-					cursors[i].requery();
-					views[i].setSelection(0);
 				}
-
 				break;
 			case Commons.RESULT_CODE_ERROR:
 				String errorMessage = resultData

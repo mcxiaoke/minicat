@@ -3,7 +3,7 @@
 	android:installLocation="internalOnly" package="com.fanfou.app"
 	android:versionCode="20111115" android:versionName="1.8.0">
 
-	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="10" />
+	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="14" />
 
 	<application android:icon="@drawable/icon" android:label="@string/app_name"
 		android:name=".App">
