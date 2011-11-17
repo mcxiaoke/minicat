@@ -40,6 +40,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.3 2011.10.29
  * @version 2.4 2011.11.04
  * @version 2.5 2011.11.07
+ * @version 2.6 2011.11.17
  * 
  */
 public class StatusPage extends BaseActivity {

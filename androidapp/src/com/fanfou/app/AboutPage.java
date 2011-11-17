@@ -4,20 +4,23 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Spannable;
 import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.util.StatusHelper;
 import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.08.26
  * @version 1.1 2011.10.26
+ * @version 1.2 2011.11.17
  * 
  */
 public class AboutPage extends Activity implements OnClickListener {
@@ -68,13 +71,25 @@ public class AboutPage extends Activity implements OnClickListener {
 		TextPaint t2 = mSupport.getPaint();
 		t2.setFakeBoldText(true);
 		mSupportText.setText(R.string.support_text);
-		StatusHelper.linkifySupport(mSupportText);
+		linkifySupport(mSupportText);
 		mContact.setText("联系方式");
 		TextPaint t3 = mContact.getPaint();
 		t3.setFakeBoldText(true);
 		mContactText.setText(R.string.contact_text);
 		mCopyright.setText("\u00a9 2007-2011 fanfou.com");
 
+	}
+	
+	private void linkifySupport(final TextView textView){
+		textView.setMovementMethod(LinkMovementMethod.getInstance());
+		Spannable span=(Spannable) textView.getText();
+		String text=textView.getText().toString();
+		String spanText="@Android客户端";
+		int start=text.indexOf(spanText);
+		if(start>0){
+			int end=start+spanText.length();
+			span.setSpan(new URLSpan("fanfou://user/androidsupport"), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);	
+		}
 	}
 
 	@Override
