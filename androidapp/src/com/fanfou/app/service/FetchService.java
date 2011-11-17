@@ -341,6 +341,7 @@ public class FetchService extends BaseIntentService {
 				statuses = api.mentions(count, page, sinceId, maxId, format);
 				break;
 			case Status.TYPE_PUBLIC:
+				count = FanFouApiConfig.DEFAULT_TIMELINE_COUNT;
 				if (App.DEBUG)
 					Log.d(TAG, "fetchTimeline TYPE_PUBLIC");
 				statuses = api.pubicTimeline(count, format);

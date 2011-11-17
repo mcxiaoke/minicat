@@ -9,6 +9,9 @@ import com.fanfou.app.App;
 import com.fanfou.app.api.Status;
 
 import android.text.Html;
+import android.text.Spannable;
+import android.text.TextPaint;
+import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
@@ -112,11 +115,35 @@ public class StatusHelper {
 	public static void setStatus(TextView textView, String text) {
 		String processedText = preprocessText(text);
 		textView.setText(Html.fromHtml(processedText), BufferType.SPANNABLE);
-		Linkify.addLinks(textView, Linkify.ALL);
+		Linkify.addLinks(textView, Linkify.WEB_URLS);
 		linkifyUsers(textView);
 		linkifyTags(textView);
+		removeUnderlines(textView);
 		userLinks.clear();
 	}
+	
+	 public static void removeUnderlines(TextView textView) {
+	        Spannable s = (Spannable)textView.getText();
+	        URLSpan[] spans = s.getSpans(0, s.length(), URLSpan.class);
+	        for (URLSpan span: spans) {
+	            int start = s.getSpanStart(span);
+	            int end = s.getSpanEnd(span);
+	            s.removeSpan(span);
+	            span = new URLSpanNoUnderline(span.getURL());
+	            s.setSpan(span, start, end, 0);
+	        }
+	        textView.setText(s);
+	    }
+	
+	private static class URLSpanNoUnderline extends URLSpan {
+        public URLSpanNoUnderline(String url) {
+            super(url);
+        }
+        @Override public void updateDrawState(TextPaint tp) {
+            super.updateDrawState(tp);
+            tp.setUnderlineText(false);
+        }
+    }
 
 	/**
 	 * 从消息中获取全部提到的人，将它们按先后顺序放入一个列表

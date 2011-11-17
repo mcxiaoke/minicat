@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -796,10 +797,43 @@ final public class ImageHelper {
 		return bitmap;
 	}
 
+	public static Bitmap loadFromPath(Context context, String path, int maxW,
+			int maxH) throws IOException {
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inScaled = false;
+//		 options.inPreferredConfig = Bitmap.Config.RGB_565;
+		options.inSampleSize = computeSampleSize(path, maxW, maxH);
+//		options.inDither = false;
+		options.inJustDecodeBounds = false;
+//		options.inPurgeable = true;
+		Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+		return bitmap;
+	}
+
 	private static int computeSampleSize(InputStream stream, int maxW, int maxH) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
 		BitmapFactory.decodeStream(stream, null, options);
+		double w = options.outWidth;
+		double h = options.outHeight;
+		int sampleSize = (int) Math.ceil(Math.max(w / maxW, h / maxH));
+		return sampleSize;
+	}
+	
+	private static int computeSampleSize(String path, int maxW, int maxH) {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(path, options);
+		double w = options.outWidth;
+		double h = options.outHeight;
+		int sampleSize = (int) Math.ceil(Math.max(w / maxW, h / maxH));
+		return sampleSize;
+	}
+	
+	private static int computeSampleSize(File file, int maxW, int maxH) {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(file.getPath(), options);
 		double w = options.outWidth;
 		double h = options.outHeight;
 		int sampleSize = (int) Math.ceil(Math.max(w / maxW, h / maxH));

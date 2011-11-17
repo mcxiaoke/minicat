@@ -25,6 +25,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.1 2011.10.27
  * @version 2.2 2011.11.09
  * @version 3.0 2011.11.16
+ * @version 3.1 2011.11.17
  * 
  */
 public class PhotoViewPage extends BaseActivity {
@@ -50,7 +51,7 @@ public class PhotoViewPage extends BaseActivity {
 		}
 		
 		try {
-			bitmap = ImageHelper.loadFromUri(this, mPhotoPath, 1600, 1600);
+			bitmap = ImageHelper.loadFromPath(this, mPhotoPath, 1200, 1200);
 			if (App.DEBUG) {
 				Log.d(TAG, "Bitmap width=" + bitmap.getWidth() + " height="
 						+ bitmap.getHeight());
