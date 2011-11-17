@@ -165,7 +165,7 @@ public abstract class BaseActivity extends Activity implements
 	}
 
 	protected boolean noConnection() {
-		return App.me.apnType == ApnType.NONE;
+		return App.me.noConnection;
 	}
 
 	protected static final int MENU_ID_PROFILE = 0;

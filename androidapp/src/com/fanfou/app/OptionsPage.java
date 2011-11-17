@@ -121,7 +121,7 @@ public class OptionsPage extends PreferenceActivity implements
 		if (App.DEBUG) {
 			Log.d(TAG, "checkUpdate");
 		}
-		if (App.me.apnType == com.fanfou.app.App.ApnType.NONE) {
+		if (App.me.noConnection) {
 			Utils.notify(this, "无网络连接，请稍后重试");
 			return;
 		}

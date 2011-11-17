@@ -23,6 +23,7 @@ import com.fanfou.app.util.OptionHelper;
  * @version 2.5 2011.10.30
  * @version 2.6 2011.11.03
  * @version 2.7 2011.11.10
+ * @version 2.8 2011.11.17
  * 
  */
 public class NetworkReceiver extends BroadcastReceiver {
@@ -59,14 +60,15 @@ public class NetworkReceiver extends BroadcastReceiver {
 	}
 
 	private void handleConnectionStateChange(Context context, Intent intent) {
-		boolean disconnected = intent.getBooleanExtra(
+		boolean noConnection = intent.getBooleanExtra(
 				ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
 		if (App.DEBUG) {
-			Log.v(TAG, "onReceive disconnected =  " + disconnected);
+			Log.v(TAG, "onReceive noConnection =  " + noConnection);
 			IntentHelper.logIntent(TAG, intent);
 		}
-		if (disconnected) {
-			App.me.apnType = ApnType.NONE;
+
+		App.me.noConnection = noConnection;
+		if (noConnection) {
 			if (App.DEBUG) {
 				Log.v(TAG, "onReceive apnType=" + App.me.apnType.name());
 			}
@@ -77,6 +79,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 				.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
 
 		if (info != null && info.isConnectedOrConnecting()) {
+			App.me.noConnection = false;
 			if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
 				App.me.apnType = ApnType.NET;
 				String apnTypeName = info.getExtraInfo();
@@ -100,7 +103,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 				onWifiConnected(context);
 			}
 		} else {
-//			App.me.apnType = ApnType.NONE;
+			App.me.noConnection = true;
 			if (App.DEBUG) {
 				Log.v(TAG, "onReceive NetworkInfo is null.");
 			}

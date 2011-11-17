@@ -480,18 +480,18 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		return Parser.savedSearch(response);
 	}
 
-	private List<User> fetchUsers(String url, String userId, int page)
+	private List<User> fetchUsers(String url, String userId, int count, int page)
 			throws ApiException {
 		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
-		builder.url(url).id(userId).page(page).param("mode", "noprofile");
+		builder.url(url).id(userId).count(count).page(page).param("mode", "noprofile");
 		Response response = fetch(builder.build());
 
 		return User.parseUsers(response);
 	}
 
 	@Override
-	public List<User> usersFriends(String userId, int page) throws ApiException {
-		List<User> users = fetchUsers(URL_USERS_FRIENDS, userId, page);
+	public List<User> usersFriends(String userId, int count, int page) throws ApiException {
+		List<User> users = fetchUsers(URL_USERS_FRIENDS, userId, count,page);
 		if (users != null && users.size() > 0) {
 			for (User user : users) {
 				user.type = User.TYPE_FRIENDS;
@@ -502,9 +502,9 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public List<User> usersFollowers(String userId, int page)
+	public List<User> usersFollowers(String userId, int count, int page)
 			throws ApiException {
-		List<User> users = fetchUsers(URL_USERS_FOLLOWERS, userId, page);
+		List<User> users = fetchUsers(URL_USERS_FOLLOWERS, userId, count,page);
 		if (users != null && users.size() > 0) {
 			for (User user : users) {
 				user.type = User.TYPE_FOLLOWERS;

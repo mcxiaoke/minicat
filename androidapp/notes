@@ -1018,6 +1018,5 @@ TODO LIST
 修复图片查看器空指针错误
 修改超时设置
 修改链接和人名解析，自定义Linkify，提高效率
-
-
-
+修改APN判断，分离类型判断和是否有连接的判断
+修改API，为friends/followers添加count参数

@@ -51,10 +51,11 @@ public class NetworkState {
 	private void initState() {
 		try {
 			NetworkInfo info = cm.getActiveNetworkInfo();
-			if (info != null && info.isAvailable()) {
+			if (info != null && info.isConnectedOrConnecting()) {
 				if (App.DEBUG) {
 					log(info.toString());
 				}
+				App.me.noConnection=false;
 				if (info.getType() == ConnectivityManager.TYPE_WIFI) {
 					apnType = ApnType.WIFI;
 					apnTypeName = "wifi";
@@ -70,8 +71,8 @@ public class NetworkState {
 						}
 					}
 				}
-			} else {
-				apnType=ApnType.NONE;
+			}else{
+				App.me.noConnection=true;
 			}
 		} catch (Exception e) {
 		}

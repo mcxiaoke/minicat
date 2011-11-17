@@ -25,6 +25,7 @@ public interface FanFouApiConfig {
 	public static final int MAX_TIMELINE_COUNT = 60;
 	public static final int DEFAULT_TIMELINE_COUNT = 20;
 	public static final int MAX_USERS_COUNT = 100;
+	public static final int DEFAULT_USERS_COUNT = 20;
 	public static final int MAX_IDS_COUNT = 2000;
 
 	// verify account

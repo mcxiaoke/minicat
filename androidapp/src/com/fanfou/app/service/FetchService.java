@@ -44,6 +44,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.1 2011.11.07
  * @version 4.2 2011.11.10
  * @version 4.3 2011.11.11
+ * @version 4.4 2011.11.17
  * 
  */
 public class FetchService extends BaseIntentService {
@@ -107,14 +108,21 @@ public class FetchService extends BaseIntentService {
 		int count = bundle.getInt(Commons.EXTRA_COUNT);
 		if (App.DEBUG)
 			log("fetchFriendsOrFollowers ownerId=" + ownerId + " page=" + page);
+		
+		
+		if (App.me.apnType == ApnType.WIFI) {
+			count = FanFouApiConfig.MAX_USERS_COUNT;
+		} else {
+			count = FanFouApiConfig.DEFAULT_USERS_COUNT;
+		}
 
 		Api api = App.me.api;
 		try {
 			List<User> users = null;
 			if (mType == User.TYPE_FRIENDS) {
-				users = api.usersFriends(ownerId, page);
+				users = api.usersFriends(ownerId, count,page);
 			} else if (mType == User.TYPE_FOLLOWERS) {
-				users = api.usersFollowers(ownerId, page);
+				users = api.usersFollowers(ownerId, count,page);
 			}
 			if (users != null && users.size() > 0) {
 				

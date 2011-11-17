@@ -89,10 +89,6 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 		return false;
 	}
 
-	protected boolean noConnection() {
-		return App.me.apnType == ApnType.NONE;
-	}
-
 	protected static final int MENU_ID_PROFILE = 0; //
 	protected static final int MENU_ID_OPTION = 1; // 设置
 	protected static final int MENU_ID_SEARCH = 2;

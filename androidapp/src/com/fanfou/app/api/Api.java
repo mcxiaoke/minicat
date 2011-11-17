@@ -286,7 +286,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<User> usersFriends(String userId, int page) throws ApiException;
+	List<User> usersFriends(String userId, int count, int page) throws ApiException;
 
 	/**
 	 * followers info list
@@ -295,7 +295,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<User> usersFollowers(String userId, int page) throws ApiException;
+	List<User> usersFollowers(String userId, int count, int page) throws ApiException;
 
 	/**
 	 * show a user's profile

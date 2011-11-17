@@ -60,6 +60,8 @@ public class App extends Application {
 
 	public static App me;
 	public static boolean active = false;
+	
+	public boolean noConnection;
 
 	private IImageLoader imageLoader;
 	public Api api;
@@ -264,6 +266,7 @@ public class App extends Application {
 				Log.d("App","NetworkInfo: "+info);
 			}
 			if (info != null && info.isConnectedOrConnecting()) {
+				App.me.noConnection=false;
 				if (info.getType() == ConnectivityManager.TYPE_WIFI) {
 					type = ApnType.WIFI;
 				} else if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
@@ -278,8 +281,8 @@ public class App extends Application {
 						}
 					}
 				}
-			} else {
-				type=ApnType.NONE;
+			}else{
+				App.me.noConnection=true;
 			}
 		} catch (Exception e) {
 		}
@@ -287,8 +290,7 @@ public class App extends Application {
 	}
 	
 	public static enum ApnType {
-		WIFI("wifi"), HSDPA("hsdpa"), NET("net"), WAP("wap"), CTWAP("ctwap"), NONE(
-				"none"), ;
+		WIFI("wifi"), HSDPA("hsdpa"), NET("net"), WAP("wap"), CTWAP("ctwap"), ;
 
 		private String tag;
 
