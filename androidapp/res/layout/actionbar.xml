@@ -10,10 +10,10 @@
 
 	<com.fanfou.app.ui.widget.ScrollingTextView
 		android:id="@id/actionbar_title" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:layout_centerInParent="true"
+		android:layout_height="wrap_content" android:layout_toRightOf="@id/actionbar_left"
 		android:paddingLeft="4dp" android:paddingRight="4dp"
 		android:textColor="@color/solid_white" android:layout_centerVertical="true"
-		android:textSize="@dimen/text_size_large" />
+		android:textSize="@dimen/text_size_medium" />
 
 	<ImageView android:id="@id/actionbar_refresh"
 		android:layout_centerVertical="true" android:layout_width="wrap_content"

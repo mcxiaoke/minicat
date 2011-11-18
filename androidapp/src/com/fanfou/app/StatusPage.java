@@ -179,6 +179,8 @@ public class StatusPage extends BaseActivity {
 
 	private void updateUI() {
 		if (status != null) {
+			
+			mActionBar.setTitle(status.userScreenName);
 
 			boolean textMode = OptionHelper.readBoolean(this,
 					R.string.option_text_mode, false);

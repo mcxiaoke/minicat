@@ -53,7 +53,7 @@
 			<LinearLayout android:id="@id/user_statuses_view" style="@style/Profile.Item">
 
 				<TextView android:id="@id/user_statuses_title" style="@style/Text.Large"
-					android:layout_alignParentLeft="true" android:text="我的消息" />
+					android:layout_alignParentLeft="true" />
 
 				<View android:layout_width="wrap_content"
 					android:layout_height="0dp" android:layout_weight="1" />
@@ -65,8 +65,7 @@
 			<LinearLayout android:id="@id/user_favorites_view"
 				style="@style/Profile.Item">
 
-				<TextView android:id="@id/user_favorites_title" style="@style/Text.Large"
-					android:text="我的收藏" />
+				<TextView android:id="@id/user_favorites_title" style="@style/Text.Large" />
 
 				<View android:layout_width="wrap_content"
 					android:layout_height="0dp" android:layout_weight="1" />
@@ -76,8 +75,7 @@
 
 			<LinearLayout android:id="@id/user_friends_view" style="@style/Profile.Item">
 
-				<TextView android:id="@id/user_friends_title" style="@style/Text.Large"
-					android:text="我关注的人" />
+				<TextView android:id="@id/user_friends_title" style="@style/Text.Large" />
 
 				<View android:layout_width="wrap_content"
 					android:layout_height="0dp" android:layout_weight="1" />
@@ -89,7 +87,7 @@
 				style="@style/Profile.Item">
 
 				<TextView android:id="@id/user_followers_title" style="@style/Text.Large"
-					android:text="关注我的人" />
+					android:text="关注 " />
 
 				<View android:layout_width="wrap_content"
 					android:layout_height="0dp" android:layout_weight="1" />
@@ -100,7 +98,7 @@
 			<TextView android:id="@id/user_description" style="@style/Text.Medium"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:layout_margin="8dp" android:background="@drawable/text_white_bg"
-				android:padding="6dp" />
+				android:padding="6dp" android:autoLink="web"/>
 
 			<TextView android:id="@id/user_extrainfo" style="@style/Text.Medium"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"

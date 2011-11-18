@@ -2,10 +2,10 @@ package com.fanfou.app.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.FormattableFlags;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
-
 import android.util.Log;
 
 import com.fanfou.app.App;
@@ -26,11 +26,10 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.0 2011.11.07
  * @version 2.1 2011.11.09
  * @version 2.2 2011.11.11
+ * @version 3.0 2011.11.18
  * 
  */
 public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
-	// oauth is on or off
-	private static final boolean OAUTH_ON = true;
 	private static final String TAG = FanFouApi.class.getSimpleName();
 
 	/**
@@ -52,11 +51,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	 */
 	private Response fetch(ConnectionRequest request) throws ApiException {
 		try {
-			// long startTime = System.currentTimeMillis();
 			HttpResponse response = ConnectionManager.execWithOAuth(request);
-			// if(App.DEBUG){
-			// long reqTime = System.currentTimeMillis() - startTime;
-			// Utils.logTime("fetch", reqTime);}
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == HTTP_OK) {
 				return new Response(response);
@@ -79,16 +74,14 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<User> fetchUsers(String url, String userId) throws ApiException {
+	List<User> fetchUsers(String url, String userId,String mode) throws ApiException {
 		Response response = fetch(new ConnectionRequest.Builder().url(url)
-				.id(userId).build());
+				.id(userId).mode(mode).build());
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("fetchUsers()---url=" + url + " userid=" + userId);
 			log("fetchStatuses()---statusCode=" + statusCode);
 		}
-
-		// handlerResponseError(response);
 		return User.parseUsers(response);
 
 	}
@@ -114,34 +107,21 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	 * @throws ApiException
 	 */
 	List<Status> fetchStatuses(String url, int count, int page, String userId,
-			String sinceId, String maxId, boolean isHtml, int type)
+			String sinceId, String maxId, String format, String mode, int type)
 			throws ApiException {
 		if (App.DEBUG) {
 			log("fetchStatuses()---url=" + url + " count=" + count + " page="
 					+ page + " userid=" + userId + " sinceId=" + sinceId
-					+ " maxid=" + maxId);
+					+ " maxid=" + maxId+" mode="+mode+" format="+format);
 		}
 		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(url).count(count).page(page).id(userId).sinceId(sinceId)
-				.maxId(maxId).param("mode", "noprofile");
-
-		// count<=0,count>60时返回60条
-		// count>=0&&count<=60时返回count条
-		// int c=count;
-		// if(c<1||c>ApiConfig.MAX_COUNT){
-		// c=ApiConfig.MAX_COUNT;
-		// }
-		// builder.count(c);
-
-		if (isHtml) {
-			builder.param("format", "html");
-		}
+				.maxId(maxId).format(format).mode(mode);
 		Response response = fetch(builder.build());
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("fetchStatuses()---statusCode=" + statusCode);
 		}
-
 		return Status.parseStatuses(response, type);
 
 	}
@@ -156,10 +136,10 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	 * @return string for id
 	 * @throws ApiException
 	 */
-	private Response doGetIdAction(String url, String id) throws ApiException {
+	private Response doGetIdAction(String url, String id, String format,String mode) throws ApiException {
 		if (App.DEBUG)
 			log("doGetIdAction() ---url=" + url + " id=" + id);
-		return doSingleIdAction(url, id, false);
+		return doSingleIdAction(url, id, format,mode,false);
 	}
 
 	/**
@@ -170,13 +150,13 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	 * @return
 	 * @throws ApiException
 	 */
-	private Response doPostIdAction(String url, String id) throws ApiException {
+	private Response doPostIdAction(String url, String id,String format,String mode) throws ApiException {
 		if (StringHelper.isEmpty(id)) {
 			throw new IllegalArgumentException("POST请求ID参数不能为空");
 		}
 		if (App.DEBUG)
 			log("doPostIdAction() ---url=" + url + " id=" + id);
-		return doSingleIdAction(url, id, true);
+		return doSingleIdAction(url, id, format, mode,true);
 	}
 
 	/**
@@ -188,57 +168,57 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	 * @return
 	 * @throws ApiException
 	 */
-	private Response doSingleIdAction(String url, String id, boolean isPost)
+	private Response doSingleIdAction(String url, String id, String format, String mode,boolean isPost)
 			throws ApiException {
 		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
-		builder.url(url).id(id).post(isPost).param("mode", "noprofile");
+		builder.url(url).id(id).post(isPost).format(format).mode(mode);
 		return fetch(builder.build());
 	}
 
 	@Override
-	public User verifyAccount() throws ApiException {
+	public User verifyAccount(String mode) throws ApiException {
 		Response response = fetch(new ConnectionRequest.Builder().url(
-				URL_VERIFY_CREDENTIALS).param("mode", "noprofile").build());
+				URL_VERIFY_CREDENTIALS).mode(mode).build());
 		return User.parse(response);
 	}
 
 	@Override
-	public List<Status> pubicTimeline(int count, boolean isHtml)
+	public List<Status> pubicTimeline(int count, String format, String mode)
 			throws ApiException {
 		List<Status> ss = fetchStatuses(URL_TIMELINE_PUBLIC, count, 0, null,
-				null, null, isHtml, Status.TYPE_PUBLIC);
+				null, null, format,mode, Status.TYPE_PUBLIC);
 		return ss;
 	}
 
 	@Override
 	public List<Status> homeTimeline(int count, int page, String sinceId,
-			String maxId, boolean isHtml) throws ApiException {
-		List<Status> ss = fetchStatuses(URL_TIMELINE_FRIENDS, count, page,
-				null, sinceId, maxId, isHtml, Status.TYPE_HOME);
+			String maxId, String format, String mode) throws ApiException {
+		List<Status> ss = fetchStatuses(URL_TIMELINE_HOME, count, page,
+				null, sinceId, maxId, format,mode, Status.TYPE_HOME);
 		return ss;
 	}
 
 	@Override
 	public List<Status> userTimeline(int count, int page, String userId,
-			String sinceId, String maxId, boolean isHtml) throws ApiException {
+			String sinceId, String maxId, String format, String mode) throws ApiException {
 		List<Status> ss = fetchStatuses(URL_TIMELINE_USER, count, page, userId,
-				sinceId, maxId, isHtml, Status.TYPE_USER);
+				sinceId, maxId, format,mode, Status.TYPE_USER);
 		return ss;
 	}
 
 	@Override
 	public List<Status> mentions(int count, int page, String sinceId,
-			String maxId, boolean isHtml) throws ApiException {
+			String maxId, String format, String mode) throws ApiException {
 		List<Status> ss = fetchStatuses(URL_TIMELINE_MENTIONS, count, page,
-				null, sinceId, maxId, isHtml, Status.TYPE_MENTION);
+				null, sinceId, maxId, format,mode, Status.TYPE_MENTION);
 		return ss;
 	}
 
 	@Override
-	public List<Status> contextTimeline(String id, boolean isHtml)
+	public List<Status> contextTimeline(String id, String format, String mode)
 			throws ApiException {
 		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
-		builder.url(URL_TIMELINE_CONTEXT).id(id).format(isHtml);
+		builder.url(URL_TIMELINE_CONTEXT).id(id).format("html").mode("lite");
 		Response response = fetch(builder.build());
 		List<Status> ss = Status.parseStatuses(response, Status.TYPE_CONTEXT);
 		return ss;
@@ -246,17 +226,16 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 
 	@Override
 	public List<Status> replies(int count, int page, String userId,
-			String sinceId, String maxId, boolean isHtml) throws ApiException {
+			String sinceId, String maxId, String format, String mode) throws ApiException {
 		List<Status> ss = fetchStatuses(URL_TIMELINE_REPLIES, count, page,
-				userId, sinceId, maxId, isHtml, Status.TYPE_MENTION);
+				userId, sinceId, maxId, format,mode, Status.TYPE_MENTION);
 		return ss;
 	}
 
 	@Override
-	public List<Status> favorites(int count, int page, String userId,
-			boolean isHtml) throws ApiException {
+	public List<Status> favorites(int count, int page, String userId, String format, String mode) throws ApiException {
 		List<Status> ss = fetchStatuses(URL_FAVORITES, count, page, userId,
-				null, null, isHtml, Status.TYPE_FAVORITES);
+				null, null, format,mode, Status.TYPE_FAVORITES);
 
 		if (userId != null && ss != null) {
 			for (Status status : ss) {
@@ -267,8 +246,8 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public Status statusFavorite(String statusId) throws ApiException {
-		Response response = doPostIdAction(URL_FAVORITES_CREATE, statusId);
+	public Status statusFavorite(String statusId, String format, String mode) throws ApiException {
+		Response response = doPostIdAction(URL_FAVORITES_CREATE, statusId,format,mode);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("statusFavorite()---statusCode=" + statusCode);
@@ -278,8 +257,8 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public Status statusUnfavorite(String statusId) throws ApiException {
-		Response response = doPostIdAction(URL_FAVORITES_DESTROY, statusId);
+	public Status statusUnfavorite(String statusId, String format, String mode) throws ApiException {
+		Response response = doPostIdAction(URL_FAVORITES_DESTROY, statusId,format,mode);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("statusUnfavorite()---statusCode=" + statusCode);
@@ -290,13 +269,13 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public Status statusShow(String statusId) throws ApiException {
+	public Status statusShow(String statusId, String format, String mode) throws ApiException {
 		if (StringHelper.isEmpty(statusId)) {
 			throw new IllegalArgumentException("消息ID不能为空");
 		}
 		if (App.DEBUG)
 			log("statusShow()---statusId=" + statusId);
-		Response response = doGetIdAction(URL_STATUS_SHOW, statusId);
+		Response response = doGetIdAction(URL_STATUS_SHOW, statusId,format,mode);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("statusShow()---statusCode=" + statusCode);
@@ -310,7 +289,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 
 	@Override
 	public Status statusUpdate(String status, String inReplyToStatusId,
-			String source, String location, String repostStatusId)
+			String source, String location, String repostStatusId, String format, String mode)
 			throws ApiException {
 		if (StringHelper.isEmpty(status)) {
 			if (App.DEBUG)
@@ -340,8 +319,8 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public Status statusDelete(String statusId) throws ApiException {
-		Response response = doPostIdAction(URL_STATUS_DESTROY, statusId);
+	public Status statusDelete(String statusId, String format, String mode) throws ApiException {
+		Response response = doPostIdAction(URL_STATUS_DESTROY, statusId,format,mode);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("statusDelete()---statusCode=" + statusCode);
@@ -351,7 +330,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 
 	@Override
 	public Status photoUpload(File photo, String status, String source,
-			String location) throws ApiException {
+			String location, String format, String mode) throws ApiException {
 		if (photo == null) {
 			if (App.DEBUG)
 				throw new IllegalArgumentException("文件不能为空");
@@ -377,7 +356,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public List<Status> search(String keyword, String maxId, boolean isHtml)
+	public List<Status> search(String keyword, String maxId, String format, String mode)
 			throws ApiException {
 		if (StringHelper.isEmpty(keyword)) {
 			if (App.DEBUG)
@@ -389,7 +368,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		builder.url(URL_SEARCH_PUBLIC);
 		builder.param("q", keyword);
 		builder.param("max_id", maxId);
-		builder.param("format", "html");
+		builder.format("html").mode("lite");
 		Response response = fetch(builder.build());
 
 		int statusCode = response.statusCode;
@@ -490,7 +469,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public List<User> usersFriends(String userId, int count, int page) throws ApiException {
+	public List<User> usersFriends(String userId, int count, int page,String mode) throws ApiException {
 		List<User> users = fetchUsers(URL_USERS_FRIENDS, userId, count,page);
 		if (users != null && users.size() > 0) {
 			for (User user : users) {
@@ -502,7 +481,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public List<User> usersFollowers(String userId, int count, int page)
+	public List<User> usersFollowers(String userId, int count, int page,String mode)
 			throws ApiException {
 		List<User> users = fetchUsers(URL_USERS_FOLLOWERS, userId, count,page);
 		if (users != null && users.size() > 0) {
@@ -515,8 +494,8 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public User userShow(String userId) throws ApiException {
-		Response response = doGetIdAction(URL_USER_SHOW, userId);
+	public User userShow(String userId,String mode) throws ApiException {
+		Response response = doGetIdAction(URL_USER_SHOW, userId,null,mode);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("userShow()---statusCode=" + statusCode);
@@ -532,8 +511,8 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public User userFollow(String userId) throws ApiException {
-		Response response = doPostIdAction(URL_FRIENDSHIPS_CREATE, userId);
+	public User userFollow(String userId,String mode) throws ApiException {
+		Response response = doPostIdAction(URL_FRIENDSHIPS_CREATE, userId,null,mode);
 
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
@@ -550,8 +529,8 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public User userUnfollow(String userId) throws ApiException {
-		Response response = doPostIdAction(URL_FRIENDSHIPS_DESTROY, userId);
+	public User userUnfollow(String userId,String mode) throws ApiException {
+		Response response = doPostIdAction(URL_FRIENDSHIPS_DESTROY, userId,null,mode);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("userUnfollow()---statusCode=" + statusCode);
@@ -567,8 +546,8 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public User userBlock(String userId) throws ApiException {
-		Response response = doPostIdAction(URL_BLOCKS_CREATE, userId);
+	public User userBlock(String userId,String mode) throws ApiException {
+		Response response = doPostIdAction(URL_BLOCKS_CREATE, userId,null,mode);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("userBlock()---statusCode=" + statusCode);
@@ -583,8 +562,8 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public User userUnblock(String userId) throws ApiException {
-		Response response = doPostIdAction(URL_BLOCKS_DESTROY, userId);
+	public User userUnblock(String userId,String mode) throws ApiException {
+		Response response = doPostIdAction(URL_BLOCKS_DESTROY, userId,null,mode);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("userUnblock()---statusCode=" + statusCode);
@@ -653,9 +632,9 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	private List<DirectMessage> messages(String url, int count, int page,
-			String sinceId, String maxId) throws ApiException {
+			String sinceId, String maxId,String mode) throws ApiException {
 		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
-		builder.url(url).count(count).page(page).maxId(maxId).sinceId(sinceId).param("mode", "noprofile");
+		builder.url(url).count(count).page(page).maxId(maxId).sinceId(sinceId).mode(mode);
 
 		// count<=0,count>60时返回60条
 		// count>=0&&count<=60时返回count条
@@ -675,9 +654,9 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 
 	@Override
 	public List<DirectMessage> messagesInbox(int count, int page,
-			String sinceId, String maxId) throws ApiException {
+			String sinceId, String maxId,String mode) throws ApiException {
 		List<DirectMessage> dms = messages(URL_DIRECT_MESSAGES_INBOX, count,
-				page, sinceId, maxId);
+				page, sinceId, maxId,mode);
 		if (dms != null && dms.size() > 0) {
 			for (DirectMessage dm : dms) {
 				dm.type = DirectMessage.TYPE_IN;
@@ -690,9 +669,9 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 
 	@Override
 	public List<DirectMessage> messagesOutbox(int count, int page,
-			String sinceId, String maxId) throws ApiException {
+			String sinceId, String maxId,String mode) throws ApiException {
 		List<DirectMessage> dms = messages(URL_DIRECT_MESSAGES_OUTBOX, count,
-				page, sinceId, maxId);
+				page, sinceId, maxId,mode);
 		if (dms != null && dms.size() > 0) {
 			for (DirectMessage dm : dms) {
 				dm.type = DirectMessage.TYPE_OUT;
@@ -705,7 +684,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 
 	@Override
 	public DirectMessage messageCreate(String userId, String text,
-			String inReplyToId) throws ApiException {
+			String inReplyToId,String mode) throws ApiException {
 		if (StringHelper.isEmpty(userId) || StringHelper.isEmpty(text)) {
 			if (App.DEBUG)
 				throw new IllegalArgumentException("收信人ID和私信内容都不能为空");
@@ -735,10 +714,10 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public DirectMessage messageDelete(String directMessageId)
+	public DirectMessage messageDelete(String directMessageId,String mode)
 			throws ApiException {
 		Response response = doPostIdAction(URL_DIRECT_MESSAGES_DESTROY,
-				directMessageId);
+				directMessageId,null,mode);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("messageDelete()---statusCode=" + statusCode);
@@ -749,38 +728,10 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public User notificationsOn(String userId) throws ApiException {
-		Response response = doPostIdAction(URL_NOTIFICATIONS_OPEN, userId);
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("notificationsOn()---statusCode=" + statusCode);
-		}
-
-		// handlerResponseError(response);
-		return User.parse(response);
-	}
-
-	@Override
-	public User notificationsOff(String userId) throws ApiException {
-		Response response = doPostIdAction(URL_NOTIFICATIONS_CLOSE, userId);
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("notificationsOff()---statusCode=" + statusCode);
-		}
-
-		// handlerResponseError(response);
-		return User.parse(response);
-	}
-
-	@Override
-	public void test() throws ApiException {
-	}
-
-	@Override
 	public List<Status> photosTimeline(int count, int page, String userId,
-			String sinceId, String maxId, boolean isHtml) throws ApiException {
+			String sinceId, String maxId, String format,String mode) throws ApiException {
 		List<Status> ss = fetchStatuses(URL_PHOTO_USER_TIMELINE, count, page,
-				userId, sinceId, maxId, isHtml, Status.TYPE_USER);
+				userId, sinceId, maxId, format,mode, Status.TYPE_USER);
 		if (App.DEBUG) {
 			log("photosTimeline()");
 		}
@@ -789,7 +740,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 
 	@Override
 	public User updateProfile(String description, String name, String location,
-			String url) throws ApiException {
+			String url,String mode) throws ApiException {
 		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(URL_ACCOUNT_UPDATE_PROFILE).post();
 		builder.param("description", description);
@@ -805,7 +756,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public User updateProfileImage(File image) throws ApiException {
+	public User updateProfileImage(File image,String mode) throws ApiException {
 		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(URL_ACCOUNT_UPDATE_PROFILE_IMAGE).post();
 		builder.param("image", image);
@@ -818,8 +769,8 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public User isBlocked(String userId) throws ApiException {
-		Response response = doPostIdAction(URL_BLOCKS_EXISTS, userId);
+	public User isBlocked(String userId,String mode) throws ApiException {
+		Response response = doPostIdAction(URL_BLOCKS_EXISTS, userId,null,mode);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("userIsBlocked()---statusCode=" + statusCode);
@@ -828,7 +779,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public List<User> userBlockedList(int count, int page) throws ApiException {
+	public List<User> userBlockedList(int count, int page,String mode) throws ApiException {
 		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(URL_BLOCKS_USERS);
 		builder.count(count).page(page);

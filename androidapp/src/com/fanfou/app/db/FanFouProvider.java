@@ -1022,5 +1022,29 @@ public class FanFouProvider extends ContentProvider {
 		return result;
 
 	}
+	
+	public static Uri buildUriWithUserId(String userId){
+		Uri uri=Uri.parse(UserInfo.CONTENT_URI + "/id/" + userId);
+		if(App.DEBUG){
+			Log.d(TAG, "buildUriWithUserId uri="+uri);
+		}
+		return uri;
+	}
+	
+	public static Uri buildUriWithStatusId(String statusId){
+		Uri uri=Uri.parse(StatusInfo.CONTENT_URI + "/id/" + statusId);
+		if(App.DEBUG){
+			Log.d(TAG, "buildUriWithStatusId uri="+uri);
+		}
+		return uri;
+	}
+	
+	public static Uri buildUriWithDirectMessageId(String msgId){
+		Uri uri=Uri.parse(DirectMessageInfo.CONTENT_URI + "/id/" + msgId);
+		if(App.DEBUG){
+			Log.d(TAG, "buildUriWithDirectMessageId uri="+uri);
+		}
+		return uri;
+	}
 
 }

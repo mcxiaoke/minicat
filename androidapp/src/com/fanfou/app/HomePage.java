@@ -700,6 +700,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			setBusy(false);
 			switch (resultCode) {
 			case Commons.RESULT_CODE_FINISH:
+				int type=resultData.getInt(Commons.EXTRA_TYPE,Status.TYPE_HOME);
 				int count = resultData.getInt(Commons.EXTRA_COUNT);
 				if (doGetMore) {
 					if (i < NUMS_OF_PAGE - 1) {
@@ -713,7 +714,11 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 						views[i].addFooter();
 					}
 					if (count > 0) {
-						Utils.notify(mContext, count + "条新消息");
+						if(type==DirectMessage.TYPE_ALL){
+							Utils.notify(mContext, count + "条新私信");
+						}else{
+							Utils.notify(mContext, count + "条新消息");
+						}
 						if (soundEffect) {
 							SoundManager.playSound(1, 0);
 						}

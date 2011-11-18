@@ -58,6 +58,7 @@ import com.fanfou.app.util.Utils;
  * @version 3.4 2011.11.07
  * @version 4.0 2011.11.08
  * @version 4.1 2011.11.15
+ * @version 4.2 2011.11.18
  * 
  */
 public class WritePage extends BaseActivity {
@@ -333,7 +334,7 @@ public class WritePage extends BaseActivity {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				content = s.toString();
+				content = s.toString().trim();
 				wordsCount = content.length();
 				showCount(wordsCount);
 			}

@@ -18,6 +18,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.fanfou.app.adapter.SearchResultsAdapter;
 import com.fanfou.app.api.ApiException;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.UIManager;
@@ -232,7 +233,7 @@ public class SearchResultsPage extends BaseActivity implements
 			}
 			List<com.fanfou.app.api.Status> result = null;
 			try {
-				result = App.me.api.search(keyword, maxId, true);
+				result = App.me.api.search(keyword, maxId, FanFouApiConfig.FORMAT_HTML,FanFouApiConfig.MODE_LITE);
 			} catch (ApiException e) {
 				if (App.DEBUG)
 					e.printStackTrace();

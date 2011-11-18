@@ -32,7 +32,7 @@
 			android:layout_height="wrap_content">
 
 			<TextView android:id="@id/status_text" style="@style/Text.Content"
-				android:layout_alignParentTop="true" />
+				android:layout_alignParentTop="true" android:textColorLink="@color/profile_relation_blue"/>
 
 			<RelativeLayout android:id="@id/status_info"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"

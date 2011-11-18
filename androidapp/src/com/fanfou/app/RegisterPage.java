@@ -41,6 +41,7 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * @version 1.1 2011.10.17
  * @version 1.2 2011.10.25
  * @version 1.3 2011.10.26
+ * @version 1.4 2011.11.18
  * 
  */
 public class RegisterPage extends Activity implements OnClickListener {
@@ -279,8 +280,8 @@ public class RegisterPage extends Activity implements OnClickListener {
 			if (g != null) {
 				g.dispatch();
 			}
-			final String message = "你的临时ID是[" + u.id + "]，你的昵称是["
-					+ u.screenName + "]，请访问饭否网站修改个人网址，完善你的个人介绍，点击确定直接登录";
+			final String message = "你的昵称是["
+					+ u.screenName + "]，请稍后通过MENU菜单进入个人空间完善你的个人资料，点击确定直接登录";
 			final AlertInfoDialog dialog = new AlertInfoDialog(mContext,
 					"注册成功", message);
 			dialog.setOnClickListener(new AlertInfoDialog.OnOKClickListener() {
@@ -312,9 +313,12 @@ public class RegisterPage extends Activity implements OnClickListener {
 			params.add(new Parameter("follow_pushed", String
 					.valueOf(cFollowPushed.isChecked())));
 
-			for (Parameter parameter : params) {
-				Log.d("RegisterTask", parameter.toString());
+			if (App.DEBUG) {
+				for (Parameter parameter : params) {
+					Log.d("RegisterTask", parameter.toString());
+				}
 			}
+
 			// HttpClient client = NetworkHelper.newHttpClient();
 			// HttpPost request = new HttpPost(ApiConfig.URL_REGISTER);
 			// request.setEntity(ConnectionRequest.encodeForPost(params));

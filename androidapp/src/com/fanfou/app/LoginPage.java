@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.fanfou.app.api.ApiException;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.ResultInfo;
 import com.fanfou.app.api.User;
 import com.fanfou.app.auth.OAuth;
@@ -268,7 +269,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 
 					App.me.oauthAccessToken = token.getToken();
 					App.me.oauthAccessTokenSecret = token.getTokenSecret();
-					User u = App.me.api.verifyAccount();
+					User u = App.me.api.verifyAccount(FanFouApiConfig.MODE_LITE);
 
 					if (isCancelled) {
 						if (App.DEBUG) {

@@ -32,6 +32,7 @@ import com.fanfou.app.util.Utils;
  * @version 3.0 2011.10.21
  * @version 3.1 2011.10.24
  * @version 3.2 2011.10.29
+ * @version 3.3 2011.11.18
  * 
  */
 public abstract class BaseTimelineActivity extends BaseActivity implements
@@ -119,7 +120,7 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 		mActionBar.setTitleClickListener(this);
 		mActionBar.setRightAction(this);
 		if (user != null) {
-			mActionBar.setTitle(getPageTitle());
+			mActionBar.setTitle(user.screenName+"的"+getPageTitle());
 		}
 	}
 
@@ -165,7 +166,6 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 	protected void updateUI() {
 		if (mCursor != null) {
 			mCursor.requery();
-			mListView.setSelection(1);
 		}
 	}
 
@@ -221,14 +221,8 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 				if (!isInitialized) {
 					showContent();
 				}
-
 				if (doGetMore) {
-					int count = resultData.getInt(Commons.EXTRA_COUNT);
-					if (count < 20) {
-						mListView.onNoLoadMore();
-					} else {
-						mListView.onLoadMoreComplete();
-					}
+					mListView.onLoadMoreComplete();
 				} else {
 					mListView.onRefreshComplete();
 				}
@@ -239,14 +233,11 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 				Utils.notify(mContext, msg);
 				if (!isInitialized) {
 					showContent();
-					mListView.onNoLoadMore();
-					mListView.onNoRefresh();
+				}
+				if (doGetMore) {
+					mListView.onLoadMoreComplete();
 				} else {
-					if (doGetMore) {
-						mListView.onLoadMoreComplete();
-					} else {
-						mListView.onRefreshComplete();
-					}
+					mListView.onRefreshComplete();
 				}
 				break;
 			default:

@@ -42,7 +42,7 @@ public class UserTimelinePage extends BaseTimelineActivity {
 
 	@Override
 	protected String getPageTitle() {
-		return "我的消息";
+		return "消息";
 	}
 
 	protected int getType() {

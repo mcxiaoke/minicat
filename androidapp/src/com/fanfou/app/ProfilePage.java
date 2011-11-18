@@ -41,6 +41,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.4 2011.10.29
  * @version 1.5 2011.11.11
  * @version 1.6 2011.11.16
+ * @version 1.7 2011.11.18
  * 
  */
 public class ProfilePage extends BaseActivity {
@@ -65,13 +66,21 @@ public class ProfilePage extends BaseActivity {
 	private TextView mDescription;
 
 	private ViewGroup mStatusesView;
+	private TextView mStatusesTitle;
 	private TextView mStatusesInfo;
+
 	private ViewGroup mFavoritesView;
+	private TextView mFavoritesTitle;
 	private TextView mFavoritesInfo;
+
 	private ViewGroup mFriendsView;
+	private TextView mFriendsTitle;
 	private TextView mFriendsInfo;
+
 	private ViewGroup mFollowersView;
+	private TextView mFollowersTitle;
 	private TextView mFollowersInfo;
+
 	private TextView mExtraInfo;
 
 	private String userId;
@@ -158,12 +167,19 @@ public class ProfilePage extends BaseActivity {
 		mFollowAction = (ImageView) findViewById(R.id.user_action_follow);
 
 		mStatusesView = (ViewGroup) findViewById(R.id.user_statuses_view);
+		mStatusesTitle = (TextView) findViewById(R.id.user_statuses_title);
 		mStatusesInfo = (TextView) findViewById(R.id.user_statuses);
+
 		mFavoritesView = (ViewGroup) findViewById(R.id.user_favorites_view);
+		mFavoritesTitle = (TextView) findViewById(R.id.user_favorites_title);
 		mFavoritesInfo = (TextView) findViewById(R.id.user_favorites);
+
 		mFriendsView = (ViewGroup) findViewById(R.id.user_friends_view);
+		mFriendsTitle = (TextView) findViewById(R.id.user_friends_title);
 		mFriendsInfo = (TextView) findViewById(R.id.user_friends);
+
 		mFollowersView = (ViewGroup) findViewById(R.id.user_followers_view);
+		mFollowersTitle = (TextView) findViewById(R.id.user_followers_title);
 		mFollowersInfo = (TextView) findViewById(R.id.user_followers);
 
 		mStatusesView.setOnClickListener(this);
@@ -183,7 +199,7 @@ public class ProfilePage extends BaseActivity {
 	 */
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setTitle("我的空间");
+		mActionBar.setTitle("个人空间");
 		mActionBar.setRightAction(new WriteAction());
 	}
 
@@ -237,6 +253,22 @@ public class ProfilePage extends BaseActivity {
 		}
 
 		mName.setText(user.screenName);
+
+		String prefix;
+
+		if (user.gender.equals("男")) {
+			prefix = "他";
+		} else if (user.gender.equals("女")) {
+			prefix = "她";
+		} else {
+			prefix = "TA";
+		}
+
+		mActionBar.setTitle(user.screenName);
+		mStatusesTitle.setText(prefix + "的消息");
+		mFavoritesTitle.setText(prefix + "的收藏");
+		mFriendsTitle.setText(prefix + "关注的人");
+		mFollowersTitle.setText("关注" + prefix + "的人");
 
 		mStatusesInfo.setText("" + user.statusesCount);
 		mFavoritesInfo.setText("" + user.favouritesCount);

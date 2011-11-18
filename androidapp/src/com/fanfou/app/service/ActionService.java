@@ -13,6 +13,7 @@ import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
@@ -31,6 +32,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 3.1 2011.11.07
  * @version 3.2 2011.11.08
  * @version 3.5 2011.11.10
+ * @version 4.0 2011.11.18
  * 
  */
 public class ActionService extends BaseIntentService {
@@ -95,7 +97,7 @@ public class ActionService extends BaseIntentService {
 			switch (type) {
 			case Commons.ACTION_STATUS_SHOW: {
 				// 404 消息不存在
-				Status s = api.statusShow(id);
+				Status s = api.statusShow(id, FanFouApiConfig.FORMAT_HTML,FanFouApiConfig.MODE_LITE);
 				if (s == null || s.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
@@ -116,7 +118,7 @@ public class ActionService extends BaseIntentService {
 				// 删除消息
 				// 404 说明消息不存在
 				// 403 说明不是你的消息，无权限删除
-				Status s = api.statusDelete(id);
+				Status s = api.statusDelete(id, FanFouApiConfig.FORMAT_HTML,FanFouApiConfig.MODE_LITE);
 				if (s == null || s.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
@@ -133,7 +135,7 @@ public class ActionService extends BaseIntentService {
 			case Commons.ACTION_STATUS_FAVORITE: {
 				// 404 消息不存在
 				// 404 没有通过用户验证
-				Status s = api.statusFavorite(id);
+				Status s = api.statusFavorite(id, FanFouApiConfig.FORMAT_HTML,FanFouApiConfig.MODE_LITE);
 				if (s == null || s.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
@@ -153,7 +155,7 @@ public class ActionService extends BaseIntentService {
 			case Commons.ACTION_STATUS_UNFAVORITE: {
 				// 404 没有这条消息
 				// 404 收藏不存在
-				Status s = api.statusUnfavorite(id);
+				Status s = api.statusUnfavorite(id, FanFouApiConfig.FORMAT_HTML,FanFouApiConfig.MODE_LITE);
 				if (s == null || s.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
@@ -171,7 +173,7 @@ public class ActionService extends BaseIntentService {
 			}
 				break;
 			case Commons.ACTION_USER_SHOW: {
-				User u = api.userShow(id);
+				User u = api.userShow(id,FanFouApiConfig.MODE_LITE);
 				if (u == null || u.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
@@ -189,7 +191,7 @@ public class ActionService extends BaseIntentService {
 				break;
 
 			case Commons.ACTION_USER_FOLLOW: {
-				User u = api.userFollow(id);
+				User u = api.userFollow(id,FanFouApiConfig.MODE_LITE);
 				if (u == null || u.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
@@ -204,7 +206,7 @@ public class ActionService extends BaseIntentService {
 				break;
 			}
 			case Commons.ACTION_USER_UNFOLLOW: {
-				User u = api.userUnfollow(id);
+				User u = api.userUnfollow(id,FanFouApiConfig.MODE_LITE);
 				if (u == null || u.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
@@ -229,7 +231,7 @@ public class ActionService extends BaseIntentService {
 			}
 				break;
 			case Commons.ACTION_USER_BLOCK: {
-				User u = api.userBlock(id);
+				User u = api.userBlock(id,FanFouApiConfig.MODE_LITE);
 				if (u == null || u.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
@@ -243,7 +245,7 @@ public class ActionService extends BaseIntentService {
 			}
 				break;
 			case Commons.ACTION_USER_UNBLOCK: {
-				User u = api.userUnblock(id);
+				User u = api.userUnblock(id,FanFouApiConfig.MODE_LITE);
 				if (u == null || u.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
@@ -258,7 +260,7 @@ public class ActionService extends BaseIntentService {
 				// 删除消息
 				// 404 说明消息不存在
 				// 403 说明不是你的消息，无权限删除
-				DirectMessage dm = api.messageDelete(id);
+				DirectMessage dm = api.messageDelete(id,FanFouApiConfig.MODE_LITE);
 				if (dm == null || dm.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {

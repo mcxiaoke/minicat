@@ -16,6 +16,7 @@ import com.fanfou.app.WritePage;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Draft;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.util.ImageHelper;
@@ -26,6 +27,7 @@ import com.fanfou.app.util.OptionHelper;
  * @version 1.0 2011.10.28
  * @version 1.1 2011.11.02
  * @version 2.0 2011.11.15
+ * @version 3.0 2011.11.18
  * 
  */
 public class TaskQueueService extends BaseIntentService {
@@ -52,12 +54,14 @@ public class TaskQueueService extends BaseIntentService {
 			Api api = App.me.api;
 			Status result = null;
 			if (d.type == WritePage.TYPE_REPLY) {
-				result = api.statusUpdate(d.text, d.replyTo, null, null, null);
+				result = api.statusUpdate(d.text, d.replyTo, null, null, null,
+						FanFouApiConfig.FORMAT_HTML, FanFouApiConfig.MODE_LITE);
 			} else {
 				File srcFile = new File(d.filePath);
 				if (srcFile == null || !srcFile.exists()) {
 					result = api.statusUpdate(d.text, null, null, null,
-							d.replyTo);
+							d.replyTo, FanFouApiConfig.FORMAT_HTML,
+							FanFouApiConfig.MODE_LITE);
 				} else {
 					int quality = OptionHelper.parseInt(this,
 							R.string.option_photo_quality,
@@ -69,7 +73,9 @@ public class TaskQueueService extends BaseIntentService {
 							log("photo file=" + srcFile.getName() + " size="
 									+ photo.length() / 1024 + " quality="
 									+ quality);
-						result = api.photoUpload(photo, d.text, null, null);
+						result = api.photoUpload(photo, d.text, null, null,
+								FanFouApiConfig.FORMAT_HTML,
+								FanFouApiConfig.MODE_LITE);
 					}
 					photo.delete();
 				}

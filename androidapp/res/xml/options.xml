@@ -177,6 +177,12 @@
 
 		<Preference android:key="@string/option_feedback"
 			android:summary="通过邮件发送意见和建议" android:title="意见反馈" />
+		
+		<Preference android:key="@string/option_changelog"
+			android:summary="查看客户端更新日志" android:title="更新日志">
+			<intent android:action="android.intent.action.VIEW"
+				android:data="http://apps.fanfou.com/android/changelog.html" />
+		</Preference>
 
 		<Preference android:key="@string/option_website"
 			android:summary="访问饭否网站获取更多信息" android:title="访问网站">

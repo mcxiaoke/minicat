@@ -16,6 +16,7 @@ import com.fanfou.app.WritePage;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Draft;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
@@ -32,6 +33,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.0 2011.10.27
  * @version 2.1 2011.10.28
  * @version 2.2 2011.11.02
+ * @version 3.0 2011.11.18
  * 
  */
 public class PostStatusService extends WakefulIntentService {
@@ -59,7 +61,9 @@ public class PostStatusService extends WakefulIntentService {
 		if (intent == null) {
 			return;
 		}
-		log("intent=" + intent);
+		if(App.DEBUG){
+			log("intent=" + intent);
+		}
 		this.nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		parseIntent(intent);
 		if (doSend()) {
@@ -87,11 +91,13 @@ public class PostStatusService extends WakefulIntentService {
 			Status result = null;
 			if (type == WritePage.TYPE_REPLY) {
 				result = api.statusUpdate(text, relationId, null, location,
-						null);
+						null, FanFouApiConfig.FORMAT_HTML,
+						FanFouApiConfig.MODE_LITE);
 			} else {
 				if (srcFile == null || !srcFile.exists()) {
 					result = api.statusUpdate(text, null, null, location,
-							relationId);
+							relationId, FanFouApiConfig.FORMAT_HTML,
+							FanFouApiConfig.MODE_LITE);
 				} else {
 					int quality = ImageHelper.IMAGE_QUALITY_MEDIUM;
 					if (App.me.apnType == ApnType.WIFI
@@ -111,7 +117,9 @@ public class PostStatusService extends WakefulIntentService {
 							log("photo file=" + srcFile.getName() + " size="
 									+ photo.length() / 1024 + " quality="
 									+ quality);
-						result = api.photoUpload(photo, text, null, location);
+						result = api.photoUpload(photo, text, null, location,
+								FanFouApiConfig.FORMAT_HTML,
+								FanFouApiConfig.MODE_LITE);
 					}
 					photo.delete();
 				}

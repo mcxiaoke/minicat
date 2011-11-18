@@ -10,6 +10,7 @@ package com.fanfou.app.api;
  * @version 1.5 2011.11.07
  * @version 1.6 2011.11.07
  * @version 1.7 2011.11.11
+ * @version 2.0 2011.11.18
  * 
  */
 public interface FanFouApiConfig {
@@ -27,6 +28,9 @@ public interface FanFouApiConfig {
 	public static final int MAX_USERS_COUNT = 100;
 	public static final int DEFAULT_USERS_COUNT = 20;
 	public static final int MAX_IDS_COUNT = 2000;
+	
+	public static final String FORMAT_HTML="html";
+	public static final String MODE_LITE="lite";
 
 	// verify account
 	public static final String URL_VERIFY_CREDENTIALS = API_BASE
@@ -49,7 +53,7 @@ public interface FanFouApiConfig {
 	// param page 1~
 	// param format -- format=html
 	// home timeline
-	public static final String URL_TIMELINE_FRIENDS = API_BASE
+	public static final String URL_TIMELINE_HOME = API_BASE
 			+ "statuses/friends_timeline" + EXTENSION;
 
 	// show home timeline/replies/mentions
@@ -115,7 +119,7 @@ public interface FanFouApiConfig {
 	// show item in saved searches
 	// param id -- keyword id
 	public static final String URL_SEARCH_SAVED_ID = API_BASE
-			+ "saved_searches/show/id" + EXTENSION;
+			+ "saved_searches/show" + EXTENSION;
 
 	// create a saved search
 	// param query -- keyword to save
@@ -126,7 +130,7 @@ public interface FanFouApiConfig {
 	// param id -- saved search item id
 	// POST METHOD
 	public static final String URL_SEARCH_SAVED_DESTROY = API_BASE
-			+ "saved_searches/destroy/id" + EXTENSION;
+			+ "saved_searches/destroy" + EXTENSION;
 
 	// show friends or followers or user profile
 	// param id -- user id,optional
@@ -164,7 +168,7 @@ public interface FanFouApiConfig {
 	// param max_id
 	// param page
 	public static final String URL_DIRECT_MESSAGES_INBOX = API_BASE
-			+ "direct_messages" + EXTENSION;
+			+ "direct_messages/inbox" + EXTENSION;
 	public static final String URL_DIRECT_MESSAGES_OUTBOX = API_BASE
 			+ "direct_messages/sent" + EXTENSION;
 
@@ -186,24 +190,16 @@ public interface FanFouApiConfig {
 	// param id -- userid
 	// param count
 	// param page
-	public static final String URL_FAVORITES = API_BASE + "favorites"
+	public static final String URL_FAVORITES = API_BASE + "favorites/list"
 			+ EXTENSION;
 
 	// favorite or unfavorite a status
 	// param id -- status id
 	// POST METHOD
 	public static final String URL_FAVORITES_CREATE = API_BASE
-			+ "favorites/create/id" + EXTENSION;
+			+ "favorites/create" + EXTENSION;
 	public static final String URL_FAVORITES_DESTROY = API_BASE
-			+ "favorites/destroy/id" + EXTENSION;
-
-	// open or close notifications
-	// param id --userid
-	// POST METHOD
-	public static final String URL_NOTIFICATIONS_OPEN = API_BASE
-			+ "notifications/follow" + EXTENSION;
-	public static final String URL_NOTIFICATIONS_CLOSE = API_BASE
-			+ "notifications/leave" + EXTENSION;
+			+ "favorites/destroy" + EXTENSION;
 
 	// add or remove in blocks
 	// param id --userid
@@ -243,8 +239,5 @@ public interface FanFouApiConfig {
 	// POST METHOD
 	public static final String URL_ACCOUNT_UPDATE_PROFILE_IMAGE = API_BASE
 			+ "account/update_profile_image" + EXTENSION;
-
-	// test api
-	public static final String URL_TEST = API_BASE + "test" + EXTENSION;
 
 }

@@ -8,6 +8,7 @@ import android.util.Log;
 import com.fanfou.app.App;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
+import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 
@@ -16,6 +17,7 @@ import com.fanfou.app.db.Contents.UserInfo;
  * @version 1.0 2011.09.29
  * @version 1.1 2011.10.26
  * @version 1.2 2011.10.28
+ * @version 1.3 2011.11.18
  * 
  */
 public final class CacheManager {
@@ -57,11 +59,11 @@ public final class CacheManager {
 	}
 
 	public static User getUser(Context context, String key) {
-		if (App.DEBUG) {
-			Log.v("CacheManager", "get user from cache : " + key);
-		}
 		User user = sUserCache.get(key);
 		if (user == null) {
+			if (App.DEBUG) {
+				Log.v("CacheManager", "get user from cache : " + key);
+			}
 			user = queryUser(context, key);
 			if (user != null) {
 				if (App.DEBUG) {
@@ -74,12 +76,12 @@ public final class CacheManager {
 	}
 
 	public static Status getStatus(Context context, String key) {
-		if (App.DEBUG) {
-			Log.v("CacheManager", "get status from cache : " + key);
-		}
 		Status status = sStatusCache.get(key);
 
 		if (status == null) {
+			if (App.DEBUG) {
+				Log.v("CacheManager", "get status from cache : " + key);
+			}
 			status = queryStatus(context, key);
 			if (status != null) {
 				if (App.DEBUG) {
@@ -92,8 +94,7 @@ public final class CacheManager {
 	}
 
 	public static User queryUser(Context context, final String id) {
-		final Uri uri = Uri.parse(UserInfo.CONTENT_URI + "/id/" + id);
-		final Cursor cursor = context.getContentResolver().query(uri, null,
+		final Cursor cursor = context.getContentResolver().query(FanFouProvider.buildUriWithUserId(id), null,
 				null, null, null);
 		if (cursor != null && cursor.moveToFirst()) {
 			if (App.DEBUG) {
@@ -105,10 +106,12 @@ public final class CacheManager {
 	}
 
 	public static Status queryStatus(Context context, final String id) {
-		final Uri uri = Uri.parse(StatusInfo.CONTENT_URI + "/id/" + id);
-		final Cursor cursor = context.getContentResolver().query(uri, null,
+		final Cursor cursor = context.getContentResolver().query(FanFouProvider.buildUriWithStatusId(id), null,
 				null, null, null);
 		if (cursor != null && cursor.moveToFirst()) {
+			if (App.DEBUG) {
+				Log.d(TAG, "queryStatus cursor.size=" + cursor.getCount());
+			}
 			return Status.parse(cursor);
 		}
 		return null;

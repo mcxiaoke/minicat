@@ -11,19 +11,19 @@
 
 		<TextView android:id="@id/item_user_name"
 			android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
-			style="@style/Text.NameBig" />
+			style="@style/Text.Name" />
 
 		<TextView android:id="@id/item_user_id" style="@style/Text.MetaBig"
 			android:layout_toRightOf="@id/item_user_name"
 			android:layout_marginRight="10dp" android:layout_alignBottom="@id/item_user_name" />
 
 		<ImageView android:id="@id/item_user_flag" android:src="@drawable/i_mini_locked"
-			android:layout_toRightOf="@id/item_user_id"
-			android:layout_alignBottom="@id/item_user_name" android:layout_width="wrap_content"
+			android:layout_alignParentRight="true"
+			android:layout_alignTop="@id/item_user_name" android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:visibility="gone"
 			android:layout_margin="3dp" />
 
-		<TextView android:id="@id/item_user_date"
+		<TextView android:id="@id/item_user_date" android:layout_below="@id/item_user_name"
 			android:layout_alignParentRight="true" style="@style/Text.Meta" />
 
 		<TextView android:id="@id/item_user_gender" style="@style/Text.MetaBig"

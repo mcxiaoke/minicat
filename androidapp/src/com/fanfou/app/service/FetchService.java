@@ -45,6 +45,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.2 2011.11.10
  * @version 4.3 2011.11.11
  * @version 4.4 2011.11.17
+ * @version 5.0 2011.11.18
  * 
  */
 public class FetchService extends BaseIntentService {
@@ -108,8 +109,7 @@ public class FetchService extends BaseIntentService {
 		int count = bundle.getInt(Commons.EXTRA_COUNT);
 		if (App.DEBUG)
 			log("fetchFriendsOrFollowers ownerId=" + ownerId + " page=" + page);
-		
-		
+
 		if (App.me.apnType == ApnType.WIFI) {
 			count = FanFouApiConfig.MAX_USERS_COUNT;
 		} else {
@@ -120,28 +120,33 @@ public class FetchService extends BaseIntentService {
 		try {
 			List<User> users = null;
 			if (mType == User.TYPE_FRIENDS) {
-				users = api.usersFriends(ownerId, count,page);
+				users = api.usersFriends(ownerId, count, page,
+						FanFouApiConfig.MODE_LITE);
 			} else if (mType == User.TYPE_FOLLOWERS) {
-				users = api.usersFollowers(ownerId, count,page);
+				users = api.usersFollowers(ownerId, count, page,
+						FanFouApiConfig.MODE_LITE);
 			}
 			if (users != null && users.size() > 0) {
-				
+
 				int size = users.size();
 				if (App.DEBUG)
 					log("fetchFriendsOrFollowers size=" + size);
 				ContentResolver cr = getContentResolver();
-				if(page<=1&&ownerId!=null){
-					String where=UserInfo.OWNER_ID+" =? ";
-					String[] whereArgs=new String[]{ownerId};
-					int deletedNums=cr.delete(UserInfo.CONTENT_URI, where, whereArgs);
-					if(App.DEBUG){
-						log("fetchFriendsOrFollowers refresh , delete old rows, num="+deletedNums);
+				if (page <= 1 && ownerId != null) {
+					String where = UserInfo.OWNER_ID + " =? ";
+					String[] whereArgs = new String[] { ownerId };
+					int deletedNums = cr.delete(UserInfo.CONTENT_URI, where,
+							whereArgs);
+					if (App.DEBUG) {
+						log("fetchFriendsOrFollowers refresh , delete old rows, num="
+								+ deletedNums);
 					}
 				}
 				int nums = cr.bulkInsert(UserInfo.CONTENT_URI,
 						Parser.toContentValuesArray(users));
-				if(App.DEBUG){
-					log("fetchFriendsOrFollowers refresh ,insert rows, num="+nums);
+				if (App.DEBUG) {
+					log("fetchFriendsOrFollowers refresh ,insert rows, num="
+							+ nums);
 				}
 				sendCountMessage(nums);
 			} else {
@@ -197,25 +202,29 @@ public class FetchService extends BaseIntentService {
 			String outboxSinceId = Utils.getDmSinceId(oc);
 			List<DirectMessage> messages = new ArrayList<DirectMessage>();
 			List<DirectMessage> in = api.messagesInbox(count, 0, inboxSinceId,
-					null);
+					null, FanFouApiConfig.MODE_LITE);
 			if (in != null && in.size() > 0) {
 				messages.addAll(in);
 			}
 			List<DirectMessage> out = api.messagesOutbox(count, 0,
-					outboxSinceId, null);
+					outboxSinceId, null, FanFouApiConfig.MODE_LITE);
 			if (out != null && out.size() > 0) {
 				messages.addAll(out);
 			}
 			if (messages != null && messages.size() > 0) {
 				ContentResolver cr = getContentResolver();
 				int size = messages.size();
-				log("doFetchMessagesRefresh size()=" + size);
+				if (App.DEBUG) {
+					log("fetchNewDirectMessages size()=" + size);
+				}
 				int nums = cr.bulkInsert(DirectMessageInfo.CONTENT_URI,
 						Parser.toContentValuesArray(messages));
 				sendCountMessage(nums);
 				return nums;
 			} else {
-				log("doFetchMessagesRefresh size()=0");
+				if (App.DEBUG) {
+					log("fetchNewDirectMessages size()=0");
+				}
 				sendCountMessage(0);
 			}
 		} catch (ApiException e) {
@@ -239,25 +248,29 @@ public class FetchService extends BaseIntentService {
 			String outboxMaxid = Utils.getDmMaxId(oc);
 			List<DirectMessage> messages = new ArrayList<DirectMessage>();
 			List<DirectMessage> in = api.messagesInbox(count, 0, null,
-					inboxMaxId);
+					inboxMaxId, FanFouApiConfig.MODE_LITE);
 			if (in != null && in.size() > 0) {
 				messages.addAll(in);
 			}
 			List<DirectMessage> out = api.messagesOutbox(count, 0, null,
-					outboxMaxid);
+					outboxMaxid, FanFouApiConfig.MODE_LITE);
 			if (out != null && out.size() > 0) {
 				messages.addAll(out);
 			}
 			if (messages != null && messages.size() > 0) {
 				ContentResolver cr = getContentResolver();
 				int size = messages.size();
-				log("doFetchMessagesMore size()=" + size);
+				if (App.DEBUG) {
+					log("doFetchMessagesMore size()=" + size);
+				}
 				int nums = cr.bulkInsert(DirectMessageInfo.CONTENT_URI,
 						Parser.toContentValuesArray(messages));
 				sendCountMessage(nums);
 				return nums;
 			} else {
-				log("doFetchMessagesMore size()=0");
+				if (App.DEBUG) {
+					log("doFetchMessagesMore size()=0");
+				}
 				sendCountMessage(0);
 			}
 		} catch (ApiException e) {
@@ -339,36 +352,40 @@ public class FetchService extends BaseIntentService {
 			case Status.TYPE_HOME:
 				if (App.DEBUG)
 					Log.d(TAG, "fetchTimeline TYPE_HOME");
-				statuses = api
-						.homeTimeline(count, page, sinceId, maxId, format);
+				statuses = api.homeTimeline(count, page, sinceId, maxId,
+						FanFouApiConfig.FORMAT_HTML, FanFouApiConfig.MODE_LITE);
 
 				break;
 			case Status.TYPE_MENTION:
 				if (App.DEBUG)
 					Log.d(TAG, "fetchTimeline TYPE_MENTION");
-				statuses = api.mentions(count, page, sinceId, maxId, format);
+				statuses = api.mentions(count, page, sinceId, maxId,
+						FanFouApiConfig.FORMAT_HTML, FanFouApiConfig.MODE_LITE);
 				break;
 			case Status.TYPE_PUBLIC:
 				count = FanFouApiConfig.DEFAULT_TIMELINE_COUNT;
 				if (App.DEBUG)
 					Log.d(TAG, "fetchTimeline TYPE_PUBLIC");
-				statuses = api.pubicTimeline(count, format);
+				statuses = api.pubicTimeline(count,
+						FanFouApiConfig.FORMAT_HTML, FanFouApiConfig.MODE_LITE);
 				break;
 			case Status.TYPE_FAVORITES:
 				if (App.DEBUG)
 					Log.d(TAG, "fetchTimeline TYPE_FAVORITES");
-				statuses = api.favorites(count, page, id, format);
+				statuses = api.favorites(count, page, id,
+						FanFouApiConfig.FORMAT_HTML, FanFouApiConfig.MODE_LITE);
 				break;
 			case Status.TYPE_USER:
 				if (App.DEBUG)
 					Log.d(TAG, "fetchTimeline TYPE_USER");
-				statuses = api.userTimeline(count, page, id, sinceId,
-						maxId, format);
+				statuses = api.userTimeline(count, page, id, sinceId, maxId,
+						FanFouApiConfig.FORMAT_HTML, FanFouApiConfig.MODE_LITE);
 				break;
 			case Status.TYPE_CONTEXT:
 				if (App.DEBUG)
 					Log.d(TAG, "fetchTimeline TYPE_CONTEXT");
-				statuses=api.contextTimeline(id, format);
+				statuses = api.contextTimeline(id, FanFouApiConfig.FORMAT_HTML,
+						FanFouApiConfig.MODE_LITE);
 				break;
 			default:
 				break;

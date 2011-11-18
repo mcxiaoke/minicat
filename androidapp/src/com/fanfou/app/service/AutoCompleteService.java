@@ -18,6 +18,7 @@ import com.fanfou.app.db.Contents.UserInfo;
  * @author mcxiaoke
  * @version 1.0 2011.10.10
  * @version 1.1 2011.11.17
+ * @version 2.0 2011.11.18
  * 
  */
 public class AutoCompleteService extends WakefulIntentService {
@@ -52,7 +53,7 @@ public class AutoCompleteService extends WakefulIntentService {
 			int nums = 0;
 			boolean hasNext = true;
 			for (int page = 1; hasNext; page++) {
-				List<User> result = api.usersFriends(null, count,page);
+				List<User> result = api.usersFriends(null, count,page,FanFouApiConfig.MODE_LITE);
 				if (result != null && result.size() > 0) {
 					int size=result.size();
 					for (User u : result) {

@@ -16,6 +16,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import com.fanfou.app.adapter.ConversationAdapter;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.config.Commons;
@@ -33,6 +34,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.2 2011.10.28
  * @version 1.3 2011.11.07
  * @version 2.0 2011.11.11
+ * @version 3.0 2011.11.18
  * 
  */
 public class ConversationPage extends BaseActivity implements
@@ -160,7 +162,7 @@ public class ConversationPage extends BaseActivity implements
 			String id = mStatus.id;
 			try {
 				if (!StringHelper.isEmpty(id)) {
-					return api.contextTimeline(id, true);
+					return api.contextTimeline(id,FanFouApiConfig.FORMAT_HTML,FanFouApiConfig.MODE_LITE);
 				}
 			} catch (ApiException e) {
 				if (App.DEBUG) {

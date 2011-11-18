@@ -32,6 +32,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.1 2011.11.02
  * @version 1.2 2011.11.03
  * @version 1.3 2011.11.04
+ * @version 2.0 2011.11.18
  * 
  */
 public class NotificationService extends BaseIntentService {
@@ -119,7 +120,7 @@ public class NotificationService extends BaseIntentService {
 	private void handleDm(int count) throws ApiException {
 		Cursor mc = initCursor(DirectMessage.TYPE_IN);
 		List<DirectMessage> dms = App.me.api.messagesInbox(count, DEFAULT_PAGE,
-				Utils.getDmSinceId(mc), null);
+				Utils.getDmSinceId(mc), null, FanFouApiConfig.MODE_LITE);
 		if (dms != null) {
 			int size = dms.size();
 			if (size > 0) {
@@ -147,7 +148,8 @@ public class NotificationService extends BaseIntentService {
 	private void handleMention(int count) throws ApiException {
 		Cursor mc = initCursor(Status.TYPE_MENTION);
 		List<Status> ss = App.me.api.mentions(count, DEFAULT_PAGE,
-				Utils.getSinceId(mc), null, true);
+				Utils.getSinceId(mc), null, FanFouApiConfig.FORMAT_HTML,
+				FanFouApiConfig.MODE_LITE);
 		if (ss != null) {
 			int size = ss.size();
 			if (size > 0) {
@@ -174,7 +176,8 @@ public class NotificationService extends BaseIntentService {
 	private void handleHome(int count) throws ApiException {
 		Cursor mc = initCursor(Status.TYPE_HOME);
 		List<Status> ss = App.me.api.homeTimeline(count, DEFAULT_PAGE,
-				Utils.getSinceId(mc), null, true);
+				Utils.getSinceId(mc), null, FanFouApiConfig.FORMAT_HTML,
+				FanFouApiConfig.MODE_LITE);
 		if (ss != null) {
 			int size = ss.size();
 			if (size > 0) {

@@ -52,6 +52,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.1 2011.10.25
  * @version 1.2 2011.10.26
  * @version 1.3 2011.11.07
+ * @version 1.4 2011.11.18
  * 
  */
 public class SendPage extends BaseActivity {
@@ -134,7 +135,7 @@ public class SendPage extends BaseActivity {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				mContent = s.toString();
+				mContent = s.toString().trim();
 			}
 		});
 

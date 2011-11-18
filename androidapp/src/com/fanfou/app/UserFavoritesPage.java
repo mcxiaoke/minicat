@@ -38,7 +38,7 @@ public class UserFavoritesPage extends BaseTimelineActivity {
 
 	@Override
 	protected String getPageTitle() {
-		return "我的收藏";
+		return "收藏";
 	}
 
 	protected int getType() {

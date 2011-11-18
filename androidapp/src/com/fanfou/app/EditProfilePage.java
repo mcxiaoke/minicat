@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.ResultInfo;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.IImageLoader;
@@ -39,6 +40,7 @@ import android.widget.TextView;
  * @version 1.0 2011.11.07
  * @version 1.5 2011.11.08
  * @version 1.6 2011.11.09
+ * @version 1.7 2011.11.18
  * 
  */
 public class EditProfilePage extends BaseActivity {
@@ -185,8 +187,10 @@ public class EditProfilePage extends BaseActivity {
 		if (App.DEBUG) {
 			log("updateProfileImagePreview() url=" + user.profileImageUrl);
 		}
-		mLoader.set(user.profileImageUrl, mHeadView,R.drawable.default_head);
+		mHeadView.setImageResource(R.drawable.default_head);
 		mHeadView.invalidate();
+		mHeadView.setTag(user.profileImageUrl);
+		mLoader.set(user.profileImageUrl, mHeadView,R.drawable.default_head);
 
 	}
 
@@ -360,7 +364,7 @@ public class EditProfilePage extends BaseActivity {
 			String location = map.get("location");
 			String url = map.get("url");
 			try {
-				User user = api.updateProfile(description, name, location, url);
+				User user = api.updateProfile(description, name, location, url,FanFouApiConfig.MODE_LITE);
 				if (isCancelled) {
 					return new ResultInfo(ResultInfo.CODE_CANCELED, "用户取消");
 				}
@@ -431,7 +435,7 @@ public class EditProfilePage extends BaseActivity {
 				mEditProfilePage.setResult(RESULT_OK, intent);
 				mEditProfilePage.user = user;
 				mEditProfilePage.updateProfileImagePreview();
-				// mContext.finish();
+//				mEditProfilePage.finish();
 			}
 		}
 
@@ -467,7 +471,7 @@ public class EditProfilePage extends BaseActivity {
 			try {
 				File file = ImageHelper.prepareProfileImage(mEditProfilePage,
 						srcFile);
-				User user = api.updateProfileImage(file);
+				User user = api.updateProfileImage(file,FanFouApiConfig.MODE_LITE);
 				if (isCancelled) {
 					return new ResultInfo(ResultInfo.CODE_CANCELED, "用户取消");
 				}

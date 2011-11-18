@@ -38,6 +38,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.6 2011.11.07
  * @version 2.0 2011.11.07
  * @version 2.1 2011.11.09
+ * @version 2.2 2011.11.18
  * 
  */
 public class UserListPage extends BaseActivity implements OnRefreshListener,
@@ -53,7 +54,6 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	protected UserCursorAdapter mCursorAdapter;
 
 	protected Handler mHandler;
-	protected ResultReceiver mResultReceiver;
 
 	protected String userId;
 	protected String userName;
@@ -86,8 +86,6 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 
 	protected void initialize() {
 		mHandler = new ResultHandler();
-		mResultReceiver = new MyResultHandler(mHandler);
-		// clearDB();
 		initCursor();
 	}
 
@@ -154,7 +152,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
-			mCursorAdapter.getFilter().filter(s.toString());
+			mCursorAdapter.getFilter().filter(s.toString().trim());
 		}
 	}
 
@@ -165,9 +163,9 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		if (user != null) {
 			if (type == User.TYPE_FRIENDS) {
-				mActionBar.setTitle("我关注的人");
+				mActionBar.setTitle(user.screenName+"关注的人");
 			} else if (type == User.TYPE_FOLLOWERS) {
-				mActionBar.setTitle("关注我的人");
+				mActionBar.setTitle("关注"+user.screenName+"的人");
 			}
 		}
 	}
@@ -209,7 +207,8 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 		b.putString(Commons.EXTRA_ID, userId);
 		b.putInt(Commons.EXTRA_PAGE, page);
 		b.putInt(Commons.EXTRA_COUNT, FanFouApiConfig.MAX_USERS_COUNT);
-		FetchService.start(this, type, mResultReceiver, b);
+		ResultReceiver receiver=new MyResultHandler(mHandler,isGetMore);
+		FetchService.start(this, type, receiver, b);
 	}
 
 	protected void updateUI() {
@@ -262,6 +261,12 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected class MyResultHandler extends ResultReceiver {
+		private boolean doGetMore;
+		
+		public MyResultHandler(Handler handler,boolean doGetMore) {
+			super(handler);
+			this.doGetMore=doGetMore;
+		}
 
 		@Override
 		protected void onReceiveResult(int resultCode, Bundle resultData) {
@@ -272,12 +277,11 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 				if (!isInitialized) {
 					showContent();
 				}
-				mListView.onRefreshComplete();
 				int count = resultData.getInt(Commons.EXTRA_COUNT);
-				if (count < 100) {
-					mListView.onNoLoadMore();
-				} else {
+				if(doGetMore){
 					mListView.onLoadMoreComplete();
+				}else{
+					mListView.onRefreshComplete();
 				}
 				updateUI();
 				break;
@@ -285,17 +289,13 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 				int code = resultData.getInt(Commons.EXTRA_ERROR_CODE);
 				String msg = resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
 				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
-				// if(code==ResponseCode.HTTP_FORBIDDEN||code==ResponseCode.HTTP_NOT_FOUND){
-				// finish();
-				// return;
-				// }
 				if (!isInitialized) {
 					showContent();
-					mListView.onNoRefresh();
-					mListView.onNoLoadMore();
-				} else {
-					mListView.onRefreshComplete();
+				}
+				if(doGetMore){
 					mListView.onLoadMoreComplete();
+				}else{
+					mListView.onRefreshComplete();
 				}
 				break;
 			default:
@@ -303,9 +303,6 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 			}
 		}
 
-		public MyResultHandler(Handler handler) {
-			super(handler);
-		}
 
 	}
 

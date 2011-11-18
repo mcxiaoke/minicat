@@ -24,6 +24,7 @@ import com.fanfou.app.util.Utils;
  * @author mcxiaoke
  * @version 1.0 2011.11.03
  * @version 1.1 2011.11.04
+ * @version 1.2 2011.11.18
  * 
  */
 public final class ConnectionRequest {
@@ -98,9 +99,16 @@ public final class ConnectionRequest {
 			return this;
 		}
 		
-		public Builder format(boolean isHtml) {
-			if(isHtml){
-				this.params.add(new Parameter("format", "html"));
+		public Builder format(String format) {
+			if(!TextUtils.isEmpty(format)){
+				this.params.add(new Parameter("format",format));
+			}
+			return this;
+		}
+		
+		public Builder mode(String mode){
+			if(!TextUtils.isEmpty(mode)){
+				this.params.add(new Parameter("mode",mode));
 			}
 			return this;
 		}

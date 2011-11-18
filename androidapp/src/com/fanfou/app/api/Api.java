@@ -12,6 +12,7 @@ import java.util.List;
  * @version 1.4 2011.11.07
  * @version 1.5 2011.11.09
  * @version 1.6 2011.11.11
+ * @version 2.0 2011.11.18
  * 
  */
 public interface Api {
@@ -27,7 +28,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	User verifyAccount() throws ApiException;
+	User verifyAccount(String mode) throws ApiException;
 
 	/**
 	 * update user profile
@@ -43,7 +44,7 @@ public interface Api {
 	 * @throws ApiException
 	 */
 	User updateProfile(String description, String name, String location,
-			String url) throws ApiException;
+			String url,String mode) throws ApiException;
 
 	/**
 	 * udpate user profile image
@@ -53,7 +54,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	User updateProfileImage(File image) throws ApiException;
+	User updateProfileImage(File image, String mode) throws ApiException;
 
 	// public timeline
 	// count -- status count
@@ -64,7 +65,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Status> pubicTimeline(int count, boolean isHtml) throws ApiException;
+	List<Status> pubicTimeline(int count, String format,String mode) throws ApiException;
 
 	// friends timeline
 	/**
@@ -79,7 +80,7 @@ public interface Api {
 	 * @throws ApiException
 	 */
 	List<Status> homeTimeline(int count, int page, String sinceId,
-			String maxId, boolean isHtml) throws ApiException;
+			String maxId, String format,String mode) throws ApiException;
 
 	// user timeline
 	/**
@@ -94,7 +95,7 @@ public interface Api {
 	 * @throws ApiException
 	 */
 	List<Status> userTimeline(int count, int page, String userId,
-			String sinceId, String maxId, boolean isHtml) throws ApiException;
+			String sinceId, String maxId, String format,String mode) throws ApiException;
 
 	/**
 	 * user timeline contains photos
@@ -109,7 +110,7 @@ public interface Api {
 	 * @throws ApiException
 	 */
 	List<Status> photosTimeline(int count, int page, String userId,
-			String sinceId, String maxId, boolean isHtml) throws ApiException;
+			String sinceId, String maxId, String format,String mode) throws ApiException;
 
 	// mention timeline
 	/**
@@ -124,7 +125,7 @@ public interface Api {
 	 * @throws ApiException
 	 */
 	List<Status> mentions(int count, int page, String sinceId, String maxId,
-			boolean isHtml) throws ApiException;
+			String format,String mode) throws ApiException;
 
 	// replies timeline
 	/**
@@ -139,7 +140,7 @@ public interface Api {
 	 * @throws ApiException
 	 */
 	List<Status> replies(int count, int page, String userId, String sinceId,
-			String maxId, boolean isHtml) throws ApiException;
+			String maxId, String format,String mode) throws ApiException;
 
 	/**
 	 * favorites
@@ -150,7 +151,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Status> favorites(int count, int page, String userId, boolean isHtml)
+	List<Status> favorites(int count, int page, String userId, String format,String mode)
 			throws ApiException;
 	
 	/**
@@ -160,7 +161,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Status> contextTimeline(String id, boolean isHtml) throws ApiException;
+	List<Status> contextTimeline(String id, String format,String mode) throws ApiException;
 
 	/**
 	 * action: favorite
@@ -169,7 +170,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	Status statusFavorite(String statusId) throws ApiException;
+	Status statusFavorite(String statusId, String format,String mode) throws ApiException;
 
 	/**
 	 * action: unfavorite
@@ -178,7 +179,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	Status statusUnfavorite(String statusId) throws ApiException;
+	Status statusUnfavorite(String statusId, String format,String mode) throws ApiException;
 
 	/**
 	 * show a status details
@@ -187,7 +188,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	Status statusShow(String statusId) throws ApiException;
+	Status statusShow(String statusId,String format, String mode) throws ApiException;
 
 	/**
 	 * update a status
@@ -201,7 +202,7 @@ public interface Api {
 	 * @throws ApiException
 	 */
 	Status statusUpdate(String status, String inReplyToStatusId, String source,
-			String location, String repostStatusId) throws ApiException;
+			String location, String repostStatusId,String format, String mode) throws ApiException;
 
 	/**
 	 * delete a status
@@ -210,7 +211,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	Status statusDelete(String statusId) throws ApiException;
+	Status statusDelete(String statusId, String format,String mode) throws ApiException;
 
 	/**
 	 * upload a photo
@@ -222,7 +223,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	Status photoUpload(File photo, String status, String source, String location)
+	Status photoUpload(File photo, String status, String source, String location,String format, String mode)
 			throws ApiException;
 
 	/**
@@ -233,7 +234,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Status> search(String keyword, String maxId, boolean isHtml)
+	List<Status> search(String keyword, String maxId ,String format, String mode)
 			throws ApiException;
 
 	/**
@@ -286,7 +287,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<User> usersFriends(String userId, int count, int page) throws ApiException;
+	List<User> usersFriends(String userId, int count, int page,String mode) throws ApiException;
 
 	/**
 	 * followers info list
@@ -295,7 +296,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<User> usersFollowers(String userId, int count, int page) throws ApiException;
+	List<User> usersFollowers(String userId, int count, int page,String mode) throws ApiException;
 
 	/**
 	 * show a user's profile
@@ -304,7 +305,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	User userShow(String userId) throws ApiException;
+	User userShow(String userId,String mode) throws ApiException;
 
 	/**
 	 * action: follow
@@ -313,7 +314,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	User userFollow(String userId) throws ApiException;
+	User userFollow(String userId,String mode) throws ApiException;
 
 	/**
 	 * action: unfollow
@@ -322,7 +323,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	User userUnfollow(String userId) throws ApiException;
+	User userUnfollow(String userId,String mode) throws ApiException;
 
 	/**
 	 * action: block
@@ -331,7 +332,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	User userBlock(String userId) throws ApiException;
+	User userBlock(String userId,String mode) throws ApiException;
 
 	/**
 	 * action: unblock
@@ -340,7 +341,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	User userUnblock(String userId) throws ApiException;
+	User userUnblock(String userId,String mode) throws ApiException;
 
 	/**
 	 * check user is or not blocked.
@@ -350,7 +351,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	User isBlocked(String userId) throws ApiException;
+	User isBlocked(String userId,String mode) throws ApiException;
 
 	/**
 	 * fetch user list blocked by me
@@ -358,7 +359,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<User> userBlockedList(int count, int page) throws ApiException;
+	List<User> userBlockedList(int count, int page,String mode) throws ApiException;
 
 	/**
 	 * fetch user ids list blocked by me
@@ -409,7 +410,7 @@ public interface Api {
 	 * @throws ApiException
 	 */
 	List<DirectMessage> messagesInbox(int count, int page, String sinceId,
-			String maxId) throws ApiException;
+			String maxId,String mode) throws ApiException;
 
 	/**
 	 * outbox messages
@@ -422,7 +423,7 @@ public interface Api {
 	 * @throws ApiException
 	 */
 	List<DirectMessage> messagesOutbox(int count, int page, String sinceId,
-			String maxId) throws ApiException;
+			String maxId, String mode) throws ApiException;
 
 	/**
 	 * send a dm
@@ -433,7 +434,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	DirectMessage messageCreate(String userId, String text, String inReplyToId)
+	DirectMessage messageCreate(String userId, String text, String inReplyToId,String mode)
 			throws ApiException;
 
 	/**
@@ -443,31 +444,6 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	DirectMessage messageDelete(String directMessageId) throws ApiException;
-
-	/**
-	 * notify on
-	 * 
-	 * @param userId
-	 * @return
-	 * @throws ApiException
-	 */
-	User notificationsOn(String userId) throws ApiException;
-
-	/**
-	 * notify off
-	 * 
-	 * @param userId
-	 * @return
-	 * @throws ApiException
-	 */
-	User notificationsOff(String userId) throws ApiException;
-
-	/**
-	 * test
-	 * 
-	 * @throws ApiException
-	 */
-	void test() throws ApiException;
+	DirectMessage messageDelete(String directMessageId,String mode) throws ApiException;
 
 }

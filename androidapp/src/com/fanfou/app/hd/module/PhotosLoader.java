@@ -9,12 +9,14 @@ import android.util.Log;
 import com.fanfou.app.App;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Photo;
 import com.fanfou.app.api.Status;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.11.04
+ * @version 2.0 2011.11.18
  * 
  */
 public class PhotosLoader extends BaseDataLoader<List<Photo>> {
@@ -38,7 +40,7 @@ public class PhotosLoader extends BaseDataLoader<List<Photo>> {
 		ArrayList<Photo> photos = null;
 		try {
 			List<Status> ss = api
-					.photosTimeline(0, 0, userId, null, null, true);
+					.photosTimeline(0, 0, userId, null, null,FanFouApiConfig.FORMAT_HTML,FanFouApiConfig.MODE_LITE);
 			if (ss != null) {
 				if (App.DEBUG) {
 					log("loadInBackground() result.size=" + ss.size());

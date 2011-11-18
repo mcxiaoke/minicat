@@ -164,7 +164,9 @@ public class MyProfilePage extends BaseActivity {
 	}
 
 	private void showContent() {
-		log("showContent()");
+		if(App.DEBUG){
+			log("showContent()");
+		}
 		isInitialized = true;
 		mEmptyView.setVisibility(View.GONE);
 		mScrollView.setVisibility(View.VISIBLE);
@@ -174,8 +176,12 @@ public class MyProfilePage extends BaseActivity {
 		if (user == null) {
 			return;
 		}
-		log("updateUI user.name=" + user.screenName);
+		
+		if(App.DEBUG){
+			log("updateUI user.name=" + user.screenName);
+		}
 
+		mHead.setTag(user.profileImageUrl);
 		mLoader.set(user.profileImageUrl, mHead, R.drawable.default_head);
 		mName.setText(user.screenName);
 
@@ -184,7 +190,9 @@ public class MyProfilePage extends BaseActivity {
 		mFriendsInfo.setText("" + user.friendsCount);
 		mFollowersInfo.setText("" + user.followersCount);
 
-		log("updateUI user.description=" + user.description);
+		if(App.DEBUG){
+			log("updateUI user.description=" + user.description);
+		}
 
 		if (StringHelper.isEmpty(user.description)) {
 			mDescription.setText("这家伙什么也没留下");
@@ -292,10 +300,6 @@ public class MyProfilePage extends BaseActivity {
 
 	}
 
-	private void goBlockingListPage() {
-
-	}
-
 	@Override
 	public void onRefreshClick() {
 		if (isBusy) {
@@ -331,7 +335,9 @@ public class MyProfilePage extends BaseActivity {
 			switch (resultCode) {
 			case Commons.RESULT_CODE_FINISH:
 				if (resultData != null) {
-					log("result ok, update ui");
+					if(App.DEBUG){
+						log("result ok, update ui");
+					}
 					int type = resultData.getInt(Commons.EXTRA_TYPE);
 					User result = (User) resultData.getParcelable(Commons.EXTRA_USER);
 					if (result != null) {
@@ -360,7 +366,9 @@ public class MyProfilePage extends BaseActivity {
 				}
 				String msg = resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
 				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
-				log("result error");
+				if(App.DEBUG){
+					log("result error");
+				}
 				break;
 			default:
 				break;

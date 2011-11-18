@@ -13,6 +13,7 @@ import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.util.IOHelper;
@@ -21,6 +22,7 @@ import com.fanfou.app.util.IOHelper;
  * @author mcxiaoke
  * @version 1.0 2011.06.25
  * @version 1.1 2011.10.25
+ * @version 2.0 2011.11.18
  * 
  */
 public class PostMessageService extends BaseIntentService {
@@ -70,7 +72,7 @@ public class PostMessageService extends BaseIntentService {
 		boolean res = true;
 		Api api = App.me.api;
 		try {
-			DirectMessage result = api.messageCreate(userId, content, null);
+			DirectMessage result = api.messageCreate(userId, content, null,FanFouApiConfig.MODE_LITE);
 			nm.cancel(10);
 			if (result == null || result.isNull()) {
 				IOHelper.copyToClipBoard(this, content);

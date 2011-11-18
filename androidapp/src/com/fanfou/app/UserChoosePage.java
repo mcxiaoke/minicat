@@ -42,6 +42,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.1 2011.10.26
  * @version 2.2 2011.11.01
  * @version 2.3 2011.11.07
+ * @version 2.4 2011.11.18
  */
 public class UserChoosePage extends BaseActivity implements
 		FilterQueryProvider, OnItemClickListener {
@@ -214,8 +215,9 @@ public class UserChoosePage extends BaseActivity implements
 	}
 
 	protected void updateUI() {
-		if (App.DEBUG)
+		if (App.DEBUG){
 			log("updateUI()");
+		}
 		if (mCursor != null) {
 			mCursor.requery();
 		}
@@ -253,8 +255,9 @@ public class UserChoosePage extends BaseActivity implements
 			for (String screenName : mUserNames) {
 				sb.append("@").append(screenName).append(" ");
 			}
-
-			log("User Names: " + sb.toString());
+			if (App.DEBUG) {
+				log("User Names: " + sb.toString());
+			}
 			Intent intent = new Intent();
 			intent.putExtra(Commons.EXTRA_TEXT, sb.toString());
 			setResult(RESULT_OK, intent);
@@ -275,7 +278,7 @@ public class UserChoosePage extends BaseActivity implements
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
 			resetChoices();
-			mCursorAdapter.getFilter().filter(s.toString());
+			mCursorAdapter.getFilter().filter(s.toString().trim());
 		}
 	}
 
@@ -355,7 +358,9 @@ public class UserChoosePage extends BaseActivity implements
 			}
 		}
 
-		log(StringHelper.toString(mUserNames));
+		if(App.DEBUG){
+			log(StringHelper.toString(mUserNames));
+		}
 
 		if (mViewStub != null) {
 			initViewStub();

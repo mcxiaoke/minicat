@@ -157,7 +157,7 @@ public final class ConnectionManager {
 		setProxy(httpClient);
 		HttpPost post = new HttpPost(url);
 		post.setEntity(ConnectionRequest.encodeForPost(params));
-		return httpClient.execute(new HttpGet(url));
+		return httpClient.execute(post);
 	}
 
 	private static void setHeaders(HttpRequestBase request, List<Header> headers) {

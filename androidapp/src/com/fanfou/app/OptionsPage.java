@@ -208,10 +208,7 @@ public class OptionsPage extends PreferenceActivity implements
 					getResources().getInteger(R.integer.defaultFontSize));
 			skp.setSummary(value + "号");
 			needRestart = true;
-		}
-		if (key.equals(getString(R.string.option_play_sound_effect))) {
-			needRestart = true;
-		} else if (p instanceof ListPreference) {
+		}else if (p instanceof ListPreference) {
 			ListPreference lp = (ListPreference) p;
 			lp.setSummary(lp.getEntry());
 			setResult(RESULT_OK,

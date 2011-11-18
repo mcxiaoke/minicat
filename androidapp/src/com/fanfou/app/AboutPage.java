@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fanfou.app.ui.ActionBar;
+import com.fanfou.app.util.Linkify;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -88,23 +89,8 @@ public class AboutPage extends Activity implements OnClickListener {
 		int start=text.indexOf(spanText);
 		if(start>0){
 			int end=start+spanText.length();
-			span.setSpan(new URLSpan("fanfou://user/androidsupport"), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);	
+			span.setSpan(new Linkify.URLSpanNoUnderline("fanfou://user/androidsupport"), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);	
 		}
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
 	}
 
 	@Override
