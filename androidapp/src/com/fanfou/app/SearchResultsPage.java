@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemLongClickListener;
 
+import com.fanfou.app.App.ApnType;
 import com.fanfou.app.adapter.SearchResultsAdapter;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.FanFouApiConfig;
@@ -32,6 +33,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.0 2011.08.05
  * @version 1.1 2011.10.12
  * @version 1.5 2011.10.24
+ * @version 1.6 2011.11.21
  * 
  */
 public class SearchResultsPage extends BaseActivity implements
@@ -232,8 +234,13 @@ public class SearchResultsPage extends BaseActivity implements
 				return null;
 			}
 			List<com.fanfou.app.api.Status> result = null;
+			
+			int count = FanFouApiConfig.DEFAULT_TIMELINE_COUNT;
+			if (App.me.apnType == ApnType.WIFI) {
+				count = FanFouApiConfig.MAX_TIMELINE_COUNT;
+			}
 			try {
-				result = App.me.api.search(keyword, maxId, FanFouApiConfig.FORMAT_HTML,FanFouApiConfig.MODE_LITE);
+				result = App.me.api.search(keyword, null,maxId,count, FanFouApiConfig.FORMAT_HTML,FanFouApiConfig.MODE_LITE);
 			} catch (ApiException e) {
 				if (App.DEBUG)
 					e.printStackTrace();

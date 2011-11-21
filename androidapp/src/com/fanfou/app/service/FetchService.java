@@ -46,6 +46,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.3 2011.11.11
  * @version 4.4 2011.11.17
  * @version 5.0 2011.11.18
+ * @version 5.1 2011.11.21
  * 
  */
 public class FetchService extends BaseIntentService {
@@ -201,12 +202,12 @@ public class FetchService extends BaseIntentService {
 			String inboxSinceId = Utils.getDmSinceId(ic);
 			String outboxSinceId = Utils.getDmSinceId(oc);
 			List<DirectMessage> messages = new ArrayList<DirectMessage>();
-			List<DirectMessage> in = api.messagesInbox(count, 0, inboxSinceId,
+			List<DirectMessage> in = api.directMessagesInbox(count, 0, inboxSinceId,
 					null, FanFouApiConfig.MODE_LITE);
 			if (in != null && in.size() > 0) {
 				messages.addAll(in);
 			}
-			List<DirectMessage> out = api.messagesOutbox(count, 0,
+			List<DirectMessage> out = api.directMessagesOutbox(count, 0,
 					outboxSinceId, null, FanFouApiConfig.MODE_LITE);
 			if (out != null && out.size() > 0) {
 				messages.addAll(out);
@@ -247,12 +248,12 @@ public class FetchService extends BaseIntentService {
 			String inboxMaxId = Utils.getDmMaxId(ic);
 			String outboxMaxid = Utils.getDmMaxId(oc);
 			List<DirectMessage> messages = new ArrayList<DirectMessage>();
-			List<DirectMessage> in = api.messagesInbox(count, 0, null,
+			List<DirectMessage> in = api.directMessagesInbox(count, 0, null,
 					inboxMaxId, FanFouApiConfig.MODE_LITE);
 			if (in != null && in.size() > 0) {
 				messages.addAll(in);
 			}
-			List<DirectMessage> out = api.messagesOutbox(count, 0, null,
+			List<DirectMessage> out = api.directMessagesOutbox(count, 0, null,
 					outboxMaxid, FanFouApiConfig.MODE_LITE);
 			if (out != null && out.size() > 0) {
 				messages.addAll(out);

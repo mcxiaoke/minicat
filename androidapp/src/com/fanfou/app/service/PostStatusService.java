@@ -90,12 +90,12 @@ public class PostStatusService extends WakefulIntentService {
 		try {
 			Status result = null;
 			if (type == WritePage.TYPE_REPLY) {
-				result = api.statusUpdate(text, relationId, null, location,
+				result = api.statusesCreate(text, relationId, null, location,
 						null, FanFouApiConfig.FORMAT_HTML,
 						FanFouApiConfig.MODE_LITE);
 			} else {
 				if (srcFile == null || !srcFile.exists()) {
-					result = api.statusUpdate(text, null, null, location,
+					result = api.statusesCreate(text, null, null, location,
 							relationId, FanFouApiConfig.FORMAT_HTML,
 							FanFouApiConfig.MODE_LITE);
 				} else {
@@ -117,7 +117,7 @@ public class PostStatusService extends WakefulIntentService {
 							log("photo file=" + srcFile.getName() + " size="
 									+ photo.length() / 1024 + " quality="
 									+ quality);
-						result = api.photoUpload(photo, text, null, location,
+						result = api.photosUpload(photo, text, null, location,
 								FanFouApiConfig.FORMAT_HTML,
 								FanFouApiConfig.MODE_LITE);
 					}

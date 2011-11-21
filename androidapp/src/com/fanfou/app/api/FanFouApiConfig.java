@@ -11,6 +11,7 @@ package com.fanfou.app.api;
  * @version 1.6 2011.11.07
  * @version 1.7 2011.11.11
  * @version 2.0 2011.11.18
+ * @version 3.0 2011.11.21
  * 
  */
 public interface FanFouApiConfig {
@@ -54,7 +55,7 @@ public interface FanFouApiConfig {
 	// param format -- format=html
 	// home timeline
 	public static final String URL_TIMELINE_HOME = API_BASE
-			+ "statuses/friends_timeline" + EXTENSION;
+			+ "statuses/home_timeline" + EXTENSION;
 
 	// show home timeline/replies/mentions
 	public static final String URL_TIMELINE_USER = API_BASE
@@ -89,7 +90,7 @@ public interface FanFouApiConfig {
 	// param id -- status id
 	// POST METHOD
 	public static final String URL_STATUS_DESTROY = API_BASE
-			+ "statuses/destroy" + EXTENSION;
+			+ "statuses/destroy/%s" + EXTENSION;
 
 	// photo upload
 	// param photo -- photo file
@@ -107,29 +108,34 @@ public interface FanFouApiConfig {
 	// search for public timeline
 	// param q -- search keywords
 	// param max_id -- max status id
-	public static final String URL_SEARCH_PUBLIC = API_BASE
+	public static final String URL_SEARCH = API_BASE
 			+ "search/public_timeline" + EXTENSION;
-	public static final String URL_SEARCH_TRENDS = API_BASE + "trends"
+	
+	public static final String URL_SEARCH_USERS = API_BASE
+	+ "search/users" + EXTENSION;
+	
+	
+	public static final String URL_TRENDS_LIST = API_BASE + "trends/list"
 			+ EXTENSION;
 
 	// show saved searches list
-	public static final String URL_SEARCH_SAVED = API_BASE + "saved_searches"
+	public static final String URL_SAVED_SEARCHES_LIST = API_BASE + "saved_searches/list"
 			+ EXTENSION;
 
 	// show item in saved searches
 	// param id -- keyword id
-	public static final String URL_SEARCH_SAVED_ID = API_BASE
+	public static final String URL_SAVED_SEARCHES_SHOW = API_BASE
 			+ "saved_searches/show" + EXTENSION;
 
 	// create a saved search
 	// param query -- keyword to save
-	public static final String URL_SEARCH_SAVED_CREATE = API_BASE
+	public static final String URL_SAVED_SEARCHES_CREATE = API_BASE
 			+ "saved_searches/create" + EXTENSION;
 
 	// remove a saved search
 	// param id -- saved search item id
 	// POST METHOD
-	public static final String URL_SEARCH_SAVED_DESTROY = API_BASE
+	public static final String URL_SAVED_SEARCHES_DESTROY = API_BASE
 			+ "saved_searches/destroy" + EXTENSION;
 
 	// show friends or followers or user profile
@@ -145,9 +151,9 @@ public interface FanFouApiConfig {
 	// param id -- userid
 	// POST METHOD
 	public static final String URL_FRIENDSHIPS_CREATE = API_BASE
-			+ "friendships/create" + EXTENSION;
+			+ "friendships/create/%s" + EXTENSION;
 	public static final String URL_FRIENDSHIPS_DESTROY = API_BASE
-			+ "friendships/destroy" + EXTENSION;
+			+ "friendships/destroy/%s" + EXTENSION;
 
 	// friendships exists?
 	// param user_a -- user id
@@ -184,29 +190,29 @@ public interface FanFouApiConfig {
 	// param id -- message id
 	// POST METHOD
 	public static final String URL_DIRECT_MESSAGES_DESTROY = API_BASE
-			+ "direct_messages/destroy" + EXTENSION;
+			+ "direct_messages/destroy/%s" + EXTENSION;
 
 	// show favorites
 	// param id -- userid
 	// param count
 	// param page
-	public static final String URL_FAVORITES = API_BASE + "favorites/list"
+	public static final String URL_FAVORITES_LIST = API_BASE + "favorites/list"
 			+ EXTENSION;
 
 	// favorite or unfavorite a status
 	// param id -- status id
 	// POST METHOD
 	public static final String URL_FAVORITES_CREATE = API_BASE
-			+ "favorites/create" + EXTENSION;
+			+ "favorites/create/%s" + EXTENSION;
 	public static final String URL_FAVORITES_DESTROY = API_BASE
-			+ "favorites/destroy" + EXTENSION;
+			+ "favorites/destroy/%s" + EXTENSION;
 
 	// add or remove in blocks
 	// param id --userid
 	// POST METHOD
-	public static final String URL_BLOCKS_CREATE = API_BASE + "blocks/create"
+	public static final String URL_BLOCKS_CREATE = API_BASE + "blocks/create/%s"
 			+ EXTENSION;
-	public static final String URL_BLOCKS_DESTROY = API_BASE + "blocks/destroy"
+	public static final String URL_BLOCKS_DESTROY = API_BASE + "blocks/destroy/%s"
 			+ EXTENSION;
 
 	// show blocking list

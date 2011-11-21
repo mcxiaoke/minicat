@@ -1,8 +1,12 @@
 package com.fanfou.app.ui;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.TreeSet;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +19,7 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.DraftsPage;
+import com.fanfou.app.R;
 import com.fanfou.app.SendPage;
 import com.fanfou.app.MyProfilePage;
 import com.fanfou.app.ProfilePage;
@@ -27,6 +32,7 @@ import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.service.ActionService;
+import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StatusHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
@@ -40,6 +46,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.0 2011.10.29
  * @version 2.1 2011.11.09
  * @version 2.2 2011.11.11
+ * @version 2.3 2011.11.21
  * 
  */
 public final class ActionManager {
@@ -97,15 +104,6 @@ public final class ActionManager {
 	public static void doMyProfile(Context context) {
 		Intent intent = new Intent(context, MyProfilePage.class);
 		context.startActivity(intent);
-		// if (App.me.user != null) {
-		// Intent intent = new Intent(context, MyProfilePage.class);
-		// intent.putExtra(Commons.EXTRA_USER, App.me.user);
-		// context.startActivity(intent);
-		// }else{
-		// Intent intent = new Intent(context, MyProfilePage.class);
-		// intent.putExtra(Commons.EXTRA_USER_ID, App.me.userId);
-		// context.startActivity(intent);
-		// }
 	}
 
 	public static void doProfile(Context context, String userId) {
@@ -210,13 +208,24 @@ public final class ActionManager {
 			if (App.DEBUG) {
 				Log.d(TAG, "doReply: status is null.");
 			}
-			HashSet<String> names = StatusHelper.getMentionedNames(status);
 			StringBuilder sb = new StringBuilder();
-			Iterator<String> i = names.iterator();
-			while (i.hasNext()) {
-				String name = i.next();
-				sb.append("@").append(name).append(" ");
+			sb.append("@").append(status.userScreenName).append(" ");
+			
+			boolean replyToAll=OptionHelper.readBoolean(context, R.string.option_reply_to_all_default, true);
+			if(replyToAll){
+				
+//				HashSet<String> names = StatusHelper.getMentionedNames(status.simpleText);
+//				Iterator<String> i = names.iterator();
+//				while (i.hasNext()) {
+//					String name = i.next();
+//					sb.append("@").append(name).append(" ");
+//				}
+				ArrayList<String> names=StatusHelper.getMentions(status.simpleText);
+				for (String name : names) {
+					sb.append("@").append(name).append(" ");
+				}
 			}
+			
 			Intent intent = new Intent(context, WritePage.class);
 			intent.putExtra(Commons.EXTRA_IN_REPLY_TO_ID, status.id);
 			intent.putExtra(Commons.EXTRA_TEXT, sb.toString());

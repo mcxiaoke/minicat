@@ -119,7 +119,7 @@ public class NotificationService extends BaseIntentService {
 
 	private void handleDm(int count) throws ApiException {
 		Cursor mc = initCursor(DirectMessage.TYPE_IN);
-		List<DirectMessage> dms = App.me.api.messagesInbox(count, DEFAULT_PAGE,
+		List<DirectMessage> dms = App.me.api.directMessagesInbox(count, DEFAULT_PAGE,
 				Utils.getDmSinceId(mc), null, FanFouApiConfig.MODE_LITE);
 		if (dms != null) {
 			int size = dms.size();

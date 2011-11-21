@@ -54,12 +54,12 @@ public class TaskQueueService extends BaseIntentService {
 			Api api = App.me.api;
 			Status result = null;
 			if (d.type == WritePage.TYPE_REPLY) {
-				result = api.statusUpdate(d.text, d.replyTo, null, null, null,
+				result = api.statusesCreate(d.text, d.replyTo, null, null, null,
 						FanFouApiConfig.FORMAT_HTML, FanFouApiConfig.MODE_LITE);
 			} else {
 				File srcFile = new File(d.filePath);
 				if (srcFile == null || !srcFile.exists()) {
-					result = api.statusUpdate(d.text, null, null, null,
+					result = api.statusesCreate(d.text, null, null, null,
 							d.replyTo, FanFouApiConfig.FORMAT_HTML,
 							FanFouApiConfig.MODE_LITE);
 				} else {
@@ -73,7 +73,7 @@ public class TaskQueueService extends BaseIntentService {
 							log("photo file=" + srcFile.getName() + " size="
 									+ photo.length() / 1024 + " quality="
 									+ quality);
-						result = api.photoUpload(photo, d.text, null, null,
+						result = api.photosUpload(photo, d.text, null, null,
 								FanFouApiConfig.FORMAT_HTML,
 								FanFouApiConfig.MODE_LITE);
 					}

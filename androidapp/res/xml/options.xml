@@ -67,10 +67,11 @@
 			android:dialogTitle="选择消息页面图片显示方式" android:entries="@array/pic_level"
 			android:entryValues="@array/pic_level_values" android:key="@string/option_pic_level"
 			android:summary="设置消息页面图片大小" android:title="消息图片预览" />
-		
-			<com.fanfou.app.preferences.SeekBarPreference
-		android:title="文本字体大小" android:summary="设置文本内容字体大小" android:dialogTitle="选择字体大小" android:text="号" android:key="@string/option_fontsize"
-		android:defaultValue="15" android:max="28" />
+
+		<com.fanfou.app.preferences.SeekBarPreference
+			android:title="文本字体大小" android:summary="设置文本内容字体大小"
+			android:dialogTitle="选择字体大小" android:text="号" android:key="@string/option_fontsize"
+			android:defaultValue="15" android:max="28" />
 
 		<ListPreference android:defaultValue="80"
 			android:dialogTitle="选择上传照片的质量" android:entries="@array/photo_quality"
@@ -106,10 +107,9 @@
 	</PreferenceScreen>
 
 	<PreferenceScreen android:title="使用偏好">
-		
-<!-- 		<CheckBoxPreference android:defaultValue="true"
-			android:key="@string/option_show_splash_screen" android:summary="启动时显示闪屏画面"
-			android:title="显示启动画面" /> -->
+
+		<!-- <CheckBoxPreference android:defaultValue="true" android:key="@string/option_show_splash_screen" 
+			android:summary="启动时显示闪屏画面" android:title="显示启动画面" /> -->
 
 		<CheckBoxPreference android:defaultValue="false"
 			android:key="@string/option_refresh_on_open" android:summary="客户端启动时刷新时间线"
@@ -122,15 +122,19 @@
 		<CheckBoxPreference android:defaultValue="false"
 			android:key="@string/option_fast_scroll_on" android:summary="显示列表快速拖动滑块"
 			android:title="快速拖动" />
-		
+
 		<CheckBoxPreference android:defaultValue="false"
 			android:key="@string/option_page_scroll_endless" android:summary="页面切换使用循环滚动"
 			android:title="循环滚动" />
 
 		<CheckBoxPreference android:defaultValue="true"
+			android:key="@string/option_reply_to_all_default" android:summary="默认回复所有人"
+			android:title="全部回复" />
+
+		<CheckBoxPreference android:defaultValue="true"
 			android:key="@string/option_save_on_back_press" android:summary="保存未发送消息为草稿"
 			android:title="保存草稿" />
-		
+
 		<CheckBoxPreference android:defaultValue="true"
 			android:key="@string/option_play_sound_effect" android:summary="时间线有新消息时播放音效"
 			android:title="音效反馈" />
@@ -177,7 +181,7 @@
 
 		<Preference android:key="@string/option_feedback"
 			android:summary="通过邮件发送意见和建议" android:title="意见反馈" />
-		
+
 		<Preference android:key="@string/option_changelog"
 			android:summary="查看客户端更新日志" android:title="更新日志">
 			<intent android:action="android.intent.action.VIEW"

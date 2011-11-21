@@ -112,7 +112,7 @@ public class SearchPage extends BaseActivity implements OnItemClickListener {
 		protected Integer doInBackground(Void... params) {
 			Api api = App.me.api;
 			try {
-				List<Search> savedSearches = api.savedSearches();
+				List<Search> savedSearches = api.savedSearchesList();
 				if (savedSearches != null && savedSearches.size() > 0) {
 					mHotwords.addAll(savedSearches);
 				}

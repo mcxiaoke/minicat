@@ -343,7 +343,7 @@ public class WritePage extends BaseActivity {
 
 		mAutoCompleteTextView.setTokenizer(new AtTokenizer());
 		mAutoCompleteTextView.setDropDownBackgroundResource(R.drawable.bg);
-		final String[] projection = new String[] {UserInfo.ID,
+		final String[] projection = new String[] {UserInfo._ID,UserInfo.ID,
 				 UserInfo.SCREEN_NAME,UserInfo.TYPE,UserInfo.OWNER_ID};
 		String where = UserInfo.OWNER_ID + " = '" + App.me.userId + "' AND "
 		+ UserInfo.TYPE + " = '" + User.TYPE_FRIENDS + "'";

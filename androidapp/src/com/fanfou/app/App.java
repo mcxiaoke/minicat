@@ -37,6 +37,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.5 2011.10.25
  * @version 4.6 2011.10.27
  * @version 5.0 2011.11.10
+ * @version 5.1 2011.11.21
  * 
  */
 
@@ -56,7 +57,7 @@ public class App extends Application {
 	// TODO contentprovider need modify use sqlite
 	// TODO add some flags to status model in db
 
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 
 	public static App me;
 	public static boolean active = false;
@@ -177,16 +178,11 @@ public class App extends Application {
 			Log.d("App", "cleanSettings");
 		}
 		Editor editor = sp.edit();
-		editor.clear();
-//		editor.remove(getString(R.string.option_set_auto_clean));
-//		editor.remove(getString(R.string.option_set_auto_update));
-//		editor.remove(getString(R.string.option_set_auto_complete));
-//		editor.remove(getString(R.string.option_set_notification));
-		editor.putString(getString(R.string.option_oauth_token), oauthAccessToken);
-		editor.putString(getString(R.string.option_oauth_token_secret), oauthAccessTokenSecret);
-		editor.putString(getString(R.string.option_userid), userId);
-		editor.putString(getString(R.string.option_username), userScreenName);
-		editor.putString(getString(R.string.option_profile_image), userProfileImage);
+		editor.remove(getString(R.string.option_set_auto_clean));
+		editor.remove(getString(R.string.option_set_auto_update));
+		editor.remove(getString(R.string.option_set_auto_complete));
+		editor.remove(getString(R.string.option_set_notification));
+		editor.remove(getString(R.string.option_fontsize));
 		editor.commit();
 	}
 

@@ -1,5 +1,6 @@
 package com.fanfou.app.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.regex.Matcher;
@@ -21,6 +22,7 @@ import android.widget.TextView.BufferType;
  * @version 1.0 2011.06.01
  * @version 1.5 2011.10.26
  * @version 1.6 2011.11.17
+ * @version 1.7 2011.11.21
  * 
  */
 public class StatusHelper {
@@ -79,33 +81,35 @@ public class StatusHelper {
 		Matcher m = PATTERN_USERLINK.matcher(text);
 		while (m.find()) {
 			userNameIdMap.put(m.group(2), m.group(1));
-			if(App.DEBUG){
-				Log.d(TAG, "preprocessText() screenName="+m.group(2)+" userId="+m.group(1)); 
+			if (App.DEBUG) {
+				Log.d(TAG, "preprocessText() screenName=" + m.group(2)
+						+ " userId=" + m.group(1));
 			}
 		}
 		// 将User Link的连接去掉
-//		StringBuffer sb = new StringBuffer();
-//		m = PATTERN_USERLINK.matcher(text);
-//		while (m.find()) {
-//			m.appendReplacement(sb, "@$2");
-//		}
-//		m.appendTail(sb);
-//		if(App.DEBUG){
-//			Log.d(TAG, "preprocessText() result="+sb.toString()); 
-//		}
-//		return sb.toString();
-		
+		// StringBuffer sb = new StringBuffer();
+		// m = PATTERN_USERLINK.matcher(text);
+		// while (m.find()) {
+		// m.appendReplacement(sb, "@$2");
+		// }
+		// m.appendTail(sb);
+		// if(App.DEBUG){
+		// Log.d(TAG, "preprocessText() result="+sb.toString());
+		// }
+		// return sb.toString();
+
 		return Html.fromHtml(text).toString();
 	}
-	
-	private HashMap<String, String> extractNames(final String text){
-		HashMap<String, String> names=new HashMap<String, String>();
+
+	private HashMap<String, String> extractNames(final String text) {
+		HashMap<String, String> names = new HashMap<String, String>();
 		// 处理HTML格式返回的用户链接
 		Matcher m = PATTERN_USERLINK.matcher(text);
 		while (m.find()) {
 			names.put(m.group(2), m.group(1));
-			if(App.DEBUG){
-				Log.d(TAG, "extractNames() screenName="+m.group(2)+" userId="+m.group(1)); 
+			if (App.DEBUG) {
+				Log.d(TAG, "extractNames() screenName=" + m.group(2)
+						+ " userId=" + m.group(1));
 			}
 		}
 		return names;
@@ -123,19 +127,19 @@ public class StatusHelper {
 		linkifyTags(textView);
 		userNameIdMap.clear();
 	}
-	
-	 public static void removeUnderlines(TextView textView) {
-	        Spannable s = (Spannable)textView.getText();
-	        URLSpan[] spans = s.getSpans(0, s.length(), URLSpan.class);
-	        for (URLSpan span: spans) {
-	            int start = s.getSpanStart(span);
-	            int end = s.getSpanEnd(span);
-	            s.removeSpan(span);
-	            span = new Linkify.URLSpanNoUnderline(span.getURL());
-	            s.setSpan(span, start, end, 0);
-	        }
-	        textView.setText(s);
-	    }
+
+	public static void removeUnderlines(TextView textView) {
+		Spannable s = (Spannable) textView.getText();
+		URLSpan[] spans = s.getSpans(0, s.length(), URLSpan.class);
+		for (URLSpan span : spans) {
+			int start = s.getSpanStart(span);
+			int end = s.getSpanEnd(span);
+			s.removeSpan(span);
+			span = new Linkify.URLSpanNoUnderline(span.getURL());
+			s.setSpan(span, start, end, 0);
+		}
+		textView.setText(s);
+	}
 
 	/**
 	 * 从消息中获取全部提到的人，将它们按先后顺序放入一个列表
@@ -144,22 +148,36 @@ public class StatusHelper {
 	 *            消息文本
 	 * @return 消息中@的人的列表，按顺序存放
 	 */
-	public static HashSet<String> getMentionedNames(Status status) {
+	private static final Pattern namePattern = Pattern.compile("@(.*?)\\s");
+	private static final int MAX_NAME_LENGTH = 12;
+
+	public static HashSet<String> getMentionedNames(String text) {
+
 		HashSet<String> names = new HashSet<String>();
-
-		final Pattern p = Pattern.compile("@(.*?)\\s");
-		final int MAX_NAME_LENGTH = 12;
-
-		Matcher m = p.matcher(status.simpleText);
+		Matcher m = namePattern.matcher(text);
 		while (m.find()) {
 			String name = m.group(1);
 			if (name.length() <= MAX_NAME_LENGTH + 1) {
 				names.add(m.group(1));
 			}
 		}
-		names.add(status.userScreenName);
 		String name = App.me.userScreenName;
 		names.remove(name);
 		return names;
 	}
+
+	public static ArrayList<String> getMentions(String text) {
+		ArrayList<String> names = new ArrayList<String>();
+		Matcher m = namePattern.matcher(text);
+		while (m.find()) {
+			String name = m.group(1);
+			if (!names.contains(name) && name.length() <= MAX_NAME_LENGTH + 1) {
+				names.add(m.group(1));
+			}
+		}
+		String name = App.me.userScreenName;
+		names.remove(name);
+		return names;
+	}
+
 }

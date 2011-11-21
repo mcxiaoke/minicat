@@ -34,7 +34,7 @@ public class AutoCompleteCursorAdapter extends ResourceCursorAdapter {
 
 	@Override
 	public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
-		 final String[] projection = new String[] {UserInfo.ID,
+		 final String[] projection = new String[] {UserInfo._ID,UserInfo.ID,
 		 UserInfo.SCREEN_NAME,UserInfo.TYPE,UserInfo.OWNER_ID};
 		String where = UserInfo.OWNER_ID + " = '" + App.me.userId + "' AND "
 				+ UserInfo.TYPE + " = '" + User.TYPE_FRIENDS + "'"
