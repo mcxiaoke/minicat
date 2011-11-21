@@ -43,6 +43,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.2 2011.11.01
  * @version 2.3 2011.11.07
  * @version 2.4 2011.11.18
+ * @version 2.5 2011.11.21
  */
 public class UserChoosePage extends BaseActivity implements
 		FilterQueryProvider, OnItemClickListener {
@@ -94,11 +95,10 @@ public class UserChoosePage extends BaseActivity implements
 	}
 
 	protected void initCursorAdapter() {
-		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
+		String where = UserInfo.TYPE + "=? AND " + UserInfo.OWNER_ID
 				+ "=?";
 		String[] whereArgs = new String[] { String.valueOf(User.TYPE_FRIENDS),
 				App.me.userId };
-		String orderBy = FanFouProvider.ORDERBY_STATUSES_COUNT;
 		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				whereArgs, null);
 

@@ -334,9 +334,7 @@ public class Status implements Storable<Status> {
 	}
 
 	@Override
-	public void fromContentValues(ContentValues values) {
-		ContentValues cv = values;
-
+	public void fromContentValues(final ContentValues cv) {
 		id = cv.getAsString(StatusInfo.ID);
 		ownerId = cv.getAsString(StatusInfo.OWNER_ID);
 		createdAt = new Date(cv.getAsLong(StatusInfo.CREATED_AT));

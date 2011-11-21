@@ -67,6 +67,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.3 2011.11.09
  * @version 4.4 2011.11.11
  * @version 4.5 2011.11.16
+ * @version 4.6 2011.11.21
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
@@ -656,7 +657,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		MenuItem search = menu.add(0, MENU_ID_SEARCH, MENU_ID_SEARCH, "热词搜索");
 		search.setIcon(R.drawable.i_menu_search);
 
-		MenuItem logout = menu.add(0, MENU_ID_LOGOUT, MENU_ID_LOGOUT, "注销登录");
+		MenuItem logout = menu.add(0, MENU_ID_LOGOUT, MENU_ID_LOGOUT, "切换帐号");
 		logout.setIcon(R.drawable.i_menu_logout);
 
 		MenuItem about = menu.add(0, MENU_ID_ABOUT, MENU_ID_ABOUT, "关于饭否");

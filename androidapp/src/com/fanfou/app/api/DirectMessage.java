@@ -31,6 +31,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.6 2011.07.22
  * @version 1.7 2011.10.21
  * @version 1.8 2011.11.04
+ * @version 1.9 2011.11.21
  * 
  */
 public class DirectMessage implements Storable<DirectMessage> {
@@ -41,7 +42,6 @@ public class DirectMessage implements Storable<DirectMessage> {
 		Log.d(TAG, message);
 	}
 
-	private static final long serialVersionUID = 7135927428287533074L;
 	public static final int TYPE_IN = Commons.DIRECT_MESSAGE_TYPE_INBOX;
 	public static final int TYPE_OUT = Commons.DIRECT_MESSAGE_TYPE_OUTBOX;
 	public static final int TYPE_ALL = Commons.DIRECT_MESSAGE_TYPE_ALL;
@@ -60,7 +60,6 @@ public class DirectMessage implements Storable<DirectMessage> {
 
 	public int type;
 
-	// add 2011.10.09
 	public String threadUserId;
 	public String threadUserName;
 	public boolean isRead;
@@ -212,10 +211,10 @@ public class DirectMessage implements Storable<DirectMessage> {
 	public ContentValues toContentValues() {
 		ContentValues cv = new ContentValues();
 		
-		cv.put(BasicColumns.ID, this.id);
-		cv.put(BasicColumns.OWNER_ID, this.ownerId);
+		cv.put(DirectMessageInfo.ID, this.id);
+		cv.put(DirectMessageInfo.OWNER_ID, this.ownerId);
 		cv.put(DirectMessageInfo.TEXT, this.text);
-		cv.put(BasicColumns.CREATED_AT, this.createdAt.getTime());
+		cv.put(DirectMessageInfo.CREATED_AT,this.createdAt.getTime());
 		
 		cv.put(DirectMessageInfo.SENDER_ID, this.senderId);
 		cv.put(DirectMessageInfo.RECIPIENT_ID, this.recipientId);
@@ -239,8 +238,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 	}
 	
 	@Override
-	public void fromContentValues(ContentValues values) {
-		ContentValues cv = new ContentValues();
+	public void fromContentValues(final ContentValues cv) {
 		id=cv.getAsString(DirectMessageInfo.ID);
 		ownerId=cv.getAsString(DirectMessageInfo.OWNER_ID);
 		text=cv.getAsString(DirectMessageInfo.TEXT);
@@ -258,7 +256,6 @@ public class DirectMessage implements Storable<DirectMessage> {
 		threadUserId=cv.getAsString(DirectMessageInfo.THREAD_USER_ID);
 		threadUserName=cv.getAsString(DirectMessageInfo.THREAD_USER_NAME);
 		isRead=cv.getAsBoolean(DirectMessageInfo.IS_READ);
-		
 	}
 
 	@Override

@@ -21,19 +21,17 @@ import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
-import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.service.FetchService;
 import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.ui.widget.EndlessListView;
 import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
-import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.11.09
+ * @version 1.1 2011.11.21
  * 
  */
 
@@ -81,10 +79,9 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected void initCursor() {
-		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
+		String where = UserInfo.TYPE + "=? AND " + UserInfo.OWNER_ID
 				+ "=?";
 		String[] whereArgs = new String[] { String.valueOf(User.TYPE_FRIENDS), App.me.userId };
-		String orderBy = FanFouProvider.ORDERBY_DATE_DESC;
 		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				whereArgs, null);
 	}

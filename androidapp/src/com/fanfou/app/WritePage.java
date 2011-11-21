@@ -59,6 +59,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.0 2011.11.08
  * @version 4.1 2011.11.15
  * @version 4.2 2011.11.18
+ * @version 4.4 2011.11.21
  * 
  */
 public class WritePage extends BaseActivity {
@@ -340,35 +341,13 @@ public class WritePage extends BaseActivity {
 			}
 		});
 
-		// boolean sendOnEnter=OptionHelper.readBoolean(this,
-		// R.string.option_send_on_enter, false);
-		// if(sendOnEnter){
-		// mAutoCompleteTextView.setImeOptions(EditorInfo.IME_ACTION_SEND);
-		// mAutoCompleteTextView.setOnEditorActionListener(new
-		// OnEditorActionListener() {
-		// @Override
-		// public boolean onEditorAction(TextView v, int actionId, KeyEvent
-		// event) {
-		// switch (actionId) {
-		// case EditorInfo.IME_ACTION_SEND:
-		// doSend();
-		// return true;
-		// default:
-		// break;
-		// }
-		// return false;
-		// }
-		// });
-		// }else{
-		// mAutoCompleteTextView.setImeOptions(EditorInfo.IME_ACTION_DONE);
-		// }
-
 		mAutoCompleteTextView.setTokenizer(new AtTokenizer());
 		mAutoCompleteTextView.setDropDownBackgroundResource(R.drawable.bg);
-		String[] projection = new String[] { UserInfo._ID, UserInfo.ID,
-				UserInfo.SCREEN_NAME };
-		String where = BasicColumns.TYPE + " = '" + User.TYPE_FRIENDS + "'";
-		Cursor c = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where, null,
+		final String[] projection = new String[] {UserInfo.ID,
+				 UserInfo.SCREEN_NAME,UserInfo.TYPE,UserInfo.OWNER_ID};
+		String where = UserInfo.OWNER_ID + " = '" + App.me.userId + "' AND "
+		+ UserInfo.TYPE + " = '" + User.TYPE_FRIENDS + "'";
+		Cursor c = managedQuery(UserInfo.CONTENT_URI, projection, where, null,
 				null);
 		mAutoCompleteTextView.setAdapter(new AutoCompleteCursorAdapter(this, c));
 	}

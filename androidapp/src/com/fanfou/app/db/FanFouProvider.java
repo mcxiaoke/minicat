@@ -43,6 +43,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 3.5 2011.11.10
  * @version 3.6 2011.11.11
  * @version 3.7 2011.11.15
+ * @version 3.8 2011.11.21
  * 
  */
 public class FanFouProvider extends ContentProvider {
@@ -1021,6 +1022,14 @@ public class FanFouProvider extends ContentProvider {
 		}
 		return result;
 
+	}
+	
+	public static Uri buildUriWithUserType(int type){
+		Uri uri=Uri.parse(UserInfo.CONTENT_URI + "/type/" + type);
+		if(App.DEBUG){
+			Log.d(TAG, "buildUriWithUserType uri="+uri);
+		}
+		return uri;
 	}
 	
 	public static Uri buildUriWithUserId(String userId){

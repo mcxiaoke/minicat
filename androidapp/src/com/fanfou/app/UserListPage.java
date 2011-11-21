@@ -39,6 +39,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.0 2011.11.07
  * @version 2.1 2011.11.09
  * @version 2.2 2011.11.18
+ * @version 2.3 2011.11.21
  * 
  */
 public class UserListPage extends BaseActivity implements OnRefreshListener,
@@ -90,10 +91,9 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected void initCursor() {
-		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
+		String where = UserInfo.TYPE + "=? AND " + UserInfo.OWNER_ID
 				+ "=?";
 		String[] whereArgs = new String[] { String.valueOf(type), userId };
-		String orderBy = FanFouProvider.ORDERBY_DATE_DESC;
 		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				whereArgs, null);
 	}

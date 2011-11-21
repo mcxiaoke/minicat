@@ -223,7 +223,7 @@ public class User implements Storable<User> {
 	}
 	
 	@Override
-	public void fromContentValues(ContentValues cv) {	
+	public void fromContentValues(final ContentValues cv) {	
 		id=cv.getAsString(UserInfo.ID);
 		ownerId=cv.getAsString(UserInfo.OWNER_ID);
 		

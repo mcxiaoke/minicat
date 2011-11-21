@@ -23,7 +23,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
-import android.util.Patterns;
 import android.webkit.WebView;
 import android.widget.TextView;
 
