@@ -42,6 +42,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.5 2011.11.11
  * @version 1.6 2011.11.16
  * @version 1.7 2011.11.18
+ * @version 1.8 2011.11.22
  * 
  */
 public class ProfilePage extends BaseActivity {
@@ -287,7 +288,7 @@ public class ProfilePage extends BaseActivity {
 		mProtected.setVisibility(user.protect ? View.VISIBLE : View.GONE);
 
 		setExtraInfo(user);
-		updateFollowButton(user);
+		updateFollowButton(user.following);
 
 		if (!noPermission) {
 			boolean need = OptionHelper.readBoolean(this,
@@ -351,8 +352,8 @@ public class ProfilePage extends BaseActivity {
 		startService(intent);
 	}
 
-	private void updateFollowButton(User u) {
-		mFollowAction.setImageResource(u.following ? R.drawable.btn_unfollow
+	private void updateFollowButton(boolean following) {
+		mFollowAction.setImageResource(following ? R.drawable.btn_unfollow
 				: R.drawable.btn_follow);
 	}
 
@@ -365,6 +366,7 @@ public class ProfilePage extends BaseActivity {
 		if (user == null || user.isNull()) {
 			return;
 		}
+
 		if (user.following) {
 			final ConfirmDialog dialog = new ConfirmDialog(this, "取消关注",
 					"要取消关注" + user.screenName + "吗？");
@@ -372,12 +374,15 @@ public class ProfilePage extends BaseActivity {
 
 				@Override
 				public void onButton1Click() {
+					updateFollowButton(false);
 					ActionManager.doFollow(mContext, user,
 							new MyResultReceiver());
 				}
 			});
+
 			dialog.show();
 		} else {
+			updateFollowButton(true);
 			ActionManager.doFollow(mContext, user, new MyResultReceiver());
 		}
 
@@ -499,7 +504,7 @@ public class ProfilePage extends BaseActivity {
 							|| type == Commons.ACTION_USER_UNFOLLOW) {
 						if (App.DEBUG)
 							log("user.following=" + user.following);
-						updateFollowButton(user);
+						updateFollowButton(user.following);
 						Utils.notify(mContext, user.following ? "关注成功"
 								: "取消关注成功");
 					}
@@ -514,10 +519,13 @@ public class ProfilePage extends BaseActivity {
 				int type = resultData.getInt(Commons.EXTRA_TYPE);
 				if (type == Commons.ACTION_USER_RELATION) {
 					return;
-				}
-				if (type == Commons.ACTION_USER_SHOW) {
+				} else if (type == Commons.ACTION_USER_SHOW) {
 					stopRefreshAnimation();
+				} else if (type == Commons.ACTION_USER_FOLLOW
+						|| type == Commons.ACTION_USER_UNFOLLOW) {
+					updateFollowButton(user.following);
 				}
+
 				String msg = resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
 				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
 				break;

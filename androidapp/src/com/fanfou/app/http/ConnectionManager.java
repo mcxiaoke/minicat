@@ -29,7 +29,6 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
-import android.net.http.AndroidHttpClient;
 import android.util.Log;
 
 import com.fanfou.app.App;

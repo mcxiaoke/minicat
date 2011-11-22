@@ -194,8 +194,8 @@
 		<item name="android:textSize">@dimen/text_size_large</item>
 		<item name="android:textColor">@color/soft_black</item>
 	</style>
-	
-			<style name="Text.ItemName">
+
+	<style name="Text.ItemName">
 		<item name="android:layout_width">wrap_content</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:textSize">@dimen/text_size_large</item>
@@ -387,6 +387,25 @@
 		<item name="strokeWidth">2dp</item>
 		<item name="radius">10dp</item>
 		<item name="centered">true</item>
+	</style>
+
+
+	<style name="OnScreenHintTextAppearance">
+		<item name="android:textColor">@android:color/primary_text_dark</item>
+		<item name="android:textColorHighlight">#FFFF9200</item>
+		<item name="android:textColorHint">#808080</item>
+		<item name="android:textColorLink">#5C5CFF</item>
+		<item name="android:textSize">16sp</item>
+		<item name="android:textStyle">normal</item>
+	</style>
+	<style name="OnScreenHintTextAppearance.Small">
+		<item name="android:textSize">14sp</item>
+		<item name="android:textStyle">normal</item>
+		<item name="android:textColor">@android:color/secondary_text_dark</item>
+	</style>
+	<style name="Animation_OnScreenHint">
+		<item name="android:windowEnterAnimation">@anim/on_screen_hint_enter</item>
+		<item name="android:windowExitAnimation">@anim/on_screen_hint_exit</item>
 	</style>
 
 </resources>

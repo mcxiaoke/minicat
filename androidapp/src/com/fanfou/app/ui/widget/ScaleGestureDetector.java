@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.fanfou.app.util;
+package com.fanfou.app.ui.widget;
 
 import android.content.Context;
 import android.util.DisplayMetrics;

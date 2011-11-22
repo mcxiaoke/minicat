@@ -1,18 +1,18 @@
 package com.fanfou.app.ui.widget;
 
 import android.content.Context;
-import android.text.Editable;
 import android.util.AttributeSet;
 import android.widget.MultiAutoCompleteTextView;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.10.24
+ * @version 1.1 2011.11.22
  * 
  */
 public class MyAutoCompleteTextView extends MultiAutoCompleteTextView {
-
-	private Tokenizer mTokenizer;
+	private static final String TAG = MyAutoCompleteTextView.class
+			.getSimpleName();
 
 	public MyAutoCompleteTextView(Context context) {
 		super(context);
@@ -30,25 +30,11 @@ public class MyAutoCompleteTextView extends MultiAutoCompleteTextView {
 	@Override
 	public void setTokenizer(Tokenizer t) {
 		super.setTokenizer(t);
-		mTokenizer = t;
 	}
 
 	@Override
 	public boolean enoughToFilter() {
-		Editable text = getText();
-
-		int end = getSelectionEnd();
-		if (end < 0 || mTokenizer == null) {
-			return false;
-		}
-
-		int start = mTokenizer.findTokenStart(text, end);
-
-		if (end - start >= getThreshold() && text.toString().startsWith("@")) {
-			return true;
-		} else {
-			return false;
-		}
+		return super.enoughToFilter();
 	}
 
 }

@@ -284,15 +284,18 @@ public final class Utils {
 	}
 
 	public static void setAutoNotification(Context context) {
-		boolean isSet = OptionHelper.readBoolean(context,
-				R.string.option_set_notification, false);
-		if (App.DEBUG) {
-			Log.d(TAG, "setAutoNotification flag=" + isSet);
-		}
-		if (!isSet) {
-			AlarmHelper.setNotificationTaskOn(context, 5);
-			OptionHelper.saveBoolean(context, R.string.option_set_notification,
-					true);
+		boolean notificationOn=OptionHelper.readBoolean(context, R.string.option_notification, true);
+		if(notificationOn){
+			boolean isSet = OptionHelper.readBoolean(context,
+					R.string.option_set_notification, false);
+			if (App.DEBUG) {
+				Log.d(TAG, "setAutoNotification flag=" + isSet);
+			}
+			if (!isSet) {
+				AlarmHelper.setNotificationTaskOn(context, 5);
+				OptionHelper.saveBoolean(context, R.string.option_set_notification,
+						true);
+			}
 		}
 	}
 

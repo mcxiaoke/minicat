@@ -26,6 +26,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.2 2011.11.09
  * @version 3.0 2011.11.16
  * @version 3.1 2011.11.17
+ * @version 3.2 2011.11.22
  * 
  */
 public class PhotoViewPage extends BaseActivity {
@@ -91,8 +92,15 @@ public class PhotoViewPage extends BaseActivity {
 	}
 
 	@Override
+	protected void onMenuSaveClick() {
+		doSave();
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		return super.onCreateOptionsMenu(menu);
+		MenuItem option = menu.add(0, MENU_ID_SAVE, MENU_ID_SAVE, "保存图片");
+		option.setIcon(R.drawable.ic_menu_save);
+		return true;
 	}
 
 	@Override
@@ -107,7 +115,7 @@ public class PhotoViewPage extends BaseActivity {
 		super.onDestroy();
 	}
 
-	private void savePhoto() {
+	private void doSave() {
 		File file = new File(mPhotoPath);
 		if (file.exists()) {
 			File dest = new File(IOHelper.getPhotoDir(this), file.getName());

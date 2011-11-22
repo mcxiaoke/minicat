@@ -85,7 +85,7 @@ public class App extends Application {
 		initAppInfo();
 		initPreferences();
 		versionCheck();
-		initAlarm();
+		setAlarms();
 		ACRA.init(this);
 	}
 
@@ -149,7 +149,7 @@ public class App extends Application {
 		appVersionName = pi.versionName;
 	}
 
-	private void initAlarm() {
+	public void setAlarms() {
 		if (!isLogin) {
 			return;
 		}
@@ -167,9 +167,9 @@ public class App extends Application {
 			Log.d("App", "versionCheck");
 		}
 		if (OptionHelper.readInt(this, R.string.option_old_version_code, 0) < appVersionCode) {
-			cleanSettings();
 			OptionHelper.saveInt(this, R.string.option_old_version_code,
 					appVersionCode);
+			cleanSettings();
 		}
 	}
 
@@ -183,6 +183,18 @@ public class App extends Application {
 		editor.remove(getString(R.string.option_set_auto_complete));
 		editor.remove(getString(R.string.option_set_notification));
 		editor.remove(getString(R.string.option_fontsize));
+		editor.commit();
+	}
+	
+	public void cleanAlarmSettings() {
+		if (DEBUG) {
+			Log.d("App", "cleanAlarmSettings");
+		}
+		Editor editor = sp.edit();
+		editor.remove(getString(R.string.option_set_auto_clean));
+		editor.remove(getString(R.string.option_set_auto_update));
+		editor.remove(getString(R.string.option_set_auto_complete));
+		editor.remove(getString(R.string.option_set_notification));
 		editor.commit();
 	}
 

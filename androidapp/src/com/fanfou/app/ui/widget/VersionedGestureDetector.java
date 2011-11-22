@@ -32,7 +32,7 @@ public abstract class VersionedGestureDetector {
 		VersionedGestureDetector detector = null;
 		if (sdkVersion < Build.VERSION_CODES.ECLAIR) {
 			detector = new CupcakeDetector();
-		} else if (sdkVersion < Build.VERSION_CODES.FROYO) {
+		} else if (sdkVersion < 8) {
 			detector = new EclairDetector();
 		} else {
 			detector = new FroyoDetector(context);

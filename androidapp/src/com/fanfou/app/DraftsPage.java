@@ -92,7 +92,7 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuItem clear = menu.add(0, MENU_ID_CLEAR, MENU_ID_CLEAR, "清空草稿");
-		clear.setIcon(R.drawable.i_menu_clear);
+		clear.setIcon(R.drawable.ic_menu_clear);
 		return true;
 	}
 

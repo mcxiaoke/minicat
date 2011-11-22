@@ -36,7 +36,11 @@
 	<dimen name="write_maxheight">180dp</dimen>
 	<dimen name="write_image_height">60dp</dimen>
 	<dimen name="write_actions_height">48dp</dimen>
-	
-		<dimen name="widget_margin">8dp</dimen>
-		<dimen name="widget_padding">6dp</dimen>
+
+	<dimen name="widget_margin">8dp</dimen>
+	<dimen name="widget_padding">6dp</dimen>
+
+
+
+	<dimen name="hint_y_offset">64dp</dimen>
 </resources>

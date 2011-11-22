@@ -2,10 +2,14 @@ package com.fanfou.app.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.FormattableFlags;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.protocol.HTTP;
+
 import android.util.Log;
 
 import com.fanfou.app.App;
@@ -28,6 +32,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.2 2011.11.11
  * @version 3.0 2011.11.18
  * @version 4.0 2011.11.21
+ * @version 4.1 2011.11.22
  * 
  */
 public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
@@ -63,8 +68,9 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 				throw new ApiException(statusCode, Parser.error(response));
 			}
 		} catch (IOException e) {
-			if (App.DEBUG)
-				e.printStackTrace();
+			if (App.DEBUG){
+				Log.e(TAG, e.getMessage()+" "+e.toString());
+			}
 			throw new ApiException(ERROR_NOT_CONNECTED, e.toString(),
 					e.getCause());
 		}
@@ -538,15 +544,18 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 
 	@Override
 	public User friendshipsCreate(String userId,String mode) throws ApiException {
-		String url=String.format(URL_FRIENDSHIPS_CREATE, userId);
+		String url;
+		try {
+			// hack for oauth chinese charactar encode
+			url = String.format(URL_FRIENDSHIPS_CREATE, URLEncoder.encode(userId, HTTP.UTF_8));
+		} catch (UnsupportedEncodingException e) {
+			url = String.format(URL_FRIENDSHIPS_CREATE, userId);
+		}
 		Response response = doPostIdAction(url, null,null,mode);
-
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("friendshipsCreate()---statusCode=" + statusCode+" url="+url);
 		}
-
-		// handlerResponseError(response);
 		User u = User.parse(response);
 		if (u != null) {
 			u.ownerId = App.me.userId;
@@ -557,14 +566,18 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 
 	@Override
 	public User friendshipsDelete(String userId,String mode) throws ApiException {
-		String url=String.format(URL_FRIENDSHIPS_DESTROY, userId);
+//		String url=String.format(URL_FRIENDSHIPS_DESTROY, userId);
+		String url;
+		try {
+			url = String.format(URL_FRIENDSHIPS_DESTROY, URLEncoder.encode(userId, HTTP.UTF_8));
+		} catch (UnsupportedEncodingException e) {
+			url = String.format(URL_FRIENDSHIPS_DESTROY, userId);
+		}
 		Response response = doPostIdAction(url, null,null,mode);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("friendshipsDelete()---statusCode=" + statusCode+" url="+url);
 		}
-
-		// handlerResponseError(response);
 		User u = User.parse(response);
 		if (u != null) {
 			u.ownerId = App.me.userId;
@@ -575,7 +588,15 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 
 	@Override
 	public User blocksCreate(String userId,String mode) throws ApiException {
-		String url=String.format(URL_BLOCKS_CREATE, userId);
+//		String url=String.format(URL_BLOCKS_CREATE, userId);
+		
+		String url;
+		try {
+			url = String.format(URL_BLOCKS_CREATE, URLEncoder.encode(userId, HTTP.UTF_8));
+		} catch (UnsupportedEncodingException e) {
+			url = String.format(URL_BLOCKS_CREATE, userId);
+		}
+		
 		Response response = doPostIdAction(url, null,null,mode);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
@@ -592,7 +613,15 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 
 	@Override
 	public User blocksDelete(String userId,String mode) throws ApiException {
-		String url=String.format(URL_BLOCKS_DESTROY, userId);
+//		String url=String.format(URL_BLOCKS_DESTROY, userId);
+		
+		String url;
+		try {
+			url = String.format(URL_BLOCKS_DESTROY, URLEncoder.encode(userId, HTTP.UTF_8));
+		} catch (UnsupportedEncodingException e) {
+			url = String.format(URL_BLOCKS_DESTROY, userId);
+		}
+		
 		Response response = doPostIdAction(url, null,null,mode);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {

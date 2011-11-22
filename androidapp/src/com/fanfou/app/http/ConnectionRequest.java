@@ -18,6 +18,9 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 
 import android.text.TextUtils;
+import android.util.Log;
+
+import com.fanfou.app.App;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -25,9 +28,11 @@ import com.fanfou.app.util.Utils;
  * @version 1.0 2011.11.03
  * @version 1.1 2011.11.04
  * @version 1.2 2011.11.18
+ * @version 1.3 2011.11.22
  * 
  */
 public final class ConnectionRequest {
+	private static final String TAG=ConnectionRequest.class.getSimpleName();
 
 	public final boolean post;
 	public final List<Parameter> params;
@@ -40,15 +45,17 @@ public final class ConnectionRequest {
 		this.headers = builder.headers;
 		this.params = builder.params;
 		if (post) {
-			if (Utils.isEmpty(params)) {
-				throw new IllegalArgumentException("POST参数不能为空");
-			}
 			this.url = builder.url;
-			if (containsFile(params)) {
-				entity = encodeMultipart(params);
-			} else {
-				entity = encodeForPost(params);
+			if (!Utils.isEmpty(params)) {
+				if (containsFile(params)) {
+					entity = encodeMultipart(params);
+				} else {
+					entity = encodeForPost(params);
+				}
+			}else{
+				entity=null;
 			}
+
 		} else {
 			if (Utils.isEmpty(params)) {
 				this.url = builder.url;
@@ -57,6 +64,9 @@ public final class ConnectionRequest {
 				;
 			}
 			this.entity = null;
+		}
+		if(App.DEBUG){
+			Log.d(TAG, "ConnectionRequest url="+url+" post="+post);
 		}
 	}
 
@@ -228,12 +238,13 @@ public final class ConnectionRequest {
 	public static String encodeForGet(List<Parameter> params) {
 		if (Utils.isEmpty(params)) {
 			return "";
-		}
+		}	
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < params.size(); i++) {
 			Parameter p = params.get(i);
 			if (p.isFile()) {
-				throw new IllegalArgumentException("GET参数不能为文件");
+//				throw new IllegalArgumentException("GET参数不能为文件");
+				continue;
 			}
 			if (i > 0) {
 				buf.append("&");
@@ -246,7 +257,8 @@ public final class ConnectionRequest {
 
 	public static MultipartEntity encodeMultipart(List<Parameter> params) {
 		if (Utils.isEmpty(params)) {
-			throw new IllegalArgumentException("POST参数不能为空");
+//			throw new IllegalArgumentException("POST参数不能为空");
+			return null;
 		}
 		MultipartEntity entity = new MultipartEntity();
 		try {
@@ -269,7 +281,8 @@ public final class ConnectionRequest {
 
 	public static HttpEntity encodeForPost(List<Parameter> params) {
 		if (Utils.isEmpty(params)) {
-			throw new IllegalArgumentException("POST参数不能为空");
+//			throw new IllegalArgumentException("POST参数不能为空");
+			return null;
 		}
 		HttpEntity entity = null;
 		try {

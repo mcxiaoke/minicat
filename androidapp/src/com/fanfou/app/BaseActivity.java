@@ -35,6 +35,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.3 2011.11.07
  * @version 2.4 2011.11.11
  * @version 2.5 2011.11.15
+ * @version 2.6 2011.11.22
  * 
  */
 public abstract class BaseActivity extends Activity implements
@@ -177,6 +178,7 @@ public abstract class BaseActivity extends Activity implements
 	protected static final int MENU_ID_HOME = 6; 
 	protected static final int MENU_ID_CLEAR = 7;
 	protected static final int MENU_ID_REFRESH = 8; 
+	protected static final int MENU_ID_SAVE = 9; 
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
@@ -207,6 +209,10 @@ public abstract class BaseActivity extends Activity implements
 			onMenuClearClick();
 			break;
 		case MENU_ID_REFRESH:
+			onMenuRefreshClick();
+			break;
+		case MENU_ID_SAVE:
+			onMenuSaveClick();
 			break;
 		default:
 			break;
@@ -238,7 +244,7 @@ public abstract class BaseActivity extends Activity implements
 //		feedback.setIcon(R.drawable.i_menu_feedback);
 
 		MenuItem home = menu.add(0, MENU_ID_HOME, MENU_ID_HOME, "返回首页");
-		home.setIcon(R.drawable.i_menu_home);
+		home.setIcon(R.drawable.ic_menu_home);
 //
 //		MenuItem clear = menu.add(0, MENU_ID_CLEAR, MENU_ID_CLEAR, "清空草稿");
 //		clear.setIcon(R.drawable.i_menu_clear);
@@ -291,6 +297,10 @@ public abstract class BaseActivity extends Activity implements
 	protected void onMenuRefreshClick(){
 		
 	};
+	
+	protected void onMenuSaveClick(){
+		
+	}
 
 	protected void onMenuLogoutClick() {
 		final ConfirmDialog dialog = new ConfirmDialog(this, "注销",

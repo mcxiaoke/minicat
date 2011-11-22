@@ -68,6 +68,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.4 2011.11.11
  * @version 4.5 2011.11.16
  * @version 4.6 2011.11.21
+ * @version 4.7 2011.11.22
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
@@ -648,24 +649,24 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuItem option = menu.add(0, MENU_ID_OPTION, MENU_ID_OPTION, "功能设置");
-		option.setIcon(R.drawable.i_menu_option);
+		option.setIcon(R.drawable.ic_menu_option);
 
 		MenuItem profile = menu
 				.add(0, MENU_ID_PROFILE, MENU_ID_PROFILE, "我的空间");
-		profile.setIcon(R.drawable.i_menu_profile);
+		profile.setIcon(R.drawable.ic_menu_profile);
 
 		MenuItem search = menu.add(0, MENU_ID_SEARCH, MENU_ID_SEARCH, "热词搜索");
-		search.setIcon(R.drawable.i_menu_search);
+		search.setIcon(R.drawable.ic_menu_search);
 
-		MenuItem logout = menu.add(0, MENU_ID_LOGOUT, MENU_ID_LOGOUT, "切换帐号");
-		logout.setIcon(R.drawable.i_menu_logout);
+		MenuItem logout = menu.add(0, MENU_ID_LOGOUT, MENU_ID_LOGOUT, "注销登录");
+		logout.setIcon(R.drawable.ic_menu_logout);
 
 		MenuItem about = menu.add(0, MENU_ID_ABOUT, MENU_ID_ABOUT, "关于饭否");
-		about.setIcon(R.drawable.i_menu_about);
+		about.setIcon(R.drawable.ic_menu_about);
 
 		MenuItem feedback = menu.add(0, MENU_ID_FEEDBACK, MENU_ID_FEEDBACK,
 				"意见反馈");
-		feedback.setIcon(R.drawable.i_menu_feedback);
+		feedback.setIcon(R.drawable.ic_menu_feedback);
 		return true;
 	}
 

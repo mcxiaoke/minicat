@@ -21,6 +21,7 @@ import com.fanfou.app.util.Utils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
@@ -223,7 +224,7 @@ public class EditProfilePage extends BaseActivity {
 			if (App.DEBUG)
 				log("from gallery uri=" + uri);
 			String path;
-			if (uri.getScheme().equals("content")) {
+			if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
 				path = IOHelper.getRealPathFromURI(this, uri);
 			} else {
 				path = uri.getPath();

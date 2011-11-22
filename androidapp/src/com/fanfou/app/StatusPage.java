@@ -41,6 +41,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.4 2011.11.04
  * @version 2.5 2011.11.07
  * @version 2.6 2011.11.17
+ * @version 2.7 2011.11.22
  * 
  */
 public class StatusPage extends BaseActivity {
@@ -115,8 +116,8 @@ public class StatusPage extends BaseActivity {
 
 	}
 
-	private void updateFavoriteButton() {
-		if (status.favorited) {
+	private void updateFavoriteButton(boolean favorited) {
+		if (favorited) {
 			bFavorite.setImageResource(R.drawable.i_bar2_unfavorite);
 		} else {
 			bFavorite.setImageResource(R.drawable.i_bar2_favorite);
@@ -205,7 +206,7 @@ public class StatusPage extends BaseActivity {
 				bReply.setImageResource(R.drawable.i_bar2_reply);
 			}
 
-			updateFavoriteButton();
+			updateFavoriteButton(status.favorited);
 
 			if (status.isThread) {
 				vThread.setVisibility(View.VISIBLE);
@@ -413,13 +414,14 @@ public class StatusPage extends BaseActivity {
 				} else {
 					status.favorited = false;
 				}
-				updateFavoriteButton();
+				updateFavoriteButton(status.favorited);
 			}
 
 			@Override
 			public void onActionFailed(int type, String message) {
 			}
 		};
+		updateFavoriteButton(!status.favorited);
 		ActionManager.doFavorite(this, status, li);
 	}
 

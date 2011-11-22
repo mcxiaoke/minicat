@@ -1,8 +1,8 @@
 package com.fanfou.app.service;
 
 import java.io.File;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import android.content.ContentUris;
 import android.content.Intent;
@@ -28,6 +28,7 @@ import com.fanfou.app.util.OptionHelper;
  * @version 1.1 2011.11.02
  * @version 2.0 2011.11.15
  * @version 3.0 2011.11.18
+ * @version 3.1 2011.11.22
  * 
  */
 public class TaskQueueService extends BaseIntentService {
@@ -99,7 +100,7 @@ public class TaskQueueService extends BaseIntentService {
 	}
 
 	private void sendQueue() {
-		BlockingDeque<Draft> queue = new LinkedBlockingDeque<Draft>();
+		BlockingQueue<Draft> queue=new LinkedBlockingQueue<Draft>();
 		boolean running = true;
 		Cursor cursor = getContentResolver().query(DraftInfo.CONTENT_URI,
 				DraftInfo.COLUMNS, null, null, null);

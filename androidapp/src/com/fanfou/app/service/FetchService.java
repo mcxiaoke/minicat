@@ -47,6 +47,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.4 2011.11.17
  * @version 5.0 2011.11.18
  * @version 5.1 2011.11.21
+ * @version 5.2 2011.11.22
  * 
  */
 public class FetchService extends BaseIntentService {
@@ -220,13 +221,11 @@ public class FetchService extends BaseIntentService {
 				}
 				int nums = cr.bulkInsert(DirectMessageInfo.CONTENT_URI,
 						Parser.toContentValuesArray(messages));
-				sendCountMessage(nums);
 				return nums;
 			} else {
 				if (App.DEBUG) {
 					log("fetchNewDirectMessages size()=0");
 				}
-				sendCountMessage(0);
 			}
 		} catch (ApiException e) {
 			if (App.DEBUG) {
@@ -266,13 +265,11 @@ public class FetchService extends BaseIntentService {
 				}
 				int nums = cr.bulkInsert(DirectMessageInfo.CONTENT_URI,
 						Parser.toContentValuesArray(messages));
-				sendCountMessage(nums);
 				return nums;
 			} else {
 				if (App.DEBUG) {
 					log("doFetchMessagesMore size()=0");
 				}
-				sendCountMessage(0);
 			}
 		} catch (ApiException e) {
 			if (App.DEBUG) {

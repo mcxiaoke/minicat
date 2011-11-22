@@ -2,6 +2,8 @@ package com.fanfou.app.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
@@ -20,6 +22,9 @@ import com.fanfou.app.db.Contents.UserInfo;
  * 
  */
 public class AutoCompleteCursorAdapter extends ResourceCursorAdapter {
+	private static final String TAG = AutoCompleteCursorAdapter.class
+			.getSimpleName();
+
 	private Context mContext;
 
 	public AutoCompleteCursorAdapter(Context context, Cursor c) {
@@ -34,12 +39,18 @@ public class AutoCompleteCursorAdapter extends ResourceCursorAdapter {
 
 	@Override
 	public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
-		 final String[] projection = new String[] {UserInfo._ID,UserInfo.ID,
-		 UserInfo.SCREEN_NAME,UserInfo.TYPE,UserInfo.OWNER_ID};
+		if (TextUtils.isEmpty(constraint)) {
+			return null;
+		}
+		final String[] projection = new String[] { UserInfo._ID, UserInfo.ID,
+				UserInfo.SCREEN_NAME, UserInfo.TYPE, UserInfo.OWNER_ID };
 		String where = UserInfo.OWNER_ID + " = '" + App.me.userId + "' AND "
-				+ UserInfo.TYPE + " = '" + User.TYPE_FRIENDS + "'"
+				+ UserInfo.TYPE + " = '" + User.TYPE_FRIENDS + "' AND "
 				+ UserInfo.SCREEN_NAME + " like '%" + constraint + "%' OR "
 				+ UserInfo.ID + " like '%" + constraint + "%'";
+		if (App.DEBUG) {
+			Log.d(TAG, "runQueryOnBackgroundThread where=" + where);
+		}
 		return mContext.getContentResolver().query(UserInfo.CONTENT_URI,
 				projection, where, null, null);
 	}

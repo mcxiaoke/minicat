@@ -986,7 +986,7 @@ public class FanFouProvider extends ContentProvider {
 			return false;
 		}
 		Uri uri=Uri.parse(UserInfo.CONTENT_URI + "/id/" + u.id);
-		int result = context.getContentResolver().update(uri, u.toContentValues(), null, null);
+		int result = context.getContentResolver().update(uri, u.toSimpleContentValues(), null, null);
 		if (App.DEBUG) {
 			if(result>0){
 				Log.d(TAG, "updateUserInfo id=" + u.id + " updated rows: " + result+" uri="+uri);

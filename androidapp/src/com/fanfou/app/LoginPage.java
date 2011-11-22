@@ -367,6 +367,8 @@ public final class LoginPage extends Activity implements OnClickListener {
 				if (g != null) {
 					g.dispatch();
 				}
+				App.me.cleanAlarmSettings();
+				App.me.setAlarms();
 				IntentHelper.goHomePage(mContext, page);
 				finish();
 				break;

@@ -5,6 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import com.fanfou.app.ui.widget.ScaleGestureDetector;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;

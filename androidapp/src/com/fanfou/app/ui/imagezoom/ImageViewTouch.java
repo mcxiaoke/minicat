@@ -1,6 +1,6 @@
 package com.fanfou.app.ui.imagezoom;
 
-import com.fanfou.app.util.ScaleGestureDetector;
+import com.fanfou.app.ui.widget.ScaleGestureDetector;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -9,6 +9,11 @@ import android.view.MotionEvent;
 //import android.view.ScaleGestureDetector;
 import android.view.ViewConfiguration;
 
+/**
+ * @author mcxiaoke
+ * @version 1.1 2011.11.22
+ *
+ */
 public class ImageViewTouch extends ImageViewTouchBase {
 	
 	static final float					MIN_ZOOM	= 0.9f;
@@ -34,8 +39,10 @@ public class ImageViewTouch extends ImageViewTouchBase {
 		mGestureListener = new GestureListener();
 		mScaleListener = new ScaleListener();
 		
+		// compatibility for api 7
 		mScaleDetector = new ScaleGestureDetector( getContext(), mScaleListener );
-		mGestureDetector = new GestureDetector( getContext(), mGestureListener, null, true );
+//		mGestureDetector = new GestureDetector( getContext(), mGestureListener, null, true );// api>=8
+		mGestureDetector = new GestureDetector( getContext(), mGestureListener, null );
 		mCurrentScaleFactor = 1f;
 		mDoubleTapDirection = 1;
 	}
