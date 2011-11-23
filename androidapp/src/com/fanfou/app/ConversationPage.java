@@ -16,6 +16,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import com.fanfou.app.adapter.ConversationAdapter;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.cache.CacheManager;
@@ -158,7 +159,7 @@ public class ConversationPage extends BaseActivity implements
 
 		@Override
 		protected List<com.fanfou.app.api.Status> doInBackground(Void... params) {
-			Api api = App.me.api;
+			Api api = FanFouApi.getInstance();
 			String id = mStatus.id;
 			try {
 				if (!StringHelper.isEmpty(id)) {

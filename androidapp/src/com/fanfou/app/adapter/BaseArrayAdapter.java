@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.cache.IImageLoader;
+import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.util.OptionHelper;
 
 /**
@@ -32,7 +33,7 @@ public abstract class BaseArrayAdapter<T> extends BaseAdapter {
 		super();
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);
-		this.mLoader = App.me.getImageLoader();
+		this.mLoader =ImageLoader.getInstance(mContext);
 		this.textMode = OptionHelper.readBoolean(mContext,
 				R.string.option_text_mode, false);
 //		this.fontSize = OptionHelper.parseInt(mContext,

@@ -32,6 +32,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.7 2011.10.21
  * @version 1.8 2011.11.04
  * @version 1.9 2011.11.21
+ * @version 2.0 2011.11.23
  * 
  */
 public class DirectMessage implements Storable<DirectMessage> {
@@ -45,6 +46,8 @@ public class DirectMessage implements Storable<DirectMessage> {
 	public static final int TYPE_IN = Commons.DIRECT_MESSAGE_TYPE_INBOX;
 	public static final int TYPE_OUT = Commons.DIRECT_MESSAGE_TYPE_OUTBOX;
 	public static final int TYPE_ALL = Commons.DIRECT_MESSAGE_TYPE_ALL;
+	public static final int TYPE_LIST = Commons.DIRECT_MESSAGE_TYPE_CONVERSATION_LIST;
+	public static final int TYPE_USER = Commons.DIRECT_MESSAGE_TYPE_CONVERSATION_USER;
 
 	public String id;
 	public String ownerId;
@@ -68,7 +71,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 
 	public User sender = null;
 	public User recipient = null;
-	
+
 	public DirectMessage() {
 
 	}
@@ -87,11 +90,11 @@ public class DirectMessage implements Storable<DirectMessage> {
 		return StringHelper.isEmpty(id);
 	}
 
-	public static List<DirectMessage> parseMessges(Response r)
+	public static List<DirectMessage> parseMessges(Response r, int type)
 			throws ApiException {
 		try {
 			JSONArray a = new JSONArray(r.getContent());
-			return parseMessges(a);
+			return parseMessges(a, type);
 		} catch (JSONException e) {
 			if (App.DEBUG)
 				e.printStackTrace();
@@ -100,7 +103,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 		}
 	}
 
-	public static List<DirectMessage> parseMessges(JSONArray a)
+	public static List<DirectMessage> parseMessges(JSONArray a, int type)
 			throws ApiException {
 		if (a == null) {
 			return null;
@@ -109,7 +112,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 		try {
 			for (int i = 0; i < a.length(); i++) {
 				JSONObject o = a.getJSONObject(i);
-				DirectMessage dm = parse(o);
+				DirectMessage dm = parse(o, type);
 				dms.add(dm);
 			}
 		} catch (JSONException e) {
@@ -117,6 +120,41 @@ public class DirectMessage implements Storable<DirectMessage> {
 					e.getMessage(), e);
 		}
 		return dms;
+	}
+
+	public static List<DirectMessage> parseConversationList(Response response)
+			throws ApiException {
+		return parseConversationList(response.getJSONArray());
+	}
+
+	public static List<DirectMessage> parseConversationList(JSONArray a)
+			throws ApiException {
+		if (a == null) {
+			return null;
+		}
+		List<DirectMessage> dms = new ArrayList<DirectMessage>();
+		try {
+			for (int i = 0; i < a.length(); i++) {
+				JSONObject io = a.getJSONObject(i);
+				JSONObject dmo = io.getJSONObject("dm");
+				DirectMessage dm = parse(dmo, TYPE_LIST);
+				dms.add(dm);
+			}
+		} catch (JSONException e) {
+			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED,
+					e.getMessage(), e);
+		}
+		return dms;
+	}
+
+	public static List<DirectMessage> parseConversationUser(Response response)
+			throws ApiException {
+		return parseConversationUser(response.getJSONArray());
+	}
+
+	public static List<DirectMessage> parseConversationUser(JSONArray a)
+			throws ApiException {
+		return parseMessges(a, TYPE_USER);
 	}
 
 	public static DirectMessage parse(Cursor c) {
@@ -146,18 +184,18 @@ public class DirectMessage implements Storable<DirectMessage> {
 		dm.threadUserName = Parser.parseString(c,
 				DirectMessageInfo.THREAD_USER_NAME);
 		dm.isRead = Parser.parseBoolean(c, DirectMessageInfo.IS_READ);
-		
-		if(TextUtils.isEmpty(dm.id)){
+
+		if (TextUtils.isEmpty(dm.id)) {
 			return null;
 		}
 
 		return dm;
 	}
 
-	public static DirectMessage parse(Response r) throws ApiException {
+	public static DirectMessage parse(Response r, int type) throws ApiException {
 		try {
 			JSONObject o = new JSONObject(r.getContent());
-			return parse(o);
+			return parse(o, type);
 		} catch (JSONException e) {
 			if (App.DEBUG)
 				e.printStackTrace();
@@ -166,7 +204,8 @@ public class DirectMessage implements Storable<DirectMessage> {
 		}
 	}
 
-	public static DirectMessage parse(JSONObject o) throws ApiException {
+	public static DirectMessage parse(JSONObject o, int type)
+			throws ApiException {
 		if (o == null) {
 			return null;
 		}
@@ -197,6 +236,8 @@ public class DirectMessage implements Storable<DirectMessage> {
 
 			dm.isRead = false;
 
+			dm.type = type;
+
 			dm.ownerId = App.me.userId;
 		} catch (JSONException e) {
 			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED,
@@ -210,52 +251,55 @@ public class DirectMessage implements Storable<DirectMessage> {
 	@Override
 	public ContentValues toContentValues() {
 		ContentValues cv = new ContentValues();
-		
+
 		cv.put(DirectMessageInfo.ID, this.id);
 		cv.put(DirectMessageInfo.OWNER_ID, this.ownerId);
 		cv.put(DirectMessageInfo.TEXT, this.text);
-		cv.put(DirectMessageInfo.CREATED_AT,this.createdAt.getTime());
-		
+		cv.put(DirectMessageInfo.CREATED_AT, this.createdAt.getTime());
+
 		cv.put(DirectMessageInfo.SENDER_ID, this.senderId);
 		cv.put(DirectMessageInfo.RECIPIENT_ID, this.recipientId);
-		
+
 		cv.put(DirectMessageInfo.SENDER_SCREEN_NAME, this.senderScreenName);
 		cv.put(DirectMessageInfo.RECIPIENT_SCREEN_NAME,
 				this.recipientScreenName);
-		
+
 		cv.put(DirectMessageInfo.SENDER_PROFILE_IMAGE_URL,
 				this.senderProfileImageUrl);
 		cv.put(DirectMessageInfo.RECIPIENT_PROFILE_IMAGE_URL,
 				this.recipientProfileImageUrl);
-		
+
 		cv.put(BasicColumns.TYPE, this.type);
 
 		cv.put(DirectMessageInfo.THREAD_USER_ID, this.threadUserId);
 		cv.put(DirectMessageInfo.THREAD_USER_NAME, this.threadUserName);
 		cv.put(DirectMessageInfo.IS_READ, this.isRead);
-		
+
 		return cv;
 	}
-	
+
 	@Override
 	public void fromContentValues(final ContentValues cv) {
-		id=cv.getAsString(DirectMessageInfo.ID);
-		ownerId=cv.getAsString(DirectMessageInfo.OWNER_ID);
-		text=cv.getAsString(DirectMessageInfo.TEXT);
-		createdAt=new Date(cv.getAsLong(DirectMessageInfo.CREATED_AT));
-		
-		senderId=cv.getAsString(DirectMessageInfo.SENDER_ID);
-		senderScreenName=cv.getAsString(DirectMessageInfo.SENDER_SCREEN_NAME);
-		senderProfileImageUrl=cv.getAsString(DirectMessageInfo.SENDER_PROFILE_IMAGE_URL);
-		
-		recipientId=cv.getAsString(DirectMessageInfo.RECIPIENT_ID);
-		recipientScreenName=cv.getAsString(DirectMessageInfo.RECIPIENT_SCREEN_NAME);
-		recipientProfileImageUrl=cv.getAsString(DirectMessageInfo.RECIPIENT_PROFILE_IMAGE_URL);
-		
-		type=cv.getAsInteger(DirectMessageInfo.TYPE);
-		threadUserId=cv.getAsString(DirectMessageInfo.THREAD_USER_ID);
-		threadUserName=cv.getAsString(DirectMessageInfo.THREAD_USER_NAME);
-		isRead=cv.getAsBoolean(DirectMessageInfo.IS_READ);
+		id = cv.getAsString(DirectMessageInfo.ID);
+		ownerId = cv.getAsString(DirectMessageInfo.OWNER_ID);
+		text = cv.getAsString(DirectMessageInfo.TEXT);
+		createdAt = new Date(cv.getAsLong(DirectMessageInfo.CREATED_AT));
+
+		senderId = cv.getAsString(DirectMessageInfo.SENDER_ID);
+		senderScreenName = cv.getAsString(DirectMessageInfo.SENDER_SCREEN_NAME);
+		senderProfileImageUrl = cv
+				.getAsString(DirectMessageInfo.SENDER_PROFILE_IMAGE_URL);
+
+		recipientId = cv.getAsString(DirectMessageInfo.RECIPIENT_ID);
+		recipientScreenName = cv
+				.getAsString(DirectMessageInfo.RECIPIENT_SCREEN_NAME);
+		recipientProfileImageUrl = cv
+				.getAsString(DirectMessageInfo.RECIPIENT_PROFILE_IMAGE_URL);
+
+		type = cv.getAsInteger(DirectMessageInfo.TYPE);
+		threadUserId = cv.getAsString(DirectMessageInfo.THREAD_USER_ID);
+		threadUserName = cv.getAsString(DirectMessageInfo.THREAD_USER_NAME);
+		isRead = cv.getAsBoolean(DirectMessageInfo.IS_READ);
 	}
 
 	@Override
@@ -290,7 +334,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		ContentValues cv=toContentValues();
+		ContentValues cv = toContentValues();
 		dest.writeParcelable(cv, flags);
 	}
 
@@ -306,9 +350,5 @@ public class DirectMessage implements Storable<DirectMessage> {
 			return new DirectMessage[size];
 		}
 	};
-
-
-
-
 
 }

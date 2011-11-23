@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.api.ApiException;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.Status;
@@ -124,11 +125,11 @@ public class CleanService extends WakefulIntentService {
 				}
 				List<Status> result = null;
 				if (type == Status.TYPE_HOME) {
-					result = App.me.api.homeTimeline(20, page, sinceId, null,
+					result = FanFouApi.getInstance().homeTimeline(20, page, sinceId, null,
 							FanFouApiConfig.FORMAT_HTML,
 							FanFouApiConfig.MODE_LITE);
 				} else if (type == Status.TYPE_MENTION) {
-					result = App.me.api.mentions(20, page, sinceId, null,
+					result = FanFouApi.getInstance().mentions(20, page, sinceId, null,
 							FanFouApiConfig.FORMAT_HTML,
 							FanFouApiConfig.MODE_LITE);
 				}
@@ -177,10 +178,10 @@ public class CleanService extends WakefulIntentService {
 			}
 			List<Status> result = null;
 			if (type == Status.TYPE_HOME) {
-				result = App.me.api.homeTimeline(FanFouApiConfig.DEFAULT_TIMELINE_COUNT, 0, sinceId, null,
+				result = FanFouApi.getInstance().homeTimeline(FanFouApiConfig.DEFAULT_TIMELINE_COUNT, 0, sinceId, null,
 						FanFouApiConfig.FORMAT_HTML, FanFouApiConfig.MODE_LITE);
 			} else if (type == Status.TYPE_MENTION) {
-				result = App.me.api.mentions(FanFouApiConfig.DEFAULT_TIMELINE_COUNT, 0, sinceId, null,
+				result = FanFouApi.getInstance().mentions(FanFouApiConfig.DEFAULT_TIMELINE_COUNT, 0, sinceId, null,
 						FanFouApiConfig.FORMAT_HTML, FanFouApiConfig.MODE_LITE);
 			}
 

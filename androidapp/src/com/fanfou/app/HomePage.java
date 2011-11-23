@@ -32,6 +32,7 @@ import com.fanfou.app.adapter.ViewsAdapter;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
+import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
@@ -607,7 +608,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	@Override
 	protected void onDestroy() {
-		App.me.shutdownImageLoader();
+		ImageLoader.getInstance(this).shutdown();
 		super.onDestroy();
 	}
 

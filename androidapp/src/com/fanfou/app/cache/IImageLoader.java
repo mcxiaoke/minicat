@@ -5,6 +5,7 @@ package com.fanfou.app.cache;
 
 import java.io.File;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 

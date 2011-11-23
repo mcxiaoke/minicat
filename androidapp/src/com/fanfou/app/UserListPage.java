@@ -18,6 +18,7 @@ import com.fanfou.app.adapter.UserCursorAdapter;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
+import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.db.Contents.BasicColumns;
@@ -222,7 +223,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	@Override
 	protected void onPause() {
 		super.onPause();
-		App.me.clearImageTasks();
+		ImageLoader.getInstance(this).clearQueue();
 	}
 
 	private static final String LIST_STATE = "listState";

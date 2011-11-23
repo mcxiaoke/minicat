@@ -6,6 +6,7 @@ import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Photo;
 import com.fanfou.app.cache.IImageLoader;
+import com.fanfou.app.cache.ImageLoader;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -26,7 +27,7 @@ public class PhotoAdapter extends BaseAdapter {
 			throw new NullPointerException("data cannot be null.");
 		}
 		mContext = context;
-		mLoader = App.me.getImageLoader();
+		mLoader = ImageLoader.getInstance(mContext);
 		mImageList = list;
 	}
 

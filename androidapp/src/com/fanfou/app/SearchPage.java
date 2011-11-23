@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.fanfou.app.adapter.SearchAdapter;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.Search;
 import com.fanfou.app.ui.ActionBar;
 
@@ -110,7 +111,7 @@ public class SearchPage extends BaseActivity implements OnItemClickListener {
 
 		@Override
 		protected Integer doInBackground(Void... params) {
-			Api api = App.me.api;
+			Api api = FanFouApi.getInstance();
 			try {
 				List<Search> savedSearches = api.savedSearchesList();
 				if (savedSearches != null && savedSearches.size() > 0) {

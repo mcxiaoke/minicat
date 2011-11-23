@@ -9,6 +9,7 @@ import com.fanfou.app.App;
 import com.fanfou.app.App.ApnType;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.User;
@@ -46,7 +47,7 @@ public class AutoCompleteService extends WakefulIntentService {
 		if(App.me.noConnection){
 			return;
 		}
-		Api api = App.me.api;
+		Api api = FanFouApi.getInstance();
 		
 		int count = FanFouApiConfig.MAX_USERS_COUNT;
 		try {

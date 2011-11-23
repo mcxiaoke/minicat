@@ -25,6 +25,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.fanfou.app.adapter.UserChooseCursorAdapter;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.User;
+import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.db.Contents.BasicColumns;
@@ -231,7 +232,7 @@ public class UserChoosePage extends BaseActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-		App.me.clearImageTasks();
+		ImageLoader.getInstance(this).clearQueue();
 	}
 
 	@Override

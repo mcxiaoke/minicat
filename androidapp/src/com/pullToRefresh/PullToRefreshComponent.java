@@ -7,10 +7,16 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.pullToRefresh.utils.Pixel;
 
+/**
+ * @author mcxiaoke
+ * @version 1.1 2011.11.23
+ *
+ */
 public class PullToRefreshComponent {
 
 	private static final int EVENT_COUNT = 3;
@@ -19,15 +25,15 @@ public class PullToRefreshComponent {
 	private static final float PULL_ELEMENT_STANDBY_HEIGHT = 100;
 	protected static int firstVisibleItem = 0;
 
-	private View upperView;
-	private View lowerView;
+	private ViewGroup upperView;
+	private ViewGroup lowerView;
 	private ListView listView;
 	private Handler uiThreadHandler;
 
 	private float[] lastYs = new float[EVENT_COUNT];
 
-	private RefreshListener onPullDownRefreshAction = new NoRefreshListener();
-	private RefreshListener onPullUpRefreshAction = new NoRefreshListener();
+	private RefreshListener onPullDownRefreshListener;
+	private RefreshListener onPullUpRefreshListener;
 
 	protected ScrollingState state;
 	private boolean mayPullUpToRefresh = true;
@@ -35,7 +41,7 @@ public class PullToRefreshComponent {
 	private OnReleaseReady onReleaseLowerReady;
 	private OnReleaseReady onReleaseUpperReady;
 
-	public PullToRefreshComponent(View upperView, View lowerView,
+	public PullToRefreshComponent(ViewGroup upperView, ViewGroup lowerView,
 			ListView listView, Handler uiThreadHandler) {
 		this.upperView = upperView;
 		this.lowerView = lowerView;
@@ -72,11 +78,11 @@ public class PullToRefreshComponent {
 	}
 
 	public void beginPullDownRefresh() {
-		this.beginRefresh(this.upperView, this.onPullDownRefreshAction);
+		this.beginRefresh(this.upperView, this.onPullDownRefreshListener);
 	}
 
-	private void beginRefresh(View viewToUpdate,
-			final RefreshListener refreshAction) {
+	private void beginRefresh(ViewGroup viewToUpdate,
+			final RefreshListener li) {
 		android.view.ViewGroup.LayoutParams params = viewToUpdate
 				.getLayoutParams();
 		params.height = (int) PULL_ELEMENT_STANDBY_HEIGHT;
@@ -88,7 +94,7 @@ public class PullToRefreshComponent {
 			public void run() {
 				try {
 					Date start = new Date();
-					refreshAction.doRefresh();
+					li.doRefresh();
 					Date finish = new Date();
 					long difference = finish.getTime() - start.getTime();
 					try {
@@ -103,7 +109,7 @@ public class PullToRefreshComponent {
 						@Override
 						public void run() {
 							PullToRefreshComponent.this
-									.refreshFinished(refreshAction);
+									.refreshFinished(li);
 						}
 					});
 				}
@@ -112,21 +118,21 @@ public class PullToRefreshComponent {
 	}
 
 	public void beginPullUpRefresh() {
-		this.beginRefresh(this.lowerView, this.onPullUpRefreshAction);
+		this.beginRefresh(this.lowerView, this.onPullUpRefreshListener);
 	}
 
 	/**************************************************************/
 	// Listeners
 	/**************************************************************/
 
-	public void setOnPullDownRefreshAction(RefreshListener onRefreshAction) {
+	public void setOnPullDownRefreshListener(RefreshListener li) {
 		this.enablePullDownToRefresh();
-		this.onPullDownRefreshAction = onRefreshAction;
+		this.onPullDownRefreshListener = li;
 	}
 
-	public void setOnPullUpRefreshAction(RefreshListener onRefreshAction) {
+	public void setOnPullUpRefreshListener(RefreshListener li) {
 		this.enablePullUpToRefresh();
-		this.onPullUpRefreshAction = onRefreshAction;
+		this.onPullUpRefreshListener = li;
 	}
 
 	protected void refreshFinished(final RefreshListener refreshAction) {
@@ -284,12 +290,12 @@ public class PullToRefreshComponent {
 		return this.lowerView.getHeight();
 	}
 
-	public RefreshListener getOnUpperRefreshAction() {
-		return this.onPullDownRefreshAction;
+	public RefreshListener getOnUpperRefreshListener() {
+		return this.onPullDownRefreshListener;
 	}
 
-	public RefreshListener getOnLowerRefreshAction() {
-		return this.onPullUpRefreshAction;
+	public RefreshListener getOnLowerRefreshListener() {
+		return this.onPullUpRefreshListener;
 	}
 
 	public void disablePullUpToRefresh() {

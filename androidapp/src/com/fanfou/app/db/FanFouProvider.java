@@ -44,6 +44,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 3.6 2011.11.11
  * @version 3.7 2011.11.15
  * @version 3.8 2011.11.21
+ * @version 3.9 2011.11.23
  * 
  */
 public class FanFouProvider extends ContentProvider {

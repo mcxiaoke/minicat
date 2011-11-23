@@ -18,13 +18,14 @@ import com.fanfou.app.db.Contents.UserInfo;
  * @version 3.3 2011.11.07
  * @version 3.4 2011.11.10
  * @version 3.5 2011.11.18
+ * @version 3.6 2011.11.23
  * 
  */
 public class SQLiteHelper extends SQLiteOpenHelper {
 	public static final String TAG = "SQLiteHelper";
 
 	public static final String DATABASE_NAME = "fanfou.db";
-	public static final int DATABASE_VERSION = 9;
+	public static final int DATABASE_VERSION = 10;
 
 	/**
 	 * @param context

@@ -17,7 +17,7 @@ public class PullingUpState implements ScrollingState {
 			pullToRefreshComponent.beginPullUpRefresh();
 		} else {
 			pullToRefreshComponent.refreshFinished(pullToRefreshComponent
-					.getOnLowerRefreshAction());
+					.getOnLowerRefreshListener());
 		}
 		return true;
 	}

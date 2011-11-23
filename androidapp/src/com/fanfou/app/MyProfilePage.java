@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.cache.IImageLoader;
+import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.service.ActionService;
 import com.fanfou.app.ui.ActionBar;
@@ -86,7 +87,7 @@ public class MyProfilePage extends BaseActivity {
 
 	private void initialize() {
 		mHandler = new Handler();
-		mLoader = App.me.getImageLoader();
+		mLoader = ImageLoader.getInstance(this);
 	}
 
 	private void setLayout() {

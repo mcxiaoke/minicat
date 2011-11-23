@@ -1,15 +1,23 @@
 package com.fanfou.app.cache;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.ref.SoftReference;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import org.apache.http.HttpResponse;
 import android.content.Context;
@@ -22,13 +30,16 @@ import android.widget.ImageView;
 
 import com.fanfou.app.App;
 import com.fanfou.app.http.ConnectionManager;
+import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.ImageHelper;
+import com.fanfou.app.util.StringHelper;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.09.23
  * @version 2.0 2011.09.27
  * @version 2.1 2011.11.04
+ * @version 2.5 2011.11.23
  * 
  */
 public class ImageLoader implements Runnable, IImageLoader {
@@ -43,19 +54,27 @@ public class ImageLoader implements Runnable, IImageLoader {
 
 	private final ExecutorService mExecutorService = Executors
 			.newFixedThreadPool(CORE_POOL_SIZE);
-
-	private final BlockingQueue<ImageLoaderTask> mTaskQueue = new LinkedBlockingQueue<ImageLoaderTask>();
+	private final BlockingQueue<ImageLoaderTask> mTaskQueue = new PriorityBlockingQueue<ImageLoaderTask>(
+			20, new ImageLoaderTaskComparator());
+	// private final BlockingQueue<ImageLoaderTask> mTaskQueue = new
+	// LinkedBlockingQueue<ImageLoader.ImageLoaderTask>();
 	private final ConcurrentHashMap<ImageLoaderTask, ImageLoaderCallback> mCallbackMap = new ConcurrentHashMap<ImageLoaderTask, ImageLoaderCallback>();
 	public final ImageCache mCache;
 	private final Handler mHandler;
 
-	// private final DefaultHttpClient mHttpClient;
+	private static ImageLoader INSTANCE = null;
 
-	public ImageLoader(Context context) {
-		this.mCache = new ImageCache(context);
+	private ImageLoader(Context context) {
+		this.mCache = ImageCache.getInstance(context);
 		this.mHandler = new ImageDownloadHandler();
-		this.mExecutorService.submit(this);
-		// this.mHttpClient = NetworkHelper.newHttpClient();
+		new Thread(this).start();
+	}
+
+	public static ImageLoader getInstance(Context context) {
+		if (INSTANCE == null) {
+			INSTANCE = new ImageLoader(context);
+		}
+		return INSTANCE;
 	}
 
 	@Override
@@ -129,6 +148,7 @@ public class ImageLoader implements Runnable, IImageLoader {
 					bitmap, 6));
 		} else {
 			task.imageView.setImageResource(iconId);
+			task.imageView.setTag(url);
 			addToQueue(task, new InternelCallback(task.imageView));
 		}
 	}
@@ -152,6 +172,7 @@ public class ImageLoader implements Runnable, IImageLoader {
 		if (bitmap != null) {
 			task.imageView.setImageBitmap(bitmap);
 		} else {
+			task.imageView.setTag(url);
 			addToQueue(task, new InternelCallback(task.imageView));
 		}
 
@@ -160,18 +181,11 @@ public class ImageLoader implements Runnable, IImageLoader {
 	private void addToQueue(final ImageLoaderTask task,
 			final ImageLoaderCallback callback) {
 		if (!mTaskQueue.contains(task)) {
-			try {
-				if (App.DEBUG) {
-					Log.d(TAG, "addToQueue " + new URL(task.url).getFile());
-				}
-				mTaskQueue.put(task);
-				mCallbackMap.put(task, callback);
-			} catch (InterruptedException e) {
-				if (App.DEBUG)
-					e.printStackTrace();
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
+			if (App.DEBUG) {
+				Log.d(TAG, "addToQueue " + task.url);
 			}
+			mTaskQueue.add(task);
+			mCallbackMap.put(task, callback);
 		}
 	}
 
@@ -179,7 +193,10 @@ public class ImageLoader implements Runnable, IImageLoader {
 	public void run() {
 		while (true) {
 			try {
-				ImageLoaderTask task = mTaskQueue.take();
+				final ImageLoaderTask task = mTaskQueue.take();
+				if (App.DEBUG) {
+					Log.d(TAG, "mTaskQueue.take() task=" + task.toString());
+				}
 				if (!mCache.containsKey(task.url)) {
 					final Bitmap bitmap = downloadImage(task.url);
 					mCache.put(task.url, bitmap);
@@ -189,20 +206,19 @@ public class ImageLoader implements Runnable, IImageLoader {
 					message.getData().putParcelable(EXTRA_BITMAP, bitmap);
 					mHandler.sendMessage(message);
 				}
-			} catch (InterruptedException e) {
 			} catch (IOException e) {
 				if (App.DEBUG) {
 					Log.d(TAG, "run() error:" + e.getMessage());
 				}
-			} finally {
+			} catch (InterruptedException e) {
+				if (App.DEBUG) {
+					Log.d(TAG, "run() error:" + e.getMessage());
+				}
 			}
 		}
 	}
 
 	private Bitmap downloadImage(String url) throws IOException {
-		// NetworkHelper.setProxy(mHttpClient);
-		// HttpGet request = new HttpGet(url);
-		// HttpResponse response = mHttpClient.execute(request);
 		HttpResponse response = ConnectionManager.get(url);
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (App.DEBUG) {
@@ -224,7 +240,6 @@ public class ImageLoader implements Runnable, IImageLoader {
 				final Bitmap bitmap = (Bitmap) msg.getData().getParcelable(
 						EXTRA_BITMAP);
 				if (bitmap != null) {
-					// mCache.put(task.url, bitmap);
 					if (callback != null) {
 						callback.onFinish(task.url, bitmap);
 					}
@@ -252,11 +267,10 @@ public class ImageLoader implements Runnable, IImageLoader {
 		public void onFinish(String url, Bitmap bitmap) {
 			if (bitmap != null) {
 				String tag = (String) imageView.getTag();
-				if (App.DEBUG) {
-					Log.d(TAG, "InternelCallback.onFinish() tag=" + tag);
-					Log.d(TAG, "InternelCallback.onFinish() url=" + url);
-				}
 				if (tag != null && tag.equals(url)) {
+					if (App.DEBUG) {
+						Log.d(TAG, "InternelCallback.onFinish() invalidate");
+					}
 					imageView.setImageBitmap(bitmap);
 					imageView.postInvalidate();
 				}
@@ -269,14 +283,53 @@ public class ImageLoader implements Runnable, IImageLoader {
 
 	}
 
+	private static class ImageLoaderTaskComparator implements
+			Comparator<ImageLoaderTask> {
+
+		@Override
+		public int compare(ImageLoaderTask a, ImageLoaderTask b) {
+			if (a.timestamp > b.timestamp) {
+				return -1;
+			} else if (a.timestamp < b.timestamp) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+
+	}
+
 	private class ImageLoaderTask implements Serializable {
+
 		private static final long serialVersionUID = 8580178675788143663L;
+		public final long timestamp;
 		public final String url;
 		public final ImageView imageView;
 
 		public ImageLoaderTask(String url, ImageView imageView) {
+			this.timestamp = System.currentTimeMillis();
 			this.url = url;
 			this.imageView = imageView;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (o instanceof ImageLoaderTask) {
+				if (((ImageLoaderTask) o).url.equals(url)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		@Override
+		public int hashCode() {
+			return url.hashCode();
+		}
+
+		@Override
+		public String toString() {
+			return "time:" + timestamp + " url:" + url;
 		}
 
 	}
@@ -298,6 +351,138 @@ public class ImageLoader implements Runnable, IImageLoader {
 	public void clearQueue() {
 		mTaskQueue.clear();
 		mCallbackMap.clear();
+	}
+
+}
+
+/**
+ * @author mcxiaoke
+ * @version 1.0 2011.06.01
+ * @version 1.1 2011.09.23
+ * @version 1.5 2011.11.23
+ * 
+ */
+class ImageCache implements ICache<Bitmap> {
+	private static final String TAG = ImageCache.class.getSimpleName();
+
+	public static final int IMAGE_QUALITY = 100;
+
+	public static ImageCache INSTANCE = null;
+
+	final Map<String, SoftReference<Bitmap>> memoryCache;
+
+	Context mContext;
+
+	private ImageCache(Context context) {
+		this.mContext = context;
+		this.memoryCache = new HashMap<String, SoftReference<Bitmap>>();
+	}
+
+	public static ImageCache getInstance(Context context) {
+		if (INSTANCE == null) {
+			INSTANCE = new ImageCache(context);
+		}
+		return INSTANCE;
+	}
+
+	@Override
+	public int getCount() {
+		return memoryCache.size();
+	}
+
+	@Override
+	public Bitmap get(String key) {
+		if (StringHelper.isEmpty(key)) {
+			return null;
+		}
+		Bitmap bitmap = null;
+
+		final SoftReference<Bitmap> reference = memoryCache.get(key);
+		if (reference != null) {
+			bitmap = reference.get();
+		}
+
+		if (bitmap == null) {
+			bitmap = loadFromFile(key);
+			if (bitmap == null) {
+				memoryCache.remove(key);
+			} else {
+				synchronized (this) {
+					memoryCache.put(key, new SoftReference<Bitmap>(bitmap));
+				}
+			}
+		}
+		return bitmap;
+	}
+
+	@Override
+	public boolean put(String key, Bitmap bitmap) {
+		synchronized (this) {
+			memoryCache.put(key, new SoftReference<Bitmap>(bitmap));
+		}
+		return writeToFile(key, bitmap);
+	}
+
+	@Override
+	public boolean containsKey(String key) {
+		return get(key) != null;
+	}
+
+	@Override
+	public void clear() {
+		String[] files = mContext.fileList();
+		for (String file : files) {
+			mContext.deleteFile(file);
+		}
+		synchronized (this) {
+			memoryCache.clear();
+		}
+	}
+
+	protected boolean replace(String oldKey, String key, Bitmap bitmap) {
+		boolean result = false;
+		put(key, bitmap);
+		synchronized (this) {
+			result = memoryCache.put(key, new SoftReference<Bitmap>(bitmap)) != null;
+			memoryCache.remove(oldKey);
+		}
+		mContext.deleteFile(StringHelper.md5(oldKey));
+		return result;
+	}
+
+	private Bitmap loadFromFile(String key) {
+
+		Bitmap bitmap = null;
+		String filename = StringHelper.md5(key) + ".jpg";
+		File file = new File(IOHelper.getImageCacheDir(mContext), filename);
+		if (!file.exists()) {
+			return null;
+		}
+		FileInputStream fis = null;
+		try {
+			fis = new FileInputStream(file);
+			bitmap = BitmapFactory.decodeStream(fis);
+		} catch (FileNotFoundException e) {
+			if (App.DEBUG) {
+				Log.e(TAG, e.getMessage());
+			}
+			memoryCache.remove(key);
+		} finally {
+			IOHelper.forceClose(fis);
+		}
+		return bitmap;
+	}
+
+	private boolean writeToFile(String key, Bitmap bitmap) {
+		if (bitmap == null || StringHelper.isEmpty(key)) {
+			return false;
+		}
+		String filename = StringHelper.md5(key) + ".jpg";
+		File file = new File(IOHelper.getImageCacheDir(mContext), filename);
+		if (App.DEBUG) {
+			Log.d(TAG, "save image: " + filename);
+		}
+		return ImageHelper.writeToFile(file, bitmap);
 	}
 
 }

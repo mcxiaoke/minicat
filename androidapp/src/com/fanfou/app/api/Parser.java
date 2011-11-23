@@ -36,6 +36,7 @@ import com.fanfou.app.util.DateTimeHelper;
  * @version 1.3 2011.10.19
  * @version 1.4 2011.11.11
  * @version 1.5 2011.11.15
+ * @version 1.6 2011.11.23
  * 
  */
 public final class Parser implements ResponseCode {

@@ -56,10 +56,8 @@
 	<string name="option_old_version_code">old_version_code</string>
 
 	<string name="option_notification">notification</string>
-	<string name="option_notification_switch">notification_switch</string>
 	<string name="option_notification_interval">notification_interval</string>
 
-	<string name="option_notification_sound">notification_sound</string>
 	<string name="option_notification_vibrate">notification_vibrate</string>
 	<string name="option_notification_led">notification_led</string>
 	<string name="option_notification_ringtone">notification_ringtone</string>

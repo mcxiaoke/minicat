@@ -6,10 +6,12 @@ import java.util.Map;
 
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.ResultInfo;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.IImageLoader;
+import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.ui.ActionBar;
@@ -83,8 +85,7 @@ public class EditProfilePage extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		parseIntent();
-		mLoader = App.me.getImageLoader();
-
+		mLoader = ImageLoader.getInstance(this);
 		setLayout();
 		updateUI();
 	}
@@ -306,7 +307,7 @@ public class EditProfilePage extends BaseActivity {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			api = App.me.api;
+			api = FanFouApi.getInstance();
 			pd = new ProgressDialog(mContext);
 			pd.setMessage("正在更新个人资料...");
 			pd.setIndeterminate(true);
@@ -412,7 +413,7 @@ public class EditProfilePage extends BaseActivity {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			api = App.me.api;
+			api = FanFouApi.getInstance();
 			pd = new ProgressDialog(mEditProfilePage);
 			pd.setMessage("正在更新头像...");
 			pd.setIndeterminate(true);

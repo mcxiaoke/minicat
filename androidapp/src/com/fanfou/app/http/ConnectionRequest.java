@@ -29,6 +29,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.1 2011.11.04
  * @version 1.2 2011.11.18
  * @version 1.3 2011.11.22
+ * @version 1.4 2011.11.23
  * 
  */
 public final class ConnectionRequest {
@@ -69,6 +70,10 @@ public final class ConnectionRequest {
 			Log.d(TAG, "ConnectionRequest url="+url+" post="+post);
 		}
 	}
+	
+	public static Builder newBuilder(){
+		return new Builder();
+	}
 
 	public static class Builder {
 		private boolean post;
@@ -83,6 +88,9 @@ public final class ConnectionRequest {
 		}
 
 		public Builder url(String url) {
+			if(TextUtils.isEmpty(url)){
+				throw new NullPointerException("Builder.url() request url must not be empty or null.");
+			}
 			this.url = url;
 			return this;
 		}

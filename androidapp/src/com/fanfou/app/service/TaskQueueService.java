@@ -16,6 +16,7 @@ import com.fanfou.app.WritePage;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Draft;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.db.Contents.DraftInfo;
@@ -52,7 +53,7 @@ public class TaskQueueService extends BaseIntentService {
 	private boolean doSend(final Draft d) {
 		boolean res = false;
 		try {
-			Api api = App.me.api;
+			Api api = FanFouApi.getInstance();
 			Status result = null;
 			if (d.type == WritePage.TYPE_REPLY) {
 				result = api.statusesCreate(d.text, d.replyTo, null, null, null,

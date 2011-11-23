@@ -13,6 +13,7 @@ import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
@@ -69,7 +70,7 @@ public class ActionService extends BaseIntentService {
 	}
 
 	private void doDetectFriendships(String userA, String userB) {
-		Api api = App.me.api;
+		Api api = FanFouApi.getInstance();
 		try {
 			boolean result = api.friendshipsExists(userA, userB);
 			Bundle data = new Bundle();
@@ -91,7 +92,7 @@ public class ActionService extends BaseIntentService {
 	}
 
 	private void performAction(String id, int type) {
-		Api api = App.me.api;
+		Api api = FanFouApi.getInstance();
 		String where = BasicColumns.ID + "=?";
 		String[] whereArgs = new String[] { id };
 		try {

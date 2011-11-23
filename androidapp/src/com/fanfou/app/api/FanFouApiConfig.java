@@ -175,8 +175,13 @@ public interface FanFouApiConfig {
 	// param page
 	public static final String URL_DIRECT_MESSAGES_INBOX = API_BASE
 			+ "direct_messages/inbox" + EXTENSION;
+	
 	public static final String URL_DIRECT_MESSAGES_OUTBOX = API_BASE
 			+ "direct_messages/sent" + EXTENSION;
+	
+	public static final String URL_DIRECT_MESSAGES_CONVERSATION_LIST=API_BASE+"direct_messages/conversation_list"+ EXTENSION;
+	
+	public static final String URL_DIRECT_MESSAGES_CONVERSATION=API_BASE+"direct_messages/conversation"+ EXTENSION;
 
 	// send direct message
 	// param user -- recipient user id

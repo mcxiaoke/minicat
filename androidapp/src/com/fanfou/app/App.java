@@ -17,13 +17,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.fanfou.app.api.Api;
-import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.User;
-import com.fanfou.app.cache.IImageLoader;
-import com.fanfou.app.cache.ImageLoader;
-import com.fanfou.app.http.NetworkState;
-import com.fanfou.app.util.Compatibility;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
@@ -38,6 +32,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.6 2011.10.27
  * @version 5.0 2011.11.10
  * @version 5.1 2011.11.21
+ * @version 5.2 2011.11.23
  * 
  */
 
@@ -64,9 +59,6 @@ public class App extends Application {
 	
 	public boolean noConnection;
 
-	private IImageLoader imageLoader;
-	public Api api;
-
 	public boolean isLogin;
 	public String userId;
 	public String userScreenName;
@@ -92,8 +84,6 @@ public class App extends Application {
 	private void init() {
 		App.me = this;
 		this.apnType = getApnType(this);
-		this.imageLoader = new ImageLoader(this);
-		this.api = new FanFouApi();
 
 		if (DEBUG) {
 			java.util.logging.Logger.getLogger("org.apache.http").setLevel(
@@ -250,25 +240,6 @@ public class App extends Application {
 		editor.remove(getString(R.string.option_oauth_token));
 		editor.remove(getString(R.string.option_oauth_token_secret));
 		editor.commit();
-	}
-
-	public IImageLoader getImageLoader() {
-		if (imageLoader == null) {
-			imageLoader = new ImageLoader(this);
-		}
-		return imageLoader;
-	}
-
-	public void clearImageTasks() {
-		if (imageLoader != null) {
-			imageLoader.clearQueue();
-		}
-	}
-
-	public void shutdownImageLoader() {
-		if (imageLoader != null) {
-			imageLoader.shutdown();
-		}
 	}
 	
 	public static ApnType getApnType(Context context) {

@@ -13,6 +13,7 @@ import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
@@ -71,7 +72,7 @@ public class PostMessageService extends BaseIntentService {
 	private boolean doSend() {
 		showSendingNotification();
 		boolean res = true;
-		Api api = App.me.api;
+		Api api = FanFouApi.getInstance();
 		try {
 			DirectMessage result = api.directMessagesCreate(userId, content, null,FanFouApiConfig.MODE_LITE);
 			nm.cancel(10);

@@ -9,6 +9,7 @@ import com.fanfou.app.App;
 import com.fanfou.app.HomePage;
 import com.fanfou.app.LoginPage;
 import com.fanfou.app.R;
+import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.config.Commons;
 
 public final class IntentHelper {
@@ -22,7 +23,7 @@ public final class IntentHelper {
 
 	public static void goLoginPage(Context context) {
 		App.me.removeAccountInfo();
-		App.me.clearImageTasks();
+		ImageLoader.getInstance(context).clearQueue();
 		Intent intent = new Intent(context, LoginPage.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		context.startActivity(intent);

@@ -35,25 +35,17 @@
 
 		<PreferenceCategory android:title="通知设置">
 
-			<CheckBoxPreference android:defaultValue="true"
-				android:dependency="@string/option_notification" android:key="@string/option_notification_switch"
-				android:summary="收到消息和私信时在状态栏显示通知" android:title="通知" />
-
-			<CheckBoxPreference android:defaultValue="true"
-				android:dependency="@string/option_notification_switch" android:key="@string/option_notification_sound"
-				android:summary="收到消息和私信时声音提示" android:title="声音" />
-
 			<RingtonePreference android:defaultValue="content://settings/system/notification_sound"
-				android:dependency="@string/option_notification_sound" android:key="@string/option_notification_ringtone"
-				android:ringtoneType="notification" android:title="选择铃声" />
+				android:key="@string/option_notification_ringtone" android:dependency="@string/option_notification"
+				android:ringtoneType="notification" android:title="铃声" />
 
 			<CheckBoxPreference android:defaultValue="true"
-				android:dependency="@string/option_notification_switch" android:key="@string/option_notification_vibrate"
+				android:dependency="@string/option_notification" android:key="@string/option_notification_vibrate"
 				android:summary="收到消息和私信时震动提示" android:title="震动" />
 
 			<CheckBoxPreference android:defaultValue="true"
-				android:dependency="@string/option_notification_switch" android:key="@string/option_notification_led"
-				android:summary="收到消息和私信时闪烁提示" android:title="LED" />
+				android:dependency="@string/option_notification" android:key="@string/option_notification_led"
+				android:summary="收到消息和私信时闪烁提示" android:title="指示灯" />
 		</PreferenceCategory>
 	</PreferenceScreen>
 

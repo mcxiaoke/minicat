@@ -17,6 +17,7 @@ import android.os.Message;
 import com.fanfou.app.App;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
@@ -73,7 +74,7 @@ public class WebService extends Service implements IWebService {
 	}
 
 	private void initialize() {
-		mApi = App.me.api;
+		mApi = FanFouApi.getInstance();
 	}
 
 	@Override

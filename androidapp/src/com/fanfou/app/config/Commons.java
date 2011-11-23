@@ -11,6 +11,7 @@ package com.fanfou.app.config;
  * @version 1.5 2011.10.10
  * @version 1.6 2011.11.08
  * @version 1.7 2011.11.11
+ * @version 1.8 2011.11.23
  * 
  */
 public interface Commons {
@@ -89,6 +90,8 @@ public interface Commons {
 	public static final int DIRECT_MESSAGE_TYPE_INBOX = 21;
 	public static final int DIRECT_MESSAGE_TYPE_OUTBOX = 22;
 	public static final int DIRECT_MESSAGE_TYPE_ALL = 23;
+	public static final int DIRECT_MESSAGE_TYPE_CONVERSATION_LIST = 24;
+	public static final int DIRECT_MESSAGE_TYPE_CONVERSATION_USER = 25;
 
 	public static final int USER_TYPE_FRIENDS = 41;
 	public static final int USER_TYPE_FOLLOWERS = 42;

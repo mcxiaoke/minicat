@@ -129,9 +129,9 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 			}
 		}
 
-		holder.headIcon.setTag(s.userProfileImageUrl);
 
 		if (!isTextMode()) {
+//			holder.headIcon.setTag(s.userProfileImageUrl);
 			mLoader.set(s.userProfileImageUrl, holder.headIcon,
 					R.drawable.default_head);
 			holder.headIcon.setOnClickListener(new View.OnClickListener() {

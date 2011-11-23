@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.cache.IImageLoader;
+import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.cache.IImageLoader.ImageLoaderCallback;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
@@ -97,7 +98,7 @@ public class StatusPage extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mLoader = App.me.getImageLoader();
+		mLoader = ImageLoader.getInstance(this);
 		mHandler = new Handler();
 
 		setContentView(R.layout.status);

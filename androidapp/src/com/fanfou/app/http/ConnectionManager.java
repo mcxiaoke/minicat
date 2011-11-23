@@ -56,8 +56,8 @@ public final class ConnectionManager {
 	private static final String TAG = ConnectionManager.class.getSimpleName();
 
 	public static final int SOCKET_BUFFER_SIZE = 8192;
-	public static final int CONNECTION_TIMEOUT_MS = 10000;
-	public static final int SOCKET_TIMEOUT_MS = 30000;
+	public static final int CONNECTION_TIMEOUT_MS = 20000;
+	public static final int SOCKET_TIMEOUT_MS = 20000;
 	public static final int MAX_TOTAL_CONNECTIONS = 20;
 	public static final int MAX_RETRY_TIMES = 3;
 

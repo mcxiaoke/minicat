@@ -13,6 +13,7 @@ import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.Status;
@@ -33,6 +34,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.2 2011.11.03
  * @version 1.3 2011.11.04
  * @version 2.0 2011.11.18
+ * @version 2.1 2011.11.23
  * 
  */
 public class NotificationService extends BaseIntentService {
@@ -119,7 +121,7 @@ public class NotificationService extends BaseIntentService {
 
 	private void handleDm(int count) throws ApiException {
 		Cursor mc = initCursor(DirectMessage.TYPE_IN);
-		List<DirectMessage> dms = App.me.api.directMessagesInbox(count, DEFAULT_PAGE,
+		List<DirectMessage> dms = FanFouApi.getInstance().directMessagesInbox(count, DEFAULT_PAGE,
 				Utils.getDmSinceId(mc), null, FanFouApiConfig.MODE_LITE);
 		if (dms != null) {
 			int size = dms.size();
@@ -147,7 +149,7 @@ public class NotificationService extends BaseIntentService {
 
 	private void handleMention(int count) throws ApiException {
 		Cursor mc = initCursor(Status.TYPE_MENTION);
-		List<Status> ss = App.me.api.mentions(count, DEFAULT_PAGE,
+		List<Status> ss = FanFouApi.getInstance().mentions(count, DEFAULT_PAGE,
 				Utils.getSinceId(mc), null, FanFouApiConfig.FORMAT_HTML,
 				FanFouApiConfig.MODE_LITE);
 		if (ss != null) {
@@ -175,7 +177,7 @@ public class NotificationService extends BaseIntentService {
 
 	private void handleHome(int count) throws ApiException {
 		Cursor mc = initCursor(Status.TYPE_HOME);
-		List<Status> ss = App.me.api.homeTimeline(count, DEFAULT_PAGE,
+		List<Status> ss = FanFouApi.getInstance().homeTimeline(count, DEFAULT_PAGE,
 				Utils.getSinceId(mc), null, FanFouApiConfig.FORMAT_HTML,
 				FanFouApiConfig.MODE_LITE);
 		if (ss != null) {
@@ -230,11 +232,6 @@ public class NotificationService extends BaseIntentService {
 	}
 
 	private void sendStatusNotification(int type, int count, Status status) {
-		boolean needNotification = OptionHelper.readBoolean(this,
-				R.string.option_notification_switch, false);
-		if (!needNotification) {
-			return;
-		}
 		if (App.DEBUG) {
 			Log.d(TAG, "sendStatusNotification type=" + type + " count="
 					+ count + " status=" + (status == null ? "null" : status)
@@ -249,11 +246,6 @@ public class NotificationService extends BaseIntentService {
 	}
 
 	private void sendMessageNotification(int type, int count, DirectMessage dm) {
-		boolean needNotification = OptionHelper.readBoolean(this,
-				R.string.option_notification_switch, false);
-		if (!needNotification) {
-			return;
-		}
 		if (App.DEBUG) {
 			Log.d(TAG, "sendMessageNotification type=" + type + " count="
 					+ count + " active=" + App.active);

@@ -9,6 +9,7 @@ import android.util.Log;
 import com.fanfou.app.App;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Photo;
 import com.fanfou.app.api.Status;
@@ -36,7 +37,7 @@ public class PhotosLoader extends BaseDataLoader<List<Photo>> {
 
 	@Override
 	public List<Photo> loadInBackground() {
-		Api api = App.me.api;
+		Api api = FanFouApi.getInstance();
 		ArrayList<Photo> photos = null;
 		try {
 			List<Status> ss = api

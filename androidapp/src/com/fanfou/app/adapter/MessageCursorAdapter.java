@@ -103,18 +103,11 @@ public class MessageCursorAdapter extends BaseCursorAdapter {
 		}
 
 		if (!isTextMode()) {
+//			holder.headIcon.setTag(dm.senderProfileImageUrl);
 			mLoader.set(dm.senderProfileImageUrl, holder.headIcon,
 					R.drawable.default_head);
 		}
 
-		// Bitmap bitmap=mLoader.get(dm.senderProfileImageUrl,
-		// getImageCallback(holder.headIcon));
-		// if(bitmap!=null){
-		// holder.headIcon.setImageBitmap(bitmap);
-		// }else{
-		// holder.headIcon.setImageResource(R.drawable.default_head);
-		// }
-		// row.setBackgroundColor(0x44888800);
 		holder.headIcon.setOnClickListener(new View.OnClickListener() {
 
 			@Override

@@ -98,7 +98,7 @@ public class PullToRefreshListView extends RelativeLayout {
 	}
 
 	public void setOnPullDownRefreshAction(final RefreshListener listener) {
-		this.pullToRefresh.setOnPullDownRefreshAction(new RefreshListener() {
+		this.pullToRefresh.setOnPullDownRefreshListener(new RefreshListener() {
 
 			@Override
 			public void refreshFinished() {
@@ -145,7 +145,7 @@ public class PullToRefreshListView extends RelativeLayout {
 	}
 
 	public void setOnPullUpRefreshAction(final RefreshListener listener) {
-		this.pullToRefresh.setOnPullUpRefreshAction(new RefreshListener() {
+		this.pullToRefresh.setOnPullUpRefreshListener(new RefreshListener() {
 
 			@Override
 			public void refreshFinished() {

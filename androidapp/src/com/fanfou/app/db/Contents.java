@@ -230,8 +230,8 @@ public final class Contents {
 				+ RECIPIENT_SCREEN_NAME + " text not null, "
 				+ SENDER_PROFILE_IMAGE_URL + " text not null, "
 				+ RECIPIENT_PROFILE_IMAGE_URL + " text not null, " + TYPE
-				+ " integer not null, " + THREAD_USER_ID + " text not null, "
-				+ THREAD_USER_NAME + " text not null, " + IS_READ
+				+ " integer not null, " + THREAD_USER_ID + " text , "
+				+ THREAD_USER_NAME + " text , " + IS_READ
 				+ " boolean not null, "
 
 				+ "unique ( " + ID + " ) on conflict ignore );";

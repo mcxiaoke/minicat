@@ -19,6 +19,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import com.fanfou.app.App.ApnType;
 import com.fanfou.app.adapter.SearchResultsAdapter;
 import com.fanfou.app.api.ApiException;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.ui.ActionBar;
@@ -240,7 +241,7 @@ public class SearchResultsPage extends BaseActivity implements
 				count = FanFouApiConfig.MAX_TIMELINE_COUNT;
 			}
 			try {
-				result = App.me.api.search(keyword, null,maxId,count, FanFouApiConfig.FORMAT_HTML,FanFouApiConfig.MODE_LITE);
+				result = FanFouApi.getInstance().search(keyword, null,maxId,count, FanFouApiConfig.FORMAT_HTML,FanFouApiConfig.MODE_LITE);
 			} catch (ApiException e) {
 				if (App.DEBUG)
 					e.printStackTrace();
