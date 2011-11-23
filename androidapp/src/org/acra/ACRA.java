@@ -18,8 +18,6 @@ package org.acra;
 import static org.acra.ReportField.*;
 
 import org.acra.annotation.ReportsCrashes;
-import org.acra.sender.EmailIntentSender;
-import org.acra.sender.GoogleFormSender;
 import org.acra.sender.HttpPostSender;
 import org.acra.util.PackageManagerWrapper;
 
@@ -176,36 +174,10 @@ public class ACRA {
      */
     private static void addReportSenders(ErrorReporter errorReporter) {
 
-        // Try to send by mail.
-        if (!"".equals(mReportsCrashes.mailTo())) {
-            Log.w(LOG_TAG, mApplication.getPackageName() + " reports will be sent by email (if accepted by user).");
-            errorReporter.addReportSender(new EmailIntentSender(mApplication));
-            return;
-        }
-
-        // TODO if we REALLY want the behaviour below then we need to change the logic. Because at present it is not falling back to email report.
-        // Check for Internet permission, if not granted fallback to email report.
-
-        final PackageManagerWrapper pm = new PackageManagerWrapper(mApplication);
-        if (!pm.hasPermission(permission.INTERNET)) {
-            // NB If the PackageManager has died then this will erroneously log the error that the App doesn't have Internet (even though it does).
-            // I think that is a small price to pay to ensure that ACRA doesn't crash if the PackageManager has died.
-            Log.e(LOG_TAG, mApplication.getPackageName()
-                            + " should be granted permission "
-                            + permission.INTERNET
-                            + " if you want your crash reports to be sent. If you don't want to add this permission to your application you can also enable sending reports by email. If this is your will then provide your email address in @ReportsCrashes(mailTo=\"your.account@domain.com\"");
-            return;
-        }
-
         // If formUri is set, instantiate a sender for a generic HTTP POST form
         if (mReportsCrashes.formUri() != null && !"".equals(mReportsCrashes.formUri())) {
             errorReporter.addReportSender(new HttpPostSender(mReportsCrashes.formUri(), null));
             return;
-        }
-
-        // The default behavior is to us the formKey for a Google Docs Form.
-        if (mReportsCrashes.formKey() != null && !"".equals(mReportsCrashes.formKey().trim())) {
-            errorReporter.addReportSender(new GoogleFormSender(mReportsCrashes.formKey()));
         }
     }
 
@@ -255,7 +227,6 @@ public class ACRA {
      * @return The Shared Preferences where ACRA will retrieve its user adjustable setting.
      */
     public static SharedPreferences getACRASharedPreferences() {
-        // TODO is there any reason to keep this method public? If we can hide it, we should. Do clients ever need to access it?
         if (!"".equals(mReportsCrashes.sharedPreferencesName())) {
             Log.d(ACRA.LOG_TAG, "Retrieve SharedPreferences " + mReportsCrashes.sharedPreferencesName());
             return mApplication.getSharedPreferences(mReportsCrashes.sharedPreferencesName(),
