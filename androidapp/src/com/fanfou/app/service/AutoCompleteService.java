@@ -2,17 +2,18 @@ package com.fanfou.app.service;
 
 import java.util.List;
 
+import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
 import com.fanfou.app.App;
-import com.fanfou.app.App.ApnType;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.User;
+import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.db.Contents.UserInfo;
 
 /**
@@ -20,9 +21,10 @@ import com.fanfou.app.db.Contents.UserInfo;
  * @version 1.0 2011.10.10
  * @version 1.1 2011.11.17
  * @version 2.0 2011.11.18
+ * @version 2.1 2011.11.24
  * 
  */
-public class AutoCompleteService extends WakefulIntentService {
+public class AutoCompleteService extends BaseIntentService {
 	private static final String TAG = AutoCompleteService.class.getSimpleName();
 
 	public void log(String message) {

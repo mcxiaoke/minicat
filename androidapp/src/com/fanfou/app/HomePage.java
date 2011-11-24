@@ -147,6 +147,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				R.string.option_page_scroll_endless, false);
 		soundEffect = OptionHelper.readBoolean(mContext,
 				R.string.option_play_sound_effect, true);
+		
+		ImageLoader.getInstance(this);
 		mHandler = new Handler();
 		initSendSuccessReceiver();
 		initSoundManager();

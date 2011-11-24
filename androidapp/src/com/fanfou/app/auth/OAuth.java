@@ -16,6 +16,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
@@ -34,6 +35,7 @@ import com.fanfou.app.util.Base64;
 /**
  * @author mcxiaoke
  * @version 2.0 2011.11.03
+ * @version 2.1 2011.11.24
  * 
  */
 public class OAuth {
@@ -82,16 +84,8 @@ public class OAuth {
 			throws ApiException, IOException {
 		String authorization = getXAuthHeader(username, password,
 				HttpGet.METHOD_NAME, ACCESS_TOKEN_URL);
-		// if (App.DEBUG)
-		// log("xauth authorization=" + authorization);
-		// HttpGet request = new HttpGet(ACCESS_TOKEN_URL);
-		// request.addHeader(new BasicHeader("Authorization", authorization));
-		// HttpClient client = NetworkHelper.newHttpClient();
-		// NetworkHelper.setProxy(client);
-		// HttpResponse response = client.execute(request);
 		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
-		builder.url(ACCESS_TOKEN_URL);
-		builder.header("Authorization", authorization);
+		builder.url(ACCESS_TOKEN_URL).header("Authorization", authorization);
 		HttpResponse response = ConnectionManager.exec(builder.build());
 		int statusCode = response.getStatusLine().getStatusCode();
 		String content = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);

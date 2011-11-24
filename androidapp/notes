@@ -1047,3 +1047,9 @@ TODO LIST
 修改数据库部分，threadid变为可选，数据库版本改为10
 修改设置项，简化通知的设置项目
 开始修改PullToRefreshListView
+
+20111124
+修改图片缓存部分，避免空指针
+修改后台任务，减少频率，减少耗电
+暂时去掉下拉刷新，下周再实现
+添加自定义debug key，添加ant build.xml

@@ -16,6 +16,7 @@ import com.fanfou.app.App.ApnType;
  * @version 1.0 2011.01.29
  * @version 1.1 2011.05.02
  * @version 1.2 2011.05.02
+ * @version 1.3 2011.11.24
  * 
  */
 public class NetworkState {
@@ -24,7 +25,6 @@ public class NetworkState {
 	 */
 	private static final String TAG = NetworkState.class.getSimpleName();
 	private ConnectivityManager cm;
-	private String apnTypeName = "cmnet";
 	private ApnType apnType = ApnType.NET;
 
 	/**
@@ -58,9 +58,8 @@ public class NetworkState {
 				App.me.noConnection=false;
 				if (info.getType() == ConnectivityManager.TYPE_WIFI) {
 					apnType = ApnType.WIFI;
-					apnTypeName = "wifi";
 				} else if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
-					apnTypeName = info.getExtraInfo();
+					String apnTypeName = info.getExtraInfo();
 					if (!TextUtils.isEmpty(apnTypeName)) {
 						if (apnTypeName.equals("3gnet")) {
 							apnType = ApnType.HSDPA;
@@ -87,10 +86,6 @@ public class NetworkState {
 		return apnType;
 	}
 
-	public String getApnName() {
-		return apnTypeName;
-	}
-
 	/**
 	 * 判断是否WIFI接入
 	 * 
@@ -113,7 +108,7 @@ public class NetworkState {
 			if (info != null && info.isAvailable()) {
 				log(info.toString());
 				if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
-					apnTypeName = info.getExtraInfo();
+					String apnTypeName = info.getExtraInfo();
 					if (!TextUtils.isEmpty(apnTypeName)) {
 						if (apnTypeName.equals("3gnet")) {
 							result = true;

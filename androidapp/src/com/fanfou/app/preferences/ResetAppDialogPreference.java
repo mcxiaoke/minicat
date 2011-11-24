@@ -72,7 +72,6 @@ public class ResetAppDialogPreference extends DialogPreference {
 			OptionHelper.clearSettings(c);
 			IOHelper.cleanDB(c);
 			IOHelper.ClearCache(c);
-
 			return true;
 		}
 	}

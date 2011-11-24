@@ -49,6 +49,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.1 2011.11.04
  * @version 3.0 2011.11.09
  * @version 3.1 2011.11.15
+ * @version 3.2 2011.11.24
  * 
  */
 public final class ConnectionManager {
@@ -61,47 +62,49 @@ public final class ConnectionManager {
 	public static final int MAX_TOTAL_CONNECTIONS = 20;
 	public static final int MAX_RETRY_TIMES = 3;
 
-	private DefaultHttpClient httpClient;
-	private static ConnectionManager INSTANCE = new ConnectionManager();
+	private static DefaultHttpClient sHttpClient;
+	private static final ConnectionManager INSTANCE = new ConnectionManager();
 
-	private void log(String message) {
+	private final void log(String message) {
 		Log.d(TAG, message);
 	}
 
-	// get the single instance
-	private static ConnectionManager getInstance() {
-		return INSTANCE;
+	public final static void init() {
 	}
 
-	// get new instance
-	public static ConnectionManager newInstance() {
-		return new ConnectionManager();
+	// get the single instance
+	private final static ConnectionManager getInstance() {
+		return INSTANCE;
 	}
 
 	private ConnectionManager() {
 		prepareHttpClient();
 	}
 
-	public static HttpResponse execWithOAuth(ConnectionRequest cr)
+	public final static void setHttpClient(DefaultHttpClient client) {
+		sHttpClient = client;
+	}
+
+	public final static HttpResponse execWithOAuth(ConnectionRequest cr)
 			throws IOException, ApiException {
 		return getInstance().openWithOAuth(cr);
 	}
 
-	public static HttpResponse exec(ConnectionRequest cr) throws IOException,
-			ApiException {
+	public final static HttpResponse exec(ConnectionRequest cr)
+			throws IOException, ApiException {
 		return getInstance().open(cr);
 	}
 
-	public static HttpResponse get(String url) throws IOException {
+	public final static HttpResponse get(String url) throws IOException {
 		return getInstance().getImpl(url);
 	}
 
-	public static HttpResponse post(String url, List<Parameter> params)
+	public final static HttpResponse post(String url, List<Parameter> params)
 			throws IOException {
 		return getInstance().postImpl(url, params);
 	}
 
-	private HttpResponse openWithOAuth(ConnectionRequest cr)
+	private final HttpResponse openWithOAuth(ConnectionRequest cr)
 			throws IOException, ApiException {
 
 		HttpRequestBase request = null;
@@ -113,7 +116,6 @@ public final class ConnectionManager {
 		}
 		setHeaders(request, cr.headers);
 		setOAuth(request, cr.params);
-		setProxy(httpClient);
 		if (App.DEBUG) {
 			Header[] headers = request.getAllHeaders();
 			for (Header header : headers) {
@@ -121,10 +123,10 @@ public final class ConnectionManager {
 						+ header.getValue());
 			}
 		}
-		return httpClient.execute(request);
+		return execute(request);
 	}
 
-	private HttpResponse open(ConnectionRequest cr) throws IOException,
+	private final HttpResponse open(ConnectionRequest cr) throws IOException,
 			ApiException {
 
 		HttpRequestBase request = null;
@@ -135,7 +137,6 @@ public final class ConnectionManager {
 			request = new HttpGet(cr.url);
 		}
 		setHeaders(request, cr.headers);
-		setProxy(httpClient);
 		if (App.DEBUG) {
 			Header[] headers = request.getAllHeaders();
 			for (Header header : headers) {
@@ -143,23 +144,33 @@ public final class ConnectionManager {
 						+ header.getValue());
 			}
 		}
-		return httpClient.execute(request);
+		return execute(request);
 	}
 
-	private HttpResponse getImpl(String url) throws IOException {
-		setProxy(httpClient);
-		return httpClient.execute(new HttpGet(url));
+	private final HttpResponse getImpl(String url) throws IOException {
+		return execute(new HttpGet(url));
 	}
 
-	private HttpResponse postImpl(String url, List<Parameter> params)
+	private final HttpResponse postImpl(String url, List<Parameter> params)
 			throws IOException {
-		setProxy(httpClient);
 		HttpPost post = new HttpPost(url);
 		post.setEntity(ConnectionRequest.encodeForPost(params));
-		return httpClient.execute(post);
+		return execute(post);
 	}
 
-	private static void setHeaders(HttpRequestBase request, List<Header> headers) {
+	private final HttpResponse execute(HttpUriRequest request)
+			throws IOException {
+//		if (sHttpClient == null) {
+//			prepareHttpClient();
+//		}
+		setProxy(sHttpClient);
+		return sHttpClient.execute(request);
+//		Log.e(TAG, "execute() HttpClient is null.");
+//		throw new IOException("execute() HttpClient is null.");
+	}
+
+	private final static void setHeaders(HttpRequestBase request,
+			List<Header> headers) {
 		if (headers != null) {
 			for (Header header : headers) {
 				request.addHeader(header);
@@ -167,7 +178,7 @@ public final class ConnectionManager {
 		}
 	}
 
-	private synchronized void prepareHttpClient() {
+	private final synchronized void prepareHttpClient() {
 		HttpParams params = new BasicHttpParams();
 
 		HttpConnectionParams.setStaleCheckingEnabled(params, false);
@@ -195,14 +206,14 @@ public final class ConnectionManager {
 				SSLSocketFactory.getSocketFactory(), 443));
 		ClientConnectionManager manager = new ThreadSafeClientConnManager(
 				params, schReg);
-		httpClient = new DefaultHttpClient(manager, params);
-		httpClient.addRequestInterceptor(new GzipRequestInterceptor());
-		httpClient.addResponseInterceptor(new GzipResponseInterceptor());
-		httpClient.setHttpRequestRetryHandler(new RequestRetryHandler(
+		sHttpClient = new DefaultHttpClient(manager, params);
+		sHttpClient.addRequestInterceptor(new GzipRequestInterceptor());
+		sHttpClient.addResponseInterceptor(new GzipResponseInterceptor());
+		sHttpClient.setHttpRequestRetryHandler(new RequestRetryHandler(
 				MAX_RETRY_TIMES));
 	}
 
-	private static void setProxy(final HttpClient client) {
+	private final static void setProxy(final HttpClient client) {
 		if (client == null) {
 			return;
 		}
@@ -228,8 +239,8 @@ public final class ConnectionManager {
 		}
 	}
 
-	private static void setOAuth(HttpUriRequest request, List<Parameter> params)
-			throws ApiException {
+	private final static void setOAuth(HttpUriRequest request,
+			List<Parameter> params) throws ApiException {
 		if (StringHelper.isEmpty(App.me.oauthAccessToken)
 				|| StringHelper.isEmpty(App.me.oauthAccessTokenSecret)) {
 			throw new ApiException(ResponseCode.ERROR_AUTH_FAILED, "未通过验证，请登录");

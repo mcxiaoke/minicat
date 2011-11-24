@@ -223,6 +223,11 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	@Override
 	protected void onPause() {
 		super.onPause();
+	}
+	
+	@Override
+	protected void onStop(){
+		super.onStop();
 		ImageLoader.getInstance(this).clearQueue();
 	}
 

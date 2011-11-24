@@ -8,6 +8,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -18,6 +19,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.api.User;
+import com.fanfou.app.cache.ImageLoader;
+import com.fanfou.app.http.ConnectionManager;
+import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
@@ -33,41 +37,32 @@ import com.fanfou.app.util.Utils;
  * @version 5.0 2011.11.10
  * @version 5.1 2011.11.21
  * @version 5.2 2011.11.23
+ * @version 5.3 2011.11.24
  * 
  */
 
 @ReportsCrashes(formKey = "", formUri = "http://apps.fanfou.com/andstat/cr/", mode = ReportingInteractionMode.TOAST, resToastText = R.string.crash_toast_text)
 public class App extends Application {
 
-	// TODO c2dm activities feature and ui
-	// TODO contacts scan and invite friends and ui
-	// TODO new list fragment for home page
-	// TODO new tabs ui for home page
-	// TODO new layout and ui for pad
-	// TODO timeline filter and local search
-	// TODO edit profile feature and ui
-	// TODO widgets support
-	// TODO standalone camera shot and share feature, ui
-	// TODO timeline: read and unread flag and ui
-	// TODO contentprovider need modify use sqlite
-	// TODO add some flags to status model in db
-
 	public static final boolean DEBUG = true;
+//	public static boolean isDebuggable= false;
 
 	public static App me;
 	public static boolean active = false;
 	
 	public boolean noConnection;
-
 	public boolean isLogin;
+	
 	public String userId;
 	public String userScreenName;
-	public String userProfileImage;
+	
 	public String oauthAccessToken;
 	public String oauthAccessTokenSecret;
+	
 	public int appVersionCode;
 	public String appVersionName;
 	public ApnType apnType;
+	
 	public SharedPreferences sp;
 
 	@Override
@@ -78,12 +73,16 @@ public class App extends Application {
 		initPreferences();
 		versionCheck();
 		setAlarms();
+		ConnectionManager.init();
+//		ImageLoader.init(this);
 		ACRA.init(this);
 	}
 
 	private void init() {
 		App.me = this;
 		this.apnType = getApnType(this);
+//		this.isDebuggable=( 0 != ( getApplicationInfo().flags &= ApplicationInfo.FLAG_DEBUGGABLE ) );
+		//boolean DEBUGGABLE = (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
 
 		if (DEBUG) {
 			java.util.logging.Logger.getLogger("org.apache.http").setLevel(
@@ -112,8 +111,6 @@ public class App extends Application {
 				null);
 		this.userScreenName = OptionHelper.readString(this,
 				R.string.option_username, null);
-		this.userProfileImage = OptionHelper.readString(this,
-				R.string.option_profile_image, null);
 		this.oauthAccessToken = OptionHelper.readString(this,
 				R.string.option_oauth_token, null);
 		this.oauthAccessTokenSecret = OptionHelper.readString(this,
@@ -146,10 +143,9 @@ public class App extends Application {
 		if (DEBUG) {
 			Log.d("App", "initAlarm");
 		}
-		Utils.setAutoClean(this);
-		Utils.setAutoUpdate(this);
-		Utils.setAutoComplete(this);
-		Utils.setAutoNotification(this);
+		AlarmHelper.checkAutoUpdateSet(this);
+		AlarmHelper.checkAutoCompleteSet(this);
+		AlarmHelper.checkAutoNotificationSet(this);
 	}
 
 	private void versionCheck() {
@@ -195,7 +191,6 @@ public class App extends Application {
 		}
 		userId = u.id;
 		userScreenName = u.screenName;
-		userProfileImage = u.profileImageUrl;
 		Editor editor = sp.edit();
 		editor.putString(getString(R.string.option_userid), u.id);
 		editor.putString(getString(R.string.option_username), u.screenName);
@@ -216,7 +211,6 @@ public class App extends Application {
 		}
 		userId = u.id;
 		userScreenName = u.screenName;
-		userProfileImage = u.profileImageUrl;
 		OptionHelper.saveString(this, R.string.option_userid, u.id);
 		OptionHelper.saveString(this, R.string.option_username, u.screenName);
 		OptionHelper.saveString(this, R.string.option_profile_image,
@@ -230,7 +224,6 @@ public class App extends Application {
 		isLogin = false;
 		userId = null;
 		userScreenName = null;
-		userProfileImage = null;
 		oauthAccessToken = null;
 		oauthAccessTokenSecret = null;
 		Editor editor = sp.edit();

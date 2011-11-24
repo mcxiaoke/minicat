@@ -27,7 +27,7 @@ import com.fanfou.app.util.IOHelper;
  * @version 2.1 2011.11.21
  * 
  */
-public class PostMessageService extends BaseIntentService {
+public class PostMessageService extends WakefulIntentService {
 
 	private static final String TAG = PostMessageService.class.getSimpleName();
 	private NotificationManager nm;

@@ -103,7 +103,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 				onWifiConnected(context);
 			}
 		} else {
-			App.me.noConnection = true;
+//			App.me.noConnection = true;
 			if (App.DEBUG) {
 				Log.v(TAG, "onReceive NetworkInfo is null.");
 			}

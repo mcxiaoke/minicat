@@ -211,17 +211,6 @@ public final class Utils {
 	}
 
 	public static String getExtension(String filename) {
-		// int slashIndex = url.lastIndexOf('/');
-		// int dotIndex = url.lastIndexOf('.', slashIndex);
-		// String filenameWithoutExtension;
-		// if (dotIndex == -1)
-		// {
-		// filenameWithoutExtension = url.substring(slashIndex + 1);
-		// }
-		// else
-		// {
-		// filenameWithoutExtension = url.substring(slashIndex + 1, dotIndex);
-		// }
 		String filenameArray[] = filename.split("\\.");
 		return filenameArray[filenameArray.length - 1].toLowerCase();
 	}
@@ -233,70 +222,6 @@ public final class Utils {
 	public static float easeOut(float time, float start, float end,
 			float duration) {
 		return end * ((time = time / duration - 1) * time * time + 1) + start;
-	}
-
-	// public static boolean checkMultiTouch(Context context) {
-	// if (Build.VERSION.SDK_INT > Build.VERSION_CODES.DONUT) {
-	// return context.getPackageManager().hasSystemFeature(
-	// PackageManager.FEATURE_TOUCHSCREEN_MULTITOUCH);
-	// } else {
-	// return false;
-	// }
-	// }
-
-	public static void setAutoClean(Context context) {
-		boolean isSet = OptionHelper.readBoolean(context,
-				R.string.option_set_auto_clean, false);
-		if (App.DEBUG) {
-			Log.d(TAG, "setAutoClean flag=" + isSet);
-		}
-		if (!isSet) {
-			AlarmHelper.setCleanTask(context);
-			OptionHelper.saveBoolean(context, R.string.option_set_auto_clean,
-					true);
-		}
-	}
-
-	public static void setAutoUpdate(Context context) {
-		boolean isSet = OptionHelper.readBoolean(context,
-				R.string.option_set_auto_update, false);
-		if (App.DEBUG) {
-			Log.d(TAG, "setAutoUpdate flag=" + isSet);
-		}
-		if (!isSet) {
-			AlarmHelper.setAutoUpdateTask(context);
-			OptionHelper.saveBoolean(context, R.string.option_set_auto_update,
-					true);
-		}
-	}
-
-	public static void setAutoComplete(Context context) {
-		boolean isSet = OptionHelper.readBoolean(context,
-				R.string.option_set_auto_complete, false);
-		if (App.DEBUG) {
-			Log.d(TAG, "setAutoComplete flag=" + isSet);
-		}
-		if (!isSet) {
-			AlarmHelper.setAutoCompleteTask(context);
-			OptionHelper.saveBoolean(context,
-					R.string.option_set_auto_complete, true);
-		}
-	}
-
-	public static void setAutoNotification(Context context) {
-		boolean notificationOn=OptionHelper.readBoolean(context, R.string.option_notification, true);
-		if(notificationOn){
-			boolean isSet = OptionHelper.readBoolean(context,
-					R.string.option_set_notification, false);
-			if (App.DEBUG) {
-				Log.d(TAG, "setAutoNotification flag=" + isSet);
-			}
-			if (!isSet) {
-				AlarmHelper.setNotificationTaskOn(context, 5);
-				OptionHelper.saveBoolean(context, R.string.option_set_notification,
-						true);
-			}
-		}
 	}
 
 	public static void initScreenConfig(final Activity activity) {

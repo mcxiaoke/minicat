@@ -33,8 +33,6 @@ public class BootReceiver extends BroadcastReceiver {
 		if (update) {
 			AlarmHelper.setAutoUpdateTask(context);
 		}
-
-		AlarmHelper.setCleanTask(context);
 		AlarmHelper.setAutoCompleteTask(context);
 	}
 }

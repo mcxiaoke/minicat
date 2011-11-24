@@ -32,7 +32,7 @@ import com.fanfou.app.util.OptionHelper;
  * @version 3.1 2011.11.22
  * 
  */
-public class TaskQueueService extends BaseIntentService {
+public class TaskQueueService extends WakefulIntentService {
 	public TaskQueueService() {
 		super("TaskQueueService");
 	}

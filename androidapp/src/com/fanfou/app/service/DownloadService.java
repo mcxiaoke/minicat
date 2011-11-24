@@ -14,6 +14,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import android.app.AlertDialog;
+import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -40,9 +41,10 @@ import com.fanfou.app.util.Utils;
  * @author mcxiaoke
  * @version 1.0 2011.09.04
  * @version 2.0 2011.10.31
+ * @version 2.1 2011.11.24
  * 
  */
-public class DownloadService extends WakefulIntentService {
+public class DownloadService extends BaseIntentService {
 	private static final String TAG=DownloadService.class.getSimpleName();
 	
 	public static final String APP_UPDATE_SITE = "http://apps.fanfou.com/android/update.json";
