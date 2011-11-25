@@ -403,7 +403,7 @@ public class FetchService extends BaseIntentService {
 
 				// add at 2011.10.21
 				// if count=20, clear old statuses.
-				if (size >= count && maxId == null) {
+				if (size >= count && page<=1 && maxId == null) {
 					String where = BasicColumns.TYPE + " = ?";
 					String[] whereArgs = new String[] { String.valueOf(mType) };
 					int delete = cr.delete(StatusInfo.CONTENT_URI, where,

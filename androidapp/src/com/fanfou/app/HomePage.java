@@ -25,6 +25,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.fanfou.app.App.ApnType;
 import com.fanfou.app.adapter.BaseCursorAdapter;
 import com.fanfou.app.adapter.MessageCursorAdapter;
 import com.fanfou.app.adapter.StatusCursorAdapter;
@@ -35,6 +36,7 @@ import com.fanfou.app.api.Status;
 import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
@@ -373,7 +375,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		String where = BasicColumns.TYPE + "=?";
 		String[] whereArgs = new String[] { String.valueOf(type) };
 		Uri uri = StatusInfo.CONTENT_URI;
-		return managedQuery(uri, StatusInfo.COLUMNS, where, whereArgs, null);
+		return managedQuery(uri, StatusInfo.COLUMNS, where, whereArgs, FanFouProvider.ORDERBY_DATE_DESC);
 	}
 
 	private Cursor initMessageCursor() {
@@ -433,6 +435,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		if (!App.me.isLogin) {
 			Utils.notify(this, "未通过验证，请登录");
 			return;
+		}
+		if(App.me.apnType!=ApnType.WIFI){
+			ImageLoader.getInstance(this).clearQueue();
 		}
 		Bundle b = new Bundle();
 		b.putInt(Commons.EXTRA_COUNT, FanFouApiConfig.DEFAULT_TIMELINE_COUNT);
@@ -606,6 +611,14 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		super.onPause();
 		if (App.DEBUG)
 			log("onPause");
+	}
+	
+	@Override
+	protected void onStop(){
+		super.onStop();
+		if(App.me.apnType!=ApnType.WIFI){
+			ImageLoader.getInstance(this).clearQueue();
+		}
 	}
 
 	@Override

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if [ $1 ]; then
+    file=$1
+    echo "发布类型: 测试版"
+    echo "发布文件："${file}
+    scp $file sankuai@srv16:/opt/sankuai/apps.fanfou.com/android/beta/
+    echo "发布文件：fanfou.apk"
+    scp $file sankuai@srv16:/opt/sankuai/apps.fanfou.com/android/beta/fanfou.apk
+    echo "发布文件：update.json"
+    scp update.json sankuai@srv16:/opt/sankuai/apps.fanfou.com/android/beta/
+    echo "文件已成功发布到测试站点."
+    exit 0
+fi
+echo "未指定要发布的文件"
+exit 1

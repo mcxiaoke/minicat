@@ -5,6 +5,7 @@ import java.io.IOException;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -34,6 +35,7 @@ import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.ui.TextChangeListener;
+import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.DeviceHelper;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -368,8 +370,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 				if (g != null) {
 					g.dispatch();
 				}
-				App.me.cleanAlarmSettings();
-				App.me.setAlarms();
+				AlarmHelper.setAlarms(mContext);
 				IntentHelper.goHomePage(mContext, page);
 				finish();
 				break;
@@ -377,6 +378,8 @@ public final class LoginPage extends Activity implements OnClickListener {
 				break;
 			}
 		}
+		
+
 
 	}
 

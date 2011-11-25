@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.fanfou.app.App.ApnType;
 import com.fanfou.app.adapter.UserCursorAdapter;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
@@ -69,7 +71,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	private static final String tag = UserListPage.class.getSimpleName();
 
 	private void log(String message) {
-		Log.i(tag, message);
+		Log.d(tag, message);
 	}
 
 	@Override
@@ -228,7 +230,9 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	@Override
 	protected void onStop(){
 		super.onStop();
-		ImageLoader.getInstance(this).clearQueue();
+		if(App.me.apnType!=ApnType.WIFI){
+			ImageLoader.getInstance(this).clearQueue();
+		}
 	}
 
 	private static final String LIST_STATE = "listState";

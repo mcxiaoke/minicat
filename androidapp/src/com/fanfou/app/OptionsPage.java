@@ -30,6 +30,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.1 2011.10.25
  * @version 1.5 2011.11.10
  * @version 1.6 2011.11.16
+ * @version 1.7 2011.11.25
  * 
  */
 public class OptionsPage extends PreferenceActivity implements
@@ -161,15 +162,24 @@ public class OptionsPage extends PreferenceActivity implements
 				String s = sp.getString(
 						getString(R.string.option_notification_interval), "5");
 				int intervel = Integer.parseInt(s);
-				AlarmHelper.setNotificationTaskOn(this, intervel);
+				AlarmHelper.setNotificationTask(this, intervel);
 			} else {
-				AlarmHelper.setNotificationTaskOff(this);
+				AlarmHelper.removeNotificationTask(this);
 			}
 		} else if (key.equals(getString(R.string.option_notification_interval))) {
 			String s = sp.getString(key, "5");
 			int intervel = Integer.parseInt(s);
-			AlarmHelper.setNotificationTaskOn(this, intervel);
-		} else if (key.equals(getString(R.string.option_page_scroll_endless))) {
+			AlarmHelper.setNotificationTask(this, intervel);
+		} 
+		else if(key.equals(getString(R.string.option_autoupdate))){
+			CheckBoxPreference cp = (CheckBoxPreference) p;
+			if(cp.isChecked()){
+				AlarmHelper.setAutoUpdateTask(this);
+			}else{
+				AlarmHelper.removeAutoUpdateTask(this);
+			}
+		}
+		else if (key.equals(getString(R.string.option_page_scroll_endless))) {
 			needRestart = true;
 		} else if (key.equals(getString(R.string.option_force_portrait))) {
 			CheckBoxPreference cp = (CheckBoxPreference) p;

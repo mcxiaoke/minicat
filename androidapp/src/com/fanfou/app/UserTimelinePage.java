@@ -3,6 +3,7 @@ package com.fanfou.app;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.service.FetchService;
@@ -24,7 +25,7 @@ public class UserTimelinePage extends BaseTimelineActivity {
 				+ "=? ";
 		String[] whereArgs = new String[] { String.valueOf(getType()), userId };
 		return managedQuery(StatusInfo.CONTENT_URI, StatusInfo.COLUMNS, where,
-				whereArgs, null);
+				whereArgs, FanFouProvider.ORDERBY_DATE_DESC);
 	}
 
 	@Override

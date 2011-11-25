@@ -34,6 +34,7 @@ import com.fanfou.app.service.FetchService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
+import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.StringHelper;
 
 /**
@@ -45,6 +46,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.3 2011.11.07
  * @version 2.4 2011.11.18
  * @version 2.5 2011.11.21
+ * @version 2.6 2011.11.25
  */
 public class UserChoosePage extends BaseActivity implements
 		FilterQueryProvider, OnItemClickListener {
@@ -112,6 +114,7 @@ public class UserChoosePage extends BaseActivity implements
 			showContent();
 		} else {
 			doRefresh();
+			AlarmHelper.startAutoComplete(this);
 			showProgress();
 		}
 	}

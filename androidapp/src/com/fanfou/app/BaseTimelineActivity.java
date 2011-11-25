@@ -57,7 +57,7 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 			.getSimpleName();
 
 	private void log(String message) {
-		Log.e(tag, message);
+		Log.d(tag, message);
 	}
 
 	@Override

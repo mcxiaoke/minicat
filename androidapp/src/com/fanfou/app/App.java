@@ -38,14 +38,15 @@ import com.fanfou.app.util.Utils;
  * @version 5.1 2011.11.21
  * @version 5.2 2011.11.23
  * @version 5.3 2011.11.24
+ * @version 5.4 2011.11.25
  * 
  */
 
 @ReportsCrashes(formKey = "", formUri = "http://apps.fanfou.com/andstat/cr/", mode = ReportingInteractionMode.TOAST, resToastText = R.string.crash_toast_text)
 public class App extends Application {
 
-	public static final boolean DEBUG = true;
-//	public static boolean isDebuggable= false;
+//	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	public static App me;
 	public static boolean active = false;
@@ -72,9 +73,7 @@ public class App extends Application {
 		initAppInfo();
 		initPreferences();
 		versionCheck();
-		setAlarms();
 		ConnectionManager.init();
-//		ImageLoader.init(this);
 		ACRA.init(this);
 	}
 
@@ -136,26 +135,18 @@ public class App extends Application {
 		appVersionName = pi.versionName;
 	}
 
-	public void setAlarms() {
-		if (!isLogin) {
-			return;
-		}
-		if (DEBUG) {
-			Log.d("App", "initAlarm");
-		}
-		AlarmHelper.checkAutoUpdateSet(this);
-		AlarmHelper.checkAutoCompleteSet(this);
-		AlarmHelper.checkAutoNotificationSet(this);
-	}
-
 	private void versionCheck() {
 		if (DEBUG) {
 			Log.d("App", "versionCheck");
 		}
-		if (OptionHelper.readInt(this, R.string.option_old_version_code, 0) < appVersionCode) {
+		if (OptionHelper.readInt(this, R.string.option_old_version_code, 0) < 20111118) {
 			OptionHelper.saveInt(this, R.string.option_old_version_code,
 					appVersionCode);
 			cleanSettings();
+		}
+		if (OptionHelper.readInt(this, R.string.option_old_version_code, 0) < appVersionCode) {
+			OptionHelper.saveInt(this, R.string.option_old_version_code,
+					appVersionCode);
 		}
 	}
 
@@ -169,18 +160,6 @@ public class App extends Application {
 		editor.remove(getString(R.string.option_set_auto_complete));
 		editor.remove(getString(R.string.option_set_notification));
 		editor.remove(getString(R.string.option_fontsize));
-		editor.commit();
-	}
-	
-	public void cleanAlarmSettings() {
-		if (DEBUG) {
-			Log.d("App", "cleanAlarmSettings");
-		}
-		Editor editor = sp.edit();
-		editor.remove(getString(R.string.option_set_auto_clean));
-		editor.remove(getString(R.string.option_set_auto_update));
-		editor.remove(getString(R.string.option_set_auto_complete));
-		editor.remove(getString(R.string.option_set_notification));
 		editor.commit();
 	}
 

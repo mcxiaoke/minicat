@@ -204,8 +204,8 @@ public class FanFouProvider extends ContentProvider {
 	public Cursor query(Uri uri, String[] columns, String where,
 			String[] whereArgs, String orderBy) {
 		if (App.DEBUG) {
-			log("query() uri = " + uri + " where= (" + where + ") whereArgs = "
-					+ StringHelper.toString(whereArgs));
+			log("query() uri = " + uri + " where = (" + where + ") whereArgs = "
+					+ StringHelper.toString(whereArgs)+" orderBy = "+orderBy);
 		}
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
@@ -228,7 +228,6 @@ public class FanFouProvider extends ContentProvider {
 			break;
 		case STATUSES_ALL:
 			qb.setTables(StatusInfo.TABLE_NAME);
-			order = ORDERBY_DATE_DESC;
 			break;
 		case STATUS_SEARCH:
 			order = ORDERBY_DATE_DESC;
@@ -341,9 +340,10 @@ public class FanFouProvider extends ContentProvider {
 		if (values == null || values.size() == 0) {
 			throw new IllegalArgumentException("插入数据不能为空.");
 		}
-
-		// log("insert() uri=" + uri.toString() + " id="
-		// + values.getAsString(BasicColumns.ID));
+		if (App.DEBUG) {
+			log("insert() uri=" + uri.toString() + " id="
+					+ values.getAsString(BasicColumns.ID));
+		}
 
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		String table;
@@ -538,8 +538,6 @@ public class FanFouProvider extends ContentProvider {
 		final SQLiteDatabase db = dbHelper.getWritableDatabase();
 		InsertHelper ih = new InsertHelper(db, StatusInfo.TABLE_NAME);
 
-
-
 		int id = ih.getColumnIndex(StatusInfo.ID);
 		int ownerId = ih.getColumnIndex(StatusInfo.OWNER_ID);
 		int createdAt = ih.getColumnIndex(StatusInfo.CREATED_AT);
@@ -553,7 +551,7 @@ public class FanFouProvider extends ContentProvider {
 		int inReplyToUserId = ih.getColumnIndex(StatusInfo.IN_REPLY_TO_USER_ID);
 		int inReplyToScreenName = ih
 				.getColumnIndex(StatusInfo.IN_REPLY_TO_SCREEN_NAME);
-		
+
 		int photoImageUrl = ih.getColumnIndex(StatusInfo.PHOTO_IMAGE_URL);
 		int photoThumbUrl = ih.getColumnIndex(StatusInfo.PHOTO_THUMB_URL);
 		int photoLargeUrl = ih.getColumnIndex(StatusInfo.PHOTO_LARGE_URL);
@@ -565,13 +563,13 @@ public class FanFouProvider extends ContentProvider {
 
 		int truncated = ih.getColumnIndex(StatusInfo.TRUNCATED);
 		int favorited = ih.getColumnIndex(StatusInfo.FAVORITED);
-		int isSelf=ih.getColumnIndex(StatusInfo.IS_SELF);
+		int isSelf = ih.getColumnIndex(StatusInfo.IS_SELF);
 
 		int isRead = ih.getColumnIndex(StatusInfo.IS_READ);
 		int isThread = ih.getColumnIndex(StatusInfo.IS_THREAD);
 		int hasPhoto = ih.getColumnIndex(StatusInfo.HAS_PHOTO);
 		int special = ih.getColumnIndex(StatusInfo.SPECIAL);
-		
+
 		int type = ih.getColumnIndex(StatusInfo.TYPE);
 
 		try {
@@ -586,7 +584,6 @@ public class FanFouProvider extends ContentProvider {
 				ih.bind(text, value.getAsString(StatusInfo.TEXT));
 				ih.bind(simpleText, value.getAsString(StatusInfo.SIMPLE_TEXT));
 				ih.bind(source, value.getAsString(StatusInfo.SOURCE));
-
 
 				ih.bind(inReplyToStatusId,
 						value.getAsString(StatusInfo.IN_REPLY_TO_STATUS_ID));
@@ -607,7 +604,7 @@ public class FanFouProvider extends ContentProvider {
 						value.getAsString(StatusInfo.USER_SCREEN_NAME));
 				ih.bind(userProfileImageUrl,
 						value.getAsString(StatusInfo.USER_PROFILE_IMAGE_URL));
-				
+
 				ih.bind(truncated, value.getAsBoolean(StatusInfo.TRUNCATED));
 				ih.bind(favorited, value.getAsBoolean(StatusInfo.FAVORITED));
 				ih.bind(isSelf, value.getAsBoolean(StatusInfo.IS_SELF));
@@ -616,7 +613,7 @@ public class FanFouProvider extends ContentProvider {
 				ih.bind(isThread, value.getAsBoolean(StatusInfo.IS_THREAD));
 				ih.bind(hasPhoto, value.getAsBoolean(StatusInfo.HAS_PHOTO));
 				ih.bind(special, value.getAsBoolean(StatusInfo.SPECIAL));
-				
+
 				ih.bind(type, value.getAsInteger(StatusInfo.TYPE));
 
 				long result = ih.execute();
@@ -972,9 +969,10 @@ public class FanFouProvider extends ContentProvider {
 		default:
 			throw new IllegalArgumentException("update() Unknown URI " + uri);
 		}
-		if(App.DEBUG){
-			if(count>0){
-				log("update() result uri="+uri+" id="+id+" count="+count);
+		if (App.DEBUG) {
+			if (count > 0) {
+				log("update() result uri=" + uri + " id=" + id + " count="
+						+ count);
 			}
 		}
 		getContext().getContentResolver().notifyChange(uri, null);
@@ -986,22 +984,25 @@ public class FanFouProvider extends ContentProvider {
 		if (u == null || u.isNull()) {
 			return false;
 		}
-		Uri uri=Uri.parse(UserInfo.CONTENT_URI + "/id/" + u.id);
-		int result = context.getContentResolver().update(uri, u.toSimpleContentValues(), null, null);
+		Uri uri = Uri.parse(UserInfo.CONTENT_URI + "/id/" + u.id);
+		int result = context.getContentResolver().update(uri,
+				u.toSimpleContentValues(), null, null);
 		if (App.DEBUG) {
-			if(result>0){
-				Log.d(TAG, "updateUserInfo id=" + u.id + " updated rows: " + result+" uri="+uri);
+			if (result > 0) {
+				Log.d(TAG, "updateUserInfo id=" + u.id + " updated rows: "
+						+ result + " uri=" + uri);
 			}
 		}
-		return result>0;
+		return result > 0;
 	}
-	
+
 	// 插入用户信息
 	public static void insertUserInfo(Context context, User u) {
 		if (u == null || u.isNull()) {
 			return;
 		}
-		Uri uri=context.getContentResolver().insert(UserInfo.CONTENT_URI, u.toContentValues());
+		Uri uri = context.getContentResolver().insert(UserInfo.CONTENT_URI,
+				u.toContentValues());
 		if (App.DEBUG) {
 			Log.d(TAG, "insertUserInfo uri=" + uri);
 		}
@@ -1024,35 +1025,35 @@ public class FanFouProvider extends ContentProvider {
 		return result;
 
 	}
-	
-	public static Uri buildUriWithUserType(int type){
-		Uri uri=Uri.parse(UserInfo.CONTENT_URI + "/type/" + type);
-		if(App.DEBUG){
-			Log.d(TAG, "buildUriWithUserType uri="+uri);
+
+	public static Uri buildUriWithUserType(int type) {
+		Uri uri = Uri.parse(UserInfo.CONTENT_URI + "/type/" + type);
+		if (App.DEBUG) {
+			Log.d(TAG, "buildUriWithUserType uri=" + uri);
 		}
 		return uri;
 	}
-	
-	public static Uri buildUriWithUserId(String userId){
-		Uri uri=Uri.parse(UserInfo.CONTENT_URI + "/id/" + userId);
-		if(App.DEBUG){
-			Log.d(TAG, "buildUriWithUserId uri="+uri);
+
+	public static Uri buildUriWithUserId(String userId) {
+		Uri uri = Uri.parse(UserInfo.CONTENT_URI + "/id/" + userId);
+		if (App.DEBUG) {
+			Log.d(TAG, "buildUriWithUserId uri=" + uri);
 		}
 		return uri;
 	}
-	
-	public static Uri buildUriWithStatusId(String statusId){
-		Uri uri=Uri.parse(StatusInfo.CONTENT_URI + "/id/" + statusId);
-		if(App.DEBUG){
-			Log.d(TAG, "buildUriWithStatusId uri="+uri);
+
+	public static Uri buildUriWithStatusId(String statusId) {
+		Uri uri = Uri.parse(StatusInfo.CONTENT_URI + "/id/" + statusId);
+		if (App.DEBUG) {
+			Log.d(TAG, "buildUriWithStatusId uri=" + uri);
 		}
 		return uri;
 	}
-	
-	public static Uri buildUriWithDirectMessageId(String msgId){
-		Uri uri=Uri.parse(DirectMessageInfo.CONTENT_URI + "/id/" + msgId);
-		if(App.DEBUG){
-			Log.d(TAG, "buildUriWithDirectMessageId uri="+uri);
+
+	public static Uri buildUriWithDirectMessageId(String msgId) {
+		Uri uri = Uri.parse(DirectMessageInfo.CONTENT_URI + "/id/" + msgId);
+		if (App.DEBUG) {
+			Log.d(TAG, "buildUriWithDirectMessageId uri=" + uri);
 		}
 		return uri;
 	}

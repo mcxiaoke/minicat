@@ -14,7 +14,6 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import android.app.AlertDialog;
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -42,12 +41,16 @@ import com.fanfou.app.util.Utils;
  * @version 1.0 2011.09.04
  * @version 2.0 2011.10.31
  * @version 2.1 2011.11.24
+ * @version 2.2 2011.11.25
  * 
  */
 public class DownloadService extends BaseIntentService {
 	private static final String TAG=DownloadService.class.getSimpleName();
 	
-	public static final String APP_UPDATE_SITE = "http://apps.fanfou.com/android/update.json";
+	public static final String APP_SITE_BASE_URL = "http://apps.fanfou.com/android/";
+	public static final String APP_SITE_BETA=APP_SITE_BASE_URL+"beta/";
+	public static final String APP_UPDATE_SITE = APP_SITE_BASE_URL+"update.json";
+	public static final String APP_UPDATE_SITE_BETA = APP_SITE_BETA+"update.json";
 
 	private static final int NOTIFICATION_PROGRESS_ID = 1;
 	private NotificationManager nm;
@@ -68,10 +71,9 @@ public class DownloadService extends BaseIntentService {
 	}
 
 	public static void startDownload(Context context, String url) {
-
 		Intent intent = new Intent(context, DownloadService.class);
 		intent.putExtra(Commons.EXTRA_TYPE, TYPE_DOWNLOAD);
-		intent.putExtra(Commons.EXTRA_URL, url);
+		intent.putExtra(Commons.EXTRA_DOWNLOAD_URL, url);
 		context.startService(intent);
 	}
 
@@ -89,7 +91,11 @@ public class DownloadService extends BaseIntentService {
 		if (type == TYPE_CHECK) {
 			check();
 		} else if (type == TYPE_DOWNLOAD) {
-			String url = intent.getStringExtra(Commons.EXTRA_URL);
+			String url = intent.getStringExtra(Commons.EXTRA_DOWNLOAD_URL);
+			if(App.DEBUG){
+				url=(APP_SITE_BETA+"/fanfou.apk");
+			}
+			log("onHandleIntent TYPE_DOWNLOAD url="+url);
 			if (!StringHelper.isEmpty(url)) {
 				download(url);
 			}
@@ -112,9 +118,7 @@ public class DownloadService extends BaseIntentService {
 		InputStream is = null;
 		FileOutputStream fos = null;
 		try {
-			HttpClient client = new DefaultHttpClient();
-			HttpGet request = new HttpGet(url);
-			HttpResponse response = client.execute(request);
+			HttpResponse response = ConnectionManager.get(url);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == 200) {
 				HttpEntity entity = response.getEntity();
@@ -146,6 +150,7 @@ public class DownloadService extends BaseIntentService {
 			}
 		} catch (IOException e) {
 			if (App.DEBUG)
+				Log.e(TAG, "download error: "+e.getMessage());
 				e.printStackTrace();
 			nm.cancel(NOTIFICATION_PROGRESS_ID);
 		} finally {
@@ -207,6 +212,10 @@ public class DownloadService extends BaseIntentService {
 		try {
 
 			// HttpResponse response = client.execute(request);
+			String url=APP_UPDATE_SITE;
+			if(App.DEBUG){
+				url=APP_UPDATE_SITE_BETA;
+			}
 			HttpResponse response = ConnectionManager.get(APP_UPDATE_SITE);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (App.DEBUG) {

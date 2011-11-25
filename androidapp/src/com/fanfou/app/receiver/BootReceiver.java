@@ -25,9 +25,8 @@ public class BootReceiver extends BroadcastReceiver {
 		if (notification) {
 			int intervel = OptionHelper.parseInt(context,
 					R.string.option_notification_interval, "5");
-			AlarmHelper.setNotificationTaskOn(context, intervel);
+			AlarmHelper.setNotificationTask(context, intervel);
 		}
-
 		boolean update = OptionHelper.readBoolean(context,
 				R.string.option_autoupdate, false);
 		if (update) {

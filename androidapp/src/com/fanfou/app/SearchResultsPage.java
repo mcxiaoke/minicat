@@ -35,6 +35,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.1 2011.10.12
  * @version 1.5 2011.10.24
  * @version 1.6 2011.11.21
+ * @version 1.7 2011.11.25
  * 
  */
 public class SearchResultsPage extends BaseActivity implements
@@ -56,13 +57,12 @@ public class SearchResultsPage extends BaseActivity implements
 	private static final String tag = SearchResultsPage.class.getSimpleName();
 
 	private void log(String message) {
-		Log.e(tag, message);
+		Log.d(tag, message);
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		log("onCreate");
 		initialize();
 		setLayout();
 		search();
@@ -99,7 +99,9 @@ public class SearchResultsPage extends BaseActivity implements
 		Intent intent = getIntent();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			keyword = intent.getStringExtra(SearchManager.QUERY);
-			log("parseIntent() keyword=" + keyword);
+			if(App.DEBUG){
+				log("parseIntent() keyword=" + keyword);
+			}
 		} else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 			Uri data = intent.getData();
 			if (data != null) {
@@ -110,14 +112,12 @@ public class SearchResultsPage extends BaseActivity implements
 	}
 
 	private void showProgress() {
-		log("showProgress()");
 		showListView = false;
 		mListView.setVisibility(View.GONE);
 		mEmptyView.setVisibility(View.VISIBLE);
 	}
 
 	private void showContent() {
-		log("showContent()");
 		showListView = true;
 
 		mStatusAdapter = new SearchResultsAdapter(this, mStatuses);
@@ -140,7 +140,9 @@ public class SearchResultsPage extends BaseActivity implements
 
 	private void doSearch() {
 		if (keyword != null) {
-			log("doSearch() keyword=" + keyword);
+			if(App.DEBUG){
+				log("doSearch() keyword=" + keyword);
+			}
 			mActionBar.setTitle(keyword);
 			new SearchTask().execute();
 		}
@@ -148,7 +150,6 @@ public class SearchResultsPage extends BaseActivity implements
 	}
 
 	protected void updateUI(boolean noMore) {
-		log("updateUI()");
 		mStatusAdapter.updateDataAndUI(mStatuses, keyword);
 		if (noMore) {
 			mListView.onNoLoadMore();

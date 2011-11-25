@@ -199,20 +199,23 @@ public class ImageLoader implements Runnable, IImageLoader {
 				}
 				if (!mCache.containsKey(task.url)) {
 					final Bitmap bitmap = downloadImage(task.url);
-					mCache.put(task.url, bitmap);
-					final Message message = mHandler
-							.obtainMessage(MESSAGE_FINISH);
+					final Message message = mHandler.obtainMessage();
+					if (bitmap != null) {
+						message.what = MESSAGE_FINISH;
+						message.getData().putParcelable(EXTRA_BITMAP, bitmap);
+					} else {
+						message.what = MESSAGE_ERROR;
+					}
 					message.getData().putSerializable(EXTRA_TASK, task);
-					message.getData().putParcelable(EXTRA_BITMAP, bitmap);
 					mHandler.sendMessage(message);
 				}
 			} catch (IOException e) {
 				if (App.DEBUG) {
-					Log.d(TAG, "run() error:" + e.getMessage());
+					Log.d(TAG, "ImageLoaderTask.run() error:" + e.getMessage());
 				}
 			} catch (InterruptedException e) {
 				if (App.DEBUG) {
-					Log.d(TAG, "run() error:" + e.getMessage());
+					Log.d(TAG, "ImageLoaderTask.run() error:" + e.getMessage());
 				}
 			}
 		}
@@ -225,7 +228,15 @@ public class ImageLoader implements Runnable, IImageLoader {
 			Log.d(TAG, "downloadImage() statusCode=" + statusCode + " [" + url
 					+ "]");
 		}
-		return BitmapFactory.decodeStream(response.getEntity().getContent());
+		Bitmap bitmap = null;
+		if (statusCode == 200) {
+			bitmap = BitmapFactory.decodeStream(response.getEntity()
+					.getContent());
+			if (bitmap != null) {
+				mCache.put(url, bitmap);
+			}
+		}
+		return bitmap;
 	}
 
 	private class ImageDownloadHandler extends Handler {
@@ -239,14 +250,14 @@ public class ImageLoader implements Runnable, IImageLoader {
 				final ImageLoaderCallback callback = mCallbackMap.get(task);
 				final Bitmap bitmap = (Bitmap) msg.getData().getParcelable(
 						EXTRA_BITMAP);
-				if (bitmap != null) {
-					if (callback != null) {
-						callback.onFinish(task.url, bitmap);
-					}
+				if (callback != null) {
+					callback.onFinish(task.url, bitmap);
 				}
 				mCallbackMap.remove(task);
 				break;
 			case MESSAGE_ERROR:
+				final ImageLoaderTask task2 = (ImageLoaderTask) msg.getData().getSerializable(EXTRA_TASK);
+				mCallbackMap.remove(task2);
 				break;
 			default:
 				break;

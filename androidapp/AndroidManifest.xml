@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.fanfou.app"
-	android:versionCode="20111123" android:versionName="1.8.2">
+	android:versionCode="20111125" android:versionName="1.8.2">
 
 	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="14" />
 

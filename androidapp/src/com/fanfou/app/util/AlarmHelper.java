@@ -28,20 +28,32 @@ import com.fanfou.app.service.NotificationService;
  * @version 1.1 2011.10.21
  * @version 1.1 2011.10.28
  * @version 2.0 2011.11.24
+ * @version 2.5 2011.11.25
  * 
  */
 public final class AlarmHelper {
 	private static final String TAG = AlarmHelper.class.getSimpleName();
 
 	public final static void clearAlarms(Context context) {
+		if (App.DEBUG) {
+			Log.d(TAG, "clearAlarms");
+		}
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-		am.cancel(getAutoCompletePendingIntent(context));
-		am.cancel(getCleanPendingIntent(context));
 		am.cancel(getNotificationPendingIntent(context));
+		am.cancel(getAutoCompletePendingIntent(context));
 		am.cancel(getAutoUpdatePendingIntent(context));
 	}
 	
+	public final static void setAlarms(Context context) {
+		if (App.DEBUG) {
+			Log.d(TAG, "setAlarms");
+		}
+		AlarmHelper.checkAutoNotificationSet(context);
+		AlarmHelper.checkAutoCompleteSet(context);
+		AlarmHelper.checkAutoUpdateSet(context);
+	}
+
 	@SuppressWarnings("unused")
 	private final static void checkAutoCleanSet(Context context) {
 		boolean isSet = OptionHelper.readBoolean(context,
@@ -66,10 +78,12 @@ public final class AlarmHelper {
 		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
 				10 * 24 * 3600 * 1000, getCleanPendingIntent(context));
 		if (App.DEBUG) {
-			Log.d(TAG, "setCleanTask first time="+DateTimeHelper.formatDate(c.getTime()));
+			Log.d(TAG,
+					"setCleanTask first time="
+							+ DateTimeHelper.formatDate(c.getTime()));
 		}
 	}
-	
+
 	public final static void checkAutoUpdateSet(Context context) {
 		boolean isSet = OptionHelper.readBoolean(context,
 				R.string.option_set_auto_update, false);
@@ -77,11 +91,18 @@ public final class AlarmHelper {
 			Log.d(TAG, "checkAutoUpdateSet flag=" + isSet);
 		}
 		if (!isSet) {
-			AlarmHelper.setAutoUpdateTask(context);
+			boolean auto=OptionHelper.readBoolean(context, R.string.option_autoupdate, true);
+			if(auto){
+				AlarmHelper.setAutoUpdateTask(context);
+			}else{
+				AlarmHelper.removeAutoUpdateTask(context);
+			}
 			OptionHelper.saveBoolean(context, R.string.option_set_auto_update,
 					true);
 		}
 	}
+	
+	
 
 	public final static void setAutoUpdateTask(Context context) {
 		Calendar c = Calendar.getInstance();
@@ -91,32 +112,45 @@ public final class AlarmHelper {
 		long interval = 3 * 24 * 3600 * 1000;
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-		am.setInexactRepeating(AlarmManager.RTC, c.getTimeInMillis(),
-				interval, getAutoUpdatePendingIntent(context));
+		am.setInexactRepeating(AlarmManager.RTC, c.getTimeInMillis(), interval,
+				getAutoUpdatePendingIntent(context));
 		if (App.DEBUG) {
-			Log.d(TAG, "setAutoUpdateTask first time="+DateTimeHelper.formatDate(c.getTime()));
+			Log.d(TAG,
+					"setAutoUpdateTask first time="
+							+ DateTimeHelper.formatDate(c.getTime()));
 		}
 
 	}
-	
+
+	public final static void removeAutoUpdateTask(Context context) {
+		AlarmManager am = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		PendingIntent pi = getAutoUpdatePendingIntent(context);
+		am.cancel(pi);
+		pi.cancel();
+	}
 
 	public final static void checkAutoNotificationSet(Context context) {
-		boolean notificationOn=OptionHelper.readBoolean(context, R.string.option_notification, true);
-		if(notificationOn){
-			boolean isSet = OptionHelper.readBoolean(context,
-					R.string.option_set_notification, false);
-			if (App.DEBUG) {
-				Log.d(TAG, "setAutoNotification flag=" + isSet);
+		boolean isSet = OptionHelper.readBoolean(context,
+				R.string.option_set_notification, false);
+		if (App.DEBUG) {
+			Log.d(TAG, "setAutoNotification flag=" + isSet);
+		}
+		if (!isSet) {
+			boolean notificationOn = OptionHelper.readBoolean(context,
+					R.string.option_notification, true);
+			if (notificationOn) {
+				AlarmHelper.setNotificationTask(context, 5);
+			} else {
+				AlarmHelper.removeNotificationTask(context);
 			}
-			if (!isSet) {
-				AlarmHelper.setNotificationTaskOn(context, 5);
-				OptionHelper.saveBoolean(context, R.string.option_set_notification,
-						true);
-			}
+			OptionHelper.saveBoolean(context,
+					R.string.option_set_notification, true);
+
 		}
 	}
 
-	public final static void setNotificationTaskOn(Context context, int interval) {
+	public final static void setNotificationTask(Context context, int interval) {
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MINUTE, interval);
 		AlarmManager am = (AlarmManager) context
@@ -124,13 +158,14 @@ public final class AlarmHelper {
 		am.setInexactRepeating(AlarmManager.RTC, c.getTimeInMillis(),
 				interval * 60 * 1000, getNotificationPendingIntent(context));
 		if (App.DEBUG) {
-			Log.d(TAG, "setNotificationTaskOn first time="+DateTimeHelper.formatDate(c.getTime()));
+			Log.d(TAG,
+					"setNotificationTaskOn first time="
+							+ DateTimeHelper.formatDate(c.getTime()));
 		}
-
 
 	}
 
-	public final static void setNotificationTaskOff(Context context) {
+	public final static void removeNotificationTask(Context context) {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		PendingIntent pi = getNotificationPendingIntent(context);
@@ -140,7 +175,7 @@ public final class AlarmHelper {
 			Log.d(TAG, "setNotificationTaskOff");
 		}
 	}
-	
+
 	public final static void checkAutoCompleteSet(Context context) {
 		boolean isSet = OptionHelper.readBoolean(context,
 				R.string.option_set_auto_complete, false);
@@ -153,7 +188,7 @@ public final class AlarmHelper {
 					R.string.option_set_auto_complete, true);
 		}
 	}
-	
+
 	public final static void startAutoComplete(Context context) {
 		Calendar c = Calendar.getInstance();
 		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
@@ -161,9 +196,12 @@ public final class AlarmHelper {
 		c.add(Calendar.MINUTE, 5);
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-		am.set(AlarmManager.RTC, c.getTimeInMillis(), getAutoCompletePendingIntent(context));
+		am.set(AlarmManager.RTC, c.getTimeInMillis(),
+				getAutoCompletePendingIntent(context));
 		if (App.DEBUG) {
-			Log.d(TAG, "startAutoComplete time="+DateTimeHelper.formatDate(c.getTime()));
+			Log.d(TAG,
+					"startAutoComplete time="
+							+ DateTimeHelper.formatDate(c.getTime()));
 		}
 	}
 
@@ -175,14 +213,17 @@ public final class AlarmHelper {
 		long interval = 3 * 24 * 3600 * 1000;
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-		am.setInexactRepeating(AlarmManager.RTC, c.getTimeInMillis(),
-				interval, getAutoCompletePendingIntent(context));
+		am.setInexactRepeating(AlarmManager.RTC, c.getTimeInMillis(), interval,
+				getAutoCompletePendingIntent(context));
 		if (App.DEBUG) {
-			Log.d(TAG, "setAutoCompleteTask first time="+DateTimeHelper.formatDate(c.getTime()));
+			Log.d(TAG,
+					"setAutoCompleteTask first time="
+							+ DateTimeHelper.formatDate(c.getTime()));
 		}
 	}
 
-	private final static PendingIntent getAutoUpdatePendingIntent(Context context) {
+	private final static PendingIntent getAutoUpdatePendingIntent(
+			Context context) {
 		Intent intent = new Intent(context, DownloadService.class);
 		intent.putExtra(Commons.EXTRA_TYPE, DownloadService.TYPE_CHECK);
 		PendingIntent pi = PendingIntent.getService(context, 0, intent,
@@ -190,14 +231,16 @@ public final class AlarmHelper {
 		return pi;
 	}
 
-	private final static PendingIntent getAutoCompletePendingIntent(Context context) {
+	private final static PendingIntent getAutoCompletePendingIntent(
+			Context context) {
 		Intent intent = new Intent(context, AutoCompleteService.class);
 		PendingIntent pi = PendingIntent.getService(context, 0, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		return pi;
 	}
 
-	private final static PendingIntent getNotificationPendingIntent(Context context) {
+	private final static PendingIntent getNotificationPendingIntent(
+			Context context) {
 		Intent intent = new Intent(context, NotificationService.class);
 		PendingIntent pi = PendingIntent.getService(context, 0, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
