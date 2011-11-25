@@ -135,6 +135,9 @@ public final class Utils {
 		if (c != null && c.moveToFirst()) {
 			final DirectMessage first = DirectMessage.parse(c);
 			if (first != null) {
+				if(App.DEBUG){
+					Log.d(TAG, "getDmSinceId() id="+first.id); 
+				}
 				return first.id;
 			}
 		}
@@ -145,6 +148,9 @@ public final class Utils {
 		if (c != null && c.moveToLast()) {
 			final DirectMessage last = DirectMessage.parse(c);
 			if (last != null) {
+				if(App.DEBUG){
+					Log.d(TAG, "getDmMaxId() id="+last.id); 
+				}
 				return last.id;
 			}
 		}
@@ -161,6 +167,9 @@ public final class Utils {
 		if (c != null && c.moveToFirst()) {
 			Status first = Status.parse(c);
 			if (first != null) {
+				if(App.DEBUG){
+					Log.d(TAG, "getSinceId() id="+first.id); 
+				}
 				return first.id;
 			}
 		}
@@ -177,6 +186,9 @@ public final class Utils {
 		if (c != null && c.moveToLast()) {
 			Status first = Status.parse(c);
 			if (first != null) {
+				if(App.DEBUG){
+					Log.d(TAG, "getMaxId() id="+first.id); 
+				}
 				return first.id;
 			}
 		}

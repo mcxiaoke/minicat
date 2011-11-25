@@ -227,10 +227,11 @@ public class FanFouProvider extends ContentProvider {
 			qb.appendWhere("'" + uri.getPathSegments().get(2) + "'");
 			break;
 		case STATUSES_ALL:
-			qb.setTables(StatusInfo.TABLE_NAME);
-			break;
 		case STATUS_SEARCH:
-			order = ORDERBY_DATE_DESC;
+			qb.setTables(StatusInfo.TABLE_NAME);
+			if (order == null) {
+				order = ORDERBY_DATE_DESC;
+			}
 			break;
 		case STATUS_ID:
 			qb.setTables(StatusInfo.TABLE_NAME);
@@ -340,10 +341,6 @@ public class FanFouProvider extends ContentProvider {
 		if (values == null || values.size() == 0) {
 			throw new IllegalArgumentException("插入数据不能为空.");
 		}
-		if (App.DEBUG) {
-			log("insert() uri=" + uri.toString() + " id="
-					+ values.getAsString(BasicColumns.ID));
-		}
 
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		String table;
@@ -379,23 +376,13 @@ public class FanFouProvider extends ContentProvider {
 			throw new IllegalArgumentException("insert() Unknown URI " + uri);
 		}
 
-		// log(" insert() table=" + table + " values=" + values);
 		long rowId = db.insert(table, null, values);
-		// long rowId=db.insert(table, null, values);
-
-		if (rowId < 0) {
-			// log("insert failed. ");
-			// String where=BasicColumns.ID+"=?";
-			// String[] whereArgs=new
-			// String[]{values.getAsString(BasicColumns.ID)};
-			// db.update(table, values, where,whereArgs);
-			return uri;
+		if (App.DEBUG) {
+			log("insert() uri=" + uri.toString() + " id="
+					+ values.getAsString(BasicColumns.ID)+" rowId="+rowId);
 		}
-		Uri resultUri = ContentUris.withAppendedId(contentUri, rowId);
-
-		// log("insert() resultUri=" + resultUri);
-		getContext().getContentResolver().notifyChange(resultUri, null);
-		return resultUri;
+		getContext().getContentResolver().notifyChange(uri, null);
+		return uri;
 	}
 
 	@Override
@@ -634,7 +621,6 @@ public class FanFouProvider extends ContentProvider {
 		} finally {
 			ih.close();
 			db.endTransaction();
-
 		}
 		return numInserted;
 

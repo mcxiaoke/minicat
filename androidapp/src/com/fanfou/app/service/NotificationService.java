@@ -22,6 +22,7 @@ import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
+import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.App.ApnType;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -35,6 +36,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.3 2011.11.04
  * @version 2.0 2011.11.18
  * @version 2.1 2011.11.23
+ * @version 2.2 2011.11.25
  * 
  */
 public class NotificationService extends BaseIntentService {
@@ -123,6 +125,7 @@ public class NotificationService extends BaseIntentService {
 		Cursor mc = initCursor(DirectMessage.TYPE_IN);
 		List<DirectMessage> dms = FanFouApi.getInstance().directMessagesInbox(count, DEFAULT_PAGE,
 				Utils.getDmSinceId(mc), null, FanFouApiConfig.MODE_LITE);
+		mc.close();
 		if (dms != null) {
 			int size = dms.size();
 			if (size > 0) {
@@ -144,7 +147,7 @@ public class NotificationService extends BaseIntentService {
 						DirectMessageInfo.CONTENT_URI, null, false);
 			}
 		}
-		mc.close();
+		
 	}
 
 	private void handleMention(int count) throws ApiException {
@@ -152,6 +155,7 @@ public class NotificationService extends BaseIntentService {
 		List<Status> ss = FanFouApi.getInstance().mentions(count, DEFAULT_PAGE,
 				Utils.getSinceId(mc), null, FanFouApiConfig.FORMAT_HTML,
 				FanFouApiConfig.MODE_LITE);
+		mc.close();
 		if (ss != null) {
 			int size = ss.size();
 			if (size > 0) {
@@ -168,11 +172,11 @@ public class NotificationService extends BaseIntentService {
 							Parser.toContentValuesArray(ss));
 					notifyStatusList(NOTIFICATION_TYPE_MENTION, size);
 				}
-				getContentResolver().bulkInsert(StatusInfo.CONTENT_URI,
-						Parser.toContentValuesArray(ss));
+				getContentResolver().notifyChange(StatusInfo.CONTENT_URI, null,
+						false);
 			}
 		}
-		mc.close();
+		
 	}
 
 	private void handleHome(int count) throws ApiException {
@@ -180,6 +184,7 @@ public class NotificationService extends BaseIntentService {
 		List<Status> ss = FanFouApi.getInstance().homeTimeline(count, DEFAULT_PAGE,
 				Utils.getSinceId(mc), null, FanFouApiConfig.FORMAT_HTML,
 				FanFouApiConfig.MODE_LITE);
+		mc.close();
 		if (ss != null) {
 			int size = ss.size();
 			if (size > 0) {
@@ -200,7 +205,7 @@ public class NotificationService extends BaseIntentService {
 						false);
 			}
 		}
-		mc.close();
+		
 	}
 
 	private void notifyStatusOne(int type, Status status) {
@@ -220,15 +225,16 @@ public class NotificationService extends BaseIntentService {
 	}
 
 	private Cursor initCursor(int type) {
-		String where = BasicColumns.TYPE + "=?";
+		String where = BasicColumns.TYPE + " =? ";
 		String[] whereArgs = new String[] { String.valueOf(type) };
 		Uri uri = StatusInfo.CONTENT_URI;
 		String[] columns = StatusInfo.COLUMNS;
+		String orderBy=FanFouProvider.ORDERBY_DATE_DESC;
 		if (type == DirectMessage.TYPE_IN) {
 			uri = DirectMessageInfo.CONTENT_URI;
 			columns = DirectMessageInfo.COLUMNS;
 		}
-		return getContentResolver().query(uri, columns, where, whereArgs, null);
+		return getContentResolver().query(uri, columns, where, whereArgs, orderBy);
 	}
 
 	private void sendStatusNotification(int type, int count, Status status) {
