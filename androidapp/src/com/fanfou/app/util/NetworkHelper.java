@@ -29,6 +29,9 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
@@ -40,7 +43,7 @@ import com.fanfou.app.App.ApnType;
  * @version 2.0 2011.10.29
  * 
  */
-final class NetworkHelper {
+public final class NetworkHelper {
 
 	public static final int SOCKET_BUFFER_SIZE = 2048;
 	public static final int CONNECTION_TIMEOUT_MS = 5000;
@@ -175,6 +178,38 @@ final class NetworkHelper {
 			}
 			params.removeParameter(ConnRoutePNames.DEFAULT_PROXY);
 		}
+	}
+	
+	public static ApnType getApnType(Context context) {
+		ApnType type=ApnType.NET;
+		try {
+			ConnectivityManager cm=(ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo info = cm.getActiveNetworkInfo();
+			if (App.DEBUG) {
+				Log.d("App","NetworkInfo: "+info);
+			}
+			if (info != null && info.isConnectedOrConnecting()) {
+				App.noConnection=false;
+				if (info.getType() == ConnectivityManager.TYPE_WIFI) {
+					type = ApnType.WIFI;
+				} else if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
+					String apnTypeName = info.getExtraInfo();
+					if (!TextUtils.isEmpty(apnTypeName)) {
+						if (apnTypeName.equals("3gnet")) {
+							type = ApnType.HSDPA;
+						} else if (apnTypeName.equals("ctwap")) {
+							type = ApnType.CTWAP;
+						} else if (apnTypeName.contains("wap")) {
+							type = ApnType.WAP;
+						}
+					}
+				}
+			}else{
+				App.noConnection=true;
+			}
+		} catch (Exception e) {
+		}
+		return type;
 	}
 
 	static DefaultHttpClient newHttpClient() {

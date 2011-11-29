@@ -27,6 +27,7 @@ import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.http.ConnectionManager;
 import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.DateTimeHelper;
+import com.fanfou.app.util.NetworkHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
@@ -61,6 +62,7 @@ public class App extends Application {
 	
 	public volatile static boolean noConnection;
 	public volatile static boolean verified;
+	public volatile static boolean mounted;
 	
 	public String userId;
 	public String userScreenName;
@@ -87,7 +89,7 @@ public class App extends Application {
 
 	private void init() {
 		App.me = this;
-		apnType = getApnType(this);
+		apnType = NetworkHelper.getApnType(this);
 		
 		DateTimeHelper.FANFOU_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
 
@@ -222,37 +224,7 @@ public class App extends Application {
 		editor.commit();
 	}
 	
-	public static ApnType getApnType(Context context) {
-		ApnType type=ApnType.NET;
-		try {
-			ConnectivityManager cm=(ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-			NetworkInfo info = cm.getActiveNetworkInfo();
-			if (App.DEBUG) {
-				Log.d("App","NetworkInfo: "+info);
-			}
-			if (info != null && info.isConnectedOrConnecting()) {
-				App.noConnection=false;
-				if (info.getType() == ConnectivityManager.TYPE_WIFI) {
-					type = ApnType.WIFI;
-				} else if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
-					String apnTypeName = info.getExtraInfo();
-					if (!TextUtils.isEmpty(apnTypeName)) {
-						if (apnTypeName.equals("3gnet")) {
-							type = ApnType.HSDPA;
-						} else if (apnTypeName.equals("ctwap")) {
-							type = ApnType.CTWAP;
-						} else if (apnTypeName.contains("wap")) {
-							type = ApnType.WAP;
-						}
-					}
-				}
-			}else{
-				App.noConnection=true;
-			}
-		} catch (Exception e) {
-		}
-		return type;
-	}
+
 	
 	public static enum ApnType {
 		WIFI("wifi"), HSDPA("hsdpa"), NET("net"), WAP("wap"), CTWAP("ctwap"), ;

@@ -519,12 +519,10 @@ final public class ImageHelper {
 
 	private static File compressForUpload(String srcFileName,
 			String destFileName, int maxWidth, int quality) {
-		if (quality > IMAGE_QUALITY_HIGH) {
-			quality = IMAGE_QUALITY_HIGH;
-		} else if (quality < IMAGE_QUALITY_LOW) {
-			quality = IMAGE_QUALITY_LOW;
-		}
 		Bitmap bitmap = compressImage(srcFileName, maxWidth);
+		if (bitmap == null) {
+			return null;
+		}
 		if (App.DEBUG) {
 			Log.d(TAG, "compressForUpload bitmap.width=" + bitmap.getWidth()
 					+ " height=" + bitmap.getHeight());
@@ -536,16 +534,21 @@ final public class ImageHelper {
 			if (srcFileName.toLowerCase().lastIndexOf("png") > -1) {
 				format = CompressFormat.PNG;
 			}
+			if (quality > IMAGE_QUALITY_HIGH) {
+				quality = IMAGE_QUALITY_HIGH;
+			} else if (quality < IMAGE_QUALITY_LOW) {
+				quality = IMAGE_QUALITY_LOW;
+			}
 			bitmap.compress(format, quality, os);
+			return new File(destFileName);
 		} catch (FileNotFoundException e) {
 			if (App.DEBUG) {
 				e.printStackTrace();
 			}
+			return null;
 		} finally {
 			IOHelper.forceClose(os);
 		}
-
-		return new File(destFileName);
 	}
 
 	public static Bitmap compressImage(String path, int maxDim) {
