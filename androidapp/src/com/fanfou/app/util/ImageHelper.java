@@ -560,29 +560,33 @@ final public class ImageHelper {
 			sampleSize += 1;
 		}
 		optsDownSample.inSampleSize = sampleSize;
-		Bitmap bmpt = BitmapFactory.decodeFile(path, optsDownSample);
+		Bitmap bitmap = BitmapFactory.decodeFile(path, optsDownSample);
+		if (bitmap != null) {
+			int bw = bitmap.getWidth();
+			int bh = bitmap.getHeight();
+			Matrix m = new Matrix();
+			if (bw > maxDim || bh > maxDim) {
+				float scale = 1.0f;
+				float s1 = (float) bw / (float) maxDim;
+				float s2 = (float) bh / (float) maxDim;
+				if (s1 > s2) {
+					scale = s1;
+				} else {
+					scale = s2;
+				}
+				m.postScale(scale, scale);
+			}
+			int sdk = new Integer(Build.VERSION.SDK).intValue();
+			if (sdk > 4) {
+				int rotation = getExifOrientation(path);
+				if (rotation != 0) {
+					m.postRotate(rotation);
+				}
+			}
+			return Bitmap.createBitmap(bitmap, 0, 0, bw, bh, m, true);
+		}
+		return null;
 
-		Matrix m = new Matrix();
-		if (bmpt.getWidth() > maxDim || bmpt.getHeight() > maxDim) {
-			float scale = 1.0f;
-			float s1 = (float) bmpt.getWidth() / (float) maxDim;
-			float s2 = (float) bmpt.getHeight() / (float) maxDim;
-			if (s1 > s2) {
-				scale = s1;
-			} else {
-				scale = s2;
-			}
-			m.postScale(scale, scale);
-		}
-		int sdk = new Integer(Build.VERSION.SDK).intValue();
-		if (sdk > 4) {
-			int rotation = getExifOrientation(path);
-			if (rotation != 0) {
-				m.postRotate(rotation);
-			}
-		}
-		return Bitmap.createBitmap(bmpt, 0, 0, bmpt.getWidth(),
-				bmpt.getHeight(), m, true);
 	}
 
 	/**
@@ -801,11 +805,11 @@ final public class ImageHelper {
 			int maxH) throws IOException {
 		final BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inScaled = false;
-//		 options.inPreferredConfig = Bitmap.Config.RGB_565;
+		// options.inPreferredConfig = Bitmap.Config.RGB_565;
 		options.inSampleSize = computeSampleSize(path, maxW, maxH);
-//		options.inDither = false;
+		// options.inDither = false;
 		options.inJustDecodeBounds = false;
-//		options.inPurgeable = true;
+		// options.inPurgeable = true;
 		Bitmap bitmap = BitmapFactory.decodeFile(path, options);
 		return bitmap;
 	}
@@ -819,7 +823,7 @@ final public class ImageHelper {
 		int sampleSize = (int) Math.ceil(Math.max(w / maxW, h / maxH));
 		return sampleSize;
 	}
-	
+
 	private static int computeSampleSize(String path, int maxW, int maxH) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
@@ -829,7 +833,7 @@ final public class ImageHelper {
 		int sampleSize = (int) Math.ceil(Math.max(w / maxW, h / maxH));
 		return sampleSize;
 	}
-	
+
 	private static int computeSampleSize(File file, int maxW, int maxH) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
