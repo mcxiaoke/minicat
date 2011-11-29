@@ -7,6 +7,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
+import org.apache.http.RequestLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -50,6 +51,8 @@ import com.fanfou.app.util.StringHelper;
  * @version 3.0 2011.11.09
  * @version 3.1 2011.11.15
  * @version 3.2 2011.11.24
+ * @version 3.3 2011.11.28
+ * @version 3.4 2011.11.29
  * 
  */
 public final class ConnectionManager {
@@ -62,49 +65,37 @@ public final class ConnectionManager {
 	public static final int MAX_TOTAL_CONNECTIONS = 20;
 	public static final int MAX_RETRY_TIMES = 3;
 
-	private static DefaultHttpClient sHttpClient;
-	private static final ConnectionManager INSTANCE = new ConnectionManager();
+	private DefaultHttpClient mHttpClient;
+
+	// private static final ConnectionManager INSTANCE = new
+	// ConnectionManager();
+
+	public static final ConnectionManager newInstance() {
+		return new ConnectionManager();
+	}
 
 	private final void log(String message) {
 		Log.d(TAG, message);
-	}
-
-	public final static void init() {
-	}
-
-	// get the single instance
-	private final static ConnectionManager getInstance() {
-		return INSTANCE;
 	}
 
 	private ConnectionManager() {
 		prepareHttpClient();
 	}
 
-	public final static void setHttpClient(DefaultHttpClient client) {
-		sHttpClient = client;
+	public final void setHttpClient(DefaultHttpClient client) {
+		mHttpClient = client;
 	}
 
-	public final static HttpResponse execWithOAuth(ConnectionRequest cr)
-			throws IOException, ApiException {
-		return getInstance().openWithOAuth(cr);
+	public final HttpResponse get(String url) throws IOException {
+		return getImpl(url);
 	}
 
-	public final static HttpResponse exec(ConnectionRequest cr)
-			throws IOException, ApiException {
-		return getInstance().open(cr);
-	}
-
-	public final static HttpResponse get(String url) throws IOException {
-		return getInstance().getImpl(url);
-	}
-
-	public final static HttpResponse post(String url, List<Parameter> params)
+	public final HttpResponse post(String url, List<Parameter> params)
 			throws IOException {
-		return getInstance().postImpl(url, params);
+		return postImpl(url, params);
 	}
 
-	private final HttpResponse openWithOAuth(ConnectionRequest cr)
+	public final HttpResponse execWithOAuth(ConnectionRequest cr)
 			throws IOException, ApiException {
 
 		HttpRequestBase request = null;
@@ -116,17 +107,10 @@ public final class ConnectionManager {
 		}
 		setHeaders(request, cr.headers);
 		setOAuth(request, cr.params);
-		if (App.DEBUG) {
-			Header[] headers = request.getAllHeaders();
-			for (Header header : headers) {
-				log("[Request Header] " + header.getName() + ":"
-						+ header.getValue());
-			}
-		}
 		return execute(request);
 	}
 
-	private final HttpResponse open(ConnectionRequest cr) throws IOException,
+	public final HttpResponse exec(ConnectionRequest cr) throws IOException,
 			ApiException {
 
 		HttpRequestBase request = null;
@@ -137,36 +121,45 @@ public final class ConnectionManager {
 			request = new HttpGet(cr.url);
 		}
 		setHeaders(request, cr.headers);
-		if (App.DEBUG) {
-			Header[] headers = request.getAllHeaders();
-			for (Header header : headers) {
-				log("[Request Header] " + header.getName() + ":"
-						+ header.getValue());
-			}
-		}
 		return execute(request);
 	}
 
 	private final HttpResponse getImpl(String url) throws IOException {
-		return execute(new HttpGet(url));
+		HttpGet request = new HttpGet(url);
+		return execute(request);
 	}
 
 	private final HttpResponse postImpl(String url, List<Parameter> params)
 			throws IOException {
-		HttpPost post = new HttpPost(url);
-		post.setEntity(ConnectionRequest.encodeForPost(params));
-		return execute(post);
+		HttpPost request = new HttpPost(url);
+		request.setEntity(ConnectionRequest.encodeForPost(params));
+		return execute(request);
 	}
 
-	private final HttpResponse execute(HttpUriRequest request)
+	private final HttpResponse execute(HttpRequestBase request)
 			throws IOException {
-//		if (sHttpClient == null) {
-//			prepareHttpClient();
-//		}
-		setProxy(sHttpClient);
-		return sHttpClient.execute(request);
-//		Log.e(TAG, "execute() HttpClient is null.");
-//		throw new IOException("execute() HttpClient is null.");
+		setProxy(mHttpClient);
+		if (App.DEBUG) {
+			log("==========[Request]==========");
+			log(request.getRequestLine().toString());
+//			Header[] headers = request.getAllHeaders();
+//			for (Header header : headers) {
+//				log(header.getName() + ":"
+//						+ header.getValue());
+//			}
+		}
+		HttpResponse response = mHttpClient.execute(request);
+		if (App.DEBUG) {
+			log("==========[Response]==========");
+			log(response.getStatusLine().toString());
+//			Header[] headers = response.getAllHeaders();
+//			for (Header header : headers) {
+//				log(header.getName() + ":"
+//						+ header.getValue());
+//			}
+//			log("\n");
+		}
+		return response;
 	}
 
 	private final static void setHeaders(HttpRequestBase request,
@@ -206,10 +199,10 @@ public final class ConnectionManager {
 				SSLSocketFactory.getSocketFactory(), 443));
 		ClientConnectionManager manager = new ThreadSafeClientConnManager(
 				params, schReg);
-		sHttpClient = new DefaultHttpClient(manager, params);
-		sHttpClient.addRequestInterceptor(new GzipRequestInterceptor());
-		sHttpClient.addResponseInterceptor(new GzipResponseInterceptor());
-		sHttpClient.setHttpRequestRetryHandler(new RequestRetryHandler(
+		mHttpClient = new DefaultHttpClient(manager, params);
+		mHttpClient.addRequestInterceptor(new GzipRequestInterceptor());
+		mHttpClient.addResponseInterceptor(new GzipResponseInterceptor());
+		mHttpClient.setHttpRequestRetryHandler(new RequestRetryHandler(
 				MAX_RETRY_TIMES));
 	}
 
@@ -239,13 +232,13 @@ public final class ConnectionManager {
 		}
 	}
 
-	private final static void setOAuth(HttpUriRequest request,
+	private final static void setOAuth(HttpRequestBase request,
 			List<Parameter> params) throws ApiException {
 		if (StringHelper.isEmpty(App.me.oauthAccessToken)
 				|| StringHelper.isEmpty(App.me.oauthAccessTokenSecret)) {
 			throw new ApiException(ResponseCode.ERROR_AUTH_FAILED, "未通过验证，请登录");
 		} else {
-			// request.addHeader("Host", "api.fanfou.com");
+			request.addHeader("Host", "api.fanfou.com");
 			OAuth oauth = new OAuth(App.me.oauthAccessToken,
 					App.me.oauthAccessTokenSecret);
 			oauth.signRequest(request, params);

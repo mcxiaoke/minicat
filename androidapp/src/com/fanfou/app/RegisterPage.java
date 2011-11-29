@@ -42,6 +42,7 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * @version 1.2 2011.10.25
  * @version 1.3 2011.10.26
  * @version 1.4 2011.11.18
+ * @version 1.5 2011.11.28
  * 
  */
 public class RegisterPage extends Activity implements OnClickListener {
@@ -326,7 +327,7 @@ public class RegisterPage extends Activity implements OnClickListener {
 			// Log.d("RegisterTask", request.getURI().toString());
 
 			// HttpResponse response = client.execute(request);
-			HttpResponse response = ConnectionManager.post(
+			HttpResponse response = ConnectionManager.newInstance().post(
 					FanFouApiConfig.URL_REGISTER, params);
 			Response res = new Response(response);
 			if (App.DEBUG) {

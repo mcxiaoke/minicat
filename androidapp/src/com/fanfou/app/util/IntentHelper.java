@@ -39,7 +39,6 @@ public final class IntentHelper {
 	public static void sendFeedback(Context context, String content) {
 		final Intent emailIntent = new Intent(Intent.ACTION_SEND);
 		emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		// emailIntent.setType("text/plain");
 		emailIntent.setType("message/rfc822");
 		String subject = "饭否Android客户端意见反馈";
 		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
@@ -52,7 +51,7 @@ public final class IntentHelper {
 
 	public static void logIntent(String tag, Intent intent) {
 		if (intent == null) {
-			Log.d(tag, "intent is null.");
+			return;
 		}
 		StringBuffer sb = new StringBuffer();
 		sb.append("\nAction:" + intent.getAction());
@@ -69,7 +68,7 @@ public final class IntentHelper {
 		} else {
 			sb.append("\nNO EXTRAS");
 		}
-		Log.i(tag, sb.toString());
+		Log.v(tag, sb.toString());
 	}
 
 }

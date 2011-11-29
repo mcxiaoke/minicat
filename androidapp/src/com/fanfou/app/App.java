@@ -1,5 +1,7 @@
 package com.fanfou.app;
 
+import java.util.TimeZone;
+
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
@@ -18,10 +20,13 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.fanfou.app.api.Api;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.http.ConnectionManager;
 import com.fanfou.app.util.AlarmHelper;
+import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
@@ -39,20 +44,23 @@ import com.fanfou.app.util.Utils;
  * @version 5.2 2011.11.23
  * @version 5.3 2011.11.24
  * @version 5.4 2011.11.25
+ * @version 5.5 2011.11.28
  * 
  */
 
 @ReportsCrashes(formKey = "", formUri = "http://apps.fanfou.com/andstat/cr/", mode = ReportingInteractionMode.TOAST, resToastText = R.string.crash_toast_text)
 public class App extends Application {
 
-//	public static final boolean DEBUG = true;
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 
 	public static App me;
+	
+	public static Api api;
+	
 	public static boolean active = false;
 	
-	public boolean noConnection;
-	public boolean isLogin;
+	public volatile static boolean noConnection;
+	public volatile static boolean verified;
 	
 	public String userId;
 	public String userScreenName;
@@ -73,15 +81,15 @@ public class App extends Application {
 		initAppInfo();
 		initPreferences();
 		versionCheck();
-		ConnectionManager.init();
 		ACRA.init(this);
+		api=FanFouApi.newInstance();
 	}
 
 	private void init() {
 		App.me = this;
-		this.apnType = getApnType(this);
-//		this.isDebuggable=( 0 != ( getApplicationInfo().flags &= ApplicationInfo.FLAG_DEBUGGABLE ) );
-		//boolean DEBUGGABLE = (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+		apnType = getApnType(this);
+		
+		DateTimeHelper.FANFOU_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
 
 		if (DEBUG) {
 			java.util.logging.Logger.getLogger("org.apache.http").setLevel(
@@ -114,7 +122,7 @@ public class App extends Application {
 				R.string.option_oauth_token, null);
 		this.oauthAccessTokenSecret = OptionHelper.readString(this,
 				R.string.option_oauth_token_secret, null);
-		this.isLogin = !StringHelper.isEmpty(oauthAccessTokenSecret);
+		this.verified = !StringHelper.isEmpty(oauthAccessTokenSecret);
 	}
 
 	private void initAppInfo() {
@@ -181,7 +189,7 @@ public class App extends Application {
 					tokenSecret);
 		}
 		editor.commit();
-		isLogin = true;
+		verified = true;
 	}
 
 	public synchronized void updateUserInfo(User u) {
@@ -200,7 +208,7 @@ public class App extends Application {
 		if (DEBUG) {
 			Log.d("App", "removeAccountInfo");
 		}
-		isLogin = false;
+		verified = false;
 		userId = null;
 		userScreenName = null;
 		oauthAccessToken = null;
@@ -223,7 +231,7 @@ public class App extends Application {
 				Log.d("App","NetworkInfo: "+info);
 			}
 			if (info != null && info.isConnectedOrConnecting()) {
-				App.me.noConnection=false;
+				App.noConnection=false;
 				if (info.getType() == ConnectivityManager.TYPE_WIFI) {
 					type = ApnType.WIFI;
 				} else if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
@@ -239,7 +247,7 @@ public class App extends Application {
 					}
 				}
 			}else{
-				App.me.noConnection=true;
+				App.noConnection=true;
 			}
 		} catch (Exception e) {
 		}

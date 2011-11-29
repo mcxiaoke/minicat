@@ -74,7 +74,7 @@ public class WebService extends Service implements IWebService {
 	}
 
 	private void initialize() {
-		mApi = FanFouApi.getInstance();
+		mApi = App.api;
 	}
 
 	@Override

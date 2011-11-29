@@ -36,7 +36,8 @@
 		<PreferenceCategory android:title="通知设置">
 
 			<RingtonePreference android:defaultValue="content://settings/system/notification_sound"
-				android:key="@string/option_notification_ringtone" android:dependency="@string/option_notification"
+				android:key="@string/option_notification_ringtone"
+				android:dependency="@string/option_notification"
 				android:ringtoneType="notification" android:title="铃声" />
 
 			<CheckBoxPreference android:defaultValue="true"
@@ -83,6 +84,39 @@
 			android:title="锁定竖屏" />
 
 	</PreferenceScreen>
+
+<!-- 	<PreferenceScreen android:title="颜色设置">
+
+				<com.fanfou.app.preferences.colorpicker.ColorPickerPreference
+			android:key="@string/option_color_timeline_background" android:title="列表背景"
+			android:summary="消息和用户列表界面背景" android:defaultValue="@android:color/black"
+			alphaSlider="true" />
+				
+		<com.fanfou.app.preferences.colorpicker.ColorPickerPreference
+			android:key="@string/option_color_highlight_mention" android:title="\提到我的"
+			android:summary="时间线上提到我的消息背景颜色" android:defaultValue="@android:color/black"
+			alphaSlider="true" />
+
+		<com.fanfou.app.preferences.colorpicker.ColorPickerPreference
+			android:key="@string/option_color_highlight_self" android:title="我的消息" android:summary="时间线上我的消息背景颜色"
+			android:defaultValue="@android:color/black" alphaSlider="true" />
+
+		<com.fanfou.app.preferences.colorpicker.ColorPickerPreference
+			android:key="@string/option_color_timeline_item_name" android:title="名字颜色"
+			android:summary="时间线用户名字文本颜色" android:defaultValue="@android:color/black"
+			alphaSlider="true" />
+
+		<com.fanfou.app.preferences.colorpicker.ColorPickerPreference
+			android:key="@string/option_color_timeline_item_text" android:title="消息颜色"
+			android:summary="时间线消息内容文本颜色" android:defaultValue="@android:color/black"
+			alphaSlider="true" />
+
+		<com.fanfou.app.preferences.colorpicker.ColorPickerPreference
+			android:key="@string/option_color_timeline_item_metainfo"
+			android:title="时间线消息时间和来源文本颜色" android:summary="信息颜色"
+			android:defaultValue="@android:color/black" alphaSlider="true" />
+
+	</PreferenceScreen> -->
 
 	<PreferenceScreen android:title="界面布局">
 

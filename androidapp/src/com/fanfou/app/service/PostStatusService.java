@@ -35,6 +35,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.1 2011.10.28
  * @version 2.2 2011.11.02
  * @version 3.0 2011.11.18
+ * @version 3.1 2011.11.28
  * 
  */
 public class PostStatusService extends WakefulIntentService {
@@ -62,7 +63,7 @@ public class PostStatusService extends WakefulIntentService {
 		if (intent == null) {
 			return;
 		}
-		if(App.DEBUG){
+		if (App.DEBUG) {
 			log("intent=" + intent);
 		}
 		this.nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -87,43 +88,40 @@ public class PostStatusService extends WakefulIntentService {
 	private boolean doSend() {
 		showSendingNotification();
 		boolean res = false;
-		Api api = FanFouApi.getInstance();
+		Api api = App.api;
 		try {
 			Status result = null;
-			if (type == WritePage.TYPE_REPLY) {
-				result = api.statusesCreate(text, relationId, null, location,
-						null, FanFouApiConfig.FORMAT_HTML,
-						FanFouApiConfig.MODE_LITE);
-			} else {
-				if (srcFile == null || !srcFile.exists()) {
+			if (srcFile == null || !srcFile.exists()) {
+				if (type == WritePage.TYPE_REPLY) {
+					result = api.statusesCreate(text, relationId, null,
+							location, null, FanFouApiConfig.FORMAT_HTML,
+							FanFouApiConfig.MODE_LITE);
+				} else {
 					result = api.statusesCreate(text, null, null, location,
 							relationId, FanFouApiConfig.FORMAT_HTML,
 							FanFouApiConfig.MODE_LITE);
-				} else {
-					int quality = ImageHelper.IMAGE_QUALITY_MEDIUM;
-					if (App.me.apnType == ApnType.WIFI
-							|| App.me.apnType == ApnType.HSDPA) {
-						quality = ImageHelper.IMAGE_QUALITY_HIGH;
-					} else {
-						quality = OptionHelper
-								.parseInt(
-										this,
-										R.string.option_photo_quality,
-										String.valueOf(ImageHelper.IMAGE_QUALITY_MEDIUM));
-					}
-					File photo = ImageHelper.prepareUploadFile(this, srcFile,
-							quality);
-					if (photo != null && photo.length() > 0) {
-						if (App.DEBUG)
-							log("photo file=" + srcFile.getName() + " size="
-									+ photo.length() / 1024 + " quality="
-									+ quality);
-						result = api.photosUpload(photo, text, null, location,
-								FanFouApiConfig.FORMAT_HTML,
-								FanFouApiConfig.MODE_LITE);
-					}
-					photo.delete();
 				}
+			} else {
+				int quality = ImageHelper.IMAGE_QUALITY_MEDIUM;
+				if (App.me.apnType == ApnType.WIFI
+						|| App.me.apnType == ApnType.HSDPA) {
+					quality = ImageHelper.IMAGE_QUALITY_HIGH;
+				} else {
+					quality = OptionHelper.parseInt(this,
+							R.string.option_photo_quality,
+							String.valueOf(ImageHelper.IMAGE_QUALITY_MEDIUM));
+				}
+				File photo = ImageHelper.prepareUploadFile(this, srcFile,
+						quality);
+				if (photo != null && photo.length() > 0) {
+					if (App.DEBUG)
+						log("photo file=" + srcFile.getName() + " size="
+								+ photo.length() / 1024 + " quality=" + quality);
+					result = api.photosUpload(photo, text, null, location,
+							FanFouApiConfig.FORMAT_HTML,
+							FanFouApiConfig.MODE_LITE);
+				}
+				photo.delete();
 			}
 			nm.cancel(0);
 			if (result != null && !result.isNull()) {

@@ -251,6 +251,7 @@ public class ProfilePage extends BaseActivity {
 		if (textMode) {
 			mHead.setVisibility(View.GONE);
 		} else {
+			mHead.setTag(user.profileImageUrl);
 			mLoader.set(user.profileImageUrl, mHead, R.drawable.default_head);
 		}
 

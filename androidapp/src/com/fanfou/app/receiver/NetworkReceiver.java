@@ -28,6 +28,10 @@ import com.fanfou.app.util.OptionHelper;
  */
 public class NetworkReceiver extends BroadcastReceiver {
 	private static String TAG = NetworkReceiver.class.getSimpleName();
+	
+	private void log(String msg){
+		Log.d(TAG, msg);
+	}
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -40,16 +44,16 @@ public class NetworkReceiver extends BroadcastReceiver {
 	}
 
 	private void onWifiConnected(Context context) {
+		if(App.DEBUG){
+			log("onWifiConnected");
+		}
 		// when wifi is connected, start fetch friends for autocomplete and
 		// check update.
-		startAutoComplete(context);
+//		AutoCompleteService.start(context);
 		startUpdateCheck(context);
 	}
 
-	public static void startAutoComplete(Context context) {
-		Intent intent = new Intent(context, AutoCompleteService.class);
-		context.startService(intent);
-	}
+
 
 	public static void startUpdateCheck(Context context) {
 		boolean autoUpdate = OptionHelper.readBoolean(context,
@@ -63,15 +67,12 @@ public class NetworkReceiver extends BroadcastReceiver {
 		boolean noConnection = intent.getBooleanExtra(
 				ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
 		if (App.DEBUG) {
-			Log.v(TAG, "onReceive noConnection =  " + noConnection);
 			IntentHelper.logIntent(TAG, intent);
+			log("onReceive noConnection =  " + noConnection);
 		}
 
-		App.me.noConnection = noConnection;
+		App.noConnection = noConnection;
 		if (noConnection) {
-			if (App.DEBUG) {
-				Log.v(TAG, "onReceive apnType=" + App.me.apnType.name());
-			}
 			return;
 		}
 
@@ -79,7 +80,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 				.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
 
 		if (info != null && info.isConnectedOrConnecting()) {
-			App.me.noConnection = false;
+			App.noConnection = false;
 			if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
 				App.me.apnType = ApnType.NET;
 				String apnTypeName = info.getExtraInfo();
@@ -97,26 +98,22 @@ public class NetworkReceiver extends BroadcastReceiver {
 				}
 			} else if (info.getType() == ConnectivityManager.TYPE_WIFI) {
 				if (App.DEBUG) {
-					Log.d(TAG, "type=TYPE_WIFI ");
+					log("onReceive type=TYPE_WIFI ");
 				}
 				App.me.apnType = ApnType.WIFI;
 				onWifiConnected(context);
 			}
 		} else {
-//			App.me.noConnection = true;
 			if (App.DEBUG) {
-				Log.v(TAG, "onReceive NetworkInfo is null.");
+				log("onReceive NetworkInfo is null.");
 			}
-		}
-		if (App.DEBUG) {
-			Log.v(TAG, "onReceive apnType=" + App.me.apnType.name());
 		}
 	}
 
 	private void handleWifiStateChange(Context context, Intent intent) {
 		int wifiState = intent.getExtras().getInt(WifiManager.EXTRA_WIFI_STATE);
 		if (App.DEBUG) {
-			Log.v(TAG, "wifi state=" + wifiState);
+			log("wifi state=" + wifiState);
 		}
 		switch (wifiState) {
 		case WifiManager.WIFI_STATE_DISABLING:

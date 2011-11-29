@@ -539,7 +539,7 @@ public class WritePage extends BaseActivity {
 			Utils.notify(this, "消息内容不能为空");
 			return;
 		}
-		if (!App.me.isLogin) {
+		if (!App.verified) {
 			Utils.notify(this, "未通过验证，请先登录");
 			return;
 		}

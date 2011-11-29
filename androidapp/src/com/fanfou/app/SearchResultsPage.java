@@ -242,7 +242,7 @@ public class SearchResultsPage extends BaseActivity implements
 				count = FanFouApiConfig.MAX_TIMELINE_COUNT;
 			}
 			try {
-				result = FanFouApi.getInstance().search(keyword, null,maxId,count, FanFouApiConfig.FORMAT_HTML,FanFouApiConfig.MODE_LITE);
+				result = App.api.search(keyword, null,maxId,count, FanFouApiConfig.FORMAT_HTML,FanFouApiConfig.MODE_LITE);
 			} catch (ApiException e) {
 				if (App.DEBUG)
 					e.printStackTrace();

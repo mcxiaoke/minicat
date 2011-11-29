@@ -209,18 +209,9 @@ public final class ActionManager {
 				Log.d(TAG, "doReply: status is null.");
 			}
 			StringBuilder sb = new StringBuilder();
-			sb.append("@").append(status.userScreenName).append(" ");
-			
 			boolean replyToAll=OptionHelper.readBoolean(context, R.string.option_reply_to_all_default, true);
 			if(replyToAll){
-				
-//				HashSet<String> names = StatusHelper.getMentionedNames(status.simpleText);
-//				Iterator<String> i = names.iterator();
-//				while (i.hasNext()) {
-//					String name = i.next();
-//					sb.append("@").append(name).append(" ");
-//				}
-				ArrayList<String> names=StatusHelper.getMentions(status.simpleText);
+				ArrayList<String> names=StatusHelper.getMentions(status);
 				for (String name : names) {
 					sb.append("@").append(name).append(" ");
 				}

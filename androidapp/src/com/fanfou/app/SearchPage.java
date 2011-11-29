@@ -111,7 +111,7 @@ public class SearchPage extends BaseActivity implements OnItemClickListener {
 
 		@Override
 		protected Integer doInBackground(Void... params) {
-			Api api = FanFouApi.getInstance();
+			Api api = App.api;
 			try {
 				List<Search> savedSearches = api.savedSearchesList();
 				if (savedSearches != null && savedSearches.size() > 0) {

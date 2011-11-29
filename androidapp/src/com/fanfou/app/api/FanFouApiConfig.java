@@ -22,11 +22,11 @@ public interface FanFouApiConfig {
 	public static final String HOST = "http://fanfou.com/";
 	public static final String API_BASE_DOMAIN = "http://api.fanfou.com/";
 	public static final String API_BASE_IP = "http://58.83.129.19/";
-	public static final String API_BASE = API_BASE_DOMAIN;
+	public static final String API_BASE = API_BASE_IP;
 	public static final String EXTENSION = ".json";
 	public static final int MAX_TIMELINE_COUNT = 60;
 	public static final int DEFAULT_TIMELINE_COUNT = 20;
-	public static final int MAX_USERS_COUNT = 100;
+	public static final int MAX_USERS_COUNT = 60;
 	public static final int DEFAULT_USERS_COUNT = 20;
 	public static final int MAX_IDS_COUNT = 2000;
 	
@@ -73,7 +73,7 @@ public interface FanFouApiConfig {
 			+ "photos/user_timeline" + EXTENSION;
 
 	// show a status, param id -- status id
-	public static final String URL_STATUS_SHOW = API_BASE + "statuses/show/id"
+	public static final String URL_STATUS_SHOW = API_BASE + "statuses/show/%s"
 			+ EXTENSION;
 
 	// post a status

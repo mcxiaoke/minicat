@@ -89,7 +89,7 @@ public class StatusArrayAdapter extends BaseArrayAdapter<Status> {
 		final Status s = mStatus.get(position);
 
 		if (!isTextMode()) {
-//			holder.headIcon.setTag(s.userProfileImageUrl);
+			holder.headIcon.setTag(s.userProfileImageUrl);
 			mLoader.set(s.userProfileImageUrl, holder.headIcon,
 					R.drawable.default_head);
 			holder.headIcon.setOnClickListener(new View.OnClickListener() {

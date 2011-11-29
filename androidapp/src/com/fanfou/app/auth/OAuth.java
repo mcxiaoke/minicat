@@ -36,6 +36,7 @@ import com.fanfou.app.util.Base64;
  * @author mcxiaoke
  * @version 2.0 2011.11.03
  * @version 2.1 2011.11.24
+ * @version 2.2 2011.11.28
  * 
  */
 public class OAuth {
@@ -77,7 +78,7 @@ public class OAuth {
 	public void signRequest(HttpUriRequest request, List<Parameter> params) {
 		String authorization = getOAuthHeader(request.getMethod(), request
 				.getURI().toString(), params, oauthToken);
-		request.setHeader(new BasicHeader("Authorization", authorization));
+		request.addHeader(new BasicHeader("Authorization", authorization));
 	}
 
 	public OAuthToken getOAuthAccessToken(String username, String password)
@@ -86,7 +87,8 @@ public class OAuth {
 				HttpGet.METHOD_NAME, ACCESS_TOKEN_URL);
 		ConnectionRequest.Builder builder = new ConnectionRequest.Builder();
 		builder.url(ACCESS_TOKEN_URL).header("Authorization", authorization);
-		HttpResponse response = ConnectionManager.exec(builder.build());
+		HttpResponse response = ConnectionManager.newInstance().exec(
+				builder.build());
 		int statusCode = response.getStatusLine().getStatusCode();
 		String content = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
 		if (App.DEBUG)
@@ -122,8 +124,7 @@ public class OAuth {
 		oauthHeaderParams.add(new Parameter("x_auth_mode", "client_auth"));
 		// parseGetParams(url, oauthHeaderParams);
 		StringBuffer base = new StringBuffer(method).append("&")
-				.append(encode(constructRequestURL(url)))
-				.append("&");
+				.append(encode(constructRequestURL(url))).append("&");
 		base.append(encode(alignParams(oauthHeaderParams)));
 		String oauthBaseString = base.toString();
 		String signature = getSignature(oauthBaseString, null);
@@ -171,10 +172,10 @@ public class OAuth {
 		oauthHeaderParams.add(new Parameter("oauth_nonce", nonce));
 		oauthHeaderParams.add(new Parameter("oauth_version", "1.0"));
 		if (null != otoken) {
-			if (App.DEBUG)
-				log("getOAuthHeader() oauth_token="
-						+ otoken.getToken() + " oauth_token_secret="
-						+ otoken.getTokenSecret());
+			// if (App.DEBUG){
+			// log("getOAuthHeader() oauth_token="
+			// + otoken.getToken() + " oauth_token_secret="
+			// + otoken.getTokenSecret());}
 			oauthHeaderParams.add(new Parameter("oauth_token", otoken
 					.getToken()));
 		}
@@ -186,24 +187,25 @@ public class OAuth {
 			signatureBaseParams.addAll(params);
 		}
 		parseGetParams(url, signatureBaseParams);
-	
-		String encodedUrl=encode(constructFanFouRequestURL(url));
-		String encodedParams=encode(alignParams(signatureBaseParams));
+
+		String encodedUrl = encode(constructFanFouRequestURL(url));
+		String encodedParams = encode(alignParams(signatureBaseParams));
 
 		StringBuffer base = new StringBuffer(method).append("&")
 				.append(encodedUrl).append("&").append(encodedParams);
 		String oauthBaseString = base.toString();
-		
-		if(App.DEBUG){
-			log("getOAuthHeader() url=" + url);
-			log("getOAuthHeader() encodedUrl="+encodedUrl);
-			log("getOAuthHeader() encodedParams="+encodedParams);
-			log("getOAuthHeader() baseString=" + oauthBaseString);
-		}
-		oauthHeaderParams.add(new Parameter("oauth_signature", getSignature(oauthBaseString, otoken)));
+
+		 if(App.DEBUG){
+		 log("getOAuthHeader() url=" + url);
+		 log("getOAuthHeader() encodedUrl="+encodedUrl);
+		 log("getOAuthHeader() encodedParams="+encodedParams);
+		 log("getOAuthHeader() baseString=" + oauthBaseString);
+		 }
+		oauthHeaderParams.add(new Parameter("oauth_signature", getSignature(
+				oauthBaseString, otoken)));
 		return "OAuth " + encodeParameters(oauthHeaderParams, ",", true);
 	}
-	
+
 	private static String encode(String value) {
 		String encoded = null;
 		try {
@@ -251,17 +253,16 @@ public class OAuth {
 		signatureBaseParams.addAll(oauthHeaderParams);
 
 		// log("=========createOAuthSignatureParams========");
-		if (App.DEBUG) {
-			for (Parameter parameter : signatureBaseParams) {
-				log(parameter.toString());
-			}
-		}
+		// if (App.DEBUG) {
+		// for (Parameter parameter : signatureBaseParams) {
+		// log(parameter.toString());
+		// }
+		// }
 
 		parseGetParams(url, signatureBaseParams);
 
 		StringBuffer base = new StringBuffer(method).append("&")
-				.append(encode(constructRequestURL(url)))
-				.append("&");
+				.append(encode(constructRequestURL(url))).append("&");
 		base.append(encode(alignParams(signatureBaseParams)));
 
 		String oauthBaseString = base.toString();
@@ -280,7 +281,8 @@ public class OAuth {
 			Mac mac = Mac.getInstance(HMAC_SHA1);
 			SecretKeySpec spec;
 			if (null == token) {
-				String oauthSignature = encode(FanFouApiConfig.CONSUMER_SECRET) + "&";
+				String oauthSignature = encode(FanFouApiConfig.CONSUMER_SECRET)
+						+ "&";
 				spec = new SecretKeySpec(oauthSignature.getBytes(), HMAC_SHA1);
 			} else {
 				spec = token.getSecretKeySpec();
@@ -323,8 +325,7 @@ public class OAuth {
 					}
 					buf.append(splitter);
 				}
-				buf.append(encode(param.getName())).append(
-						"=");
+				buf.append(encode(param.getName())).append("=");
 				if (quot) {
 					buf.append("\"");
 				}
@@ -336,9 +337,9 @@ public class OAuth {
 				buf.append("\"");
 			}
 		}
-		if(App.DEBUG){
-			Log.d(TAG, "encodeParameters result="+buf.toString());
-		}
+		// if(App.DEBUG){
+		// Log.d(TAG, "encodeParameters result="+buf.toString());
+		// }
 		return buf.toString();
 	}
 
@@ -359,17 +360,19 @@ public class OAuth {
 			}
 		}
 		url = baseURL + url.substring(slashIndex);
-
+		if (App.DEBUG) {
+			Log.d(TAG, "constructRequestURL result=" + url);
+		}
 		return url;
 	}
-	
+
 	public static String constructFanFouRequestURL(String url) {
 		int index = url.indexOf("?");
 		if (-1 != index) {
 			url = url.substring(0, index);
 		}
 		int slashIndex = url.indexOf("/", 8);
-		return "http://api.fanfou.com" + url.substring(slashIndex);	
+		return "http://api.fanfou.com" + url.substring(slashIndex);
 	}
 
 	@Override

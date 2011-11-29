@@ -70,7 +70,7 @@ public class ActionService extends BaseIntentService {
 	}
 
 	private void doDetectFriendships(String userA, String userB) {
-		Api api = FanFouApi.getInstance();
+		Api api = App.api;
 		try {
 			boolean result = api.friendshipsExists(userA, userB);
 			Bundle data = new Bundle();
@@ -92,7 +92,7 @@ public class ActionService extends BaseIntentService {
 	}
 
 	private void performAction(String id, int type) {
-		Api api = FanFouApi.getInstance();
+		Api api = App.api;
 		String where = BasicColumns.ID + "=?";
 		String[] whereArgs = new String[] { id };
 		try {

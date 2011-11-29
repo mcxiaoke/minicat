@@ -3,6 +3,7 @@ package com.fanfou.app.service;
 import java.util.List;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -22,6 +23,8 @@ import com.fanfou.app.db.Contents.UserInfo;
  * @version 1.1 2011.11.17
  * @version 2.0 2011.11.18
  * @version 2.1 2011.11.24
+ * @version 2.2 2011.11.28
+ * @version 2.3 2011.11.29
  * 
  */
 public class AutoCompleteService extends BaseIntentService {
@@ -35,51 +38,48 @@ public class AutoCompleteService extends BaseIntentService {
 		super("AutoCompleteService");
 	}
 
+	public static void start(Context context) {
+		context.startService(new Intent(context, AutoCompleteService.class));
+	}
+
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		doFetchAutoComplete();
 	}
 
 	private void doFetchAutoComplete() {
-		if (App.DEBUG)
-			log("doFetchAutoComplete");
-		if (!App.me.isLogin) {
+		if (!App.verified) {
 			return;
 		}
-		if(App.me.noConnection){
+		if (App.noConnection) {
 			return;
 		}
-		Api api = FanFouApi.getInstance();
-		
-		int count = FanFouApiConfig.MAX_USERS_COUNT;
-		try {
-			int nums = 0;
-			boolean hasNext = true;
-			for (int page = 1; hasNext; page++) {
-				List<User> result = api.usersFriends(null, count,page,FanFouApiConfig.MODE_LITE);
-				if (result != null && result.size() > 0) {
-					int size=result.size();
-					for (User u : result) {
-						u.type = User.TYPE_FRIENDS;
-					}
-					if (App.DEBUG)
-						log("doFetchAutoComplete page==" + page
-								+ " result.size=" + size);
-					getContentResolver().bulkInsert(UserInfo.CONTENT_URI,
-							Parser.toContentValuesArray(result));
-					nums += result.size();
-					if (size<count||page >= 20) {
-						hasNext = false;
-					}
-				} else {
-					hasNext = false;
+		Api api = App.api;
+		int page = 1;
+		boolean more = true;
+		while (more) {
+			List<User> result = null;
+			try {
+				result = api.usersFriends(null,
+						FanFouApiConfig.MAX_USERS_COUNT, page,
+						FanFouApiConfig.MODE_LITE);
+			} catch (ApiException e) {
+			}
+			if (result != null && result.size() > 0) {
+				int size = result.size();
+
+				int insertedNums=getContentResolver().bulkInsert(UserInfo.CONTENT_URI,
+						Parser.toContentValuesArray(result));
+				if (App.DEBUG) {
+					log("doFetchAutoComplete page==" + page + " size=" + size+" insert rows="+insertedNums);
 				}
+				if (size < FanFouApiConfig.MAX_USERS_COUNT || page >= 20) {
+					more = false;
+				}
+			} else {
+				more = false;
 			}
-		} catch (ApiException e) {
-			if (App.DEBUG) {
-				Log.e(TAG, ""+e.toString());
-				e.printStackTrace();
-			}
+			page++;
 		}
 	}
 

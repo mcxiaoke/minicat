@@ -272,7 +272,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 
 					App.me.oauthAccessToken = token.getToken();
 					App.me.oauthAccessTokenSecret = token.getTokenSecret();
-					User u = FanFouApi.getInstance().verifyAccount(FanFouApiConfig.MODE_LITE);
+					User u = App.api.verifyAccount(FanFouApiConfig.MODE_LITE);
 
 					if (isCancelled) {
 						if (App.DEBUG) {

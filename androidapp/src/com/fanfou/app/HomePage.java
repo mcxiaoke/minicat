@@ -432,7 +432,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	 *            类型参数：Home/Mention/Message/Public
 	 */
 	private void doRetrieve(final int page, boolean doGetMore) {
-		if (!App.me.isLogin) {
+		if (!App.verified) {
 			Utils.notify(this, "未通过验证，请登录");
 			return;
 		}

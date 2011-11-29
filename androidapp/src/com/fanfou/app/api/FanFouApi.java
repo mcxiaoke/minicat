@@ -35,12 +35,13 @@ import com.fanfou.app.util.StringHelper;
  * @version 4.0 2011.11.21
  * @version 4.1 2011.11.22
  * @version 4.2 2011.11.23
+ * @version 4.3 2011.11.28
+ * @version 4.4 2011.11.29
  * 
  */
 public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	private static final String TAG = FanFouApi.class.getSimpleName();
-	
-	private static FanFouApi INSTANCE=new FanFouApi();
+	private ConnectionManager conn;
 
 	/**
 	 * @param message
@@ -50,10 +51,11 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	private FanFouApi() {
+		conn=ConnectionManager.newInstance();
 	}
 	
-	public static Api getInstance() {
-		return INSTANCE;
+	public static FanFouApi newInstance(){
+		return new FanFouApi();
 	}
 
 	/**
@@ -65,10 +67,11 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	 */
 	private Response fetch(ConnectionRequest request) throws ApiException {
 		try {
-			HttpResponse response = ConnectionManager.execWithOAuth(request);
+			HttpResponse response = conn.execWithOAuth(request);
 			int statusCode = response.getStatusLine().getStatusCode();
+			
 			if (App.DEBUG) {
-				Log.i(TAG, "fetch() url=" + request.url + " post="
+				log("fetch() url=" + request.url + " post="
 						+ request.post + " statusCode=" + statusCode);
 			}
 			if (statusCode == HTTP_OK) {
@@ -310,7 +313,10 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		}
 		if (App.DEBUG)
 			log("statusShow()---statusId=" + statusId);
-		Response response = doGetIdAction(URL_STATUS_SHOW, statusId, format,
+		
+		String url=String.format(URL_STATUS_SHOW, statusId);
+		
+		Response response = doGetIdAction(url, statusId, format,
 				mode);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
@@ -328,9 +334,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 			String source, String location, String repostStatusId,
 			String format, String mode) throws ApiException {
 		if (StringHelper.isEmpty(status)) {
-			if (App.DEBUG)
 				throw new IllegalArgumentException("消息内容不能为空");
-			return null;
 		}
 		if (App.DEBUG)
 			log("statusUpdate() ---[status=(" + status + ") replyToStatusId="
@@ -370,9 +374,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	public Status photosUpload(File photo, String status, String source,
 			String location, String format, String mode) throws ApiException {
 		if (photo == null) {
-			if (App.DEBUG)
 				throw new IllegalArgumentException("文件不能为空");
-			return null;
 		}
 		if (App.DEBUG)
 			log("upload()---photo=" + photo.getAbsolutePath() + " status="
@@ -590,6 +592,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		} catch (UnsupportedEncodingException e) {
 			url = String.format(URL_FRIENDSHIPS_CREATE, userId);
 		}
+		
 		Response response = doPostIdAction(url, null, null, mode);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
@@ -618,6 +621,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		} catch (UnsupportedEncodingException e) {
 			url = String.format(URL_FRIENDSHIPS_DESTROY, userId);
 		}
+		
 		Response response = doPostIdAction(url, null, null, mode);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {

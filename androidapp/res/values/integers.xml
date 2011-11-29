@@ -6,4 +6,5 @@
 
 	<integer name="defaultFontSize">15</integer>
 	<integer name="maxFontSize">28</integer>
+
 </resources>

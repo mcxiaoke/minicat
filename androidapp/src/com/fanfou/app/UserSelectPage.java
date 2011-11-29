@@ -164,7 +164,7 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected void doRetrieve(boolean isGetMore) {
-		if (!App.me.isLogin) {
+		if (!App.verified) {
 			Utils.notify(this, "未通过验证，请登录");
 			return;
 		}

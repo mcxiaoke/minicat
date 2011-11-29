@@ -4,12 +4,12 @@
 	<string name="option_userid">userid</string>
 	<string name="option_username">screen_name</string>
 	<string name="option_profile_image">profile_image</string>
-	
+
 	<string name="option_oauth_token">oauth_token</string>
 	<string name="option_oauth_token_secret">oauth_token_secret</string>
 	<string name="option_location_enable">location_enable</string>
 	<string name="option_verified">verified</string>
-	
+
 	<string name="option_set_auto_complete">set_auto_complete</string>
 	<string name="option_set_auto_clean">set_auto_clean</string>
 	<string name="option_set_notification">set_notification</string>
@@ -19,6 +19,14 @@
 	<string name="option_photo_quality">photo_quality</string>
 	<string name="option_text_mode">text_mode</string>
 	<string name="option_pic_level">pic_level</string>
+
+	<string name="option_color_highlight_mention">color_highlight_mention</string>
+	<string name="option_color_highlight_self">color_highlight_self</string>
+	<string name="option_color_timeline_background">color_timeline_background</string>
+	<string name="option_color_timeline_item_name">color_timeline_item_name</string>
+	<string name="option_color_timeline_item_text">color_timeline_item_text</string>
+	<string name="option_color_timeline_item_metainfo">color_timeline_item_metainfo</string>
+	<string name="option_color_reset_all">color_reset_all</string>
 
 	<string name="option_bottom_refresh_icon">bottom_refresh_icon</string>
 	<string name="option_bottom_write_icon">bottom_write_icon</string>
@@ -41,18 +49,18 @@
 	<string name="option_autoupdate">autoupdate</string>
 	<string name="option_autoupdate_interval">autoupdate_interval</string>
 	<string name="option_current_account">current_account</string>
-	
+
 	<string name="option_fetch_relationships">fetch_relationships</string>
 	<string name="option_clear_data_and_settings">clear_data_and_settings</string>
-		
+
 	<string name="option_logout">logout</string>
 	<string name="option_cleanpic">cleanpic</string>
 	<string name="option_cleandb">cleandb</string>
-	
+
 	<string name="option_force_portrait">force_portrait</string>
 	<string name="option_force_fullscreen">force_fullscreen</string>
 	<string name="option_play_sound_effect">play_sound_effect</string>
-	
+
 	<string name="option_old_version_code">old_version_code</string>
 
 	<string name="option_notification">notification</string>
@@ -66,7 +74,7 @@
 	<string name="option_notification_dm">notification_dm</string>
 	<string name="option_notification_mention">notification_mention</string>
 	<string name="option_notification_home">notification_home</string>
-	
-		<string name="option_test_key">test_key</string>
+
+	<string name="option_test_key">test_key</string>
 
 </resources>

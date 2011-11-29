@@ -90,7 +90,7 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter {
 		final ViewHolder holder = (ViewHolder) row.getTag();
 
 		if (!isTextMode()) {
-//			holder.headIcon.setTag(u.profileImageUrl);
+			holder.headIcon.setTag(u.profileImageUrl);
 			mLoader.set(u.profileImageUrl, holder.headIcon,
 					R.drawable.default_head);
 		}

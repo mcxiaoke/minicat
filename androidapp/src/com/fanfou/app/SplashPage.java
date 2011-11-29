@@ -44,7 +44,7 @@ public class SplashPage extends Activity {
 
 	private void checkLogin() {
 		// 可以将大部分的初始化工作从App中转移到这里
-		if (App.me.isLogin) {
+		if (App.verified) {
 			IntentHelper.goHomePage(this, 0);
 		} else {
 			IntentHelper.goLoginPage(this);

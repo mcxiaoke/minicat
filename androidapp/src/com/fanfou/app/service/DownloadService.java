@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.RemoteViews;
@@ -42,15 +43,18 @@ import com.fanfou.app.util.Utils;
  * @version 2.0 2011.10.31
  * @version 2.1 2011.11.24
  * @version 2.2 2011.11.25
+ * @version 2.3 2011.11.28
  * 
  */
 public class DownloadService extends BaseIntentService {
-	private static final String TAG=DownloadService.class.getSimpleName();
-	
+	private static final String TAG = DownloadService.class.getSimpleName();
+
 	public static final String APP_SITE_BASE_URL = "http://apps.fanfou.com/android/";
-	public static final String APP_SITE_BETA=APP_SITE_BASE_URL+"beta/";
-	public static final String APP_UPDATE_SITE = APP_SITE_BASE_URL+"update.json";
-	public static final String APP_UPDATE_SITE_BETA = APP_SITE_BETA+"update.json";
+	public static final String APP_SITE_BETA = "http://apps.fanfou.com/android/beta/";
+	public static final String APP_UPDATE_SITE = APP_SITE_BASE_URL
+			+ "update.json";
+	public static final String APP_UPDATE_SITE_BETA = APP_SITE_BETA
+			+ "update.json";
 
 	private static final int NOTIFICATION_PROGRESS_ID = 1;
 	private NotificationManager nm;
@@ -70,6 +74,12 @@ public class DownloadService extends BaseIntentService {
 
 	}
 
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		mHandler = new DownloadHandler();
+	}
+
 	public static void startDownload(Context context, String url) {
 		Intent intent = new Intent(context, DownloadService.class);
 		intent.putExtra(Commons.EXTRA_TYPE, TYPE_DOWNLOAD);
@@ -86,17 +96,17 @@ public class DownloadService extends BaseIntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		mHandler = new Handler();
 		int type = intent.getIntExtra(Commons.EXTRA_TYPE, TYPE_CHECK);
 		if (type == TYPE_CHECK) {
 			check();
 		} else if (type == TYPE_DOWNLOAD) {
 			String url = intent.getStringExtra(Commons.EXTRA_DOWNLOAD_URL);
-			if(App.DEBUG){
-				url=(APP_SITE_BETA+"/fanfou.apk");
+			if (App.DEBUG) {
+				url = (APP_SITE_BETA + "/fanfou.apk");
 			}
-			log("onHandleIntent TYPE_DOWNLOAD url="+url);
+			log("onHandleIntent TYPE_DOWNLOAD url=" + url);
 			if (!StringHelper.isEmpty(url)) {
+				
 				download(url);
 			}
 		}
@@ -104,9 +114,11 @@ public class DownloadService extends BaseIntentService {
 
 	private void check() {
 		VersionInfo info = fetchVersionInfo();
-		if (App.DEBUG && info != null) {
-			notifyUpdate(info, this);
-			return;
+		if (App.DEBUG) {
+			if (info != null) {
+				notifyUpdate(info, this);
+				return;
+			}
 		}
 		if (info != null && info.versionCode > App.me.appVersionCode) {
 			notifyUpdate(info, this);
@@ -118,7 +130,7 @@ public class DownloadService extends BaseIntentService {
 		InputStream is = null;
 		FileOutputStream fos = null;
 		try {
-			HttpResponse response = ConnectionManager.get(url);
+			HttpResponse response = ConnectionManager.newInstance().get(url);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == 200) {
 				HttpEntity entity = response.getEntity();
@@ -126,32 +138,36 @@ public class DownloadService extends BaseIntentService {
 				long download = 0;
 				is = entity.getContent();
 				File file = new File(IOHelper.getDownloadDir(this),
-						"fanfou.apk");
+						"fanfou_"+System.currentTimeMillis()+".apk");
 				fos = new FileOutputStream(file);
 				// fos = openFileOutput("fanfou.apk", MODE_PRIVATE);
-				byte[] buffer = new byte[20480];
+				byte[] buffer = new byte[8196];
 				int read = -1;
-
 				while ((read = is.read(buffer)) != -1) {
 					fos.write(buffer, 0, read);
 					download += read;
-
-					int progress = (int) (100 * download / (total * 1.0));
-					updateProgress(progress, file.getAbsolutePath());
+					int progress = (int) (100.0 * download /total);
+					Message message = new Message();
+					message.what=MSG_PROGRESS;
+					message.arg1 = progress;
+					mHandler.sendMessage(message);
 					if (App.DEBUG) {
 						log("progress=" + progress);
 					}
 				}
 				fos.flush();
+				nm.cancel(NOTIFICATION_PROGRESS_ID);
 				if (download >= total) {
-					nm.cancel(NOTIFICATION_PROGRESS_ID);
-					Utils.open(this, file.getAbsolutePath());
+					Message message = new Message();
+					message.what=MSG_SUCCESS;
+					message.getData().putString(Commons.EXTRA_FILENAME, file.getAbsolutePath());
+					mHandler.sendMessage(message);
 				}
 			}
 		} catch (IOException e) {
 			if (App.DEBUG)
-				Log.e(TAG, "download error: "+e.getMessage());
-				e.printStackTrace();
+				Log.e(TAG, "download error: " + e.getMessage());
+			e.printStackTrace();
 			nm.cancel(NOTIFICATION_PROGRESS_ID);
 		} finally {
 			IOHelper.forceClose(is);
@@ -160,7 +176,7 @@ public class DownloadService extends BaseIntentService {
 	}
 
 	private void showProgress() {
-		notification = new Notification(R.drawable.ic_notify_home, "正在下载饭否客户端",
+		notification = new Notification(R.drawable.ic_notify_download, "正在下载饭否客户端",
 				System.currentTimeMillis());
 		notification.flags |= Notification.FLAG_ONGOING_EVENT;
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
@@ -179,14 +195,41 @@ public class DownloadService extends BaseIntentService {
 
 	}
 
-	private void updateProgress(final int progress, String fileName) {
-		if (progress <= 100) {
+	private static final int MSG_PROGRESS = 0;
+	private static final int MSG_SUCCESS=1;
+
+	private class DownloadHandler extends Handler {
+		@Override
+		public void handleMessage(Message msg) {
+			if(App.DEBUG){
+				log("DownloadHandler msg.what="+msg.what+" arg1="+msg.arg1);
+			}
+			if (MSG_PROGRESS == msg.what) {
+				int progress = msg.arg1;
+				updateProgress(progress);
+			}else if(MSG_SUCCESS==msg.what){
+				String filePath=msg.getData().getString(Commons.EXTRA_FILENAME);
+				Utils.open(DownloadService.this, filePath);
+			}
+		}
+
+	}
+
+	private void updateProgress(final int progress) {
+		if (progress < 100) {
 			notification.contentView.setTextViewText(
 					R.id.download_notification_text, "正在下载饭否客户端 " + progress
 							+ "%");
 			notification.contentView.setInt(
 					R.id.download_notification_progress, "setProgress",
 					progress);
+			nm.notify(NOTIFICATION_PROGRESS_ID, notification);
+		}else{
+			notification.contentView.setTextViewText(
+					R.id.download_notification_text, "饭否客户端下载完成");
+			notification.contentView.setInt(
+					R.id.download_notification_progress, "setProgress",
+					100);
 			nm.notify(NOTIFICATION_PROGRESS_ID, notification);
 		}
 	}
@@ -206,17 +249,13 @@ public class DownloadService extends BaseIntentService {
 	}
 
 	public static VersionInfo fetchVersionInfo() {
-		// HttpClient client = NetworkHelper.newHttpClient();
-		// NetworkHelper.setProxy(client);
-		// HttpGet request = new HttpGet(APP_UPDATE_SITE);
 		try {
-
-			// HttpResponse response = client.execute(request);
-			String url=APP_UPDATE_SITE;
-			if(App.DEBUG){
-				url=APP_UPDATE_SITE_BETA;
+			String url = APP_UPDATE_SITE;
+			if (App.DEBUG) {
+				url = APP_UPDATE_SITE_BETA;
 			}
-			HttpResponse response = ConnectionManager.get(APP_UPDATE_SITE);
+			HttpResponse response = ConnectionManager.newInstance().get(
+					APP_UPDATE_SITE);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (App.DEBUG) {
 				Log.d(TAG, "statusCode=" + statusCode);
@@ -271,9 +310,9 @@ public class DownloadService extends BaseIntentService {
 				.setNegativeButton("以后再说", null);
 		builder.setPositiveButton("立即升级", downListener);
 		StringBuffer sb = new StringBuffer();
-		sb.append("安装版本： ").append(App.me.appVersionName).append("(Build")
+		sb.append("安装版本：").append(App.me.appVersionName).append("(Build")
 				.append(App.me.appVersionCode).append(")");
-		sb.append("\n最新版本： ").append(info.versionName).append("(Build")
+		sb.append("\n最新版本：").append(info.versionName).append("(Build")
 				.append(info.versionCode).append(")");
 		sb.append("\n更新日期：").append(info.releaseDate);
 		sb.append("\n更新级别：").append(info.forceUpdate ? "重要升级" : "一般升级");

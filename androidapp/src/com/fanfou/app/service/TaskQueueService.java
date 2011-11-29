@@ -30,6 +30,7 @@ import com.fanfou.app.util.OptionHelper;
  * @version 2.0 2011.11.15
  * @version 3.0 2011.11.18
  * @version 3.1 2011.11.22
+ * @version 3.2 2011.11.28
  * 
  */
 public class TaskQueueService extends WakefulIntentService {
@@ -53,34 +54,34 @@ public class TaskQueueService extends WakefulIntentService {
 	private boolean doSend(final Draft d) {
 		boolean res = false;
 		try {
-			Api api = FanFouApi.getInstance();
+			Api api = App.api;
 			Status result = null;
-			if (d.type == WritePage.TYPE_REPLY) {
-				result = api.statusesCreate(d.text, d.replyTo, null, null, null,
-						FanFouApiConfig.FORMAT_HTML, FanFouApiConfig.MODE_LITE);
-			} else {
-				File srcFile = new File(d.filePath);
-				if (srcFile == null || !srcFile.exists()) {
+			File srcFile = new File(d.filePath);
+			if (srcFile == null || !srcFile.exists()) {
+				if (d.type == WritePage.TYPE_REPLY) {
+					result = api.statusesCreate(d.text, d.replyTo, null, null,
+							null, FanFouApiConfig.FORMAT_HTML,
+							FanFouApiConfig.MODE_LITE);
+				} else {
 					result = api.statusesCreate(d.text, null, null, null,
 							d.replyTo, FanFouApiConfig.FORMAT_HTML,
 							FanFouApiConfig.MODE_LITE);
-				} else {
-					int quality = OptionHelper.parseInt(this,
-							R.string.option_photo_quality,
-							String.valueOf(ImageHelper.IMAGE_QUALITY_MEDIUM));
-					File photo = ImageHelper.prepareUploadFile(this, srcFile,
-							quality);
-					if (photo != null && photo.length() > 0) {
-						if (App.DEBUG)
-							log("photo file=" + srcFile.getName() + " size="
-									+ photo.length() / 1024 + " quality="
-									+ quality);
-						result = api.photosUpload(photo, d.text, null, null,
-								FanFouApiConfig.FORMAT_HTML,
-								FanFouApiConfig.MODE_LITE);
-					}
-					photo.delete();
 				}
+			} else {
+				int quality = OptionHelper.parseInt(this,
+						R.string.option_photo_quality,
+						String.valueOf(ImageHelper.IMAGE_QUALITY_MEDIUM));
+				File photo = ImageHelper.prepareUploadFile(this, srcFile,
+						quality);
+				if (photo != null && photo.length() > 0) {
+					if (App.DEBUG)
+						log("photo file=" + srcFile.getName() + " size="
+								+ photo.length() / 1024 + " quality=" + quality);
+					result = api.photosUpload(photo, d.text, null, null,
+							FanFouApiConfig.FORMAT_HTML,
+							FanFouApiConfig.MODE_LITE);
+				}
+				photo.delete();
 			}
 			if (result != null && !result.isNull()) {
 				res = true;
@@ -101,7 +102,7 @@ public class TaskQueueService extends WakefulIntentService {
 	}
 
 	private void sendQueue() {
-		BlockingQueue<Draft> queue=new LinkedBlockingQueue<Draft>();
+		BlockingQueue<Draft> queue = new LinkedBlockingQueue<Draft>();
 		boolean running = true;
 		Cursor cursor = getContentResolver().query(DraftInfo.CONTENT_URI,
 				DraftInfo.COLUMNS, null, null, null);

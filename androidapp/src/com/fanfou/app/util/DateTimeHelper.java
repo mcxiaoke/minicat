@@ -22,7 +22,7 @@ public class DateTimeHelper {
 	private static final String DATE_ONLY_FORMAT_STRING = "yyyy-MM-dd";
 	private static final String TIME_ONLY_FORMAT_STRING = "HH:mm:ss";
 
-	private static final SimpleDateFormat FANFOU_DATE_FORMAT = new SimpleDateFormat(
+	public static final SimpleDateFormat FANFOU_DATE_FORMAT = new SimpleDateFormat(
 			FANFOU_DATE_FORMAT_STRING, Locale.US);
 
 	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(

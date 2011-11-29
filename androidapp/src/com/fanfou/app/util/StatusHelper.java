@@ -166,8 +166,10 @@ public class StatusHelper {
 		return names;
 	}
 
-	public static ArrayList<String> getMentions(String text) {
+	public static ArrayList<String> getMentions(final Status status) {
+		String text=status.simpleText;
 		ArrayList<String> names = new ArrayList<String>();
+		names.add(status.userScreenName);
 		Matcher m = namePattern.matcher(text);
 		while (m.find()) {
 			String name = m.group(1);

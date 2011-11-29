@@ -43,6 +43,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.5 2011.11.07
  * @version 2.6 2011.11.17
  * @version 2.7 2011.11.22
+ * @version 2.8 2011.11.28
  * 
  */
 public class StatusPage extends BaseActivity {
@@ -189,6 +190,7 @@ public class StatusPage extends BaseActivity {
 			if (textMode) {
 				iUserHead.setVisibility(View.GONE);
 			} else {
+				iUserHead.setTag(status.userProfileImageUrl);
 				mLoader.set(status.userProfileImageUrl, iUserHead,
 						R.drawable.default_head);
 			}
@@ -233,18 +235,18 @@ public class StatusPage extends BaseActivity {
 		iPhoto.setOnClickListener(this);
 
 		// 先检查本地是否有大图缓存
-		Bitmap bitmap = mLoader.load(s.photoLargeUrl);
+		Bitmap bitmap = mLoader.load(s.photoLargeUrl,null);
 		if (bitmap != null) {
-			iPhoto.setTag(s.photoLargeUrl);
+//			iPhoto.setTag(s.photoLargeUrl);
 			iPhoto.setImageBitmap(bitmap);
 			mPhotoState = PHOTO_LARGE;
 			return;
 		}
 
 		// 再检查本地是否有缩略图缓存
-		bitmap = mLoader.load(s.photoImageUrl);
+		bitmap = mLoader.load(s.photoImageUrl,null);
 		if (bitmap != null) {
-			iPhoto.setTag(s.photoImageUrl);
+//			iPhoto.setTag(s.photoImageUrl);
 			iPhoto.setImageBitmap(bitmap);
 			mPhotoState = PHOTO_SMALL;
 			return;
@@ -356,14 +358,17 @@ public class StatusPage extends BaseActivity {
 	private void loadPhoto(final int type) {
 		iPhoto.setImageResource(R.drawable.photo_loading);
 		mPhotoState = PHOTO_LOADING;
-		ImageLoaderCallback callback = new ImageLoaderCallback() {
+		final ImageLoaderCallback callback = new ImageLoaderCallback() {
 
 			@Override
 			public void onFinish(String key, Bitmap bitmap) {
 				if (bitmap != null) {
 					iPhoto.setImageBitmap(bitmap);
-					iPhoto.invalidate();
+					iPhoto.postInvalidate();
 					mPhotoState = type;
+				}else{
+					iPhoto.setImageResource(R.drawable.photo_icon);
+					mPhotoState = PHOTO_ICON;
 				}
 			}
 

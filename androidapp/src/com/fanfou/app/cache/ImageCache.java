@@ -87,6 +87,9 @@ final class ImageCache implements ICache<Bitmap> {
 
 	@Override
 	public boolean put(String key, Bitmap bitmap) {
+		if(key==null || bitmap==null){
+			return false;
+		}
 		synchronized (this) {
 			memoryCache.put(key, new SoftReference<Bitmap>(bitmap));
 		}

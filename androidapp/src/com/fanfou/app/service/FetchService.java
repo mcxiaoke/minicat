@@ -119,7 +119,7 @@ public class FetchService extends BaseIntentService {
 			count = FanFouApiConfig.DEFAULT_USERS_COUNT;
 		}
 
-		Api api = FanFouApi.getInstance();
+		Api api = App.api;
 		try {
 			List<User> users = null;
 			if (mType == User.TYPE_FRIENDS) {
@@ -197,7 +197,7 @@ public class FetchService extends BaseIntentService {
 	}
 
 	private int fetchNewDirectMessages(int count) {
-		Api api = FanFouApi.getInstance();
+		Api api = App.api;
 		Cursor ic = initMessagesCursor(false);
 		Cursor oc = initMessagesCursor(true);
 		try {
@@ -241,7 +241,7 @@ public class FetchService extends BaseIntentService {
 	}
 
 	private int fetchOldDirectMessages(int count) {
-		Api api = FanFouApi.getInstance();
+		Api api = App.api;
 		Cursor ic = initMessagesCursor(false);
 		Cursor oc = initMessagesCursor(true);
 		try {
@@ -323,7 +323,7 @@ public class FetchService extends BaseIntentService {
 	private void fetchTimeline(Bundle bundle) {
 		if (App.DEBUG)
 			Log.d(TAG, "fetchTimeline");
-		Api api = FanFouApi.getInstance();
+		Api api = App.api;
 		List<Status> statuses = null;
 
 		int page = bundle.getInt(Commons.EXTRA_PAGE);

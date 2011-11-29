@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
@@ -106,6 +107,7 @@ public class CleanService extends WakefulIntentService {
 	@SuppressWarnings("unused")
 	private void doUpdate2(int type) {
 		try {
+			Api api=App.api;
 			String where = BasicColumns.TYPE + "=?";
 			String[] whereArgs = new String[] { String.valueOf(type) };
 			Uri uri = StatusInfo.CONTENT_URI;
@@ -125,11 +127,11 @@ public class CleanService extends WakefulIntentService {
 				}
 				List<Status> result = null;
 				if (type == Status.TYPE_HOME) {
-					result = FanFouApi.getInstance().homeTimeline(20, page, sinceId, null,
+					result = api.homeTimeline(20, page, sinceId, null,
 							FanFouApiConfig.FORMAT_HTML,
 							FanFouApiConfig.MODE_LITE);
 				} else if (type == Status.TYPE_MENTION) {
-					result = FanFouApi.getInstance().mentions(20, page, sinceId, null,
+					result = api.mentions(20, page, sinceId, null,
 							FanFouApiConfig.FORMAT_HTML,
 							FanFouApiConfig.MODE_LITE);
 				}
@@ -166,6 +168,7 @@ public class CleanService extends WakefulIntentService {
 
 	private void doUpdate(int type) {
 		try {
+			Api api=App.api;
 			String where = BasicColumns.TYPE + "=?";
 			String[] whereArgs = new String[] { String.valueOf(type) };
 			Uri uri = StatusInfo.CONTENT_URI;
@@ -178,10 +181,10 @@ public class CleanService extends WakefulIntentService {
 			}
 			List<Status> result = null;
 			if (type == Status.TYPE_HOME) {
-				result = FanFouApi.getInstance().homeTimeline(FanFouApiConfig.DEFAULT_TIMELINE_COUNT, 0, sinceId, null,
+				result = api.homeTimeline(FanFouApiConfig.DEFAULT_TIMELINE_COUNT, 0, sinceId, null,
 						FanFouApiConfig.FORMAT_HTML, FanFouApiConfig.MODE_LITE);
 			} else if (type == Status.TYPE_MENTION) {
-				result = FanFouApi.getInstance().mentions(FanFouApiConfig.DEFAULT_TIMELINE_COUNT, 0, sinceId, null,
+				result = api.mentions(FanFouApiConfig.DEFAULT_TIMELINE_COUNT, 0, sinceId, null,
 						FanFouApiConfig.FORMAT_HTML, FanFouApiConfig.MODE_LITE);
 			}
 

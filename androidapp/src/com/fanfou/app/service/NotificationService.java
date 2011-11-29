@@ -123,7 +123,7 @@ public class NotificationService extends BaseIntentService {
 
 	private void handleDm(int count) throws ApiException {
 		Cursor mc = initCursor(DirectMessage.TYPE_IN);
-		List<DirectMessage> dms = FanFouApi.getInstance().directMessagesInbox(count, DEFAULT_PAGE,
+		List<DirectMessage> dms = App.api.directMessagesInbox(count, DEFAULT_PAGE,
 				Utils.getDmSinceId(mc), null, FanFouApiConfig.MODE_LITE);
 		mc.close();
 		if (dms != null) {
@@ -152,7 +152,7 @@ public class NotificationService extends BaseIntentService {
 
 	private void handleMention(int count) throws ApiException {
 		Cursor mc = initCursor(Status.TYPE_MENTION);
-		List<Status> ss = FanFouApi.getInstance().mentions(count, DEFAULT_PAGE,
+		List<Status> ss = App.api.mentions(count, DEFAULT_PAGE,
 				Utils.getSinceId(mc), null, FanFouApiConfig.FORMAT_HTML,
 				FanFouApiConfig.MODE_LITE);
 		mc.close();
@@ -181,7 +181,7 @@ public class NotificationService extends BaseIntentService {
 
 	private void handleHome(int count) throws ApiException {
 		Cursor mc = initCursor(Status.TYPE_HOME);
-		List<Status> ss = FanFouApi.getInstance().homeTimeline(count, DEFAULT_PAGE,
+		List<Status> ss = App.api.homeTimeline(count, DEFAULT_PAGE,
 				Utils.getSinceId(mc), null, FanFouApiConfig.FORMAT_HTML,
 				FanFouApiConfig.MODE_LITE);
 		mc.close();

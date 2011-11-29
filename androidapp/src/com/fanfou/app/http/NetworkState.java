@@ -55,7 +55,7 @@ public class NetworkState {
 				if (App.DEBUG) {
 					log(info.toString());
 				}
-				App.me.noConnection=false;
+				App.noConnection=false;
 				if (info.getType() == ConnectivityManager.TYPE_WIFI) {
 					apnType = ApnType.WIFI;
 				} else if (info.getType() == ConnectivityManager.TYPE_MOBILE) {

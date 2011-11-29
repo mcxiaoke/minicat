@@ -17,8 +17,6 @@ import java.util.List;
  * 
  */
 public interface Api {
-	
-//	Api newInstance();
 
 	// account verify
 	// for basic auth key is username, value is password

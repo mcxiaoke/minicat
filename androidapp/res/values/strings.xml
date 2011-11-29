@@ -29,10 +29,29 @@
 
 	<string name="crash_mail_header">请点击发送邮件，报告以下匿名崩溃数据帮助饭否改进客户端：\n\n</string>
 
-	<string name="support_text">意见和建议提交，问题反馈，获取版本更新信息，请关注官方技术支持帐号 @Android客户端</string>
+	<string name="support_text">意见和建议提交，问题反馈，获取版本更新信息，请关注官方技术支持帐号 @Android客户端
+	</string>
 	<string name="introduction_text">本软件适用于Android
 		1.6以上系统，本软件的下载和使用完全免费，使用过程中产生的流量费用由运营商收取。</string>
 	<string name="contact_text">饭否网站： http://fanfou.com\n发送邮件：android@fanfou.com
 	</string>
+
+
+	<!-- Color Picker -->
+	<string name="dialog_color_picker">Color Picker</string>
+	<string name="press_color_to_apply">Press on Color to apply</string>
+
+	<!-- Preferences -->
+	<string name="pref_category">Category</string>
+	<string name="color1_title">Color 1</string>
+	<string name="color1_summary">black color by default, set by reference</string>
+	<string name="color2_title">Color 2</string>
+	<string name="color2_summary">not persistent color\nalpha slider added via code
+	</string>
+	<string name="color3_title">Color 3</string>
+	<string name="color3_summary">picker with alpha slider</string>
+	<string name="color4_title">Color 4</string>
+	<string name="color4_summary">color set with HEX code in xml</string>
+
 
 </resources>
