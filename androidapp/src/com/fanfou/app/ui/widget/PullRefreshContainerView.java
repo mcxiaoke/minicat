@@ -5,9 +5,6 @@
  * 
  * https://github.com/timahoney/Android-Pull-To-Refresh
  * https://github.com/wdx700/Android-Pull-To-Refresh
- * 
- * modified by mcxiaoke at 2011.11.23
- * 
  */
 package com.fanfou.app.ui.widget;
 
@@ -31,13 +28,7 @@ import android.widget.TextView;
  * To get the actions of the list, use a {@link OnChangeStateListener} with {@link #setOnChangeStateListener(OnChangeStateListener)}.
  * If you want to change how the refresh header looks, you should do it during these state changes.   
  */
-/**
- * @author mcxiaoke
- * @version 2.0 2011.11.23
- * @version 2.0 2011.11.24
- *
- */
-public class PullRefreshView extends LinearLayout {	
+public class PullRefreshContainerView extends LinearLayout {	
 	/**
 	 * Interface for listening to when the refresh container changes state.
 	 */
@@ -48,19 +39,8 @@ public class PullRefreshView extends LinearLayout {
 		 * @param state The state of the header. May be STATE_IDLE, STATE_READY,
 		 * 		or STATE_REFRESHING.
 		 */
-		public void onChangeState(PullRefreshView container, int state);
+		public void onChangeState(PullRefreshContainerView container, int state);
 	}
-	
-	public interface OnRefreshListener{
-		public void onRefresh(PullRefreshView container);
-	}
-	
-	public interface OnLoadMoreListener{
-		public void onLoadMore(PullRefreshView container);
-	}
-	
-	
-	private static final LinearLayout.LayoutParams MATCH_PARENT=new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
 	/**
 	 * State of the refresh header when it is doing nothing or being pulled down slightly.
@@ -83,33 +63,21 @@ public class PullRefreshView extends LinearLayout {
 	 * State of the refresh header when the list should be refreshing.
 	 */
 	public static final int STATE_LOADING = 3;
-	
-	
-	public static final int POSITION_NONE=100;
-	public static final int POSITION_HEADER=101;
-	public static final int POSITION_FOOTER=102;
 
 	private LinearLayout mHeaderContainer;
 	private View mHeaderView;
-	private LinearLayout mFooterContainer;
-	private View mFooterView;
-	private ListView mListView;
-	private int[] mState=new int[2];
+	private ListView mList;
+	private int mState;
 	private OnChangeStateListener mOnChangeStateListener;
 	
-	private OnRefreshListener mOnRefreshListener;
-	private OnLoadMoreListener mOnLoadMoreListener;
-	
-	private int position=POSITION_NONE;
-	
-	private int REFRESH_VIEW_HEIGHT = 100;
+	private int REFRESH_VIEW_HEIGHT = 60;
 	
 	/**
 	 * Creates a new pull to refresh container.
 	 * 
 	 * @param context the application context
 	 */
-	public PullRefreshView(Context context) {
+	public PullRefreshContainerView(Context context) {
 		super(context);
 		init(context);
 	}
@@ -120,7 +88,7 @@ public class PullRefreshView extends LinearLayout {
 	 * @param context the application context
 	 * @param attrs the XML attribute set
 	 */
-	public PullRefreshView(Context context, AttributeSet attrs) {
+	public PullRefreshContainerView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init(context);
 	}
@@ -132,14 +100,13 @@ public class PullRefreshView extends LinearLayout {
 	 * @param attrs the XML attribute set
 	 * @param defStyle the style for this view
 	 */
-	public PullRefreshView(Context context, AttributeSet attrs, int defStyle) {
+	public PullRefreshContainerView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs);
 		init(context);
 	}
 
 	private void init(Context context) {
-		mState[0] = STATE_IDLE; // Start out as idle.
-		mState[1] = STATE_IDLE;
+		mState = STATE_IDLE; // Start out as idle.
 		
 		float densityFactor = context.getResources().getDisplayMetrics().density;
     	REFRESH_VIEW_HEIGHT *= densityFactor;
@@ -147,71 +114,61 @@ public class PullRefreshView extends LinearLayout {
 		// We don't want to see the fading edge on the container.
 		setVerticalFadingEdgeEnabled(false);
 		setVerticalScrollBarEnabled(false);
-		setHorizontalScrollBarEnabled(false);
 		
 		setOrientation(LinearLayout.VERTICAL);
 
-		// Set the default header.
+		// Set the default list and header.
 		mHeaderContainer = new LinearLayout(context);
 		addView(mHeaderContainer);
-		setHeaderViewHeight(1);
+		setRefreshViewHeight(1);
+		
 		TextView headerView = new TextView(context);
 		headerView.setText("Default refresh header.");
-		setHeader(headerView);
+		setRefreshHeader(headerView);
 		
-		// set default list
 		ListView list = new ListView(context);
-		setListView(list);
-		
-		// Set the default footer.
-		mFooterContainer=new LinearLayout(context);
-		addView(mFooterContainer);
-		setFooterViewHeight(1);
-		TextView footerView = new TextView(context);
-		headerView.setText("Default refresh footer.");
-		setFooter(footerView);
+		setList(list);
 	}
 
 	private boolean mScrollingList = true;
-	private float mInterceptY1;
-	private int mLastMotionY1;
+	private float mInterceptY;
+	private int mLastMotionY;
 	
 	@Override
 	public boolean dispatchTouchEvent (MotionEvent ev) {
-		float oldLastY1 = mInterceptY1;
-		mInterceptY1 = ev.getY();
+		float oldLastY = mInterceptY;
+		mInterceptY = ev.getY();
 
-		if (mState[0] == STATE_LOADING) {
+		if (mState == STATE_LOADING) {
     		return super.dispatchTouchEvent(ev);
     	}
 		
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_DOWN:
-			mLastMotionY1 = (int) ev.getY();
+			mLastMotionY = (int) ev.getY();
 			mScrollingList = true;
 			return super.dispatchTouchEvent(ev);
 			
 		case MotionEvent.ACTION_MOVE:
-			if (mListView.getFirstVisiblePosition() == 0
-					&& (mListView.getChildCount() == 0 || mListView.getChildAt(0).getTop() == 0)) {
-				if ((mInterceptY1 - oldLastY1 > 5) || (mState[0] == STATE_PULL) || (mState[0] == STATE_RELEASE)) {
+			if (mList.getFirstVisiblePosition() == 0
+					&& (mList.getChildCount() == 0 || mList.getChildAt(0).getTop() == 0)) {
+				if ((mInterceptY - oldLastY > 5) || (mState == STATE_PULL) || (mState == STATE_RELEASE)) {
 					mScrollingList = false;
 					applyHeaderHeight(ev);
 					return true;
 				} else {
 					mScrollingList = true;
-//					return super.dispatchTouchEvent(ev);
+					return super.dispatchTouchEvent(ev);
 				}
-			} 
-//			else if (mScrollingList) {
-//				return super.dispatchTouchEvent(ev);
-//			} else {
-//				return super.dispatchTouchEvent(ev);
-//			}
-			return super.dispatchTouchEvent(ev);
+			} else if (mScrollingList) {
+				return super.dispatchTouchEvent(ev);
+			} else {
+				return super.dispatchTouchEvent(ev);
+			}
+		
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
-        	if (mState[0] == STATE_RELEASE) {
+        	if (mState == STATE_RELEASE) {
 				refresh();
 			} else {
 				changeState(STATE_IDLE);
@@ -234,57 +191,37 @@ public class PullRefreshView extends LinearLayout {
         if (historySize > 0) {
 	        for (int h = 0; h < historySize; h++) {
                 int historicalY = (int) (ev.getHistoricalY(h));
-                updateHeaderView(historicalY - mLastMotionY1);
+                updateRefreshView(historicalY - mLastMotionY);
 	        }
         } else {
         	int historicalY = (int) ev.getY();
-        	updateHeaderView(historicalY - mLastMotionY1);
+        	updateRefreshView(historicalY - mLastMotionY);
         }
     }
 	
-	private void updateHeaderView(int height) {
+	private void updateRefreshView(int height) {
 		if (height <= 0) {
         	return;
         }
 
-        if ((REFRESH_VIEW_HEIGHT/4 <= mCurHeaderViewHeight) && (mCurHeaderViewHeight < REFRESH_VIEW_HEIGHT)) {
-        	setHeaderViewHeight(height);
+        if ((REFRESH_VIEW_HEIGHT/4 <= mCurRefreshViewHeight) && (mCurRefreshViewHeight < REFRESH_VIEW_HEIGHT)) {
+        	setRefreshViewHeight(height);
         	changeState(STATE_PULL);
-        } else if (mCurHeaderViewHeight >= REFRESH_VIEW_HEIGHT) {
+        } else if (mCurRefreshViewHeight >= REFRESH_VIEW_HEIGHT) {
         	if (height > REFRESH_VIEW_HEIGHT) {
         		height = (int) (REFRESH_VIEW_HEIGHT + (height - REFRESH_VIEW_HEIGHT) *  REFRESH_VIEW_HEIGHT * 1.0f/height);
         	}
         	
-        	setHeaderViewHeight(height);
+        	setRefreshViewHeight(height);
         	changeState(STATE_RELEASE);
         } else {
-        	setHeaderViewHeight(height);
+        	setRefreshViewHeight(height);
         }
 	}
 	
-	private void updateFooterView(int height) {
-		if (height <= 0) {
-        	return;
-        }
-
-        if ((REFRESH_VIEW_HEIGHT/4 <= mCurFooterViewHeight) && (mCurFooterViewHeight < REFRESH_VIEW_HEIGHT)) {
-        	setFooterViewHeight(height);
-        	changeState(STATE_PULL);
-        } else if (mCurFooterViewHeight >= REFRESH_VIEW_HEIGHT) {
-        	if (height > REFRESH_VIEW_HEIGHT) {
-        		height = (int) (REFRESH_VIEW_HEIGHT + (height - REFRESH_VIEW_HEIGHT) *  REFRESH_VIEW_HEIGHT * 1.0f/height);
-        	}
-        	
-        	setFooterViewHeight(height);
-        	changeState(STATE_RELEASE);
-        } else {
-        	setFooterViewHeight(height);
-        }
-	}
-	
-	private int mCurHeaderViewHeight = 60;
-    private void setHeaderViewHeight(int height) {
-    	if (mCurHeaderViewHeight == height) {
+	private int mCurRefreshViewHeight = 60;
+    private void setRefreshViewHeight(int height) {
+    	if (mCurRefreshViewHeight == height) {
     		return;
     	}
 
@@ -293,53 +230,25 @@ public class PullRefreshView extends LinearLayout {
     	} else {
     		mHeaderContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, height));
     	}
-    	mCurHeaderViewHeight = height;
-    }
-    
-	private int mCurFooterViewHeight = 60;
-    private void setFooterViewHeight(int height) {
-    	if (mCurFooterViewHeight == height) {
-    		return;
-    	}
-
-    	if (height == 1) {
-    		mFooterContainer.setLayoutParams(new LayoutParams(1, 1));
-    	} else {
-    		mFooterContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, height));
-    	}
-    	mCurFooterViewHeight = height;
+    	mCurRefreshViewHeight = height;
     }
 	
 	private void changeState(int state) {
 		switch (state) {
 		case STATE_IDLE:
-			if(position==POSITION_HEADER){
-				setHeaderViewHeight(1);
-			}else if(position==POSITION_FOOTER){
-				setFooterViewHeight(1);
-			}
+			setRefreshViewHeight(1);
 			break;
 		case STATE_PULL:
 			break;
 		case STATE_RELEASE:
 			break;
 		case STATE_LOADING:
-			if(position==POSITION_HEADER){
-				setHeaderViewHeight(REFRESH_VIEW_HEIGHT);
-				if(mOnRefreshListener!=null){
-					mOnRefreshListener.onRefresh(this);
-				}
-			}else if(position==POSITION_FOOTER){
-				setFooterViewHeight(REFRESH_VIEW_HEIGHT);
-				if(mOnLoadMoreListener!=null){
-					mOnLoadMoreListener.onLoadMore(this);
-				}
-			}
-
+			setRefreshViewHeight(REFRESH_VIEW_HEIGHT);
 			break;
 		}
 		
-		mState[0] = state;
+		mState = state;
+
 		notifyStateChanged();
 	}
 
@@ -347,26 +256,25 @@ public class PullRefreshView extends LinearLayout {
 	 * Sets the list to be used in this pull to refresh container.
 	 * @param list the list to use
 	 */
-
-	public void setListView(ListView list) {
-		if (mListView != null) {
-			removeView(mListView);
+	public void setList(ListView list) {
+		if (mList != null) {
+			removeView(mList);
 		}
-		mListView = list;
-		if (mListView.getParent() != null) {
-			ViewGroup parent = (ViewGroup) mListView.getParent();
-			parent.removeView(mListView);
+		mList = list;
+		if (mList.getParent() != null) {
+			ViewGroup parent = (ViewGroup) mList.getParent();
+			parent.removeView(mList);
 		}
 		
-		mListView.setLayoutParams(MATCH_PARENT);
-		addView(mListView);
+		mList.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		addView(mList);
 	}
 
 	/**
 	 * @return the list inside this pull to refresh container
 	 */
-	public ListView getListView() {
-		return mListView;
+	public ListView getList() {
+		return mList;
 	}
 
 	/**
@@ -378,7 +286,7 @@ public class PullRefreshView extends LinearLayout {
 	 * 
 	 * @param headerView the view to use as the whole header.
 	 */
-	public void setHeader(View header) {
+	public void setRefreshHeader(View header) {
 		if (mHeaderView != null) {
 			mHeaderContainer.removeView(mHeaderView);
 		}		
@@ -390,19 +298,6 @@ public class PullRefreshView extends LinearLayout {
 		mHeaderContainer.addView(header, 0);
 		mHeaderView = header;
 	}
-	
-	public void setFooter(View header) {
-		if (mFooterView != null) {
-			mFooterContainer.removeView(mFooterView);
-		}		
-
-		if (header == null) {
-			throw new RuntimeException("Please supply a non-null footer container.");
-		}
-
-		mFooterContainer.addView(header, 0);
-		mFooterView = header;
-	}
 
 	public void refresh() {	
 		changeState(STATE_LOADING);			
@@ -412,7 +307,7 @@ public class PullRefreshView extends LinearLayout {
 	 * Notifies the pull-to-refresh view that the refreshing is complete.
 	 * This will hide the refreshing header.
 	 */
-	public void refreshComplete() {
+	public void completeRefresh() {
 		changeState(STATE_IDLE);
 	}
 
@@ -421,7 +316,7 @@ public class PullRefreshView extends LinearLayout {
 	 */
 	private void notifyStateChanged() {
 		if (mOnChangeStateListener != null) {
-			mOnChangeStateListener.onChangeState(this, mState[0]);
+			mOnChangeStateListener.onChangeState(this, mState);
 		}
 	}
 
@@ -431,18 +326,4 @@ public class PullRefreshView extends LinearLayout {
 	public void setOnChangeStateListener(OnChangeStateListener listener) {
 		mOnChangeStateListener = listener;
 	}
-	
-	public void setOnRefreshListener(OnRefreshListener li){
-		mOnRefreshListener=li;
-	}
-	
-	
-	public void setOnLoadMoreListener(OnLoadMoreListener li){
-		mOnLoadMoreListener=li;
-	}
-	
-	
-	
-	
-	
 }

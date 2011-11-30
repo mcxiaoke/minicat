@@ -1,68 +1,61 @@
 package com.fanfou.app.auth;
 
 import java.io.IOException;
+import java.io.Serializable;
 
-import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.http.ParseException;
-
-import com.fanfou.app.api.ApiException;
-import com.fanfou.app.http.Response;
-
-public class OAuthToken implements java.io.Serializable {
+public class OAuthToken implements Serializable {
 
 	private static final long serialVersionUID = 3891133932519746686L;
 	private String token;
 	private String tokenSecret;
-	private transient SecretKeySpec secretKeySpec;
-	String[] responseStr = null;
+	
+	public OAuthToken(){	
+	}
 
 	public OAuthToken(String token, String tokenSecret) {
 		this.token = token;
 		this.tokenSecret = tokenSecret;
 	}
 
-	public OAuthToken(Response response) throws ApiException, ParseException,
-			IOException {
-		this(response.getContent());
+	public static OAuthToken from(String response)  throws IOException{
+		return parse(response);
 	}
 
-	public OAuthToken(String string) {
-		// Log.e("====================================", string);
-		responseStr = string.split("&");
-		tokenSecret = getParameter("oauth_token_secret");
-		token = getParameter("oauth_token");
+	private static OAuthToken parse(String response) {
+		OAuthToken token=null;
+		try {
+			String[] strs = response.split("&");
+			token=new OAuthToken();
+			for (String str : strs) {
+				if (str.startsWith("oauth_token=")) {
+					token.setToken(str.split("=")[1].trim());
+				} else if (str.startsWith("oauth_token_secret=")) {
+					token.setTokenSecret(str.split("=")[1].trim());
+				}
+			}
+		} catch (Exception e) {
+		}
+		return token;
 	}
 
 	public String getToken() {
 		return token;
 	}
 
+	public void setToken(String token) {
+		this.token = token;
+	}
+
 	public String getTokenSecret() {
 		return tokenSecret;
 	}
 
-	void setSecretKeySpec(SecretKeySpec secretKeySpec) {
-		this.secretKeySpec = secretKeySpec;
+	public void setTokenSecret(String tokenSecret) {
+		this.tokenSecret = tokenSecret;
 	}
-
-	SecretKeySpec getSecretKeySpec() {
-		return secretKeySpec;
-	}
-
-	public String getParameter(String parameter) {
-		String value = null;
-		try {
-			for (String str : responseStr) {
-				if (str.startsWith(parameter + '=')) {
-					value = str.split("=")[1].trim();
-					break;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return value;
+	
+	public boolean isNull(){
+		return token==null||tokenSecret==null;
 	}
 
 	@Override
@@ -92,6 +85,6 @@ public class OAuthToken implements java.io.Serializable {
 	@Override
 	public String toString() {
 		return "OAuthToken{" + "token='" + token + '\'' + ", tokenSecret='"
-				+ tokenSecret + '\'' + ", secretKeySpec=" + secretKeySpec + '}';
+				+ tokenSecret + '}';
 	}
 }

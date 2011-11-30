@@ -1,6 +1,7 @@
 package com.fanfou.app.http;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.Header;
@@ -35,7 +36,8 @@ import android.util.Log;
 import com.fanfou.app.App;
 import com.fanfou.app.App.ApnType;
 import com.fanfou.app.api.ApiException;
-import com.fanfou.app.auth.OAuth;
+import com.fanfou.app.api.FanFouApiConfig;
+import com.fanfou.app.auth.OAuthService;
 import com.fanfou.app.util.StringHelper;
 
 /**
@@ -66,12 +68,14 @@ public final class ConnectionManager {
 	public static final int MAX_RETRY_TIMES = 3;
 
 	private DefaultHttpClient mHttpClient;
-
-	// private static final ConnectionManager INSTANCE = new
-	// ConnectionManager();
+	private OAuthService mOAuth;
 
 	public static final ConnectionManager newInstance() {
 		return new ConnectionManager();
+	}
+	
+	public static final ConnectionManager newInstance(OAuthService oauth) {
+		return new ConnectionManager(oauth);
 	}
 
 	private final void log(String message) {
@@ -80,10 +84,16 @@ public final class ConnectionManager {
 
 	private ConnectionManager() {
 		prepareHttpClient();
+		this.mOAuth=null;
 	}
-
-	public final void setHttpClient(DefaultHttpClient client) {
-		mHttpClient = client;
+	
+	private ConnectionManager(OAuthService oauth) {
+		prepareHttpClient();
+		this.mOAuth=oauth;
+	}
+	
+	public void setOAuth(OAuthService oauth){
+		this.mOAuth=oauth;
 	}
 
 	public final HttpResponse get(String url) throws IOException {
@@ -95,8 +105,7 @@ public final class ConnectionManager {
 		return postImpl(url, params);
 	}
 
-	public final HttpResponse execWithOAuth(ConnectionRequest cr)
-			throws IOException, ApiException {
+	public final HttpResponse exec(ConnectionRequest cr) throws IOException{
 
 		HttpRequestBase request = null;
 		if (cr.entity != null) {
@@ -106,12 +115,10 @@ public final class ConnectionManager {
 			request = new HttpGet(cr.url);
 		}
 		setHeaders(request, cr.headers);
-		setOAuth(request, cr.params);
 		return execute(request);
 	}
-
-	public final HttpResponse exec(ConnectionRequest cr) throws IOException,
-			ApiException {
+	
+	public final HttpResponse execWithOAuth(ConnectionRequest cr) throws IOException{
 
 		HttpRequestBase request = null;
 		if (cr.entity != null) {
@@ -121,6 +128,9 @@ public final class ConnectionManager {
 			request = new HttpGet(cr.url);
 		}
 		setHeaders(request, cr.headers);
+		if(mOAuth!=null){
+			mOAuth.signRequest(request, cr.params);
+		}
 		return execute(request);
 	}
 
@@ -229,19 +239,6 @@ public final class ConnectionManager {
 				Log.d("setProxy", "use no proxy, direct connect");
 			}
 			params.removeParameter(ConnRoutePNames.DEFAULT_PROXY);
-		}
-	}
-
-	private final static void setOAuth(HttpRequestBase request,
-			List<Parameter> params) throws ApiException {
-		if (StringHelper.isEmpty(App.me.oauthAccessToken)
-				|| StringHelper.isEmpty(App.me.oauthAccessTokenSecret)) {
-			throw new ApiException(ResponseCode.ERROR_AUTH_FAILED, "未通过验证，请登录");
-		} else {
-			request.addHeader("Host", "api.fanfou.com");
-			OAuth oauth = new OAuth(App.me.oauthAccessToken,
-					App.me.oauthAccessTokenSecret);
-			oauth.signRequest(request, params);
 		}
 	}
 

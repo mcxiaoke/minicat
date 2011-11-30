@@ -1073,3 +1073,6 @@ TODO LIST
 修复自动完成人名获取不全的问题
 修复下载进度显示卡住卡死的问题
 
+20111130
+重构网络部分和OAuth部分，使代码架构更清晰
+添加PullToRefreshContainerView，准备测试下拉刷新

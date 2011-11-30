@@ -25,8 +25,11 @@ import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.ResultInfo;
 import com.fanfou.app.api.User;
-import com.fanfou.app.auth.OAuth;
+import com.fanfou.app.auth.FanFouOAuthProvider;
+import com.fanfou.app.auth.OAuthService;
 import com.fanfou.app.auth.OAuthToken;
+import com.fanfou.app.auth.XAuthService;
+import com.fanfou.app.auth.exception.OAuthTokenException;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.DraftInfo;
@@ -253,9 +256,9 @@ public final class LoginPage extends Activity implements OnClickListener {
 			String savedUserId = OptionHelper.readString(mContext,
 					R.string.option_userid, null);
 			try {
-				OAuth oauth = new OAuth();
-				OAuthToken token = oauth
-						.getOAuthAccessToken(username, password);
+				XAuthService xauth = new XAuthService(new FanFouOAuthProvider());
+				OAuthToken token = xauth.requestOAuthAccessToken(username,
+						password);
 				if (App.DEBUG)
 					log("xauth token=" + token);
 
@@ -272,6 +275,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 
 					App.me.oauthAccessToken = token.getToken();
 					App.me.oauthAccessTokenSecret = token.getTokenSecret();
+					((FanFouApi)App.api).setOAuthAccessToken(token);
 					User u = App.api.verifyAccount(FanFouApiConfig.MODE_LITE);
 
 					if (isCancelled) {
@@ -309,6 +313,11 @@ public final class LoginPage extends Activity implements OnClickListener {
 					e.printStackTrace();
 				return new ResultInfo(LOGIN_IO_ERROR,
 						getString(R.string.connection_error_msg));
+
+			} catch (OAuthTokenException e) {
+				if (App.DEBUG)
+					e.printStackTrace();
+				return new ResultInfo(LOGIN_IO_ERROR, e.getMessage());
 			} catch (ApiException e) {
 				if (App.DEBUG)
 					e.printStackTrace();
@@ -378,8 +387,6 @@ public final class LoginPage extends Activity implements OnClickListener {
 				break;
 			}
 		}
-		
-
 
 	}
 

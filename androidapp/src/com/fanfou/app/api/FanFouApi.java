@@ -7,16 +7,22 @@ import java.net.URLEncoder;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.protocol.HTTP;
 
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.auth.FanFouOAuthProvider;
+import com.fanfou.app.auth.OAuthService;
+import com.fanfou.app.auth.OAuthSupport;
+import com.fanfou.app.auth.OAuthToken;
 import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.http.ConnectionManager;
 import com.fanfou.app.http.ConnectionRequest;
+import com.fanfou.app.http.Parameter;
 import com.fanfou.app.http.Response;
 import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.StringHelper;
@@ -42,6 +48,7 @@ import com.fanfou.app.util.StringHelper;
 public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	private static final String TAG = FanFouApi.class.getSimpleName();
 	private ConnectionManager conn;
+	private OAuthService oauth; 
 
 	/**
 	 * @param message
@@ -51,11 +58,28 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	private FanFouApi() {
-		conn=ConnectionManager.newInstance();
+		oauth=new OAuthService(new FanFouOAuthProvider());
+		conn=ConnectionManager.newInstance(oauth);
+		setOAuthAccessToken(App.me.oauthAccessToken, App.me.oauthAccessTokenSecret);
 	}
 	
 	public static FanFouApi newInstance(){
 		return new FanFouApi();
+	}
+	
+//	public void setOAuthService(OAuthService oauth){
+//		this.oauth=oauth;
+//	}
+	
+	public void setOAuthAccessToken(OAuthToken token){
+		oauth.setOAuthAccessToken(token);
+	}
+	
+	public void setOAuthAccessToken(String token, String tokenSecret){
+		if(token==null||tokenSecret==null){
+			return;
+		}
+		oauth.setOAuthAccessToken(new OAuthToken(token, tokenSecret));
 	}
 
 	/**
@@ -65,7 +89,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	 * @return response object
 	 * @throws ApiException
 	 */
-	private Response fetch(ConnectionRequest request) throws ApiException {
+	private Response fetch(final ConnectionRequest request) throws ApiException {
 		try {
 			HttpResponse response = conn.execWithOAuth(request);
 			int statusCode = response.getStatusLine().getStatusCode();
@@ -956,5 +980,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		}
 		return Parser.ids(response);
 	}
+	
+
 
 }
