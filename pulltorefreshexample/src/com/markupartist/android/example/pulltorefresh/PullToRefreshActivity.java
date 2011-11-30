@@ -1,0 +1,72 @@
+package com.markupartist.android.example.pulltorefresh;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+
+import android.app.ListActivity;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import com.markupartist.android.widget.PullToRefreshListView;
+import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
+
+public class PullToRefreshActivity extends ListActivity {    
+    private ArrayAdapter<String> mAdapter;
+
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.pull_to_refresh);
+
+        // Set a listener to be invoked when the list should be refreshed.
+        PullToRefreshListView listView = (PullToRefreshListView) getListView();
+        listView.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Do work to refresh the list here.
+                new GetDataTask().execute();
+            }
+        });
+
+        mAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1,
+                new LinkedList<String>(Arrays.asList(getResources().getStringArray(R.array.robots))));
+
+        setListAdapter(mAdapter);
+    }
+
+    @SuppressWarnings("unchecked")
+	@Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        ((ArrayAdapter<String>)getListAdapter()).remove(
+            (String)l.getItemAtPosition(position)
+        );
+    }
+
+    private class GetDataTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            // Simulates a background job.
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                ;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void vooid) {
+            mAdapter.insert("Robot says: " + Long.toHexString(System.nanoTime()), 0);
+            // Call onRefreshComplete when the list has been refreshed.
+            ((PullToRefreshListView) getListView()).onRefreshComplete();
+        }
+    }
+
+}
