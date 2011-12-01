@@ -7,31 +7,22 @@ import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
 import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.User;
 import com.fanfou.app.auth.OAuthToken;
-import com.fanfou.app.cache.ImageLoader;
-import com.fanfou.app.http.NetManger;
-import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.NetworkHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -57,24 +48,24 @@ public class App extends Application {
 	public static final boolean DEBUG = true;
 
 	public static App me;
-	
+
 	public static Api api;
-	
+
 	public static boolean active = false;
-	
+
 	public volatile static boolean noConnection;
 	public volatile static boolean verified;
 	public volatile static boolean mounted;
-	
+
 	public String userId;
 	public String userScreenName;
-	
+
 	public OAuthToken token;
-	
+
 	public int appVersionCode;
 	public String appVersionName;
 	public ApnType apnType;
-	
+
 	public SharedPreferences sp;
 
 	@Override
@@ -85,14 +76,15 @@ public class App extends Application {
 		initPreferences();
 		versionCheck();
 		ACRA.init(this);
-		api=FanFouApi.newInstance();
+		api = FanFouApi.newInstance();
 	}
 
 	private void init() {
 		App.me = this;
 		apnType = NetworkHelper.getApnType(this);
-		
-		DateTimeHelper.FANFOU_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+		DateTimeHelper.FANFOU_DATE_FORMAT.setTimeZone(TimeZone
+				.getTimeZone("GMT"));
 
 		if (DEBUG) {
 			java.util.logging.Logger.getLogger("org.apache.http").setLevel(
@@ -126,8 +118,9 @@ public class App extends Application {
 		String oauthAccessTokenSecret = OptionHelper.readString(this,
 				R.string.option_oauth_token_secret, null);
 		App.verified = !StringHelper.isEmpty(oauthAccessTokenSecret);
-		if(App.verified){
-			this.token=new OAuthToken(oauthAccessToken, oauthAccessTokenSecret);
+		if (App.verified) {
+			this.token = new OAuthToken(oauthAccessToken,
+					oauthAccessTokenSecret);
 		}
 	}
 
@@ -135,7 +128,7 @@ public class App extends Application {
 		if (DEBUG) {
 			Log.d("App", "initAppInfo");
 		}
-		
+
 		PackageManager pm = getPackageManager();
 		PackageInfo pi;
 		try {
@@ -177,10 +170,12 @@ public class App extends Application {
 		editor.commit();
 	}
 
-	public synchronized void updateAccountInfo(final User u, final OAuthToken otoken) {
+	public synchronized void updateAccountInfo(final User u,
+			final OAuthToken otoken) {
 		if (DEBUG) {
 			Log.d("App", "updateAccountInfo");
 		}
+		setOAuthToken(otoken);
 		userId = u.id;
 		userScreenName = u.screenName;
 		Editor editor = sp.edit();
@@ -188,15 +183,12 @@ public class App extends Application {
 		editor.putString(getString(R.string.option_username), u.screenName);
 		editor.putString(getString(R.string.option_profile_image),
 				u.profileImageUrl);
-		if (token!=null) {
-			token=otoken;
-			verified = true;
-			editor.putString(getString(R.string.option_oauth_token), token.getToken());
-			editor.putString(getString(R.string.option_oauth_token_secret),
-					token.getTokenSecret());
-		}
+		editor.putString(getString(R.string.option_oauth_token),
+				token.getToken());
+		editor.putString(getString(R.string.option_oauth_token_secret),
+				token.getTokenSecret());
 		editor.commit();
-		
+
 	}
 
 	public synchronized void updateUserInfo(final User u) {
@@ -215,10 +207,9 @@ public class App extends Application {
 		if (DEBUG) {
 			Log.d("App", "removeAccountInfo");
 		}
-		verified = false;
+		setOAuthToken(null);
 		userId = null;
 		userScreenName = null;
-		token=null;
 		Editor editor = sp.edit();
 		editor.remove(getString(R.string.option_userid));
 		editor.remove(getString(R.string.option_username));
@@ -226,11 +217,20 @@ public class App extends Application {
 		editor.remove(getString(R.string.option_oauth_token));
 		editor.remove(getString(R.string.option_oauth_token_secret));
 		editor.commit();
-		((FanFouApi)api).setOAuthToken(null);
 	}
-	
 
-	
+	public void setOAuthToken(final OAuthToken otoken) {
+		if (otoken == null) {
+			verified = false;
+			this.token = null;
+			((FanFouApi) App.api).setOAuthToken(null);
+		} else {
+			verified = true;
+			this.token = otoken;
+			((FanFouApi) App.api).setOAuthToken(token);
+		}
+	}
+
 	public static enum ApnType {
 		WIFI("wifi"), HSDPA("hsdpa"), NET("net"), WAP("wap"), CTWAP("ctwap"), ;
 

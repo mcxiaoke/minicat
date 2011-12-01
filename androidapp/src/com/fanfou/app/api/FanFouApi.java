@@ -365,8 +365,6 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		if (App.DEBUG) {
 			log("statusUpdate()---statusCode=" + statusCode);
 		}
-		// TODO
-		// 需要处理重复消息，等待服务端修改完成
 		return Status.parse(response, Status.TYPE_HOME);
 	}
 

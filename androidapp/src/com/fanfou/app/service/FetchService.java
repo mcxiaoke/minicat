@@ -132,16 +132,17 @@ public class FetchService extends BaseIntentService {
 			if (users != null && users.size() > 0) {
 
 				int size = users.size();
-				if (App.DEBUG)
+				if (App.DEBUG){
 					log("fetchFriendsOrFollowers size=" + size);
+				}
 				ContentResolver cr = getContentResolver();
-				if (page <= 1 && ownerId != null) {
+				if (page < 2 && ownerId != null) {
 					String where = UserInfo.OWNER_ID + " =? ";
 					String[] whereArgs = new String[] { ownerId };
 					int deletedNums = cr.delete(UserInfo.CONTENT_URI, where,
 							whereArgs);
 					if (App.DEBUG) {
-						log("fetchFriendsOrFollowers refresh , delete old rows, num="
+						log("fetchFriendsOrFollowers delete old rows "
 								+ deletedNums);
 					}
 				}

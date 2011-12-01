@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.App.ApnType;
@@ -306,6 +307,7 @@ public abstract class BaseActivity extends Activity implements
 
 			@Override
 			public void onButton1Click() {
+				App.me.setOAuthToken(null);
 				IntentHelper.goLoginPage(mContext);
 				finish();
 			}
