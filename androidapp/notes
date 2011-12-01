@@ -1076,3 +1076,6 @@ TODO LIST
 20111130
 重构网络部分和OAuth部分，使代码架构更清晰
 添加PullToRefreshContainerView，准备测试下拉刷新
+
+20111201
+继续重构网络部分，添加几个新类，为使用UrlConnection作准备

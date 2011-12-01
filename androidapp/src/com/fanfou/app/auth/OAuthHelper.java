@@ -1,34 +1,180 @@
 package com.fanfou.app.auth;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.protocol.HTTP;
 
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.http.NetRequest;
 import com.fanfou.app.http.Parameter;
+import com.fanfou.app.util.Base64;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.11.30
- *
+ * @version 2.0 2011.12.01
+ * 
  */
 public final class OAuthHelper {
-	private static final String TAG=OAuthHelper.class.getSimpleName();
-	
-	
-	static String alignParams(List<Parameter> params) {
+	public static final String OAUTH_VERSION1 = "1.0";
+	public static final String HMAC_SHA1 = "HmacSHA1";
+	public static final Parameter OAUTH_SIGNATURE_METHOD = new Parameter(
+			"oauth_signature_method", "HMAC-SHA1");
+
+	private static final String TAG = OAuthHelper.class.getSimpleName();
+
+	public final static Random RAND = new Random();
+
+	static long createNonce() {
+		return System.currentTimeMillis() / 1000 + RAND.nextInt();
+	}
+
+	static long createTimestamp() {
+		return System.currentTimeMillis() / 1000;
+	}
+
+	static String buildOAuthHeader(String method, String url,
+			List<Parameter> params, OAuthProvider provider, OAuthToken otoken,
+			SecretKeySpec spec) {
+		if (params == null) {
+			params = new ArrayList<Parameter>();
+		}
+		long timestamp = System.currentTimeMillis() / 1000;
+		long nonce = timestamp + RAND.nextInt();
+		List<Parameter> oauthHeaderParams = new ArrayList<Parameter>();
+		oauthHeaderParams.add(new Parameter("oauth_consumer_key", provider
+				.getConsumerKey()));
+		oauthHeaderParams.add(OAUTH_SIGNATURE_METHOD);
+		oauthHeaderParams.add(new Parameter("oauth_timestamp", timestamp));
+		oauthHeaderParams.add(new Parameter("oauth_nonce", nonce));
+		oauthHeaderParams.add(new Parameter("oauth_version", OAUTH_VERSION1));
+		if (null != otoken) {
+			oauthHeaderParams.add(new Parameter("oauth_token", otoken
+					.getToken()));
+		}
+		List<Parameter> signatureBaseParams = new ArrayList<Parameter>(
+				oauthHeaderParams.size() + params.size());
+		signatureBaseParams.addAll(oauthHeaderParams);
+		if (method != HttpGet.METHOD_NAME && params != null
+				&& !NetRequest.containsFile(params)) {
+			signatureBaseParams.addAll(params);
+		}
+		parseGetParams(url, signatureBaseParams);
+
+		
+		String encodedUrl = OAuthHelper.encodeForOAuth(OAuthHelper
+				.constructRequestURL(url),HTTP.UTF_8);
+		
+		String encodedParams = OAuthHelper.encodeForOAuth(OAuthHelper
+				.alignParams(signatureBaseParams),HTTP.UTF_8);
+
+		StringBuffer base = new StringBuffer(method).append("&")
+				.append(encodedUrl).append("&").append(encodedParams);
+		String oauthBaseString = base.toString();
+
+		if (App.DEBUG) {
+			Log.d(TAG, "getOAuthHeader() url=" + url);
+			Log.d(TAG, "getOAuthHeader() encodedUrl=" + encodedUrl);
+			Log.d(TAG, "getOAuthHeader() encodedParams=" + encodedParams);
+			Log.d(TAG, "getOAuthHeader() baseString=" + oauthBaseString);
+		}
+		oauthHeaderParams.add(new Parameter("oauth_signature", OAuthHelper
+				.getSignature(oauthBaseString, spec)));
+		return "OAuth "
+				+ OAuthHelper.encodeParameters(oauthHeaderParams, ",", true);
+	}
+
+	static String buildXAuthHeader(String username, String password,
+			String method, String url, OAuthProvider provider,
+			SecretKeySpec spec) {
+		long timestamp = System.currentTimeMillis() / 1000;
+		long nonce = System.nanoTime() + RAND.nextInt();
+		List<Parameter> oauthHeaderParams = new ArrayList<Parameter>();
+		oauthHeaderParams.add(new Parameter("oauth_consumer_key", provider
+				.getConsumerKey()));
+		oauthHeaderParams.add(new Parameter("oauth_signature_method",
+				"HMAC-SHA1"));
+		oauthHeaderParams.add(new Parameter("oauth_timestamp", timestamp));
+		oauthHeaderParams.add(new Parameter("oauth_nonce", nonce));
+		oauthHeaderParams.add(new Parameter("oauth_version", "1.0"));
+		oauthHeaderParams.add(new Parameter("x_auth_username", username));
+		oauthHeaderParams.add(new Parameter("x_auth_password", password));
+		oauthHeaderParams.add(new Parameter("x_auth_mode", "client_auth"));
+		StringBuffer base = new StringBuffer(method)
+				.append("&")
+				.append(OAuthHelper.encode(OAuthHelper.constructRequestURL(url)))
+				.append("&");
+		base.append(OAuthHelper.encode(OAuthHelper
+				.alignParams(oauthHeaderParams)));
+		String oauthBaseString = base.toString();
+		String signature = getSignature(oauthBaseString, spec);
+		oauthHeaderParams.add(new Parameter("oauth_signature", signature));
+		return "OAuth "
+				+ OAuthHelper.encodeParameters(oauthHeaderParams, ",", true);
+	}
+
+	private static void parseGetParams(String url,
+			List<Parameter> signatureBaseParams) {
+		int queryStart = url.indexOf("?");
+		if (-1 != queryStart) {
+			String[] queryStrs = url.substring(queryStart + 1).split("&");
+			try {
+				for (String query : queryStrs) {
+					String[] split = query.split("=");
+					if (split.length == 2) {
+						signatureBaseParams.add(new Parameter(URLDecoder
+								.decode(split[0], "UTF-8"), URLDecoder.decode(
+								split[1], "UTF-8")));
+					} else {
+						signatureBaseParams.add(new Parameter(URLDecoder
+								.decode(split[0], "UTF-8"), ""));
+					}
+				}
+			} catch (UnsupportedEncodingException ignore) {
+			}
+
+		}
+
+	}
+
+	private static String getSignature(String data, SecretKeySpec spec) {
+		byte[] byteHMAC = null;
+		try {
+			Mac mac = Mac.getInstance(HMAC_SHA1);
+			mac.init(spec);
+			byteHMAC = mac.doFinal(data.getBytes());
+		} catch (InvalidKeyException ike) {
+			throw new AssertionError(ike);
+		} catch (NoSuchAlgorithmException nsae) {
+			throw new AssertionError(nsae);
+		}
+		return Base64.encodeBytes(byteHMAC);
+	}
+
+	private static String alignParams(List<Parameter> params) {
 		Collections.sort(params);
 		return encodeParameters(params);
 	}
 
-	static String encodeParameters(List<Parameter> httpParams) {
+	private static String encodeParameters(List<Parameter> httpParams) {
 		return encodeParameters(httpParams, "&", false);
 	}
 
-	static String encodeParameters(List<Parameter> httpParams,
+	private static String encodeParameters(List<Parameter> httpParams,
 			String splitter, boolean quot) {
 		StringBuffer buf = new StringBuffer();
 		for (Parameter param : httpParams) {
@@ -54,7 +200,7 @@ public final class OAuthHelper {
 		return buf.toString();
 	}
 
-	static String constructRequestURL(String url) {
+	private static String constructRequestURL(String url) {
 		int index = url.indexOf("?");
 		if (-1 != index) {
 			url = url.substring(0, index);
@@ -76,7 +222,7 @@ public final class OAuthHelper {
 		}
 		return url;
 	}
-	
+
 	static String encode(String value) {
 		String encoded = null;
 		try {
@@ -101,5 +247,72 @@ public final class OAuthHelper {
 			}
 		}
 		return buf.toString();
+	}
+
+	static String encodeForOAuth(String s, String enc) {
+		if (s == null || enc == null) {
+			throw new NullPointerException();
+		}
+		StringBuilder buf = new StringBuilder(s.length() + 16);
+		int start = -1;
+		for (int i = 0; i < s.length(); i++) {
+			char ch = s.charAt(i);
+			if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')
+					|| (ch >= '0' && ch <= '9') || " .-*_".indexOf(ch) > -1) {
+				if (start >= 0) {
+					convert(s.substring(start, i), buf, enc);
+					start = -1;
+				}
+				buf.append(ch);
+			} else {
+				if (start < 0) {
+					start = i;
+				}
+			}
+		}
+		if (start >= 0) {
+			convert(s.substring(start, s.length()), buf, enc);
+		}
+		return buf.toString();
+	}
+
+	static final String HEX_DIGITS = "0123456789ABCDEF";
+
+	private static void convert(String s, StringBuilder buf, String enc) {
+		byte[] bytes;
+		try {
+			bytes = s.getBytes(enc);
+		} catch (Exception e) {
+			bytes = s.getBytes();
+		}
+		for (int j = 0; j < bytes.length; j++) {
+			buf.append('%');
+			buf.append(HEX_DIGITS.charAt((bytes[j] & 0xf0) >> 4));
+			buf.append(HEX_DIGITS.charAt(bytes[j] & 0xf));
+		}
+	}
+
+	static SecretKeySpec getSecretKeySpec(OAuthProvider provider,
+			OAuthToken token) {
+		if (null == token) {
+			String oauthSignature = OAuthHelper.encode(provider
+					.getConsumerSercret()) + "&";
+			return new SecretKeySpec(oauthSignature.getBytes(),
+					OAuthHelper.HMAC_SHA1);
+		} else {
+			String oauthSignature = OAuthHelper.encode(provider
+					.getConsumerSercret())
+					+ "&"
+					+ NetRequest.encode(token.getTokenSecret());
+			return new SecretKeySpec(oauthSignature.getBytes(),
+					OAuthHelper.HMAC_SHA1);
+		}
+	}
+
+	static SecretKeySpec getSecretKeySpec(OAuthProvider provider) {
+		String oauthSignature = OAuthHelper.encode(provider
+				.getConsumerSercret()) + "&";
+		return new SecretKeySpec(oauthSignature.getBytes(),
+				OAuthHelper.HMAC_SHA1);
 	}
 }

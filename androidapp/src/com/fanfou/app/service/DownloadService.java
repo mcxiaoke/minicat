@@ -31,7 +31,7 @@ import com.fanfou.app.App;
 import com.fanfou.app.NewVersionPage;
 import com.fanfou.app.R;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.http.ConnectionManager;
+import com.fanfou.app.http.NetManger;
 import com.fanfou.app.update.VersionInfo;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.StringHelper;
@@ -130,7 +130,7 @@ public class DownloadService extends BaseIntentService {
 		InputStream is = null;
 		FileOutputStream fos = null;
 		try {
-			HttpResponse response = ConnectionManager.newInstance().get(url);
+			HttpResponse response = NetManger.newInstance().get(url);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == 200) {
 				HttpEntity entity = response.getEntity();
@@ -254,7 +254,7 @@ public class DownloadService extends BaseIntentService {
 			if (App.DEBUG) {
 				url = APP_UPDATE_SITE_BETA;
 			}
-			HttpResponse response = ConnectionManager.newInstance().get(
+			HttpResponse response = NetManger.newInstance().get(
 					APP_UPDATE_SITE);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (App.DEBUG) {

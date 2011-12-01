@@ -23,8 +23,9 @@ import android.util.Log;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.User;
+import com.fanfou.app.auth.OAuthToken;
 import com.fanfou.app.cache.ImageLoader;
-import com.fanfou.app.http.ConnectionManager;
+import com.fanfou.app.http.NetManger;
 import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.NetworkHelper;
@@ -46,6 +47,7 @@ import com.fanfou.app.util.Utils;
  * @version 5.3 2011.11.24
  * @version 5.4 2011.11.25
  * @version 5.5 2011.11.28
+ * @version 5.6 2011.12.01
  * 
  */
 
@@ -67,8 +69,7 @@ public class App extends Application {
 	public String userId;
 	public String userScreenName;
 	
-	public String oauthAccessToken;
-	public String oauthAccessTokenSecret;
+	public OAuthToken token;
 	
 	public int appVersionCode;
 	public String appVersionName;
@@ -120,11 +121,14 @@ public class App extends Application {
 				null);
 		this.userScreenName = OptionHelper.readString(this,
 				R.string.option_username, null);
-		this.oauthAccessToken = OptionHelper.readString(this,
+		String oauthAccessToken = OptionHelper.readString(this,
 				R.string.option_oauth_token, null);
-		this.oauthAccessTokenSecret = OptionHelper.readString(this,
+		String oauthAccessTokenSecret = OptionHelper.readString(this,
 				R.string.option_oauth_token_secret, null);
-		this.verified = !StringHelper.isEmpty(oauthAccessTokenSecret);
+		App.verified = !StringHelper.isEmpty(oauthAccessTokenSecret);
+		if(App.verified){
+			this.token=new OAuthToken(oauthAccessToken, oauthAccessTokenSecret);
+		}
 	}
 
 	private void initAppInfo() {
@@ -173,8 +177,7 @@ public class App extends Application {
 		editor.commit();
 	}
 
-	public synchronized void updateAccountInfo(User u, String token,
-			String tokenSecret) {
+	public synchronized void updateAccountInfo(final User u, final OAuthToken otoken) {
 		if (DEBUG) {
 			Log.d("App", "updateAccountInfo");
 		}
@@ -185,16 +188,18 @@ public class App extends Application {
 		editor.putString(getString(R.string.option_username), u.screenName);
 		editor.putString(getString(R.string.option_profile_image),
 				u.profileImageUrl);
-		if (!TextUtils.isEmpty(token)) {
-			editor.putString(getString(R.string.option_oauth_token), token);
+		if (token!=null) {
+			token=otoken;
+			verified = true;
+			editor.putString(getString(R.string.option_oauth_token), token.getToken());
 			editor.putString(getString(R.string.option_oauth_token_secret),
-					tokenSecret);
+					token.getTokenSecret());
 		}
 		editor.commit();
-		verified = true;
+		
 	}
 
-	public synchronized void updateUserInfo(User u) {
+	public synchronized void updateUserInfo(final User u) {
 		if (DEBUG) {
 			Log.d("App", "updateAccountInfo u");
 		}
@@ -213,8 +218,7 @@ public class App extends Application {
 		verified = false;
 		userId = null;
 		userScreenName = null;
-		oauthAccessToken = null;
-		oauthAccessTokenSecret = null;
+		token=null;
 		Editor editor = sp.edit();
 		editor.remove(getString(R.string.option_userid));
 		editor.remove(getString(R.string.option_username));
@@ -222,6 +226,7 @@ public class App extends Application {
 		editor.remove(getString(R.string.option_oauth_token));
 		editor.remove(getString(R.string.option_oauth_token_secret));
 		editor.commit();
+		((FanFouApi)api).setOAuthToken(null);
 	}
 	
 

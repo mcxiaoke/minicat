@@ -1,7 +1,6 @@
 package com.fanfou.app.http;
 
 import java.io.File;
-import java.io.Serializable;
 import org.apache.http.NameValuePair;
 
 /**
@@ -12,9 +11,8 @@ import org.apache.http.NameValuePair;
  * @version 2.0 2011.11.03
  * 
  */
-public final class Parameter implements NameValuePair, Serializable,
+public final class Parameter implements NameValuePair,
 		Comparable<Parameter> {
-	private static final long serialVersionUID = -4374460503164258750L;
 	private String name = null;
 	private String value = null;
 	private File file = null;

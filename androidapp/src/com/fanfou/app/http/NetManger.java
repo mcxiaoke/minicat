@@ -1,19 +1,15 @@
 package com.fanfou.app.http;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
-import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
-import org.apache.http.RequestLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
@@ -35,10 +31,7 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.App.ApnType;
-import com.fanfou.app.api.ApiException;
-import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.auth.OAuthService;
-import com.fanfou.app.util.StringHelper;
 
 /**
  * @author mcxiaoke
@@ -55,11 +48,12 @@ import com.fanfou.app.util.StringHelper;
  * @version 3.2 2011.11.24
  * @version 3.3 2011.11.28
  * @version 3.4 2011.11.29
+ * @version 4.0 2011.12.01
  * 
  */
-public final class ConnectionManager {
+public class NetManger {
 
-	private static final String TAG = ConnectionManager.class.getSimpleName();
+	private static final String TAG = NetManger.class.getSimpleName();
 
 	public static final int SOCKET_BUFFER_SIZE = 8192;
 	public static final int CONNECTION_TIMEOUT_MS = 20000;
@@ -68,32 +62,17 @@ public final class ConnectionManager {
 	public static final int MAX_RETRY_TIMES = 3;
 
 	private DefaultHttpClient mHttpClient;
-	private OAuthService mOAuth;
 
-	public static final ConnectionManager newInstance() {
-		return new ConnectionManager();
-	}
-	
-	public static final ConnectionManager newInstance(OAuthService oauth) {
-		return new ConnectionManager(oauth);
+	public static final NetManger newInstance() {
+		return new NetManger();
 	}
 
 	private final void log(String message) {
 		Log.d(TAG, message);
 	}
 
-	private ConnectionManager() {
+	NetManger() {
 		prepareHttpClient();
-		this.mOAuth=null;
-	}
-	
-	private ConnectionManager(OAuthService oauth) {
-		prepareHttpClient();
-		this.mOAuth=oauth;
-	}
-	
-	public void setOAuth(OAuthService oauth){
-		this.mOAuth=oauth;
 	}
 
 	public final HttpResponse get(String url) throws IOException {
@@ -105,33 +84,17 @@ public final class ConnectionManager {
 		return postImpl(url, params);
 	}
 
-	public final HttpResponse exec(ConnectionRequest cr) throws IOException{
-
-		HttpRequestBase request = null;
-		if (cr.entity != null) {
-			request = new HttpPost(cr.url);
-			((HttpPost) request).setEntity(cr.entity);
-		} else {
-			request = new HttpGet(cr.url);
-		}
-		setHeaders(request, cr.headers);
-		return execute(request);
+	public final HttpResponse exec(NetRequest cr) throws IOException{
+		return execute(cr.request);
 	}
 	
-	public final HttpResponse execWithOAuth(ConnectionRequest cr) throws IOException{
-
-		HttpRequestBase request = null;
-		if (cr.entity != null) {
-			request = new HttpPost(cr.url);
-			((HttpPost) request).setEntity(cr.entity);
-		} else {
-			request = new HttpGet(cr.url);
-		}
-		setHeaders(request, cr.headers);
-		if(mOAuth!=null){
-			mOAuth.signRequest(request, cr.params);
-		}
-		return execute(request);
+	public final HttpResponse execWithOAuth(NetRequest cr) throws IOException{
+		signRequest(cr);
+		return execute(cr.request);
+	}
+	
+	protected void signRequest(NetRequest cr){
+		
 	}
 
 	private final HttpResponse getImpl(String url) throws IOException {
@@ -142,7 +105,7 @@ public final class ConnectionManager {
 	private final HttpResponse postImpl(String url, List<Parameter> params)
 			throws IOException {
 		HttpPost request = new HttpPost(url);
-		request.setEntity(ConnectionRequest.encodeForPost(params));
+		request.setEntity(NetRequest.encodeForPost(params));
 		return execute(request);
 	}
 
@@ -170,15 +133,6 @@ public final class ConnectionManager {
 //			log("\n");
 		}
 		return response;
-	}
-
-	private final static void setHeaders(HttpRequestBase request,
-			List<Header> headers) {
-		if (headers != null) {
-			for (Header header : headers) {
-				request.addHeader(header);
-			}
-		}
 	}
 
 	private final synchronized void prepareHttpClient() {
@@ -241,18 +195,5 @@ public final class ConnectionManager {
 			params.removeParameter(ConnRoutePNames.DEFAULT_PROXY);
 		}
 	}
-
-	// private static void setBasicAuth(HttpUriRequest request,
-	// List<Parameter> params) throws ApiException {
-	// if (null != username && null != password) {
-	// String basicAuth = "Basic "
-	// + Base64.encodeBytes((username + ":" + password).getBytes());
-	// BasicHeader header = new BasicHeader("Authorization", basicAuth);
-	// request.setHeader(header);
-	// } else {
-	// throw new ApiException(ResponseCode.ERROR_AUTH_EMPTY,
-	// "username and password must not be empty.");
-	// }
-	// }
 
 }

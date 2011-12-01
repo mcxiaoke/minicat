@@ -11,6 +11,9 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
@@ -30,48 +33,51 @@ import com.fanfou.app.util.Utils;
  * @version 1.2 2011.11.18
  * @version 1.3 2011.11.22
  * @version 1.4 2011.11.23
+ * @version 2.0 2011.12.01
  * 
  */
-public final class ConnectionRequest {
-	private static final String TAG=ConnectionRequest.class.getSimpleName();
+public final class NetRequest {
+	private static final String TAG = NetRequest.class.getSimpleName();
 
 	public final boolean post;
 	public final List<Parameter> params;
 	public final List<Header> headers;
 	public final HttpEntity entity;
 	public final String url;
+	public final HttpRequestBase request;
 
-	private ConnectionRequest(Builder builder) {
+	private NetRequest(Builder builder) {
 		this.post = builder.post;
 		this.headers = builder.headers;
 		this.params = builder.params;
 		if (post) {
 			this.url = builder.url;
+			this.request = new HttpPost(url);
 			if (!Utils.isEmpty(params)) {
 				if (containsFile(params)) {
 					entity = encodeMultipart(params);
 				} else {
 					entity = encodeForPost(params);
 				}
-			}else{
-				entity=null;
+				((HttpPost) request).setEntity(entity);
+			} else {
+				entity = null;
 			}
-
 		} else {
+			this.entity = null;
 			if (Utils.isEmpty(params)) {
 				this.url = builder.url;
 			} else {
 				this.url = builder.url + "?" + encodeForGet(params);
 				;
 			}
-			this.entity = null;
+			this.request = new HttpGet(url);
 		}
-		if(App.DEBUG){
-			Log.d(TAG, "ConnectionRequest url="+url+" post="+post);
-		}
+		setHeaders(request, headers);
+		
 	}
-	
-	public static Builder newBuilder(){
+
+	public static Builder newBuilder() {
 		return new Builder();
 	}
 
@@ -88,8 +94,9 @@ public final class ConnectionRequest {
 		}
 
 		public Builder url(String url) {
-			if(TextUtils.isEmpty(url)){
-				throw new NullPointerException("Builder.url() request url must not be empty or null.");
+			if (TextUtils.isEmpty(url)) {
+				throw new NullPointerException(
+						"Builder.url() request url must not be empty or null.");
 			}
 			this.url = url;
 			return this;
@@ -116,17 +123,17 @@ public final class ConnectionRequest {
 			this.params.add(new Parameter("count", count));
 			return this;
 		}
-		
+
 		public Builder format(String format) {
-			if(!TextUtils.isEmpty(format)){
-				this.params.add(new Parameter("format",format));
+			if (!TextUtils.isEmpty(format)) {
+				this.params.add(new Parameter("format", format));
 			}
 			return this;
 		}
-		
-		public Builder mode(String mode){
-			if(!TextUtils.isEmpty(mode)){
-				this.params.add(new Parameter("mode",mode));
+
+		public Builder mode(String mode) {
+			if (!TextUtils.isEmpty(mode)) {
+				this.params.add(new Parameter("mode", mode));
 			}
 			return this;
 		}
@@ -233,12 +240,12 @@ public final class ConnectionRequest {
 			return this;
 		}
 
-		public ConnectionRequest build() {
+		public NetRequest build() {
 			return create();
 		}
 
-		private ConnectionRequest create() {
-			return new ConnectionRequest(this);
+		private NetRequest create() {
+			return new NetRequest(this);
 		}
 
 	}
@@ -246,26 +253,29 @@ public final class ConnectionRequest {
 	public static String encodeForGet(List<Parameter> params) {
 		if (Utils.isEmpty(params)) {
 			return "";
-		}	
-		StringBuffer buf = new StringBuffer();
+		}
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < params.size(); i++) {
 			Parameter p = params.get(i);
 			if (p.isFile()) {
-//				throw new IllegalArgumentException("GET参数不能为文件");
-				continue;
+				throw new IllegalArgumentException("GET参数不能包含文件");
 			}
 			if (i > 0) {
-				buf.append("&");
+				sb.append("&");
 			}
-			buf.append(encode(p.getName())).append("=")
+			sb.append(encode(p.getName())).append("=")
 					.append(encode(p.getValue()));
 		}
-		return buf.toString();
+		
+		if(App.DEBUG){
+			Log.d(TAG, "encodeForGet 1 result="+sb.toString());
+		}
+		
+		return sb.toString();
 	}
 
 	public static MultipartEntity encodeMultipart(List<Parameter> params) {
 		if (Utils.isEmpty(params)) {
-//			throw new IllegalArgumentException("POST参数不能为空");
 			return null;
 		}
 		MultipartEntity entity = new MultipartEntity();
@@ -289,41 +299,30 @@ public final class ConnectionRequest {
 
 	public static HttpEntity encodeForPost(List<Parameter> params) {
 		if (Utils.isEmpty(params)) {
-//			throw new IllegalArgumentException("POST参数不能为空");
 			return null;
 		}
-		HttpEntity entity = null;
 		try {
-			entity = new UrlEncodedFormEntity(params, HTTP.UTF_8);
+			return new UrlEncodedFormEntity(params, HTTP.UTF_8);
 		} catch (UnsupportedEncodingException e) {
 		}
-		return entity;
+		return null;
 	}
-
-	public static String encode(String value) {
-		String encoded = null;
+	
+	public static String encode(String input){
 		try {
-			encoded = URLEncoder.encode(value, "UTF-8");
-		} catch (UnsupportedEncodingException ignore) {
+			return URLEncoder.encode(input, HTTP.UTF_8);
+		} catch (UnsupportedEncodingException e) {
 		}
-		StringBuffer buf = new StringBuffer(encoded.length());
-		char focus;
-		for (int i = 0; i < encoded.length(); i++) {
-			focus = encoded.charAt(i);
-			if (focus == '*') {
-				buf.append("%2A");
-			} else if (focus == '+') {
-				buf.append("%20");
-			} else if (focus == '%' && (i + 1) < encoded.length()
-					&& encoded.charAt(i + 1) == '7'
-					&& encoded.charAt(i + 2) == 'E') {
-				buf.append('~');
-				i += 2;
-			} else {
-				buf.append(focus);
+		return input;
+	}
+	
+	private final static void setHeaders(HttpRequestBase request,
+			List<Header> headers) {
+		if (headers != null) {
+			for (Header header : headers) {
+				request.addHeader(header);
 			}
 		}
-		return buf.toString();
 	}
 
 	public static boolean containsFile(Parameter[] params) {
@@ -373,5 +372,40 @@ public final class ConnectionRequest {
 		return getParameterArray(name1, String.valueOf(value1), name2,
 				String.valueOf(value2));
 	}
+	
+//	private static final String BOUNDARY="GFDGFD34gdft4tdgdg";
+//	private byte[] generatePhotoRequest(byte[] imagedata){
+//	    byte[] requestData = null;
+//	    ByteArrayOutputStream bufer = new ByteArrayOutputStream();
+//	    DataOutputStream dataOut = new DataOutputStream(bufer);
+//	    try{
+//	        dataOut.writeBytes("--");
+//	        dataOut.writeBytes(BOUNDARY);
+//	        dataOut.writeBytes("\r\n");
+//	        dataOut.writeBytes("Content-Disposition: form-data; name=\"auth\"; filename=\"auth\"\r\n");
+//	        dataOut.writeBytes("Content-Type: text/xml; charset=utf-8\r\n");
+//	        dataOut.writeBytes("\r\n");
+//	        dataOut.write(generateAuth());
+//	        dataOut.writeBytes("\r\n--" + BOUNDARY + "\r\n");
+//	        dataOut.writeBytes("Content-Disposition: form-data; name=\""+CIMAGE+"\"; filename=\""+CIMAGE+"\"\r\n");
+//	        dataOut.writeBytes("Content-Type: "+IMAGE_PNG+"\r\n");
+//	        dataOut.writeBytes("\r\n");
+//	        bufer.write(imagedata);
+//	        dataOut.writeBytes("\r\n");
+//	        dataOut.writeBytes("\r\n--" + BOUNDARY + "--\r\n");
+//
+//	        requestData = bufer.toByteArray();
+//	    } catch(IOException ex){
+//	        ex.printStackTrace();
+//	    } finally{
+//	        if(bufer!=null){
+//	            try {
+//	                bufer.close();
+//	            } catch (IOException e) {
+//	                // TODO Auto-generated catch block
+//	                e.printStackTrace();
+//	            }
+//	        }
+//	    }}
 
 }

@@ -20,7 +20,7 @@ import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
-import com.fanfou.app.http.Response;
+import com.fanfou.app.http.NetResponse;
 import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.StringHelper;
 
@@ -84,7 +84,7 @@ public class User implements Storable<User> {
 		return StringHelper.isEmpty(id);
 	}
 
-	public static List<User> parseUsers(Response r) throws ApiException {
+	public static List<User> parseUsers(NetResponse r) throws ApiException {
 			return User.parseUsers(r.getJSONArray());
 	}
 
@@ -131,7 +131,7 @@ public class User implements Storable<User> {
 		return user;
 	}
 
-	public static User parse(Response r) throws ApiException {
+	public static User parse(NetResponse r) throws ApiException {
 		return parse(r.getJSONObject());
 	}
 	

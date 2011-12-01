@@ -53,6 +53,8 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * @version 2.5 2011.10.25
  * @version 2.6 2011.10.26
  * @version 2.7 2011.10.27
+ * @version 2.8 2011.11.26
+ * @version 3.0 2011.12.01
  * 
  */
 public final class LoginPage extends Activity implements OnClickListener {
@@ -272,10 +274,8 @@ public final class LoginPage extends Activity implements OnClickListener {
 
 				if (token != null) {
 					publishProgress(1);
-
-					App.me.oauthAccessToken = token.getToken();
-					App.me.oauthAccessTokenSecret = token.getTokenSecret();
-					((FanFouApi)App.api).setOAuthAccessToken(token);
+					App.me.token=token;
+//					((FanFouApi)App.api).setOAuthToken(token);
 					User u = App.api.verifyAccount(FanFouApiConfig.MODE_LITE);
 
 					if (isCancelled) {
@@ -287,8 +287,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 					}
 
 					if (u != null && !u.isNull()) {
-						App.me.updateAccountInfo(u, token.getToken(),
-								token.getTokenSecret());
+						App.me.updateAccountInfo(u, token);
 						if (App.DEBUG)
 							log("xauth successful! ");
 

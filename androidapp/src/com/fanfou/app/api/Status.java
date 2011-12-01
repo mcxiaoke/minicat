@@ -20,7 +20,7 @@ import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
-import com.fanfou.app.http.Response;
+import com.fanfou.app.http.NetResponse;
 import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.StatusHelper;
 import com.fanfou.app.util.StringHelper;
@@ -37,6 +37,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.7 2011.11.04
  * @version 2.0 2011.11.10
  * @version 2.1 2011.11.11
+ * @version 2.2 2011.12.01
  * 
  */
 public class Status implements Storable<Status> {
@@ -108,7 +109,7 @@ public class Status implements Storable<Status> {
 		return StringHelper.isEmpty(id);
 	}
 
-	public static List<Status> parseStatuses(Response r, int type)
+	public static List<Status> parseStatuses(NetResponse r, int type)
 			throws ApiException {
 		if (App.DEBUG) {
 			log("parseStatuses response");
@@ -206,12 +207,12 @@ public class Status implements Storable<Status> {
 
 	}
 
-	public static Status parse(Response response, int type) throws ApiException {
-		return parse(response.getContent(), type);
+	public static Status parse(NetResponse response, int type) throws ApiException {
+		return parse(response.getJSONObject(), type);
 	}
 
-	public static Status parse(Response response) throws ApiException {
-		return parse(response.getContent());
+	public static Status parse(NetResponse response) throws ApiException {
+		return parse(response.getJSONObject());
 	}
 
 	public static Status parse(String content) throws ApiException {

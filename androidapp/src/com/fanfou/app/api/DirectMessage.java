@@ -19,7 +19,7 @@ import com.fanfou.app.App;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
-import com.fanfou.app.http.Response;
+import com.fanfou.app.http.NetResponse;
 import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.StringHelper;
 
@@ -33,6 +33,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.8 2011.11.04
  * @version 1.9 2011.11.21
  * @version 2.0 2011.11.23
+ * @version 2.1 2011.12.01
  * 
  */
 public class DirectMessage implements Storable<DirectMessage> {
@@ -90,17 +91,10 @@ public class DirectMessage implements Storable<DirectMessage> {
 		return StringHelper.isEmpty(id);
 	}
 
-	public static List<DirectMessage> parseMessges(Response r, int type)
+	public static List<DirectMessage> parseMessges(NetResponse r, int type)
 			throws ApiException {
-		try {
-			JSONArray a = new JSONArray(r.getContent());
-			return parseMessges(a, type);
-		} catch (JSONException e) {
-			if (App.DEBUG)
-				e.printStackTrace();
-			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED,
-					e.getMessage(), e.getCause());
-		}
+		JSONArray a = r.getJSONArray();
+		return parseMessges(a, type);
 	}
 
 	public static List<DirectMessage> parseMessges(JSONArray a, int type)
@@ -122,7 +116,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 		return dms;
 	}
 
-	public static List<DirectMessage> parseConversationList(Response response)
+	public static List<DirectMessage> parseConversationList(NetResponse response)
 			throws ApiException {
 		return parseConversationList(response.getJSONArray());
 	}
@@ -147,7 +141,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 		return dms;
 	}
 
-	public static List<DirectMessage> parseConversationUser(Response response)
+	public static List<DirectMessage> parseConversationUser(NetResponse response)
 			throws ApiException {
 		return parseConversationUser(response.getJSONArray());
 	}
@@ -192,16 +186,10 @@ public class DirectMessage implements Storable<DirectMessage> {
 		return dm;
 	}
 
-	public static DirectMessage parse(Response r, int type) throws ApiException {
-		try {
-			JSONObject o = new JSONObject(r.getContent());
-			return parse(o, type);
-		} catch (JSONException e) {
-			if (App.DEBUG)
-				e.printStackTrace();
-			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED,
-					e.getMessage(), e.getCause());
-		}
+	public static DirectMessage parse(NetResponse r, int type)
+			throws ApiException {
+		JSONObject o = r.getJSONObject();
+		return parse(o, type);
 	}
 
 	public static DirectMessage parse(JSONObject o, int type)

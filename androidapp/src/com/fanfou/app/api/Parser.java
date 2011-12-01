@@ -24,7 +24,7 @@ import android.text.Html;
 import android.util.Log;
 
 import com.fanfou.app.App;
-import com.fanfou.app.http.Response;
+import com.fanfou.app.http.NetResponse;
 import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.DateTimeHelper;
 
@@ -37,6 +37,7 @@ import com.fanfou.app.util.DateTimeHelper;
  * @version 1.4 2011.11.11
  * @version 1.5 2011.11.15
  * @version 1.6 2011.11.23
+ * @version 1.7 2011.12.01
  * 
  */
 public final class Parser implements ResponseCode {
@@ -88,34 +89,24 @@ public final class Parser implements ResponseCode {
 	public static final String REQUEST = "request";
 	public static final String ERROR = "error";
 
-	public static List<String> ids(Response r) throws ApiException {
-
-		return ids(r.getContent());
-
+	public static List<String> ids(NetResponse r) throws ApiException {
+		return ids(r.getJSONArray());
 	}
 
-	public static List<Search> trends(Response r) throws ApiException {
-
-		return trends(r.getContent());
-
+	public static List<Search> trends(NetResponse r) throws ApiException {
+		return trends(r.getJSONObject());
 	}
 
-	public static Search savedSearch(Response r) throws ApiException {
-
-		return savedSearch(r.getContent());
-
+	public static Search savedSearch(NetResponse r) throws ApiException {
+		return savedSearch(r.getJSONObject());
 	}
 
-	public static List<Search> savedSearches(Response r) throws ApiException {
-
-		return savedSearches(r.getContent());
-
+	public static List<Search> savedSearches(NetResponse r) throws ApiException {
+		return savedSearches(r.getJSONArray());
 	}
 
-	public static Search trend(Response r) throws ApiException {
-
-		return trend(r.getContent());
-
+	public static Search trend(NetResponse r) throws ApiException {
+		return trend(r.getJSONObject());
 	}
 
 	public static List<String> ids(String content) throws ApiException {

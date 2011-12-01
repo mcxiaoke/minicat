@@ -21,7 +21,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.fanfou.app.App;
-import com.fanfou.app.http.ConnectionManager;
+import com.fanfou.app.http.NetManger;
 import com.fanfou.app.util.ImageHelper;
 
 /**
@@ -54,14 +54,14 @@ public class ImageLoader implements IImageLoader {
 	public final ImageCache mCache;
 	private final Handler mHandler;
 
-	private ConnectionManager conn;
+	private NetManger conn;
 
 	private static ImageLoader INSTANCE = null;
 
 	private ImageLoader(Context context) {
 		this.mCache = ImageCache.getInstance(context);
 		this.mHandler = new ImageDownloadHandler();
-		conn = ConnectionManager.newInstance();
+		conn = NetManger.newInstance();
 		new Daemon().start();
 	}
 
@@ -161,10 +161,10 @@ public class ImageLoader implements IImageLoader {
 		private final ImageLoaderTask task;
 		private final Handler handler;
 		private final ImageCache cache;
-		private final ConnectionManager conn;
+		private final NetManger conn;
 
 		public Worker(ImageLoaderTask task, Handler handler, ImageCache cache,
-				ConnectionManager conn) {
+				NetManger conn) {
 			this.task = task;
 			this.handler = handler;
 			this.cache = cache;
@@ -198,7 +198,7 @@ public class ImageLoader implements IImageLoader {
 		}
 	}
 
-	private static Bitmap downloadImage(ConnectionManager conn, String url)
+	private static Bitmap downloadImage(NetManger conn, String url)
 			throws IOException {
 		HttpResponse response = conn.get(url);
 		int statusCode = response.getStatusLine().getStatusCode();

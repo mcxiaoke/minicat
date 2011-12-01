@@ -21,7 +21,7 @@ import com.fanfou.app.api.ApiException;
  * @version 3.0 2011.11.10
  * 
  */
-public class Response implements ResponseCode {
+public class NetResponse implements ResponseInterface, ResponseCode {
 
 	// private HttpResponse response;
 	private HttpEntity entity;
@@ -32,7 +32,7 @@ public class Response implements ResponseCode {
 
 	// public final Header[] headers;
 
-	public Response(HttpResponse response) {
+	public NetResponse(HttpResponse response) {
 		// this.response = response;
 		this.entity = response.getEntity();
 		this.statusLine = response.getStatusLine();
@@ -40,33 +40,30 @@ public class Response implements ResponseCode {
 		// this.headers = response.getAllHeaders();
 	}
 
-	public final String getContent() throws ApiException {
+	public final String getContent() throws IOException {
 		if (content == null) {
-			try {
-				content = EntityUtils.toString(entity, HTTP.UTF_8);
-				used = true;
-			} catch (IOException e) {
-				if (App.DEBUG) {
-					e.printStackTrace();
-				}
-				throw new ApiException(ERROR_NOT_CONNECTED, e.getMessage(), e);
-			} finally {
-			}
+			content = EntityUtils.toString(entity, HTTP.UTF_8);
+			used = true;
 		}
 		return content;
 	}
-	
-	public final JSONObject getJSONObject() throws ApiException{
+
+	public final JSONObject getJSONObject() throws ApiException {
 		try {
+
 			return new JSONObject(getContent());
+		} catch (IOException e) {
+			throw new ApiException(ResponseCode.ERROR_NOT_CONNECTED, e);
 		} catch (JSONException e) {
 			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED, e);
 		}
 	}
-	
-	public final JSONArray getJSONArray() throws ApiException{
+
+	public final JSONArray getJSONArray() throws ApiException {
 		try {
 			return new JSONArray(getContent());
+		} catch (IOException e) {
+			throw new ApiException(ResponseCode.ERROR_NOT_CONNECTED, e);
 		} catch (JSONException e) {
 			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED, e);
 		}
