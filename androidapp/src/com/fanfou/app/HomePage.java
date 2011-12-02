@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.AnimationDrawable;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -72,6 +73,8 @@ import com.fanfou.app.util.Utils;
  * @version 4.5 2011.11.16
  * @version 4.6 2011.11.21
  * @version 4.7 2011.11.22
+ * @version 4.8 2011.11.30
+ * @version 4.9 2011.12.02
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,

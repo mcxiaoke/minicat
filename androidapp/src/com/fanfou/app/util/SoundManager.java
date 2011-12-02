@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.fanfou.app.R;
 
+import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -19,7 +20,7 @@ public final class SoundManager {
 	private static SoundPool mSoundPool;
 	private static HashMap<Integer,Integer> mSoundPoolMap;
 	private static AudioManager mAudioManager;
-	private static Context mContext;
+	private static Activity mContext;
 
 	private SoundManager() {
 	}
@@ -42,12 +43,13 @@ public final class SoundManager {
 	 * @param theContext
 	 *            The Application context
 	 */
-	public static void initSounds(Context theContext) {
+	public static void initSounds(Activity theContext) {
 		mContext = theContext;
 		mSoundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
 		mSoundPoolMap = new HashMap<Integer, Integer>();
 		mAudioManager = (AudioManager) mContext
 				.getSystemService(Context.AUDIO_SERVICE);
+		mContext.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 	}
 
 	/**
