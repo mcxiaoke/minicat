@@ -19,6 +19,7 @@ import com.fanfou.app.api.Api;
 import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.User;
 import com.fanfou.app.auth.OAuthToken;
+import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.NetworkHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -146,14 +147,11 @@ public class App extends Application {
 		if (DEBUG) {
 			Log.d("App", "versionCheck");
 		}
-		if (OptionHelper.readInt(this, R.string.option_old_version_code, 0) < 20111118) {
-			OptionHelper.saveInt(this, R.string.option_old_version_code,
-					appVersionCode);
-			cleanSettings();
-		}
 		if (OptionHelper.readInt(this, R.string.option_old_version_code, 0) < appVersionCode) {
 			OptionHelper.saveInt(this, R.string.option_old_version_code,
 					appVersionCode);
+			cleanSettings();
+			AlarmHelper.setScheduledTasks(this);
 		}
 	}
 

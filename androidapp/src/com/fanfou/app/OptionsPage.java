@@ -20,9 +20,7 @@ import com.fanfou.app.preferences.SeekBarPreference;
 import com.fanfou.app.service.DownloadService;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.update.VersionInfo;
-import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.IntentHelper;
-import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -166,11 +164,7 @@ public class OptionsPage extends PreferenceActivity implements
 		} 
 		else if(key.equals(getString(R.string.option_autoupdate))){
 			CheckBoxPreference cp = (CheckBoxPreference) p;
-			if(cp.isChecked()){
-				AlarmHelper.setAutoUpdateTask(this);
-			}else{
-				AlarmHelper.removeAutoUpdateTask(this);
-			}
+			DownloadService.set(this, cp.isChecked());
 		}
 		else if (key.equals(getString(R.string.option_page_scroll_endless))) {
 			needRestart = true;
@@ -181,31 +175,7 @@ public class OptionsPage extends PreferenceActivity implements
 			} else {
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 			}
-		} else if (key.equals(getString(R.string.option_bottom_refresh_icon))) {
-			ListPreference lp = (ListPreference) p;
-			lp.setSummary(lp.getEntry());
-			String value = lp.getValue();
-			String value2 = OptionHelper.readString(this,
-					R.string.option_bottom_write_icon, "none");
-			if (value.equals(value2) && !value.equals("none")) {
-				lp.setValue("none");
-				Utils.notify(this, "请重选，刷新图标和发消息图标不能处于同一位置");
-			} else {
-				needRestart = true;
-			}
-		} else if (key.equals(getString(R.string.option_bottom_write_icon))) {
-			ListPreference lp = (ListPreference) p;
-			lp.setSummary(lp.getEntry());
-			String value = lp.getValue();
-			String value2 = OptionHelper.readString(this,
-					R.string.option_bottom_refresh_icon, "none");
-			if (value.equals(value2) && !value.equals("none")) {
-				lp.setValue("none");
-				Utils.notify(this, "请重选，发消息图标和刷新图标不能处于同一位置");
-			} else {
-				needRestart = true;
-			}
-		} else if (key.equals(getString(R.string.option_fontsize))) {
+		}else if (key.equals(getString(R.string.option_fontsize))) {
 			SeekBarPreference skp = (SeekBarPreference) p;
 			int value = sp.getInt(key,
 					getResources().getInteger(R.integer.defaultFontSize));
@@ -231,7 +201,6 @@ public class OptionsPage extends PreferenceActivity implements
 			if (App.DEBUG) {
 				Log.i(TAG, "CheckTask init");
 			}
-
 		}
 
 		@Override

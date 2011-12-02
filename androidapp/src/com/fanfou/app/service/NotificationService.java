@@ -82,6 +82,11 @@ public class NotificationService extends BaseIntentService {
 	}
 
 	public static void set(Context context) {
+		boolean need = OptionHelper.readBoolean(context,
+				R.string.option_notification, true);
+		if(!need){
+			return;
+		}
 		int interval = OptionHelper.parseInt(context, R.string.option_notification_interval, "5");
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MINUTE, interval);
@@ -153,10 +158,7 @@ public class NotificationService extends BaseIntentService {
 				handleHome(count);
 
 			}
-
-			if (need) {
 				set(this);
-			}
 		} catch (ApiException e) {
 			if (App.DEBUG) {
 				Log.e(TAG, "error code=" + e.statusCode + " error message="

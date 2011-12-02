@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -13,6 +14,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -34,6 +36,7 @@ import com.fanfou.app.config.Commons;
 import com.fanfou.app.http.NetClient;
 import com.fanfou.app.update.VersionInfo;
 import com.fanfou.app.util.IOHelper;
+import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
 
@@ -44,16 +47,14 @@ import com.fanfou.app.util.Utils;
  * @version 2.1 2011.11.24
  * @version 2.2 2011.11.25
  * @version 2.3 2011.11.28
+ * @version 2.4 2011.12.02
  * 
  */
 public class DownloadService extends BaseIntentService {
 	private static final String TAG = DownloadService.class.getSimpleName();
 
 	public static final String APP_SITE_BASE_URL = "http://apps.fanfou.com/android/";
-	public static final String APP_SITE_BETA = "http://apps.fanfou.com/android/beta/";
 	public static final String APP_UPDATE_SITE = APP_SITE_BASE_URL
-			+ "update.json";
-	public static final String APP_UPDATE_SITE_BETA = APP_SITE_BETA
 			+ "update.json";
 
 	private static final int NOTIFICATION_PROGRESS_ID = 1;
@@ -79,6 +80,54 @@ public class DownloadService extends BaseIntentService {
 		super.onCreate();
 		mHandler = new DownloadHandler();
 	}
+	
+	
+	public static void set(Context context, boolean set) {
+		if (set) {
+			set(context);
+		} else {
+			unset(context);
+		}
+	}
+
+	public static void set(Context context) {
+		boolean need = OptionHelper.readBoolean(context,
+				R.string.option_autoupdate, true);
+		if(!need){
+			return;
+		}
+		Calendar c = Calendar.getInstance();
+		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
+				c.get(Calendar.DAY_OF_MONTH), 11, 0);
+		c.add(Calendar.DATE, 1);
+		long interval = 2 * 24 * 3600 * 1000;
+		AlarmManager am = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		am.setInexactRepeating(AlarmManager.RTC, c.getTimeInMillis(), interval,
+				getPendingIntent(context));
+	}
+
+	public static void unset(Context context) {
+		AlarmManager am = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		am.cancel(getPendingIntent(context));
+	}
+	
+	public static void setIfNot(Context context){
+		boolean set=OptionHelper.readBoolean(context, R.string.option_set_auto_update, false);
+		if(!set){
+			OptionHelper.saveBoolean(context, R.string.option_set_auto_update, true);
+			set(context);
+		}
+	}
+
+	private final static PendingIntent getPendingIntent(Context context) {
+		Intent intent = new Intent(context, DownloadService.class);
+		intent.putExtra(Commons.EXTRA_TYPE, DownloadService.TYPE_CHECK);
+		PendingIntent pi = PendingIntent.getService(context, 0, intent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+		return pi;
+	}
 
 	public static void startDownload(Context context, String url) {
 		Intent intent = new Intent(context, DownloadService.class);
@@ -101,9 +150,6 @@ public class DownloadService extends BaseIntentService {
 			check();
 		} else if (type == TYPE_DOWNLOAD) {
 			String url = intent.getStringExtra(Commons.EXTRA_DOWNLOAD_URL);
-			if (App.DEBUG) {
-				url = (APP_SITE_BETA + "/fanfou.apk");
-			}
 			log("onHandleIntent TYPE_DOWNLOAD url=" + url);
 			if (!StringHelper.isEmpty(url)) {
 				
@@ -251,9 +297,6 @@ public class DownloadService extends BaseIntentService {
 	public static VersionInfo fetchVersionInfo() {
 		try {
 			String url = APP_UPDATE_SITE;
-			if (App.DEBUG) {
-				url = APP_UPDATE_SITE_BETA;
-			}
 			HttpResponse response = NetClient.newInstance().get(
 					APP_UPDATE_SITE);
 			int statusCode = response.getStatusLine().getStatusCode();

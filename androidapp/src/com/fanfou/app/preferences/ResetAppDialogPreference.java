@@ -68,7 +68,7 @@ public class ResetAppDialogPreference extends DialogPreference {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			AlarmHelper.clearAlarms(c);
+			AlarmHelper.unsetScheduledTasks(c);
 			OptionHelper.clearSettings(c);
 			IOHelper.cleanDB(c);
 			IOHelper.ClearCache(c);

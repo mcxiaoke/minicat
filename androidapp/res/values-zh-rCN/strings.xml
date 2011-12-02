@@ -9,11 +9,9 @@
 	<string name="login_signup_web">网站注册</string>
 	<string name="login_signup_sms">短信注册</string>
 	
-		<string name="connection_error_msg">网络连接好像有问题，请稍后重试</string>
+	<string name="connection_error_msg">网络连接好像有问题，请稍后重试</string>
 	
-		<string name="crash_toast_text">啊噢，客户端崩溃了，一份包含匿名数据的崩溃报告已经被发送给开发者用于分析出错原因 !</string>
-	
-	<string name="crash_mail_header">请点击发送邮件，报告以下匿名崩溃数据帮助饭否改进客户端：\n\n</string>
+	<string name="crash_toast_text">啊噢，客户端崩溃了，一份包含错误信息的崩溃报告已经被发送给开发者用于分析出错原因 !</string>
 	
 	<string name="support_text">意见和建议提交，问题反馈，获取版本更新信息，请关注官方技术支持帐号 @Android客户端</string>
 	<string name="introduction_text">本软件适用于Android 1.6以上系统，本软件的下载和使用完全免费，使用过程中产生的流量费用由运营商收取。</string>

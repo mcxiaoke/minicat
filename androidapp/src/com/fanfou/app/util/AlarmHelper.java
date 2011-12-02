@@ -1,24 +1,15 @@
 package com.fanfou.app.util;
 
-import java.util.Calendar;
-import java.util.Date;
-
-import android.app.AlarmManager;
 import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.R;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.service.AutoCompleteService;
-import com.fanfou.app.service.CleanService;
 import com.fanfou.app.service.DownloadService;
 import com.fanfou.app.service.NotificationService;
 
@@ -35,125 +26,22 @@ import com.fanfou.app.service.NotificationService;
 public final class AlarmHelper {
 	private static final String TAG = AlarmHelper.class.getSimpleName();
 
-	public final static void clearAlarms(Context context) {
+	public final static void setScheduledTasks(Context context) {
 		if (App.DEBUG) {
 			Log.d(TAG, "clearAlarms");
 		}
-		AlarmManager am = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
-		am.cancel(getAutoUpdatePendingIntent(context));
+		DownloadService.unset(context);
 		NotificationService.unset(context);
 		AutoCompleteService.unset(context);
 	}
-	
-	public final static void setAlarms(Context context) {
+
+	public final static void unsetScheduledTasks(Context context) {
 		if (App.DEBUG) {
 			Log.d(TAG, "setAlarms");
 		}
-		AlarmHelper.checkAutoUpdateSet(context);
+		DownloadService.setIfNot(context);
 		NotificationService.setIfNot(context);
 		AutoCompleteService.setIfNot(context);
-	}
-
-	@SuppressWarnings("unused")
-	private final static void checkAutoCleanSet(Context context) {
-		boolean isSet = OptionHelper.readBoolean(context,
-				R.string.option_set_auto_clean, false);
-		if (App.DEBUG) {
-			Log.d(TAG, "checkAutoCleanSet flag=" + isSet);
-		}
-		if (!isSet) {
-			AlarmHelper.setCleanTask(context);
-			OptionHelper.saveBoolean(context, R.string.option_set_auto_clean,
-					true);
-		}
-	}
-
-	private final static void setCleanTask(Context context) {
-		Calendar c = Calendar.getInstance();
-		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
-				c.get(Calendar.DAY_OF_MONTH), 12, 0);
-		c.add(Calendar.DATE, 10);
-		AlarmManager am = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
-		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
-				10 * 24 * 3600 * 1000, getCleanPendingIntent(context));
-		if (App.DEBUG) {
-			Log.d(TAG,
-					"setCleanTask first time="
-							+ DateTimeHelper.formatDate(c.getTime()));
-		}
-	}
-
-	public final static void checkAutoUpdateSet(Context context) {
-		boolean isSet = OptionHelper.readBoolean(context,
-				R.string.option_set_auto_update, false);
-		if (App.DEBUG) {
-			Log.d(TAG, "checkAutoUpdateSet flag=" + isSet);
-		}
-		if (!isSet) {
-			boolean auto=OptionHelper.readBoolean(context, R.string.option_autoupdate, true);
-			if(auto){
-				AlarmHelper.setAutoUpdateTask(context);
-			}else{
-				AlarmHelper.removeAutoUpdateTask(context);
-			}
-			OptionHelper.saveBoolean(context, R.string.option_set_auto_update,
-					true);
-		}
-	}
-	
-	
-
-	public final static void setAutoUpdateTask(Context context) {
-		Calendar c = Calendar.getInstance();
-		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
-				c.get(Calendar.DAY_OF_MONTH), 11, 0);
-		c.add(Calendar.DATE, 1);
-		long interval = 3 * 24 * 3600 * 1000;
-		AlarmManager am = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
-		am.setInexactRepeating(AlarmManager.RTC, c.getTimeInMillis(), interval,
-				getAutoUpdatePendingIntent(context));
-		if (App.DEBUG) {
-			Log.d(TAG,
-					"setAutoUpdateTask first time="
-							+ DateTimeHelper.formatDate(c.getTime()));
-		}
-
-	}
-
-	public final static void removeAutoUpdateTask(Context context) {
-		AlarmManager am = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
-		PendingIntent pi = getAutoUpdatePendingIntent(context);
-		am.cancel(pi);
-		pi.cancel();
-	}
-
-	private final static PendingIntent getAutoUpdatePendingIntent(
-			Context context) {
-		Intent intent = new Intent(context, DownloadService.class);
-		intent.putExtra(Commons.EXTRA_TYPE, DownloadService.TYPE_CHECK);
-		PendingIntent pi = PendingIntent.getService(context, 0, intent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
-		return pi;
-	}
-
-	private final static PendingIntent getCleanPendingIntent(Context context) {
-		return PendingIntent.getService(context, 0, new Intent(context,
-				CleanService.class), PendingIntent.FLAG_UPDATE_CURRENT);
-	}
-
-	public final static long setTestTime() {
-		Calendar c = Calendar.getInstance();
-		c.add(Calendar.SECOND, 10);
-		long result = c.getTimeInMillis();
-		if (App.DEBUG)
-			Log.d("AlarmHelper",
-					"Alarm test Time:"
-							+ DateTimeHelper.formatDate(new Date(result)));
-		return result;
 	}
 
 	public final static void setNotificationType(Context context,
