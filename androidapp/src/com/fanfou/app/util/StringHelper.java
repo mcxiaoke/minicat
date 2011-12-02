@@ -3,6 +3,8 @@
  */
 package com.fanfou.app.util;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URLDecoder;
@@ -38,64 +40,90 @@ import com.fanfou.app.App;
  * 
  */
 public class StringHelper {
-	
-	
-    // Regex that matches characters that have special meaning in HTML. '<', '>', '&' and
-    // multiple continuous spaces.
-    private static final Pattern PLAIN_TEXT_TO_ESCAPE = Pattern.compile("[<>&]| {2,}|\r?\n");
 
-    /**
-     * Escape some special character as HTML escape sequence.
-     * 
-     * @param text Text to be displayed using WebView.
-     * @return Text correctly escaped.
-     */
-    public static String escapeCharacterToDisplay(String text) {
-        Pattern pattern = PLAIN_TEXT_TO_ESCAPE;
-        Matcher match = pattern.matcher(text);
-        
-        if (match.find()) {
-            StringBuilder out = new StringBuilder();
-            int end = 0;
-            do {
-                int start = match.start();
-                out.append(text.substring(end, start));
-                end = match.end();
-                int c = text.codePointAt(start);
-                if (c == ' ') {
-                    // Escape successive spaces into series of "&nbsp;".
-                    for (int i = 1, n = end - start; i < n; ++i) {
-                        out.append("&nbsp;");
-                    }
-                    out.append(' ');
-                } else if (c == '\r' || c == '\n') {
-                    out.append("<br>");
-                } else if (c == '<') {
-                    out.append("&lt;");
-                } else if (c == '>') {
-                    out.append("&gt;");
-                } else if (c == '&') {
-                    out.append("&amp;");
-                }
-            } while (match.find());
-            out.append(text.substring(end));
-            text = out.toString();
-        }        
-        return text;
-    }
-    
-    public static String bytesToHexString(byte[] bytes) {
-        // http://stackoverflow.com/questions/332079
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < bytes.length; i++) {
-            String hex = Integer.toHexString(0xFF & bytes[i]);
-            if (hex.length() == 1) {
-                sb.append('0');
-            }
-            sb.append(hex);
-        }
-        return sb.toString();
-    }
+	// Regex that matches characters that have special meaning in HTML. '<',
+	// '>', '&' and
+	// multiple continuous spaces.
+	private static final Pattern PLAIN_TEXT_TO_ESCAPE = Pattern
+			.compile("[<>&]| {2,}|\r?\n");
+
+	/**
+	 * Escape some special character as HTML escape sequence.
+	 * 
+	 * @param text
+	 *            Text to be displayed using WebView.
+	 * @return Text correctly escaped.
+	 */
+	public static String escapeCharacterToDisplay(String text) {
+		Pattern pattern = PLAIN_TEXT_TO_ESCAPE;
+		Matcher match = pattern.matcher(text);
+
+		if (match.find()) {
+			StringBuilder out = new StringBuilder();
+			int end = 0;
+			do {
+				int start = match.start();
+				out.append(text.substring(end, start));
+				end = match.end();
+				int c = text.codePointAt(start);
+				if (c == ' ') {
+					// Escape successive spaces into series of "&nbsp;".
+					for (int i = 1, n = end - start; i < n; ++i) {
+						out.append("&nbsp;");
+					}
+					out.append(' ');
+				} else if (c == '\r' || c == '\n') {
+					out.append("<br>");
+				} else if (c == '<') {
+					out.append("&lt;");
+				} else if (c == '>') {
+					out.append("&gt;");
+				} else if (c == '&') {
+					out.append("&amp;");
+				}
+			} while (match.find());
+			out.append(text.substring(end));
+			text = out.toString();
+		}
+		return text;
+	}
+
+	public static String bytesToHexString(byte[] bytes) {
+		// http://stackoverflow.com/questions/332079
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < bytes.length; i++) {
+			String hex = Integer.toHexString(0xFF & bytes[i]);
+			if (hex.length() == 1) {
+				sb.append('0');
+			}
+			sb.append(hex);
+		}
+		return sb.toString();
+	}
+
+	public static String getStackMessageString(Throwable e) {
+		StringBuffer message = new StringBuffer();
+		StackTraceElement[] stack = e.getStackTrace();
+		StackTraceElement stackLine = stack[stack.length - 1];
+		message.append(stackLine.getFileName());
+		message.append(":");
+		message.append(stackLine.getLineNumber());
+		message.append(":");
+		message.append(stackLine.getMethodName());
+		message.append(" ");
+		message.append(e.getMessage());
+		return message.toString();
+	}
+
+	public static String getStackTraceString(Throwable tr) {
+		if (tr == null) {
+			return "";
+		}
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		tr.printStackTrace(pw);
+		return sw.toString();
+	}
 
 	public static String toString(List<String> array) {
 		if (array == null || array.size() == 0) {
@@ -161,6 +189,36 @@ public class StringHelper {
 		} else {
 			return str;
 		}
+	}
+
+	public static String join(String separator, String[] strings) {
+		if (strings == null) {
+			return null;
+		}
+		if (strings.length == 0) {
+			return "";
+		}
+		StringBuilder builder = new StringBuilder(strings[0]);
+		for (int i = 1, length = strings.length; i < length; i++) {
+			builder.append(separator);
+			builder.append(strings[i]);
+		}
+		return builder.toString();
+	}
+
+	public static String join(String separator, Integer[] integers) {
+		if (integers == null) {
+			return null;
+		}
+		if (integers.length == 0) {
+			return "";
+		}
+		StringBuilder builder = new StringBuilder(integers[0].toString());
+		for (int i = 1, length = integers.length; i < length; i++) {
+			builder.append(separator);
+			builder.append(integers[i]);
+		}
+		return builder.toString();
 	}
 
 	/**

@@ -2,8 +2,12 @@
 
 import java.io.File;
 import java.util.Collection;
+import java.util.List;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -298,5 +302,25 @@ public final class Utils {
 			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}
 	}
+	
+	/**
+	   * Checks whether the recording service is currently running.
+	   *
+	   * @param ctx the current context
+	   * @return true if the service is running, false otherwise
+	   */
+	  public static boolean isServiceRunning(Context ctx, Class<?> cls) {
+	    ActivityManager activityManager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
+	    List<RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
+
+	    for (RunningServiceInfo serviceInfo : services) {
+	      ComponentName componentName = serviceInfo.service;
+	      String serviceName = componentName.getClassName();
+	      if (serviceName.equals(cls.getName())) {
+	        return true;
+	      }
+	    }
+	    return false;
+	  }
 
 }
