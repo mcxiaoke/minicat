@@ -1,7 +1,10 @@
 package com.fanfou.app.service;
 
+import java.util.Calendar;
 import java.util.List;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,10 +13,10 @@ import android.os.PowerManager;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.App.ApnType;
 import com.fanfou.app.R;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
-import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.Status;
@@ -23,7 +26,6 @@ import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.FanFouProvider;
-import com.fanfou.app.App.ApnType;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.Utils;
@@ -37,6 +39,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.0 2011.11.18
  * @version 2.1 2011.11.23
  * @version 2.2 2011.11.25
+ * @version 2.5 2011.12.02
  * 
  */
 public class NotificationService extends BaseIntentService {
@@ -70,15 +73,54 @@ public class NotificationService extends BaseIntentService {
 		super.onDestroy();
 	}
 
+	public static void set(Context context, boolean set) {
+		if (set) {
+			set(context);
+		} else {
+			unset(context);
+		}
+	}
+
+	public static void set(Context context) {
+		int interval = OptionHelper.readInt(context,
+				R.string.option_notification_interval, 5);
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.MINUTE, interval);
+		AlarmManager am = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		am.set(AlarmManager.RTC, c.getTimeInMillis(), getPendingIntent(context));
+	}
+
+	public static void unset(Context context) {
+		AlarmManager am = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		am.cancel(getPendingIntent(context));
+	}
+	
+	public static void setIfNot(Context context){
+		boolean set=OptionHelper.readBoolean(context, R.string.option_set_notification, false);
+		if(!set){
+			OptionHelper.saveBoolean(context, R.string.option_set_notification, true);
+			set(context);
+		}
+	}
+
+	private final static PendingIntent getPendingIntent(Context context) {
+		Intent intent = new Intent(context, NotificationService.class);
+		PendingIntent pi = PendingIntent.getService(context, 0, intent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+		return pi;
+	}
+
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		if (App.DEBUG) {
 			Log.i(TAG, "onHandleIntent");
 		}
 
-		boolean flag = OptionHelper.readBoolean(this,
+		boolean need = OptionHelper.readBoolean(this,
 				R.string.option_notification, false);
-		if (!flag) {
+		if (!need) {
 			return;
 		}
 
@@ -112,6 +154,10 @@ public class NotificationService extends BaseIntentService {
 				handleHome(count);
 
 			}
+
+			if (need) {
+				set(this);
+			}
 		} catch (ApiException e) {
 			if (App.DEBUG) {
 				Log.e(TAG, "error code=" + e.statusCode + " error message="
@@ -123,8 +169,9 @@ public class NotificationService extends BaseIntentService {
 
 	private void handleDm(int count) throws ApiException {
 		Cursor mc = initCursor(DirectMessage.TYPE_IN);
-		List<DirectMessage> dms = App.api.directMessagesInbox(count, DEFAULT_PAGE,
-				Utils.getDmSinceId(mc), null, FanFouApiConfig.MODE_LITE);
+		List<DirectMessage> dms = App.api.directMessagesInbox(count,
+				DEFAULT_PAGE, Utils.getDmSinceId(mc), null,
+				FanFouApiConfig.MODE_LITE);
 		mc.close();
 		if (dms != null) {
 			int size = dms.size();
@@ -147,7 +194,7 @@ public class NotificationService extends BaseIntentService {
 						DirectMessageInfo.CONTENT_URI, null, false);
 			}
 		}
-		
+
 	}
 
 	private void handleMention(int count) throws ApiException {
@@ -176,7 +223,7 @@ public class NotificationService extends BaseIntentService {
 						false);
 			}
 		}
-		
+
 	}
 
 	private void handleHome(int count) throws ApiException {
@@ -205,7 +252,7 @@ public class NotificationService extends BaseIntentService {
 						false);
 			}
 		}
-		
+
 	}
 
 	private void notifyStatusOne(int type, Status status) {
@@ -229,12 +276,13 @@ public class NotificationService extends BaseIntentService {
 		String[] whereArgs = new String[] { String.valueOf(type) };
 		Uri uri = StatusInfo.CONTENT_URI;
 		String[] columns = StatusInfo.COLUMNS;
-		String orderBy=FanFouProvider.ORDERBY_DATE_DESC;
+		String orderBy = FanFouProvider.ORDERBY_DATE_DESC;
 		if (type == DirectMessage.TYPE_IN) {
 			uri = DirectMessageInfo.CONTENT_URI;
 			columns = DirectMessageInfo.COLUMNS;
 		}
-		return getContentResolver().query(uri, columns, where, whereArgs, orderBy);
+		return getContentResolver().query(uri, columns, where, whereArgs,
+				orderBy);
 	}
 
 	private void sendStatusNotification(int type, int count, Status status) {

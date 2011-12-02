@@ -18,6 +18,7 @@ import android.util.Log;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.preferences.SeekBarPreference;
 import com.fanfou.app.service.DownloadService;
+import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.update.VersionInfo;
 import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.IntentHelper;
@@ -31,6 +32,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.5 2011.11.10
  * @version 1.6 2011.11.16
  * @version 1.7 2011.11.25
+ * @version 2.0 2011.12.02
  * 
  */
 public class OptionsPage extends PreferenceActivity implements
@@ -158,18 +160,9 @@ public class OptionsPage extends PreferenceActivity implements
 		Preference p = findPreference(key);
 		if (key.equals(getString(R.string.option_notification))) {
 			CheckBoxPreference cp = (CheckBoxPreference) p;
-			if (cp.isChecked()) {
-				String s = sp.getString(
-						getString(R.string.option_notification_interval), "5");
-				int intervel = Integer.parseInt(s);
-				AlarmHelper.setNotificationTask(this, intervel);
-			} else {
-				AlarmHelper.removeNotificationTask(this);
-			}
+			NotificationService.set(this, cp.isChecked());
 		} else if (key.equals(getString(R.string.option_notification_interval))) {
-			String s = sp.getString(key, "5");
-			int intervel = Integer.parseInt(s);
-			AlarmHelper.setNotificationTask(this, intervel);
+			NotificationService.set(this);
 		} 
 		else if(key.equals(getString(R.string.option_autoupdate))){
 			CheckBoxPreference cp = (CheckBoxPreference) p;

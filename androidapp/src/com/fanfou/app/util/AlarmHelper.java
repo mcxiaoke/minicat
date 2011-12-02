@@ -29,6 +29,7 @@ import com.fanfou.app.service.NotificationService;
  * @version 1.1 2011.10.28
  * @version 2.0 2011.11.24
  * @version 2.5 2011.11.25
+ * @version 3.0 2011.12.02
  * 
  */
 public final class AlarmHelper {
@@ -40,7 +41,6 @@ public final class AlarmHelper {
 		}
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-		am.cancel(getNotificationPendingIntent(context));
 		am.cancel(getAutoCompletePendingIntent(context));
 		am.cancel(getAutoUpdatePendingIntent(context));
 	}
@@ -49,9 +49,9 @@ public final class AlarmHelper {
 		if (App.DEBUG) {
 			Log.d(TAG, "setAlarms");
 		}
-		AlarmHelper.checkAutoNotificationSet(context);
 		AlarmHelper.checkAutoCompleteSet(context);
 		AlarmHelper.checkAutoUpdateSet(context);
+		NotificationService.setIfNot(context);
 	}
 
 	@SuppressWarnings("unused")
@@ -130,52 +130,6 @@ public final class AlarmHelper {
 		pi.cancel();
 	}
 
-	public final static void checkAutoNotificationSet(Context context) {
-		boolean isSet = OptionHelper.readBoolean(context,
-				R.string.option_set_notification, false);
-		if (App.DEBUG) {
-			Log.d(TAG, "setAutoNotification flag=" + isSet);
-		}
-		if (!isSet) {
-			boolean notificationOn = OptionHelper.readBoolean(context,
-					R.string.option_notification, true);
-			if (notificationOn) {
-				AlarmHelper.setNotificationTask(context, 5);
-			} else {
-				AlarmHelper.removeNotificationTask(context);
-			}
-			OptionHelper.saveBoolean(context,
-					R.string.option_set_notification, true);
-
-		}
-	}
-
-	public final static void setNotificationTask(Context context, int interval) {
-		Calendar c = Calendar.getInstance();
-		c.add(Calendar.MINUTE, interval);
-		AlarmManager am = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
-		am.setInexactRepeating(AlarmManager.RTC, c.getTimeInMillis(),
-				interval * 60 * 1000, getNotificationPendingIntent(context));
-		if (App.DEBUG) {
-			Log.d(TAG,
-					"setNotificationTaskOn first time="
-							+ DateTimeHelper.formatDate(c.getTime()));
-		}
-
-	}
-
-	public final static void removeNotificationTask(Context context) {
-		AlarmManager am = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
-		PendingIntent pi = getNotificationPendingIntent(context);
-		am.cancel(pi);
-		pi.cancel();
-		if (App.DEBUG) {
-			Log.d(TAG, "setNotificationTaskOff");
-		}
-	}
-
 	public final static void checkAutoCompleteSet(Context context) {
 		boolean isSet = OptionHelper.readBoolean(context,
 				R.string.option_set_auto_complete, false);
@@ -234,14 +188,6 @@ public final class AlarmHelper {
 	private final static PendingIntent getAutoCompletePendingIntent(
 			Context context) {
 		Intent intent = new Intent(context, AutoCompleteService.class);
-		PendingIntent pi = PendingIntent.getService(context, 0, intent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
-		return pi;
-	}
-
-	private final static PendingIntent getNotificationPendingIntent(
-			Context context) {
-		Intent intent = new Intent(context, NotificationService.class);
 		PendingIntent pi = PendingIntent.getService(context, 0, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		return pi;
