@@ -82,8 +82,7 @@ public class NotificationService extends BaseIntentService {
 	}
 
 	public static void set(Context context) {
-		int interval = OptionHelper.readInt(context,
-				R.string.option_notification_interval, 5);
+		int interval = OptionHelper.parseInt(context, R.string.option_notification_interval, "5");
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MINUTE, interval);
 		AlarmManager am = (AlarmManager) context

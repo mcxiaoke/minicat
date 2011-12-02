@@ -41,17 +41,18 @@ public final class AlarmHelper {
 		}
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-		am.cancel(getAutoCompletePendingIntent(context));
 		am.cancel(getAutoUpdatePendingIntent(context));
+		NotificationService.unset(context);
+		AutoCompleteService.unset(context);
 	}
 	
 	public final static void setAlarms(Context context) {
 		if (App.DEBUG) {
 			Log.d(TAG, "setAlarms");
 		}
-		AlarmHelper.checkAutoCompleteSet(context);
 		AlarmHelper.checkAutoUpdateSet(context);
 		NotificationService.setIfNot(context);
+		AutoCompleteService.setIfNot(context);
 	}
 
 	@SuppressWarnings("unused")
@@ -130,64 +131,10 @@ public final class AlarmHelper {
 		pi.cancel();
 	}
 
-	public final static void checkAutoCompleteSet(Context context) {
-		boolean isSet = OptionHelper.readBoolean(context,
-				R.string.option_set_auto_complete, false);
-		if (App.DEBUG) {
-			Log.d(TAG, "checkAutoCompleteSet flag=" + isSet);
-		}
-		if (!isSet) {
-			AlarmHelper.setAutoCompleteTask(context);
-			OptionHelper.saveBoolean(context,
-					R.string.option_set_auto_complete, true);
-		}
-	}
-
-	public final static void startAutoComplete(Context context) {
-		Calendar c = Calendar.getInstance();
-		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
-				c.get(Calendar.DAY_OF_MONTH), 8, 0);
-		c.add(Calendar.MINUTE, 5);
-		AlarmManager am = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
-		am.set(AlarmManager.RTC, c.getTimeInMillis(),
-				getAutoCompletePendingIntent(context));
-		if (App.DEBUG) {
-			Log.d(TAG,
-					"startAutoComplete time="
-							+ DateTimeHelper.formatDate(c.getTime()));
-		}
-	}
-
-	public final static void setAutoCompleteTask(Context context) {
-		Calendar c = Calendar.getInstance();
-		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
-				c.get(Calendar.DAY_OF_MONTH), 8, 0);
-		c.add(Calendar.HOUR_OF_DAY, 1);
-		long interval = 3 * 24 * 3600 * 1000;
-		AlarmManager am = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
-		am.setInexactRepeating(AlarmManager.RTC, c.getTimeInMillis(), interval,
-				getAutoCompletePendingIntent(context));
-		if (App.DEBUG) {
-			Log.d(TAG,
-					"setAutoCompleteTask first time="
-							+ DateTimeHelper.formatDate(c.getTime()));
-		}
-	}
-
 	private final static PendingIntent getAutoUpdatePendingIntent(
 			Context context) {
 		Intent intent = new Intent(context, DownloadService.class);
 		intent.putExtra(Commons.EXTRA_TYPE, DownloadService.TYPE_CHECK);
-		PendingIntent pi = PendingIntent.getService(context, 0, intent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
-		return pi;
-	}
-
-	private final static PendingIntent getAutoCompletePendingIntent(
-			Context context) {
-		Intent intent = new Intent(context, AutoCompleteService.class);
 		PendingIntent pi = PendingIntent.getService(context, 0, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		return pi;

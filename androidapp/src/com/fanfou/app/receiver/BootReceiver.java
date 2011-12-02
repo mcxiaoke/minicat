@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.fanfou.app.R;
+import com.fanfou.app.service.AutoCompleteService;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -27,11 +28,14 @@ public class BootReceiver extends BroadcastReceiver {
 		if (notification) {
 			NotificationService.set(context);
 		}
+		
+		AutoCompleteService.set(context);
+		
+		
 		boolean update = OptionHelper.readBoolean(context,
 				R.string.option_autoupdate, false);
 		if (update) {
 			AlarmHelper.setAutoUpdateTask(context);
 		}
-		AlarmHelper.setAutoCompleteTask(context);
 	}
 }
