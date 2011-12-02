@@ -7,7 +7,7 @@ import com.fanfou.app.auth.OAuthService;
  * @version 1.0 2011.12.01
  *
  */
-public class OAuthNetClient extends NetManger {
+public class OAuthNetClient extends NetClient {
 	private OAuthService mOAuth;
 	
 	private OAuthNetClient(OAuthService oauth) {
@@ -26,7 +26,6 @@ public class OAuthNetClient extends NetManger {
 
 	@Override
 	protected void signRequest(final NetRequest cr) {
-		super.signRequest(cr);
 		if(mOAuth!=null){
 			mOAuth.signRequest(cr.request, cr.params);
 		}

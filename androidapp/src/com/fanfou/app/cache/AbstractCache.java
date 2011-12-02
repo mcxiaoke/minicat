@@ -6,6 +6,7 @@ import java.util.HashMap;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.09.29
+ * @version 1.1 2011.12.02
  * 
  * @param <T>
  */
@@ -87,6 +88,11 @@ public class AbstractCache<T> implements ICache<T> {
 	protected T read(String key) {
 		throw new NullPointerException(
 				"file cache must override read() method.");
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return memoryCache.isEmpty();
 	};
 
 }

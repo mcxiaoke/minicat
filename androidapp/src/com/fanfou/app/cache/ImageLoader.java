@@ -21,7 +21,8 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.fanfou.app.App;
-import com.fanfou.app.http.NetManger;
+import com.fanfou.app.App.ApnType;
+import com.fanfou.app.http.NetClient;
 import com.fanfou.app.util.ImageHelper;
 
 /**
@@ -32,6 +33,7 @@ import com.fanfou.app.util.ImageHelper;
  * @version 2.5 2011.11.23
  * @version 2.6 2011.11.28
  * @version 3.0 2011.11.29
+ * @version 4.0 2011.12.02
  * 
  */
 public class ImageLoader implements IImageLoader {
@@ -42,10 +44,9 @@ public class ImageLoader implements IImageLoader {
 	private static final String EXTRA_BITMAP = "bitmap";
 	private static final int MESSAGE_FINISH = 0;
 	private static final int MESSAGE_ERROR = 1;
-	private static final int CORE_POOL_SIZE = 3;
+	private static final int CORE_POOL_SIZE = 2;
 
-	private final ExecutorService mExecutorService = Executors
-			.newFixedThreadPool(CORE_POOL_SIZE);
+//	private final ExecutorService mExecutorService = Executors.newSingleThreadExecutor();
 	private final BlockingQueue<ImageLoaderTask> mTaskQueue = new PriorityBlockingQueue<ImageLoaderTask>(
 			20, new ImageLoaderTaskComparator());
 	// private final BlockingQueue<ImageLoaderTask> mTaskQueue = new
@@ -54,15 +55,21 @@ public class ImageLoader implements IImageLoader {
 	public final ImageCache mCache;
 	private final Handler mHandler;
 
-	private NetManger conn;
+	private NetClient mClient;
+
+	private Daemon mDaemon;
 
 	private static ImageLoader INSTANCE = null;
 
 	private ImageLoader(Context context) {
+		if(App.DEBUG){
+			Log.d(TAG, "ImageLoader new instance.");
+		}
 		this.mCache = ImageCache.getInstance(context);
-		this.mHandler = new ImageDownloadHandler();
-		conn = NetManger.newInstance();
-		new Daemon().start();
+		this.mClient = NetClient.newInstance();
+		this.mHandler = new ImageDownloadHandler(mCallbackMap);
+		this.mDaemon = new Daemon();
+		this.mDaemon.start();
 	}
 
 	public static ImageLoader getInstance(Context context) {
@@ -121,50 +128,47 @@ public class ImageLoader implements IImageLoader {
 	}
 
 	private final class Daemon extends Thread {
+
+		public Daemon() {
+			super("ImageLoader Daemon");
+			setPriority(MIN_PRIORITY);
+		}
+
+		@Override
+		public synchronized void start() {
+			super.start();
+			if(App.DEBUG){
+				Log.d(TAG, "Daemon Thread start().");
+			}
+		}
+
 		public void run() {
 			while (true) {
 				try {
+					if (App.DEBUG) {
+						Log.d(TAG,"Daemon Thread isRunning");
+					}
 					final ImageLoaderTask task = mTaskQueue.take();
-					if (App.DEBUG) {
-						Log.d(TAG, "mTaskQueue.take() task=" + task.toString());
-					}
-					if (!mCache.containsKey(task.url)) {
-						final Bitmap bitmap = downloadImage(conn, task.url);
-						mCache.put(task.url, bitmap);
-						final Message message = mHandler.obtainMessage();
-						if (bitmap != null) {
-							message.what = MESSAGE_FINISH;
-							message.getData().putParcelable(EXTRA_BITMAP,
-									bitmap);
-						} else {
-							message.what = MESSAGE_ERROR;
-						}
-						message.getData().putSerializable(EXTRA_TASK, task);
-						mHandler.sendMessage(message);
-					}
-				} catch (IOException e) {
-					if (App.DEBUG) {
-						Log.d(TAG,
-								"ImageLoaderTask.run() error:" + e.getMessage());
-					}
+						 handleDownloadTask(mCache, task, mClient, mHandler);
 				} catch (InterruptedException e) {
 					if (App.DEBUG) {
-						Log.d(TAG,
-								"ImageLoaderTask.run() error:" + e.getMessage());
+						Log.d(TAG, "Daemon Thread is interrupted:" + e.getMessage());
 					}
+//					break;
 				}
 			}
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private static final class Worker implements Runnable {
 		private final ImageLoaderTask task;
 		private final Handler handler;
 		private final ImageCache cache;
-		private final NetManger conn;
+		private final NetClient conn;
 
-		public Worker(ImageLoaderTask task, Handler handler, ImageCache cache,
-				NetManger conn) {
+		public Worker(final ImageLoaderTask task, final Handler handler,
+				final ImageCache cache, final NetClient conn) {
 			this.task = task;
 			this.handler = handler;
 			this.cache = cache;
@@ -172,33 +176,36 @@ public class ImageLoader implements IImageLoader {
 		}
 
 		public void run() {
-			while (true) {
-				try {
-					if (!cache.containsKey(task.url)) {
-						final Bitmap bitmap = downloadImage(conn, task.url);
-						cache.put(task.url, bitmap);
-						final Message message = handler.obtainMessage();
-						if (bitmap != null) {
-							message.what = MESSAGE_FINISH;
-							message.getData().putParcelable(EXTRA_BITMAP,
-									bitmap);
-						} else {
-							message.what = MESSAGE_ERROR;
-						}
-						message.getData().putSerializable(EXTRA_TASK, task);
-						handler.sendMessage(message);
-					}
-				} catch (IOException e) {
-					if (App.DEBUG) {
-						Log.d(TAG,
-								"ImageLoaderTask.run() error:" + e.getMessage());
-					}
-				}
-			}
+			handleDownloadTask(cache, task, conn, handler);
 		}
 	}
 
-	private static Bitmap downloadImage(NetManger conn, String url)
+	private static void handleDownloadTask(final ImageCache cache,
+			final ImageLoaderTask task, final NetClient conn,
+			final Handler handler) {
+		if (!cache.containsKey(task.url)) {
+			Bitmap bitmap = null;
+			try {
+				bitmap = downloadImage(conn, task.url);
+			} catch (IOException e) {
+				if (App.DEBUG) {
+					e.printStackTrace();
+				}
+			}
+			final Message message = handler.obtainMessage();
+			if (bitmap != null) {
+				cache.put(task.url, bitmap);
+				message.what = MESSAGE_FINISH;
+				message.getData().putParcelable(EXTRA_BITMAP, bitmap);
+			} else {
+				message.what = MESSAGE_ERROR;
+			}
+			message.getData().putSerializable(EXTRA_TASK, task);
+			handler.sendMessage(message);
+		}
+	}
+
+	private static Bitmap downloadImage(NetClient conn, String url)
 			throws IOException {
 		HttpResponse response = conn.get(url);
 		int statusCode = response.getStatusLine().getStatusCode();
@@ -210,14 +217,17 @@ public class ImageLoader implements IImageLoader {
 		if (statusCode == 200) {
 			bitmap = BitmapFactory.decodeStream(response.getEntity()
 					.getContent());
-			// if (bitmap != null) {
-			// cache.put(url, bitmap);
-			// }
 		}
 		return bitmap;
 	}
 
-	private class ImageDownloadHandler extends Handler {
+	private static class ImageDownloadHandler extends Handler {
+		private ConcurrentHashMap<ImageLoaderTask, ImageLoaderCallback> map;
+
+		public ImageDownloadHandler(
+				final ConcurrentHashMap<ImageLoaderTask, ImageLoaderCallback> map) {
+			this.map = map;
+		}
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -225,25 +235,23 @@ public class ImageLoader implements IImageLoader {
 			case MESSAGE_FINISH:
 				final ImageLoaderTask task = (ImageLoaderTask) msg.getData()
 						.getSerializable(EXTRA_TASK);
-				final ImageLoaderCallback callback = mCallbackMap.get(task);
+				final ImageLoaderCallback callback = map.get(task);
 				final Bitmap bitmap = (Bitmap) msg.getData().getParcelable(
 						EXTRA_BITMAP);
 				if (callback != null) {
 					callback.onFinish(task.url, bitmap);
 				}
-				mCallbackMap.remove(task);
+				map.remove(task);
 				break;
 			case MESSAGE_ERROR:
 				final ImageLoaderTask task2 = (ImageLoaderTask) msg.getData()
 						.getSerializable(EXTRA_TASK);
-				mCallbackMap.remove(task2);
+				map.remove(task2);
 				break;
 			default:
 				break;
 			}
-
 		}
-
 	}
 
 	private static class InternelCallback implements ImageLoaderCallback {
@@ -259,7 +267,7 @@ public class ImageLoader implements IImageLoader {
 				String tag = (String) imageView.getTag();
 				if (tag != null && tag.equals(url)) {
 					if (App.DEBUG) {
-						Log.d(TAG, "InternelCallback.onFinish() invalidate");
+						Log.d(TAG, "InternelCallback.onFinish() url=" + url);
 					}
 					imageView.setImageBitmap(bitmap);
 				}
@@ -325,10 +333,16 @@ public class ImageLoader implements IImageLoader {
 
 	@Override
 	public void shutdown() {
-		mExecutorService.shutdown();
 		mTaskQueue.clear();
 		mCallbackMap.clear();
 		mCache.clear();
+		if (App.DEBUG) {
+			Log.d(TAG, "shutdown()");
+			Log.d(TAG, "mTaskQueue.isEmpty = " + mTaskQueue.isEmpty());
+			Log.d(TAG, "mCallbackMap.isEmpty = " + mCallbackMap.isEmpty());
+			Log.d(TAG, "mCache.isEmpty = " + mCache.isEmpty());
+			Log.d(TAG, "mDaemon.isAlive = " + mDaemon.isAlive());
+		}
 	}
 
 	@Override

@@ -19,7 +19,7 @@ import org.apache.http.protocol.HTTP;
 import android.util.Log;
 
 import com.fanfou.app.App;
-import com.fanfou.app.http.NetRequest;
+import com.fanfou.app.http.NetHelper;
 import com.fanfou.app.http.Parameter;
 import com.fanfou.app.util.Base64;
 
@@ -27,6 +27,7 @@ import com.fanfou.app.util.Base64;
  * @author mcxiaoke
  * @version 1.0 2011.11.30
  * @version 2.0 2011.12.01
+ * @version 2.1 2011.12.02
  * 
  */
 public final class OAuthHelper {
@@ -70,7 +71,7 @@ public final class OAuthHelper {
 				oauthHeaderParams.size() + params.size());
 		signatureBaseParams.addAll(oauthHeaderParams);
 		if (method != HttpGet.METHOD_NAME && params != null
-				&& !NetRequest.containsFile(params)) {
+				&& !NetHelper.containsFile(params)) {
 			signatureBaseParams.addAll(params);
 		}
 		parseGetParams(url, signatureBaseParams);
@@ -303,7 +304,7 @@ public final class OAuthHelper {
 			String oauthSignature = OAuthHelper.encode(provider
 					.getConsumerSercret())
 					+ "&"
-					+ NetRequest.encode(token.getTokenSecret());
+					+ OAuthHelper.encode(token.getTokenSecret());
 			return new SecretKeySpec(oauthSignature.getBytes(),
 					OAuthHelper.HMAC_SHA1);
 		}

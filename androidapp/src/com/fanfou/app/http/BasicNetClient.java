@@ -3,10 +3,11 @@ package com.fanfou.app.http;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.12.01
+ * @version 1.1 2011.12.02
  * 
  *
  */
-public class BasicNetClient extends NetManger {
+public class BasicNetClient extends NetClient {
 	private String username;
 	private String password;
 	private String authorization;
@@ -31,7 +32,6 @@ public class BasicNetClient extends NetManger {
 
 	@Override
 	protected void signRequest(final NetRequest cr) {
-		super.signRequest(cr);
 		cr.request.addHeader("Authorization", authorization);
 		
 	}

@@ -42,6 +42,7 @@ import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.dialog.ConfirmDialog;
+import com.fanfou.app.http.NetClient;
 import com.fanfou.app.service.FetchService;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionBar;
@@ -626,8 +627,12 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	@Override
 	protected void onDestroy() {
-		ImageLoader.getInstance(this).shutdown();
 		super.onDestroy();
+		ImageLoader.getInstance(this).shutdown();
+		SoundManager.cleanup();
+		if(App.DEBUG){
+			log("onDestroy()");
+		}
 	}
 
 	@Override

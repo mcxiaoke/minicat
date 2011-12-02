@@ -1,29 +1,21 @@
 package com.fanfou.app.http;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.protocol.HTTP;
 
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.fanfou.app.App;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -34,6 +26,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.3 2011.11.22
  * @version 1.4 2011.11.23
  * @version 2.0 2011.12.01
+ * @version 2.1 2011.12.02
  * 
  */
 public final class NetRequest {
@@ -47,6 +40,10 @@ public final class NetRequest {
 	public final HttpRequestBase request;
 
 	private NetRequest(Builder builder) {
+		if (TextUtils.isEmpty(builder.url)) {
+			throw new IllegalArgumentException(
+					"NetRequest() request url must not be empty or null.");
+		}
 		this.post = builder.post;
 		this.headers = builder.headers;
 		this.params = builder.params;
@@ -54,10 +51,10 @@ public final class NetRequest {
 			this.url = builder.url;
 			this.request = new HttpPost(url);
 			if (!Utils.isEmpty(params)) {
-				if (containsFile(params)) {
-					entity = encodeMultipart(params);
+				if (NetHelper.containsFile(params)) {
+					entity = NetHelper.encodeMultipart(params);
 				} else {
-					entity = encodeForPost(params);
+					entity = NetHelper.encodeForPost(params);
 				}
 				((HttpPost) request).setEntity(entity);
 			} else {
@@ -68,13 +65,22 @@ public final class NetRequest {
 			if (Utils.isEmpty(params)) {
 				this.url = builder.url;
 			} else {
-				this.url = builder.url + "?" + encodeForGet(params);
+				this.url = builder.url + "?" + NetHelper.encodeForGet(params);
 				;
 			}
 			this.request = new HttpGet(url);
 		}
-		setHeaders(request, headers);
-		
+		NetHelper.setHeaders(request, headers);
+	}
+	
+	public HttpResponse send(NetClient nm) throws IOException{
+		return nm.exec(this);
+	}
+
+	public void cancel() {
+		if (request != null) {
+			request.abort();
+		}
 	}
 
 	public static Builder newBuilder() {
@@ -95,7 +101,7 @@ public final class NetRequest {
 
 		public Builder url(String url) {
 			if (TextUtils.isEmpty(url)) {
-				throw new NullPointerException(
+				throw new IllegalArgumentException(
 						"Builder.url() request url must not be empty or null.");
 			}
 			this.url = url;
@@ -241,171 +247,9 @@ public final class NetRequest {
 		}
 
 		public NetRequest build() {
-			return create();
-		}
-
-		private NetRequest create() {
 			return new NetRequest(this);
 		}
 
 	}
-
-	public static String encodeForGet(List<Parameter> params) {
-		if (Utils.isEmpty(params)) {
-			return "";
-		}
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < params.size(); i++) {
-			Parameter p = params.get(i);
-			if (p.isFile()) {
-				throw new IllegalArgumentException("GET参数不能包含文件");
-			}
-			if (i > 0) {
-				sb.append("&");
-			}
-			sb.append(encode(p.getName())).append("=")
-					.append(encode(p.getValue()));
-		}
-		
-		if(App.DEBUG){
-			Log.d(TAG, "encodeForGet 1 result="+sb.toString());
-		}
-		
-		return sb.toString();
-	}
-
-	public static MultipartEntity encodeMultipart(List<Parameter> params) {
-		if (Utils.isEmpty(params)) {
-			return null;
-		}
-		MultipartEntity entity = new MultipartEntity();
-		try {
-			for (Parameter param : params) {
-				if (param.isFile()) {
-					entity.addPart(param.getName(),
-							new FileBody(param.getFile()));
-				} else {
-					entity.addPart(
-							param.getName(),
-							new StringBody(param.getValue(), Charset
-									.forName(HTTP.UTF_8)));
-				}
-			}
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return entity;
-	}
-
-	public static HttpEntity encodeForPost(List<Parameter> params) {
-		if (Utils.isEmpty(params)) {
-			return null;
-		}
-		try {
-			return new UrlEncodedFormEntity(params, HTTP.UTF_8);
-		} catch (UnsupportedEncodingException e) {
-		}
-		return null;
-	}
-	
-	public static String encode(String input){
-		try {
-			return URLEncoder.encode(input, HTTP.UTF_8);
-		} catch (UnsupportedEncodingException e) {
-		}
-		return input;
-	}
-	
-	private final static void setHeaders(HttpRequestBase request,
-			List<Header> headers) {
-		if (headers != null) {
-			for (Header header : headers) {
-				request.addHeader(header);
-			}
-		}
-	}
-
-	public static boolean containsFile(Parameter[] params) {
-		boolean containsFile = false;
-		if (null == params) {
-			return false;
-		}
-		for (Parameter param : params) {
-			if (param.isFile()) {
-				containsFile = true;
-				break;
-			}
-		}
-		return containsFile;
-	}
-
-	public static boolean containsFile(List<Parameter> params) {
-		if (Utils.isEmpty(params)) {
-			return false;
-		}
-		boolean containsFile = false;
-		for (Parameter param : params) {
-			if (param.isFile()) {
-				containsFile = true;
-				break;
-			}
-		}
-		return containsFile;
-	}
-
-	public static Parameter[] getParameterArray(String name, String value) {
-		return new Parameter[] { new Parameter(name, value) };
-	}
-
-	public static Parameter[] getParameterArray(String name, int value) {
-		return getParameterArray(name, String.valueOf(value));
-	}
-
-	public static Parameter[] getParameterArray(String name1, String value1,
-			String name2, String value2) {
-		return new Parameter[] { new Parameter(name1, value1),
-				new Parameter(name2, value2) };
-	}
-
-	public static Parameter[] getParameterArray(String name1, int value1,
-			String name2, int value2) {
-		return getParameterArray(name1, String.valueOf(value1), name2,
-				String.valueOf(value2));
-	}
-	
-//	private static final String BOUNDARY="GFDGFD34gdft4tdgdg";
-//	private byte[] generatePhotoRequest(byte[] imagedata){
-//	    byte[] requestData = null;
-//	    ByteArrayOutputStream bufer = new ByteArrayOutputStream();
-//	    DataOutputStream dataOut = new DataOutputStream(bufer);
-//	    try{
-//	        dataOut.writeBytes("--");
-//	        dataOut.writeBytes(BOUNDARY);
-//	        dataOut.writeBytes("\r\n");
-//	        dataOut.writeBytes("Content-Disposition: form-data; name=\"auth\"; filename=\"auth\"\r\n");
-//	        dataOut.writeBytes("Content-Type: text/xml; charset=utf-8\r\n");
-//	        dataOut.writeBytes("\r\n");
-//	        dataOut.write(generateAuth());
-//	        dataOut.writeBytes("\r\n--" + BOUNDARY + "\r\n");
-//	        dataOut.writeBytes("Content-Disposition: form-data; name=\""+CIMAGE+"\"; filename=\""+CIMAGE+"\"\r\n");
-//	        dataOut.writeBytes("Content-Type: "+IMAGE_PNG+"\r\n");
-//	        dataOut.writeBytes("\r\n");
-//	        bufer.write(imagedata);
-//	        dataOut.writeBytes("\r\n");
-//	        dataOut.writeBytes("\r\n--" + BOUNDARY + "--\r\n");
-//
-//	        requestData = bufer.toByteArray();
-//	    } catch(IOException ex){
-//	        ex.printStackTrace();
-//	    } finally{
-//	        if(bufer!=null){
-//	            try {
-//	                bufer.close();
-//	            } catch (IOException e) {
-//	                // TODO Auto-generated catch block
-//	                e.printStackTrace();
-//	            }
-//	        }
-//	    }}
 
 }

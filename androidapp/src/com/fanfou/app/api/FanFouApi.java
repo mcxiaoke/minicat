@@ -18,7 +18,7 @@ import com.fanfou.app.auth.OAuthService;
 import com.fanfou.app.auth.OAuthToken;
 import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.http.NetManger;
+import com.fanfou.app.http.NetClient;
 import com.fanfou.app.http.NetRequest;
 import com.fanfou.app.http.NetResponse;
 import com.fanfou.app.http.OAuthNetClient;
@@ -43,11 +43,12 @@ import com.fanfou.app.util.StringHelper;
  * @version 4.4 2011.11.29
  * @version 4.5 2011.11.30
  * @version 4.6 2011.12.01
+ * @version 4.7 2011.12.02
  * 
  */
 public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	private static final String TAG = FanFouApi.class.getSimpleName();
-	private NetManger conn;
+	private OAuthNetClient conn;
 	private OAuthService oauth; 
 
 	/**
@@ -80,7 +81,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	 */
 	private NetResponse fetch(final NetRequest request) throws ApiException {
 		try {
-			HttpResponse response = conn.execWithOAuth(request);
+			HttpResponse response = request.send(conn);
 			int statusCode = response.getStatusLine().getStatusCode();
 			
 			if (App.DEBUG) {

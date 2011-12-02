@@ -158,4 +158,9 @@ final class ImageCache implements ICache<Bitmap> {
 		return ImageHelper.writeToFile(file, bitmap);
 	}
 
+	@Override
+	public boolean isEmpty() {
+		return memoryCache.isEmpty();
+	}
+
 }

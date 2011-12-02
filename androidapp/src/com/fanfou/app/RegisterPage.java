@@ -24,7 +24,7 @@ import com.fanfou.app.api.ResultInfo;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.AlertInfoDialog;
-import com.fanfou.app.http.NetManger;
+import com.fanfou.app.http.NetClient;
 import com.fanfou.app.http.Parameter;
 import com.fanfou.app.http.NetResponse;
 import com.fanfou.app.http.ResponseCode;
@@ -327,7 +327,7 @@ public class RegisterPage extends Activity implements OnClickListener {
 			// Log.d("RegisterTask", request.getURI().toString());
 
 			// HttpResponse response = client.execute(request);
-			HttpResponse response = NetManger.newInstance().post(
+			HttpResponse response = NetClient.newInstance().post(
 					FanFouApiConfig.URL_REGISTER, params);
 			NetResponse res = new NetResponse(response);
 			if (App.DEBUG) {
