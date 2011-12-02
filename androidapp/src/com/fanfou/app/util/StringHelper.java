@@ -34,6 +34,7 @@ import com.fanfou.app.App;
  * @author mcxiaoke
  * @version 1.0 2011.05.19
  * @version 1.1 2011.11.22
+ * @version 1.2 2011.12.02
  * 
  */
 public class StringHelper {
@@ -81,6 +82,19 @@ public class StringHelper {
             text = out.toString();
         }        
         return text;
+    }
+    
+    public static String bytesToHexString(byte[] bytes) {
+        // http://stackoverflow.com/questions/332079
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < bytes.length; i++) {
+            String hex = Integer.toHexString(0xFF & bytes[i]);
+            if (hex.length() == 1) {
+                sb.append('0');
+            }
+            sb.append(hex);
+        }
+        return sb.toString();
     }
 
 	public static String toString(List<String> array) {
