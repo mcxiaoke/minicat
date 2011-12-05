@@ -74,6 +74,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.7 2011.11.22
  * @version 4.8 2011.11.30
  * @version 4.9 2011.12.02
+ * @version 5.0 2011.12.05
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
@@ -515,10 +516,14 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			if (App.DEBUG) {
 				log("onBroadcastReceived ACTION_STATUS_SENT");
 			}
-			boolean needRefresh = OptionHelper.readBoolean(this,
-					R.string.option_refresh_after_send, false);
-			if (needRefresh && mCurrentPage == 0) {
-				onRefreshClick();
+			
+			if(mCurrentPage==0){
+				cursors[0].requery();
+				boolean needRefresh = OptionHelper.readBoolean(this,
+						R.string.option_refresh_after_send, false);
+				if(needRefresh){
+					onRefreshClick();
+				}
 			}
 
 		} else if (action.equals(Actions.ACTION_NOTIFICATION)) {

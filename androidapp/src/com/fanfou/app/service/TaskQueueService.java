@@ -18,7 +18,9 @@ import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Draft;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
+import com.fanfou.app.config.Actions;
 import com.fanfou.app.db.Contents.DraftInfo;
+import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.ImageHelper;
 import com.fanfou.app.util.OptionHelper;
 
@@ -30,6 +32,7 @@ import com.fanfou.app.util.OptionHelper;
  * @version 3.0 2011.11.18
  * @version 3.1 2011.11.22
  * @version 3.2 2011.11.28
+ * @version 3.3 2011.12.05
  * 
  */
 public class TaskQueueService extends WakefulIntentService {
@@ -83,6 +86,7 @@ public class TaskQueueService extends WakefulIntentService {
 				photo.delete();
 			}
 			if (result != null && !result.isNull()) {
+				IOHelper.storeStatus(this, result);
 				res = true;
 			}
 		} catch (ApiException e) {
@@ -114,6 +118,8 @@ public class TaskQueueService extends WakefulIntentService {
 				cursor.moveToNext();
 			}
 		}
+		
+		int nums=0;
 		while (running) {
 			final Draft d = queue.poll();
 			if (d != null) {
@@ -123,6 +129,7 @@ public class TaskQueueService extends WakefulIntentService {
 				}
 				if (doSend(d)) {
 					deleteDraft(d.id);
+					nums++;
 					if (App.DEBUG) {
 						log("Send draft successful: id=" + d.id + " text="
 								+ d.text + " filepath=" + d.filePath);
@@ -132,6 +139,15 @@ public class TaskQueueService extends WakefulIntentService {
 				running = false;
 			}
 		}
+		if(nums>0){
+			sendSuccessBroadcast();
+		}
+	}
+	
+	private void sendSuccessBroadcast() {
+		Intent intent = new Intent(Actions.ACTION_STATUS_SENT);
+		intent.setPackage(getPackageName());
+		sendOrderedBroadcast(intent, null);
 	}
 
 }

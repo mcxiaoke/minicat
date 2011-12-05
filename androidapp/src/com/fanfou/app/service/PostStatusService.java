@@ -22,6 +22,7 @@ import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.App.ApnType;
+import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.ImageHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
@@ -35,6 +36,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.2 2011.11.02
  * @version 3.0 2011.11.18
  * @version 3.1 2011.11.28
+ * @version 3.2 2011.12.05
  * 
  */
 public class PostStatusService extends WakefulIntentService {
@@ -124,6 +126,7 @@ public class PostStatusService extends WakefulIntentService {
 			}
 			nm.cancel(0);
 			if (result != null && !result.isNull()) {
+				IOHelper.storeStatus(this, result);
 				res = true;
 			}
 		} catch (ApiException e) {
