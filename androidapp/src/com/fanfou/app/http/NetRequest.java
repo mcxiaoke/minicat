@@ -70,10 +70,6 @@ public final class NetRequest {
 		NetHelper.setHeaders(request, headers);
 	}
 
-	public HttpResponse send(AbstractNetClient nm) throws IOException {
-		return nm.exec(this);
-	}
-
 	public void abort() {
 		if (request != null) {
 			request.abort();

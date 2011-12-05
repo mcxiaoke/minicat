@@ -215,11 +215,11 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	 */
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setLeftAction(new HomeLogoAction());
+//		mActionBar.setLeftAction(new HomeLogoAction());
 		mActionBar.setRightAction(new ActionBar.WriteAction(this, null));
 		mActionBar.setRefreshEnabled(this);
 		if (App.DEBUG) {
-			mActionBar.setTitle("内部开发版");
+			mActionBar.setTitle("[内部测试版]");
 		}
 	}
 

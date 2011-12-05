@@ -55,7 +55,7 @@ public class ImageLoader implements IImageLoader {
 	public final ImageCache mCache;
 	private final Handler mHandler;
 
-	private AbstractNetClient mClient;
+	private SimpleNetClient mClient;
 
 	private Daemon mDaemon;
 
@@ -168,10 +168,10 @@ public class ImageLoader implements IImageLoader {
 		private final ImageLoaderTask task;
 		private final Handler handler;
 		private final ImageCache cache;
-		private final AbstractNetClient conn;
+		private final SimpleNetClient conn;
 
 		public Worker(final ImageLoaderTask task, final Handler handler,
-				final ImageCache cache, final AbstractNetClient conn) {
+				final ImageCache cache, final SimpleNetClient conn) {
 			this.task = task;
 			this.handler = handler;
 			this.cache = cache;
@@ -185,7 +185,7 @@ public class ImageLoader implements IImageLoader {
 	}
 
 	private static void handleDownloadTask(final ImageCache cache,
-			final ImageLoaderTask task, final AbstractNetClient conn,
+			final ImageLoaderTask task, final SimpleNetClient conn,
 			final Handler handler) {
 		if (!cache.containsKey(task.url)) {
 			Bitmap bitmap = null;
@@ -209,7 +209,7 @@ public class ImageLoader implements IImageLoader {
 		}
 	}
 
-	private static Bitmap downloadImage(AbstractNetClient conn, String url)
+	private static Bitmap downloadImage(SimpleNetClient conn, String url)
 			throws IOException {
 		HttpResponse response = conn.get(url);
 		int statusCode = response.getStatusLine().getStatusCode();
