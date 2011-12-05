@@ -22,7 +22,6 @@ import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.service.FetchService;
@@ -94,7 +93,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected void initCursor() {
-		String where = UserInfo.TYPE + "=? AND " + UserInfo.OWNER_ID
+		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
 				+ "=?";
 		String[] whereArgs = new String[] { String.valueOf(type), userId };
 		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
@@ -166,9 +165,9 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		if (user != null) {
 			if (type == User.TYPE_FRIENDS) {
-				mActionBar.setTitle(user.screenName+"关注的人");
+				mActionBar.setTitle(user.screenName + "关注的人");
 			} else if (type == User.TYPE_FOLLOWERS) {
-				mActionBar.setTitle("关注"+user.screenName+"的人");
+				mActionBar.setTitle("关注" + user.screenName + "的人");
 			}
 		}
 	}
@@ -210,7 +209,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 		b.putString(Commons.EXTRA_ID, userId);
 		b.putInt(Commons.EXTRA_PAGE, page);
 		b.putInt(Commons.EXTRA_COUNT, FanFouApiConfig.MAX_USERS_COUNT);
-		ResultReceiver receiver=new MyResultHandler(mHandler,isGetMore);
+		ResultReceiver receiver = new MyResultHandler(mHandler, isGetMore);
 		FetchService.start(this, type, receiver, b);
 	}
 
@@ -226,11 +225,11 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	protected void onPause() {
 		super.onPause();
 	}
-	
+
 	@Override
-	protected void onStop(){
+	protected void onStop() {
 		super.onStop();
-		if(App.me.apnType!=ApnType.WIFI){
+		if (App.me.apnType != ApnType.WIFI) {
 			ImageLoader.getInstance(this).clearQueue();
 		}
 	}
@@ -272,10 +271,10 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 
 	protected class MyResultHandler extends ResultReceiver {
 		private boolean doGetMore;
-		
-		public MyResultHandler(Handler handler,boolean doGetMore) {
+
+		public MyResultHandler(Handler handler, boolean doGetMore) {
 			super(handler);
-			this.doGetMore=doGetMore;
+			this.doGetMore = doGetMore;
 		}
 
 		@Override
@@ -288,9 +287,9 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 					showContent();
 				}
 				int count = resultData.getInt(Commons.EXTRA_COUNT);
-				if(doGetMore){
+				if (doGetMore) {
 					mListView.onLoadMoreComplete();
-				}else{
+				} else {
 					mListView.onRefreshComplete();
 				}
 				updateUI();
@@ -302,9 +301,9 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 				if (!isInitialized) {
 					showContent();
 				}
-				if(doGetMore){
+				if (doGetMore) {
 					mListView.onLoadMoreComplete();
-				}else{
+				} else {
 					mListView.onRefreshComplete();
 				}
 				break;
@@ -312,7 +311,6 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 				break;
 			}
 		}
-
 
 	}
 

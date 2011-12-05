@@ -2,15 +2,12 @@ package com.fanfou.app.cache;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.db.FanFouProvider;
-import com.fanfou.app.db.Contents.StatusInfo;
-import com.fanfou.app.db.Contents.UserInfo;
 
 /**
  * @author mcxiaoke
@@ -94,8 +91,8 @@ public final class CacheManager {
 	}
 
 	public static User queryUser(Context context, final String id) {
-		final Cursor cursor = context.getContentResolver().query(FanFouProvider.buildUriWithUserId(id), null,
-				null, null, null);
+		final Cursor cursor = context.getContentResolver().query(
+				FanFouProvider.buildUriWithUserId(id), null, null, null, null);
 		if (cursor != null && cursor.moveToFirst()) {
 			if (App.DEBUG) {
 				Log.d(TAG, "queryUser cursor.size=" + cursor.getCount());
@@ -106,8 +103,9 @@ public final class CacheManager {
 	}
 
 	public static Status queryStatus(Context context, final String id) {
-		final Cursor cursor = context.getContentResolver().query(FanFouProvider.buildUriWithStatusId(id), null,
-				null, null, null);
+		final Cursor cursor = context.getContentResolver()
+				.query(FanFouProvider.buildUriWithStatusId(id), null, null,
+						null, null);
 		if (cursor != null && cursor.moveToFirst()) {
 			if (App.DEBUG) {
 				Log.d(TAG, "queryStatus cursor.size=" + cursor.getCount());

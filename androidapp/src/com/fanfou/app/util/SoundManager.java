@@ -12,13 +12,14 @@ import android.media.SoundPool;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.11.16
- * @see http://www.droidnova.com/creating-sound-effects-in-android-part-2,695.html
- *
+ * @see http
+ *      ://www.droidnova.com/creating-sound-effects-in-android-part-2,695.html
+ * 
  */
 public final class SoundManager {
 	private static SoundManager _instance;
 	private static SoundPool mSoundPool;
-	private static HashMap<Integer,Integer> mSoundPoolMap;
+	private static HashMap<Integer, Integer> mSoundPoolMap;
 	private static AudioManager mAudioManager;
 	private static Activity mContext;
 

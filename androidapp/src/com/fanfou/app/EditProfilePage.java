@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
-import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.ResultInfo;
 import com.fanfou.app.api.User;
@@ -66,7 +65,7 @@ public class EditProfilePage extends BaseActivity {
 	private EditText mDescriptionEdit;
 	private EditText mUrlEdit;
 	private EditText mLocationEdit;
-	
+
 	private TextView mNameLabel;
 	private TextView mDescriptionLabel;
 	private TextView mUrlLabel;
@@ -107,20 +106,20 @@ public class EditProfilePage extends BaseActivity {
 
 		mHeadView = (ImageView) findViewById(R.id.profile_image);
 		mHeadView.setOnClickListener(this);
-		
-		mHeadEdit=(ImageView) findViewById(R.id.profile_image_edit);
+
+		mHeadEdit = (ImageView) findViewById(R.id.profile_image_edit);
 		mHeadEdit.setOnClickListener(this);
 
 		mNameEdit = (EditText) findViewById(R.id.profile_name_edit);
 		mDescriptionEdit = (EditText) findViewById(R.id.profile_description_edit);
 		mUrlEdit = (EditText) findViewById(R.id.profile_url_edit);
 		mLocationEdit = (EditText) findViewById(R.id.profile_location_edit);
-		
-		mNameLabel=(TextView) findViewById(R.id.profile_name);
-		mDescriptionLabel=(TextView) findViewById(R.id.profile_description);
-		mUrlLabel=(TextView) findViewById(R.id.profile_url);
-		mLocationLabel=(TextView) findViewById(R.id.profile_location);
-		
+
+		mNameLabel = (TextView) findViewById(R.id.profile_name);
+		mDescriptionLabel = (TextView) findViewById(R.id.profile_description);
+		mUrlLabel = (TextView) findViewById(R.id.profile_url);
+		mLocationLabel = (TextView) findViewById(R.id.profile_location);
+
 		setFakedBold(mNameLabel);
 		setFakedBold(mDescriptionLabel);
 		setFakedBold(mUrlLabel);
@@ -129,9 +128,9 @@ public class EditProfilePage extends BaseActivity {
 		setTextChangeListener();
 
 	}
-	
-	private void setFakedBold(TextView tv){
-		TextPaint tp=tv.getPaint();
+
+	private void setFakedBold(TextView tv) {
+		TextPaint tp = tv.getPaint();
 		tp.setFakeBoldText(true);
 	}
 
@@ -192,7 +191,7 @@ public class EditProfilePage extends BaseActivity {
 		mHeadView.setImageResource(R.drawable.default_head);
 		mHeadView.invalidate();
 		mHeadView.setTag(user.profileImageUrl);
-		mLoader.set(user.profileImageUrl, mHeadView,R.drawable.default_head);
+		mLoader.set(user.profileImageUrl, mHeadView, R.drawable.default_head);
 
 	}
 
@@ -258,7 +257,7 @@ public class EditProfilePage extends BaseActivity {
 		if (map.size() > 0) {
 			new UpdateProfileTask(this).execute(map);
 		} else {
-//			Utils.notify(this, "无任何修改");
+			// Utils.notify(this, "无任何修改");
 			finish();
 		}
 
@@ -366,7 +365,8 @@ public class EditProfilePage extends BaseActivity {
 			String location = map.get("location");
 			String url = map.get("url");
 			try {
-				User user = api.updateProfile(description, name, location, url,FanFouApiConfig.MODE_LITE);
+				User user = api.updateProfile(description, name, location, url,
+						FanFouApiConfig.MODE_LITE);
 				if (isCancelled) {
 					return new ResultInfo(ResultInfo.CODE_CANCELED, "用户取消");
 				}
@@ -437,7 +437,7 @@ public class EditProfilePage extends BaseActivity {
 				mEditProfilePage.setResult(RESULT_OK, intent);
 				mEditProfilePage.user = user;
 				mEditProfilePage.updateProfileImagePreview();
-//				mEditProfilePage.finish();
+				// mEditProfilePage.finish();
 			}
 		}
 
@@ -473,7 +473,8 @@ public class EditProfilePage extends BaseActivity {
 			try {
 				File file = ImageHelper.prepareProfileImage(mEditProfilePage,
 						srcFile);
-				User user = api.updateProfileImage(file,FanFouApiConfig.MODE_LITE);
+				User user = api.updateProfileImage(file,
+						FanFouApiConfig.MODE_LITE);
 				if (isCancelled) {
 					return new ResultInfo(ResultInfo.CODE_CANCELED, "用户取消");
 				}

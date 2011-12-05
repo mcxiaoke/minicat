@@ -5,8 +5,6 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 
 import org.apache.http.HttpResponse;
@@ -21,8 +19,9 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.fanfou.app.App;
-import com.fanfou.app.App.ApnType;
-import com.fanfou.app.http.NetClient;
+import com.fanfou.app.http.AbstractNetClient;
+import com.fanfou.app.http.AbstractNetClient;
+import com.fanfou.app.http.SimpleNetClient;
 import com.fanfou.app.util.ImageHelper;
 
 /**
@@ -46,7 +45,8 @@ public class ImageLoader implements IImageLoader {
 	private static final int MESSAGE_ERROR = 1;
 	private static final int CORE_POOL_SIZE = 2;
 
-//	private final ExecutorService mExecutorService = Executors.newSingleThreadExecutor();
+	// private final ExecutorService mExecutorService =
+	// Executors.newSingleThreadExecutor();
 	private final BlockingQueue<ImageLoaderTask> mTaskQueue = new PriorityBlockingQueue<ImageLoaderTask>(
 			20, new ImageLoaderTaskComparator());
 	// private final BlockingQueue<ImageLoaderTask> mTaskQueue = new
@@ -55,18 +55,18 @@ public class ImageLoader implements IImageLoader {
 	public final ImageCache mCache;
 	private final Handler mHandler;
 
-	private NetClient mClient;
+	private AbstractNetClient mClient;
 
 	private Daemon mDaemon;
 
 	private static ImageLoader INSTANCE = null;
 
 	private ImageLoader(Context context) {
-		if(App.DEBUG){
+		if (App.DEBUG) {
 			Log.d(TAG, "ImageLoader new instance.");
 		}
 		this.mCache = ImageCache.getInstance(context);
-		this.mClient = NetClient.newInstance();
+		this.mClient = SimpleNetClient.newInstance();
 		this.mHandler = new ImageDownloadHandler(mCallbackMap);
 		this.mDaemon = new Daemon();
 		this.mDaemon.start();
@@ -137,24 +137,27 @@ public class ImageLoader implements IImageLoader {
 		@Override
 		public synchronized void start() {
 			super.start();
-			if(App.DEBUG){
+			if (App.DEBUG) {
 				Log.d(TAG, "Daemon Thread start().");
 			}
 		}
 
+		@Override
 		public void run() {
 			while (true) {
 				try {
 					if (App.DEBUG) {
-						Log.d(TAG,"Daemon Thread isRunning");
+						Log.d(TAG, "Daemon Thread isRunning");
 					}
 					final ImageLoaderTask task = mTaskQueue.take();
-						 handleDownloadTask(mCache, task, mClient, mHandler);
+					handleDownloadTask(mCache, task, mClient, mHandler);
 				} catch (InterruptedException e) {
 					if (App.DEBUG) {
-						Log.d(TAG, "Daemon Thread is interrupted:" + e.getMessage());
+						Log.d(TAG,
+								"Daemon Thread is interrupted:"
+										+ e.getMessage());
 					}
-//					break;
+					// break;
 				}
 			}
 		}
@@ -165,23 +168,24 @@ public class ImageLoader implements IImageLoader {
 		private final ImageLoaderTask task;
 		private final Handler handler;
 		private final ImageCache cache;
-		private final NetClient conn;
+		private final AbstractNetClient conn;
 
 		public Worker(final ImageLoaderTask task, final Handler handler,
-				final ImageCache cache, final NetClient conn) {
+				final ImageCache cache, final AbstractNetClient conn) {
 			this.task = task;
 			this.handler = handler;
 			this.cache = cache;
 			this.conn = conn;
 		}
 
+		@Override
 		public void run() {
 			handleDownloadTask(cache, task, conn, handler);
 		}
 	}
 
 	private static void handleDownloadTask(final ImageCache cache,
-			final ImageLoaderTask task, final NetClient conn,
+			final ImageLoaderTask task, final AbstractNetClient conn,
 			final Handler handler) {
 		if (!cache.containsKey(task.url)) {
 			Bitmap bitmap = null;
@@ -205,7 +209,7 @@ public class ImageLoader implements IImageLoader {
 		}
 	}
 
-	private static Bitmap downloadImage(NetClient conn, String url)
+	private static Bitmap downloadImage(AbstractNetClient conn, String url)
 			throws IOException {
 		HttpResponse response = conn.get(url);
 		int statusCode = response.getStatusLine().getStatusCode();

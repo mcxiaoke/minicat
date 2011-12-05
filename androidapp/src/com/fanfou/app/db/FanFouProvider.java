@@ -2,7 +2,6 @@ package com.fanfou.app.db;
 
 import android.app.SearchManager;
 import android.content.ContentProvider;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
@@ -204,8 +203,9 @@ public class FanFouProvider extends ContentProvider {
 	public Cursor query(Uri uri, String[] columns, String where,
 			String[] whereArgs, String orderBy) {
 		if (App.DEBUG) {
-			log("query() uri = " + uri + " where = (" + where + ") whereArgs = "
-					+ StringHelper.toString(whereArgs)+" orderBy = "+orderBy);
+			log("query() uri = " + uri + " where = (" + where
+					+ ") whereArgs = " + StringHelper.toString(whereArgs)
+					+ " orderBy = " + orderBy);
 		}
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
@@ -218,12 +218,12 @@ public class FanFouProvider extends ContentProvider {
 			break;
 		case USER_TYPE:
 			qb.setTables(UserInfo.TABLE_NAME);
-			qb.appendWhere(UserInfo.TYPE + "=");
+			qb.appendWhere(BasicColumns.TYPE + "=");
 			qb.appendWhere(uri.getPathSegments().get(2));
 			break;
 		case USER_ID:
 			qb.setTables(UserInfo.TABLE_NAME);
-			qb.appendWhere(UserInfo.ID + "=");
+			qb.appendWhere(BasicColumns.ID + "=");
 			qb.appendWhere("'" + uri.getPathSegments().get(2) + "'");
 			break;
 		case STATUSES_ALL:
@@ -252,18 +252,16 @@ public class FanFouProvider extends ContentProvider {
 			// (select max(created_at) from message m2 where type= 21 and
 			// m1.sender_id = m2.sender_id group by (sender_id))
 			// order by created_at desc;";
-			String typeStr = DirectMessageInfo.TYPE + "= "
-					+ DirectMessage.TYPE_IN;
-			String orderStr = " order by " + DirectMessageInfo.CREATED_AT
-					+ " desc";
-			String subQuery = "(select max(" + DirectMessageInfo.CREATED_AT
+			String typeStr = BasicColumns.TYPE + "= " + DirectMessage.TYPE_IN;
+			String orderStr = " order by " + BasicColumns.CREATED_AT + " desc";
+			String subQuery = "(select max(" + BasicColumns.CREATED_AT
 					+ ") from " + DirectMessageInfo.TABLE_NAME + " m2 where "
 					+ typeStr + " and m1.sender_id = m2.sender_id group by ("
 					+ DirectMessageInfo.SENDER_ID + "))";
 			String querySql = "select * from " + DirectMessageInfo.TABLE_NAME
 					+ " m1 where " + typeStr + " and "
-					+ DirectMessageInfo.CREATED_AT + " = " + subQuery
-					+ orderStr + " ;";
+					+ BasicColumns.CREATED_AT + " = " + subQuery + orderStr
+					+ " ;";
 			Cursor cursor = db.rawQuery(querySql, null);
 			if (cursor == null) {
 				if (App.DEBUG) {
@@ -379,7 +377,7 @@ public class FanFouProvider extends ContentProvider {
 		long rowId = db.insert(table, null, values);
 		if (App.DEBUG) {
 			log("insert() uri=" + uri.toString() + " id="
-					+ values.getAsString(BasicColumns.ID)+" rowId="+rowId);
+					+ values.getAsString(BasicColumns.ID) + " rowId=" + rowId);
 		}
 		getContext().getContentResolver().notifyChange(uri, null);
 		return uri;
@@ -445,8 +443,8 @@ public class FanFouProvider extends ContentProvider {
 		final SQLiteDatabase db = dbHelper.getWritableDatabase();
 		InsertHelper ih = new InsertHelper(db, UserInfo.TABLE_NAME);
 
-		int id = ih.getColumnIndex(UserInfo.ID);
-		int ownerId = ih.getColumnIndex(UserInfo.OWNER_ID);
+		int id = ih.getColumnIndex(BasicColumns.ID);
+		int ownerId = ih.getColumnIndex(BasicColumns.OWNER_ID);
 
 		int screenName = ih.getColumnIndex(UserInfo.SCREEN_NAME);
 		int location = ih.getColumnIndex(UserInfo.LOCATION);
@@ -464,17 +462,17 @@ public class FanFouProvider extends ContentProvider {
 		int statusesCount = ih.getColumnIndex(UserInfo.STATUSES_COUNT);
 
 		int following = ih.getColumnIndex(UserInfo.FOLLOWING);
-		int createdAt = ih.getColumnIndex(UserInfo.CREATED_AT);
+		int createdAt = ih.getColumnIndex(BasicColumns.CREATED_AT);
 
-		int type = ih.getColumnIndex(UserInfo.TYPE);
+		int type = ih.getColumnIndex(BasicColumns.TYPE);
 
 		try {
 			db.beginTransaction();
 			for (ContentValues value : values) {
 				ih.prepareForInsert();
 
-				ih.bind(id, value.getAsString(UserInfo.ID));
-				ih.bind(ownerId, value.getAsString(UserInfo.OWNER_ID));
+				ih.bind(id, value.getAsString(BasicColumns.ID));
+				ih.bind(ownerId, value.getAsString(BasicColumns.OWNER_ID));
 
 				ih.bind(screenName, value.getAsString(UserInfo.SCREEN_NAME));
 				ih.bind(location, value.getAsString(UserInfo.LOCATION));
@@ -497,8 +495,8 @@ public class FanFouProvider extends ContentProvider {
 						value.getAsInteger(UserInfo.STATUSES_COUNT));
 
 				ih.bind(following, value.getAsBoolean(UserInfo.FOLLOWING));
-				ih.bind(createdAt, value.getAsLong(UserInfo.CREATED_AT));
-				ih.bind(type, value.getAsInteger(UserInfo.TYPE));
+				ih.bind(createdAt, value.getAsLong(BasicColumns.CREATED_AT));
+				ih.bind(type, value.getAsInteger(BasicColumns.TYPE));
 
 				long result = ih.execute();
 				if (result > -1) {
@@ -525,9 +523,9 @@ public class FanFouProvider extends ContentProvider {
 		final SQLiteDatabase db = dbHelper.getWritableDatabase();
 		InsertHelper ih = new InsertHelper(db, StatusInfo.TABLE_NAME);
 
-		int id = ih.getColumnIndex(StatusInfo.ID);
-		int ownerId = ih.getColumnIndex(StatusInfo.OWNER_ID);
-		int createdAt = ih.getColumnIndex(StatusInfo.CREATED_AT);
+		int id = ih.getColumnIndex(BasicColumns.ID);
+		int ownerId = ih.getColumnIndex(BasicColumns.OWNER_ID);
+		int createdAt = ih.getColumnIndex(BasicColumns.CREATED_AT);
 
 		int text = ih.getColumnIndex(StatusInfo.TEXT);
 		int simpleText = ih.getColumnIndex(StatusInfo.SIMPLE_TEXT);
@@ -557,16 +555,16 @@ public class FanFouProvider extends ContentProvider {
 		int hasPhoto = ih.getColumnIndex(StatusInfo.HAS_PHOTO);
 		int special = ih.getColumnIndex(StatusInfo.SPECIAL);
 
-		int type = ih.getColumnIndex(StatusInfo.TYPE);
+		int type = ih.getColumnIndex(BasicColumns.TYPE);
 
 		try {
 			db.beginTransaction();
 			for (ContentValues value : values) {
 				ih.prepareForInsert();
 
-				ih.bind(id, value.getAsString(StatusInfo.ID));
-				ih.bind(ownerId, value.getAsString(StatusInfo.OWNER_ID));
-				ih.bind(createdAt, value.getAsLong(StatusInfo.CREATED_AT));
+				ih.bind(id, value.getAsString(BasicColumns.ID));
+				ih.bind(ownerId, value.getAsString(BasicColumns.OWNER_ID));
+				ih.bind(createdAt, value.getAsLong(BasicColumns.CREATED_AT));
 
 				ih.bind(text, value.getAsString(StatusInfo.TEXT));
 				ih.bind(simpleText, value.getAsString(StatusInfo.SIMPLE_TEXT));
@@ -601,7 +599,7 @@ public class FanFouProvider extends ContentProvider {
 				ih.bind(hasPhoto, value.getAsBoolean(StatusInfo.HAS_PHOTO));
 				ih.bind(special, value.getAsBoolean(StatusInfo.SPECIAL));
 
-				ih.bind(type, value.getAsInteger(StatusInfo.TYPE));
+				ih.bind(type, value.getAsInteger(BasicColumns.TYPE));
 
 				long result = ih.execute();
 				if (result > -1) {
@@ -637,11 +635,11 @@ public class FanFouProvider extends ContentProvider {
 			count = db.delete(UserInfo.TABLE_NAME, where, whereArgs);
 			break;
 		case USER_TYPE:
-			count = db.delete(UserInfo.TABLE_NAME, UserInfo.TYPE + "=?",
+			count = db.delete(UserInfo.TABLE_NAME, BasicColumns.TYPE + "=?",
 					new String[] { uri.getPathSegments().get(2) });
 		case USER_ID:
 			id = uri.getPathSegments().get(2);
-			count = db.delete(UserInfo.TABLE_NAME, UserInfo.ID + "=?",
+			count = db.delete(UserInfo.TABLE_NAME, BasicColumns.ID + "=?",
 					new String[] { id });
 			break;
 		case STATUSES_ALL:
@@ -661,20 +659,20 @@ public class FanFouProvider extends ContentProvider {
 			break;
 		case MESSAGE_ITEM:
 			id = uri.getPathSegments().get(2);
-			count = db.delete(DirectMessageInfo.TABLE_NAME,
-					DirectMessageInfo.ID + "=?", new String[] { id });
+			count = db.delete(DirectMessageInfo.TABLE_NAME, BasicColumns.ID
+					+ "=?", new String[] { id });
 			break;
 		case MESSAGE_ID:
 			_id = uri.getPathSegments().get(2);
-			count = db.delete(DirectMessageInfo.TABLE_NAME,
-					DirectMessageInfo._ID + "=?", new String[] { _id });
+			count = db.delete(DirectMessageInfo.TABLE_NAME, BaseColumns._ID
+					+ "=?", new String[] { _id });
 			break;
 		case DRAFT_ALL:
 			count = db.delete(DraftInfo.TABLE_NAME, where, whereArgs);
 			break;
 		case DRAFT_ID:
 			_id = uri.getPathSegments().get(1);
-			count = db.delete(DraftInfo.TABLE_NAME, DraftInfo._ID + "=?",
+			count = db.delete(DraftInfo.TABLE_NAME, BaseColumns._ID + "=?",
 					new String[] { _id });
 			break;
 		default:
@@ -741,14 +739,14 @@ public class FanFouProvider extends ContentProvider {
 	}
 
 	private int cleanUserTimeline() {
-		String where = StatusInfo.TYPE + "=?";
+		String where = BasicColumns.TYPE + "=?";
 		String[] whereArgs = new String[] { String.valueOf(Status.TYPE_USER), };
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		return db.delete(StatusInfo.TABLE_NAME, where, whereArgs);
 	}
 
 	private int cleanFavorites() {
-		String where = StatusInfo.TYPE + "=?";
+		String where = BasicColumns.TYPE + "=?";
 		String[] whereArgs = new String[] { String
 				.valueOf(Status.TYPE_FAVORITES), };
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -773,30 +771,30 @@ public class FanFouProvider extends ContentProvider {
 		//
 		//
 		// return db.delete(StatusInfo.TABLE_NAME, where, null);
-		String where = StatusInfo.TYPE + "=?";
+		String where = BasicColumns.TYPE + "=?";
 		String[] whereArgs = new String[] { String.valueOf(Status.TYPE_PUBLIC) };
 		return db.delete(StatusInfo.TABLE_NAME, where, whereArgs);
 	}
 
 	private int cleanOthersTimeline() {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		String where = StatusInfo.TYPE + "=?";
+		String where = BasicColumns.TYPE + "=?";
 		String[] whereArgs = new String[] { String.valueOf(Commons.TYPE_NONE) };
 		return db.delete(StatusInfo.TABLE_NAME, where, whereArgs);
 	}
 
 	private int cleanTimeline(String userId, String count) {
 
-		String where = " " + StatusInfo.CREATED_AT + " < " + " (SELECT "
-				+ StatusInfo.CREATED_AT + " FROM " + StatusInfo.TABLE_NAME;
+		String where = " " + BasicColumns.CREATED_AT + " < " + " (SELECT "
+				+ BasicColumns.CREATED_AT + " FROM " + StatusInfo.TABLE_NAME;
 
-		where += " WHERE " + StatusInfo.TYPE + " = " + Status.TYPE_USER;
+		where += " WHERE " + BasicColumns.TYPE + " = " + Status.TYPE_USER;
 		where += " AND " + StatusInfo.USER_ID + " = " + " '" + userId + "' ";
 
-		where += " ORDER BY " + StatusInfo.CREATED_AT + " DESC LIMIT 1 OFFSET "
-				+ count + " )";
+		where += " ORDER BY " + BasicColumns.CREATED_AT
+				+ " DESC LIMIT 1 OFFSET " + count + " )";
 
-		where += " AND " + StatusInfo.TYPE + " = " + Status.TYPE_USER + " ";
+		where += " AND " + BasicColumns.TYPE + " = " + Status.TYPE_USER + " ";
 		where += " AND " + StatusInfo.USER_ID + " = " + " '" + userId + "' ";
 
 		// log("cleanTimeline where: [" + where + "]");
@@ -807,18 +805,20 @@ public class FanFouProvider extends ContentProvider {
 
 	private int cleanFavorites(String ownerId) {
 
-		String where = " " + StatusInfo.CREATED_AT + " < " + " (SELECT "
-				+ StatusInfo.CREATED_AT + " FROM " + StatusInfo.TABLE_NAME;
+		String where = " " + BasicColumns.CREATED_AT + " < " + " (SELECT "
+				+ BasicColumns.CREATED_AT + " FROM " + StatusInfo.TABLE_NAME;
 
-		where += " WHERE " + StatusInfo.TYPE + " = " + Status.TYPE_FAVORITES;
-		where += " AND " + StatusInfo.OWNER_ID + " = " + " '" + ownerId + "' ";
+		where += " WHERE " + BasicColumns.TYPE + " = " + Status.TYPE_FAVORITES;
+		where += " AND " + BasicColumns.OWNER_ID + " = " + " '" + ownerId
+				+ "' ";
 
-		where += " ORDER BY " + StatusInfo.CREATED_AT
+		where += " ORDER BY " + BasicColumns.CREATED_AT
 				+ " DESC LIMIT 1 OFFSET 20 )";
 
-		where += " AND " + StatusInfo.TYPE + " = " + Status.TYPE_FAVORITES
+		where += " AND " + BasicColumns.TYPE + " = " + Status.TYPE_FAVORITES
 				+ " ";
-		where += " AND " + StatusInfo.OWNER_ID + " = " + " '" + ownerId + "' ";
+		where += " AND " + BasicColumns.OWNER_ID + " = " + " '" + ownerId
+				+ "' ";
 
 		// log("cleanFavorites where: [" + where + "]");
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -826,14 +826,14 @@ public class FanFouProvider extends ContentProvider {
 	}
 
 	private int cleanHome(String count) {
-		String where = " " + StatusInfo.CREATED_AT + " < " + " (SELECT "
-				+ StatusInfo.CREATED_AT + " FROM " + StatusInfo.TABLE_NAME;
+		String where = " " + BasicColumns.CREATED_AT + " < " + " (SELECT "
+				+ BasicColumns.CREATED_AT + " FROM " + StatusInfo.TABLE_NAME;
 
-		where += " WHERE " + StatusInfo.TYPE + " = " + Status.TYPE_HOME;
+		where += " WHERE " + BasicColumns.TYPE + " = " + Status.TYPE_HOME;
 
-		where += " ORDER BY " + StatusInfo.CREATED_AT + " DESC LIMIT 1 OFFSET "
-				+ count + " )";
-		where += " AND " + StatusInfo.TYPE + " = " + Status.TYPE_HOME + " ";
+		where += " ORDER BY " + BasicColumns.CREATED_AT
+				+ " DESC LIMIT 1 OFFSET " + count + " )";
+		where += " AND " + BasicColumns.TYPE + " = " + Status.TYPE_HOME + " ";
 
 		// log("cleanHome where: [" + where + "]");
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -843,15 +843,16 @@ public class FanFouProvider extends ContentProvider {
 
 	private int cleanMentions(String count) {
 
-		String where = " " + StatusInfo.CREATED_AT + " < " + " (SELECT "
-				+ StatusInfo.CREATED_AT + " FROM " + StatusInfo.TABLE_NAME;
+		String where = " " + BasicColumns.CREATED_AT + " < " + " (SELECT "
+				+ BasicColumns.CREATED_AT + " FROM " + StatusInfo.TABLE_NAME;
 
-		where += " WHERE " + StatusInfo.TYPE + " = " + Status.TYPE_MENTION;
+		where += " WHERE " + BasicColumns.TYPE + " = " + Status.TYPE_MENTION;
 
-		where += " ORDER BY " + StatusInfo.CREATED_AT + " DESC LIMIT 1 OFFSET "
-				+ count + " )";
+		where += " ORDER BY " + BasicColumns.CREATED_AT
+				+ " DESC LIMIT 1 OFFSET " + count + " )";
 
-		where += " AND " + StatusInfo.TYPE + " = " + Status.TYPE_MENTION + " ";
+		where += " AND " + BasicColumns.TYPE + " = " + Status.TYPE_MENTION
+				+ " ";
 
 		// log("cleanMentions where: [" + where + "]");
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -860,11 +861,11 @@ public class FanFouProvider extends ContentProvider {
 	}
 
 	private int cleanMessages(String count) {
-		String where = " " + DirectMessageInfo.CREATED_AT + " < " + " (SELECT "
-				+ DirectMessageInfo.CREATED_AT + " FROM "
+		String where = " " + BasicColumns.CREATED_AT + " < " + " (SELECT "
+				+ BasicColumns.CREATED_AT + " FROM "
 				+ DirectMessageInfo.TABLE_NAME;
 
-		where += " ORDER BY " + DirectMessageInfo.CREATED_AT
+		where += " ORDER BY " + BasicColumns.CREATED_AT
 				+ " DESC LIMIT 1 OFFSET " + count + " )";
 
 		// log("cleanMentions where: [" + where + "]");
@@ -874,7 +875,7 @@ public class FanFouProvider extends ContentProvider {
 
 	private int cleanUsers() {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		String where = UserInfo.OWNER_ID + " !=? ";
+		String where = BasicColumns.OWNER_ID + " !=? ";
 		String[] whereArgs = new String[] { String.valueOf(App.me.userId) };
 		return db.delete(UserInfo.TABLE_NAME, where, whereArgs);
 	}
@@ -891,12 +892,12 @@ public class FanFouProvider extends ContentProvider {
 		switch (sUriMatcher.match(uri)) {
 		case USER_ID:
 			id = uri.getPathSegments().get(2);
-			count = db.update(UserInfo.TABLE_NAME, values, UserInfo.ID + "=?",
-					new String[] { id });
+			count = db.update(UserInfo.TABLE_NAME, values, BasicColumns.ID
+					+ "=?", new String[] { id });
 			break;
 		case STATUS_ID:
 			id = uri.getPathSegments().get(2);
-			count = db.update(StatusInfo.TABLE_NAME, values, StatusInfo.ID
+			count = db.update(StatusInfo.TABLE_NAME, values, BasicColumns.ID
 					+ "=?", new String[] { id });
 			// count = db.update(StatusInfo.TABLE_NAME, values,
 			// StatusInfo.ID
@@ -908,7 +909,7 @@ public class FanFouProvider extends ContentProvider {
 		case MESSAGE_ITEM:
 			id = uri.getPathSegments().get(2);
 			count = db.update(DirectMessageInfo.TABLE_NAME, values,
-					DirectMessageInfo.ID + "=?", new String[] { id });
+					BasicColumns.ID + "=?", new String[] { id });
 			// count = db.update(
 			// DirectMessageInfo.TABLE_NAME,
 			// values,
@@ -922,7 +923,7 @@ public class FanFouProvider extends ContentProvider {
 			_id = uri.getPathSegments().get(2);
 			id = _id;
 			count = db.update(DirectMessageInfo.TABLE_NAME, values,
-					DirectMessageInfo._ID + "=?", new String[] { _id });
+					BaseColumns._ID + "=?", new String[] { _id });
 			break;
 		case USERS_ALL:
 			id = "";
@@ -930,9 +931,8 @@ public class FanFouProvider extends ContentProvider {
 			break;
 		case USER_TYPE:
 			id = "";
-			count = db.update(UserInfo.TABLE_NAME, values,
-					UserInfo.TYPE + "=?", new String[] { uri.getPathSegments()
-							.get(2) });
+			count = db.update(UserInfo.TABLE_NAME, values, BasicColumns.TYPE
+					+ "=?", new String[] { uri.getPathSegments().get(2) });
 			break;
 		case STATUSES_ALL:
 			id = "";

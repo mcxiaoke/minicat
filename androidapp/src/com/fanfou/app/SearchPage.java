@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.fanfou.app.adapter.SearchAdapter;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
-import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.Search;
 import com.fanfou.app.ui.ActionBar;
 

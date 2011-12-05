@@ -29,13 +29,12 @@ public interface ResponseCode {
 	public static final int ERROR_AUTH_EMPTY = -4;
 	public static final int ERROR_PARSE_FAILED = -5;
 	public static final int ERROR_DUPLICATE = -6;
-	
-	
-	//200 OK: 成功
-	//202 Accepted: 发送消息时未提供source的请求会暂时放到队列中，并返回状态码202
-	//400 Bad Request： 无效的请求，返回值中可以看到错误的详细信息
-	//401 Unauthorized： 用户需要登录或者认证失败
-	//403 Forbidden： 用户无访问权限，例如访问了设置隐私的用户、消息等
-	//404 Not Found： 请求的资源已经不存在，例如访问了不存在的用户、消息等
+
+	// 200 OK: 成功
+	// 202 Accepted: 发送消息时未提供source的请求会暂时放到队列中，并返回状态码202
+	// 400 Bad Request： 无效的请求，返回值中可以看到错误的详细信息
+	// 401 Unauthorized： 用户需要登录或者认证失败
+	// 403 Forbidden： 用户无访问权限，例如访问了设置隐私的用户、消息等
+	// 404 Not Found： 请求的资源已经不存在，例如访问了不存在的用户、消息等
 
 }

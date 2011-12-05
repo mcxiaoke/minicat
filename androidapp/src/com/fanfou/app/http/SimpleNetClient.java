@@ -3,11 +3,16 @@ package com.fanfou.app.http;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.12.02
- *
+ * 
  */
-public class SimpleNetClient extends NetClient {
+public class SimpleNetClient extends AbstractNetClient {
+	
+	
+	public static SimpleNetClient newInstance(){
+		return new SimpleNetClient();
+	}
 
-	public SimpleNetClient() {
+	SimpleNetClient() {
 		super();
 	}
 

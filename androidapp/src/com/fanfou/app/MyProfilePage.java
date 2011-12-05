@@ -1,7 +1,6 @@
 package com.fanfou.app;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -75,9 +74,9 @@ public class MyProfilePage extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		parseIntent();
-			initialize();
-			setLayout();
-			initCheckState();
+		initialize();
+		setLayout();
+		initCheckState();
 	}
 
 	private void parseIntent() {
@@ -108,7 +107,7 @@ public class MyProfilePage extends BaseActivity {
 
 		mDescription = (TextView) findViewById(R.id.user_description);
 
-//		mHeadView = (ViewGroup) findViewById(R.id.user_headview);
+		// mHeadView = (ViewGroup) findViewById(R.id.user_headview);
 
 		mStatusesView = (ViewGroup) findViewById(R.id.user_statuses_view);
 		mStatusesInfo = (TextView) findViewById(R.id.user_statuses);
@@ -119,7 +118,7 @@ public class MyProfilePage extends BaseActivity {
 		mFollowersView = (ViewGroup) findViewById(R.id.user_followers_view);
 		mFollowersInfo = (TextView) findViewById(R.id.user_followers);
 
-//		mHeadView.setOnClickListener(this);
+		// mHeadView.setOnClickListener(this);
 		mStatusesView.setOnClickListener(this);
 		mFavoritesView.setOnClickListener(this);
 		mFriendsView.setOnClickListener(this);
@@ -134,19 +133,19 @@ public class MyProfilePage extends BaseActivity {
 		mActionBar.setTitle("我的空间");
 		mActionBar.setRightAction(new EditProfileAction());
 	}
-	
-	private class EditProfileAction extends ActionBar.AbstractAction{
+
+	private class EditProfileAction extends ActionBar.AbstractAction {
 		public EditProfileAction() {
 			super(R.drawable.ic_sethead);
 		}
 
 		@Override
 		public void performAction(View view) {
-			if(user!=null){
+			if (user != null) {
 				goEditProfilePage(mContext, user);
 			}
 		}
-		
+
 	}
 
 	protected void initCheckState() {
@@ -165,7 +164,7 @@ public class MyProfilePage extends BaseActivity {
 	}
 
 	private void showContent() {
-		if(App.DEBUG){
+		if (App.DEBUG) {
 			log("showContent()");
 		}
 		isInitialized = true;
@@ -177,8 +176,8 @@ public class MyProfilePage extends BaseActivity {
 		if (user == null) {
 			return;
 		}
-		
-		if(App.DEBUG){
+
+		if (App.DEBUG) {
 			log("updateUI user.name=" + user.screenName);
 		}
 
@@ -191,7 +190,7 @@ public class MyProfilePage extends BaseActivity {
 		mFriendsInfo.setText("" + user.friendsCount);
 		mFollowersInfo.setText("" + user.followersCount);
 
-		if(App.DEBUG){
+		if (App.DEBUG) {
 			log("updateUI user.description=" + user.description);
 		}
 
@@ -293,7 +292,7 @@ public class MyProfilePage extends BaseActivity {
 			ActionManager.doShowFollowers(this, user);
 			break;
 		case R.id.user_headview:
-//			goEditProfilePage(this,user);
+			// goEditProfilePage(this,user);
 			break;
 		default:
 			break;
@@ -336,11 +335,12 @@ public class MyProfilePage extends BaseActivity {
 			switch (resultCode) {
 			case Commons.RESULT_CODE_FINISH:
 				if (resultData != null) {
-					if(App.DEBUG){
+					if (App.DEBUG) {
 						log("result ok, update ui");
 					}
 					int type = resultData.getInt(Commons.EXTRA_TYPE);
-					User result = (User) resultData.getParcelable(Commons.EXTRA_USER);
+					User result = (User) resultData
+							.getParcelable(Commons.EXTRA_USER);
 					if (result != null) {
 						App.me.updateUserInfo(result);
 						user = result;
@@ -367,7 +367,7 @@ public class MyProfilePage extends BaseActivity {
 				}
 				String msg = resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
 				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
-				if(App.DEBUG){
+				if (App.DEBUG) {
 					log("result error");
 				}
 				break;

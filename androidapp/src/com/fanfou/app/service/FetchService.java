@@ -18,7 +18,6 @@ import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
-import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.Status;
@@ -132,12 +131,12 @@ public class FetchService extends BaseIntentService {
 			if (users != null && users.size() > 0) {
 
 				int size = users.size();
-				if (App.DEBUG){
+				if (App.DEBUG) {
 					log("fetchFriendsOrFollowers size=" + size);
 				}
 				ContentResolver cr = getContentResolver();
 				if (page < 2 && ownerId != null) {
-					String where = UserInfo.OWNER_ID + " =? ";
+					String where = BasicColumns.OWNER_ID + " =? ";
 					String[] whereArgs = new String[] { ownerId };
 					int deletedNums = cr.delete(UserInfo.CONTENT_URI, where,
 							whereArgs);
@@ -205,8 +204,8 @@ public class FetchService extends BaseIntentService {
 			String inboxSinceId = Utils.getDmSinceId(ic);
 			String outboxSinceId = Utils.getDmSinceId(oc);
 			List<DirectMessage> messages = new ArrayList<DirectMessage>();
-			List<DirectMessage> in = api.directMessagesInbox(count, 0, inboxSinceId,
-					null, FanFouApiConfig.MODE_LITE);
+			List<DirectMessage> in = api.directMessagesInbox(count, 0,
+					inboxSinceId, null, FanFouApiConfig.MODE_LITE);
 			if (in != null && in.size() > 0) {
 				messages.addAll(in);
 			}
@@ -404,7 +403,7 @@ public class FetchService extends BaseIntentService {
 
 				// add at 2011.10.21
 				// if count=20, clear old statuses.
-				if (size >= count && page<=1 && maxId == null) {
+				if (size >= count && page <= 1 && maxId == null) {
 					String where = BasicColumns.TYPE + " = ?";
 					String[] whereArgs = new String[] { String.valueOf(mType) };
 					int delete = cr.delete(StatusInfo.CONTENT_URI, where,

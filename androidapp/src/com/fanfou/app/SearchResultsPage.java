@@ -19,7 +19,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import com.fanfou.app.App.ApnType;
 import com.fanfou.app.adapter.SearchResultsAdapter;
 import com.fanfou.app.api.ApiException;
-import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.ui.ActionBar;
@@ -99,7 +98,7 @@ public class SearchResultsPage extends BaseActivity implements
 		Intent intent = getIntent();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			keyword = intent.getStringExtra(SearchManager.QUERY);
-			if(App.DEBUG){
+			if (App.DEBUG) {
 				log("parseIntent() keyword=" + keyword);
 			}
 		} else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
@@ -140,7 +139,7 @@ public class SearchResultsPage extends BaseActivity implements
 
 	private void doSearch() {
 		if (keyword != null) {
-			if(App.DEBUG){
+			if (App.DEBUG) {
 				log("doSearch() keyword=" + keyword);
 			}
 			mActionBar.setTitle(keyword);
@@ -236,13 +235,14 @@ public class SearchResultsPage extends BaseActivity implements
 				return null;
 			}
 			List<com.fanfou.app.api.Status> result = null;
-			
+
 			int count = FanFouApiConfig.DEFAULT_TIMELINE_COUNT;
 			if (App.me.apnType == ApnType.WIFI) {
 				count = FanFouApiConfig.MAX_TIMELINE_COUNT;
 			}
 			try {
-				result = App.api.search(keyword, null,maxId,count, FanFouApiConfig.FORMAT_HTML,FanFouApiConfig.MODE_LITE);
+				result = App.api.search(keyword, null, maxId, count,
+						FanFouApiConfig.FORMAT_HTML, FanFouApiConfig.MODE_LITE);
 			} catch (ApiException e) {
 				if (App.DEBUG)
 					e.printStackTrace();

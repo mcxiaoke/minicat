@@ -1,6 +1,6 @@
 package com.fanfou.app.api;
+
 import android.content.ContentValues;
-import android.os.Bundle;
 import android.os.Parcelable;
 
 /**
@@ -13,11 +13,11 @@ import android.os.Parcelable;
 public interface Storable<T> extends Parcelable, Comparable<T> {
 
 	ContentValues toContentValues();
-	
+
 	void fromContentValues(ContentValues values);
-	
-//	Bundle toBundle();
-//	
-//	void fromBundle(Bundle bundle);
+
+	// Bundle toBundle();
+	//
+	// void fromBundle(Bundle bundle);
 
 }

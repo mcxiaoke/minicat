@@ -139,8 +139,8 @@ public final class Utils {
 		if (c != null && c.moveToFirst()) {
 			final DirectMessage first = DirectMessage.parse(c);
 			if (first != null) {
-				if(App.DEBUG){
-					Log.d(TAG, "getDmSinceId() id="+first.id); 
+				if (App.DEBUG) {
+					Log.d(TAG, "getDmSinceId() id=" + first.id);
 				}
 				return first.id;
 			}
@@ -152,8 +152,8 @@ public final class Utils {
 		if (c != null && c.moveToLast()) {
 			final DirectMessage last = DirectMessage.parse(c);
 			if (last != null) {
-				if(App.DEBUG){
-					Log.d(TAG, "getDmMaxId() id="+last.id); 
+				if (App.DEBUG) {
+					Log.d(TAG, "getDmMaxId() id=" + last.id);
 				}
 				return last.id;
 			}
@@ -171,8 +171,8 @@ public final class Utils {
 		if (c != null && c.moveToFirst()) {
 			Status first = Status.parse(c);
 			if (first != null) {
-				if(App.DEBUG){
-					Log.d(TAG, "getSinceId() id="+first.id); 
+				if (App.DEBUG) {
+					Log.d(TAG, "getSinceId() id=" + first.id);
 				}
 				return first.id;
 			}
@@ -190,8 +190,8 @@ public final class Utils {
 		if (c != null && c.moveToLast()) {
 			Status first = Status.parse(c);
 			if (first != null) {
-				if(App.DEBUG){
-					Log.d(TAG, "getMaxId() id="+first.id); 
+				if (App.DEBUG) {
+					Log.d(TAG, "getMaxId() id=" + first.id);
 				}
 				return first.id;
 			}
@@ -302,25 +302,28 @@ public final class Utils {
 			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}
 	}
-	
-	/**
-	   * Checks whether the recording service is currently running.
-	   *
-	   * @param ctx the current context
-	   * @return true if the service is running, false otherwise
-	   */
-	  public static boolean isServiceRunning(Context ctx, Class<?> cls) {
-	    ActivityManager activityManager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
-	    List<RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
 
-	    for (RunningServiceInfo serviceInfo : services) {
-	      ComponentName componentName = serviceInfo.service;
-	      String serviceName = componentName.getClassName();
-	      if (serviceName.equals(cls.getName())) {
-	        return true;
-	      }
-	    }
-	    return false;
-	  }
+	/**
+	 * Checks whether the recording service is currently running.
+	 * 
+	 * @param ctx
+	 *            the current context
+	 * @return true if the service is running, false otherwise
+	 */
+	public static boolean isServiceRunning(Context ctx, Class<?> cls) {
+		ActivityManager activityManager = (ActivityManager) ctx
+				.getSystemService(Context.ACTIVITY_SERVICE);
+		List<RunningServiceInfo> services = activityManager
+				.getRunningServices(Integer.MAX_VALUE);
+
+		for (RunningServiceInfo serviceInfo : services) {
+			ComponentName componentName = serviceInfo.service;
+			String serviceName = componentName.getClassName();
+			if (serviceName.equals(cls.getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 }

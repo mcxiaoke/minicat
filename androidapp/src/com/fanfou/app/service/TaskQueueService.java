@@ -16,7 +16,6 @@ import com.fanfou.app.WritePage;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Draft;
-import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.db.Contents.DraftInfo;

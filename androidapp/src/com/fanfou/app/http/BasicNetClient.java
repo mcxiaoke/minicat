@@ -5,9 +5,9 @@ package com.fanfou.app.http;
  * @version 1.0 2011.12.01
  * @version 1.1 2011.12.02
  * 
- *
+ * 
  */
-public class BasicNetClient extends NetClient {
+public class BasicNetClient extends AbstractNetClient {
 	private String username;
 	private String password;
 	private String authorization;
@@ -19,7 +19,7 @@ public class BasicNetClient extends NetClient {
 		createBasicAuthHeader();
 	}
 
-	public static final BasicNetClient newInstance(String username,
+	static final BasicNetClient newInstance(String username,
 			String password) {
 		return new BasicNetClient(username, password);
 	}
@@ -33,10 +33,12 @@ public class BasicNetClient extends NetClient {
 	@Override
 	protected void signRequest(final NetRequest cr) {
 		cr.request.addHeader("Authorization", authorization);
-		
+
 	}
-	
-	private void createBasicAuthHeader(){
-		authorization = "Basic "+ com.fanfou.app.util.Base64.encodeBytes((username + ":" + password).getBytes());
+
+	private void createBasicAuthHeader() {
+		authorization = "Basic "
+				+ com.fanfou.app.util.Base64
+						.encodeBytes((username + ":" + password).getBytes());
 	}
 }

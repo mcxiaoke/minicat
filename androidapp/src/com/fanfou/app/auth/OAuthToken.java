@@ -8,8 +8,8 @@ public class OAuthToken implements Serializable {
 	private static final long serialVersionUID = 3891133932519746686L;
 	private String token;
 	private String tokenSecret;
-	
-	public OAuthToken(){	
+
+	public OAuthToken() {
 	}
 
 	public OAuthToken(String token, String tokenSecret) {
@@ -17,15 +17,15 @@ public class OAuthToken implements Serializable {
 		this.tokenSecret = tokenSecret;
 	}
 
-	public static OAuthToken from(String response)  throws IOException{
+	public static OAuthToken from(String response) throws IOException {
 		return parse(response);
 	}
 
 	private static OAuthToken parse(String response) {
-		OAuthToken token=null;
+		OAuthToken token = null;
 		try {
 			String[] strs = response.split("&");
-			token=new OAuthToken();
+			token = new OAuthToken();
 			for (String str : strs) {
 				if (str.startsWith("oauth_token=")) {
 					token.setToken(str.split("=")[1].trim());
@@ -53,9 +53,9 @@ public class OAuthToken implements Serializable {
 	public void setTokenSecret(String tokenSecret) {
 		this.tokenSecret = tokenSecret;
 	}
-	
-	public boolean isNull(){
-		return token==null||tokenSecret==null;
+
+	public boolean isNull() {
+		return token == null || tokenSecret == null;
 	}
 
 	@Override

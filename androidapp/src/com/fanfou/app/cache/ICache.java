@@ -18,7 +18,7 @@ public interface ICache<T> {
 	boolean containsKey(String key);
 
 	void clear();
-	
+
 	boolean isEmpty();
 
 }

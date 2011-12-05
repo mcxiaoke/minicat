@@ -3,7 +3,6 @@ package com.fanfou.app;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.service.FetchService;
@@ -32,8 +31,8 @@ public class UserFavoritesPage extends BaseTimelineActivity {
 	protected void doRetrieveImpl(Bundle b, MyResultHandler receiver) {
 		if (receiver.doGetMore) {
 			page++;
-		}else{
-			page=1;
+		} else {
+			page = 1;
 		}
 		b.putInt(Commons.EXTRA_PAGE, page);
 		b.putInt(Commons.EXTRA_COUNT, FanFouApiConfig.DEFAULT_TIMELINE_COUNT);

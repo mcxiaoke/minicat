@@ -29,44 +29,44 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.11.22
- *
+ * 
  * @param <Param>
  */
 public abstract class SingleRunningTask<Param> {
-	
-	private static final String TAG=SingleRunningTask.class.getSimpleName();
-	
-    private final AtomicBoolean mIsRunning = new AtomicBoolean(false);
-    private final String mLogTaskName;
 
-    public SingleRunningTask(String logTaskName) {
-        mLogTaskName = logTaskName;
-    }
+	private static final String TAG = SingleRunningTask.class.getSimpleName();
 
-    /**
-     * Calls {@link #runInternal} if it's not running already.
-     */
-    public final void run(Param param) {
-        if (mIsRunning.compareAndSet(false, true)) {
-            Log.d(TAG,  mLogTaskName + ": start");
-            try {
-                runInternal(param);
-            } finally {
-                Log.d(TAG, mLogTaskName + ": done");
-                mIsRunning.set(false);
-            }
-        } else {
-            // Already running -- do nothing.
-            Log.d(TAG, mLogTaskName + ": already running");
-        }
-    }
+	private final AtomicBoolean mIsRunning = new AtomicBoolean(false);
+	private final String mLogTaskName;
 
-    /**
-     * The actual task must be implemented by subclasses.
-     */
-    protected abstract void runInternal(Param param);
+	public SingleRunningTask(String logTaskName) {
+		mLogTaskName = logTaskName;
+	}
 
-    /* package */ boolean isRunningForTest() {
-        return mIsRunning.get();
-    }
+	/**
+	 * Calls {@link #runInternal} if it's not running already.
+	 */
+	public final void run(Param param) {
+		if (mIsRunning.compareAndSet(false, true)) {
+			Log.d(TAG, mLogTaskName + ": start");
+			try {
+				runInternal(param);
+			} finally {
+				Log.d(TAG, mLogTaskName + ": done");
+				mIsRunning.set(false);
+			}
+		} else {
+			// Already running -- do nothing.
+			Log.d(TAG, mLogTaskName + ": already running");
+		}
+	}
+
+	/**
+	 * The actual task must be implemented by subclasses.
+	 */
+	protected abstract void runInternal(Param param);
+
+	/* package */boolean isRunningForTest() {
+		return mIsRunning.get();
+	}
 }

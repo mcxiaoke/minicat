@@ -2,11 +2,6 @@ package com.fanfou.app.ui;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.TreeSet;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -209,14 +204,15 @@ public final class ActionManager {
 				Log.d(TAG, "doReply: status is null.");
 			}
 			StringBuilder sb = new StringBuilder();
-			boolean replyToAll=OptionHelper.readBoolean(context, R.string.option_reply_to_all_default, true);
-			if(replyToAll){
-				ArrayList<String> names=StatusHelper.getMentions(status);
+			boolean replyToAll = OptionHelper.readBoolean(context,
+					R.string.option_reply_to_all_default, true);
+			if (replyToAll) {
+				ArrayList<String> names = StatusHelper.getMentions(status);
 				for (String name : names) {
 					sb.append("@").append(name).append(" ");
 				}
 			}
-			
+
 			Intent intent = new Intent(context, WritePage.class);
 			intent.putExtra(Commons.EXTRA_IN_REPLY_TO_ID, status.id);
 			intent.putExtra(Commons.EXTRA_TEXT, sb.toString());
@@ -234,13 +230,13 @@ public final class ActionManager {
 		intent.putExtra(Commons.EXTRA_TEXT, text);
 		context.startActivity(intent);
 	}
-	
+
 	public static void doWrite(Context context) {
 		Intent intent = new Intent(context, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
 		context.startActivity(intent);
 	}
-	
+
 	public static void doSend(Context context) {
 		Intent intent = new Intent(context, SendPage.class);
 		context.startActivity(intent);

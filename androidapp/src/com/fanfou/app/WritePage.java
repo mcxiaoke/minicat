@@ -7,21 +7,17 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Selection;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.fanfou.app.adapter.AtTokenizer;
@@ -30,7 +26,6 @@ import com.fanfou.app.api.Draft;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.dialog.ConfirmDialog;
@@ -204,14 +199,14 @@ public class WritePage extends BaseActivity {
 		if (count > 140) {
 			tWordsCount.setTextColor(getResources().getColorStateList(
 					R.color.write_count_alert_text));
-			tWordsCount.setText("字数超标：" + (count-140));
+			tWordsCount.setText("字数超标：" + (count - 140));
 		} else {
-			
+
 			tWordsCount.setTextColor(getResources().getColorStateList(
 					R.color.write_count_text));
 			tWordsCount.setText("剩余字数：" + (140 - count));
 		}
-		
+
 	}
 
 	private void parsePhoto(Uri uri) {
@@ -343,13 +338,16 @@ public class WritePage extends BaseActivity {
 
 		mAutoCompleteTextView.setTokenizer(new AtTokenizer());
 		mAutoCompleteTextView.setDropDownBackgroundResource(R.drawable.bg);
-		final String[] projection = new String[] {UserInfo._ID,UserInfo.ID,
-				 UserInfo.SCREEN_NAME,UserInfo.TYPE,UserInfo.OWNER_ID};
-		String where = UserInfo.OWNER_ID + " = '" + App.me.userId + "' AND "
-		+ UserInfo.TYPE + " = '" + User.TYPE_FRIENDS + "'";
+		final String[] projection = new String[] { UserInfo._ID,
+				UserInfo.ID, UserInfo.SCREEN_NAME, UserInfo.TYPE,
+				UserInfo.OWNER_ID };
+		String where = UserInfo.OWNER_ID + " = '" + App.me.userId
+				+ "' AND " + UserInfo.TYPE + " = '" + User.TYPE_FRIENDS
+				+ "'";
 		Cursor c = managedQuery(UserInfo.CONTENT_URI, projection, where, null,
 				null);
-		mAutoCompleteTextView.setAdapter(new AutoCompleteCursorAdapter(this, c));
+		mAutoCompleteTextView
+				.setAdapter(new AutoCompleteCursorAdapter(this, c));
 	}
 
 	private void setLayout() {
@@ -387,7 +385,8 @@ public class WritePage extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 		if (enableLocation) {
-			mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationMonitor);
+			mLocationManager.requestLocationUpdates(
+					LocationManager.NETWORK_PROVIDER, 0, 0, mLocationMonitor);
 		}
 	}
 
@@ -401,8 +400,8 @@ public class WritePage extends BaseActivity {
 
 	@Override
 	public void onBackPressed() {
-		if(App.DEBUG){
-			log("onBackPressed content="+content);
+		if (App.DEBUG) {
+			log("onBackPressed content=" + content);
 		}
 		if (StringHelper.isEmpty(content)) {
 			super.onBackPressed();
@@ -509,7 +508,8 @@ public class WritePage extends BaseActivity {
 			log("location enable status=" + enableLocation);
 		if (enableLocation) {
 			iLocationIcon.setImageResource(R.drawable.ic_bar_geoon);
-			mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationMonitor);
+			mLocationManager.requestLocationUpdates(
+					LocationManager.NETWORK_PROVIDER, 0, 0, mLocationMonitor);
 		} else {
 			iLocationIcon.setImageResource(R.drawable.ic_bar_geooff);
 			mLocationManager.removeUpdates(mLocationMonitor);
@@ -526,7 +526,7 @@ public class WritePage extends BaseActivity {
 		if (App.DEBUG) {
 			log("doAddUserNames: " + names);
 		}
-		if(!StringHelper.isEmpty(names)){
+		if (!StringHelper.isEmpty(names)) {
 			Editable editable = mAutoCompleteTextView.getEditableText();
 			editable.append(names);
 			Selection.setSelection(editable, editable.length());

@@ -64,7 +64,7 @@ public final class IOHelper {
 		if (Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
 			cacheDir = new File(Environment.getExternalStorageDirectory(),
-					"/Android/data/"+context.getPackageName()+"/photocache");
+					"/Android/data/" + context.getPackageName() + "/photocache");
 		} else {
 			cacheDir = context.getCacheDir();
 		}

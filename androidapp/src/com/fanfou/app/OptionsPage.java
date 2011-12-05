@@ -161,12 +161,10 @@ public class OptionsPage extends PreferenceActivity implements
 			NotificationService.set(this, cp.isChecked());
 		} else if (key.equals(getString(R.string.option_notification_interval))) {
 			NotificationService.set(this);
-		} 
-		else if(key.equals(getString(R.string.option_autoupdate))){
+		} else if (key.equals(getString(R.string.option_autoupdate))) {
 			CheckBoxPreference cp = (CheckBoxPreference) p;
 			DownloadService.set(this, cp.isChecked());
-		}
-		else if (key.equals(getString(R.string.option_page_scroll_endless))) {
+		} else if (key.equals(getString(R.string.option_page_scroll_endless))) {
 			needRestart = true;
 		} else if (key.equals(getString(R.string.option_force_portrait))) {
 			CheckBoxPreference cp = (CheckBoxPreference) p;
@@ -175,13 +173,13 @@ public class OptionsPage extends PreferenceActivity implements
 			} else {
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 			}
-		}else if (key.equals(getString(R.string.option_fontsize))) {
+		} else if (key.equals(getString(R.string.option_fontsize))) {
 			SeekBarPreference skp = (SeekBarPreference) p;
 			int value = sp.getInt(key,
 					getResources().getInteger(R.integer.defaultFontSize));
 			skp.setSummary(value + "号");
 			needRestart = true;
-		}else if (p instanceof ListPreference) {
+		} else if (p instanceof ListPreference) {
 			ListPreference lp = (ListPreference) p;
 			lp.setSummary(lp.getEntry());
 			setResult(RESULT_OK,

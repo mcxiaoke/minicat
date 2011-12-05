@@ -28,7 +28,7 @@ public abstract class WakefulIntentService extends IntentService {
 			mWakeLock.acquire();
 		} catch (SecurityException e) {
 		}
-		
+
 	}
 
 	@Override

@@ -16,7 +16,6 @@ package com.fanfou.app.util;
  * limitations under the License.
  */
 
-
 import android.os.SystemClock;
 import android.util.Log;
 
@@ -36,41 +35,40 @@ import android.util.Log;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.11.22
- *
+ * 
  */
 public class StopWatch {
-	private static final String TAG=StopWatch.class.getSimpleName();
-    private final String mName;
-    private final long mStart;
-    private long mLastSplit;
+	private static final String TAG = StopWatch.class.getSimpleName();
+	private final String mName;
+	private final long mStart;
+	private long mLastSplit;
 
-    private StopWatch(String name) {
-        mName = name;
-        mStart = getCurrentTime();
-        mLastSplit = mStart;
-        Log.d(TAG, "StopWatch(" + mName + ") start");
-    }
+	private StopWatch(String name) {
+		mName = name;
+		mStart = getCurrentTime();
+		mLastSplit = mStart;
+		Log.d(TAG, "StopWatch(" + mName + ") start");
+	}
 
-    public static StopWatch start(String name) {
-        return new StopWatch(name);
-    }
+	public static StopWatch start(String name) {
+		return new StopWatch(name);
+	}
 
-    public void split(String label) {
-        long now = getCurrentTime() ;
-        long elapse = now - mLastSplit;
-        Log.d(TAG, "StopWatch(" + mName + ") split(" + label + ") " + elapse);
-        mLastSplit = now;
-    }
+	public void split(String label) {
+		long now = getCurrentTime();
+		long elapse = now - mLastSplit;
+		Log.d(TAG, "StopWatch(" + mName + ") split(" + label + ") " + elapse);
+		mLastSplit = now;
+	}
 
-    public void stop() {
-        long now = getCurrentTime();
-        long elapse = now - mLastSplit;
-        Log.d(TAG, "StopWatch(" + mName + ") stop: "
-                + (now - mLastSplit)
-                + "  (total " + (now - mStart) + ")");
-    }
+	public void stop() {
+		long now = getCurrentTime();
+		long elapse = now - mLastSplit;
+		Log.d(TAG, "StopWatch(" + mName + ") stop: " + (now - mLastSplit)
+				+ "  (total " + (now - mStart) + ")");
+	}
 
-    private static long getCurrentTime() {
-        return SystemClock.elapsedRealtime();
-    }
+	private static long getCurrentTime() {
+		return SystemClock.elapsedRealtime();
+	}
 }

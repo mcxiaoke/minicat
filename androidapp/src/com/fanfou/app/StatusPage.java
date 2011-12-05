@@ -23,7 +23,6 @@ import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
-import com.fanfou.app.util.Compatibility;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -182,7 +181,7 @@ public class StatusPage extends BaseActivity {
 
 	private void updateUI() {
 		if (status != null) {
-			
+
 			mActionBar.setTitle(status.userScreenName);
 
 			boolean textMode = OptionHelper.readBoolean(this,
@@ -235,18 +234,18 @@ public class StatusPage extends BaseActivity {
 		iPhoto.setOnClickListener(this);
 
 		// 先检查本地是否有大图缓存
-		Bitmap bitmap = mLoader.load(s.photoLargeUrl,null);
+		Bitmap bitmap = mLoader.load(s.photoLargeUrl, null);
 		if (bitmap != null) {
-//			iPhoto.setTag(s.photoLargeUrl);
+			// iPhoto.setTag(s.photoLargeUrl);
 			iPhoto.setImageBitmap(bitmap);
 			mPhotoState = PHOTO_LARGE;
 			return;
 		}
 
 		// 再检查本地是否有缩略图缓存
-		bitmap = mLoader.load(s.photoImageUrl,null);
+		bitmap = mLoader.load(s.photoImageUrl, null);
 		if (bitmap != null) {
-//			iPhoto.setTag(s.photoImageUrl);
+			// iPhoto.setTag(s.photoImageUrl);
 			iPhoto.setImageBitmap(bitmap);
 			mPhotoState = PHOTO_SMALL;
 			return;
@@ -366,7 +365,7 @@ public class StatusPage extends BaseActivity {
 					iPhoto.setImageBitmap(bitmap);
 					iPhoto.postInvalidate();
 					mPhotoState = type;
-				}else{
+				} else {
 					iPhoto.setImageResource(R.drawable.photo_icon);
 					mPhotoState = PHOTO_ICON;
 				}

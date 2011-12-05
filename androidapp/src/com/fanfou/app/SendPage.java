@@ -17,14 +17,12 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
 
-import com.fanfou.app.adapter.AtTokenizer;
 import com.fanfou.app.adapter.AutoCompleteCursorAdapter;
 import com.fanfou.app.adapter.MessageCursorAdapter;
 import com.fanfou.app.adapter.SpaceTokenizer;
@@ -40,7 +38,6 @@ import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.ui.TextChangeListener;
-import com.fanfou.app.ui.widget.MyAutoCompleteTextView;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.StringHelper;
@@ -161,49 +158,51 @@ public class SendPage extends BaseActivity {
 			updateUI();
 		}
 	}
-	
-	private void setAutoComplete(){
+
+	private void setAutoComplete() {
 		mSelectAutoComplete = (MultiAutoCompleteTextView) findViewById(R.id.send_select_edit);
 		mSelectAutoComplete.setTokenizer(new SpaceTokenizer());
 		mSelectAutoComplete.setDropDownBackgroundResource(R.drawable.bg);
 		String[] projection = new String[] { BaseColumns._ID, BasicColumns.ID,
 				UserInfo.SCREEN_NAME };
 		String where = BasicColumns.TYPE + " = '" + User.TYPE_FRIENDS + "'";
-		Cursor c = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where, null,
-				null);
+		Cursor c = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
+				null, null);
 		mSelectAutoComplete.setAdapter(new AutoCompleteCursorAdapter(this, c));
 		mSelectAutoComplete.addTextChangedListener(new TextChangeListener() {
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				mUserId=null;
-				mUserName=null;
+				mUserId = null;
+				mUserName = null;
 			}
 		});
-		
-		mSelectAutoComplete.setOnItemClickListener(new ListView.OnItemClickListener() {
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				if(App.DEBUG){
-					Log.d(TAG, "onItemClick position="+position);
-				}
-				final Cursor c=(Cursor) parent.getItemAtPosition(position);
-				if(c!=null){
-					final User user=User.parse(c);
-					if(user!=null&&!user.isNull()){
-						mUserId=user.id;
-						mUserName=user.screenName;
-						if(App.DEBUG){
-							Log.d(TAG, "onItemClick user.id="+user.id);
+		mSelectAutoComplete
+				.setOnItemClickListener(new ListView.OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						if (App.DEBUG) {
+							Log.d(TAG, "onItemClick position=" + position);
+						}
+						final Cursor c = (Cursor) parent
+								.getItemAtPosition(position);
+						if (c != null) {
+							final User user = User.parse(c);
+							if (user != null && !user.isNull()) {
+								mUserId = user.id;
+								mUserName = user.screenName;
+								if (App.DEBUG) {
+									Log.d(TAG, "onItemClick user.id=" + user.id);
+								}
+							}
 						}
 					}
-				}
-			}
-		});
-		
+				});
+
 	}
 
 	private void setActionBar() {
@@ -266,22 +265,24 @@ public class SendPage extends BaseActivity {
 			break;
 		}
 	}
-	
-	private static final int REQUEST_CODE_SELECT_USER=2001;
-	private void startSelectUser(){
-		Intent intent=new Intent(this, UserSelectPage.class);
+
+	private static final int REQUEST_CODE_SELECT_USER = 2001;
+
+	private void startSelectUser() {
+		Intent intent = new Intent(this, UserSelectPage.class);
 		startActivityForResult(intent, REQUEST_CODE_SELECT_USER);
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if(resultCode==RESULT_OK){
-			if(requestCode==REQUEST_CODE_SELECT_USER){
-				mUserId=data.getStringExtra(Commons.EXTRA_USER_ID);
-				mUserName=data.getStringExtra(Commons.EXTRA_USER_NAME);
+		if (resultCode == RESULT_OK) {
+			if (requestCode == REQUEST_CODE_SELECT_USER) {
+				mUserId = data.getStringExtra(Commons.EXTRA_USER_ID);
+				mUserName = data.getStringExtra(Commons.EXTRA_USER_NAME);
 				mSelectAutoComplete.setText(mUserName);
-				Selection.setSelection(mSelectAutoComplete.getEditableText(), mSelectAutoComplete.getEditableText().length());
+				Selection.setSelection(mSelectAutoComplete.getEditableText(),
+						mSelectAutoComplete.getEditableText().length());
 			}
 		}
 	}
@@ -355,7 +356,7 @@ public class SendPage extends BaseActivity {
 			Utils.notify(this, "请选择收件人");
 			return;
 		}
-		
+
 		startSendService();
 		if (finish) {
 			Utils.hideKeyboard(this, mEditText);

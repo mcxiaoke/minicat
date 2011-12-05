@@ -120,7 +120,7 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 		mActionBar.setTitleClickListener(this);
 		mActionBar.setRightAction(this);
 		if (user != null) {
-			mActionBar.setTitle(user.screenName+"的"+getPageTitle());
+			mActionBar.setTitle(user.screenName + "的" + getPageTitle());
 		}
 	}
 

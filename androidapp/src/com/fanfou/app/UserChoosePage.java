@@ -14,6 +14,7 @@ import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,16 +28,13 @@ import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.service.AutoCompleteService;
 import com.fanfou.app.service.FetchService;
-import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
-import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.StringHelper;
 
 /**
@@ -101,7 +99,7 @@ public class UserChoosePage extends BaseActivity implements
 	}
 
 	protected void initCursorAdapter() {
-		String where = UserInfo.TYPE + "=? AND " + UserInfo.OWNER_ID
+		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
 				+ "=?";
 		String[] whereArgs = new String[] { String.valueOf(User.TYPE_FRIENDS),
 				App.me.userId };
@@ -163,7 +161,7 @@ public class UserChoosePage extends BaseActivity implements
 
 		mListView.setOnItemClickListener(this);
 		mListView.setItemsCanFocus(false);
-		mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 		mListView.setAdapter(mCursorAdapter);
 	}
 
@@ -222,7 +220,7 @@ public class UserChoosePage extends BaseActivity implements
 	}
 
 	protected void updateUI() {
-		if (App.DEBUG){
+		if (App.DEBUG) {
 			log("updateUI()");
 		}
 		if (mCursor != null) {
@@ -239,9 +237,9 @@ public class UserChoosePage extends BaseActivity implements
 	protected void onPause() {
 		super.onPause();
 	}
-	
+
 	@Override
-	protected void onStop(){
+	protected void onStop() {
 		super.onStop();
 		ImageLoader.getInstance(this).clearQueue();
 	}
@@ -370,7 +368,7 @@ public class UserChoosePage extends BaseActivity implements
 			}
 		}
 
-		if(App.DEBUG){
+		if (App.DEBUG) {
 			log(StringHelper.toString(mUserNames));
 		}
 

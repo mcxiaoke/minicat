@@ -19,7 +19,7 @@ import android.widget.RemoteViews;
  * @author mcxiaoke
  * @version 1.0 2011.11.08
  * @version 1.5 2011.11.11
- *
+ * 
  */
 public class WidgetTiny extends AppWidgetProvider {
 
@@ -85,7 +85,7 @@ public class WidgetTiny extends AppWidgetProvider {
 		Intent intent = new Intent(context, MyProfilePage.class);
 		return getPendingIntent(context, intent);
 	}
-	
+
 	private PendingIntent getSearchPendingIntent(Context context) {
 		Intent intent = new Intent(context, SearchPage.class);
 		return getPendingIntent(context, intent);

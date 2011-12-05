@@ -53,8 +53,8 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 	protected ResultReceiver mResultReceiver;
 
 	private boolean isInitialized = false;
-	
-	private int page=1;
+
+	private int page = 1;
 
 	private static final String tag = UserSelectPage.class.getSimpleName();
 
@@ -67,9 +67,9 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 		super.onCreate(savedInstanceState);
 		if (App.DEBUG)
 			log("onCreate");
-			initialize();
-			setLayout();
-			initCheckState();
+		initialize();
+		setLayout();
+		initCheckState();
 	}
 
 	protected void initialize() {
@@ -80,9 +80,10 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected void initCursor() {
-		String where = UserInfo.TYPE + "=? AND " + UserInfo.OWNER_ID
+		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
 				+ "=?";
-		String[] whereArgs = new String[] { String.valueOf(User.TYPE_FRIENDS), App.me.userId };
+		String[] whereArgs = new String[] { String.valueOf(User.TYPE_FRIENDS),
+				App.me.userId };
 		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				whereArgs, null);
 	}
@@ -187,9 +188,9 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 	protected void onPause() {
 		super.onPause();
 	}
-	
+
 	@Override
-	protected void onStop(){
+	protected void onStop() {
 		super.onStop();
 		ImageLoader.getInstance(this).clearQueue();
 	}
@@ -293,9 +294,9 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 			onSelected(u);
 		}
 	}
-	
-	private void onSelected(User user){
-		Intent intent=new Intent();
+
+	private void onSelected(User user) {
+		Intent intent = new Intent();
 		intent.putExtra(Commons.EXTRA_USER_ID, user.id);
 		intent.putExtra(Commons.EXTRA_USER_NAME, user.screenName);
 		setResult(RESULT_OK, intent);

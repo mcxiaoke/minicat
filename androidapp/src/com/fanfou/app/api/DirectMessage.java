@@ -240,10 +240,10 @@ public class DirectMessage implements Storable<DirectMessage> {
 	public ContentValues toContentValues() {
 		ContentValues cv = new ContentValues();
 
-		cv.put(DirectMessageInfo.ID, this.id);
-		cv.put(DirectMessageInfo.OWNER_ID, this.ownerId);
+		cv.put(BasicColumns.ID, this.id);
+		cv.put(BasicColumns.OWNER_ID, this.ownerId);
 		cv.put(DirectMessageInfo.TEXT, this.text);
-		cv.put(DirectMessageInfo.CREATED_AT, this.createdAt.getTime());
+		cv.put(BasicColumns.CREATED_AT, this.createdAt.getTime());
 
 		cv.put(DirectMessageInfo.SENDER_ID, this.senderId);
 		cv.put(DirectMessageInfo.RECIPIENT_ID, this.recipientId);
@@ -268,10 +268,10 @@ public class DirectMessage implements Storable<DirectMessage> {
 
 	@Override
 	public void fromContentValues(final ContentValues cv) {
-		id = cv.getAsString(DirectMessageInfo.ID);
-		ownerId = cv.getAsString(DirectMessageInfo.OWNER_ID);
+		id = cv.getAsString(BasicColumns.ID);
+		ownerId = cv.getAsString(BasicColumns.OWNER_ID);
 		text = cv.getAsString(DirectMessageInfo.TEXT);
-		createdAt = new Date(cv.getAsLong(DirectMessageInfo.CREATED_AT));
+		createdAt = new Date(cv.getAsLong(BasicColumns.CREATED_AT));
 
 		senderId = cv.getAsString(DirectMessageInfo.SENDER_ID);
 		senderScreenName = cv.getAsString(DirectMessageInfo.SENDER_SCREEN_NAME);
@@ -284,7 +284,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 		recipientProfileImageUrl = cv
 				.getAsString(DirectMessageInfo.RECIPIENT_PROFILE_IMAGE_URL);
 
-		type = cv.getAsInteger(DirectMessageInfo.TYPE);
+		type = cv.getAsInteger(BasicColumns.TYPE);
 		threadUserId = cv.getAsString(DirectMessageInfo.THREAD_USER_ID);
 		threadUserName = cv.getAsString(DirectMessageInfo.THREAD_USER_NAME);
 		isRead = cv.getAsBoolean(DirectMessageInfo.IS_READ);

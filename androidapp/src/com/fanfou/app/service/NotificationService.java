@@ -84,10 +84,11 @@ public class NotificationService extends BaseIntentService {
 	public static void set(Context context) {
 		boolean need = OptionHelper.readBoolean(context,
 				R.string.option_notification, true);
-		if(!need){
+		if (!need) {
 			return;
 		}
-		int interval = OptionHelper.parseInt(context, R.string.option_notification_interval, "5");
+		int interval = OptionHelper.parseInt(context,
+				R.string.option_notification_interval, "5");
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MINUTE, interval);
 		AlarmManager am = (AlarmManager) context
@@ -100,11 +101,13 @@ public class NotificationService extends BaseIntentService {
 				.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(getPendingIntent(context));
 	}
-	
-	public static void setIfNot(Context context){
-		boolean set=OptionHelper.readBoolean(context, R.string.option_set_notification, false);
-		if(!set){
-			OptionHelper.saveBoolean(context, R.string.option_set_notification, true);
+
+	public static void setIfNot(Context context) {
+		boolean set = OptionHelper.readBoolean(context,
+				R.string.option_set_notification, false);
+		if (!set) {
+			OptionHelper.saveBoolean(context, R.string.option_set_notification,
+					true);
 			set(context);
 		}
 	}
@@ -158,7 +161,7 @@ public class NotificationService extends BaseIntentService {
 				handleHome(count);
 
 			}
-				set(this);
+			set(this);
 		} catch (ApiException e) {
 			if (App.DEBUG) {
 				Log.e(TAG, "error code=" + e.statusCode + " error message="

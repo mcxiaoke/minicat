@@ -17,12 +17,12 @@ import android.widget.TextView;
  * @author mcxiaoke
  * @version 1.0 2011.11.09
  * @version 1.5 2011.11.10
- *
+ * 
  */
 public class SeekBarPreference extends DialogPreference implements
 		SeekBar.OnSeekBarChangeListener {
-	private static final String TAG=SeekBarPreference.class.getSimpleName();
-	
+	private static final String TAG = SeekBarPreference.class.getSimpleName();
+
 	private static final String androidns = "http://schemas.android.com/apk/res/android";
 
 	private SeekBar mSeekBar;
@@ -90,16 +90,17 @@ public class SeekBarPreference extends DialogPreference implements
 			mValue = shouldPersist() ? getPersistedInt(mDefault) : 0;
 		else
 			mValue = (Integer) defaultValue;
-		
-		setSummary(""+mValue+mSuffix);
+
+		setSummary("" + mValue + mSuffix);
 	}
 
 	@Override
 	protected void onDialogClosed(boolean positiveResult) {
-		if(App.DEBUG){
-			Log.d(TAG, "onDialogClosed positive="+positiveResult+" mvalue="+mValue);
+		if (App.DEBUG) {
+			Log.d(TAG, "onDialogClosed positive=" + positiveResult + " mvalue="
+					+ mValue);
 		}
-		if(positiveResult){
+		if (positiveResult) {
 			if (shouldPersist())
 				persistInt(mValue);
 			callChangeListener(new Integer(mValue));
@@ -109,14 +110,14 @@ public class SeekBarPreference extends DialogPreference implements
 	@Override
 	public void onProgressChanged(SeekBar seek, int value, boolean fromTouch) {
 		String t = String.valueOf(value);
-		mValue=value;
+		mValue = value;
 		mValueText.setText(mSuffix == null ? t : t.concat(mSuffix));
-		if(App.DEBUG){
-			Log.d(TAG, "onProgressChanged mvalue="+mValue);
+		if (App.DEBUG) {
+			Log.d(TAG, "onProgressChanged mvalue=" + mValue);
 		}
-//		if (shouldPersist())
-//			persistInt(value);
-//		callChangeListener(new Integer(value));
+		// if (shouldPersist())
+		// persistInt(value);
+		// callChangeListener(new Integer(value));
 	}
 
 	@Override

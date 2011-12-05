@@ -76,12 +76,11 @@ public final class OAuthHelper {
 		}
 		parseGetParams(url, signatureBaseParams);
 
-		
-		String encodedUrl = OAuthHelper.encodeForOAuth(OAuthHelper
-				.constructRequestURL(url),HTTP.UTF_8);
-		
-		String encodedParams = OAuthHelper.encodeForOAuth(OAuthHelper
-				.alignParams(signatureBaseParams),HTTP.UTF_8);
+		String encodedUrl = OAuthHelper.encodeForOAuth(
+				OAuthHelper.constructRequestURL(url), HTTP.UTF_8);
+
+		String encodedParams = OAuthHelper.encodeForOAuth(
+				OAuthHelper.alignParams(signatureBaseParams), HTTP.UTF_8);
 
 		StringBuffer base = new StringBuffer(method).append("&")
 				.append(encodedUrl).append("&").append(encodedParams);

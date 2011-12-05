@@ -33,37 +33,40 @@ import android.util.Log;
  */
 final class DumpSysCollector {
 
-    /**
-     * Collect results of the <code>dumpsys meminfo</code> command restricted to
-     * this application process.
-     * 
-     * @return The execution result.
-     */
-    public static String collectMemInfo() {
+	/**
+	 * Collect results of the <code>dumpsys meminfo</code> command restricted to
+	 * this application process.
+	 * 
+	 * @return The execution result.
+	 */
+	public static String collectMemInfo() {
 
-        final StringBuilder meminfo = new StringBuilder();
-        try {
-            final List<String> commandLine = new ArrayList<String>();
-            commandLine.add("dumpsys");
-            commandLine.add("meminfo");
-            commandLine.add(Integer.toString(android.os.Process.myPid()));
+		final StringBuilder meminfo = new StringBuilder();
+		try {
+			final List<String> commandLine = new ArrayList<String>();
+			commandLine.add("dumpsys");
+			commandLine.add("meminfo");
+			commandLine.add(Integer.toString(android.os.Process.myPid()));
 
-            final Process process = Runtime.getRuntime().exec(commandLine.toArray(new String[commandLine.size()]));
-            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			final Process process = Runtime.getRuntime().exec(
+					commandLine.toArray(new String[commandLine.size()]));
+			final BufferedReader bufferedReader = new BufferedReader(
+					new InputStreamReader(process.getInputStream()));
 
-            while (true) {
-                final String line = bufferedReader.readLine();
-                if (line == null) {
-                    break;
-                }
-                meminfo.append(line);
-                meminfo.append("\n");
-            }
+			while (true) {
+				final String line = bufferedReader.readLine();
+				if (line == null) {
+					break;
+				}
+				meminfo.append(line);
+				meminfo.append("\n");
+			}
 
-        } catch (IOException e) {
-            Log.e(ACRA.LOG_TAG, "DumpSysCollector.meminfo could not retrieve data", e);
-        }
+		} catch (IOException e) {
+			Log.e(ACRA.LOG_TAG,
+					"DumpSysCollector.meminfo could not retrieve data", e);
+		}
 
-        return meminfo.toString();
-    }
+		return meminfo.toString();
+	}
 }

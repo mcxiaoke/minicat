@@ -16,10 +16,8 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import com.fanfou.app.adapter.ConversationAdapter;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
-import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
-import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.UIManager;
@@ -153,8 +151,7 @@ public class ConversationPage extends BaseActivity implements
 		}
 	}
 
-	private class FetchTask
-			extends
+	private class FetchTask extends
 			AsyncTask<Void, com.fanfou.app.api.Status, List<Status>> {
 
 		@Override
@@ -163,7 +160,8 @@ public class ConversationPage extends BaseActivity implements
 			String id = mStatus.id;
 			try {
 				if (!StringHelper.isEmpty(id)) {
-					return api.contextTimeline(id,FanFouApiConfig.FORMAT_HTML,FanFouApiConfig.MODE_LITE);
+					return api.contextTimeline(id, FanFouApiConfig.FORMAT_HTML,
+							FanFouApiConfig.MODE_LITE);
 				}
 			} catch (ApiException e) {
 				if (App.DEBUG) {
@@ -175,7 +173,7 @@ public class ConversationPage extends BaseActivity implements
 
 		@Override
 		protected void onPostExecute(List<com.fanfou.app.api.Status> result) {
-			if(result!=null&&result.size()>0){
+			if (result != null && result.size() > 0) {
 				mThread.addAll(result);
 			}
 			mListView.onNoRefresh();

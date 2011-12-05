@@ -11,7 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.fanfou.app.App;
 import com.fanfou.app.api.ApiException;
 
 /**
@@ -40,6 +39,7 @@ public class NetResponse implements ResponseInterface, ResponseCode {
 		// this.headers = response.getAllHeaders();
 	}
 
+	@Override
 	public final String getContent() throws IOException {
 		if (content == null) {
 			content = EntityUtils.toString(entity, HTTP.UTF_8);

@@ -47,7 +47,7 @@ final class ImageCache implements ICache<Bitmap> {
 		}
 		return INSTANCE;
 	}
-	
+
 	public static ImageCache getInstance(Context context) {
 		if (INSTANCE == null) {
 			INSTANCE = new ImageCache(context);
@@ -87,7 +87,7 @@ final class ImageCache implements ICache<Bitmap> {
 
 	@Override
 	public boolean put(String key, Bitmap bitmap) {
-		if(key==null || bitmap==null){
+		if (key == null || bitmap == null) {
 			return false;
 		}
 		synchronized (this) {

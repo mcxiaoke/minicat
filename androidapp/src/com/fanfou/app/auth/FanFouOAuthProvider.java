@@ -3,7 +3,7 @@ package com.fanfou.app.auth;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.11.30
- *
+ * 
  */
 public class FanFouOAuthProvider implements OAuthProvider {
 

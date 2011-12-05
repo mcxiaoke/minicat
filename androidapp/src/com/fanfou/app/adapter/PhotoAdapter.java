@@ -2,7 +2,6 @@ package com.fanfou.app.adapter;
 
 import java.util.List;
 
-import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Photo;
 import com.fanfou.app.cache.IImageLoader;

@@ -17,17 +17,17 @@ public class ViewsAdapter extends PagerAdapter {
 
 	public ViewsAdapter(View[] views) {
 		this.mViews = views;
-		this.endless=false;
+		this.endless = false;
 	}
-	
+
 	public ViewsAdapter(View[] views, boolean endless) {
 		this.mViews = views;
-		this.endless=endless;
+		this.endless = endless;
 	}
 
 	@Override
 	public int getCount() {
-		return endless?Integer.MAX_VALUE:mViews.length;
+		return endless ? Integer.MAX_VALUE : mViews.length;
 	}
 
 	@Override

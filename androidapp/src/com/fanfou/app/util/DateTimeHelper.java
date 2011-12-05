@@ -85,10 +85,12 @@ public class DateTimeHelper {
 	 *            代表饭否日期和时间的字符串
 	 * @return 字符串解析为对应的Date对象
 	 */
-	private static final ParsePosition mPosition=new ParsePosition(0);
+	private static final ParsePosition mPosition = new ParsePosition(0);
+
 	public static Date fanfouStringToDate(String s) {
 		// Fanfou Date String example --> "Mon Dec 13 03:10:21 +0000 2010"
-//		final ParsePosition position = new ParsePosition(0);// 这个如果放在方法外面的话，必须每次重置Index为0
+		// final ParsePosition position = new ParsePosition(0);//
+		// 这个如果放在方法外面的话，必须每次重置Index为0
 		mPosition.setIndex(0);
 		return FANFOU_DATE_FORMAT.parse(s, mPosition);
 	}

@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 
-import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.cache.ImageLoader;
@@ -75,11 +74,12 @@ public abstract class BaseCursorAdapter extends CursorAdapter {
 		this.mCursor = c;
 		this.textMode = OptionHelper.readBoolean(mContext,
 				R.string.option_text_mode, false);
-//		this.fontSize = OptionHelper.parseInt(mContext,
-//				R.string.option_fontsize,
-//				mContext.getString(R.string.config_fontsize_default));
-		
-		this.fontSize=OptionHelper.readInt(context, R.string.option_fontsize, context.getResources().getInteger(R.integer.defaultFontSize));
+		// this.fontSize = OptionHelper.parseInt(mContext,
+		// R.string.option_fontsize,
+		// mContext.getString(R.string.config_fontsize_default));
+
+		this.fontSize = OptionHelper.readInt(context, R.string.option_fontsize,
+				context.getResources().getInteger(R.integer.defaultFontSize));
 	}
 
 	@Override

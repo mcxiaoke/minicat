@@ -50,7 +50,7 @@ public class PhotoViewPage extends BaseActivity {
 		if (App.DEBUG) {
 			Log.d(TAG, "mPhotoPath=" + mPhotoPath);
 		}
-		
+
 		try {
 			bitmap = ImageHelper.loadFromPath(this, mPhotoPath, 1200, 1200);
 			if (App.DEBUG) {
@@ -59,8 +59,8 @@ public class PhotoViewPage extends BaseActivity {
 			}
 			mImageView.setImageBitmapReset(bitmap, true);
 		} catch (IOException e) {
-			if(App.DEBUG){
-				Log.e(TAG, ""+e);
+			if (App.DEBUG) {
+				Log.e(TAG, "" + e);
 			}
 		}
 	}

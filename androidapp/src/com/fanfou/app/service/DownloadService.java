@@ -8,9 +8,6 @@ import java.util.Calendar;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
@@ -33,7 +30,9 @@ import com.fanfou.app.App;
 import com.fanfou.app.NewVersionPage;
 import com.fanfou.app.R;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.http.NetClient;
+import com.fanfou.app.http.AbstractNetClient;
+import com.fanfou.app.http.AbstractNetClient;
+import com.fanfou.app.http.OneTimeNetClient;
 import com.fanfou.app.update.VersionInfo;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -80,8 +79,7 @@ public class DownloadService extends BaseIntentService {
 		super.onCreate();
 		mHandler = new DownloadHandler();
 	}
-	
-	
+
 	public static void set(Context context, boolean set) {
 		if (set) {
 			set(context);
@@ -93,7 +91,7 @@ public class DownloadService extends BaseIntentService {
 	public static void set(Context context) {
 		boolean need = OptionHelper.readBoolean(context,
 				R.string.option_autoupdate, true);
-		if(!need){
+		if (!need) {
 			return;
 		}
 		Calendar c = Calendar.getInstance();
@@ -112,11 +110,13 @@ public class DownloadService extends BaseIntentService {
 				.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(getPendingIntent(context));
 	}
-	
-	public static void setIfNot(Context context){
-		boolean set=OptionHelper.readBoolean(context, R.string.option_set_auto_update, false);
-		if(!set){
-			OptionHelper.saveBoolean(context, R.string.option_set_auto_update, true);
+
+	public static void setIfNot(Context context) {
+		boolean set = OptionHelper.readBoolean(context,
+				R.string.option_set_auto_update, false);
+		if (!set) {
+			OptionHelper.saveBoolean(context, R.string.option_set_auto_update,
+					true);
 			set(context);
 		}
 	}
@@ -152,7 +152,7 @@ public class DownloadService extends BaseIntentService {
 			String url = intent.getStringExtra(Commons.EXTRA_DOWNLOAD_URL);
 			log("onHandleIntent TYPE_DOWNLOAD url=" + url);
 			if (!StringHelper.isEmpty(url)) {
-				
+
 				download(url);
 			}
 		}
@@ -175,16 +175,17 @@ public class DownloadService extends BaseIntentService {
 		showProgress();
 		InputStream is = null;
 		FileOutputStream fos = null;
+		OneTimeNetClient client=OneTimeNetClient.newInstance();
 		try {
-			HttpResponse response = NetClient.newInstance().get(url);
+			HttpResponse response = client.get(url);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == 200) {
 				HttpEntity entity = response.getEntity();
 				long total = entity.getContentLength();
 				long download = 0;
 				is = entity.getContent();
-				File file = new File(IOHelper.getDownloadDir(this),
-						"fanfou_"+System.currentTimeMillis()+".apk");
+				File file = new File(IOHelper.getDownloadDir(this), "fanfou_"
+						+ System.currentTimeMillis() + ".apk");
 				fos = new FileOutputStream(file);
 				// fos = openFileOutput("fanfou.apk", MODE_PRIVATE);
 				byte[] buffer = new byte[8196];
@@ -192,9 +193,9 @@ public class DownloadService extends BaseIntentService {
 				while ((read = is.read(buffer)) != -1) {
 					fos.write(buffer, 0, read);
 					download += read;
-					int progress = (int) (100.0 * download /total);
+					int progress = (int) (100.0 * download / total);
 					Message message = new Message();
-					message.what=MSG_PROGRESS;
+					message.what = MSG_PROGRESS;
 					message.arg1 = progress;
 					mHandler.sendMessage(message);
 					if (App.DEBUG) {
@@ -205,8 +206,9 @@ public class DownloadService extends BaseIntentService {
 				nm.cancel(NOTIFICATION_PROGRESS_ID);
 				if (download >= total) {
 					Message message = new Message();
-					message.what=MSG_SUCCESS;
-					message.getData().putString(Commons.EXTRA_FILENAME, file.getAbsolutePath());
+					message.what = MSG_SUCCESS;
+					message.getData().putString(Commons.EXTRA_FILENAME,
+							file.getAbsolutePath());
 					mHandler.sendMessage(message);
 				}
 			}
@@ -218,12 +220,13 @@ public class DownloadService extends BaseIntentService {
 		} finally {
 			IOHelper.forceClose(is);
 			IOHelper.forceClose(fos);
+			client.close();
 		}
 	}
 
 	private void showProgress() {
-		notification = new Notification(R.drawable.ic_notify_download, "正在下载饭否客户端",
-				System.currentTimeMillis());
+		notification = new Notification(R.drawable.ic_notify_download,
+				"正在下载饭否客户端", System.currentTimeMillis());
 		notification.flags |= Notification.FLAG_ONGOING_EVENT;
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		remoteViews = new RemoteViews(getPackageName(),
@@ -242,19 +245,21 @@ public class DownloadService extends BaseIntentService {
 	}
 
 	private static final int MSG_PROGRESS = 0;
-	private static final int MSG_SUCCESS=1;
+	private static final int MSG_SUCCESS = 1;
 
 	private class DownloadHandler extends Handler {
 		@Override
 		public void handleMessage(Message msg) {
-			if(App.DEBUG){
-				log("DownloadHandler msg.what="+msg.what+" arg1="+msg.arg1);
+			if (App.DEBUG) {
+				log("DownloadHandler msg.what=" + msg.what + " arg1="
+						+ msg.arg1);
 			}
 			if (MSG_PROGRESS == msg.what) {
 				int progress = msg.arg1;
 				updateProgress(progress);
-			}else if(MSG_SUCCESS==msg.what){
-				String filePath=msg.getData().getString(Commons.EXTRA_FILENAME);
+			} else if (MSG_SUCCESS == msg.what) {
+				String filePath = msg.getData().getString(
+						Commons.EXTRA_FILENAME);
 				Utils.open(DownloadService.this, filePath);
 			}
 		}
@@ -270,12 +275,11 @@ public class DownloadService extends BaseIntentService {
 					R.id.download_notification_progress, "setProgress",
 					progress);
 			nm.notify(NOTIFICATION_PROGRESS_ID, notification);
-		}else{
+		} else {
 			notification.contentView.setTextViewText(
 					R.id.download_notification_text, "饭否客户端下载完成");
 			notification.contentView.setInt(
-					R.id.download_notification_progress, "setProgress",
-					100);
+					R.id.download_notification_progress, "setProgress", 100);
 			nm.notify(NOTIFICATION_PROGRESS_ID, notification);
 		}
 	}
@@ -295,10 +299,9 @@ public class DownloadService extends BaseIntentService {
 	}
 
 	public static VersionInfo fetchVersionInfo() {
+		OneTimeNetClient client=OneTimeNetClient.newInstance();
 		try {
-			String url = APP_UPDATE_SITE;
-			HttpResponse response = NetClient.newInstance().get(
-					APP_UPDATE_SITE);
+			HttpResponse response = client.get(APP_UPDATE_SITE);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (App.DEBUG) {
 				Log.d(TAG, "statusCode=" + statusCode);
@@ -319,6 +322,8 @@ public class DownloadService extends BaseIntentService {
 			if (App.DEBUG) {
 				e.printStackTrace();
 			}
+		}finally{
+			client.close();
 		}
 		return null;
 	}

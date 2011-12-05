@@ -4,7 +4,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import android.app.AlarmManager;
-import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -14,14 +13,10 @@ import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
-import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.User;
-import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.db.Contents.UserInfo;
-import com.fanfou.app.util.AlarmHelper;
-import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.OptionHelper;
 
 /**
@@ -48,26 +43,27 @@ public class AutoCompleteService extends BaseIntentService {
 	public static void start(Context context) {
 		context.startService(new Intent(context, AutoCompleteService.class));
 	}
-	
+
 	public final static void startInMinutes(Context context) {
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MINUTE, 5);
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-		am.set(AlarmManager.RTC, c.getTimeInMillis(),
-				getPendingIntent(context));
-		}
+		am.set(AlarmManager.RTC, c.getTimeInMillis(), getPendingIntent(context));
+	}
 
 	public static void set(Context context) {
 		Calendar c = Calendar.getInstance();
 		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
 				c.get(Calendar.DAY_OF_MONTH), 20, 0);
 		c.add(Calendar.MINUTE, 30);
-		long interval=3*24*3600*1000;
+		long interval = 3 * 24 * 3600 * 1000;
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-//		am.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), getPendingIntent(context));
-		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), interval, getPendingIntent(context));
+		// am.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
+		// getPendingIntent(context));
+		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
+				interval, getPendingIntent(context));
 	}
 
 	public static void unset(Context context) {
@@ -75,11 +71,13 @@ public class AutoCompleteService extends BaseIntentService {
 				.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(getPendingIntent(context));
 	}
-	
-	public static void setIfNot(Context context){
-		boolean set=OptionHelper.readBoolean(context, R.string.option_set_auto_complete, false);
-		if(!set){
-			OptionHelper.saveBoolean(context, R.string.option_set_auto_complete, true);
+
+	public static void setIfNot(Context context) {
+		boolean set = OptionHelper.readBoolean(context,
+				R.string.option_set_auto_complete, false);
+		if (!set) {
+			OptionHelper.saveBoolean(context,
+					R.string.option_set_auto_complete, true);
 			set(context);
 		}
 	}
@@ -117,10 +115,12 @@ public class AutoCompleteService extends BaseIntentService {
 			if (result != null && result.size() > 0) {
 				int size = result.size();
 
-				int insertedNums=getContentResolver().bulkInsert(UserInfo.CONTENT_URI,
+				int insertedNums = getContentResolver().bulkInsert(
+						UserInfo.CONTENT_URI,
 						Parser.toContentValuesArray(result));
 				if (App.DEBUG) {
-					log("doFetchAutoComplete page==" + page + " size=" + size+" insert rows="+insertedNums);
+					log("doFetchAutoComplete page==" + page + " size=" + size
+							+ " insert rows=" + insertedNums);
 				}
 				if (size < FanFouApiConfig.MAX_USERS_COUNT || page >= 20) {
 					more = false;

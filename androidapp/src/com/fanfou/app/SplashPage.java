@@ -1,7 +1,6 @@
 package com.fanfou.app;
 
 import com.fanfou.app.util.IntentHelper;
-import com.fanfou.app.util.OptionHelper;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,24 +21,23 @@ public class SplashPage extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		PreferenceManager.setDefaultValues(this, R.xml.options, false);
-		
+
 		checkLogin();
-//		boolean showSplash = OptionHelper.readBoolean(this,
-//				R.string.option_show_splash_screen, true);
-//		if (showSplash) {
-//			setContentView(R.layout.splash);
-//			mHandler.postDelayed(new Runnable() {
-//
-//				@Override
-//				public void run() {
-//					checkLogin();
-//				}
-//			}, 2000);
-//		} else {
-//			checkLogin();
-//		}
-		
-		
+		// boolean showSplash = OptionHelper.readBoolean(this,
+		// R.string.option_show_splash_screen, true);
+		// if (showSplash) {
+		// setContentView(R.layout.splash);
+		// mHandler.postDelayed(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		// checkLogin();
+		// }
+		// }, 2000);
+		// } else {
+		// checkLogin();
+		// }
+
 	}
 
 	private void checkLogin() {

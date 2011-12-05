@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.cache.ImageLoader;
@@ -33,14 +32,15 @@ public abstract class BaseArrayAdapter<T> extends BaseAdapter {
 		super();
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);
-		this.mLoader =ImageLoader.getInstance(mContext);
+		this.mLoader = ImageLoader.getInstance(mContext);
 		this.textMode = OptionHelper.readBoolean(mContext,
 				R.string.option_text_mode, false);
-//		this.fontSize = OptionHelper.parseInt(mContext,
-//				R.string.option_fontsize,
-//				mContext.getString(R.string.config_fontsize_default));
-		
-		this.fontSize=OptionHelper.readInt(context, R.string.option_fontsize, context.getResources().getInteger(R.integer.defaultFontSize));
+		// this.fontSize = OptionHelper.parseInt(mContext,
+		// R.string.option_fontsize,
+		// mContext.getString(R.string.config_fontsize_default));
+
+		this.fontSize = OptionHelper.readInt(context, R.string.option_fontsize,
+				context.getResources().getInteger(R.integer.defaultFontSize));
 	}
 
 	protected void setHeadImage(ImageView headIcon) {

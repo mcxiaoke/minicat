@@ -13,7 +13,6 @@ import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
-import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
@@ -74,7 +73,8 @@ public class PostMessageService extends WakefulIntentService {
 		boolean res = true;
 		Api api = App.api;
 		try {
-			DirectMessage result = api.directMessagesCreate(userId, content, null,FanFouApiConfig.MODE_LITE);
+			DirectMessage result = api.directMessagesCreate(userId, content,
+					null, FanFouApiConfig.MODE_LITE);
 			nm.cancel(10);
 			if (result == null || result.isNull()) {
 				IOHelper.copyToClipBoard(this, content);

@@ -11,8 +11,7 @@ import org.apache.http.NameValuePair;
  * @version 2.0 2011.11.03
  * 
  */
-public final class Parameter implements NameValuePair,
-		Comparable<Parameter> {
+public final class Parameter implements NameValuePair, Comparable<Parameter> {
 	private String name = null;
 	private String value = null;
 	private File file = null;

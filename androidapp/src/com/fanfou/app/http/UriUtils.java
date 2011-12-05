@@ -25,16 +25,20 @@ import java.util.regex.Matcher;
 import junit.framework.Assert;
 
 /**
- * Utility class for URI encoding and decoding based on RFC 3986. Offers encoding methods for
- * the various URI components.
- *
- * <p>All {@code encode*(String, String} methods in this class operate in a similar way:
+ * Utility class for URI encoding and decoding based on RFC 3986. Offers
+ * encoding methods for the various URI components.
+ * 
+ * <p>
+ * All {@code encode*(String, String} methods in this class operate in a similar
+ * way:
  * <ul>
- * <li>Valid characters for the specific URI component as defined in RFC 3986 stay the same.
- * <li>All other characters are converted into one or more bytes in the given encoding scheme.
- * Each of the resulting bytes is written as a hexadecimal string in the "<code>%<i>xy</i></code>" format.
+ * <li>Valid characters for the specific URI component as defined in RFC 3986
+ * stay the same.
+ * <li>All other characters are converted into one or more bytes in the given
+ * encoding scheme. Each of the resulting bytes is written as a hexadecimal
+ * string in the "<code>%<i>xy</i></code>" format.
  * </ul>
- *
+ * 
  * @author Arjen Poutsma
  * @since 3.0
  * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986</a>
@@ -42,7 +46,7 @@ import junit.framework.Assert;
 public abstract class UriUtils {
 
 	private static final BitSet SCHEME;
-	
+
 	private static final BitSet USER_INFO;
 
 	private static final BitSet HOST;
@@ -74,12 +78,10 @@ public abstract class UriUtils {
 	private static final String FRAGMENT_PATTERN = "(.*)";
 
 	// Regex patterns that matches URIs. See RFC 3986, appendix B
-	private static final Pattern URI_PATTERN =
-			Pattern.compile("^(" + SCHEME_PATTERN + ")?" +
-					"(//(" + USERINFO_PATTERN + "@)?" + HOST_PATTERN + "(:" + PORT_PATTERN + ")?" + ")?"
-					+ PATH_PATTERN +
-					"(\\?" + QUERY_PATTERN + ")?" +
-					"(#" + FRAGMENT_PATTERN + ")?");
+	private static final Pattern URI_PATTERN = Pattern.compile("^("
+			+ SCHEME_PATTERN + ")?" + "(//(" + USERINFO_PATTERN + "@)?"
+			+ HOST_PATTERN + "(:" + PORT_PATTERN + ")?" + ")?" + PATH_PATTERN
+			+ "(\\?" + QUERY_PATTERN + ")?" + "(#" + FRAGMENT_PATTERN + ")?");
 
 	static {
 		// variable names refer to RFC 3986, appendix A
@@ -181,18 +183,24 @@ public abstract class UriUtils {
 	}
 
 	/**
-	 * Encodes the given source URI into an encoded String. All various URI components are encoded according to
-	 * their respective valid character sets.
-	 *
-	 * @param uri the URI to be encoded
-	 * @param encoding the character encoding to encode to
+	 * Encodes the given source URI into an encoded String. All various URI
+	 * components are encoded according to their respective valid character
+	 * sets.
+	 * 
+	 * @param uri
+	 *            the URI to be encoded
+	 * @param encoding
+	 *            the character encoding to encode to
 	 * @return the encoded URI
-	 * @throws IllegalArgumentException when the given uri parameter is not a valid URI
-	 * @throws UnsupportedEncodingException when the given encoding parameter is not supported
+	 * @throws IllegalArgumentException
+	 *             when the given uri parameter is not a valid URI
+	 * @throws UnsupportedEncodingException
+	 *             when the given encoding parameter is not supported
 	 */
-	public static String encodeUri(String uri, String encoding) throws UnsupportedEncodingException {
+	public static String encodeUri(String uri, String encoding)
+			throws UnsupportedEncodingException {
 		Assert.assertNotNull("'uri' must not be null", uri);
-		Assert.assertNotNull("'encoding' must not be empty",encoding);
+		Assert.assertNotNull("'encoding' must not be empty", encoding);
 		Matcher m = URI_PATTERN.matcher(uri);
 		if (m.matches()) {
 			String scheme = m.group(2);
@@ -240,132 +248,172 @@ public abstract class UriUtils {
 
 			return sb.toString();
 		} else {
-			throw new IllegalArgumentException("[" + uri + "] is not a valid URI");
+			throw new IllegalArgumentException("[" + uri
+					+ "] is not a valid URI");
 		}
 	}
 
 	/**
 	 * Encodes the given URI scheme.
-	 *
-	 * @param scheme the scheme to be encoded
-	 * @param encoding the character encoding to encode to
+	 * 
+	 * @param scheme
+	 *            the scheme to be encoded
+	 * @param encoding
+	 *            the character encoding to encode to
 	 * @return the encoded scheme
-	 * @throws UnsupportedEncodingException when the given encoding parameter is not supported
+	 * @throws UnsupportedEncodingException
+	 *             when the given encoding parameter is not supported
 	 */
-	public static String encodeScheme(String scheme, String encoding) throws UnsupportedEncodingException {
+	public static String encodeScheme(String scheme, String encoding)
+			throws UnsupportedEncodingException {
 		return encode(scheme, encoding, SCHEME);
 	}
 
 	/**
 	 * Encodes the given URI user info.
-	 *
-	 * @param userInfo the user info to be encoded
-	 * @param encoding the character encoding to encode to
+	 * 
+	 * @param userInfo
+	 *            the user info to be encoded
+	 * @param encoding
+	 *            the character encoding to encode to
 	 * @return the encoded user info
-	 * @throws UnsupportedEncodingException when the given encoding parameter is not supported
+	 * @throws UnsupportedEncodingException
+	 *             when the given encoding parameter is not supported
 	 */
-	public static String encodeUserInfo(String userInfo, String encoding) throws UnsupportedEncodingException {
+	public static String encodeUserInfo(String userInfo, String encoding)
+			throws UnsupportedEncodingException {
 		return encode(userInfo, encoding, USER_INFO);
 	}
 
 	/**
 	 * Encodes the given URI host.
-	 *
-	 * @param host the host to be encoded
-	 * @param encoding the character encoding to encode to
+	 * 
+	 * @param host
+	 *            the host to be encoded
+	 * @param encoding
+	 *            the character encoding to encode to
 	 * @return the encoded host
-	 * @throws UnsupportedEncodingException when the given encoding parameter is not supported
+	 * @throws UnsupportedEncodingException
+	 *             when the given encoding parameter is not supported
 	 */
-	public static String encodeHost(String host, String encoding) throws UnsupportedEncodingException {
+	public static String encodeHost(String host, String encoding)
+			throws UnsupportedEncodingException {
 		return encode(host, encoding, HOST);
 	}
 
 	/**
 	 * Encodes the given URI port.
-	 *
-	 * @param port the port to be encoded
-	 * @param encoding the character encoding to encode to
+	 * 
+	 * @param port
+	 *            the port to be encoded
+	 * @param encoding
+	 *            the character encoding to encode to
 	 * @return the encoded port
-	 * @throws UnsupportedEncodingException when the given encoding parameter is not supported
+	 * @throws UnsupportedEncodingException
+	 *             when the given encoding parameter is not supported
 	 */
-	public static String encodePort(String port, String encoding) throws UnsupportedEncodingException {
+	public static String encodePort(String port, String encoding)
+			throws UnsupportedEncodingException {
 		return encode(port, encoding, PORT);
 	}
 
 	/**
 	 * Encodes the given URI path.
-	 *
-	 * @param path the path to be encoded
-	 * @param encoding the character encoding to encode to
+	 * 
+	 * @param path
+	 *            the path to be encoded
+	 * @param encoding
+	 *            the character encoding to encode to
 	 * @return the encoded path
-	 * @throws UnsupportedEncodingException when the given encoding parameter is not supported
+	 * @throws UnsupportedEncodingException
+	 *             when the given encoding parameter is not supported
 	 */
-	public static String encodePath(String path, String encoding) throws UnsupportedEncodingException {
+	public static String encodePath(String path, String encoding)
+			throws UnsupportedEncodingException {
 		return encode(path, encoding, PATH);
 	}
 
 	/**
 	 * Encodes the given URI path segment.
-	 *
-	 * @param segment the segment to be encoded
-	 * @param encoding the character encoding to encode to
+	 * 
+	 * @param segment
+	 *            the segment to be encoded
+	 * @param encoding
+	 *            the character encoding to encode to
 	 * @return the encoded segment
-	 * @throws UnsupportedEncodingException when the given encoding parameter is not supported
+	 * @throws UnsupportedEncodingException
+	 *             when the given encoding parameter is not supported
 	 */
-	public static String encodePathSegment(String segment, String encoding) throws UnsupportedEncodingException {
+	public static String encodePathSegment(String segment, String encoding)
+			throws UnsupportedEncodingException {
 		return encode(segment, encoding, SEGMENT);
 	}
 
 	/**
 	 * Encodes the given URI query.
-	 *
-	 * @param query the query to be encoded
-	 * @param encoding the character encoding to encode to
+	 * 
+	 * @param query
+	 *            the query to be encoded
+	 * @param encoding
+	 *            the character encoding to encode to
 	 * @return the encoded query
-	 * @throws UnsupportedEncodingException when the given encoding parameter is not supported
+	 * @throws UnsupportedEncodingException
+	 *             when the given encoding parameter is not supported
 	 */
-	public static String encodeQuery(String query, String encoding) throws UnsupportedEncodingException {
+	public static String encodeQuery(String query, String encoding)
+			throws UnsupportedEncodingException {
 		return encode(query, encoding, QUERY);
 	}
 
 	/**
 	 * Encodes the given URI query parameter.
-	 *
-	 * @param query the query parameter to be encoded
-	 * @param encoding the character encoding to encode to
+	 * 
+	 * @param query
+	 *            the query parameter to be encoded
+	 * @param encoding
+	 *            the character encoding to encode to
 	 * @return the encoded query parameter
-	 * @throws UnsupportedEncodingException when the given encoding parameter is not supported
+	 * @throws UnsupportedEncodingException
+	 *             when the given encoding parameter is not supported
 	 */
-	public static String encodeQueryParam(String queryParam, String encoding) throws UnsupportedEncodingException {
+	public static String encodeQueryParam(String queryParam, String encoding)
+			throws UnsupportedEncodingException {
 		return encode(queryParam, encoding, QUERY_PARAM);
 	}
 
 	/**
 	 * Encodes the given URI fragment.
-	 *
-	 * @param fragment the fragment to be encoded
-	 * @param encoding the character encoding to encode to
+	 * 
+	 * @param fragment
+	 *            the fragment to be encoded
+	 * @param encoding
+	 *            the character encoding to encode to
 	 * @return the encoded fragment
-	 * @throws UnsupportedEncodingException when the given encoding parameter is not supported
+	 * @throws UnsupportedEncodingException
+	 *             when the given encoding parameter is not supported
 	 */
-	public static String encodeFragment(String fragment, String encoding) throws UnsupportedEncodingException {
+	public static String encodeFragment(String fragment, String encoding)
+			throws UnsupportedEncodingException {
 		return encode(fragment, encoding, FRAGMENT);
 	}
 
-	private static String encode(String source, String encoding, BitSet notEncoded) throws UnsupportedEncodingException {
+	private static String encode(String source, String encoding,
+			BitSet notEncoded) throws UnsupportedEncodingException {
 		Assert.assertNotNull("'source' must not be null", source);
 		Assert.assertNotNull("'encoding' must not be empty", notEncoded);
-		ByteArrayOutputStream bos = new ByteArrayOutputStream(source.length() * 2);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream(
+				source.length() * 2);
 
 		for (int i = 0; i < source.length(); i++) {
 			int ch = source.charAt(i);
 			if (notEncoded.get(ch)) {
 				bos.write(ch);
-			}
-			else {
+			} else {
 				bos.write('%');
-				char hex1 = Character.toUpperCase(Character.forDigit((ch >> 4) & 0xF, 16));
-				char hex2 = Character.toUpperCase(Character.forDigit(ch & 0xF, 16));
+				char hex1 = Character.toUpperCase(Character.forDigit(
+						(ch >> 4) & 0xF, 16));
+				char hex2 = Character.toUpperCase(Character.forDigit(ch & 0xF,
+						16));
 				bos.write(hex1);
 				bos.write(hex2);
 			}
@@ -374,12 +422,11 @@ public abstract class UriUtils {
 	}
 
 	/**
-	 * Decodes the given encoded source String into an URI. Based on the following
-	 * rules:
+	 * Decodes the given encoded source String into an URI. Based on the
+	 * following rules:
 	 * <ul>
-	 * <li>Alphanumeric characters {@code "a"} through {@code "z"},
-	 * {@code "A"} through {@code "Z"}, and {@code "0"} through {@code "9"}
-	 * stay the same.
+	 * <li>Alphanumeric characters {@code "a"} through {@code "z"}, {@code "A"}
+	 * through {@code "Z"}, and {@code "0"} through {@code "9"} stay the same.
 	 * <li>Special characters {@code "-"}, {@code "_"}, {@code "."}, and
 	 * {@code "*"} stay the same.
 	 * <li>All other characters are converted into one or more bytes using the
@@ -388,15 +435,18 @@ public abstract class UriUtils {
 	 * <li>A sequence "<code>%<i>xy</i></code>" is interpreted as a hexadecimal
 	 * representation of the character.
 	 * </ul>
+	 * 
 	 * @param source
 	 * @param encoding
 	 * @return the decoded URI
-	 * @throws UnsupportedEncodingException when the given encoding parameter is not supported
+	 * @throws UnsupportedEncodingException
+	 *             when the given encoding parameter is not supported
 	 * @see java.net.URLDecoder#decode(String, String)
 	 */
-	public static String decode(String source, String encoding) throws UnsupportedEncodingException {
-		Assert.assertNotNull("'source' must not be null",source);
-		Assert.assertNotNull("'encoding' must not be empty",encoding);
+	public static String decode(String source, String encoding)
+			throws UnsupportedEncodingException {
+		Assert.assertNotNull("'source' must not be null", source);
+		Assert.assertNotNull("'encoding' must not be empty", encoding);
 		int length = source.length();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream(length);
 		for (int i = 0; i < length; i++) {
@@ -409,12 +459,12 @@ public abstract class UriUtils {
 					int l = Character.digit(hex2, 16);
 					bos.write((char) ((u << 4) + l));
 					i += 2;
+				} else {
+					throw new IllegalArgumentException(
+							"Invalid encoded sequence \"" + source.substring(i)
+									+ "\"");
 				}
-				else {
-					throw new IllegalArgumentException("Invalid encoded sequence \"" + source.substring(i) + "\"");
-				}
-			}
-			else {
+			} else {
 				bos.write(ch);
 			}
 		}

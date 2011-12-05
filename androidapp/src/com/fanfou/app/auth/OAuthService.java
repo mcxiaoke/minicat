@@ -17,7 +17,7 @@ import com.fanfou.app.http.Parameter;
  * @version 4.0 2011.12.01
  * 
  */
-public class OAuthService{
+public class OAuthService {
 
 	private OAuthProvider mOAuthProvider;
 	private OAuthToken mOAuthToken;

@@ -9,21 +9,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
-import com.fanfou.app.App.ApnType;
-import com.fanfou.app.service.AutoCompleteService;
 import com.fanfou.app.ui.ActionBar.OnRefreshClickListener;
 import com.fanfou.app.ui.ActionManager;
-import com.fanfou.app.util.Compatibility;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.Utils;
 
@@ -168,15 +163,15 @@ public abstract class BaseActivity extends Activity implements
 	}
 
 	protected static final int MENU_ID_PROFILE = 0;
-	protected static final int MENU_ID_OPTION = 1; 
+	protected static final int MENU_ID_OPTION = 1;
 	protected static final int MENU_ID_SEARCH = 2;
 	protected static final int MENU_ID_ABOUT = 3;
 	protected static final int MENU_ID_FEEDBACK = 4;
 	protected static final int MENU_ID_LOGOUT = 5;
-	protected static final int MENU_ID_HOME = 6; 
+	protected static final int MENU_ID_HOME = 6;
 	protected static final int MENU_ID_CLEAR = 7;
-	protected static final int MENU_ID_REFRESH = 8; 
-	protected static final int MENU_ID_SAVE = 9; 
+	protected static final int MENU_ID_REFRESH = 8;
+	protected static final int MENU_ID_SAVE = 9;
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
@@ -221,31 +216,34 @@ public abstract class BaseActivity extends Activity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-//		MenuItem option = menu.add(0, MENU_ID_OPTION, MENU_ID_OPTION, "功能设置");
-//		option.setIcon(R.drawable.i_menu_option);
-//
-//		MenuItem profile = menu
-//				.add(0, MENU_ID_PROFILE, MENU_ID_PROFILE, "我的空间");
-//		profile.setIcon(R.drawable.i_menu_profile);
-//
-//		MenuItem search = menu.add(0, MENU_ID_SEARCH, MENU_ID_SEARCH, "热词搜索");
-//		search.setIcon(R.drawable.i_menu_search);
-//
-//		MenuItem logout = menu.add(0, MENU_ID_LOGOUT, MENU_ID_LOGOUT, "注销登录");
-//		logout.setIcon(R.drawable.i_menu_logout);
-//
-//		MenuItem about = menu.add(0, MENU_ID_ABOUT, MENU_ID_ABOUT, "关于饭否");
-//		about.setIcon(R.drawable.i_menu_about);
-//
-//		MenuItem feedback = menu.add(0, MENU_ID_FEEDBACK, MENU_ID_FEEDBACK,
-//				"意见反馈");
-//		feedback.setIcon(R.drawable.i_menu_feedback);
+		// MenuItem option = menu.add(0, MENU_ID_OPTION, MENU_ID_OPTION,
+		// "功能设置");
+		// option.setIcon(R.drawable.i_menu_option);
+		//
+		// MenuItem profile = menu
+		// .add(0, MENU_ID_PROFILE, MENU_ID_PROFILE, "我的空间");
+		// profile.setIcon(R.drawable.i_menu_profile);
+		//
+		// MenuItem search = menu.add(0, MENU_ID_SEARCH, MENU_ID_SEARCH,
+		// "热词搜索");
+		// search.setIcon(R.drawable.i_menu_search);
+		//
+		// MenuItem logout = menu.add(0, MENU_ID_LOGOUT, MENU_ID_LOGOUT,
+		// "注销登录");
+		// logout.setIcon(R.drawable.i_menu_logout);
+		//
+		// MenuItem about = menu.add(0, MENU_ID_ABOUT, MENU_ID_ABOUT, "关于饭否");
+		// about.setIcon(R.drawable.i_menu_about);
+		//
+		// MenuItem feedback = menu.add(0, MENU_ID_FEEDBACK, MENU_ID_FEEDBACK,
+		// "意见反馈");
+		// feedback.setIcon(R.drawable.i_menu_feedback);
 
 		MenuItem home = menu.add(0, MENU_ID_HOME, MENU_ID_HOME, "返回首页");
 		home.setIcon(R.drawable.ic_menu_home);
-//
-//		MenuItem clear = menu.add(0, MENU_ID_CLEAR, MENU_ID_CLEAR, "清空草稿");
-//		clear.setIcon(R.drawable.i_menu_clear);
+		//
+		// MenuItem clear = menu.add(0, MENU_ID_CLEAR, MENU_ID_CLEAR, "清空草稿");
+		// clear.setIcon(R.drawable.i_menu_clear);
 		return true;
 	}
 
@@ -291,13 +289,13 @@ public abstract class BaseActivity extends Activity implements
 
 	protected void onMenuClearClick() {
 	};
-	
-	protected void onMenuRefreshClick(){
-		
+
+	protected void onMenuRefreshClick() {
+
 	};
-	
-	protected void onMenuSaveClick(){
-		
+
+	protected void onMenuSaveClick() {
+
 	}
 
 	protected void onMenuLogoutClick() {

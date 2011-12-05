@@ -12,7 +12,6 @@ import android.util.Log;
 import com.fanfou.app.App;
 import com.fanfou.app.App.ApnType;
 import com.fanfou.app.R;
-import com.fanfou.app.service.AutoCompleteService;
 import com.fanfou.app.service.DownloadService;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -28,8 +27,8 @@ import com.fanfou.app.util.OptionHelper;
  */
 public class NetworkReceiver extends BroadcastReceiver {
 	private static String TAG = NetworkReceiver.class.getSimpleName();
-	
-	private void log(String msg){
+
+	private void log(String msg) {
 		Log.d(TAG, msg);
 	}
 
@@ -44,16 +43,14 @@ public class NetworkReceiver extends BroadcastReceiver {
 	}
 
 	private void onWifiConnected(Context context) {
-		if(App.DEBUG){
+		if (App.DEBUG) {
 			log("onWifiConnected");
 		}
 		// when wifi is connected, start fetch friends for autocomplete and
 		// check update.
-//		AutoCompleteService.start(context);
+		// AutoCompleteService.start(context);
 		startUpdateCheck(context);
 	}
-
-
 
 	public static void startUpdateCheck(Context context) {
 		boolean autoUpdate = OptionHelper.readBoolean(context,

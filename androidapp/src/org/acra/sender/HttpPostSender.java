@@ -73,70 +73,77 @@ import android.util.Log;
  */
 public class HttpPostSender implements ReportSender {
 
-    private final Uri mFormUri;
-    private final Map<ReportField, String> mMapping;
+	private final Uri mFormUri;
+	private final Map<ReportField, String> mMapping;
 
-    /**
-     * <p>
-     * Create a new HttpPostSender instance.
-     * </p>
-     * 
-     * @param formUri
-     *            The URL of your server-side crash report collection script.
-     * @param mapping
-     *            If null, POST parameters will be named with
-     *            {@link ReportField} values converted to String with
-     *            .toString(). If not null, POST parameters will be named with
-     *            the result of mapping.get(ReportField.SOME_FIELD);
-     */
-    public HttpPostSender(String formUri, Map<ReportField, String> mapping) {
-        mFormUri = Uri.parse(formUri);
-        mMapping = mapping;
-    }
+	/**
+	 * <p>
+	 * Create a new HttpPostSender instance.
+	 * </p>
+	 * 
+	 * @param formUri
+	 *            The URL of your server-side crash report collection script.
+	 * @param mapping
+	 *            If null, POST parameters will be named with
+	 *            {@link ReportField} values converted to String with
+	 *            .toString(). If not null, POST parameters will be named with
+	 *            the result of mapping.get(ReportField.SOME_FIELD);
+	 */
+	public HttpPostSender(String formUri, Map<ReportField, String> mapping) {
+		mFormUri = Uri.parse(formUri);
+		mMapping = mapping;
+	}
 
-    @Override
-    public void send(CrashReportData report) throws ReportSenderException {
+	@Override
+	public void send(CrashReportData report) throws ReportSenderException {
 
-        try {
-            final Map<String, String> finalReport = remap(report);
-            final URL reportUrl = new URL(mFormUri.toString());
-            Log.d(LOG_TAG, "Connect to " + reportUrl.toString());
+		try {
+			final Map<String, String> finalReport = remap(report);
+			final URL reportUrl = new URL(mFormUri.toString());
+			Log.d(LOG_TAG, "Connect to " + reportUrl.toString());
 
-            final String login = isNull(ACRA.getConfig().formUriBasicAuthLogin()) ? null : ACRA.getConfig().formUriBasicAuthLogin();
-            final String password = isNull(ACRA.getConfig().formUriBasicAuthPassword()) ? null : ACRA.getConfig().formUriBasicAuthPassword();
+			final String login = isNull(ACRA.getConfig()
+					.formUriBasicAuthLogin()) ? null : ACRA.getConfig()
+					.formUriBasicAuthLogin();
+			final String password = isNull(ACRA.getConfig()
+					.formUriBasicAuthPassword()) ? null : ACRA.getConfig()
+					.formUriBasicAuthPassword();
 
-            final HttpRequest request = new HttpRequest();
-            request.setConnectionTimeOut(ACRA.getConfig().connectionTimeout());
-            request.setSocketTimeOut(ACRA.getConfig().socketTimeout());
-            request.setMaxNrRetries(ACRA.getConfig().maxNumberOfRequestRetries());
-            request.setLogin(login);
-            request.setPassword(password);
-            request.sendPost(reportUrl, finalReport);
+			final HttpRequest request = new HttpRequest();
+			request.setConnectionTimeOut(ACRA.getConfig().connectionTimeout());
+			request.setSocketTimeOut(ACRA.getConfig().socketTimeout());
+			request.setMaxNrRetries(ACRA.getConfig()
+					.maxNumberOfRequestRetries());
+			request.setLogin(login);
+			request.setPassword(password);
+			request.sendPost(reportUrl, finalReport);
 
-        } catch (IOException e) {
-            throw new ReportSenderException("Error while sending report to Http Post Form.", e);
-        }
-    }
+		} catch (IOException e) {
+			throw new ReportSenderException(
+					"Error while sending report to Http Post Form.", e);
+		}
+	}
 
-    private static boolean isNull(String aString) {
-        return aString == null || ACRA.NULL_VALUE.equals(aString);
-    }
+	private static boolean isNull(String aString) {
+		return aString == null || ACRA.NULL_VALUE.equals(aString);
+	}
 
-    private Map<String, String> remap(Map<ReportField, String> report) {
+	private Map<String, String> remap(Map<ReportField, String> report) {
 
-        ReportField[] fields = ACRA.getConfig().customReportContent();
-        if(fields.length == 0) {
-            fields = ACRA.DEFAULT_REPORT_FIELDS;
-        }
+		ReportField[] fields = ACRA.getConfig().customReportContent();
+		if (fields.length == 0) {
+			fields = ACRA.DEFAULT_REPORT_FIELDS;
+		}
 
-        final Map<String, String> finalReport = new HashMap<String, String>(report.size());
-        for (ReportField field : fields) {
-            if (mMapping == null || mMapping.get(field) == null) {
-                finalReport.put(field.toString(), report.get(field));
-            } else {
-                finalReport.put(mMapping.get(field), report.get(field));
-            }
-        }
-        return finalReport;
-    }
+		final Map<String, String> finalReport = new HashMap<String, String>(
+				report.size());
+		for (ReportField field : fields) {
+			if (mMapping == null || mMapping.get(field) == null) {
+				finalReport.put(field.toString(), report.get(field));
+			} else {
+				finalReport.put(mMapping.get(field), report.get(field));
+			}
+		}
+		return finalReport;
+	}
 }

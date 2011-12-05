@@ -19,9 +19,6 @@ import static org.acra.ReportField.*;
 
 import org.acra.annotation.ReportsCrashes;
 import org.acra.sender.HttpPostSender;
-import org.acra.util.PackageManagerWrapper;
-
-import android.Manifest.permission;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -40,240 +37,274 @@ import android.util.Log;
  */
 public class ACRA {
 
-    public static final boolean DEV_LOGGING = false; // Should be false for release.
-    public static final String LOG_TAG = ACRA.class.getSimpleName();
+	public static final boolean DEV_LOGGING = false; // Should be false for
+														// release.
+	public static final String LOG_TAG = ACRA.class.getSimpleName();
 
-    /**
-     * The key of the application default SharedPreference where you can put a
-     * 'true' Boolean value to disable ACRA.
-     */
-    public static final String PREF_DISABLE_ACRA = "acra.disable";
+	/**
+	 * The key of the application default SharedPreference where you can put a
+	 * 'true' Boolean value to disable ACRA.
+	 */
+	public static final String PREF_DISABLE_ACRA = "acra.disable";
 
-    /**
-     * Alternatively, you can use this key if you prefer your users to have the
-     * checkbox ticked to enable crash reports. If both acra.disable and
-     * acra.enable are set, the value of acra.disable takes over the other.
-     */
-    public static final String PREF_ENABLE_ACRA = "acra.enable";
+	/**
+	 * Alternatively, you can use this key if you prefer your users to have the
+	 * checkbox ticked to enable crash reports. If both acra.disable and
+	 * acra.enable are set, the value of acra.disable takes over the other.
+	 */
+	public static final String PREF_ENABLE_ACRA = "acra.enable";
 
-    /**
-     * The key of the SharedPreference allowing the user to disable sending
-     * content of logcat/dropbox. System logs collection is also dependent of
-     * the READ_LOGS permission.
-     */
-    public static final String PREF_ENABLE_SYSTEM_LOGS = "acra.syslog.enable";
+	/**
+	 * The key of the SharedPreference allowing the user to disable sending
+	 * content of logcat/dropbox. System logs collection is also dependent of
+	 * the READ_LOGS permission.
+	 */
+	public static final String PREF_ENABLE_SYSTEM_LOGS = "acra.syslog.enable";
 
-    /**
-     * The key of the SharedPreference allowing the user to disable sending his
-     * device id. Device ID collection is also dependent of the READ_PHONE_STATE
-     * permission.
-     */
-    public static final String PREF_ENABLE_DEVICE_ID = "acra.deviceid.enable";
+	/**
+	 * The key of the SharedPreference allowing the user to disable sending his
+	 * device id. Device ID collection is also dependent of the READ_PHONE_STATE
+	 * permission.
+	 */
+	public static final String PREF_ENABLE_DEVICE_ID = "acra.deviceid.enable";
 
-    /**
-     * The key of the SharedPreference allowing the user to always include his
-     * email address.
-     */
-    public static final String PREF_USER_EMAIL_ADDRESS = "acra.user.email";
+	/**
+	 * The key of the SharedPreference allowing the user to always include his
+	 * email address.
+	 */
+	public static final String PREF_USER_EMAIL_ADDRESS = "acra.user.email";
 
-    /**
-     * The key of the SharedPreference allowing the user to automatically accept
-     * sending reports.
-     */
-    public static final String PREF_ALWAYS_ACCEPT = "acra.alwaysaccept";
+	/**
+	 * The key of the SharedPreference allowing the user to automatically accept
+	 * sending reports.
+	 */
+	public static final String PREF_ALWAYS_ACCEPT = "acra.alwaysaccept";
 
-    private static Application mApplication;
-    private static ReportsCrashes mReportsCrashes;
+	private static Application mApplication;
+	private static ReportsCrashes mReportsCrashes;
 
-    // Accessible via ACRA#getErrorReporter().
-    private static ErrorReporter errorReporterSingleton;
+	// Accessible via ACRA#getErrorReporter().
+	private static ErrorReporter errorReporterSingleton;
 
-    // NB don't convert to a local field because then it could be garbage collected and then we would have no PreferenceListener.
-    private static OnSharedPreferenceChangeListener mPrefListener;
+	// NB don't convert to a local field because then it could be garbage
+	// collected and then we would have no PreferenceListener.
+	private static OnSharedPreferenceChangeListener mPrefListener;
 
-    /**
-     * <p>
-     * Initialize ACRA for a given Application. The call to this method should
-     * be placed as soon as possible in the {@link Application#onCreate()}
-     * method.
-     * </p>
-     * 
-     * @param app   Your Application class.
-     * @throws IllegalStateException if it is called more than once.
-     */
-    public static void init(Application app) {
+	/**
+	 * <p>
+	 * Initialize ACRA for a given Application. The call to this method should
+	 * be placed as soon as possible in the {@link Application#onCreate()}
+	 * method.
+	 * </p>
+	 * 
+	 * @param app
+	 *            Your Application class.
+	 * @throws IllegalStateException
+	 *             if it is called more than once.
+	 */
+	public static void init(Application app) {
 
-        if (mApplication != null) {
-            throw new IllegalStateException("ACRA#init called more than once");
-        }
+		if (mApplication != null) {
+			throw new IllegalStateException("ACRA#init called more than once");
+		}
 
-        mApplication = app;
-        mReportsCrashes = mApplication.getClass().getAnnotation(ReportsCrashes.class);
-        if (mReportsCrashes == null) {
-            Log.e(LOG_TAG, "ACRA#init called but no ReportsCrashes annotation on Application " + mApplication.getPackageName());
-            return;
-        }
+		mApplication = app;
+		mReportsCrashes = mApplication.getClass().getAnnotation(
+				ReportsCrashes.class);
+		if (mReportsCrashes == null) {
+			Log.e(LOG_TAG,
+					"ACRA#init called but no ReportsCrashes annotation on Application "
+							+ mApplication.getPackageName());
+			return;
+		}
 
-        final SharedPreferences prefs = getACRASharedPreferences();
-        Log.d(ACRA.LOG_TAG, "Set OnSharedPreferenceChangeListener.");
+		final SharedPreferences prefs = getACRASharedPreferences();
+		Log.d(ACRA.LOG_TAG, "Set OnSharedPreferenceChangeListener.");
 
-        try {
-            checkCrashResources();
+		try {
+			checkCrashResources();
 
-            Log.d(LOG_TAG, "ACRA is enabled for " + mApplication.getPackageName() + ", intializing...");
+			Log.d(LOG_TAG,
+					"ACRA is enabled for " + mApplication.getPackageName()
+							+ ", intializing...");
 
-            // Initialize ErrorReporter with all required data
-            final boolean enableAcra = !shouldDisableACRA(prefs);
-            final ErrorReporter errorReporter = new ErrorReporter(mApplication.getApplicationContext(), prefs, enableAcra);
+			// Initialize ErrorReporter with all required data
+			final boolean enableAcra = !shouldDisableACRA(prefs);
+			final ErrorReporter errorReporter = new ErrorReporter(
+					mApplication.getApplicationContext(), prefs, enableAcra);
 
-            // Append ReportSenders.
-            addReportSenders(errorReporter);
+			// Append ReportSenders.
+			addReportSenders(errorReporter);
 
-            errorReporterSingleton = errorReporter;
+			errorReporterSingleton = errorReporter;
 
-        } catch (ACRAConfigurationException e) {
-            Log.w(LOG_TAG, "Error : ", e);
-        }
+		} catch (ACRAConfigurationException e) {
+			Log.w(LOG_TAG, "Error : ", e);
+		}
 
-        // We HAVE to keep a reference otherwise the listener could be garbage collected:
-        // http://stackoverflow.com/questions/2542938/sharedpreferences-onsharedpreferencechangelistener-not-being-called-consistently/3104265#3104265
-        mPrefListener = new OnSharedPreferenceChangeListener() {
+		// We HAVE to keep a reference otherwise the listener could be garbage
+		// collected:
+		// http://stackoverflow.com/questions/2542938/sharedpreferences-onsharedpreferencechangelistener-not-being-called-consistently/3104265#3104265
+		mPrefListener = new OnSharedPreferenceChangeListener() {
 
-            @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                if (PREF_DISABLE_ACRA.equals(key) || PREF_ENABLE_ACRA.equals(key)) {
-                    final boolean enableAcra = !shouldDisableACRA(sharedPreferences);
-                    getErrorReporter().setEnabled(enableAcra);
-                }
-            }
-        };
+			@Override
+			public void onSharedPreferenceChanged(
+					SharedPreferences sharedPreferences, String key) {
+				if (PREF_DISABLE_ACRA.equals(key)
+						|| PREF_ENABLE_ACRA.equals(key)) {
+					final boolean enableAcra = !shouldDisableACRA(sharedPreferences);
+					getErrorReporter().setEnabled(enableAcra);
+				}
+			}
+		};
 
-        // This listener has to be set after initAcra is called to avoid a
-        // NPE in ErrorReporter.disable() because
-        // the context could be null at this moment.
-        prefs.registerOnSharedPreferenceChangeListener(mPrefListener);
-    }
+		// This listener has to be set after initAcra is called to avoid a
+		// NPE in ErrorReporter.disable() because
+		// the context could be null at this moment.
+		prefs.registerOnSharedPreferenceChangeListener(mPrefListener);
+	}
 
-    /**
-     * @return the current instance of ErrorReporter.
-     * @throws IllegalStateException if {@link ACRA#init(android.app.Application)} has not yet been called.
-     */
-    public static ErrorReporter getErrorReporter() {
-        if (errorReporterSingleton == null) {
-            throw  new IllegalStateException("Cannot access ErrorReporter before ACRA#init");
-        }
-        return errorReporterSingleton;
-    }
+	/**
+	 * @return the current instance of ErrorReporter.
+	 * @throws IllegalStateException
+	 *             if {@link ACRA#init(android.app.Application)} has not yet
+	 *             been called.
+	 */
+	public static ErrorReporter getErrorReporter() {
+		if (errorReporterSingleton == null) {
+			throw new IllegalStateException(
+					"Cannot access ErrorReporter before ACRA#init");
+		}
+		return errorReporterSingleton;
+	}
 
+	/**
+	 * Adds any relevant ReportSenders to the ErrorReporter.
+	 * 
+	 * @param errorReporter
+	 *            ErrorReporter to which to add appropriate ReportSenders.
+	 */
+	private static void addReportSenders(ErrorReporter errorReporter) {
 
+		// If formUri is set, instantiate a sender for a generic HTTP POST form
+		if (mReportsCrashes.formUri() != null
+				&& !"".equals(mReportsCrashes.formUri())) {
+			errorReporter.addReportSender(new HttpPostSender(mReportsCrashes
+					.formUri(), null));
+			return;
+		}
+	}
 
-    /**
-     * Adds any relevant ReportSenders to the ErrorReporter.
-     *
-     * @param errorReporter ErrorReporter to which to add appropriate ReportSenders.
-     */
-    private static void addReportSenders(ErrorReporter errorReporter) {
+	/**
+	 * Check if the application default shared preferences contains true for the
+	 * key "acra.disable", do not activate ACRA. Also checks the alternative
+	 * opposite setting "acra.enable" if "acra.disable" is not found.
+	 * 
+	 * @param prefs
+	 *            SharedPreferences to check to see whether ACRA should be
+	 *            disabled.
+	 * @return true if prefs indicate that ACRA should be disabled.
+	 */
+	private static boolean shouldDisableACRA(SharedPreferences prefs) {
+		boolean disableAcra = false;
+		try {
+			final boolean enableAcra = prefs.getBoolean(PREF_ENABLE_ACRA, true);
+			disableAcra = prefs.getBoolean(PREF_DISABLE_ACRA, !enableAcra);
+		} catch (Exception e) {
+			// In case of a ClassCastException
+		}
+		return disableAcra;
+	}
 
-        // If formUri is set, instantiate a sender for a generic HTTP POST form
-        if (mReportsCrashes.formUri() != null && !"".equals(mReportsCrashes.formUri())) {
-            errorReporter.addReportSender(new HttpPostSender(mReportsCrashes.formUri(), null));
-            return;
-        }
-    }
+	private static void checkCrashResources() throws ACRAConfigurationException {
+		switch (mReportsCrashes.mode()) {
+		case TOAST:
+			if (mReportsCrashes.resToastText() == 0) {
+				throw new ACRAConfigurationException(
+						"TOAST mode: you have to define the resToastText parameter in your application @ReportsCrashes() annotation.");
+			}
+			break;
+		case NOTIFICATION:
+			if (mReportsCrashes.resNotifTickerText() == 0
+					|| mReportsCrashes.resNotifTitle() == 0
+					|| mReportsCrashes.resNotifText() == 0
+					|| mReportsCrashes.resDialogText() == 0) {
+				throw new ACRAConfigurationException(
+						"NOTIFICATION mode: you have to define at least the resNotifTickerText, resNotifTitle, resNotifText, resDialogText parameters in your application @ReportsCrashes() annotation.");
+			}
+			break;
+		}
+	}
 
-    /**
-     * Check if the application default shared preferences contains true for
-     * the key "acra.disable", do not activate ACRA. Also checks the
-     * alternative opposite setting "acra.enable" if "acra.disable" is not found.
-     *
-     * @param prefs SharedPreferences to check to see whether ACRA should be disabled.
-     * @return true if prefs indicate that ACRA should be disabled.
-     */
-    private static boolean shouldDisableACRA(SharedPreferences prefs) {
-        boolean disableAcra = false;
-        try {
-            final boolean enableAcra = prefs.getBoolean(PREF_ENABLE_ACRA, true);
-            disableAcra = prefs.getBoolean(PREF_DISABLE_ACRA, !enableAcra);
-        } catch (Exception e) {
-            // In case of a ClassCastException
-        }
-        return disableAcra;
-    }
+	/**
+	 * Retrieves the {@link SharedPreferences} instance where user adjustable
+	 * settings for ACRA are stored. Default are the Application default
+	 * SharedPreferences, but you can provide another SharedPreferences name
+	 * with {@link ReportsCrashes#sharedPreferencesName()}.
+	 * 
+	 * @return The Shared Preferences where ACRA will retrieve its user
+	 *         adjustable setting.
+	 */
+	public static SharedPreferences getACRASharedPreferences() {
+		if (!"".equals(mReportsCrashes.sharedPreferencesName())) {
+			Log.d(ACRA.LOG_TAG,
+					"Retrieve SharedPreferences "
+							+ mReportsCrashes.sharedPreferencesName());
+			return mApplication.getSharedPreferences(
+					mReportsCrashes.sharedPreferencesName(),
+					mReportsCrashes.sharedPreferencesMode());
+		} else {
+			Log.d(ACRA.LOG_TAG,
+					"Retrieve application default SharedPreferences.");
+			return PreferenceManager.getDefaultSharedPreferences(mApplication);
+		}
+	}
 
-    private static void checkCrashResources() throws ACRAConfigurationException {
-        switch (mReportsCrashes.mode()) {
-        case TOAST:
-            if (mReportsCrashes.resToastText() == 0) {
-                throw new ACRAConfigurationException(
-                        "TOAST mode: you have to define the resToastText parameter in your application @ReportsCrashes() annotation.");
-            }
-            break;
-        case NOTIFICATION:
-            if (mReportsCrashes.resNotifTickerText() == 0 || mReportsCrashes.resNotifTitle() == 0
-                    || mReportsCrashes.resNotifText() == 0 || mReportsCrashes.resDialogText() == 0) {
-                throw new ACRAConfigurationException(
-                        "NOTIFICATION mode: you have to define at least the resNotifTickerText, resNotifTitle, resNotifText, resDialogText parameters in your application @ReportsCrashes() annotation.");
-            }
-            break;
-        }
-    }
+	/**
+	 * Provides the configuration annotation instance.
+	 * 
+	 * @return ACRA {@link ReportsCrashes} configuration instance.
+	 */
+	public static ReportsCrashes getConfig() {
+		return mReportsCrashes;
+	}
 
-    /**
-     * Retrieves the {@link SharedPreferences} instance where user adjustable
-     * settings for ACRA are stored. Default are the Application default
-     * SharedPreferences, but you can provide another SharedPreferences name
-     * with {@link ReportsCrashes#sharedPreferencesName()}.
-     * 
-     * @return The Shared Preferences where ACRA will retrieve its user adjustable setting.
-     */
-    public static SharedPreferences getACRASharedPreferences() {
-        if (!"".equals(mReportsCrashes.sharedPreferencesName())) {
-            Log.d(ACRA.LOG_TAG, "Retrieve SharedPreferences " + mReportsCrashes.sharedPreferencesName());
-            return mApplication.getSharedPreferences(mReportsCrashes.sharedPreferencesName(),
-                    mReportsCrashes.sharedPreferencesMode());
-        } else {
-            Log.d(ACRA.LOG_TAG, "Retrieve application default SharedPreferences.");
-            return PreferenceManager.getDefaultSharedPreferences(mApplication);
-        }
-    }
+	/**
+	 * Default list of {@link ReportField}s to be sent in email reports. You can
+	 * set your own list with
+	 * {@link org.acra.annotation.ReportsCrashes#customReportContent()}.
+	 * 
+	 * @see org.acra.annotation.ReportsCrashes#mailTo()
+	 */
+	public final static ReportField[] DEFAULT_MAIL_REPORT_FIELDS = {
+			ReportField.USER_COMMENT, ReportField.ANDROID_VERSION,
+			ReportField.APP_VERSION_NAME, ReportField.BRAND,
+			ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA,
+			ReportField.STACK_TRACE };
 
-    /**
-     * Provides the configuration annotation instance.
-     * @return ACRA {@link ReportsCrashes} configuration instance.
-     */
-    public static ReportsCrashes getConfig() {
-        return mReportsCrashes;
-    }
-
-    /**
-     * Default list of {@link ReportField}s to be sent in email reports.
-     * You can set your own list with {@link org.acra.annotation.ReportsCrashes#customReportContent()}.
-     *
-     * @see org.acra.annotation.ReportsCrashes#mailTo()
-     */
-    public final static ReportField[] DEFAULT_MAIL_REPORT_FIELDS = { ReportField.USER_COMMENT, ReportField.ANDROID_VERSION,
-            ReportField.APP_VERSION_NAME, ReportField.BRAND, ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA,
-            ReportField.STACK_TRACE };
-
-    /**
-     * Default list of {@link ReportField}s to be sent in reports. You can set your own list with
-     * {@link org.acra.annotation.ReportsCrashes#customReportContent()}.
-     */
+	/**
+	 * Default list of {@link ReportField}s to be sent in reports. You can set
+	 * your own list with
+	 * {@link org.acra.annotation.ReportsCrashes#customReportContent()}.
+	 */
 	public static final ReportField[] DEFAULT_REPORT_FIELDS = { REPORT_ID,
-			APP_VERSION_CODE, APP_VERSION_NAME,
-			PHONE_MODEL, BRAND, PRODUCT, ANDROID_VERSION, STACK_TRACE,
-			DISPLAY, LOGCAT, INSTALLATION_ID };
-    
-    public static final ReportField[] DEFAULT_REPORT_FIELDS_BACKUP = { REPORT_ID, APP_VERSION_CODE, APP_VERSION_NAME, PACKAGE_NAME,
-        FILE_PATH, PHONE_MODEL, BRAND, PRODUCT, ANDROID_VERSION, BUILD, TOTAL_MEM_SIZE, AVAILABLE_MEM_SIZE,
-        CUSTOM_DATA, IS_SILENT, STACK_TRACE, INITIAL_CONFIGURATION, CRASH_CONFIGURATION, DISPLAY, USER_COMMENT,
-        USER_EMAIL, USER_APP_START_DATE, USER_CRASH_DATE, DUMPSYS_MEMINFO, DROPBOX, LOGCAT, EVENTSLOG, RADIOLOG,
-     DEVICE_ID, INSTALLATION_ID, DEVICE_FEATURES, ENVIRONMENT, SHARED_PREFERENCES,
-                SETTINGS_SYSTEM, SETTINGS_SECURE };
+			APP_VERSION_CODE, APP_VERSION_NAME, PHONE_MODEL, BRAND, PRODUCT,
+			ANDROID_VERSION, STACK_TRACE, DISPLAY, LOGCAT, INSTALLATION_ID };
 
-    /**
-     * A special String value to allow the usage of a pseudo-null default value in annotation parameters.
-     */
-    public static final String NULL_VALUE = "ACRA-NULL-STRING";
+	public static final ReportField[] DEFAULT_REPORT_FIELDS_BACKUP = {
+			REPORT_ID, APP_VERSION_CODE, APP_VERSION_NAME, PACKAGE_NAME,
+			FILE_PATH, PHONE_MODEL, BRAND, PRODUCT, ANDROID_VERSION, BUILD,
+			TOTAL_MEM_SIZE, AVAILABLE_MEM_SIZE, CUSTOM_DATA, IS_SILENT,
+			STACK_TRACE, INITIAL_CONFIGURATION, CRASH_CONFIGURATION, DISPLAY,
+			USER_COMMENT, USER_EMAIL, USER_APP_START_DATE, USER_CRASH_DATE,
+			DUMPSYS_MEMINFO, DROPBOX, LOGCAT, EVENTSLOG, RADIOLOG, DEVICE_ID,
+			INSTALLATION_ID, DEVICE_FEATURES, ENVIRONMENT, SHARED_PREFERENCES,
+			SETTINGS_SYSTEM, SETTINGS_SECURE };
+
+	/**
+	 * A special String value to allow the usage of a pseudo-null default value
+	 * in annotation parameters.
+	 */
+	public static final String NULL_VALUE = "ACRA-NULL-STRING";
 
 }

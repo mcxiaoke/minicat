@@ -13,7 +13,6 @@ import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
-import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
@@ -99,7 +98,8 @@ public class ActionService extends BaseIntentService {
 			switch (type) {
 			case Commons.ACTION_STATUS_SHOW: {
 				// 404 消息不存在
-				Status s = api.statusesShow(id, FanFouApiConfig.FORMAT_HTML,FanFouApiConfig.MODE_LITE);
+				Status s = api.statusesShow(id, FanFouApiConfig.FORMAT_HTML,
+						FanFouApiConfig.MODE_LITE);
 				if (s == null || s.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
@@ -120,7 +120,8 @@ public class ActionService extends BaseIntentService {
 				// 删除消息
 				// 404 说明消息不存在
 				// 403 说明不是你的消息，无权限删除
-				Status s = api.statusesDelete(id, FanFouApiConfig.FORMAT_HTML,FanFouApiConfig.MODE_LITE);
+				Status s = api.statusesDelete(id, FanFouApiConfig.FORMAT_HTML,
+						FanFouApiConfig.MODE_LITE);
 				if (s == null || s.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
@@ -137,7 +138,8 @@ public class ActionService extends BaseIntentService {
 			case Commons.ACTION_STATUS_FAVORITE: {
 				// 404 消息不存在
 				// 404 没有通过用户验证
-				Status s = api.favoritesCreate(id, FanFouApiConfig.FORMAT_HTML,FanFouApiConfig.MODE_LITE);
+				Status s = api.favoritesCreate(id, FanFouApiConfig.FORMAT_HTML,
+						FanFouApiConfig.MODE_LITE);
 				if (s == null || s.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
@@ -157,7 +159,8 @@ public class ActionService extends BaseIntentService {
 			case Commons.ACTION_STATUS_UNFAVORITE: {
 				// 404 没有这条消息
 				// 404 收藏不存在
-				Status s = api.favoritesDelete(id, FanFouApiConfig.FORMAT_HTML,FanFouApiConfig.MODE_LITE);
+				Status s = api.favoritesDelete(id, FanFouApiConfig.FORMAT_HTML,
+						FanFouApiConfig.MODE_LITE);
 				if (s == null || s.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
@@ -175,7 +178,7 @@ public class ActionService extends BaseIntentService {
 			}
 				break;
 			case Commons.ACTION_USER_SHOW: {
-				User u = api.userShow(id,FanFouApiConfig.MODE_LITE);
+				User u = api.userShow(id, FanFouApiConfig.MODE_LITE);
 				if (u == null || u.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
@@ -193,7 +196,7 @@ public class ActionService extends BaseIntentService {
 				break;
 
 			case Commons.ACTION_USER_FOLLOW: {
-				User u = api.friendshipsCreate(id,FanFouApiConfig.MODE_LITE);
+				User u = api.friendshipsCreate(id, FanFouApiConfig.MODE_LITE);
 				if (u == null || u.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
@@ -208,7 +211,7 @@ public class ActionService extends BaseIntentService {
 				break;
 			}
 			case Commons.ACTION_USER_UNFOLLOW: {
-				User u = api.friendshipsDelete(id,FanFouApiConfig.MODE_LITE);
+				User u = api.friendshipsDelete(id, FanFouApiConfig.MODE_LITE);
 				if (u == null || u.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
@@ -233,7 +236,7 @@ public class ActionService extends BaseIntentService {
 			}
 				break;
 			case Commons.ACTION_USER_BLOCK: {
-				User u = api.blocksCreate(id,FanFouApiConfig.MODE_LITE);
+				User u = api.blocksCreate(id, FanFouApiConfig.MODE_LITE);
 				if (u == null || u.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
@@ -247,7 +250,7 @@ public class ActionService extends BaseIntentService {
 			}
 				break;
 			case Commons.ACTION_USER_UNBLOCK: {
-				User u = api.blocksDelete(id,FanFouApiConfig.MODE_LITE);
+				User u = api.blocksDelete(id, FanFouApiConfig.MODE_LITE);
 				if (u == null || u.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {
@@ -262,7 +265,8 @@ public class ActionService extends BaseIntentService {
 				// 删除消息
 				// 404 说明消息不存在
 				// 403 说明不是你的消息，无权限删除
-				DirectMessage dm = api.directMessagesDelete(id,FanFouApiConfig.MODE_LITE);
+				DirectMessage dm = api.directMessagesDelete(id,
+						FanFouApiConfig.MODE_LITE);
 				if (dm == null || dm.isNull()) {
 					receiver.send(Commons.RESULT_CODE_FINISH, null);
 				} else {

@@ -323,7 +323,7 @@ public class TitlePageIndicator extends View implements PageIndicator {
 
 		int page = mCurrentPage;
 		if (mCurrentOffset > halfWidth) {
-			page ++;
+			page++;
 		}
 		final boolean currentSelected = (offsetPercent <= SELECTION_FADE_PERCENTAGE);
 		final boolean currentBold = (offsetPercent <= BOLD_FADE_PERCENTAGE);
@@ -598,14 +598,14 @@ public class TitlePageIndicator extends View implements PageIndicator {
 	@Override
 	public void onPageScrolled(int position, float positionOffset,
 			int positionOffsetPixels) {
-		mCurrentPage = position%HomePage.NUMS_OF_PAGE;
+		mCurrentPage = position % HomePage.NUMS_OF_PAGE;
 		mCurrentOffset = positionOffsetPixels;
 		invalidate();
 	}
 
 	@Override
 	public void onPageSelected(int position) {
-		mCurrentPage = position%HomePage.NUMS_OF_PAGE;
+		mCurrentPage = position % HomePage.NUMS_OF_PAGE;
 		invalidate();
 	}
 

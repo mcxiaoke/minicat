@@ -57,23 +57,20 @@ public final class Contents {
 				SCREEN_NAME, LOCATION, GENDER, BIRTHDAY, DESCRIPTION,
 				PROFILE_IMAGE_URL, URL, PROTECTED, FOLLOWERS_COUNT,
 				FRIENDS_COUNT, FAVORITES_COUNT, STATUSES_COUNT, FOLLOWING,
-				CREATED_AT,TYPE, };
+				CREATED_AT, TYPE, };
 
 		public static final String CREATE_TABLE = "create table " + TABLE_NAME
 				+ " ( " + _ID + " integer primary key autoincrement, " + ID
-				+ " text not null, " + OWNER_ID
-				+ " text , " + SCREEN_NAME + " text not null, " + LOCATION
-				+ " text not null, " + GENDER + " text not null, " + BIRTHDAY
-				+ " text not null, " + DESCRIPTION + " text not null, "
-				+ PROFILE_IMAGE_URL + " text not null, " + URL
-				+ " text not null, " + PROTECTED + " boolean not null, "
-				+ FOLLOWERS_COUNT + " integer not null, " + FRIENDS_COUNT
-				+ " integer not null, " + FAVORITES_COUNT
-				+ " integer not null, " + STATUSES_COUNT
+				+ " text not null, " + OWNER_ID + " text , " + SCREEN_NAME
+				+ " text not null, " + LOCATION + " text not null, " + GENDER
+				+ " text not null, " + BIRTHDAY + " text not null, "
+				+ DESCRIPTION + " text not null, " + PROFILE_IMAGE_URL
+				+ " text not null, " + URL + " text not null, " + PROTECTED
+				+ " boolean not null, " + FOLLOWERS_COUNT
+				+ " integer not null, " + FRIENDS_COUNT + " integer not null, "
+				+ FAVORITES_COUNT + " integer not null, " + STATUSES_COUNT
 				+ " integer not null, " + FOLLOWING + " boolean not null, "
-				+ CREATED_AT
-				+ " integer not null, "
-				+ TYPE
+				+ CREATED_AT + " integer not null, " + TYPE
 				+ " integer not null, " + "unique ( " + ID + "," + TYPE
 				+ " ) on conflict ignore );";
 		// + "unique ( "+ID+","+TYPE+","+OWNER_ID+") on conflict ignore );";
@@ -92,11 +89,11 @@ public final class Contents {
 		public static final String TEXT = "text";
 		public static final String SIMPLE_TEXT = "simple_text";
 		public static final String SOURCE = "source";
-		
+
 		public static final String IN_REPLY_TO_STATUS_ID = "in_reply_to_status_id";
 		public static final String IN_REPLY_TO_USER_ID = "in_reply_to_user_id";
 		public static final String IN_REPLY_TO_SCREEN_NAME = "in_reply_to_screen_name";
-		
+
 		public static final String PHOTO_IMAGE_URL = "imageurl";
 		public static final String PHOTO_THUMB_URL = "thumburl";
 		public static final String PHOTO_LARGE_URL = "largeurl";
@@ -104,87 +101,64 @@ public final class Contents {
 		public static final String USER_ID = "user_id";
 		public static final String USER_SCREEN_NAME = "user_screen_name";
 		public static final String USER_PROFILE_IMAGE_URL = "user_profile_image_url";
-		
+
 		public static final String TRUNCATED = "truncated";
 		public static final String FAVORITED = "favorited";
-		public static final String IS_SELF="is_self";
+		public static final String IS_SELF = "is_self";
 
 		public static final String IS_READ = "is_read";
 		public static final String IS_THREAD = "is_thread";
 		public static final String HAS_PHOTO = "has_photo";
 		public static final String SPECIAL = "special";
 
-		public static final String COLUMNS[] = { 
-			_ID,
-			
-			ID,
-			OWNER_ID, 
-			CREATED_AT,
-			
-			TEXT, 
-			SIMPLE_TEXT,
-			SOURCE, 
-			
-			IN_REPLY_TO_STATUS_ID,
-			IN_REPLY_TO_USER_ID, 
-			IN_REPLY_TO_SCREEN_NAME,
-			
-			PHOTO_IMAGE_URL, 
-			PHOTO_THUMB_URL, 
-			PHOTO_LARGE_URL, 
-			
-			USER_ID,
-			USER_SCREEN_NAME, 
-			USER_PROFILE_IMAGE_URL, 
-			
-			TRUNCATED,
-			FAVORITED,
-			IS_SELF,
-			
-			IS_READ,
-			IS_THREAD, 
-			HAS_PHOTO, 
-			SPECIAL, 
-			
-			TYPE,
-		};
+		public static final String COLUMNS[] = { _ID,
 
-		static final String STATUS_SQL = " (" 
-			+ _ID+ " integer primary key autoincrement, "
-			
-			+ ID + " text not null, "
-			+ OWNER_ID+ " text, " 
-			+ CREATED_AT+ " integer not null, " 
-			
-			+ TEXT + " text not null, " 
-			+ SIMPLE_TEXT + " text not null, "
-			+ SOURCE + " text not null, " 
-			
-			+ IN_REPLY_TO_STATUS_ID + " text, " 
-			+ IN_REPLY_TO_USER_ID + " text, " 
-			+ IN_REPLY_TO_SCREEN_NAME + " text, "
-			
-			+ PHOTO_IMAGE_URL + " text, " 
-			+ PHOTO_THUMB_URL + " text, "
-			+ PHOTO_LARGE_URL + " text, "
-			
-			+ USER_ID + " text not null, " 
-			+ USER_SCREEN_NAME + " text not null, " 
-			+ USER_PROFILE_IMAGE_URL + " text not null, "
-			
-			+ TRUNCATED + " boolean not null, "
-			+ FAVORITED + " boolean not null, "
-			+ IS_SELF + " boolean not null, "
-			
-			+ IS_READ + " boolean not null, "
-			+ IS_THREAD + " boolean not null, " 
-			+ HAS_PHOTO + " boolean not null, " 
-			+ SPECIAL + " boolean not null, " 
-			
-			+ TYPE + " integer not null, "
-			
-			+ "unique ( " + ID + ","
-			+ TYPE + "," + OWNER_ID + ") on conflict ignore );";
+		ID, OWNER_ID, CREATED_AT,
+
+		TEXT, SIMPLE_TEXT, SOURCE,
+
+		IN_REPLY_TO_STATUS_ID, IN_REPLY_TO_USER_ID, IN_REPLY_TO_SCREEN_NAME,
+
+		PHOTO_IMAGE_URL, PHOTO_THUMB_URL, PHOTO_LARGE_URL,
+
+		USER_ID, USER_SCREEN_NAME, USER_PROFILE_IMAGE_URL,
+
+		TRUNCATED, FAVORITED, IS_SELF,
+
+		IS_READ, IS_THREAD, HAS_PHOTO, SPECIAL,
+
+		TYPE, };
+
+		static final String STATUS_SQL = " (" + _ID
+				+ " integer primary key autoincrement, "
+
+				+ ID + " text not null, " + OWNER_ID + " text, " + CREATED_AT
+				+ " integer not null, "
+
+				+ TEXT + " text not null, " + SIMPLE_TEXT + " text not null, "
+				+ SOURCE + " text not null, "
+
+				+ IN_REPLY_TO_STATUS_ID + " text, " + IN_REPLY_TO_USER_ID
+				+ " text, " + IN_REPLY_TO_SCREEN_NAME + " text, "
+
+				+ PHOTO_IMAGE_URL + " text, " + PHOTO_THUMB_URL + " text, "
+				+ PHOTO_LARGE_URL + " text, "
+
+				+ USER_ID + " text not null, " + USER_SCREEN_NAME
+				+ " text not null, " + USER_PROFILE_IMAGE_URL
+				+ " text not null, "
+
+				+ TRUNCATED + " boolean not null, " + FAVORITED
+				+ " boolean not null, " + IS_SELF + " boolean not null, "
+
+				+ IS_READ + " boolean not null, " + IS_THREAD
+				+ " boolean not null, " + HAS_PHOTO + " boolean not null, "
+				+ SPECIAL + " boolean not null, "
+
+				+ TYPE + " integer not null, "
+
+				+ "unique ( " + ID + "," + TYPE + "," + OWNER_ID
+				+ ") on conflict ignore );";
 
 		public static final String CREATE_TABLE = "create table " + TABLE_NAME
 				+ STATUS_SQL;

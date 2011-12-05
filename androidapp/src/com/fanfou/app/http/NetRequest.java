@@ -72,8 +72,8 @@ public final class NetRequest {
 		}
 		NetHelper.setHeaders(request, headers);
 	}
-	
-	public HttpResponse send(NetClient nm) throws IOException{
+
+	public HttpResponse send(AbstractNetClient nm) throws IOException {
 		return nm.exec(this);
 	}
 

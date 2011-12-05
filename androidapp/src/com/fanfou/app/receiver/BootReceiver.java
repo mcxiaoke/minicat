@@ -4,12 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.fanfou.app.R;
 import com.fanfou.app.service.AutoCompleteService;
 import com.fanfou.app.service.DownloadService;
 import com.fanfou.app.service.NotificationService;
-import com.fanfou.app.util.AlarmHelper;
-import com.fanfou.app.util.OptionHelper;
 
 /**
  * @author mcxiaoke

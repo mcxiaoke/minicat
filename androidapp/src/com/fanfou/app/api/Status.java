@@ -56,7 +56,7 @@ public class Status implements Storable<Status> {
 	public static final int TYPE_USER = Commons.STATUS_TYPE_USER;
 	public static final int TYPE_FAVORITES = Commons.STATUS_TYPE_FAVORITES;
 	public static final int TYPE_SEARCH = Commons.STATUS_TYPE_SEARCH;
-	public static final int TYPE_CONTEXT=Commons.STATUS_TYPE_CONTEXT;
+	public static final int TYPE_CONTEXT = Commons.STATUS_TYPE_CONTEXT;
 
 	public String id;
 	public String ownerId;
@@ -207,7 +207,8 @@ public class Status implements Storable<Status> {
 
 	}
 
-	public static Status parse(NetResponse response, int type) throws ApiException {
+	public static Status parse(NetResponse response, int type)
+			throws ApiException {
 		return parse(response.getJSONObject(), type);
 	}
 
@@ -241,7 +242,7 @@ public class Status implements Storable<Status> {
 		}
 		try {
 			Status s = new Status();
-			
+
 			s.id = o.getString(BasicColumns.ID);
 			s.ownerId = App.me.userId;
 			s.createdAt = Parser.date(o.getString(BasicColumns.CREATED_AT));
@@ -249,9 +250,10 @@ public class Status implements Storable<Status> {
 			s.text = o.getString(StatusInfo.TEXT);
 			s.simpleText = StatusHelper.getSimpifiedText(s.text);
 			s.source = Parser.parseSource(o.getString(StatusInfo.SOURCE));
-			
-			if(o.has(StatusInfo.IN_REPLY_TO_STATUS_ID)){
-				s.inReplyToStatusId = o.getString(StatusInfo.IN_REPLY_TO_STATUS_ID);
+
+			if (o.has(StatusInfo.IN_REPLY_TO_STATUS_ID)) {
+				s.inReplyToStatusId = o
+						.getString(StatusInfo.IN_REPLY_TO_STATUS_ID);
 				s.inReplyToUserId = o.getString(StatusInfo.IN_REPLY_TO_USER_ID);
 				s.inReplyToScreenName = o
 						.getString(StatusInfo.IN_REPLY_TO_SCREEN_NAME);
@@ -263,7 +265,7 @@ public class Status implements Storable<Status> {
 			s.favorited = o.getBoolean(StatusInfo.FAVORITED);
 			s.truncated = o.getBoolean(StatusInfo.TRUNCATED);
 			s.self = o.getBoolean(StatusInfo.IS_SELF);
-			
+
 			s.isRead = false;
 			s.special = false;
 
@@ -286,7 +288,7 @@ public class Status implements Storable<Status> {
 			}
 
 			s.type = type;
-			
+
 			return s;
 		} catch (JSONException e) {
 			if (App.DEBUG)
@@ -303,15 +305,15 @@ public class Status implements Storable<Status> {
 		cv.put(BasicColumns.ID, this.id);
 		cv.put(BasicColumns.OWNER_ID, this.ownerId);
 		cv.put(BasicColumns.CREATED_AT, this.createdAt.getTime());
-		
+
 		cv.put(StatusInfo.TEXT, this.text);
 		cv.put(StatusInfo.SOURCE, this.source);
 		cv.put(StatusInfo.SIMPLE_TEXT, this.simpleText);
-		
+
 		cv.put(StatusInfo.IN_REPLY_TO_STATUS_ID, this.inReplyToStatusId);
 		cv.put(StatusInfo.IN_REPLY_TO_USER_ID, this.inReplyToUserId);
 		cv.put(StatusInfo.IN_REPLY_TO_SCREEN_NAME, this.inReplyToScreenName);
-		
+
 		cv.put(StatusInfo.PHOTO_IMAGE_URL, this.photoImageUrl);
 		cv.put(StatusInfo.PHOTO_THUMB_URL, this.photoThumbUrl);
 		cv.put(StatusInfo.PHOTO_LARGE_URL, this.photoLargeUrl);
@@ -336,19 +338,19 @@ public class Status implements Storable<Status> {
 
 	@Override
 	public void fromContentValues(final ContentValues cv) {
-		id = cv.getAsString(StatusInfo.ID);
-		ownerId = cv.getAsString(StatusInfo.OWNER_ID);
-		createdAt = new Date(cv.getAsLong(StatusInfo.CREATED_AT));
-		
+		id = cv.getAsString(BasicColumns.ID);
+		ownerId = cv.getAsString(BasicColumns.OWNER_ID);
+		createdAt = new Date(cv.getAsLong(BasicColumns.CREATED_AT));
+
 		text = cv.getAsString(StatusInfo.TEXT);
 		simpleText = cv.getAsString(StatusInfo.SIMPLE_TEXT);
 		source = cv.getAsString(StatusInfo.SOURCE);
-		
+
 		inReplyToStatusId = cv.getAsString(StatusInfo.IN_REPLY_TO_STATUS_ID);
 		inReplyToUserId = cv.getAsString(StatusInfo.IN_REPLY_TO_USER_ID);
 		inReplyToScreenName = cv
 				.getAsString(StatusInfo.IN_REPLY_TO_SCREEN_NAME);
-		
+
 		photoImageUrl = cv.getAsString(StatusInfo.PHOTO_IMAGE_URL);
 		photoThumbUrl = cv.getAsString(StatusInfo.PHOTO_THUMB_URL);
 		photoLargeUrl = cv.getAsString(StatusInfo.PHOTO_LARGE_URL);
@@ -366,7 +368,7 @@ public class Status implements Storable<Status> {
 		hasPhoto = cv.getAsBoolean(StatusInfo.HAS_PHOTO);
 		special = cv.getAsBoolean(StatusInfo.SPECIAL);
 
-		type = cv.getAsInteger(StatusInfo.TYPE);
+		type = cv.getAsInteger(BasicColumns.TYPE);
 	}
 
 	@Override

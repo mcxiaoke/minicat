@@ -13,7 +13,6 @@ import com.fanfou.app.R;
 import com.fanfou.app.api.User;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
-import com.fanfou.app.util.StringHelper;
 
 /**
  * @author mcxiaoke
@@ -58,7 +57,7 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 		View view = mInflater.inflate(getLayoutId(), null);
 		ViewHolder holder = new ViewHolder(view);
 		setHeadImage(mContext, holder.headIcon);
-//		setTextStyle(holder);
+		// setTextStyle(holder);
 		view.setTag(holder);
 		// bindView(view, context, cursor);
 		return view;
@@ -89,7 +88,7 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 			holder.lockIcon.setVisibility(View.GONE);
 		}
 		holder.nameText.setText(u.screenName);
-		holder.idText.setText("("+u.id+")");
+		holder.idText.setText("(" + u.id + ")");
 		holder.dateText.setText(DateTimeHelper.formatDateOnly(u.createdAt));
 		holder.genderText.setText(u.gender);
 		holder.locationText.setText(u.location);

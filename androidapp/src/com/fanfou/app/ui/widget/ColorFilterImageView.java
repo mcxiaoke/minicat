@@ -24,31 +24,32 @@ import android.widget.ImageView;
  * A @{code ImageView} which grey out the icon if disabled.
  */
 public class ColorFilterImageView extends ImageView {
-    private final int DISABLED_COLOR;
-    private boolean mFilterEnabled = true;
+	private final int DISABLED_COLOR;
+	private boolean mFilterEnabled = true;
 
-    public ColorFilterImageView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        DISABLED_COLOR = context.getResources().getColor(android.R.color.darker_gray);
-    }
+	public ColorFilterImageView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		DISABLED_COLOR = context.getResources().getColor(
+				android.R.color.darker_gray);
+	}
 
-    public ColorFilterImageView(Context context) {
-        this(context, null);
-    }
+	public ColorFilterImageView(Context context) {
+		this(context, null);
+	}
 
-    @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-        if (mFilterEnabled) {
-            if (enabled) {
-                clearColorFilter();
-            } else {
-                setColorFilter(DISABLED_COLOR);
-            }
-        }
-    }
+	@Override
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		if (mFilterEnabled) {
+			if (enabled) {
+				clearColorFilter();
+			} else {
+				setColorFilter(DISABLED_COLOR);
+			}
+		}
+	}
 
-    public void enableFilter(boolean enabled) {
-        mFilterEnabled = enabled;
-    }
+	public void enableFilter(boolean enabled) {
+		mFilterEnabled = enabled;
+	}
 }

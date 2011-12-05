@@ -179,17 +179,18 @@ public final class NetworkHelper {
 			params.removeParameter(ConnRoutePNames.DEFAULT_PROXY);
 		}
 	}
-	
+
 	public static ApnType getApnType(Context context) {
-		ApnType type=ApnType.NET;
+		ApnType type = ApnType.NET;
 		try {
-			ConnectivityManager cm=(ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+			ConnectivityManager cm = (ConnectivityManager) context
+					.getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo info = cm.getActiveNetworkInfo();
 			if (App.DEBUG) {
-				Log.d("App","NetworkInfo: "+info);
+				Log.d("App", "NetworkInfo: " + info);
 			}
 			if (info != null && info.isConnectedOrConnecting()) {
-				App.noConnection=false;
+				App.noConnection = false;
 				if (info.getType() == ConnectivityManager.TYPE_WIFI) {
 					type = ApnType.WIFI;
 				} else if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
@@ -204,8 +205,8 @@ public final class NetworkHelper {
 						}
 					}
 				}
-			}else{
-				App.noConnection=true;
+			} else {
+				App.noConnection = true;
 			}
 		} catch (Exception e) {
 		}

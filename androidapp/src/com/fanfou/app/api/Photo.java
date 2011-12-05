@@ -16,7 +16,7 @@ import android.os.Parcelable;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.11.10
- *
+ * 
  */
 public class Photo implements Storable<Photo> {
 	public String id;
@@ -46,26 +46,26 @@ public class Photo implements Storable<Photo> {
 					e.getMessage(), e);
 		}
 	}
-	
+
 	@Override
 	public ContentValues toContentValues() {
-		ContentValues cv=new ContentValues();
+		ContentValues cv = new ContentValues();
 		cv.put("id", id);
-		cv.put("createdAt",createdAt.getTime());
+		cv.put("createdAt", createdAt.getTime());
 		cv.put("imageUrl", imageUrl);
 		cv.put("thumbUrl", thumbUrl);
 		cv.put("largeUrl", largeUrl);
 		return cv;
 	}
-	
+
 	@Override
 	public void fromContentValues(ContentValues values) {
-		ContentValues cv=values;
-		id=cv.getAsString("id");
-		createdAt=new Date(cv.getAsLong("createdAt"));
-		imageUrl=cv.getAsString("imageUrl");
-		thumbUrl=cv.getAsString("thumbUrl");
-		largeUrl=cv.getAsString("largeUrl");
+		ContentValues cv = values;
+		id = cv.getAsString("id");
+		createdAt = new Date(cv.getAsLong("createdAt"));
+		imageUrl = cv.getAsString("imageUrl");
+		thumbUrl = cv.getAsString("thumbUrl");
+		largeUrl = cv.getAsString("largeUrl");
 	}
 
 	@Override
@@ -83,8 +83,6 @@ public class Photo implements Storable<Photo> {
 		return largeUrl;
 	}
 
-
-	
 	@Override
 	public int describeContents() {
 		return 0;
@@ -92,11 +90,11 @@ public class Photo implements Storable<Photo> {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		ContentValues cv=toContentValues();
+		ContentValues cv = toContentValues();
 		dest.writeParcelable(cv, flags);
 	}
-	
-	public static final Parcelable.Creator<Photo> CREATOR=new Parcelable.Creator<Photo>() {
+
+	public static final Parcelable.Creator<Photo> CREATOR = new Parcelable.Creator<Photo>() {
 
 		@Override
 		public Photo createFromParcel(Parcel source) {
@@ -108,9 +106,9 @@ public class Photo implements Storable<Photo> {
 			return new Photo[size];
 		}
 	};
-	
-	public Photo(Parcel in){
-		ContentValues cv=in.readParcelable(null);
+
+	public Photo(Parcel in) {
+		ContentValues cv = in.readParcelable(null);
 		fromContentValues(cv);
 	}
 

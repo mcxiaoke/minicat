@@ -129,7 +129,6 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 			}
 		}
 
-
 		if (!isTextMode()) {
 			holder.headIcon.setTag(s.userProfileImageUrl);
 			mLoader.set(s.userProfileImageUrl, holder.headIcon,

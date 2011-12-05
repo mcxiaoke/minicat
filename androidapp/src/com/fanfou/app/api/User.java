@@ -12,13 +12,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
-import android.util.Log;
-
 import com.fanfou.app.App;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
-import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.http.NetResponse;
 import com.fanfou.app.http.ResponseCode;
@@ -47,31 +43,31 @@ public class User implements Storable<User> {
 	public Date createdAt;
 	public String id;
 	public String ownerId;
-	
+
 	public String screenName;
 	public String location;
 	public String gender;
 	public String birthday;
-	
+
 	public String description;
 	public String profileImageUrl;
 	public String url;
 	public boolean protect;
-	
+
 	public int followersCount;
 	public int friendsCount;
 	public int favouritesCount;
 	public int statusesCount;
-	
+
 	public boolean following;
 
 	public int type;
-	
-	public User (){
+
+	public User() {
 	}
-	
-	public User(Parcel in){
-		ContentValues cv=in.readParcelable(null);
+
+	public User(Parcel in) {
+		ContentValues cv = in.readParcelable(null);
 		fromContentValues(cv);
 	}
 
@@ -85,7 +81,7 @@ public class User implements Storable<User> {
 	}
 
 	public static List<User> parseUsers(NetResponse r) throws ApiException {
-			return User.parseUsers(r.getJSONArray());
+		return User.parseUsers(r.getJSONArray());
 	}
 
 	public static List<User> parseUsers(JSONArray a) throws ApiException {
@@ -134,14 +130,13 @@ public class User implements Storable<User> {
 	public static User parse(NetResponse r) throws ApiException {
 		return parse(r.getJSONObject());
 	}
-	
 
 	public static User parse(JSONObject o) throws ApiException {
-		if(null==o){
+		if (null == o) {
 			return null;
 		}
 		try {
-			User user=new User();
+			User user = new User();
 			user.id = o.getString(BasicColumns.ID);
 			user.screenName = o.getString(UserInfo.SCREEN_NAME);
 			user.location = o.getString(UserInfo.LOCATION);
@@ -175,17 +170,17 @@ public class User implements Storable<User> {
 		cv.put(UserInfo.LOCATION, u.location);
 		cv.put(UserInfo.GENDER, u.gender);
 		cv.put(UserInfo.BIRTHDAY, u.birthday);
-		
+
 		cv.put(UserInfo.DESCRIPTION, u.description);
 		cv.put(UserInfo.PROFILE_IMAGE_URL, u.profileImageUrl);
 		cv.put(UserInfo.URL, u.url);
 		cv.put(UserInfo.PROTECTED, u.protect);
-		
+
 		cv.put(UserInfo.FOLLOWERS_COUNT, u.followersCount);
 		cv.put(UserInfo.FRIENDS_COUNT, u.friendsCount);
 		cv.put(UserInfo.FAVORITES_COUNT, u.favouritesCount);
 		cv.put(UserInfo.STATUSES_COUNT, u.statusesCount);
-		
+
 		cv.put(UserInfo.FOLLOWING, u.following);
 
 		return cv;
@@ -196,8 +191,8 @@ public class User implements Storable<User> {
 		User u = this;
 		ContentValues cv = new ContentValues();
 
-		cv.put(UserInfo.ID, u.id);
-		cv.put(UserInfo.OWNER_ID, u.ownerId);
+		cv.put(BasicColumns.ID, u.id);
+		cv.put(BasicColumns.OWNER_ID, u.ownerId);
 
 		cv.put(UserInfo.SCREEN_NAME, u.screenName);
 		cv.put(UserInfo.LOCATION, u.location);
@@ -215,55 +210,55 @@ public class User implements Storable<User> {
 		cv.put(UserInfo.STATUSES_COUNT, u.statusesCount);
 
 		cv.put(UserInfo.FOLLOWING, u.following);
-		cv.put(UserInfo.CREATED_AT, u.createdAt.getTime());
-		
-		cv.put(UserInfo.TYPE, u.type);
+		cv.put(BasicColumns.CREATED_AT, u.createdAt.getTime());
+
+		cv.put(BasicColumns.TYPE, u.type);
 
 		return cv;
 	}
-	
+
 	@Override
-	public void fromContentValues(final ContentValues cv) {	
-		id=cv.getAsString(UserInfo.ID);
-		ownerId=cv.getAsString(UserInfo.OWNER_ID);
-		
-		screenName=cv.getAsString(UserInfo.SCREEN_NAME);
-		location=cv.getAsString(UserInfo.LOCATION);
-		gender=cv.getAsString(UserInfo.GENDER);
-		birthday=cv.getAsString(UserInfo.BIRTHDAY);
-		
-		description=cv.getAsString(UserInfo.DESCRIPTION);
-		profileImageUrl=cv.getAsString(UserInfo.PROFILE_IMAGE_URL);
-		url=cv.getAsString(UserInfo.URL);
-		protect=cv.getAsBoolean(UserInfo.PROTECTED);
-		
-		followersCount=cv.getAsInteger(UserInfo.FOLLOWERS_COUNT);
-		friendsCount=cv.getAsInteger(UserInfo.FRIENDS_COUNT);
-		favouritesCount=cv.getAsInteger(UserInfo.FAVORITES_COUNT);
-		statusesCount=cv.getAsInteger(UserInfo.STATUSES_COUNT);
-		
-		following=cv.getAsBoolean(UserInfo.FOLLOWING);
-		createdAt=new Date(cv.getAsLong(UserInfo.CREATED_AT));
-		
-		type=cv.getAsInteger(UserInfo.TYPE);
-		
+	public void fromContentValues(final ContentValues cv) {
+		id = cv.getAsString(BasicColumns.ID);
+		ownerId = cv.getAsString(BasicColumns.OWNER_ID);
+
+		screenName = cv.getAsString(UserInfo.SCREEN_NAME);
+		location = cv.getAsString(UserInfo.LOCATION);
+		gender = cv.getAsString(UserInfo.GENDER);
+		birthday = cv.getAsString(UserInfo.BIRTHDAY);
+
+		description = cv.getAsString(UserInfo.DESCRIPTION);
+		profileImageUrl = cv.getAsString(UserInfo.PROFILE_IMAGE_URL);
+		url = cv.getAsString(UserInfo.URL);
+		protect = cv.getAsBoolean(UserInfo.PROTECTED);
+
+		followersCount = cv.getAsInteger(UserInfo.FOLLOWERS_COUNT);
+		friendsCount = cv.getAsInteger(UserInfo.FRIENDS_COUNT);
+		favouritesCount = cv.getAsInteger(UserInfo.FAVORITES_COUNT);
+		statusesCount = cv.getAsInteger(UserInfo.STATUSES_COUNT);
+
+		following = cv.getAsBoolean(UserInfo.FOLLOWING);
+		createdAt = new Date(cv.getAsLong(BasicColumns.CREATED_AT));
+
+		type = cv.getAsInteger(BasicColumns.TYPE);
+
 	}
 
 	@Override
 	public String toString() {
 		return "[User] " + BasicColumns.ID + "=" + id + " "
-				+ UserInfo.SCREEN_NAME + "=" + screenName + " " + UserInfo.LOCATION + "=" + location + " "
-				+ UserInfo.GENDER + "=" + gender + " " + UserInfo.BIRTHDAY
-				+ "=" + birthday + " " + UserInfo.DESCRIPTION + "="
-				+ description + " " + UserInfo.PROFILE_IMAGE_URL + "="
-				+ profileImageUrl + " " + UserInfo.URL + "=" + url + " "
-				+ UserInfo.PROTECTED + "=" + protect + " "
-				+ UserInfo.FOLLOWERS_COUNT + "=" + followersCount + " "
-				+ UserInfo.FRIENDS_COUNT + "=" + friendsCount + " "
-				+ UserInfo.FAVORITES_COUNT + "=" + favouritesCount + " "
-				+ UserInfo.STATUSES_COUNT + "=" + statusesCount + " "
-				+ UserInfo.FOLLOWING + "=" + following + " "
-				+ BasicColumns.CREATED_AT + "=" + createdAt + " "
+				+ UserInfo.SCREEN_NAME + "=" + screenName + " "
+				+ UserInfo.LOCATION + "=" + location + " " + UserInfo.GENDER
+				+ "=" + gender + " " + UserInfo.BIRTHDAY + "=" + birthday + " "
+				+ UserInfo.DESCRIPTION + "=" + description + " "
+				+ UserInfo.PROFILE_IMAGE_URL + "=" + profileImageUrl + " "
+				+ UserInfo.URL + "=" + url + " " + UserInfo.PROTECTED + "="
+				+ protect + " " + UserInfo.FOLLOWERS_COUNT + "="
+				+ followersCount + " " + UserInfo.FRIENDS_COUNT + "="
+				+ friendsCount + " " + UserInfo.FAVORITES_COUNT + "="
+				+ favouritesCount + " " + UserInfo.STATUSES_COUNT + "="
+				+ statusesCount + " " + UserInfo.FOLLOWING + "=" + following
+				+ " " + BasicColumns.CREATED_AT + "=" + createdAt + " "
 				+ BasicColumns.TYPE + "=" + type + " ";
 	}
 
@@ -290,11 +285,11 @@ public class User implements Storable<User> {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		ContentValues cv=toContentValues();
+		ContentValues cv = toContentValues();
 		dest.writeParcelable(cv, flags);
 	}
-	
-	public static final Parcelable.Creator<User> CREATOR=new Parcelable.Creator<User>() {
+
+	public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
 
 		@Override
 		public User createFromParcel(Parcel source) {

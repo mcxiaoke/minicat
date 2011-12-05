@@ -23,68 +23,72 @@ import java.lang.reflect.Method;
 /**
  * Tools to retrieve key/value pairs from static fields and getters of any
  * class. Reflection API usage allows to retrieve data without having to
- * implement a class for each android version of each intersting class.
- * It can also help find hidden properties.
+ * implement a class for each android version of each intersting class. It can
+ * also help find hidden properties.
  * 
  * @author Kevin Gaudin
  * 
  */
 final class ReflectionCollector {
 
-    /**
-     * Retrieves key/value pairs from static fields of a class.
-     *
-     * @param someClass the class to be inspected.
-     * @return A human readable string with a key=value pair on each line.
-     */
-    public static String collectConstants(Class<?> someClass) {
+	/**
+	 * Retrieves key/value pairs from static fields of a class.
+	 * 
+	 * @param someClass
+	 *            the class to be inspected.
+	 * @return A human readable string with a key=value pair on each line.
+	 */
+	public static String collectConstants(Class<?> someClass) {
 
-        final StringBuilder result = new StringBuilder();
+		final StringBuilder result = new StringBuilder();
 
-        final Field[] fields = someClass.getFields();
-        for (final Field field : fields) {
-            result.append(field.getName()).append("=");
-            try {
-                result.append(field.get(null).toString());
-            } catch (IllegalArgumentException e) {
-                result.append("N/A");
-            } catch (IllegalAccessException e) {
-                result.append("N/A");
-            }
-            result.append("\n");
-        }
+		final Field[] fields = someClass.getFields();
+		for (final Field field : fields) {
+			result.append(field.getName()).append("=");
+			try {
+				result.append(field.get(null).toString());
+			} catch (IllegalArgumentException e) {
+				result.append("N/A");
+			} catch (IllegalAccessException e) {
+				result.append("N/A");
+			}
+			result.append("\n");
+		}
 
-        return result.toString();
-    }
+		return result.toString();
+	}
 
-    /**
-     * Retrieves key/value pairs from static getters of a class (get*() or is*()).
-     *
-     * @param someClass the class to be inspected.
-     * @return A human readable string with a key=value pair on each line.
-     */
-    public static String collectStaticGettersResults(Class<?> someClass) {
-        final StringBuilder result = new StringBuilder();
-        final Method[] methods = someClass.getMethods();
-        for (final Method method : methods) {
-            if (method.getParameterTypes().length == 0
-                    && (method.getName().startsWith("get") || method.getName().startsWith("is"))
-                    && !method.getName().equals("getClass")) {
-                try {
-                    result.append(method.getName());
-                    result.append('=');
-                    result.append(method.invoke(null, (Object[]) null));
-                    result.append("\n");
-                } catch (IllegalArgumentException e) {
-                    // NOOP
-                } catch (IllegalAccessException e) {
-                    // NOOP
-                } catch (InvocationTargetException e) {
-                    // NOOP
-                }
-            }
-        }
+	/**
+	 * Retrieves key/value pairs from static getters of a class (get*() or
+	 * is*()).
+	 * 
+	 * @param someClass
+	 *            the class to be inspected.
+	 * @return A human readable string with a key=value pair on each line.
+	 */
+	public static String collectStaticGettersResults(Class<?> someClass) {
+		final StringBuilder result = new StringBuilder();
+		final Method[] methods = someClass.getMethods();
+		for (final Method method : methods) {
+			if (method.getParameterTypes().length == 0
+					&& (method.getName().startsWith("get") || method.getName()
+							.startsWith("is"))
+					&& !method.getName().equals("getClass")) {
+				try {
+					result.append(method.getName());
+					result.append('=');
+					result.append(method.invoke(null, (Object[]) null));
+					result.append("\n");
+				} catch (IllegalArgumentException e) {
+					// NOOP
+				} catch (IllegalAccessException e) {
+					// NOOP
+				} catch (InvocationTargetException e) {
+					// NOOP
+				}
+			}
+		}
 
-        return result.toString();
-    }
+		return result.toString();
+	}
 }

@@ -17,9 +17,9 @@ package com.fanfou.app.api;
 public interface FanFouApiConfig {
 
 	public static final String HOST = "http://fanfou.com/";
-	public static final String API_DOMAIN_BASE="api.fanfou.com";
-	public static final String API_DOMAIN = "http://"+API_DOMAIN_BASE;
-//	public static final String API_IP = "http://58.83.129.19";
+	public static final String API_DOMAIN_BASE = "api.fanfou.com";
+	public static final String API_DOMAIN = "http://" + API_DOMAIN_BASE;
+	// public static final String API_IP = "http://58.83.129.19";
 	public static final String API_BASE = API_DOMAIN;
 	public static final String EXTENSION = ".json";
 	public static final int MAX_TIMELINE_COUNT = 60;
@@ -27,9 +27,9 @@ public interface FanFouApiConfig {
 	public static final int MAX_USERS_COUNT = 60;
 	public static final int DEFAULT_USERS_COUNT = 20;
 	public static final int MAX_IDS_COUNT = 2000;
-	
-	public static final String FORMAT_HTML="html";
-	public static final String MODE_LITE="lite";
+
+	public static final String FORMAT_HTML = "html";
+	public static final String MODE_LITE = "lite";
 
 	// verify account
 	public static final String URL_VERIFY_CREDENTIALS = API_BASE
@@ -62,9 +62,9 @@ public interface FanFouApiConfig {
 			+ "/statuses/replies" + EXTENSION;
 	public static final String URL_TIMELINE_MENTIONS = API_BASE
 			+ "/statuses/mentions" + EXTENSION;
-	
+
 	public static final String URL_TIMELINE_CONTEXT = API_BASE
-	+ "/statuses/context_timeline" + EXTENSION;
+			+ "/statuses/context_timeline" + EXTENSION;
 
 	// timeline contains photos
 	public static final String URL_TIMELINE_PHOTOS = API_BASE
@@ -81,8 +81,8 @@ public interface FanFouApiConfig {
 	// param location -- location string or latitude
 	// param repost_status_id -- only for repost
 	// POST METHOD
-	public static final String URL_STATUS_UPDATE = API_BASE + "/statuses/update"
-			+ EXTENSION;
+	public static final String URL_STATUS_UPDATE = API_BASE
+			+ "/statuses/update" + EXTENSION;
 
 	// delete a status
 	// param id -- status id
@@ -108,17 +108,16 @@ public interface FanFouApiConfig {
 	// param max_id -- max status id
 	public static final String URL_SEARCH = API_BASE
 			+ "/search/public_timeline" + EXTENSION;
-	
-	public static final String URL_SEARCH_USERS = API_BASE
-	+ "/search/users" + EXTENSION;
-	
-	
+
+	public static final String URL_SEARCH_USERS = API_BASE + "/search/users"
+			+ EXTENSION;
+
 	public static final String URL_TRENDS_LIST = API_BASE + "/trends/list"
 			+ EXTENSION;
 
 	// show saved searches list
-	public static final String URL_SAVED_SEARCHES_LIST = API_BASE + "/saved_searches/list"
-			+ EXTENSION;
+	public static final String URL_SAVED_SEARCHES_LIST = API_BASE
+			+ "/saved_searches/list" + EXTENSION;
 
 	// show item in saved searches
 	// param id -- keyword id
@@ -161,8 +160,8 @@ public interface FanFouApiConfig {
 
 	// friends ids or followers ids
 	// param id -- userid
-	public static final String URL_USERS_FRIENDS_IDS = API_BASE + "/friends/ids"
-			+ EXTENSION;
+	public static final String URL_USERS_FRIENDS_IDS = API_BASE
+			+ "/friends/ids" + EXTENSION;
 	public static final String URL_USERS_FOLLOWERS_IDS = API_BASE
 			+ "/followers/ids" + EXTENSION;
 
@@ -173,13 +172,15 @@ public interface FanFouApiConfig {
 	// param page
 	public static final String URL_DIRECT_MESSAGES_INBOX = API_BASE
 			+ "/direct_messages/inbox" + EXTENSION;
-	
+
 	public static final String URL_DIRECT_MESSAGES_OUTBOX = API_BASE
 			+ "/direct_messages/sent" + EXTENSION;
-	
-	public static final String URL_DIRECT_MESSAGES_CONVERSATION_LIST=API_BASE+"/direct_messages/conversation_list"+ EXTENSION;
-	
-	public static final String URL_DIRECT_MESSAGES_CONVERSATION=API_BASE+"/direct_messages/conversation"+ EXTENSION;
+
+	public static final String URL_DIRECT_MESSAGES_CONVERSATION_LIST = API_BASE
+			+ "/direct_messages/conversation_list" + EXTENSION;
+
+	public static final String URL_DIRECT_MESSAGES_CONVERSATION = API_BASE
+			+ "/direct_messages/conversation" + EXTENSION;
 
 	// send direct message
 	// param user -- recipient user id
@@ -199,8 +200,8 @@ public interface FanFouApiConfig {
 	// param id -- userid
 	// param count
 	// param page
-	public static final String URL_FAVORITES_LIST = API_BASE + "/favorites/list"
-			+ EXTENSION;
+	public static final String URL_FAVORITES_LIST = API_BASE
+			+ "/favorites/list" + EXTENSION;
 
 	// favorite or unfavorite a status
 	// param id -- status id
@@ -213,10 +214,10 @@ public interface FanFouApiConfig {
 	// add or remove in blocks
 	// param id --userid
 	// POST METHOD
-	public static final String URL_BLOCKS_CREATE = API_BASE + "/blocks/create/%s"
-			+ EXTENSION;
-	public static final String URL_BLOCKS_DESTROY = API_BASE + "/blocks/destroy/%s"
-			+ EXTENSION;
+	public static final String URL_BLOCKS_CREATE = API_BASE
+			+ "/blocks/create/%s" + EXTENSION;
+	public static final String URL_BLOCKS_DESTROY = API_BASE
+			+ "/blocks/destroy/%s" + EXTENSION;
 
 	// show blocking list
 	// param count count 0-60, default is 20

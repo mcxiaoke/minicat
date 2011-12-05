@@ -8,7 +8,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.AnimationDrawable;
-import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,7 +41,6 @@ import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.dialog.ConfirmDialog;
-import com.fanfou.app.http.NetClient;
 import com.fanfou.app.service.FetchService;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionBar;
@@ -153,7 +151,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				R.string.option_page_scroll_endless, false);
 		soundEffect = OptionHelper.readBoolean(mContext,
 				R.string.option_play_sound_effect, true);
-		
+
 		ImageLoader.getInstance(this);
 		mHandler = new Handler();
 		initSendSuccessReceiver();
@@ -379,7 +377,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		String where = BasicColumns.TYPE + "=?";
 		String[] whereArgs = new String[] { String.valueOf(type) };
 		Uri uri = StatusInfo.CONTENT_URI;
-		return managedQuery(uri, StatusInfo.COLUMNS, where, whereArgs, FanFouProvider.ORDERBY_DATE_DESC);
+		return managedQuery(uri, StatusInfo.COLUMNS, where, whereArgs,
+				FanFouProvider.ORDERBY_DATE_DESC);
 	}
 
 	private Cursor initMessageCursor() {
@@ -440,7 +439,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			Utils.notify(this, "未通过验证，请登录");
 			return;
 		}
-		if(App.me.apnType!=ApnType.WIFI){
+		if (App.me.apnType != ApnType.WIFI) {
 			ImageLoader.getInstance(this).clearQueue();
 		}
 		Bundle b = new Bundle();
@@ -616,11 +615,11 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		if (App.DEBUG)
 			log("onPause");
 	}
-	
+
 	@Override
-	protected void onStop(){
+	protected void onStop() {
 		super.onStop();
-		if(App.me.apnType!=ApnType.WIFI){
+		if (App.me.apnType != ApnType.WIFI) {
 			ImageLoader.getInstance(this).clearQueue();
 		}
 	}
@@ -630,7 +629,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		super.onDestroy();
 		ImageLoader.getInstance(this).shutdown();
 		SoundManager.cleanup();
-		if(App.DEBUG){
+		if (App.DEBUG) {
 			log("onDestroy()");
 		}
 	}
@@ -726,7 +725,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			setBusy(false);
 			switch (resultCode) {
 			case Commons.RESULT_CODE_FINISH:
-				int type=resultData.getInt(Commons.EXTRA_TYPE,Status.TYPE_HOME);
+				int type = resultData.getInt(Commons.EXTRA_TYPE,
+						Status.TYPE_HOME);
 				int count = resultData.getInt(Commons.EXTRA_COUNT);
 				if (doGetMore) {
 					if (i < NUMS_OF_PAGE - 1) {
@@ -740,9 +740,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 						views[i].addFooter();
 					}
 					if (count > 0) {
-						if(type==DirectMessage.TYPE_ALL){
+						if (type == DirectMessage.TYPE_ALL) {
 							Utils.notify(mContext, count + "条新私信");
-						}else{
+						} else {
 							Utils.notify(mContext, count + "条新消息");
 						}
 						if (soundEffect) {

@@ -24,42 +24,50 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 
 /**
- * Features declared as available on the device. Available only with API level > 5.
+ * Features declared as available on the device. Available only with API level >
+ * 5.
  * 
  * @author Kevin Gaudin
  * 
  */
 final class DeviceFeaturesCollector {
 
-    public static String getFeatures(Context ctx) {
+	public static String getFeatures(Context ctx) {
 
-        if (Compatibility.getAPILevel() < 5) {
-            return "Data available only with API Level >= 5";
-        }
+		if (Compatibility.getAPILevel() < 5) {
+			return "Data available only with API Level >= 5";
+		}
 
-        final StringBuilder result = new StringBuilder();
-        try {
-            final PackageManager pm = ctx.getPackageManager();
-            final Method getSystemAvailableFeatures = PackageManager.class.getMethod("getSystemAvailableFeatures", (Class[]) null);
-            final Object[] features = (Object[]) getSystemAvailableFeatures.invoke(pm);
-            for (final Object feature : features) {
-                final String featureName = (String) feature.getClass().getField("name").get(feature);
-                if(featureName != null) {
-                    result.append(featureName);
-                } else {
-                    final Method getGlEsVersion = feature.getClass().getMethod("getGlEsVersion", (Class[]) null);
-                    final String glEsVersion = (String) getGlEsVersion.invoke(feature);
-                    result.append("glEsVersion = ");
-                    result.append(glEsVersion);
-                }
-                result.append("\n");
-            }
-        } catch (Throwable e) {
-            Log.w(LOG_TAG, "Couldn't retrieve DeviceFeatures for " + ctx.getPackageName(), e);
-            result.append("Could not retrieve data: ");
-            result.append(e.getMessage());
-        }
+		final StringBuilder result = new StringBuilder();
+		try {
+			final PackageManager pm = ctx.getPackageManager();
+			final Method getSystemAvailableFeatures = PackageManager.class
+					.getMethod("getSystemAvailableFeatures", (Class[]) null);
+			final Object[] features = (Object[]) getSystemAvailableFeatures
+					.invoke(pm);
+			for (final Object feature : features) {
+				final String featureName = (String) feature.getClass()
+						.getField("name").get(feature);
+				if (featureName != null) {
+					result.append(featureName);
+				} else {
+					final Method getGlEsVersion = feature.getClass().getMethod(
+							"getGlEsVersion", (Class[]) null);
+					final String glEsVersion = (String) getGlEsVersion
+							.invoke(feature);
+					result.append("glEsVersion = ");
+					result.append(glEsVersion);
+				}
+				result.append("\n");
+			}
+		} catch (Throwable e) {
+			Log.w(LOG_TAG,
+					"Couldn't retrieve DeviceFeatures for "
+							+ ctx.getPackageName(), e);
+			result.append("Could not retrieve data: ");
+			result.append(e.getMessage());
+		}
 
-        return result.toString();
-    }
+		return result.toString();
+	}
 }

@@ -41,7 +41,7 @@ import com.fanfou.app.util.Utils;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.12.02
- *
+ * 
  */
 public final class NetHelper {
 	public static final int SOCKET_BUFFER_SIZE = 8192;
@@ -148,7 +148,6 @@ public final class NetHelper {
 		}
 		return containsFile;
 	}
-	
 
 	public final static synchronized DefaultHttpClient newHttpClient() {
 		HttpParams params = new BasicHttpParams();

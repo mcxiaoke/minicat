@@ -11,7 +11,6 @@ import com.fanfou.app.api.Status;
 
 import android.text.Html;
 import android.text.Spannable;
-import android.text.TextPaint;
 import android.text.style.URLSpan;
 import android.util.Log;
 import android.widget.TextView;
@@ -167,7 +166,7 @@ public class StatusHelper {
 	}
 
 	public static ArrayList<String> getMentions(final Status status) {
-		String text=status.simpleText;
+		String text = status.simpleText;
 		ArrayList<String> names = new ArrayList<String>();
 		names.add(status.userScreenName);
 		Matcher m = namePattern.matcher(text);

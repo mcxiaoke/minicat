@@ -1,7 +1,6 @@
 package com.fanfou.app.service;
 
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -17,9 +16,7 @@ import android.os.Message;
 import com.fanfou.app.App;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
-import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.FanFouApiConfig;
-import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 
@@ -118,7 +115,8 @@ public class WebService extends Service implements IWebService {
 	}
 
 	@Override
-	public void friendshipsCreate(final String id, final IWebServiceCallback callback) {
+	public void friendshipsCreate(final String id,
+			final IWebServiceCallback callback) {
 		final Handler handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -134,24 +132,25 @@ public class WebService extends Service implements IWebService {
 			}
 
 		};
-		
-		final Runnable task=new Runnable() {
-			
+
+		final Runnable task = new Runnable() {
+
 			@Override
 			public void run() {
 				User user;
 				try {
-					user = mApi.friendshipsCreate(id, FanFouApiConfig.MODE_LITE);
-					if(user==null||user.isNull()){
+					user = mApi
+							.friendshipsCreate(id, FanFouApiConfig.MODE_LITE);
+					if (user == null || user.isNull()) {
 						callback.onFailed(0, "操作不成功");
-					}else{
-						Bundle bundle=new Bundle();
+					} else {
+						Bundle bundle = new Bundle();
 						bundle.putParcelable(Commons.EXTRA_USER, user);
 						callback.onSuccess(bundle);
 					}
 				} catch (ApiException e) {
 					callback.onFailed(e.statusCode, e.getMessage());
-					if(App.DEBUG){
+					if (App.DEBUG) {
 						e.printStackTrace();
 					}
 				}

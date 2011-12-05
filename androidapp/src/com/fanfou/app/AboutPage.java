@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
+import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
-import android.text.style.URLSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -80,16 +80,18 @@ public class AboutPage extends Activity implements OnClickListener {
 		mCopyright.setText("\u00a9 2007-2011 fanfou.com");
 
 	}
-	
-	private void linkifySupport(final TextView textView){
+
+	private void linkifySupport(final TextView textView) {
 		textView.setMovementMethod(LinkMovementMethod.getInstance());
-		Spannable span=(Spannable) textView.getText();
-		String text=textView.getText().toString();
-		String spanText="@Android客户端";
-		int start=text.indexOf(spanText);
-		if(start>0){
-			int end=start+spanText.length();
-			span.setSpan(new Linkify.URLSpanNoUnderline("fanfou://user/androidsupport"), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);	
+		Spannable span = (Spannable) textView.getText();
+		String text = textView.getText().toString();
+		String spanText = "@Android客户端";
+		int start = text.indexOf(spanText);
+		if (start > 0) {
+			int end = start + spanText.length();
+			span.setSpan(new Linkify.URLSpanNoUnderline(
+					"fanfou://user/androidsupport"), start, end,
+					Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		}
 	}
 

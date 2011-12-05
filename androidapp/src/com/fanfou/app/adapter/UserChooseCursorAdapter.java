@@ -14,8 +14,6 @@ import android.widget.TextView;
 
 import com.fanfou.app.R;
 import com.fanfou.app.api.User;
-import com.fanfou.app.util.DateTimeHelper;
-import com.fanfou.app.util.StringHelper;
 
 /**
  * @author mcxiaoke
@@ -77,7 +75,7 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter {
 		View view = mInflater.inflate(getLayoutId(), null);
 		ViewHolder holder = new ViewHolder(view);
 		setHeadImage(mContext, holder.headIcon);
-//		setTextStyle(holder);
+		// setTextStyle(holder);
 		view.setTag(holder);
 		return view;
 	}
@@ -94,14 +92,14 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter {
 			mLoader.set(u.profileImageUrl, holder.headIcon,
 					R.drawable.default_head);
 		}
-		
+
 		if (u.protect) {
 			holder.lockIcon.setVisibility(View.VISIBLE);
 		} else {
 			holder.lockIcon.setVisibility(View.GONE);
 		}
 		holder.nameText.setText(u.screenName);
-		holder.idText.setText("("+u.id+")");
+		holder.idText.setText("(" + u.id + ")");
 		holder.genderText.setText(u.gender);
 		holder.locationText.setText(u.location);
 
@@ -130,8 +128,10 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter {
 			this.headIcon = (ImageView) base.findViewById(R.id.item_user_head);
 			this.lockIcon = (ImageView) base.findViewById(R.id.item_user_flag);
 			this.nameText = (TextView) base.findViewById(R.id.item_user_name);
-			this.genderText = (TextView) base.findViewById(R.id.item_user_gender);
-			this.locationText = (TextView) base.findViewById(R.id.item_user_location);
+			this.genderText = (TextView) base
+					.findViewById(R.id.item_user_gender);
+			this.locationText = (TextView) base
+					.findViewById(R.id.item_user_location);
 			this.idText = (TextView) base.findViewById(R.id.item_user_id);
 			this.checkBox = (CheckBox) base
 					.findViewById(R.id.item_user_checkbox);

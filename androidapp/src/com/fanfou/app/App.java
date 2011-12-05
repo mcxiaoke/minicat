@@ -150,21 +150,20 @@ public class App extends Application {
 		if (OptionHelper.readInt(this, R.string.option_old_version_code, 0) < appVersionCode) {
 			OptionHelper.saveInt(this, R.string.option_old_version_code,
 					appVersionCode);
-			cleanSettings();
+			cleanAlarmFlags();
 			AlarmHelper.setScheduledTasks(this);
 		}
 	}
 
-	private void cleanSettings() {
+	private void cleanAlarmFlags() {
 		if (DEBUG) {
-			Log.d("App", "cleanSettings");
+			Log.d("App", "cleanAlarmFlags");
 		}
 		Editor editor = sp.edit();
 		editor.remove(getString(R.string.option_set_auto_clean));
 		editor.remove(getString(R.string.option_set_auto_update));
 		editor.remove(getString(R.string.option_set_auto_complete));
 		editor.remove(getString(R.string.option_set_notification));
-		editor.remove(getString(R.string.option_fontsize));
 		editor.commit();
 	}
 

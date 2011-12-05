@@ -24,7 +24,9 @@ import com.fanfou.app.api.ResultInfo;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.AlertInfoDialog;
-import com.fanfou.app.http.NetClient;
+import com.fanfou.app.http.AbstractNetClient;
+import com.fanfou.app.http.AbstractNetClient;
+import com.fanfou.app.http.OneTimeNetClient;
 import com.fanfou.app.http.Parameter;
 import com.fanfou.app.http.NetResponse;
 import com.fanfou.app.http.ResponseCode;
@@ -281,8 +283,8 @@ public class RegisterPage extends Activity implements OnClickListener {
 			if (g != null) {
 				g.dispatch();
 			}
-			final String message = "你的昵称是["
-					+ u.screenName + "]，请稍后通过MENU菜单进入个人空间完善你的个人资料，点击确定直接登录";
+			final String message = "你的昵称是[" + u.screenName
+					+ "]，请稍后通过MENU菜单进入个人空间完善你的个人资料，点击确定直接登录";
 			final AlertInfoDialog dialog = new AlertInfoDialog(mContext,
 					"注册成功", message);
 			dialog.setOnClickListener(new AlertInfoDialog.OnOKClickListener() {
@@ -327,14 +329,17 @@ public class RegisterPage extends Activity implements OnClickListener {
 			// Log.d("RegisterTask", request.getURI().toString());
 
 			// HttpResponse response = client.execute(request);
-			HttpResponse response = NetClient.newInstance().post(
-					FanFouApiConfig.URL_REGISTER, params);
+			User result=null;
+			OneTimeNetClient client=OneTimeNetClient.newInstance();
+			HttpResponse response = client.post(FanFouApiConfig.URL_REGISTER, params);
 			NetResponse res = new NetResponse(response);
 			if (App.DEBUG) {
 				Log.d("RegisterTask", res.getContent());
 			}
 			if (res.statusCode == ResponseCode.HTTP_OK) {
-				return User.parse(res);
+				result= User.parse(res);
+				client.close();
+				return result;
 			} else {
 				throw new ApiException(res.statusCode, Parser.error(res
 						.getContent()));

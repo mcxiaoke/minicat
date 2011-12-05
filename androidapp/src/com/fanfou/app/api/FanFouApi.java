@@ -18,7 +18,6 @@ import com.fanfou.app.auth.OAuthService;
 import com.fanfou.app.auth.OAuthToken;
 import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.http.NetClient;
 import com.fanfou.app.http.NetRequest;
 import com.fanfou.app.http.NetResponse;
 import com.fanfou.app.http.OAuthNetClient;
@@ -44,12 +43,13 @@ import com.fanfou.app.util.StringHelper;
  * @version 4.5 2011.11.30
  * @version 4.6 2011.12.01
  * @version 4.7 2011.12.02
+ * @version 4.8 2011.12.05
  * 
  */
 public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	private static final String TAG = FanFouApi.class.getSimpleName();
 	private OAuthNetClient conn;
-	private OAuthService oauth; 
+	private OAuthService oauth;
 
 	/**
 	 * @param message
@@ -59,16 +59,16 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	private FanFouApi() {
-		oauth=new OAuthService(new FanFouOAuthProvider());
-		conn=OAuthNetClient.newInstance(oauth);
+		oauth = new OAuthService(new FanFouOAuthProvider());
+		conn = OAuthNetClient.getInstance(oauth);
 		setOAuthToken(App.me.token);
 	}
-	
-	public static FanFouApi newInstance(){
+
+	public static FanFouApi newInstance() {
 		return new FanFouApi();
 	}
-	
-	public void setOAuthToken(OAuthToken token){
+
+	public void setOAuthToken(OAuthToken token) {
 		oauth.setOAuthToken(token);
 	}
 
@@ -83,10 +83,10 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		try {
 			HttpResponse response = request.send(conn);
 			int statusCode = response.getStatusLine().getStatusCode();
-			
+
 			if (App.DEBUG) {
-				log("fetch() url=" + request.url + " post="
-						+ request.post + " statusCode=" + statusCode);
+				log("fetch() url=" + request.url + " post=" + request.post
+						+ " statusCode=" + statusCode);
 			}
 			if (statusCode == HTTP_OK) {
 				return new NetResponse(response);
@@ -112,8 +112,8 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	 */
 	List<User> fetchUsers(String url, String userId, String mode)
 			throws ApiException {
-		NetRequest request = new NetRequest.Builder().url(url)
-				.id(userId).mode(mode).build();
+		NetRequest request = new NetRequest.Builder().url(url).id(userId)
+				.mode(mode).build();
 		NetResponse response = fetch(request);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
@@ -289,8 +289,9 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	@Override
 	public Status favoritesCreate(String statusId, String format, String mode)
 			throws ApiException {
-		if(TextUtils.isEmpty(statusId)){
-			throw new NullPointerException("favoritesCreate() statusId must not be empty or null.");
+		if (TextUtils.isEmpty(statusId)) {
+			throw new NullPointerException(
+					"favoritesCreate() statusId must not be empty or null.");
 		}
 		String url = String.format(URL_FAVORITES_CREATE, statusId);
 		NetResponse response = doPostIdAction(url, null, format, mode);
@@ -305,8 +306,9 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	@Override
 	public Status favoritesDelete(String statusId, String format, String mode)
 			throws ApiException {
-		if(TextUtils.isEmpty(statusId)){
-			throw new NullPointerException("favoritesDelete() statusId must not be empty or null.");
+		if (TextUtils.isEmpty(statusId)) {
+			throw new NullPointerException(
+					"favoritesDelete() statusId must not be empty or null.");
 		}
 		String url = String.format(URL_FAVORITES_DESTROY, statusId);
 		NetResponse response = doPostIdAction(url, null, format, mode);
@@ -327,11 +329,10 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		}
 		if (App.DEBUG)
 			log("statusShow()---statusId=" + statusId);
-		
-		String url=String.format(URL_STATUS_SHOW, statusId);
-		
-		NetResponse response = doGetIdAction(url, statusId, format,
-				mode);
+
+		String url = String.format(URL_STATUS_SHOW, statusId);
+
+		NetResponse response = doGetIdAction(url, statusId, format, mode);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
 			log("statusShow()---statusCode=" + statusCode);
@@ -348,7 +349,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 			String source, String location, String repostStatusId,
 			String format, String mode) throws ApiException {
 		if (StringHelper.isEmpty(status)) {
-				throw new IllegalArgumentException("消息内容不能为空");
+			throw new IllegalArgumentException("消息内容不能为空");
 		}
 		if (App.DEBUG)
 			log("statusUpdate() ---[status=(" + status + ") replyToStatusId="
@@ -385,7 +386,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	public Status photosUpload(File photo, String status, String source,
 			String location, String format, String mode) throws ApiException {
 		if (photo == null) {
-				throw new IllegalArgumentException("文件不能为空");
+			throw new IllegalArgumentException("文件不能为空");
 		}
 		if (App.DEBUG)
 			log("upload()---photo=" + photo.getAbsolutePath() + " status="
@@ -592,8 +593,9 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	@Override
 	public User friendshipsCreate(String userId, String mode)
 			throws ApiException {
-		if(TextUtils.isEmpty(userId)){
-			throw new NullPointerException("friendshipsCreate() userId must not be empty or null.");
+		if (TextUtils.isEmpty(userId)) {
+			throw new NullPointerException(
+					"friendshipsCreate() userId must not be empty or null.");
 		}
 		String url;
 		try {
@@ -603,7 +605,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		} catch (UnsupportedEncodingException e) {
 			url = String.format(URL_FRIENDSHIPS_CREATE, userId);
 		}
-		
+
 		NetResponse response = doPostIdAction(url, null, null, mode);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
@@ -621,8 +623,9 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	@Override
 	public User friendshipsDelete(String userId, String mode)
 			throws ApiException {
-		if(TextUtils.isEmpty(userId)){
-			throw new NullPointerException("friendshipsDelete() userId must not be empty or null.");
+		if (TextUtils.isEmpty(userId)) {
+			throw new NullPointerException(
+					"friendshipsDelete() userId must not be empty or null.");
 		}
 		// String url=String.format(URL_FRIENDSHIPS_DESTROY, userId);
 		String url;
@@ -632,7 +635,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		} catch (UnsupportedEncodingException e) {
 			url = String.format(URL_FRIENDSHIPS_DESTROY, userId);
 		}
-		
+
 		NetResponse response = doPostIdAction(url, null, null, mode);
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
@@ -650,8 +653,9 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	@Override
 	public User blocksCreate(String userId, String mode) throws ApiException {
 		// String url=String.format(URL_BLOCKS_CREATE, userId);
-		if(TextUtils.isEmpty(userId)){
-			throw new NullPointerException("blocksCreate() userId must not be empty or null.");
+		if (TextUtils.isEmpty(userId)) {
+			throw new NullPointerException(
+					"blocksCreate() userId must not be empty or null.");
 		}
 		String url;
 		try {
@@ -678,8 +682,9 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	@Override
 	public User blocksDelete(String userId, String mode) throws ApiException {
 		// String url=String.format(URL_BLOCKS_DESTROY, userId);
-		if(TextUtils.isEmpty(userId)){
-			throw new NullPointerException("blocksDelete() userId must not be empty or null.");
+		if (TextUtils.isEmpty(userId)) {
+			throw new NullPointerException(
+					"blocksDelete() userId must not be empty or null.");
 		}
 		String url;
 		try {
@@ -725,7 +730,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 				log("isFriends()---response=" + content);
 			return content.contains("true");
 		} catch (IOException e) {
-			if(App.DEBUG){
+			if (App.DEBUG) {
 				e.printStackTrace();
 			}
 			return false;
@@ -791,7 +796,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 			String sinceId, String maxId, String mode) throws ApiException {
 		List<DirectMessage> dms = messages(URL_DIRECT_MESSAGES_INBOX, count,
 				page, sinceId, maxId, mode, DirectMessage.TYPE_IN);
-		//TODO new dm api, need type set to type_user
+		// TODO new dm api, need type set to type_user
 		if (dms != null && dms.size() > 0) {
 			for (DirectMessage dm : dms) {
 				dm.threadUserId = dm.senderId;
@@ -806,7 +811,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 			String sinceId, String maxId, String mode) throws ApiException {
 		List<DirectMessage> dms = messages(URL_DIRECT_MESSAGES_OUTBOX, count,
 				page, sinceId, maxId, mode, DirectMessage.TYPE_OUT);
-		//TODO new dm api, need type set to type_user
+		// TODO new dm api, need type set to type_user
 		if (dms != null && dms.size() > 0) {
 			for (DirectMessage dm : dms) {
 				dm.threadUserId = dm.recipientId;
@@ -881,8 +886,9 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	@Override
 	public DirectMessage directMessagesDelete(String directMessageId,
 			String mode) throws ApiException {
-		if(TextUtils.isEmpty(directMessageId)){
-			throw new NullPointerException("directMessagesDelete() directMessageId must not be empty or null.");
+		if (TextUtils.isEmpty(directMessageId)) {
+			throw new NullPointerException(
+					"directMessagesDelete() directMessageId must not be empty or null.");
 		}
 		String url = String
 				.format(URL_DIRECT_MESSAGES_DESTROY, directMessageId);
@@ -973,7 +979,5 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		}
 		return Parser.ids(response);
 	}
-	
-
 
 }

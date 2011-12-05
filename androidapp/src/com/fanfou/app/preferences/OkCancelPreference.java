@@ -24,27 +24,27 @@ import android.util.AttributeSet;
  */
 public class OkCancelPreference extends DialogPreference {
 
-    private Listener mListener;
+	private Listener mListener;
 
-    public OkCancelPreference(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+	public OkCancelPreference(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
 
-    @Override
-    protected void onDialogClosed(boolean positiveResult) {
-        super.onDialogClosed(positiveResult);
+	@Override
+	protected void onDialogClosed(boolean positiveResult) {
+		super.onDialogClosed(positiveResult);
 
-        if (mListener != null) {
-            mListener.onDialogClosed(positiveResult);
-        }
-    }
+		if (mListener != null) {
+			mListener.onDialogClosed(positiveResult);
+		}
+	}
 
-    public void setListener(Listener listener) {
-        mListener = listener;
-    }
+	public void setListener(Listener listener) {
+		mListener = listener;
+	}
 
-    public interface Listener {
-        void onDialogClosed(boolean okClicked);
-    }
+	public interface Listener {
+		void onDialogClosed(boolean okClicked);
+	}
 
 }
