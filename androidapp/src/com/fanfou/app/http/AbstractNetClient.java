@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -98,12 +99,12 @@ public abstract class AbstractNetClient {
 		if (App.DEBUG) {
 			log("==========[Response]==========");
 			log(response.getStatusLine().toString());
-			// Header[] headers = response.getAllHeaders();
-			// for (Header header : headers) {
-			// log(header.getName() + ":"
-			// + header.getValue());
-			// }
-			// log("\n");
+//			 Header[] headers = response.getAllHeaders();
+//			 for (Header header : headers) {
+//			 log(header.getName() + ":"
+//			 + header.getValue());
+//			 }
+//			 log("\n");
 		}
 		return response;
 	}

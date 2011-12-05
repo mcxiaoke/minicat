@@ -12,6 +12,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -72,6 +73,7 @@ public class App extends Application {
 
 	@Override
 	public void onCreate() {
+		
 		super.onCreate();
 		init();
 		initAppInfo();
@@ -82,6 +84,18 @@ public class App extends Application {
 	}
 
 	private void init() {
+		if(DEBUG){
+		         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll()
+		                 .penaltyLog()
+		                 .build());
+		         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+		                 .detectLeakedSqlLiteObjects()
+		                 .detectLeakedClosableObjects()
+		                 .penaltyLog()
+		                 .penaltyDeath()
+		                 .build());
+		}
+		
 		App.me = this;
 		apnType = NetworkHelper.getApnType(this);
 
@@ -151,22 +165,12 @@ public class App extends Application {
 		if (OptionHelper.readInt(this, R.string.option_old_version_code, 0) < appVersionCode) {
 			OptionHelper.saveInt(this, R.string.option_old_version_code,
 					appVersionCode);
-			cleanAlarmFlags();
+			AlarmHelper.cleanAlarmFlags(this);
 			AlarmHelper.setScheduledTasks(this);
 		}
 	}
 
-	private void cleanAlarmFlags() {
-		if (DEBUG) {
-			Log.d("App", "cleanAlarmFlags");
-		}
-		Editor editor = sp.edit();
-		editor.remove(getString(R.string.option_set_auto_clean));
-		editor.remove(getString(R.string.option_set_auto_update));
-		editor.remove(getString(R.string.option_set_auto_complete));
-		editor.remove(getString(R.string.option_set_notification));
-		editor.commit();
-	}
+
 
 	public synchronized void updateAccountInfo(final User u,
 			final OAuthToken otoken) {

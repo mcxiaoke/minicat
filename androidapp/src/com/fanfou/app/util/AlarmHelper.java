@@ -2,6 +2,7 @@ package com.fanfou.app.util;
 
 import android.app.Notification;
 import android.content.Context;
+import android.content.SharedPreferences.Editor;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -21,12 +22,25 @@ import com.fanfou.app.service.NotificationService;
  * @version 2.0 2011.11.24
  * @version 2.5 2011.11.25
  * @version 3.0 2011.12.02
+ * @version 3.1 2011.12.05
  * 
  */
 public final class AlarmHelper {
 	private static final String TAG = AlarmHelper.class.getSimpleName();
+	
+	public static void cleanAlarmFlags(Context context) {
+		if (App.DEBUG) {
+			Log.d("App", "cleanAlarmFlags");
+		}
+		Editor editor = App.me.sp.edit();
+		editor.remove(context.getString(R.string.option_set_auto_clean));
+		editor.remove(context.getString(R.string.option_set_auto_update));
+		editor.remove(context.getString(R.string.option_set_auto_complete));
+		editor.remove(context.getString(R.string.option_set_notification));
+		editor.commit();
+	}
 
-	public final static void setScheduledTasks(Context context) {
+	public final static void unsetScheduledTasks(Context context) {
 		if (App.DEBUG) {
 			Log.d(TAG, "clearAlarms");
 		}
@@ -35,7 +49,7 @@ public final class AlarmHelper {
 		AutoCompleteService.unset(context);
 	}
 
-	public final static void unsetScheduledTasks(Context context) {
+	public final static void setScheduledTasks(Context context) {
 		if (App.DEBUG) {
 			Log.d(TAG, "setAlarms");
 		}

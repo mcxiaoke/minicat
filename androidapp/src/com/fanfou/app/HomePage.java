@@ -517,8 +517,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				log("onBroadcastReceived ACTION_STATUS_SENT");
 			}
 			
+			cursors[0].requery();
 			if(mCurrentPage==0){
-				cursors[0].requery();
 				boolean needRefresh = OptionHelper.readBoolean(this,
 						R.string.option_refresh_after_send, false);
 				if(needRefresh){

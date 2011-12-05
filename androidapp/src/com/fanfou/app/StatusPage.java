@@ -231,13 +231,13 @@ public class StatusPage extends BaseActivity {
 			return;
 		}
 
+		mPhotoState = PHOTO_ICON;
 		iPhoto.setVisibility(View.VISIBLE);
 		iPhoto.setOnClickListener(this);
 
 		// 先检查本地是否有大图缓存
 		Bitmap bitmap = mLoader.load(s.photoLargeUrl, null);
 		if (bitmap != null) {
-			// iPhoto.setTag(s.photoLargeUrl);
 			iPhoto.setImageBitmap(bitmap);
 			mPhotoState = PHOTO_LARGE;
 			return;
@@ -246,7 +246,6 @@ public class StatusPage extends BaseActivity {
 		// 再检查本地是否有缩略图缓存
 		bitmap = mLoader.load(s.photoImageUrl, null);
 		if (bitmap != null) {
-			// iPhoto.setTag(s.photoImageUrl);
 			iPhoto.setImageBitmap(bitmap);
 			mPhotoState = PHOTO_SMALL;
 			return;
@@ -258,14 +257,19 @@ public class StatusPage extends BaseActivity {
 		} else {
 			// 再根据系统设置处理
 			int set = OptionHelper.parseInt(this, R.string.option_pic_level);
-			if (set == 2) {
+			switch (set) {
+			case 2:
 				// 如果设置为大图
 				loadPhoto(PHOTO_LARGE);
-			} else if (set == 1) {
+				break;
+			case 1:
 				// 如果设置为缩略图
 				loadPhoto(PHOTO_SMALL);
-			} else {
-				iPhoto.setImageResource(R.drawable.photo_icon);
+				break;
+			default:
+				// 设置为图标
+				loadPhoto(PHOTO_ICON);
+				break;
 			}
 		}
 	}
@@ -359,15 +363,18 @@ public class StatusPage extends BaseActivity {
 	}
 
 	private void loadPhoto(final int type) {
-		iPhoto.setImageResource(R.drawable.photo_loading);
+		if(type==PHOTO_ICON){
+			iPhoto.setImageResource(R.drawable.photo_icon);
+			return;
+		}
 		mPhotoState = PHOTO_LOADING;
+		iPhoto.setImageResource(R.drawable.photo_loading);
 		final ImageLoaderCallback callback = new ImageLoaderCallback() {
 
 			@Override
 			public void onFinish(String key, Bitmap bitmap) {
 				if (bitmap != null) {
 					iPhoto.setImageBitmap(bitmap);
-					iPhoto.postInvalidate();
 					mPhotoState = type;
 				} else {
 					iPhoto.setImageResource(R.drawable.photo_icon);
@@ -381,6 +388,7 @@ public class StatusPage extends BaseActivity {
 				mPhotoState = PHOTO_ICON;
 			}
 		};
+		
 		String photoUrl = null;
 		if (type == PHOTO_LARGE) {
 			photoUrl = status.photoLargeUrl;
@@ -391,7 +399,6 @@ public class StatusPage extends BaseActivity {
 		Bitmap bitmap = mLoader.load(photoUrl, callback);
 		if (bitmap != null) {
 			iPhoto.setImageBitmap(bitmap);
-			iPhoto.invalidate();
 			mPhotoState = type;
 		}
 	}

@@ -11,6 +11,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
+import com.fanfou.app.App;
 import com.fanfou.app.api.ApiException;
 
 /**
@@ -22,6 +25,7 @@ import com.fanfou.app.api.ApiException;
  * 
  */
 public class NetResponse implements ResponseInterface, ResponseCode {
+	private static final String TAG=NetResponse.class.getSimpleName();
 
 	// private HttpResponse response;
 	private HttpEntity entity;
@@ -45,6 +49,9 @@ public class NetResponse implements ResponseInterface, ResponseCode {
 		if (content == null) {
 			content = EntityUtils.toString(entity, HTTP.UTF_8);
 			used = true;
+		}
+		if(App.DEBUG){
+			Log.d(TAG, "getContent() ["+content+"]");
 		}
 		return content;
 	}
