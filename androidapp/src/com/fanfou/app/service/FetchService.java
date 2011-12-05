@@ -461,7 +461,7 @@ public class FetchService extends BaseIntentService {
 
 		if (receiver != null) {
 			String message = e.getMessage();
-			if (e.statusCode == ResponseCode.ERROR_NOT_CONNECTED
+			if (e.statusCode == ResponseCode.ERROR_IO_EXCEPTION
 					|| e.statusCode >= 500) {
 				message = getString(R.string.connection_error_msg);
 			}

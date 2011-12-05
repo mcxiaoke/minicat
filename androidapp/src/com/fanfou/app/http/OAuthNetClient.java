@@ -28,7 +28,7 @@ public class OAuthNetClient extends AbstractNetClient {
 	@Override
 	protected void signRequest(final NetRequest cr) {
 		if (mOAuth != null) {
-			mOAuth.signRequest(cr.request, cr.params);
+			mOAuth.signRequest(cr.request, cr.getParams());
 		}
 	}
 

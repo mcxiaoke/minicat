@@ -96,7 +96,7 @@ public class User implements Storable<User> {
 				users.add(u);
 			}
 		} catch (JSONException e) {
-			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED, e);
+			throw new ApiException(ResponseCode.ERROR_JSON_EXCEPTION, e);
 		}
 		return users;
 	}
@@ -157,7 +157,7 @@ public class User implements Storable<User> {
 			user.ownerId = App.me.userId;
 			return user;
 		} catch (Exception e) {
-			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED,
+			throw new ApiException(ResponseCode.ERROR_JSON_EXCEPTION,
 					e.getMessage(), e);
 		}
 	}

@@ -18,6 +18,7 @@ import com.fanfou.app.api.ApiException;
  * @version 1.0 2011.06.10
  * @version 2.0 2011.09.05
  * @version 3.0 2011.11.10
+ * @version 3.1 2011.12.05
  * 
  */
 public class NetResponse implements ResponseInterface, ResponseCode {
@@ -53,9 +54,11 @@ public class NetResponse implements ResponseInterface, ResponseCode {
 
 			return new JSONObject(getContent());
 		} catch (IOException e) {
-			throw new ApiException(ResponseCode.ERROR_NOT_CONNECTED, e);
+			throw new ApiException(ResponseCode.ERROR_IO_EXCEPTION,
+					e.getMessage(), e);
 		} catch (JSONException e) {
-			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED, e);
+			throw new ApiException(ResponseCode.ERROR_JSON_EXCEPTION,
+					e.getMessage(), e);
 		}
 	}
 
@@ -63,9 +66,11 @@ public class NetResponse implements ResponseInterface, ResponseCode {
 		try {
 			return new JSONArray(getContent());
 		} catch (IOException e) {
-			throw new ApiException(ResponseCode.ERROR_NOT_CONNECTED, e);
+			throw new ApiException(ResponseCode.ERROR_IO_EXCEPTION,
+					e.getMessage(), e);
 		} catch (JSONException e) {
-			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED, e);
+			throw new ApiException(ResponseCode.ERROR_JSON_EXCEPTION,
+					e.getMessage(), e);
 		}
 	}
 

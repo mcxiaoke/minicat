@@ -9,6 +9,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
@@ -70,6 +72,10 @@ public abstract class AbstractNetClient {
 	}
 
 	public HttpResponse exec(NetRequest cr) throws IOException {
+		if (TextUtils.isEmpty(cr.url)) {
+			throw new IllegalArgumentException(
+					"request url must not be empty or null.");
+		}
 		signRequest(cr);
 		return executeImpl(cr.request);
 	}

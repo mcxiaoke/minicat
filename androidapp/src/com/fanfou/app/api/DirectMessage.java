@@ -110,7 +110,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 				dms.add(dm);
 			}
 		} catch (JSONException e) {
-			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED,
+			throw new ApiException(ResponseCode.ERROR_JSON_EXCEPTION,
 					e.getMessage(), e);
 		}
 		return dms;
@@ -135,7 +135,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 				dms.add(dm);
 			}
 		} catch (JSONException e) {
-			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED,
+			throw new ApiException(ResponseCode.ERROR_JSON_EXCEPTION,
 					e.getMessage(), e);
 		}
 		return dms;
@@ -228,7 +228,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 
 			dm.ownerId = App.me.userId;
 		} catch (JSONException e) {
-			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED,
+			throw new ApiException(ResponseCode.ERROR_JSON_EXCEPTION,
 					e.getMessage(), e);
 		}
 		if (App.DEBUG)

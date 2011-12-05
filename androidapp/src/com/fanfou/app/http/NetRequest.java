@@ -27,23 +27,20 @@ import com.fanfou.app.util.Utils;
  * @version 1.4 2011.11.23
  * @version 2.0 2011.12.01
  * @version 2.1 2011.12.02
+ * @version 2.2 2011.12.05
  * 
  */
 public final class NetRequest {
 	private static final String TAG = NetRequest.class.getSimpleName();
 
 	public final boolean post;
-	public final List<Parameter> params;
-	public final List<Header> headers;
+	private final List<Parameter> params;
+	private final List<Header> headers;
 	public final HttpEntity entity;
 	public final String url;
 	public final HttpRequestBase request;
 
 	private NetRequest(Builder builder) {
-		if (TextUtils.isEmpty(builder.url)) {
-			throw new IllegalArgumentException(
-					"NetRequest() request url must not be empty or null.");
-		}
 		this.post = builder.post;
 		this.headers = builder.headers;
 		this.params = builder.params;
@@ -77,10 +74,18 @@ public final class NetRequest {
 		return nm.exec(this);
 	}
 
-	public void cancel() {
+	public void abort() {
 		if (request != null) {
 			request.abort();
 		}
+	}
+
+	public List<Parameter> getParams() {
+		return this.params;
+	}
+
+	public List<Header> getHeaders() {
+		return this.headers;
 	}
 
 	public static Builder newBuilder() {

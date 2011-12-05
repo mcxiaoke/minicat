@@ -129,7 +129,7 @@ public class Status implements Storable<Status> {
 			if (App.DEBUG) {
 				e.printStackTrace();
 			}
-			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED,
+			throw new ApiException(ResponseCode.ERROR_JSON_EXCEPTION,
 					e.getMessage(), e);
 		}
 		return parseStatuses(a, type);
@@ -154,7 +154,7 @@ public class Status implements Storable<Status> {
 		} catch (JSONException e) {
 			if (App.DEBUG)
 				e.printStackTrace();
-			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED,
+			throw new ApiException(ResponseCode.ERROR_JSON_EXCEPTION,
 					e.getMessage(), e);
 		}
 	}
@@ -227,7 +227,7 @@ public class Status implements Storable<Status> {
 		} catch (JSONException e) {
 			if (App.DEBUG)
 				e.printStackTrace();
-			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED,
+			throw new ApiException(ResponseCode.ERROR_JSON_EXCEPTION,
 					e.getMessage(), e);
 		}
 	}
@@ -293,7 +293,7 @@ public class Status implements Storable<Status> {
 		} catch (JSONException e) {
 			if (App.DEBUG)
 				e.printStackTrace();
-			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED,
+			throw new ApiException(ResponseCode.ERROR_JSON_EXCEPTION,
 					e.getMessage(), e);
 		}
 	}

@@ -42,7 +42,7 @@ public class Photo implements Storable<Photo> {
 		} catch (JSONException e) {
 			if (App.DEBUG)
 				e.printStackTrace();
-			throw new ApiException(ResponseCode.ERROR_PARSE_FAILED,
+			throw new ApiException(ResponseCode.ERROR_JSON_EXCEPTION,
 					e.getMessage(), e);
 		}
 	}

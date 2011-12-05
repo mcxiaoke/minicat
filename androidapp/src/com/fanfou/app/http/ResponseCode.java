@@ -23,11 +23,11 @@ public interface ResponseCode {
 	public static final int HTTP_SERVICE_UNAVAILABLE = 503;// Service
 
 	public static final int ERROR_NORMAL = 0;
-	public static final int ERROR_NOT_CONNECTED = -1;
+	public static final int ERROR_IO_EXCEPTION = -1;
 	public static final int ERROR_NULL_TOKEN = -2;
 	public static final int ERROR_AUTH_FAILED = -3;
 	public static final int ERROR_AUTH_EMPTY = -4;
-	public static final int ERROR_PARSE_FAILED = -5;
+	public static final int ERROR_JSON_EXCEPTION = -5;
 	public static final int ERROR_DUPLICATE = -6;
 
 	// 200 OK: 成功

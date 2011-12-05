@@ -81,7 +81,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	 */
 	private NetResponse fetch(final NetRequest request) throws ApiException {
 		try {
-			HttpResponse response = request.send(conn);
+			HttpResponse response = conn.exec(request);
 			int statusCode = response.getStatusLine().getStatusCode();
 
 			if (App.DEBUG) {
@@ -90,14 +90,13 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 			}
 			if (statusCode == HTTP_OK) {
 				return new NetResponse(response);
-			} else {
-				throw new ApiException(statusCode, Parser.error(response));
 			}
+			throw new ApiException(statusCode, Parser.error(response));
 		} catch (IOException e) {
 			if (App.DEBUG) {
 				Log.e(TAG, e.getMessage() + " " + e.toString());
 			}
-			throw new ApiException(ERROR_NOT_CONNECTED, e.toString(),
+			throw new ApiException(ERROR_IO_EXCEPTION, e.toString(),
 					e.getCause());
 		}
 	}
