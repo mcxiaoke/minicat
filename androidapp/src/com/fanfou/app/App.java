@@ -40,10 +40,11 @@ import com.fanfou.app.util.StringHelper;
  * @version 5.4 2011.11.25
  * @version 5.5 2011.11.28
  * @version 5.6 2011.12.01
+ * @version 5.7 2011.12.05
  * 
  */
 
-@ReportsCrashes(formKey = "", formUri = "http://apps.fanfou.com/andstat/cr/", mode = ReportingInteractionMode.TOAST, resToastText = R.string.crash_toast_text)
+@ReportsCrashes(formKey = "", formUri = "http://apps.fanfou.com/andstat/cr/")
 public class App extends Application {
 
 	public static final boolean DEBUG = true;

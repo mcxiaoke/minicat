@@ -160,12 +160,6 @@ public final class CrashReportDataFactory {
 						ReportUtils.getCrashConfiguration(context));
 			}
 
-			// Collect meminfo
-			if (crashReportFields.contains(DUMPSYS_MEMINFO)) {
-				crashReportData.put(DUMPSYS_MEMINFO,
-						DumpSysCollector.collectMemInfo());
-			}
-
 			// Application Package name
 			if (crashReportFields.contains(PACKAGE_NAME)) {
 				crashReportData.put(PACKAGE_NAME, context.getPackageName());
@@ -316,10 +310,6 @@ public final class CrashReportDataFactory {
 				if (crashReportFields.contains(RADIOLOG)) {
 					crashReportData.put(RADIOLOG,
 							LogCatCollector.collectLogCat("radio"));
-				}
-				if (crashReportFields.contains(DROPBOX)) {
-					crashReportData.put(DROPBOX, DropBoxCollector.read(context,
-							ACRA.getConfig().additionalDropBoxTags()));
 				}
 			} else {
 				Log.i(ACRA.LOG_TAG,
