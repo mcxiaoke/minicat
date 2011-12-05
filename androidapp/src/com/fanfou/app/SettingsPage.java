@@ -31,9 +31,10 @@ import com.fanfou.app.util.Utils;
  * @version 1.6 2011.11.16
  * @version 1.7 2011.11.25
  * @version 2.0 2011.12.02
+ * @version 2.1 2011.12.05
  * 
  */
-public class OptionsPage extends PreferenceActivity implements
+public class SettingsPage extends PreferenceActivity implements
 		OnPreferenceClickListener, OnSharedPreferenceChangeListener,
 		OnPreferenceChangeListener {
 	public static final String TAG = "OptionsPage";
@@ -164,8 +165,6 @@ public class OptionsPage extends PreferenceActivity implements
 		} else if (key.equals(getString(R.string.option_autoupdate))) {
 			CheckBoxPreference cp = (CheckBoxPreference) p;
 			DownloadService.set(this, cp.isChecked());
-		} else if (key.equals(getString(R.string.option_page_scroll_endless))) {
-			needRestart = true;
 		} else if (key.equals(getString(R.string.option_force_portrait))) {
 			CheckBoxPreference cp = (CheckBoxPreference) p;
 			if (cp.isChecked()) {
@@ -173,6 +172,7 @@ public class OptionsPage extends PreferenceActivity implements
 			} else {
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 			}
+			needRestart = true;
 		} else if (key.equals(getString(R.string.option_fontsize))) {
 			SeekBarPreference skp = (SeekBarPreference) p;
 			int value = sp.getInt(key,
@@ -182,11 +182,7 @@ public class OptionsPage extends PreferenceActivity implements
 		} else if (p instanceof ListPreference) {
 			ListPreference lp = (ListPreference) p;
 			lp.setSummary(lp.getEntry());
-			setResult(RESULT_OK,
-					getIntent().putExtra(Commons.EXTRA_BOOLEAN, true));
-			needRestart = true;
 		}
-
 	}
 
 	private static class CheckTask extends AsyncTask<Void, Void, VersionInfo> {

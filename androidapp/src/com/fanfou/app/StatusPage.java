@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -315,10 +316,13 @@ public class StatusPage extends BaseActivity {
 	}
 
 	private String getPhotoPath(String key) {
+		if(TextUtils.isEmpty(key)){
+			return null;
+		}
 		File file = new File(IOHelper.getImageCacheDir(mContext),
 				StringHelper.md5(key) + ".jpg");
 		if (App.DEBUG) {
-			log("loadFile path=" + file.getAbsolutePath());
+			log("loadFile path=" + file);
 		}
 		if (file.exists()) {
 			return file.getAbsolutePath();

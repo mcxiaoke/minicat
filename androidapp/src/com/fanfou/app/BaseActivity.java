@@ -256,7 +256,7 @@ public abstract class BaseActivity extends Activity implements
 	}
 
 	protected void onMenuOptionClick() {
-		Intent intent = new Intent(this, OptionsPage.class);
+		Intent intent = new Intent(this, SettingsPage.class);
 		startActivity(intent);
 	}
 
