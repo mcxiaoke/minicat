@@ -4,7 +4,7 @@
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:scrollbars="none" android:background="@drawable/bg">
 	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="fill_parent" android:layout_height="fill_parent">
+		android:layout_width="fill_parent" android:layout_height="wrap_content">
 		<com.fanfou.app.ui.ActionBar android:id="@id/actionbar"
 			style="@style/ActionBar" android:layout_alignParentTop="true" />
 

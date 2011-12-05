@@ -4,8 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.lang.ref.SoftReference;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -23,6 +22,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.1 2011.09.23
  * @version 1.5 2011.11.23
  * @version 1.6 2011.11.24
+ * @version 1.7 2011.12.05
  * 
  */
 final class ImageCache implements ICache<Bitmap> {
@@ -32,13 +32,16 @@ final class ImageCache implements ICache<Bitmap> {
 
 	public static ImageCache INSTANCE = null;
 
-	final Map<String, SoftReference<Bitmap>> memoryCache;
+	final ConcurrentHashMap<String, SoftReference<Bitmap>> memoryCache;
+
+	private File mCacheDir = null;
 
 	Context mContext;
 
 	private ImageCache(Context context) {
 		this.mContext = context;
-		this.memoryCache = new HashMap<String, SoftReference<Bitmap>>();
+		this.memoryCache = new ConcurrentHashMap<String, SoftReference<Bitmap>>();
+		this.mCacheDir = IOHelper.getImageCacheDir(mContext);
 	}
 
 	public static ImageCache init(Context context) {
@@ -71,16 +74,17 @@ final class ImageCache implements ICache<Bitmap> {
 		if (reference != null) {
 			bitmap = reference.get();
 		}
-
 		if (bitmap == null) {
 			bitmap = loadFromFile(key);
+			if (App.DEBUG) {
+				Log.d(TAG, "get() bitmap from disk, bitmap=" + bitmap);
+			}
 			if (bitmap == null) {
 				memoryCache.remove(key);
 			} else {
-				synchronized (this) {
-					memoryCache.put(key, new SoftReference<Bitmap>(bitmap));
-				}
+				memoryCache.put(key, new SoftReference<Bitmap>(bitmap));
 			}
+		} else {
 		}
 		return bitmap;
 	}
@@ -90,9 +94,7 @@ final class ImageCache implements ICache<Bitmap> {
 		if (key == null || bitmap == null) {
 			return false;
 		}
-		synchronized (this) {
-			memoryCache.put(key, new SoftReference<Bitmap>(bitmap));
-		}
+		memoryCache.put(key, new SoftReference<Bitmap>(bitmap));
 		return writeToFile(key, bitmap);
 	}
 
@@ -127,7 +129,7 @@ final class ImageCache implements ICache<Bitmap> {
 
 		Bitmap bitmap = null;
 		String filename = StringHelper.md5(key) + ".jpg";
-		File file = new File(IOHelper.getImageCacheDir(mContext), filename);
+		File file = new File(mCacheDir, filename);
 		if (!file.exists()) {
 			return null;
 		}
@@ -135,6 +137,9 @@ final class ImageCache implements ICache<Bitmap> {
 		try {
 			fis = new FileInputStream(file);
 			bitmap = BitmapFactory.decodeStream(fis);
+			if (App.DEBUG) {
+				Log.d(TAG, "loadFromFile() key is " + key);
+			}
 		} catch (FileNotFoundException e) {
 			if (App.DEBUG) {
 				Log.e(TAG, e.getMessage());
@@ -143,6 +148,7 @@ final class ImageCache implements ICache<Bitmap> {
 		} finally {
 			IOHelper.forceClose(fis);
 		}
+
 		return bitmap;
 	}
 
@@ -151,7 +157,7 @@ final class ImageCache implements ICache<Bitmap> {
 			return false;
 		}
 		String filename = StringHelper.md5(key) + ".jpg";
-		File file = new File(IOHelper.getImageCacheDir(mContext), filename);
+		File file = new File(mCacheDir, filename);
 		if (App.DEBUG) {
 			Log.d(TAG, "writeToFile: " + file.getPath());
 		}

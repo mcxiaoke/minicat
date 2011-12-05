@@ -9,7 +9,7 @@
 		android:layout_height="fill_parent" android:scrollbars="none">
 		<LinearLayout android:orientation="vertical"
 			android:gravity="center_horizontal" android:layout_width="fill_parent"
-			android:layout_height="fill_parent" android:padding="10dp">
+			android:layout_height="wrap_content" android:padding="10dp">
 			
 			<ImageView android:id="@id/about_icon" style="@style/Icon.Action" android:src="@drawable/about_logo" />
 

@@ -15,6 +15,7 @@ import com.fanfou.app.db.FanFouProvider;
  * @version 1.1 2011.10.26
  * @version 1.2 2011.10.28
  * @version 1.3 2011.11.18
+ * @version 1.4 2011.12.05
  * 
  */
 public final class CacheManager {
@@ -93,11 +94,16 @@ public final class CacheManager {
 	public static User queryUser(Context context, final String id) {
 		final Cursor cursor = context.getContentResolver().query(
 				FanFouProvider.buildUriWithUserId(id), null, null, null, null);
-		if (cursor != null && cursor.moveToFirst()) {
-			if (App.DEBUG) {
-				Log.d(TAG, "queryUser cursor.size=" + cursor.getCount());
+		try {
+			if (cursor != null && cursor.moveToFirst()) {
+				if (App.DEBUG) {
+					Log.d(TAG, "queryUser cursor.size=" + cursor.getCount());
+				}
+				User user = User.parse(cursor);
+				return user;
 			}
-			return User.parse(cursor);
+		} finally {
+			cursor.close();
 		}
 		return null;
 	}
@@ -106,11 +112,16 @@ public final class CacheManager {
 		final Cursor cursor = context.getContentResolver()
 				.query(FanFouProvider.buildUriWithStatusId(id), null, null,
 						null, null);
-		if (cursor != null && cursor.moveToFirst()) {
-			if (App.DEBUG) {
-				Log.d(TAG, "queryStatus cursor.size=" + cursor.getCount());
+		try {
+			if (cursor != null && cursor.moveToFirst()) {
+				if (App.DEBUG) {
+					Log.d(TAG, "queryStatus cursor.size=" + cursor.getCount());
+				}
+				Status status = Status.parse(cursor);
+				return status;
 			}
-			return Status.parse(cursor);
+		} finally {
+			cursor.close();
 		}
 		return null;
 	}

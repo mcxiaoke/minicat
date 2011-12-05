@@ -17,7 +17,7 @@
 				android:textStyle="bold" android:layout_alignParentLeft="true"
 				style="@style/Text.Name" android:text="UserName" />
 
-			<View android:layout_width="fill_parent" android:layout_height="0dp"
+			<View android:layout_width="0dp" android:layout_height="0dp"
 				android:layout_weight="1" />
 
 			<ImageView android:id="@id/item_status_icon_photo"

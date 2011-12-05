@@ -55,6 +55,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.1 2011.11.15
  * @version 4.2 2011.11.18
  * @version 4.4 2011.11.21
+ * @version 4.5 2011.12.05
  * 
  */
 public class WritePage extends BaseActivity {
@@ -71,6 +72,7 @@ public class WritePage extends BaseActivity {
 
 	private ActionBar mActionBar;
 	private MyAutoCompleteTextView mAutoCompleteTextView;
+	private Cursor mCursor;
 
 	private View mPictureView;
 	private ImageView iPicturePrieview;
@@ -344,10 +346,10 @@ public class WritePage extends BaseActivity {
 		String where = UserInfo.OWNER_ID + " = '" + App.me.userId
 				+ "' AND " + UserInfo.TYPE + " = '" + User.TYPE_FRIENDS
 				+ "'";
-		Cursor c = managedQuery(UserInfo.CONTENT_URI, projection, where, null,
+		mCursor  = managedQuery(UserInfo.CONTENT_URI, projection, where, null,
 				null);
 		mAutoCompleteTextView
-				.setAdapter(new AutoCompleteCursorAdapter(this, c));
+				.setAdapter(new AutoCompleteCursorAdapter(this, mCursor));
 	}
 
 	private void setLayout() {

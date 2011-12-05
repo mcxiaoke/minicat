@@ -6,7 +6,7 @@
 
 	<ImageView android:id="@id/item_user_head" style="@style/Image.Head" />
 
-	<RelativeLayout android:layout_width="fill_parent"
+	<RelativeLayout android:layout_width="0dp"
 		android:layout_height="wrap_content" android:layout_toRightOf="@id/item_user_head"
 		android:layout_weight="1" android:padding="4dp">
 

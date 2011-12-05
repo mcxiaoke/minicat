@@ -5,7 +5,7 @@
 	android:background="@drawable/rect_bg" android:gravity="center_vertical">
 	
 			<MultiAutoCompleteTextView 
-				android:id="@+id/send_select_edit" android:layout_width="fill_parent"
+				android:id="@+id/send_select_edit" android:layout_width="0dp"
 				android:layout_height="wrap_content" android:layout_margin="2dp"
 				android:layout_weight="1" android:background="@drawable/input_bg"
 				android:gravity="top|left" android:padding="10dp" android:singleLine="true" android:hint="收件人："/>

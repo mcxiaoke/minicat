@@ -48,7 +48,7 @@ import com.fanfou.app.util.StringHelper;
 @ReportsCrashes(formKey = "", formUri = "http://apps.fanfou.com/andstat/cr/")
 public class App extends Application {
 
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	public static App me;
 
@@ -85,15 +85,13 @@ public class App extends Application {
 
 	private void init() {
 		if(DEBUG){
-		         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll()
-		                 .penaltyLog()
-		                 .build());
-		         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-		                 .detectLeakedSqlLiteObjects()
-		                 .detectLeakedClosableObjects()
-		                 .penaltyLog()
-		                 .penaltyDeath()
-		                 .build());
+//		         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll()
+//		                 .penaltyLog()
+//		                 .build());
+//		         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll()
+//		                 .penaltyLog()
+//		                 .penaltyDeath()
+//		                 .build());
 		}
 		
 		App.me = this;
@@ -124,6 +122,7 @@ public class App extends Application {
 	}
 
 	private void initPreferences() {
+		PreferenceManager.setDefaultValues(this, R.xml.options, false);
 		this.sp = PreferenceManager.getDefaultSharedPreferences(this);
 		this.userId = OptionHelper.readString(this, R.string.option_userid,
 				null);
@@ -172,7 +171,7 @@ public class App extends Application {
 
 
 
-	public synchronized void updateAccountInfo(final User u,
+	public void updateAccountInfo(final User u,
 			final OAuthToken otoken) {
 		if (DEBUG) {
 			Log.d("App", "updateAccountInfo");
@@ -193,7 +192,7 @@ public class App extends Application {
 
 	}
 
-	public synchronized void updateUserInfo(final User u) {
+	public void updateUserInfo(final User u) {
 		if (DEBUG) {
 			Log.d("App", "updateAccountInfo u");
 		}
@@ -205,7 +204,7 @@ public class App extends Application {
 				u.profileImageUrl);
 	}
 
-	public synchronized void removeAccountInfo() {
+	public void removeAccountInfo() {
 		if (DEBUG) {
 			Log.d("App", "removeAccountInfo");
 		}

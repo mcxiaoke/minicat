@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
  * @version 1.1 2011.11.02
  * @version 1.2 2011.11.03
  * @version 1.3 2011.11.11
+ * @version 1.4 2011.12.05
  * 
  */
 public class SplashPage extends Activity {
@@ -20,7 +21,6 @@ public class SplashPage extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		PreferenceManager.setDefaultValues(this, R.xml.options, false);
 
 		checkLogin();
 		// boolean showSplash = OptionHelper.readBoolean(this,

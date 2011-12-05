@@ -14,7 +14,7 @@
 		android:background="@color/list_background" android:scrollbars="none">
 
 		<LinearLayout android:layout_width="fill_parent"
-			android:layout_height="fill_parent" android:orientation="vertical">
+			android:layout_height="wrap_content" android:orientation="vertical">
 
 			<RelativeLayout android:id="@id/user_headview" style="@style/Box"
 				android:layout_margin="4dp">
@@ -55,7 +55,7 @@
 				<TextView android:id="@id/user_statuses_title" style="@style/Text.Large"
 					android:layout_alignParentLeft="true" />
 
-				<View android:layout_width="wrap_content"
+				<View android:layout_width="0dp"
 					android:layout_height="0dp" android:layout_weight="1" />
 
 				<TextView android:id="@id/user_statuses" style="@style/Text.Small"
@@ -67,7 +67,7 @@
 
 				<TextView android:id="@id/user_favorites_title" style="@style/Text.Large" />
 
-				<View android:layout_width="wrap_content"
+				<View android:layout_width="0dp"
 					android:layout_height="0dp" android:layout_weight="1" />
 
 				<TextView android:id="@id/user_favorites" style="@style/Text.Small" />
@@ -77,7 +77,7 @@
 
 				<TextView android:id="@id/user_friends_title" style="@style/Text.Large" />
 
-				<View android:layout_width="wrap_content"
+				<View android:layout_width="0dp"
 					android:layout_height="0dp" android:layout_weight="1" />
 
 				<TextView android:id="@id/user_friends" style="@style/Text.Small" />
@@ -89,7 +89,7 @@
 				<TextView android:id="@id/user_followers_title" style="@style/Text.Large"
 					android:text="关注 " />
 
-				<View android:layout_width="wrap_content"
+				<View android:layout_width="0dp"
 					android:layout_height="0dp" android:layout_weight="1" />
 
 				<TextView android:id="@id/user_followers" style="@style/Text.Small" />
