@@ -89,8 +89,8 @@ public class DownloadService extends BaseIntentService {
 	}
 
 	public static void set(Context context) {
-		boolean need = OptionHelper.readBoolean(context,
-				R.string.option_autoupdate, true);
+		boolean need = OptionHelper.readBoolean(R.string.option_autoupdate,
+				true);
 		if (!need) {
 			return;
 		}
@@ -112,11 +112,10 @@ public class DownloadService extends BaseIntentService {
 	}
 
 	public static void setIfNot(Context context) {
-		boolean set = OptionHelper.readBoolean(context,
-				R.string.option_set_auto_update, false);
+		boolean set = OptionHelper.readBoolean(R.string.option_set_auto_update,
+				false);
 		if (!set) {
-			OptionHelper.saveBoolean(context, R.string.option_set_auto_update,
-					true);
+			OptionHelper.saveBoolean(R.string.option_set_auto_update, true);
 			set(context);
 		}
 	}
@@ -166,7 +165,7 @@ public class DownloadService extends BaseIntentService {
 				return;
 			}
 		}
-		if (info != null && info.versionCode > App.me.appVersionCode) {
+		if (info != null && info.versionCode > App.appVersionCode) {
 			notifyUpdate(info, this);
 		}
 	}
@@ -175,7 +174,7 @@ public class DownloadService extends BaseIntentService {
 		showProgress();
 		InputStream is = null;
 		FileOutputStream fos = null;
-		OneTimeNetClient client=OneTimeNetClient.newInstance();
+		OneTimeNetClient client = OneTimeNetClient.newInstance();
 		try {
 			HttpResponse response = client.get(url);
 			int statusCode = response.getStatusLine().getStatusCode();
@@ -299,7 +298,7 @@ public class DownloadService extends BaseIntentService {
 	}
 
 	public static VersionInfo fetchVersionInfo() {
-		OneTimeNetClient client=OneTimeNetClient.newInstance();
+		OneTimeNetClient client = OneTimeNetClient.newInstance();
 		try {
 			HttpResponse response = client.get(APP_UPDATE_SITE);
 			int statusCode = response.getStatusLine().getStatusCode();
@@ -322,7 +321,7 @@ public class DownloadService extends BaseIntentService {
 			if (App.DEBUG) {
 				e.printStackTrace();
 			}
-		}finally{
+		} finally {
 			client.close();
 		}
 		return null;
@@ -358,8 +357,8 @@ public class DownloadService extends BaseIntentService {
 				.setNegativeButton("以后再说", null);
 		builder.setPositiveButton("立即升级", downListener);
 		StringBuffer sb = new StringBuffer();
-		sb.append("安装版本：").append(App.me.appVersionName).append("(Build")
-				.append(App.me.appVersionCode).append(")");
+		sb.append("安装版本：").append(App.appVersionName).append("(Build")
+				.append(App.appVersionCode).append(")");
 		sb.append("\n最新版本：").append(info.versionName).append("(Build")
 				.append(info.versionCode).append(")");
 		sb.append("\n更新日期：").append(info.releaseDate);

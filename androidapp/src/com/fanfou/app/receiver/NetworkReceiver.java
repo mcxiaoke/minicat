@@ -53,7 +53,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 	}
 
 	public static void startUpdateCheck(Context context) {
-		boolean autoUpdate = OptionHelper.readBoolean(context,
+		boolean autoUpdate = OptionHelper.readBoolean(
 				R.string.option_autoupdate, true);
 		if (autoUpdate) {
 			DownloadService.startCheck(context);
@@ -79,25 +79,25 @@ public class NetworkReceiver extends BroadcastReceiver {
 		if (info != null && info.isConnectedOrConnecting()) {
 			App.noConnection = false;
 			if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
-				App.me.apnType = ApnType.NET;
+				App.setApnType(ApnType.NET);
 				String apnTypeName = info.getExtraInfo();
 				if (App.DEBUG) {
 					Log.d(TAG, "type=TYPE_MOBILE apnTypeName: " + apnTypeName);
 				}
 				if (!TextUtils.isEmpty(apnTypeName)) {
 					if (apnTypeName.equals("3gnet")) {
-						App.me.apnType = ApnType.HSDPA;
+						App.setApnType(ApnType.HSDPA);
 					} else if (apnTypeName.equals("ctwap")) {
-						App.me.apnType = ApnType.CTWAP;
+						App.setApnType(ApnType.CTWAP);
 					} else if (apnTypeName.contains("wap")) {
-						App.me.apnType = ApnType.WAP;
+						App.setApnType(ApnType.WAP);
 					}
 				}
 			} else if (info.getType() == ConnectivityManager.TYPE_WIFI) {
 				if (App.DEBUG) {
 					log("onReceive type=TYPE_WIFI ");
 				}
-				App.me.apnType = ApnType.WIFI;
+				App.setApnType(ApnType.WIFI);
 				onWifiConnected(context);
 			}
 		} else {

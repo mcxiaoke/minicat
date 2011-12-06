@@ -159,7 +159,7 @@ public final class NetworkHelper {
 			return;
 		}
 		HttpParams params = client.getParams();
-		ApnType type = App.me.apnType;
+		ApnType type = App.getApnType();
 		if (type == ApnType.CTWAP) {
 			if (App.DEBUG) {
 				Log.d("setProxy", "set proxy for ctwap");

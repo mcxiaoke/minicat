@@ -56,7 +56,7 @@ public class TaskQueueService extends WakefulIntentService {
 	private boolean doSend(final Draft d) {
 		boolean res = false;
 		try {
-			Api api = App.api;
+			Api api = App.getApi();
 			Status result = null;
 			File srcFile = new File(d.filePath);
 			if (srcFile == null || !srcFile.exists()) {
@@ -70,7 +70,7 @@ public class TaskQueueService extends WakefulIntentService {
 							FanFouApiConfig.MODE_LITE);
 				}
 			} else {
-				int quality = OptionHelper.parseInt(this,
+				int quality = OptionHelper.parseInt(
 						R.string.option_photo_quality,
 						String.valueOf(ImageHelper.IMAGE_QUALITY_MEDIUM));
 				File photo = ImageHelper.prepareUploadFile(this, srcFile,

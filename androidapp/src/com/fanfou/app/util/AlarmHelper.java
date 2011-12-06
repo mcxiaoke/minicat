@@ -27,17 +27,12 @@ import com.fanfou.app.service.NotificationService;
  */
 public final class AlarmHelper {
 	private static final String TAG = AlarmHelper.class.getSimpleName();
-	
+
 	public static void cleanAlarmFlags(Context context) {
 		if (App.DEBUG) {
 			Log.d("App", "cleanAlarmFlags");
 		}
-		Editor editor = App.me.sp.edit();
-		editor.remove(context.getString(R.string.option_set_auto_clean));
-		editor.remove(context.getString(R.string.option_set_auto_update));
-		editor.remove(context.getString(R.string.option_set_auto_complete));
-		editor.remove(context.getString(R.string.option_set_notification));
-		editor.commit();
+		OptionHelper.cleanAlarmFlags();
 	}
 
 	public final static void unsetScheduledTasks(Context context) {
@@ -63,7 +58,7 @@ public final class AlarmHelper {
 		AudioManager am = (AudioManager) context
 				.getSystemService(Context.AUDIO_SERVICE);
 		if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-			String ringFile = OptionHelper.readString(context,
+			String ringFile = OptionHelper.readString(
 					R.string.option_notification_ringtone, null);
 			Uri ringTone = null;
 			if (!TextUtils.isEmpty(ringFile)) {
@@ -72,7 +67,7 @@ public final class AlarmHelper {
 			}
 		}
 
-		boolean vibrate = OptionHelper.readBoolean(context,
+		boolean vibrate = OptionHelper.readBoolean(
 				R.string.option_notification_vibrate, false);
 		if (vibrate) {
 			notification.defaults |= Notification.DEFAULT_VIBRATE;
@@ -80,7 +75,7 @@ public final class AlarmHelper {
 			notification.vibrate = null;
 		}
 
-		boolean led = OptionHelper.readBoolean(context,
+		boolean led = OptionHelper.readBoolean(
 				R.string.option_notification_led, false);
 		if (led) {
 			notification.defaults |= Notification.DEFAULT_LIGHTS;

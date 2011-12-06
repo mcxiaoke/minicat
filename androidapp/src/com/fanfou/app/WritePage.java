@@ -116,7 +116,7 @@ public class WritePage extends BaseActivity {
 	}
 
 	private void initialize() {
-		enableLocation = OptionHelper.readBoolean(this,
+		enableLocation = OptionHelper.readBoolean(
 				R.string.option_location_enable, true);
 		mLocationManager = (LocationManager) this
 				.getSystemService(Context.LOCATION_SERVICE);
@@ -340,16 +340,14 @@ public class WritePage extends BaseActivity {
 
 		mAutoCompleteTextView.setTokenizer(new AtTokenizer());
 		mAutoCompleteTextView.setDropDownBackgroundResource(R.drawable.bg);
-		final String[] projection = new String[] { UserInfo._ID,
-				UserInfo.ID, UserInfo.SCREEN_NAME, UserInfo.TYPE,
-				UserInfo.OWNER_ID };
-		String where = UserInfo.OWNER_ID + " = '" + App.me.userId
-				+ "' AND " + UserInfo.TYPE + " = '" + User.TYPE_FRIENDS
-				+ "'";
-		mCursor  = managedQuery(UserInfo.CONTENT_URI, projection, where, null,
+		final String[] projection = new String[] { UserInfo._ID, UserInfo.ID,
+				UserInfo.SCREEN_NAME, UserInfo.TYPE, UserInfo.OWNER_ID };
+		String where = UserInfo.OWNER_ID + " = '" + App.getUserId() + "' AND "
+				+ UserInfo.TYPE + " = '" + User.TYPE_FRIENDS + "'";
+		mCursor = managedQuery(UserInfo.CONTENT_URI, projection, where, null,
 				null);
-		mAutoCompleteTextView
-				.setAdapter(new AutoCompleteCursorAdapter(this, mCursor));
+		mAutoCompleteTextView.setAdapter(new AutoCompleteCursorAdapter(this,
+				mCursor));
 	}
 
 	private void setLayout() {
@@ -408,7 +406,7 @@ public class WritePage extends BaseActivity {
 		if (StringHelper.isEmpty(content)) {
 			super.onBackPressed();
 		} else {
-			boolean needConfirm = OptionHelper.readBoolean(this,
+			boolean needConfirm = OptionHelper.readBoolean(
 					R.string.option_save_on_back_press, true);
 			if (needConfirm) {
 				checkSave();
@@ -504,7 +502,7 @@ public class WritePage extends BaseActivity {
 
 	private void switchLocation() {
 		enableLocation = !enableLocation;
-		OptionHelper.saveBoolean(this, R.string.option_location_enable,
+		OptionHelper.saveBoolean(R.string.option_location_enable,
 				enableLocation);
 		if (App.DEBUG)
 			log("location enable status=" + enableLocation);

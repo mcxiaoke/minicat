@@ -16,6 +16,7 @@ import com.fanfou.app.db.FanFouProvider;
  * @version 1.2 2011.10.28
  * @version 1.3 2011.11.18
  * @version 1.4 2011.12.05
+ * @version 1.5 2011.12.06
  * 
  */
 public final class CacheManager {
@@ -50,23 +51,14 @@ public final class CacheManager {
 	}
 
 	public static Status getStatus(String key) {
-		if (App.DEBUG) {
-			Log.v("CacheManager", "get status from cache : " + key);
-		}
 		return sStatusCache.get(key);
 	}
 
 	public static User getUser(Context context, String key) {
 		User user = sUserCache.get(key);
 		if (user == null) {
-			if (App.DEBUG) {
-				Log.v("CacheManager", "get user from cache : " + key);
-			}
-			user = queryUser(context, key);
+			user = getUserFromDB(context, key);
 			if (user != null) {
-				if (App.DEBUG) {
-					Log.v("CacheManager", "cache user from db : " + key);
-				}
 				put(user);
 			}
 		}
@@ -77,21 +69,15 @@ public final class CacheManager {
 		Status status = sStatusCache.get(key);
 
 		if (status == null) {
-			if (App.DEBUG) {
-				Log.v("CacheManager", "get status from cache : " + key);
-			}
-			status = queryStatus(context, key);
+			status = getStatusFromDB(context, key);
 			if (status != null) {
-				if (App.DEBUG) {
-					Log.v("CacheManager", "cache status from db : " + key);
-				}
 				put(status);
 			}
 		}
 		return status;
 	}
 
-	public static User queryUser(Context context, final String id) {
+	public static User getUserFromDB(Context context, final String id) {
 		final Cursor cursor = context.getContentResolver().query(
 				FanFouProvider.buildUriWithUserId(id), null, null, null, null);
 		try {
@@ -108,7 +94,7 @@ public final class CacheManager {
 		return null;
 	}
 
-	public static Status queryStatus(Context context, final String id) {
+	public static Status getStatusFromDB(Context context, final String id) {
 		final Cursor cursor = context.getContentResolver()
 				.query(FanFouProvider.buildUriWithStatusId(id), null, null,
 						null, null);

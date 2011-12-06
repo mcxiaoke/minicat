@@ -78,7 +78,7 @@ public class CleanService extends WakefulIntentService {
 	private void doCleanUserData() {
 		ContentResolver cr = getContentResolver();
 		String where = BasicColumns.OWNER_ID + "!=?";
-		String[] whereArgs = new String[] { App.me.userId };
+		String[] whereArgs = new String[] { App.getUserId() };
 		int result = cr.delete(UserInfo.CONTENT_URI, where, whereArgs);
 		if (App.DEBUG) {
 			Log.d("CleanService", "cleaned user items count=" + result);
@@ -106,7 +106,7 @@ public class CleanService extends WakefulIntentService {
 	@SuppressWarnings("unused")
 	private void doUpdate2(int type) {
 		try {
-			Api api = App.api;
+			Api api = App.getApi();
 			String where = BasicColumns.TYPE + "=?";
 			String[] whereArgs = new String[] { String.valueOf(type) };
 			Uri uri = StatusInfo.CONTENT_URI;
@@ -167,7 +167,7 @@ public class CleanService extends WakefulIntentService {
 
 	private void doUpdate(int type) {
 		try {
-			Api api = App.api;
+			Api api = App.getApi();
 			String where = BasicColumns.TYPE + "=?";
 			String[] whereArgs = new String[] { String.valueOf(type) };
 			Uri uri = StatusInfo.CONTENT_URI;

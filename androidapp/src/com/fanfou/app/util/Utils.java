@@ -65,22 +65,6 @@ public final class Utils {
 		return str == null || str == "";
 	}
 
-	public static String getViersionInfo() {
-		try {
-			PackageInfo pkg = App.me.getPackageManager().getPackageInfo(
-					App.me.getPackageName(), 0);
-			String versionName = pkg.versionName;
-			String versionCode = String.valueOf(pkg.versionCode);
-			return versionName + " (Build" + versionCode + ")";
-		} catch (NameNotFoundException e) {
-			if (App.DEBUG)
-				e.printStackTrace();
-		}
-
-		return "1.0";
-
-	}
-
 	public static void hideKeyboard(final Context context, final EditText input) {
 		InputMethodManager imm = (InputMethodManager) context
 				.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -240,19 +224,19 @@ public final class Utils {
 		return end * ((time = time / duration - 1) * time * time + 1) + start;
 	}
 
-	public static void initScreenConfig(final Activity activity) {
-		boolean fullscreen = OptionHelper.readBoolean(activity,
+	public static void initScreenConfig(final Activity context) {
+		boolean fullscreen = OptionHelper.readBoolean(
 				R.string.option_force_fullscreen, false);
 		if (fullscreen) {
-			activity.getWindow().setFlags(
+			context.getWindow().setFlags(
 					WindowManager.LayoutParams.FLAG_FULLSCREEN,
 					WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
 
-		boolean portrait = OptionHelper.readBoolean(activity,
+		boolean portrait = OptionHelper.readBoolean(
 				R.string.option_force_portrait, false);
 		if (portrait) {
-			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
 	}
 
@@ -281,7 +265,7 @@ public final class Utils {
 	}
 
 	public static void lockScreenOrientation(final Activity activity) {
-		boolean portrait = OptionHelper.readBoolean(activity,
+		boolean portrait = OptionHelper.readBoolean(
 				R.string.option_force_portrait, false);
 		if (portrait) {
 			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -296,7 +280,7 @@ public final class Utils {
 	}
 
 	public static void unlockScreenOrientation(final Activity activity) {
-		boolean portrait = OptionHelper.readBoolean(activity,
+		boolean portrait = OptionHelper.readBoolean(
 				R.string.option_force_portrait, false);
 		if (!portrait) {
 			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);

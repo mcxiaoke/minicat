@@ -160,7 +160,7 @@ public class StatusHelper {
 				names.add(m.group(1));
 			}
 		}
-		String name = App.me.userScreenName;
+		String name = App.getUserName();
 		names.remove(name);
 		return names;
 	}
@@ -176,7 +176,7 @@ public class StatusHelper {
 				names.add(m.group(1));
 			}
 		}
-		String name = App.me.userScreenName;
+		String name = App.getUserName();
 		names.remove(name);
 		return names;
 	}

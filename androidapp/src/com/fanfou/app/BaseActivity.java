@@ -305,7 +305,7 @@ public abstract class BaseActivity extends Activity implements
 
 			@Override
 			public void onButton1Click() {
-				App.me.setOAuthToken(null);
+				App.getApp().setOAuthToken(null);
 				IntentHelper.goLoginPage(mContext);
 				finish();
 			}

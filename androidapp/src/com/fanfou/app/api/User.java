@@ -154,7 +154,7 @@ public class User implements Storable<User> {
 			user.createdAt = Parser.date(o.getString(BasicColumns.CREATED_AT));
 
 			user.type = Commons.TYPE_NONE;
-			user.ownerId = App.me.userId;
+			user.ownerId = App.getUserId();
 			return user;
 		} catch (Exception e) {
 			throw new ApiException(ResponseCode.ERROR_JSON_EXCEPTION,

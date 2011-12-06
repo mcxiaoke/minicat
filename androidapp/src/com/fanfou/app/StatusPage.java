@@ -136,7 +136,7 @@ public class StatusPage extends BaseActivity {
 		} else {
 			statusId = status.id;
 		}
-		isMe = status.userId.equals(App.me.userId);
+		isMe = status.userId.equals(App.getUserId());
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class StatusPage extends BaseActivity {
 
 			mActionBar.setTitle(status.userScreenName);
 
-			boolean textMode = OptionHelper.readBoolean(this,
+			boolean textMode = OptionHelper.readBoolean(
 					R.string.option_text_mode, false);
 			if (textMode) {
 				iUserHead.setVisibility(View.GONE);
@@ -256,7 +256,7 @@ public class StatusPage extends BaseActivity {
 			iPhoto.setImageResource(R.drawable.photo_icon);
 		} else {
 			// 再根据系统设置处理
-			int set = OptionHelper.parseInt(this, R.string.option_pic_level);
+			int set = OptionHelper.parseInt(R.string.option_pic_level);
 			switch (set) {
 			case 2:
 				// 如果设置为大图

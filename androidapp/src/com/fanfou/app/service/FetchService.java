@@ -112,13 +112,13 @@ public class FetchService extends BaseIntentService {
 		if (App.DEBUG)
 			log("fetchFriendsOrFollowers ownerId=" + ownerId + " page=" + page);
 
-		if (App.me.apnType == ApnType.WIFI) {
+		if (App.getApnType() == ApnType.WIFI) {
 			count = FanFouApiConfig.MAX_USERS_COUNT;
 		} else {
 			count = FanFouApiConfig.DEFAULT_USERS_COUNT;
 		}
 
-		Api api = App.api;
+		Api api = App.getApi();
 		try {
 			List<User> users = null;
 			if (mType == User.TYPE_FRIENDS) {
@@ -182,7 +182,7 @@ public class FetchService extends BaseIntentService {
 		// count=ApiConfig.MAX_TIMELINE_COUNT;
 		// }
 
-		if (App.me.apnType == ApnType.WIFI) {
+		if (App.getApnType() == ApnType.WIFI) {
 			count = FanFouApiConfig.MAX_TIMELINE_COUNT;
 		} else {
 			count = FanFouApiConfig.DEFAULT_TIMELINE_COUNT;
@@ -197,7 +197,7 @@ public class FetchService extends BaseIntentService {
 	}
 
 	private int fetchNewDirectMessages(int count) {
-		Api api = App.api;
+		Api api = App.getApi();
 		Cursor ic = initMessagesCursor(false);
 		Cursor oc = initMessagesCursor(true);
 		try {
@@ -241,7 +241,7 @@ public class FetchService extends BaseIntentService {
 	}
 
 	private int fetchOldDirectMessages(int count) {
-		Api api = App.api;
+		Api api = App.getApi();
 		Cursor ic = initMessagesCursor(false);
 		Cursor oc = initMessagesCursor(true);
 		try {
@@ -323,7 +323,7 @@ public class FetchService extends BaseIntentService {
 	private void fetchTimeline(Bundle bundle) {
 		if (App.DEBUG)
 			Log.d(TAG, "fetchTimeline");
-		Api api = App.api;
+		Api api = App.getApi();
 		List<Status> statuses = null;
 
 		int page = bundle.getInt(Commons.EXTRA_PAGE);
@@ -339,7 +339,7 @@ public class FetchService extends BaseIntentService {
 		// count=ApiConfig.MAX_TIMELINE_COUNT;
 		// }
 
-		if (App.me.apnType == ApnType.WIFI) {
+		if (App.getApnType() == ApnType.WIFI) {
 			count = FanFouApiConfig.MAX_TIMELINE_COUNT;
 		} else {
 			count = FanFouApiConfig.DEFAULT_TIMELINE_COUNT;

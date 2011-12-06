@@ -162,7 +162,7 @@ public final class NetHelper {
 		HttpConnectionParams.setSocketBufferSize(params, SOCKET_BUFFER_SIZE);
 		HttpConnectionParams.setTcpNoDelay(params, true);
 		HttpProtocolParams.setUserAgent(params, "FanFou for Android/"
-				+ App.me.appVersionName);
+				+ App.appVersionName);
 
 		HttpClientParams.setRedirecting(params, false);
 
@@ -190,7 +190,7 @@ public final class NetHelper {
 			return;
 		}
 		HttpParams params = client.getParams();
-		ApnType type = App.me.apnType;
+		ApnType type = App.getApnType();
 		if (type == ApnType.CTWAP) {
 			if (App.DEBUG) {
 				Log.d("setProxy", "use proxy 10.0.0.200:80");

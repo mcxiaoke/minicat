@@ -226,7 +226,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 
 			dm.type = type;
 
-			dm.ownerId = App.me.userId;
+			dm.ownerId = App.getUserId();
 		} catch (JSONException e) {
 			throw new ApiException(ResponseCode.ERROR_JSON_EXCEPTION,
 					e.getMessage(), e);

@@ -51,6 +51,7 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * @version 2.7 2011.10.27
  * @version 2.8 2011.11.26
  * @version 3.0 2011.12.01
+ * @version 3.1 2011.12.06
  * 
  */
 public final class LoginPage extends Activity implements OnClickListener {
@@ -251,7 +252,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 		@Override
 		protected ResultInfo doInBackground(Void... params) {
 
-			String savedUserId = OptionHelper.readString(mContext,
+			String savedUserId = OptionHelper.readString(
 					R.string.option_userid, null);
 			try {
 				XAuthService xauth = new XAuthService(new FanFouOAuthProvider());
@@ -270,8 +271,8 @@ public final class LoginPage extends Activity implements OnClickListener {
 
 				if (token != null) {
 					publishProgress(1);
-					App.me.setOAuthToken(token);
-					User u = App.api.verifyAccount(FanFouApiConfig.MODE_LITE);
+					App.getApp().setOAuthToken(token);
+					User u = App.getApi().verifyAccount(FanFouApiConfig.MODE_LITE);
 
 					if (isCancelled) {
 						if (App.DEBUG) {
@@ -282,7 +283,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 					}
 
 					if (u != null && !u.isNull()) {
-						App.me.updateAccountInfo(u, token);
+						App.getApp().updateAccountInfo(u, token);
 						if (App.DEBUG)
 							log("xauth successful! ");
 

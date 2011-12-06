@@ -71,7 +71,7 @@ public class WebService extends Service implements IWebService {
 	}
 
 	private void initialize() {
-		mApi = App.api;
+		mApi = App.getApi();
 	}
 
 	@Override

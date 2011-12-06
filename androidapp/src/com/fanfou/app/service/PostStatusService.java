@@ -89,7 +89,7 @@ public class PostStatusService extends WakefulIntentService {
 	private boolean doSend() {
 		showSendingNotification();
 		boolean res = false;
-		Api api = App.api;
+		Api api = App.getApi();
 		try {
 			Status result = null;
 			if (srcFile == null || !srcFile.exists()) {
@@ -104,11 +104,10 @@ public class PostStatusService extends WakefulIntentService {
 				}
 			} else {
 				int quality = ImageHelper.IMAGE_QUALITY_MEDIUM;
-				if (App.me.apnType == ApnType.WIFI
-						|| App.me.apnType == ApnType.HSDPA) {
+				if (App.getApnType() == ApnType.WIFI) {
 					quality = ImageHelper.IMAGE_QUALITY_HIGH;
 				} else {
-					quality = OptionHelper.parseInt(this,
+					quality = OptionHelper.parseInt(
 							R.string.option_photo_quality,
 							String.valueOf(ImageHelper.IMAGE_QUALITY_MEDIUM));
 				}

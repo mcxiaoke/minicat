@@ -108,7 +108,7 @@ public final class ActionManager {
 			}
 			throw new NullPointerException("userid cannot be null.");
 		}
-		if (userId.equals(App.me.userId)) {
+		if (userId.equals(App.getUserId())) {
 			doMyProfile(context);
 			return;
 		}
@@ -124,7 +124,7 @@ public final class ActionManager {
 			}
 			throw new NullPointerException("directmessage cannot be null.");
 		}
-		if (dm.senderId.equals(App.me.userId)) {
+		if (dm.senderId.equals(App.getUserId())) {
 			doMyProfile(context);
 			return;
 		}
@@ -142,7 +142,7 @@ public final class ActionManager {
 			}
 			throw new NullPointerException("status cannot be null.");
 		}
-		if (status.userId.equals(App.me.userId)) {
+		if (status.userId.equals(App.getUserId())) {
 			doMyProfile(context);
 			return;
 		}
@@ -160,7 +160,7 @@ public final class ActionManager {
 			}
 			throw new NullPointerException("user cannot be null.");
 		}
-		if (user.id.equals(App.me.userId)) {
+		if (user.id.equals(App.getUserId())) {
 			doMyProfile(context);
 			return;
 		}
@@ -204,7 +204,7 @@ public final class ActionManager {
 				Log.d(TAG, "doReply: status is null.");
 			}
 			StringBuilder sb = new StringBuilder();
-			boolean replyToAll = OptionHelper.readBoolean(context,
+			boolean replyToAll = OptionHelper.readBoolean(
 					R.string.option_reply_to_all_default, true);
 			if (replyToAll) {
 				ArrayList<String> names = StatusHelper.getMentions(status);

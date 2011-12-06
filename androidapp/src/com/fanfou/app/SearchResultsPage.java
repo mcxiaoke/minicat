@@ -237,11 +237,11 @@ public class SearchResultsPage extends BaseActivity implements
 			List<com.fanfou.app.api.Status> result = null;
 
 			int count = FanFouApiConfig.DEFAULT_TIMELINE_COUNT;
-			if (App.me.apnType == ApnType.WIFI) {
+			if (App.getApnType() == ApnType.WIFI) {
 				count = FanFouApiConfig.MAX_TIMELINE_COUNT;
 			}
 			try {
-				result = App.api.search(keyword, null, maxId, count,
+				result = App.getApi().search(keyword, null, maxId, count,
 						FanFouApiConfig.FORMAT_HTML, FanFouApiConfig.MODE_LITE);
 			} catch (ApiException e) {
 				if (App.DEBUG)

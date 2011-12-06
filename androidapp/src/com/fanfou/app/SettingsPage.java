@@ -91,8 +91,8 @@ public class SettingsPage extends PreferenceActivity implements
 		interval.setSummary(interval.getEntry());
 
 		Preference currentAccount = findPreference(getText(R.string.option_current_account));
-		currentAccount.setSummary("" + App.me.userScreenName + "("
-				+ App.me.userId + ")");
+		currentAccount.setSummary("" + App.getUserName() + "("
+				+ App.getUserId() + ")");
 
 		Preference checkUpdate = findPreference(getText(R.string.option_check_update));
 		checkUpdate.setOnPreferenceClickListener(this);
@@ -215,7 +215,7 @@ public class SettingsPage extends PreferenceActivity implements
 				}
 				return;
 			}
-			if (info != null && info.versionCode > App.me.appVersionCode) {
+			if (info != null && info.versionCode > App.getApp().appVersionCode) {
 				DownloadService.showUpdateConfirmDialog(c, info);
 			} else {
 				Utils.notify(c, "你使用的已经是最新版");

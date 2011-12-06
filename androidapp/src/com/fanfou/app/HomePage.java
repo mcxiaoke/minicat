@@ -75,6 +75,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.8 2011.11.30
  * @version 4.9 2011.12.02
  * @version 5.0 2011.12.05
+ * @version 5.1 2011.12.06
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
@@ -114,6 +115,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	private boolean endlessScroll;
 	private boolean soundEffect;
 
+	private OptionHelper mOptionHelper;
+
 	public static final String TAG = "HomePage";
 
 	BroadcastReceiver mSendSuccessReceiver;
@@ -147,10 +150,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	private void init() {
 		initPage = getIntent().getIntExtra(Commons.EXTRA_PAGE, 0);
-
-		endlessScroll = OptionHelper.readBoolean(this,
+		endlessScroll = OptionHelper.readBoolean(
 				R.string.option_page_scroll_endless, false);
-		soundEffect = OptionHelper.readBoolean(mContext,
+		soundEffect = OptionHelper.readBoolean(
 				R.string.option_play_sound_effect, true);
 
 		ImageLoader.getInstance(this);
@@ -215,11 +217,11 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	 */
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-//		mActionBar.setLeftAction(new HomeLogoAction());
+		 mActionBar.setLeftAction(new HomeLogoAction());
 		mActionBar.setRightAction(new ActionBar.WriteAction(this, null));
 		mActionBar.setRefreshEnabled(this);
-		if (App.DEBUG) {
-			mActionBar.setTitle("[内部测试版]");
+		if (App.DEBUG||App.TEST) {
+			mActionBar.setTitle("测试版 "+App.appVersionName);
 		}
 	}
 
@@ -329,9 +331,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		onRight.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		onRight.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
-		String writePostion = OptionHelper.readString(this,
+		String writePostion = OptionHelper.readString(
 				R.string.option_bottom_write_icon, "none");
-		String refreshPostion = OptionHelper.readString(this,
+		String refreshPostion = OptionHelper.readString(
 				R.string.option_bottom_refresh_icon, "right");
 
 		if (writePostion.equals(refreshPostion)
@@ -418,7 +420,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	private void checkRefresh() {
-		boolean refresh = OptionHelper.readBoolean(this,
+		boolean refresh = OptionHelper.readBoolean(
 				R.string.option_refresh_on_open, false);
 		if (refresh || (cursors[0].getCount() == 0 && mCurrentPage == 0)) {
 			onRefreshClick();
@@ -440,7 +442,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			Utils.notify(this, "未通过验证，请登录");
 			return;
 		}
-		if (App.me.apnType != ApnType.WIFI) {
+		if (App.getApnType() != ApnType.WIFI) {
 			ImageLoader.getInstance(this).clearQueue();
 		}
 		Bundle b = new Bundle();
@@ -516,12 +518,12 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			if (App.DEBUG) {
 				log("onBroadcastReceived ACTION_STATUS_SENT");
 			}
-			
+
 			cursors[0].requery();
-			if(mCurrentPage==0){
-				boolean needRefresh = OptionHelper.readBoolean(this,
+			if (mCurrentPage == 0) {
+				boolean needRefresh = OptionHelper.readBoolean(
 						R.string.option_refresh_after_send, false);
-				if(needRefresh){
+				if (needRefresh) {
 					onRefreshClick();
 				}
 			}
@@ -624,7 +626,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if (App.me.apnType != ApnType.WIFI) {
+		if (App.getApnType() != ApnType.WIFI) {
 			ImageLoader.getInstance(this).clearQueue();
 		}
 	}
@@ -869,7 +871,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	@Override
 	public void onBackPressed() {
-		boolean needConfirm = OptionHelper.readBoolean(this,
+		boolean needConfirm = OptionHelper.readBoolean(
 				R.string.option_confirm_on_exit, false);
 		if (needConfirm) {
 			final ConfirmDialog dialog = new ConfirmDialog(this, "提示",

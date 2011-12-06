@@ -54,7 +54,7 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 		final String[] projection = new String[] { BaseColumns._ID,
 				UserInfo.ID, UserInfo.SCREEN_NAME, UserInfo.TYPE,
 				UserInfo.OWNER_ID };
-		String where = UserInfo.OWNER_ID + " = '" + App.me.userId + "' AND "
+		String where = UserInfo.OWNER_ID + " = '" + App.getUserId() + "' AND "
 				+ UserInfo.TYPE + " = '" + User.TYPE_FRIENDS + "' AND "
 				+ UserInfo.SCREEN_NAME + " like '%" + constraint + "%' OR "
 				+ UserInfo.ID + " like '%" + constraint + "%'";

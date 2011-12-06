@@ -102,7 +102,7 @@ public class UserChoosePage extends BaseActivity implements
 		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
 				+ "=?";
 		String[] whereArgs = new String[] { String.valueOf(User.TYPE_FRIENDS),
-				App.me.userId };
+				App.getUserId() };
 		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				whereArgs, null);
 
@@ -213,7 +213,7 @@ public class UserChoosePage extends BaseActivity implements
 
 	protected void doRetrieve(boolean isGetMore) {
 		Bundle b = new Bundle();
-		b.putString(Commons.EXTRA_ID, App.me.userId);
+		b.putString(Commons.EXTRA_ID, App.getUserId());
 		b.putInt(Commons.EXTRA_PAGE, page);
 		b.putInt(Commons.EXTRA_COUNT, FanFouApiConfig.MAX_USERS_COUNT);
 		FetchService.start(this, User.TYPE_FRIENDS, mResultReceiver, b);
@@ -338,7 +338,7 @@ public class UserChoosePage extends BaseActivity implements
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
 		String where = BasicColumns.TYPE + " = " + User.TYPE_FRIENDS + " AND "
-				+ BasicColumns.OWNER_ID + " = '" + App.me.userId + "' AND ("
+				+ BasicColumns.OWNER_ID + " = '" + App.getUserId() + "' AND ("
 				+ UserInfo.SCREEN_NAME + " like '%" + constraint + "%' OR "
 				+ BasicColumns.ID + " like '%" + constraint + "%' )";
 		;

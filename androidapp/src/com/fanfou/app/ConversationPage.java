@@ -156,7 +156,7 @@ public class ConversationPage extends BaseActivity implements
 
 		@Override
 		protected List<com.fanfou.app.api.Status> doInBackground(Void... params) {
-			Api api = App.api;
+			Api api = App.getApi();
 			String id = mStatus.id;
 			try {
 				if (!StringHelper.isEmpty(id)) {

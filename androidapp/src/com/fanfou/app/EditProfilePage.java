@@ -306,7 +306,7 @@ public class EditProfilePage extends BaseActivity {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			api = App.api;
+			api = App.getApi();
 			pd = new ProgressDialog(mContext);
 			pd.setMessage("正在更新个人资料...");
 			pd.setIndeterminate(true);
@@ -413,7 +413,7 @@ public class EditProfilePage extends BaseActivity {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			api = App.api;
+			api = App.getApi();
 			pd = new ProgressDialog(mEditProfilePage);
 			pd.setMessage("正在更新头像...");
 			pd.setIndeterminate(true);

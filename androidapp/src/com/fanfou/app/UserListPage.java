@@ -229,7 +229,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if (App.me.apnType != ApnType.WIFI) {
+		if (App.getApnType() != ApnType.WIFI) {
 			ImageLoader.getInstance(this).clearQueue();
 		}
 	}

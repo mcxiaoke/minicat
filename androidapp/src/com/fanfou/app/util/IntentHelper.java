@@ -26,7 +26,7 @@ public final class IntentHelper {
 	}
 
 	public static void goLoginPage(Context context) {
-		App.me.removeAccountInfo();
+		App.removeAccountInfo();
 		ImageLoader.getInstance(context).clearQueue();
 		Intent intent = new Intent(context, LoginPage.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

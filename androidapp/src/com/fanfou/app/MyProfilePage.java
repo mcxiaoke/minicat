@@ -32,6 +32,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.2 2011.10.29
  * @version 1.3 2011.11.07
  * @version 1.4 2011.11.08
+ * @version 1.5 2011.12.06
  * 
  */
 public class MyProfilePage extends BaseActivity {
@@ -80,7 +81,7 @@ public class MyProfilePage extends BaseActivity {
 	}
 
 	private void parseIntent() {
-		userId = App.me.userId;
+		userId = App.getUserId();
 		user = CacheManager.getUser(this, userId);
 	}
 
@@ -342,7 +343,7 @@ public class MyProfilePage extends BaseActivity {
 					User result = (User) resultData
 							.getParcelable(Commons.EXTRA_USER);
 					if (result != null) {
-						App.me.updateUserInfo(result);
+						App.getApp().updateUserInfo(result);
 						user = result;
 					}
 					if (!isInitialized) {

@@ -71,7 +71,7 @@ public class PostMessageService extends WakefulIntentService {
 	private boolean doSend() {
 		showSendingNotification();
 		boolean res = true;
-		Api api = App.api;
+		Api api = App.getApi();
 		try {
 			DirectMessage result = api.directMessagesCreate(userId, content,
 					null, FanFouApiConfig.MODE_LITE);

@@ -15,6 +15,7 @@ import android.util.Log;
 import com.fanfou.app.App;
 import com.fanfou.app.App.ApnType;
 import com.fanfou.app.R;
+import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.FanFouApiConfig;
@@ -54,6 +55,7 @@ public class NotificationService extends BaseIntentService {
 	private static final int DEFAULT_PAGE = 0;
 
 	private PowerManager.WakeLock mWakeLock;
+	private Api mApi;
 
 	public NotificationService() {
 		super("NotificationService");
@@ -82,12 +84,12 @@ public class NotificationService extends BaseIntentService {
 	}
 
 	public static void set(Context context) {
-		boolean need = OptionHelper.readBoolean(context,
-				R.string.option_notification, true);
+		boolean need = OptionHelper.readBoolean(R.string.option_notification,
+				true);
 		if (!need) {
 			return;
 		}
-		int interval = OptionHelper.parseInt(context,
+		int interval = OptionHelper.parseInt(
 				R.string.option_notification_interval, "5");
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MINUTE, interval);
@@ -103,11 +105,10 @@ public class NotificationService extends BaseIntentService {
 	}
 
 	public static void setIfNot(Context context) {
-		boolean set = OptionHelper.readBoolean(context,
+		boolean set = OptionHelper.readBoolean(
 				R.string.option_set_notification, false);
 		if (!set) {
-			OptionHelper.saveBoolean(context, R.string.option_set_notification,
-					true);
+			OptionHelper.saveBoolean(R.string.option_set_notification, true);
 			set(context);
 		}
 	}
@@ -125,21 +126,23 @@ public class NotificationService extends BaseIntentService {
 			Log.i(TAG, "onHandleIntent");
 		}
 
-		boolean need = OptionHelper.readBoolean(this,
-				R.string.option_notification, false);
+		boolean need = OptionHelper.readBoolean(R.string.option_notification,
+				false);
 		if (!need) {
 			return;
 		}
 
-		boolean dm = OptionHelper.readBoolean(this,
-				R.string.option_notification_dm, false);
-		boolean mention = OptionHelper.readBoolean(this,
+		mApi = App.getApi();
+
+		boolean dm = OptionHelper.readBoolean(R.string.option_notification_dm,
+				false);
+		boolean mention = OptionHelper.readBoolean(
 				R.string.option_notification_mention, false);
-		boolean home = OptionHelper.readBoolean(this,
+		boolean home = OptionHelper.readBoolean(
 				R.string.option_notification_home, false);
 
 		int count = DEFAULT_COUNT;
-		if (App.me.apnType == ApnType.WIFI) {
+		if (App.getApnType() == ApnType.WIFI) {
 			count = MAX_COUNT;
 		}
 		try {
@@ -173,9 +176,8 @@ public class NotificationService extends BaseIntentService {
 
 	private void handleDm(int count) throws ApiException {
 		Cursor mc = initCursor(DirectMessage.TYPE_IN);
-		List<DirectMessage> dms = App.api.directMessagesInbox(count,
-				DEFAULT_PAGE, Utils.getDmSinceId(mc), null,
-				FanFouApiConfig.MODE_LITE);
+		List<DirectMessage> dms = mApi.directMessagesInbox(count, DEFAULT_PAGE,
+				Utils.getDmSinceId(mc), null, FanFouApiConfig.MODE_LITE);
 		mc.close();
 		if (dms != null) {
 			int size = dms.size();
@@ -203,7 +205,7 @@ public class NotificationService extends BaseIntentService {
 
 	private void handleMention(int count) throws ApiException {
 		Cursor mc = initCursor(Status.TYPE_MENTION);
-		List<Status> ss = App.api.mentions(count, DEFAULT_PAGE,
+		List<Status> ss = mApi.mentions(count, DEFAULT_PAGE,
 				Utils.getSinceId(mc), null, FanFouApiConfig.FORMAT_HTML,
 				FanFouApiConfig.MODE_LITE);
 		mc.close();
@@ -232,7 +234,7 @@ public class NotificationService extends BaseIntentService {
 
 	private void handleHome(int count) throws ApiException {
 		Cursor mc = initCursor(Status.TYPE_HOME);
-		List<Status> ss = App.api.homeTimeline(count, DEFAULT_PAGE,
+		List<Status> ss = mApi.homeTimeline(count, DEFAULT_PAGE,
 				Utils.getSinceId(mc), null, FanFouApiConfig.FORMAT_HTML,
 				FanFouApiConfig.MODE_LITE);
 		mc.close();

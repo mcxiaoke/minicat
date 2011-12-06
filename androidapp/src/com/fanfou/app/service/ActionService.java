@@ -69,7 +69,7 @@ public class ActionService extends BaseIntentService {
 	}
 
 	private void doDetectFriendships(String userA, String userB) {
-		Api api = App.api;
+		Api api = App.getApi();
 		try {
 			boolean result = api.friendshipsExists(userA, userB);
 			Bundle data = new Bundle();
@@ -91,7 +91,7 @@ public class ActionService extends BaseIntentService {
 	}
 
 	private void performAction(String id, int type) {
-		Api api = App.api;
+		Api api = App.getApi();
 		String where = BasicColumns.ID + "=?";
 		String[] whereArgs = new String[] { id };
 		try {

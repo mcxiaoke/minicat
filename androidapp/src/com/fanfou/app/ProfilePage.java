@@ -246,7 +246,7 @@ public class ProfilePage extends BaseActivity {
 		if (App.DEBUG)
 			log("updateUI user.name=" + user.screenName);
 
-		boolean textMode = OptionHelper.readBoolean(this,
+		boolean textMode = OptionHelper.readBoolean(
 				R.string.option_text_mode, false);
 		if (textMode) {
 			mHead.setVisibility(View.GONE);
@@ -293,7 +293,7 @@ public class ProfilePage extends BaseActivity {
 		updateFollowButton(user.following);
 
 		if (!noPermission) {
-			boolean need = OptionHelper.readBoolean(this,
+			boolean need = OptionHelper.readBoolean(
 					R.string.option_fetch_relationships, false);
 			if (need) {
 				doFetchRelationshipInfo();
@@ -347,9 +347,9 @@ public class ProfilePage extends BaseActivity {
 		Intent intent = new Intent(this, ActionService.class);
 		intent.putExtra(Commons.EXTRA_TYPE, Commons.ACTION_USER_RELATION);
 		if (App.DEBUG)
-			log("App.userId=" + App.me.userId);
+			log("App.userId=" + App.getUserId());
 		intent.putExtra("user_a", user.id);
-		intent.putExtra("user_b", App.me.userId);
+		intent.putExtra("user_b", App.getUserId());
 		intent.putExtra(Commons.EXTRA_RECEIVER, receiver);
 		startService(intent);
 	}

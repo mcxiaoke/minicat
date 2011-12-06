@@ -73,10 +73,10 @@ public class AutoCompleteService extends BaseIntentService {
 	}
 
 	public static void setIfNot(Context context) {
-		boolean set = OptionHelper.readBoolean(context,
+		boolean set = OptionHelper.readBoolean(
 				R.string.option_set_auto_complete, false);
 		if (!set) {
-			OptionHelper.saveBoolean(context,
+			OptionHelper.saveBoolean(
 					R.string.option_set_auto_complete, true);
 			set(context);
 		}
@@ -101,7 +101,7 @@ public class AutoCompleteService extends BaseIntentService {
 		if (App.noConnection) {
 			return;
 		}
-		Api api = App.api;
+		Api api = App.getApi();
 		int page = 1;
 		boolean more = true;
 		while (more) {

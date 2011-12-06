@@ -20,8 +20,7 @@ import android.widget.ImageView;
 
 import com.fanfou.app.App;
 import com.fanfou.app.http.AbstractNetClient;
-import com.fanfou.app.http.AbstractNetClient;
-import com.fanfou.app.http.SimpleNetClient;
+import com.fanfou.app.http.OAuthNetClient;
 import com.fanfou.app.util.ImageHelper;
 
 /**
@@ -33,6 +32,7 @@ import com.fanfou.app.util.ImageHelper;
  * @version 2.6 2011.11.28
  * @version 3.0 2011.11.29
  * @version 4.0 2011.12.02
+ * @version 4.1 2011.12.06
  * 
  */
 public class ImageLoader implements IImageLoader {
@@ -54,8 +54,7 @@ public class ImageLoader implements IImageLoader {
 	private final ConcurrentHashMap<ImageLoaderTask, ImageLoaderCallback> mCallbackMap = new ConcurrentHashMap<ImageLoaderTask, ImageLoaderCallback>();
 	public final ImageCache mCache;
 	private final Handler mHandler;
-
-	private SimpleNetClient mClient;
+	private final AbstractNetClient mClient;
 
 	private Daemon mDaemon;
 
@@ -66,7 +65,7 @@ public class ImageLoader implements IImageLoader {
 			Log.d(TAG, "ImageLoader new instance.");
 		}
 		this.mCache = ImageCache.getInstance(context);
-		this.mClient = SimpleNetClient.newInstance();
+		this.mClient =OAuthNetClient.getInstance();
 		this.mHandler = new ImageDownloadHandler(mCallbackMap);
 		this.mDaemon = new Daemon();
 		this.mDaemon.start();
@@ -168,10 +167,10 @@ public class ImageLoader implements IImageLoader {
 		private final ImageLoaderTask task;
 		private final Handler handler;
 		private final ImageCache cache;
-		private final SimpleNetClient conn;
+		private final AbstractNetClient conn;
 
 		public Worker(final ImageLoaderTask task, final Handler handler,
-				final ImageCache cache, final SimpleNetClient conn) {
+				final ImageCache cache, final AbstractNetClient conn) {
 			this.task = task;
 			this.handler = handler;
 			this.cache = cache;
@@ -185,7 +184,7 @@ public class ImageLoader implements IImageLoader {
 	}
 
 	private static void handleDownloadTask(final ImageCache cache,
-			final ImageLoaderTask task, final SimpleNetClient conn,
+			final ImageLoaderTask task, final AbstractNetClient conn,
 			final Handler handler) {
 		if (!cache.containsKey(task.url)) {
 			Bitmap bitmap = null;
@@ -209,7 +208,7 @@ public class ImageLoader implements IImageLoader {
 		}
 	}
 
-	private static Bitmap downloadImage(SimpleNetClient conn, String url)
+	private static Bitmap downloadImage(AbstractNetClient conn, String url)
 			throws IOException {
 		HttpResponse response = conn.get(url);
 		int statusCode = response.getStatusLine().getStatusCode();

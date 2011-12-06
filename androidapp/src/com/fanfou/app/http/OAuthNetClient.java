@@ -6,6 +6,7 @@ import com.fanfou.app.auth.OAuthService;
  * @author mcxiaoke
  * @version 1.0 2011.12.01
  * @version 1.1 2011.12.05
+ * @version 1.2 2011.12.06
  * 
  */
 public class OAuthNetClient extends AbstractNetClient {
@@ -18,6 +19,10 @@ public class OAuthNetClient extends AbstractNetClient {
 	
 	public static OAuthNetClient getInstance(OAuthService oauth) {
 		sClient.setOAuthService(oauth);
+		return sClient;
+	}
+	
+	public static OAuthNetClient getInstance() {
 		return sClient;
 	}
 

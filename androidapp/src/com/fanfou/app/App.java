@@ -3,16 +3,13 @@ package com.fanfou.app;
 import java.util.TimeZone;
 
 import org.acra.ACRA;
-import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
 import android.app.Application;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -42,6 +39,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 5.5 2011.11.28
  * @version 5.6 2011.12.01
  * @version 5.7 2011.12.05
+ * @version 6.0 2011.12.06
  * 
  */
 
@@ -49,27 +47,26 @@ import com.fanfou.app.util.StringHelper;
 public class App extends Application {
 
 	public static final boolean DEBUG = false;
-
-	public static App me;
-
-	public static Api api;
-
+	public static final boolean TEST=true;
+	
 	public static boolean active = false;
+	public static boolean noConnection=false;
+	public static boolean verified;
+	public static boolean mounted;
 
-	public volatile static boolean noConnection;
-	public volatile static boolean verified;
-	public volatile static boolean mounted;
+	public static int appVersionCode;
+	public static String appVersionName;
+	
+	private static String sUserId;
+	private static String sUserScreenName;
 
-	public String userId;
-	public String userScreenName;
+	private static App sInstance;
+	private static Api sApi;
 
-	public OAuthToken token;
+	private static SharedPreferences sPreferences;
+	private static OAuthToken sToken;
+	private static ApnType sApnType;
 
-	public int appVersionCode;
-	public String appVersionName;
-	public ApnType apnType;
-
-	public SharedPreferences sp;
 
 	@Override
 	public void onCreate() {
@@ -80,7 +77,7 @@ public class App extends Application {
 		initPreferences();
 		versionCheck();
 		ACRA.init(this);
-		api = FanFouApi.newInstance();
+		sApi = FanFouApi.newInstance();
 	}
 
 	private void init() {
@@ -94,8 +91,9 @@ public class App extends Application {
 //		                 .build());
 		}
 		
-		App.me = this;
-		apnType = NetworkHelper.getApnType(this);
+		App.sInstance = this;
+		App.sApnType = NetworkHelper.getApnType(this);
+		App.sPreferences=PreferenceManager.getDefaultSharedPreferences(this);
 
 		DateTimeHelper.FANFOU_DATE_FORMAT.setTimeZone(TimeZone
 				.getTimeZone("GMT"));
@@ -122,19 +120,15 @@ public class App extends Application {
 	}
 
 	private void initPreferences() {
-		PreferenceManager.setDefaultValues(this, R.xml.options, false);
-		this.sp = PreferenceManager.getDefaultSharedPreferences(this);
-		this.userId = OptionHelper.readString(this, R.string.option_userid,
+		PreferenceManager.setDefaultValues(this,R.xml.options, false);
+		sUserId = OptionHelper.readString(R.string.option_userid,
 				null);
-		this.userScreenName = OptionHelper.readString(this,
-				R.string.option_username, null);
-		String oauthAccessToken = OptionHelper.readString(this,
-				R.string.option_oauth_token, null);
-		String oauthAccessTokenSecret = OptionHelper.readString(this,
-				R.string.option_oauth_token_secret, null);
+		sUserScreenName = OptionHelper.readString(R.string.option_username, null);
+		String oauthAccessToken = OptionHelper.readString(R.string.option_oauth_token, null);
+		String oauthAccessTokenSecret = OptionHelper.readString(R.string.option_oauth_token_secret, null);
 		App.verified = !StringHelper.isEmpty(oauthAccessTokenSecret);
 		if (App.verified) {
-			this.token = new OAuthToken(oauthAccessToken,
+			sToken = new OAuthToken(oauthAccessToken,
 					oauthAccessTokenSecret);
 		}
 	}
@@ -161,8 +155,8 @@ public class App extends Application {
 		if (DEBUG) {
 			Log.d("App", "versionCheck");
 		}
-		if (OptionHelper.readInt(this, R.string.option_old_version_code, 0) < appVersionCode) {
-			OptionHelper.saveInt(this, R.string.option_old_version_code,
+		if (OptionHelper.readInt(R.string.option_old_version_code, 0) < appVersionCode) {
+			OptionHelper.saveInt(R.string.option_old_version_code,
 					appVersionCode);
 			AlarmHelper.cleanAlarmFlags(this);
 			AlarmHelper.setScheduledTasks(this);
@@ -171,24 +165,15 @@ public class App extends Application {
 
 
 
-	public void updateAccountInfo(final User u,
+	public static void updateAccountInfo(final User u,
 			final OAuthToken otoken) {
 		if (DEBUG) {
 			Log.d("App", "updateAccountInfo");
 		}
+		sUserId = u.id;
+		sUserScreenName = u.screenName;
 		setOAuthToken(otoken);
-		userId = u.id;
-		userScreenName = u.screenName;
-		Editor editor = sp.edit();
-		editor.putString(getString(R.string.option_userid), u.id);
-		editor.putString(getString(R.string.option_username), u.screenName);
-		editor.putString(getString(R.string.option_profile_image),
-				u.profileImageUrl);
-		editor.putString(getString(R.string.option_oauth_token),
-				token.getToken());
-		editor.putString(getString(R.string.option_oauth_token_secret),
-				token.getTokenSecret());
-		editor.commit();
+		OptionHelper.updateAccountInfo(u, otoken);
 
 	}
 
@@ -196,40 +181,67 @@ public class App extends Application {
 		if (DEBUG) {
 			Log.d("App", "updateAccountInfo u");
 		}
-		userId = u.id;
-		userScreenName = u.screenName;
-		OptionHelper.saveString(this, R.string.option_userid, u.id);
-		OptionHelper.saveString(this, R.string.option_username, u.screenName);
-		OptionHelper.saveString(this, R.string.option_profile_image,
-				u.profileImageUrl);
+		sUserId = u.id;
+		sUserScreenName = u.screenName;
+		OptionHelper.updateUserInfo(u);
 	}
 
-	public void removeAccountInfo() {
+	public static void removeAccountInfo() {
 		if (DEBUG) {
 			Log.d("App", "removeAccountInfo");
 		}
 		setOAuthToken(null);
-		userId = null;
-		userScreenName = null;
-		Editor editor = sp.edit();
-		editor.remove(getString(R.string.option_userid));
-		editor.remove(getString(R.string.option_username));
-		editor.remove(getString(R.string.option_profile_image));
-		editor.remove(getString(R.string.option_oauth_token));
-		editor.remove(getString(R.string.option_oauth_token_secret));
-		editor.commit();
+		sUserId = null;
+		sUserScreenName = null;
+		OptionHelper.removeAccountInfo();
 	}
 
-	public void setOAuthToken(final OAuthToken otoken) {
+	public static void setOAuthToken(final OAuthToken otoken) {
 		if (otoken == null) {
 			verified = false;
-			this.token = null;
-			((FanFouApi) App.api).setOAuthToken(null);
+			sToken = null;
+			((FanFouApi) App.sApi).setOAuthToken(null);
 		} else {
 			verified = true;
-			this.token = otoken;
-			((FanFouApi) App.api).setOAuthToken(token);
+			sToken = otoken;
+			((FanFouApi) App.sApi).setOAuthToken(sToken);
 		}
+	}
+	
+	public static Api getApi(){
+		return sApi;
+	}
+	
+	public static App getApp(){
+		return sInstance;
+	}
+	
+	public static String getUserId(){
+		return sUserId;
+	}
+	
+	public static String getUserName(){
+		return sUserScreenName;
+	}
+	
+	public static OAuthToken getOAuthToken(){
+		return sToken;
+	}
+	
+	public static ApnType getApnType(){
+		return sApnType;
+	}
+
+	public static void setToken(OAuthToken sToken) {
+		App.sToken = sToken;
+	}
+
+	public static void setApnType(ApnType sApnType) {
+		App.sApnType = sApnType;
+	}
+	
+	public static SharedPreferences getPreferences(){
+		return sPreferences;
 	}
 
 	public static enum ApnType {

@@ -26,16 +26,16 @@ import com.fanfou.app.App;
 public final class DeviceHelper {
 
 	public synchronized static String uuid(Context context) {
-		String uuid = OptionHelper.readString(context, "uuid", null);
+		String uuid = OptionHelper.readString("uuid", null);
 		if (uuid == null) {
-			uuid = generateUUID(context);
-			OptionHelper.saveString(context, "uuid", uuid);
+			uuid = generateUUID();
+			OptionHelper.saveString("uuid", uuid);
 		}
 		return uuid;
 	}
 
-	private static String generateUUID(Context context) {
-		String uuid = Settings.Secure.getString(context.getContentResolver(),
+	private static String generateUUID() {
+		String uuid = Settings.Secure.getString(App.getApp().getContentResolver(),
 				Settings.Secure.ANDROID_ID);
 		if (App.DEBUG)
 			Log.d("DeviceHelper", "generateUUID uuid=" + uuid);

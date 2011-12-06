@@ -244,7 +244,7 @@ public class Status implements Storable<Status> {
 			Status s = new Status();
 
 			s.id = o.getString(BasicColumns.ID);
-			s.ownerId = App.me.userId;
+			s.ownerId = App.getUserId();
 			s.createdAt = Parser.date(o.getString(BasicColumns.CREATED_AT));
 
 			s.text = o.getString(StatusInfo.TEXT);

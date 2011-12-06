@@ -44,6 +44,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 4.6 2011.12.01
  * @version 4.7 2011.12.02
  * @version 4.8 2011.12.05
+ * @version 4.9 2011.12.06
  * 
  */
 public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
@@ -61,7 +62,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	private FanFouApi() {
 		oauth = new OAuthService(new FanFouOAuthProvider());
 		conn = OAuthNetClient.getInstance(oauth);
-		setOAuthToken(App.me.token);
+		setOAuthToken(App.getOAuthToken());
 	}
 
 	public static FanFouApi newInstance() {
@@ -553,7 +554,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		if (users != null && users.size() > 0) {
 			for (User user : users) {
 				user.type = User.TYPE_FRIENDS;
-				user.ownerId = (userId == null ? App.me.userId : userId);
+				user.ownerId = (userId == null ? App.getUserId() : userId);
 			}
 		}
 		return users;
@@ -566,7 +567,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		if (users != null && users.size() > 0) {
 			for (User user : users) {
 				user.type = User.TYPE_FOLLOWERS;
-				user.ownerId = (userId == null ? App.me.userId : userId);
+				user.ownerId = (userId == null ? App.getUserId() : userId);
 			}
 		}
 		return users;
@@ -583,7 +584,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		// handlerResponseError(response);
 		User u = User.parse(response);
 		if (u != null) {
-			u.ownerId = App.me.userId;
+			u.ownerId = App.getUserId();
 			CacheManager.put(u);
 		}
 		return u;
@@ -613,7 +614,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		}
 		User u = User.parse(response);
 		if (u != null) {
-			u.ownerId = App.me.userId;
+			u.ownerId = App.getUserId();
 			CacheManager.put(u);
 		}
 		return u;
@@ -643,7 +644,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		}
 		User u = User.parse(response);
 		if (u != null) {
-			u.ownerId = App.me.userId;
+			u.ownerId = App.getUserId();
 			CacheManager.put(u);
 		}
 		return u;
@@ -673,7 +674,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		// handlerResponseError(response);
 		User u = User.parse(response);
 		if (u != null) {
-			u.ownerId = App.me.userId;
+			u.ownerId = App.getUserId();
 		}
 		return u;
 	}
@@ -702,7 +703,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		// handlerResponseError(response);
 		User u = User.parse(response);
 		if (u != null) {
-			u.ownerId = App.me.userId;
+			u.ownerId = App.getUserId();
 		}
 		return u;
 	}

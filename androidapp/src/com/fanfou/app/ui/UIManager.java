@@ -60,7 +60,7 @@ public final class UIManager {
 		ActionItem share = new ActionItem(QUICK_ACTION_ID_SHARE, "分享", context
 				.getResources().getDrawable(R.drawable.ic_pop_share));
 
-		final boolean me = status.userId.equals(App.me.userId);
+		final boolean me = status.userId.equals(App.getUserId());
 
 		final QuickAction q = new QuickAction(context, QuickAction.HORIZONTAL);
 		q.addActionItem(me ? delete : reply);

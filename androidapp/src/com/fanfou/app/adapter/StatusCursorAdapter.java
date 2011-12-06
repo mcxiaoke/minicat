@@ -43,7 +43,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 		if (s == null || s.isNull()) {
 			return ITEM_TYPE_NONE;
 		}
-		if (s.simpleText.contains("@" + App.me.userScreenName)) {
+		if (s.simpleText.contains("@" + App.getUserName())) {
 			return ITEM_TYPE_MENTION;
 		} else {
 			return ITEM_TYPE_NONE;
