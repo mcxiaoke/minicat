@@ -41,6 +41,7 @@ import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -125,6 +126,10 @@ public class SendPage extends BaseActivity {
 
 	private void setLayout() {
 		setContentView(R.layout.send);
+		
+		View root=findViewById(R.id.root);
+		ThemeHelper.setBackgroundColor(root);
+		
 		setActionBar();
 		mEditText = (EditText) findViewById(R.id.msgchat_input);
 		mEditText.addTextChangedListener(new TextChangeListener() {
@@ -162,7 +167,7 @@ public class SendPage extends BaseActivity {
 	private void setAutoComplete() {
 		mSelectAutoComplete = (MultiAutoCompleteTextView) findViewById(R.id.send_select_edit);
 		mSelectAutoComplete.setTokenizer(new SpaceTokenizer());
-		mSelectAutoComplete.setDropDownBackgroundResource(R.drawable.bg);
+		mSelectAutoComplete.setBackgroundColor(R.color.background_color);
 		String[] projection = new String[] { BaseColumns._ID, BasicColumns.ID,
 				UserInfo.SCREEN_NAME };
 		String where = BasicColumns.TYPE + " = '" + User.TYPE_FRIENDS + "'";

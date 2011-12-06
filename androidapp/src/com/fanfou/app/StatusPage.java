@@ -29,6 +29,7 @@ import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StatusHelper;
 import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -103,6 +104,10 @@ public class StatusPage extends BaseActivity {
 		mHandler = new Handler();
 
 		setContentView(R.layout.status);
+		
+//		View root=findViewById(R.id.root);
+//		ThemeHelper.setBackgroundColor(root);
+		
 		setActionBar();
 		setLayout();
 		parseIntent();

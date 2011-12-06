@@ -16,7 +16,10 @@
 
 package com.fanfou.app.preferences.colorpicker;
 
+import com.fanfou.app.App;
+
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Bitmap.Config;
@@ -24,6 +27,7 @@ import android.preference.Preference;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -35,6 +39,7 @@ import android.widget.LinearLayout;
 public class ColorPickerPreference extends Preference implements
 		Preference.OnPreferenceClickListener,
 		ColorPickerDialog.OnColorChangedListener {
+	private static final String TAG=ColorPickerPreference.class.getSimpleName();
 
 	View mView;
 	int mDefaultValue = Color.BLACK;
@@ -42,7 +47,7 @@ public class ColorPickerPreference extends Preference implements
 	private float mDensity = 0;
 	private boolean mAlphaSliderEnabled = false;
 
-	private static final String androidns = "http://schemas.android.com/apk/res/android";
+	private static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
 
 	public ColorPickerPreference(Context context) {
 		super(context);
@@ -66,32 +71,29 @@ public class ColorPickerPreference extends Preference implements
 	}
 
 	private void init(Context context, AttributeSet attrs) {
+		if(App.DEBUG){
+			Log.d(TAG, "init");
+		}
 		mDensity = getContext().getResources().getDisplayMetrics().density;
 		setOnPreferenceClickListener(this);
 		if (attrs != null) {
-			String defaultValue = attrs.getAttributeValue(androidns,
+			String defaultValue = attrs.getAttributeValue(ANDROID_NS,
 					"defaultValue");
 			if (defaultValue.startsWith("#")) {
 				try {
 					mDefaultValue = convertToColorInt(defaultValue);
 				} catch (NumberFormatException e) {
-					Log.e("ColorPickerPreference", "Wrong color: "
-							+ defaultValue);
 					mDefaultValue = convertToColorInt("#FF000000");
 				}
 			} else {
-				int resourceId = attrs.getAttributeResourceValue(androidns,
+				int resourceId = attrs.getAttributeResourceValue(ANDROID_NS,
 						"defaultValue", 0);
 				if (resourceId != 0) {
-					// mDefaultValue =
-					// context.getResources().getInteger(resourceId);
 					mDefaultValue = context.getResources().getColor(resourceId);
 				}
 			}
 			mAlphaSliderEnabled = attrs.getAttributeBooleanValue(null,
 					"alphaSlider", false);
-			// mDefaultValue=attrs.getAttributeIntValue(androidns,
-			// "defaultValue", Color.BLACK);
 		}
 		mValue = mDefaultValue;
 	}
@@ -103,7 +105,7 @@ public class ColorPickerPreference extends Preference implements
 		setPreviewColor();
 	}
 
-	private void setPreviewColor() {
+	public void setPreviewColor() {
 		if (mView == null)
 			return;
 		ImageView iView = new ImageView(getContext());
@@ -154,7 +156,8 @@ public class ColorPickerPreference extends Preference implements
 		} catch (ClassCastException e) {
 			mValue = mDefaultValue;
 		}
-
+		Log.d(TAG, "getValue(): "
+				+ Integer.toHexString(mValue));
 		return mValue;
 	}
 

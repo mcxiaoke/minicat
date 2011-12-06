@@ -36,6 +36,7 @@ import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.ThemeHelper;
 
 /**
  * @author mcxiaoke
@@ -138,6 +139,10 @@ public class UserChoosePage extends BaseActivity implements
 
 	private void setLayout() {
 		setContentView(R.layout.user_choose);
+		
+		View root=findViewById(R.id.root);
+		ThemeHelper.setBackgroundColor(root);
+		
 		setActionBar();
 
 		mViewStub = (ViewStub) findViewById(R.id.stub);

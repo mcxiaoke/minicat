@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-	<integer name="rotateAnimTime">175</integer>
-	<integer name="revealAnimTime">150</integer>
-	<integer name="hideAnimTime">150</integer>
 
-	<integer name="defaultFontSize">15</integer>
-	<integer name="maxFontSize">28</integer>
+    <integer name="rotateAnimTime">175</integer>
+    <integer name="revealAnimTime">150</integer>
+    <integer name="hideAnimTime">150</integer>
+    <integer name="defaultFontSize">15</integer>
+    <integer name="maxFontSize">28</integer>
 
 </resources>

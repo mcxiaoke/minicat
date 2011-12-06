@@ -14,6 +14,7 @@ import com.fanfou.app.config.Commons;
 import com.fanfou.app.service.DownloadService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.update.VersionInfo;
+import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -58,6 +59,9 @@ public class NewVersionPage extends Activity implements View.OnClickListener {
 
 	private void setLayout() {
 		setContentView(R.layout.newversion);
+		
+		View root=findViewById(R.id.root);
+		ThemeHelper.setBackgroundColor(root);
 
 		setActionBar();
 

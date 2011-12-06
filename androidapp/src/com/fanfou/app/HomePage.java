@@ -52,6 +52,7 @@ import com.fanfou.app.ui.widget.EndlessListViewNoHeader.OnLoadDataListener;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.SoundManager;
+import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -139,6 +140,10 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 		init();
 		setContentView(R.layout.home);
+		
+		View root=findViewById(R.id.root);
+		ThemeHelper.setBackgroundColor(root);
+		
 		setActionBar();
 		setBottom();
 		setListViews();
@@ -220,8 +225,12 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		 mActionBar.setLeftAction(new HomeLogoAction());
 		mActionBar.setRightAction(new ActionBar.WriteAction(this, null));
 		mActionBar.setRefreshEnabled(this);
-		if (App.DEBUG||App.TEST) {
+		
+		if(App.TEST){
 			mActionBar.setTitle("测试版 "+App.appVersionName);
+		}
+		if (App.DEBUG) {
+			mActionBar.setTitle("开发版 "+App.appVersionName);
 		}
 	}
 
@@ -296,6 +305,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		mViewPager.setOnPageChangeListener(this);
 		mViewPager.setAdapter(mViewAdapter);
 		mPageIndicator = (TitlePageIndicator) findViewById(R.id.viewindicator);
+		
+		ThemeHelper.setBackgroundColor(mPageIndicator);
+		
 		mPageIndicator.setTitleProvider(this);
 
 		if (initPage > 0) {
@@ -367,13 +379,11 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	private void setListViews() {
 		for (int i = 0; i < views.length; i++) {
 			views[i] = new EndlessListViewNoHeader(this);
-			views[i].setBackgroundResource(R.drawable.bg);
 			views[i].setOnRefreshListener(this);
 			if (i != 2) {
 				views[i].setOnItemLongClickListener(this);
 			}
 		}
-		// views[3].setOnTouchListener(this);
 	}
 
 	private Cursor initStatusCursor(int type) {
@@ -397,10 +407,10 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	private void initAdapters() {
-		adapters[0] = new StatusCursorAdapter(true, this, cursors[0]);
+		adapters[0] = new StatusCursorAdapter(true,this, cursors[0]);
 		adapters[1] = new StatusCursorAdapter(this, cursors[1]);
 		adapters[2] = new MessageCursorAdapter(this, cursors[2]);
-		adapters[3] = new StatusCursorAdapter(this, cursors[3]);
+		adapters[3] = new StatusCursorAdapter(true,this, cursors[3]);
 	}
 
 	private void setAdapters() {

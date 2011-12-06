@@ -44,11 +44,6 @@ public class DraftsCursorAdaper extends BaseCursorAdapter {
 				: View.VISIBLE);
 	}
 
-	@Override
-	protected void init(Context context, Cursor c) {
-		super.init(context, c);
-	}
-
 	public DraftsCursorAdaper(Context context, Cursor c) {
 		super(context, c);
 	}

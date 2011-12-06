@@ -1,6 +1,5 @@
 package com.fanfou.app.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.TextPaint;
@@ -15,38 +14,83 @@ import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
+import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.06.01
  * @version 1.5 2011.10.24
+ * @version 1.6 2011.12.06
  * 
  */
 public class StatusCursorAdapter extends BaseCursorAdapter {
 
-	private static final int ITEM_TYPE_MENTION = 0;
-	private static final int ITEM_TYPE_NONE = 1;
-	private static final int[] TYPES = new int[] { ITEM_TYPE_MENTION,
-			ITEM_TYPE_NONE };
+	private static final int NONE = 0;
+	private static final int MENTION = 1;
+	private static final int SELF = 2;
+	private static final int[] TYPES = new int[] { NONE, MENTION, SELF, };
 
+	private int mMentionedBgColor;// = 0x332266aa;
+	private int mSelfBgColor;// = 0x33999999;
+	private boolean mUseHighlight;
 	private boolean colored;
-	private Cursor mCursor;
+
+	public static final String TAG = StatusCursorAdapter.class.getSimpleName();
+
+	private void log(String message) {
+		Log.d(TAG, message);
+
+	}
+
+	public StatusCursorAdapter(Context context) {
+		super(context, null, false);
+		init(context, false);
+	}
+
+	public StatusCursorAdapter(Context context, Cursor c) {
+		super(context, c, false);
+		init(context, false);
+	}
+
+	public StatusCursorAdapter(boolean colored,Context context, Cursor c) {
+		super(context, c, false);
+		init(context, colored);
+	}
+
+	private void init(Context context, boolean colored) {
+		this.colored=colored;
+		if(colored){
+			mUseHighlight=OptionHelper.readBoolean(R.string.option_color_use_highlight, true);
+			if(mUseHighlight){
+				mMentionedBgColor = OptionHelper.readInt(
+						R.string.option_color_highlight_mention, context.getResources()
+								.getColor(R.color.mentioned_color));
+				mSelfBgColor = OptionHelper.readInt(
+						R.string.option_color_highlight_self, context.getResources()
+								.getColor(R.color.self_color));
+				if (App.DEBUG) {
+					log("init mMentionedBgColor=" + Integer.toHexString(mMentionedBgColor));
+					log("init mSelfBgColor=" + Integer.toHexString(mSelfBgColor));
+				}
+			}
+		}
+	}
 
 	@Override
 	public int getItemViewType(int position) {
 		final Cursor c = (Cursor) getItem(position);
 		if (c == null) {
-			return ITEM_TYPE_NONE;
+			return NONE;
 		}
 		final Status s = Status.parse(c);
 		if (s == null || s.isNull()) {
-			return ITEM_TYPE_NONE;
+			return NONE;
 		}
 		if (s.simpleText.contains("@" + App.getUserName())) {
-			return ITEM_TYPE_MENTION;
+			return MENTION;
 		} else {
-			return ITEM_TYPE_NONE;
+			return s.self ? SELF : NONE;
 		}
 	}
 
@@ -55,35 +99,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 		return TYPES.length;
 	}
 
-	@Override
-	public boolean isEmpty() {
-		return super.isEmpty();
-	}
 
-	public static final String TAG = "StatusCursorAdapter";
-
-	private void log(String message) {
-		Log.e(TAG, message);
-	}
-
-	public StatusCursorAdapter(Context context) {
-		super(context, null, false);
-	}
-
-	public StatusCursorAdapter(Context context, Cursor c) {
-		super(context, c, false);
-	}
-
-	public StatusCursorAdapter(boolean colored, Context context, Cursor c) {
-		super(context, c, false);
-		this.colored = colored;
-		this.mCursor = c;
-	}
-
-	public StatusCursorAdapter(Activity context, Cursor c, boolean autoRequery) {
-		super(context, c, autoRequery);
-		this.mCursor = c;
-	}
 
 	public void switchCursor(Cursor cursor) {
 		if (cursor != null) {
@@ -123,9 +139,19 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 
 		final Status s = Status.parse(cursor);
 
-		if (colored) {
-			if (getItemViewType(cursor.getPosition()) == ITEM_TYPE_MENTION) {
-				row.setBackgroundColor(0x33999999);
+		if (mUseHighlight&&colored) {
+			int itemType = getItemViewType(cursor.getPosition());
+			switch (itemType) {
+			case MENTION:
+				row.setBackgroundColor(mMentionedBgColor);
+				break;
+			case SELF:
+				row.setBackgroundColor(mSelfBgColor);
+				break;
+			case NONE:
+				break;
+			default:
+				break;
 			}
 		}
 

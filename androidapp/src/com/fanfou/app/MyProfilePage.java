@@ -25,6 +25,7 @@ import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.ThemeHelper;
 
 /**
  * @author mcxiaoke
@@ -92,6 +93,9 @@ public class MyProfilePage extends BaseActivity {
 
 	private void setLayout() {
 		setContentView(R.layout.myprofile);
+		
+//		View root=findViewById(R.id.root);
+//		ThemeHelper.setBackgroundColor(root);
 
 		setActionBar();
 

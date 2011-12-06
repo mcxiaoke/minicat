@@ -34,6 +34,7 @@ import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.util.DeviceHelper;
 import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -78,8 +79,6 @@ public class RegisterPage extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		init();
-		setContentView(R.layout.register);
-		setActionBar();
 		setLayout();
 		setTextChangeListener();
 	}
@@ -95,6 +94,13 @@ public class RegisterPage extends Activity implements OnClickListener {
 	}
 
 	private void setLayout() {
+		setContentView(R.layout.register);
+		
+		View root=findViewById(R.id.root);
+		ThemeHelper.setBackgroundColor(root);
+		
+		setActionBar();
+		
 		eNickName = (EditText) findViewById(R.id.register_nickname);
 		eEmail = (EditText) findViewById(R.id.register_email);
 		ePassword = (EditText) findViewById(R.id.register_password);

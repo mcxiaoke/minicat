@@ -24,20 +24,10 @@ import com.fanfou.app.util.OptionHelper;
  */
 public abstract class BaseCursorAdapter extends CursorAdapter {
 
-	@Override
-	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		return null;
-	}
-
-	@Override
-	public void bindView(View view, Context context, Cursor cursor) {
-
-	}
-
-	Context mContext;
-	LayoutInflater mInflater;
-	Cursor mCursor;
-	IImageLoader mLoader;
+	protected Context mContext;
+	protected LayoutInflater mInflater;
+	protected Cursor mCursor;
+	protected IImageLoader mLoader;
 	private int fontSize;
 	private boolean textMode;
 
@@ -49,26 +39,17 @@ public abstract class BaseCursorAdapter extends CursorAdapter {
 		}
 	}
 
-	/**
-	 * @param context
-	 * @param c
-	 */
 	public BaseCursorAdapter(Context context, Cursor c) {
-		super(context, c);
+		super(context, c,false);
 		init(context, c);
 	}
 
-	/**
-	 * @param context
-	 * @param c
-	 * @param autoRequery
-	 */
 	public BaseCursorAdapter(Context context, Cursor c, boolean autoRequery) {
 		super(context, c, autoRequery);
 		init(context, c);
 	}
 
-	protected void init(Context context, Cursor c) {
+	private void init(Context context, Cursor c) {
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);
 		this.mLoader = ImageLoader.getInstance(mContext);

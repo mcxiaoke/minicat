@@ -11,6 +11,7 @@ import com.fanfou.app.service.TaskQueueService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 import android.content.Intent;
@@ -45,6 +46,10 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 
 	private void setLayout() {
 		setContentView(R.layout.list_drafts);
+		
+		View root=findViewById(R.id.root);
+		ThemeHelper.setBackgroundColor(root);
+		
 		setActionBar();
 		setListView();
 

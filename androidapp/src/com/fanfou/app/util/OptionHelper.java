@@ -171,5 +171,16 @@ public final class OptionHelper {
 				u.profileImageUrl);
 		editor.commit();
 	}
+	
+	public final static void resetColor(){
+		Editor editor = App.getPreferences().edit();
+		editor.remove(App.getApp().getString(R.string.option_color_highlight_mention));
+		editor.remove(App.getApp().getString(R.string.option_color_highlight_self));
+		editor.remove(App.getApp().getString(R.string.option_color_background));
+		editor.remove(App.getApp().getString(R.string.option_color_name));
+		editor.remove(App.getApp().getString(R.string.option_color_text));
+		editor.remove(App.getApp().getString(R.string.option_color_metainfo));
+		editor.commit();
+	}
 
 }

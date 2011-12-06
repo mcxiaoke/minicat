@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.util.Linkify;
+import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -50,6 +51,9 @@ public class AboutPage extends Activity implements OnClickListener {
 
 	private void setLayout() {
 		setContentView(R.layout.about);
+		View root=findViewById(R.id.root);
+		ThemeHelper.setBackgroundColor(root);
+		
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mLogo = (ImageView) findViewById(R.id.about_icon);
 		mLogo.setOnClickListener(this);

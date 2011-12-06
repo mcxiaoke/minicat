@@ -39,6 +39,7 @@ import com.fanfou.app.util.DeviceHelper;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -99,6 +100,9 @@ public final class LoginPage extends Activity implements OnClickListener {
 
 	private void setLayout() {
 		setContentView(R.layout.login);
+		
+		View root=findViewById(R.id.root);
+		ThemeHelper.setBackgroundColor(root);
 
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setLeftAction(new LogoAction());

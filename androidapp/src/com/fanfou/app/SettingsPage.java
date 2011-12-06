@@ -17,10 +17,12 @@ import android.util.Log;
 
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.preferences.SeekBarPreference;
+import com.fanfou.app.preferences.colorpicker.ColorPickerPreference;
 import com.fanfou.app.service.DownloadService;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.update.VersionInfo;
 import com.fanfou.app.util.IntentHelper;
+import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -94,6 +96,12 @@ public class SettingsPage extends PreferenceActivity implements
 		currentAccount.setSummary("" + App.getUserName() + "("
 				+ App.getUserId() + ")");
 
+		Preference resetColor = findPreference(getText(R.string.option_color_reset_all));
+		resetColor.setOnPreferenceClickListener(this);
+
+		Preference useHightlight = findPreference(getText(R.string.option_color_use_highlight));
+		// useHightlight.setOnPreferenceClickListener(this);
+
 		Preference checkUpdate = findPreference(getText(R.string.option_check_update));
 		checkUpdate.setOnPreferenceClickListener(this);
 
@@ -134,6 +142,11 @@ public class SettingsPage extends PreferenceActivity implements
 		IntentHelper.sendFeedback(this, "");
 	}
 
+	private void resetColor() {
+		OptionHelper.resetColor();
+		Utils.notify(this, "已清除所有自定义颜色设置");
+	}
+
 	@Override
 	public boolean onPreferenceClick(Preference preference) {
 		if (App.DEBUG) {
@@ -144,6 +157,9 @@ public class SettingsPage extends PreferenceActivity implements
 		} else if (preference.getKey().equals(
 				getString(R.string.option_feedback))) {
 			feedback();
+		} else if (preference.getKey().equals(
+				getString(R.string.option_color_reset_all))) {
+			resetColor();
 		}
 		return true;
 	}
@@ -151,7 +167,6 @@ public class SettingsPage extends PreferenceActivity implements
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
 		return false;
-
 	}
 
 	@Override
@@ -179,7 +194,16 @@ public class SettingsPage extends PreferenceActivity implements
 					getResources().getInteger(R.integer.defaultFontSize));
 			skp.setSummary(value + "号");
 			needRestart = true;
-		} else if (p instanceof ListPreference) {
+		} else if (key
+				.equals(getString(R.string.option_color_highlight_mention))
+				|| key.equals(getString(R.string.option_color_highlight_self))) {
+			ColorPickerPreference cp = (ColorPickerPreference) p;
+			cp.setPreviewColor();
+			needRestart = true;
+		} else if (key.equals(getString(R.string.option_color_use_highlight))) {
+			needRestart = true;
+		}
+		else if (p instanceof ListPreference) {
 			ListPreference lp = (ListPreference) p;
 			lp.setSummary(lp.getEntry());
 		}

@@ -39,6 +39,7 @@ import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.ImageHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -339,7 +340,7 @@ public class WritePage extends BaseActivity {
 		});
 
 		mAutoCompleteTextView.setTokenizer(new AtTokenizer());
-		mAutoCompleteTextView.setDropDownBackgroundResource(R.drawable.bg);
+		mAutoCompleteTextView.setBackgroundResource(R.drawable.input_bg);
 		final String[] projection = new String[] { UserInfo._ID, UserInfo.ID,
 				UserInfo.SCREEN_NAME, UserInfo.TYPE, UserInfo.OWNER_ID };
 		String where = UserInfo.OWNER_ID + " = '" + App.getUserId() + "' AND "
@@ -353,6 +354,10 @@ public class WritePage extends BaseActivity {
 	private void setLayout() {
 
 		setContentView(R.layout.write);
+		
+		View root=findViewById(R.id.root);
+		ThemeHelper.setBackgroundColor(root);
+		
 		setActionBar();
 		setAutoComplete();
 

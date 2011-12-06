@@ -31,6 +31,7 @@ import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -143,6 +144,9 @@ public class ProfilePage extends BaseActivity {
 
 	private void setLayout() {
 		setContentView(R.layout.profile);
+		
+//		View root=findViewById(R.id.root);
+//		ThemeHelper.setBackgroundColor(root);
 
 		setActionBar();
 

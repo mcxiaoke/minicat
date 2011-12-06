@@ -23,6 +23,7 @@ import com.fanfou.app.ui.UIManager;
 import com.fanfou.app.ui.widget.EndlessListView;
 import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
 import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -77,12 +78,16 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 	protected void initialize() {
 		mHandler = new ResultHandler();
 		mCursor = getCursor();
-		mCursorAdapter = new StatusCursorAdapter(this, mCursor);
+		mCursorAdapter = new StatusCursorAdapter(true,this, mCursor);
 
 	}
 
 	private void setLayout() {
 		setContentView(R.layout.list);
+		
+		View root=findViewById(R.id.root);
+		ThemeHelper.setBackgroundColor(root);
+		
 		setActionBar();
 
 		mEmptyView = (ViewGroup) findViewById(R.id.empty);

@@ -31,6 +31,7 @@ import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.ui.widget.EndlessListView;
 import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
 import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -125,6 +126,10 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 
 	private void setLayout() {
 		setContentView(R.layout.list_users);
+		
+		View root=findViewById(R.id.root);
+		ThemeHelper.setBackgroundColor(root);
+		
 		setActionBar();
 
 		mEmptyView = (ViewGroup) findViewById(R.id.empty);

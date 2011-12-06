@@ -18,6 +18,7 @@ import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.ImageHelper;
 import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 import android.app.Activity;
@@ -95,6 +96,9 @@ public class EditProfilePage extends BaseActivity {
 
 	private void setLayout() {
 		setContentView(R.layout.edit_profile);
+		
+		View root=findViewById(R.id.root);
+		ThemeHelper.setBackgroundColor(root);
 
 		mBar = (ActionBar) findViewById(R.id.actionbar);
 
