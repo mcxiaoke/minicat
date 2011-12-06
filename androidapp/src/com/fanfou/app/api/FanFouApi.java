@@ -359,6 +359,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		NetRequest.Builder builder = new NetRequest.Builder();
 		builder.url(URL_STATUS_UPDATE).post();
 		builder.status(status).location(location);
+		builder.format(format).mode(mode);
 		builder.param("in_reply_to_status_id", inReplyToStatusId);
 		builder.param("repost_status_id", repostStatusId);
 		builder.param("source", source);
@@ -367,7 +368,11 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		if (App.DEBUG) {
 			log("statusUpdate()---statusCode=" + statusCode);
 		}
-		return Status.parse(response, Status.TYPE_HOME);
+		Status s= Status.parse(response, Status.TYPE_HOME);
+		if(App.DEBUG){
+			log("statusesCreate "+s);
+		}
+		return s;
 	}
 
 	@Override
@@ -398,7 +403,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		builder.status(status).location(location);
 		builder.param("photo", photo);
 		builder.param("source", source);
-
+		builder.format(format).mode(mode);
 		NetResponse response = fetch(builder.build());
 		int statusCode = response.statusCode;
 		if (App.DEBUG) {
@@ -411,9 +416,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	public List<Status> search(String keyword, String sinceId, String maxId,
 			int count, String format, String mode) throws ApiException {
 		if (StringHelper.isEmpty(keyword)) {
-			if (App.DEBUG)
 				throw new IllegalArgumentException("搜索词不能为空");
-			return null;
 		}
 
 		NetRequest.Builder builder = new NetRequest.Builder();
