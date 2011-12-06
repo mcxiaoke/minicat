@@ -175,6 +175,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 			if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
 				Utils.notify(mContext, "密码和帐号不能为空");
 			} else {
+				Utils.hideKeyboard(this, editPassword);
 				g.setCustomVar(1, "username", username);
 				g.trackEvent("Action", "onClick", "Login", 1);
 				new LoginTask().execute();
