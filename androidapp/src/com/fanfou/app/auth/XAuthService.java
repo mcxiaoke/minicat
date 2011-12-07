@@ -10,8 +10,6 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.auth.exception.OAuthTokenException;
-import com.fanfou.app.http.AbstractNetClient;
-import com.fanfou.app.http.AbstractNetClient;
 import com.fanfou.app.http.NetRequest;
 import com.fanfou.app.http.OneTimeNetClient;
 
@@ -24,6 +22,7 @@ import com.fanfou.app.http.OneTimeNetClient;
  * @version 4.0 2011.12.01
  * @version 4.1 2011.12.02
  * @version 4.2 2011.12.05
+ * @version 4.3 2011.12.07
  * 
  */
 public class XAuthService {
@@ -43,7 +42,7 @@ public class XAuthService {
 			throws OAuthTokenException, IOException {
 		String authorization = OAuthHelper.buildXAuthHeader(username, password,
 				HttpGet.METHOD_NAME, mOAuthProvider.getAccessTokenURL(),
-				mOAuthProvider, OAuthHelper.getSecretKeySpec(mOAuthProvider));
+				mOAuthProvider);
 		NetRequest nr = NetRequest.newBuilder()
 				.url(mOAuthProvider.getAccessTokenURL())
 				.header("Authorization", authorization).build();

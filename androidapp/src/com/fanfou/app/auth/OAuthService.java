@@ -1,9 +1,6 @@
 package com.fanfou.app.auth;
 
 import java.util.List;
-
-import javax.crypto.spec.SecretKeySpec;
-
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.message.BasicHeader;
 import com.fanfou.app.http.Parameter;
@@ -15,13 +12,13 @@ import com.fanfou.app.http.Parameter;
  * @version 2.2 2011.11.28
  * @version 3.0 2011.11.30
  * @version 4.0 2011.12.01
+ * @version 4.1 2011.12.07
  * 
  */
 public class OAuthService {
 
 	private OAuthProvider mOAuthProvider;
 	private OAuthToken mOAuthToken;
-	private SecretKeySpec mSecretKeySpec;
 
 	public OAuthService(OAuthProvider provider) {
 		mOAuthProvider = provider;
@@ -29,23 +26,18 @@ public class OAuthService {
 
 	public OAuthService(OAuthProvider provider, OAuthToken token) {
 		this.mOAuthProvider = provider;
-		setOAuthToken(token);
+		this.mOAuthToken = token;
 	}
 
 	public void signRequest(HttpUriRequest request, List<Parameter> params) {
 		String authorization = OAuthHelper.buildOAuthHeader(
 				request.getMethod(), request.getURI().toString(), params,
-				mOAuthProvider, mOAuthToken, mSecretKeySpec);
+				mOAuthProvider, mOAuthToken);
 		request.addHeader(new BasicHeader("Authorization", authorization));
 	}
 
 	public void setOAuthToken(OAuthToken token) {
-		if (token == null) {
-			return;
-		}
 		this.mOAuthToken = token;
-		this.mSecretKeySpec = OAuthHelper.getSecretKeySpec(mOAuthProvider,
-				mOAuthToken);
 	}
 
 }

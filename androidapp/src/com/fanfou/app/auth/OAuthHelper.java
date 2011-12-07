@@ -28,6 +28,7 @@ import com.fanfou.app.util.Base64;
  * @version 1.0 2011.11.30
  * @version 2.0 2011.12.01
  * @version 2.1 2011.12.02
+ * @version 2.2 2011.12.07
  * 
  */
 public final class OAuthHelper {
@@ -49,8 +50,7 @@ public final class OAuthHelper {
 	}
 
 	static String buildOAuthHeader(String method, String url,
-			List<Parameter> params, OAuthProvider provider, OAuthToken otoken,
-			SecretKeySpec spec) {
+			List<Parameter> params, OAuthProvider provider, OAuthToken otoken) {
 		if (params == null) {
 			params = new ArrayList<Parameter>();
 		}
@@ -92,6 +92,7 @@ public final class OAuthHelper {
 			Log.d(TAG, "getOAuthHeader() encodedParams=" + encodedParams);
 			Log.d(TAG, "getOAuthHeader() baseString=" + oauthBaseString);
 		}
+		SecretKeySpec spec=getSecretKeySpec(provider, otoken);
 		oauthHeaderParams.add(new Parameter("oauth_signature", OAuthHelper
 				.getSignature(oauthBaseString, spec)));
 		return "OAuth "
@@ -99,8 +100,7 @@ public final class OAuthHelper {
 	}
 
 	static String buildXAuthHeader(String username, String password,
-			String method, String url, OAuthProvider provider,
-			SecretKeySpec spec) {
+			String method, String url, OAuthProvider provider) {
 		long timestamp = System.currentTimeMillis() / 1000;
 		long nonce = System.nanoTime() + RAND.nextInt();
 		List<Parameter> oauthHeaderParams = new ArrayList<Parameter>();
@@ -121,6 +121,7 @@ public final class OAuthHelper {
 		base.append(OAuthHelper.encode(OAuthHelper
 				.alignParams(oauthHeaderParams)));
 		String oauthBaseString = base.toString();
+		SecretKeySpec spec=getSecretKeySpec(provider, null);
 		String signature = getSignature(oauthBaseString, spec);
 		oauthHeaderParams.add(new Parameter("oauth_signature", signature));
 		return "OAuth "

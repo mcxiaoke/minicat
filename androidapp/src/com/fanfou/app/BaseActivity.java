@@ -33,6 +33,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.4 2011.11.11
  * @version 2.5 2011.11.15
  * @version 2.6 2011.11.22
+ * @version 2.7 2011.12.07
  * 
  */
 public abstract class BaseActivity extends Activity implements
@@ -278,7 +279,7 @@ public abstract class BaseActivity extends Activity implements
 		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
 		intent.putExtra(Commons.EXTRA_TEXT,
 				getString(R.string.config_feedback_account) + " ("
-						+ Build.MODEL + "-" + Build.VERSION.RELEASE + ") ");
+						+ Build.MODEL + "-" + Build.VERSION.RELEASE + " "+App.appVersionName+") ");
 		startActivity(intent);
 	}
 
@@ -305,7 +306,7 @@ public abstract class BaseActivity extends Activity implements
 
 			@Override
 			public void onButton1Click() {
-				App.getApp().setOAuthToken(null);
+				App.setOAuthToken(null);
 				IntentHelper.goLoginPage(mContext);
 				finish();
 			}
