@@ -134,6 +134,11 @@ public class ProfilePage extends BaseActivity {
 		if (user != null) {
 			userId = user.id;
 		}
+		
+		if(App.getUserId().equals(userId)){
+			ActionManager.doMyProfile(this);
+			finish();
+		}
 
 	}
 

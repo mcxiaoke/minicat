@@ -226,9 +226,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		mActionBar.setRightAction(new ActionBar.WriteAction(this, null));
 		mActionBar.setRefreshEnabled(this);
 		
-		if(App.TEST){
-			mActionBar.setTitle("测试版 "+App.appVersionName);
-		}
+//		if(App.TEST){
+//			mActionBar.setTitle("测试版 "+App.appVersionName);
+//		}
 		if (App.DEBUG) {
 			mActionBar.setTitle("开发版 "+App.appVersionName);
 		}
