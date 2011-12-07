@@ -280,7 +280,7 @@ public class ACRA {
 			ReportField.USER_COMMENT, ReportField.ANDROID_VERSION,
 			ReportField.APP_VERSION_NAME, ReportField.BRAND,
 			ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA,
-			ReportField.STACK_TRACE };
+			ReportField.STACK_TRACE,USER_CRASH_DATE };
 
 	/**
 	 * Default list of {@link ReportField}s to be sent in reports. You can set

@@ -1,5 +1,6 @@
 androidapp/bin/
 androidapp/gen/
 androidapp/proguard/
+androidapp/release/old/
 libquickaction/bin/
 libquickaction/gen/
