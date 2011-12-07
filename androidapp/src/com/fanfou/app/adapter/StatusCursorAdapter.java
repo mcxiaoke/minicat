@@ -53,25 +53,29 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 		init(context, false);
 	}
 
-	public StatusCursorAdapter(boolean colored,Context context, Cursor c) {
+	public StatusCursorAdapter(boolean colored, Context context, Cursor c) {
 		super(context, c, false);
 		init(context, colored);
 	}
 
 	private void init(Context context, boolean colored) {
-		this.colored=colored;
-		if(colored){
-			mUseHighlight=OptionHelper.readBoolean(R.string.option_color_use_highlight, true);
-			if(mUseHighlight){
+		this.colored = colored;
+		if (colored) {
+			mUseHighlight = OptionHelper.readBoolean(
+					R.string.option_color_use_highlight, true);
+			if (mUseHighlight) {
 				mMentionedBgColor = OptionHelper.readInt(
-						R.string.option_color_highlight_mention, context.getResources()
+						R.string.option_color_highlight_mention,
+						context.getResources()
 								.getColor(R.color.mentioned_color));
 				mSelfBgColor = OptionHelper.readInt(
-						R.string.option_color_highlight_self, context.getResources()
-								.getColor(R.color.self_color));
+						R.string.option_color_highlight_self, context
+								.getResources().getColor(R.color.self_color));
 				if (App.DEBUG) {
-					log("init mMentionedBgColor=" + Integer.toHexString(mMentionedBgColor));
-					log("init mSelfBgColor=" + Integer.toHexString(mSelfBgColor));
+					log("init mMentionedBgColor="
+							+ Integer.toHexString(mMentionedBgColor));
+					log("init mSelfBgColor="
+							+ Integer.toHexString(mSelfBgColor));
 				}
 			}
 		}
@@ -87,19 +91,18 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 		if (s == null || s.isNull()) {
 			return NONE;
 		}
-		if (s.simpleText.contains("@" + App.getUserName())) {
+		if (s.type == Status.TYPE_MENTION
+				|| s.simpleText.contains("@" + App.getUserName())) {
 			return MENTION;
-		} else {
-			return s.self ? SELF : NONE;
 		}
+
+		return s.self ? SELF : NONE;
 	}
 
 	@Override
 	public int getViewTypeCount() {
 		return TYPES.length;
 	}
-
-
 
 	public void switchCursor(Cursor cursor) {
 		if (cursor != null) {
@@ -139,7 +142,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 
 		final Status s = Status.parse(cursor);
 
-		if (mUseHighlight&&colored) {
+		if (mUseHighlight && colored) {
 			int itemType = getItemViewType(cursor.getPosition());
 			switch (itemType) {
 			case MENTION:

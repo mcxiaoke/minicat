@@ -408,7 +408,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	private void initAdapters() {
 		adapters[0] = new StatusCursorAdapter(true,this, cursors[0]);
-		adapters[1] = new StatusCursorAdapter(this, cursors[1]);
+		adapters[1] = new StatusCursorAdapter(true,this, cursors[1]);
 		adapters[2] = new MessageCursorAdapter(this, cursors[2]);
 		adapters[3] = new StatusCursorAdapter(true,this, cursors[3]);
 	}
