@@ -34,19 +34,16 @@ import com.fanfou.app.App;
  * @version 4.0 2011.12.01
  * @version 4.1 2011.12.02
  * @version 4.2 2011.12.05
+ * @version 4.3 2011.12.07
  * 
  */
-public abstract class AbstractNetClient {
+public class NetClient {
 
-	private static final String TAG = AbstractNetClient.class.getSimpleName();
+	private static final String TAG = NetClient.class.getSimpleName();
 
 	private DefaultHttpClient mHttpClient;
 
-	private final void log(String message) {
-		Log.d(TAG, message);
-	}
-
-	protected AbstractNetClient() {
+	public NetClient() {
 		prepareHttpClient();
 	}
 
@@ -81,39 +78,19 @@ public abstract class AbstractNetClient {
 		return executeImpl(cr.request);
 	}
 
-	protected abstract void signRequest(NetRequest cr);
+	protected void signRequest(NetRequest cr){}
 
 	private final HttpResponse executeImpl(HttpRequestBase request)
 			throws IOException {
 		NetHelper.setProxy(mHttpClient);
-		if (App.DEBUG) {
-			log("==========[Request]==========");
-			log(request.getRequestLine().toString());
-			// Header[] headers = request.getAllHeaders();
-			// for (Header header : headers) {
-			// log(header.getName() + ":"
-			// + header.getValue());
-			// }
-		}
-		HttpResponse response = mHttpClient.execute(request);
-		if (App.DEBUG) {
-			log("==========[Response]==========");
-			log(response.getStatusLine().toString());
-//			 Header[] headers = response.getAllHeaders();
-//			 for (Header header : headers) {
-//			 log(header.getName() + ":"
-//			 + header.getValue());
-//			 }
-//			 log("\n");
-		}
-		return response;
+		return NetHelper.execute(mHttpClient, request);
 	}
 
-	public DefaultHttpClient getHttpClient() {
+	protected DefaultHttpClient getHttpClient() {
 		return this.mHttpClient;
 	}
 
-	public void setHttpClient(DefaultHttpClient mHttpClient) {
+	protected void setHttpClient(DefaultHttpClient mHttpClient) {
 		this.mHttpClient = mHttpClient;
 	}
 

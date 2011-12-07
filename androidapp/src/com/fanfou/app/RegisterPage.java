@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -17,18 +18,16 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import com.fanfou.app.api.FanFouApiConfig;
+
 import com.fanfou.app.api.ApiException;
-import com.fanfou.app.api.Parser;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.ResultInfo;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.AlertInfoDialog;
-import com.fanfou.app.http.AbstractNetClient;
-import com.fanfou.app.http.AbstractNetClient;
-import com.fanfou.app.http.OneTimeNetClient;
-import com.fanfou.app.http.Parameter;
+import com.fanfou.app.http.NetClient;
 import com.fanfou.app.http.NetResponse;
+import com.fanfou.app.http.Parameter;
 import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
@@ -46,6 +45,7 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * @version 1.3 2011.10.26
  * @version 1.4 2011.11.18
  * @version 1.5 2011.11.28
+ * @version 1.6 2011.12.07
  * 
  */
 public class RegisterPage extends Activity implements OnClickListener {
@@ -226,14 +226,9 @@ public class RegisterPage extends Activity implements OnClickListener {
 				} else {
 					return new ResultInfo(REGISTER_FAILED, "注册失败");
 				}
-			} catch (ApiException e) {
+			}catch (IOException e) {
 				if (App.DEBUG) {
-					e.printStackTrace();
-				}
-				return new ResultInfo(REGISTER_FAILED, e.getMessage());
-			} catch (IOException e) {
-				if (App.DEBUG) {
-					e.printStackTrace();
+					Log.e(TAG, e.toString());
 				}
 				return new ResultInfo(REGISTER_IO_ERROR,
 						getString(R.string.connection_error_msg));
@@ -312,7 +307,7 @@ public class RegisterPage extends Activity implements OnClickListener {
 		}
 
 		private User register(String email, String nickname, String password,
-				String deviceId) throws IOException, ApiException {
+				String deviceId) throws IOException {
 			List<Parameter> params = new ArrayList<Parameter>();
 			params.add(new Parameter("email", email));
 			params.add(new Parameter("realname", nickname));
@@ -321,35 +316,30 @@ public class RegisterPage extends Activity implements OnClickListener {
 			params.add(new Parameter("deviceid", deviceId));
 			params.add(new Parameter("follow_pushed", String
 					.valueOf(cFollowPushed.isChecked())));
-
 			if (App.DEBUG) {
 				for (Parameter parameter : params) {
 					Log.d("RegisterTask", parameter.toString());
 				}
 			}
-
-			// HttpClient client = NetworkHelper.newHttpClient();
-			// HttpPost request = new HttpPost(ApiConfig.URL_REGISTER);
-			// request.setEntity(ConnectionRequest.encodeForPost(params));
-
-			// Log.d("RegisterTask", request.getURI().toString());
-
-			// HttpResponse response = client.execute(request);
-			User result=null;
-			OneTimeNetClient client=OneTimeNetClient.newInstance();
+			
+			NetClient client=new NetClient();
 			HttpResponse response = client.post(FanFouApiConfig.URL_REGISTER, params);
 			NetResponse res = new NetResponse(response);
 			if (App.DEBUG) {
-				Log.d("RegisterTask", res.getContent());
+				Log.d("RegisterTask", "Response: "+res.getContent());
 			}
+			User result=null;
 			if (res.statusCode == ResponseCode.HTTP_OK) {
-				result= User.parse(res);
-				client.close();
-				return result;
-			} else {
-				throw new ApiException(res.statusCode, Parser.error(res
-						.getContent()));
+				try {
+					result= User.parse(res);
+				} catch (ApiException e) {
+					if(App.DEBUG){
+						Log.e(TAG, e.toString());
+					}
+				}
 			}
+			client.close();
+			return result;
 		}
 	}
 

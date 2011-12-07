@@ -156,7 +156,7 @@ public class User implements Storable<User> {
 			user.type = Commons.TYPE_NONE;
 			user.ownerId = App.getUserId();
 			return user;
-		} catch (Exception e) {
+		} catch (JSONException e) {
 			throw new ApiException(ResponseCode.ERROR_JSON_EXCEPTION,
 					e.getMessage(), e);
 		}

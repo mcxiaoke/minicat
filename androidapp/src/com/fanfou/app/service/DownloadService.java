@@ -30,9 +30,7 @@ import com.fanfou.app.App;
 import com.fanfou.app.NewVersionPage;
 import com.fanfou.app.R;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.http.AbstractNetClient;
-import com.fanfou.app.http.AbstractNetClient;
-import com.fanfou.app.http.OneTimeNetClient;
+import com.fanfou.app.http.NetClient;
 import com.fanfou.app.update.VersionInfo;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -174,7 +172,7 @@ public class DownloadService extends BaseIntentService {
 		showProgress();
 		InputStream is = null;
 		FileOutputStream fos = null;
-		OneTimeNetClient client = OneTimeNetClient.newInstance();
+		NetClient client = new NetClient();
 		try {
 			HttpResponse response = client.get(url);
 			int statusCode = response.getStatusLine().getStatusCode();
@@ -298,7 +296,7 @@ public class DownloadService extends BaseIntentService {
 	}
 
 	public static VersionInfo fetchVersionInfo() {
-		OneTimeNetClient client = OneTimeNetClient.newInstance();
+		NetClient client = new NetClient();
 		try {
 			HttpResponse response = client.get(APP_UPDATE_SITE);
 			int statusCode = response.getStatusLine().getStatusCode();

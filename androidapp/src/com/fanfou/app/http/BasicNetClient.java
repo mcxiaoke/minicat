@@ -7,7 +7,7 @@ package com.fanfou.app.http;
  * 
  * 
  */
-public class BasicNetClient extends AbstractNetClient {
+public class BasicNetClient extends NetClient {
 	private String username;
 	private String password;
 	private String authorization;

@@ -17,10 +17,8 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
-
 import com.fanfou.app.App;
-import com.fanfou.app.http.AbstractNetClient;
-import com.fanfou.app.http.OAuthNetClient;
+import com.fanfou.app.http.NetClient;
 import com.fanfou.app.util.ImageHelper;
 
 /**
@@ -33,6 +31,7 @@ import com.fanfou.app.util.ImageHelper;
  * @version 3.0 2011.11.29
  * @version 4.0 2011.12.02
  * @version 4.1 2011.12.06
+ * @version 4.2 2011.12.07
  * 
  */
 public class ImageLoader implements IImageLoader {
@@ -52,9 +51,9 @@ public class ImageLoader implements IImageLoader {
 	// private final BlockingQueue<ImageLoaderTask> mTaskQueue = new
 	// LinkedBlockingQueue<ImageLoader.ImageLoaderTask>();
 	private final ConcurrentHashMap<ImageLoaderTask, ImageLoaderCallback> mCallbackMap = new ConcurrentHashMap<ImageLoaderTask, ImageLoaderCallback>();
-	public final ImageCache mCache;
+	private final ImageCache mCache;
 	private final Handler mHandler;
-	private final AbstractNetClient mClient;
+	private final NetClient mClient;
 
 	private Daemon mDaemon;
 
@@ -65,7 +64,7 @@ public class ImageLoader implements IImageLoader {
 			Log.d(TAG, "ImageLoader new instance.");
 		}
 		this.mCache = ImageCache.getInstance(context);
-		this.mClient =OAuthNetClient.getInstance();
+		this.mClient =new NetClient();
 		this.mHandler = new ImageDownloadHandler(mCallbackMap);
 		this.mDaemon = new Daemon();
 		this.mDaemon.start();
@@ -134,14 +133,6 @@ public class ImageLoader implements IImageLoader {
 		}
 
 		@Override
-		public synchronized void start() {
-			super.start();
-			if (App.DEBUG) {
-				Log.d(TAG, "Daemon Thread start().");
-			}
-		}
-
-		@Override
 		public void run() {
 			while (true) {
 				try {
@@ -167,10 +158,10 @@ public class ImageLoader implements IImageLoader {
 		private final ImageLoaderTask task;
 		private final Handler handler;
 		private final ImageCache cache;
-		private final AbstractNetClient conn;
+		private final NetClient conn;
 
 		public Worker(final ImageLoaderTask task, final Handler handler,
-				final ImageCache cache, final AbstractNetClient conn) {
+				final ImageCache cache, final NetClient conn) {
 			this.task = task;
 			this.handler = handler;
 			this.cache = cache;
@@ -184,7 +175,7 @@ public class ImageLoader implements IImageLoader {
 	}
 
 	private static void handleDownloadTask(final ImageCache cache,
-			final ImageLoaderTask task, final AbstractNetClient conn,
+			final ImageLoaderTask task, final NetClient conn,
 			final Handler handler) {
 		if (!cache.containsKey(task.url)) {
 			Bitmap bitmap = null;
@@ -208,7 +199,7 @@ public class ImageLoader implements IImageLoader {
 		}
 	}
 
-	private static Bitmap downloadImage(AbstractNetClient conn, String url)
+	private static Bitmap downloadImage(NetClient conn, String url)
 			throws IOException {
 		HttpResponse response = conn.get(url);
 		int statusCode = response.getStatusLine().getStatusCode();
@@ -336,16 +327,8 @@ public class ImageLoader implements IImageLoader {
 
 	@Override
 	public void shutdown() {
-		mTaskQueue.clear();
-		mCallbackMap.clear();
-		mCache.clear();
-		if (App.DEBUG) {
-			Log.d(TAG, "shutdown()");
-			Log.d(TAG, "mTaskQueue.isEmpty = " + mTaskQueue.isEmpty());
-			Log.d(TAG, "mCallbackMap.isEmpty = " + mCallbackMap.isEmpty());
-			Log.d(TAG, "mCache.isEmpty = " + mCache.isEmpty());
-			Log.d(TAG, "mDaemon.isAlive = " + mDaemon.isAlive());
-		}
+		clearQueue();
+		clearCache();
 	}
 
 	@Override

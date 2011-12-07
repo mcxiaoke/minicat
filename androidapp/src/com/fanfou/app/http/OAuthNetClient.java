@@ -9,7 +9,7 @@ import com.fanfou.app.auth.OAuthService;
  * @version 1.2 2011.12.06
  * 
  */
-public class OAuthNetClient extends AbstractNetClient {
+public class OAuthNetClient extends NetClient {
 	private OAuthService mOAuth=null;
 	private static OAuthNetClient sClient=new OAuthNetClient();
 

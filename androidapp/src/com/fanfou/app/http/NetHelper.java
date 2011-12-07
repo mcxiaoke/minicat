@@ -1,5 +1,6 @@
 package com.fanfou.app.http;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -8,10 +9,12 @@ import java.util.List;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
@@ -41,9 +44,11 @@ import com.fanfou.app.util.Utils;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.12.02
+ * @version 1.1 2011.12.07
  * 
  */
 public final class NetHelper {
+	private static final String TAG=NetHelper.class.getSimpleName();
 	public static final int SOCKET_BUFFER_SIZE = 8192;
 	public static final int CONNECTION_TIMEOUT_MS = 20000;
 	public static final int SOCKET_TIMEOUT_MS = 20000;
@@ -193,22 +198,48 @@ public final class NetHelper {
 		ApnType type = App.getApnType();
 		if (type == ApnType.CTWAP) {
 			if (App.DEBUG) {
-				Log.d("setProxy", "use proxy 10.0.0.200:80");
+				Log.d(TAG, "use proxy 10.0.0.200:80");
 			}
 			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
 					"10.0.0.200", 80));
 		} else if (type == ApnType.WAP) {
 			if (App.DEBUG) {
-				Log.d("setProxy", "use proxy 10.0.0.172:80");
+				Log.d(TAG, "use proxy 10.0.0.172:80");
 			}
 			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
 					"10.0.0.172", 80));
 		} else {
 			if (App.DEBUG) {
-				Log.d("setProxy", "use no proxy, direct connect");
+				Log.d(TAG, "use no proxy, direct connect");
 			}
 			params.removeParameter(ConnRoutePNames.DEFAULT_PROXY);
 		}
+	}
+	
+	public static final HttpResponse execute(final HttpClient client, final HttpUriRequest request)
+			throws IOException {
+		NetHelper.setProxy(client);
+		if (App.DEBUG) {
+			Log.d(TAG,"==========[Request]==========");
+			Log.d(TAG,request.getRequestLine().toString());
+			// Header[] headers = request.getAllHeaders();
+			// for (Header header : headers) {
+			// log(header.getName() + ":"
+			// + header.getValue());
+			// }
+		}
+		HttpResponse response = client.execute(request);
+		if (App.DEBUG) {
+			Log.d(TAG,"==========[Response]==========");
+			Log.d(TAG,response.getStatusLine().toString());
+//			 Header[] headers = response.getAllHeaders();
+//			 for (Header header : headers) {
+//			 log(header.getName() + ":"
+//			 + header.getValue());
+//			 }
+//			 log("\n");
+		}
+		return response;
 	}
 
 	public static Parameter[] getParameterArray(String name, String value) {
