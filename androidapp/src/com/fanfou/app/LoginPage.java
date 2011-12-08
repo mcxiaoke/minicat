@@ -100,8 +100,8 @@ public final class LoginPage extends Activity implements OnClickListener {
 
 	private void setLayout() {
 		setContentView(R.layout.login);
-		
-		View root=findViewById(R.id.root);
+
+		View root = findViewById(R.id.root);
 		ThemeHelper.setBackgroundColor(root);
 
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
@@ -276,8 +276,9 @@ public final class LoginPage extends Activity implements OnClickListener {
 
 				if (token != null) {
 					publishProgress(1);
-					App.getApp().setOAuthToken(token);
-					User u = App.getApi().verifyAccount(FanFouApiConfig.MODE_LITE);
+					App.setOAuthToken(token);
+					User u = App.getApi().verifyAccount(
+							FanFouApiConfig.MODE_LITE);
 
 					if (isCancelled) {
 						if (App.DEBUG) {
@@ -288,7 +289,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 					}
 
 					if (u != null && !u.isNull()) {
-						App.getApp().updateAccountInfo(u, token);
+						App.updateAccountInfo(u, token);
 						if (App.DEBUG)
 							log("xauth successful! ");
 

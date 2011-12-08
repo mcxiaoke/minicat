@@ -56,10 +56,9 @@ public class XAuthService {
 					+ content);
 		}
 		if (statusCode == 200) {
-			OAuthToken token = OAuthToken.from(content);
-			return token;
+			return OAuthToken.from(content);
 		}
 		client.close();
-		throw new OAuthTokenException(statusCode + " " + Parser.error(content));
+		throw new OAuthTokenException(Parser.error(content));
 	}
 }

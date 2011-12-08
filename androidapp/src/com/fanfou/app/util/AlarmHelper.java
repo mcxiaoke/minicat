@@ -2,7 +2,6 @@ package com.fanfou.app.util;
 
 import android.app.Notification;
 import android.content.Context;
-import android.content.SharedPreferences.Editor;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.text.TextUtils;
