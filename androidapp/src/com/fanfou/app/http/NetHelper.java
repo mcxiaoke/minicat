@@ -35,6 +35,8 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.fanfou.app.App;
@@ -49,7 +51,7 @@ import com.fanfou.app.util.Utils;
  */
 public final class NetHelper {
 	private static final String TAG=NetHelper.class.getSimpleName();
-	public static final int SOCKET_BUFFER_SIZE = 8192;
+	public static final int SOCKET_BUFFER_SIZE = 16*1024;
 	public static final int CONNECTION_TIMEOUT_MS = 20000;
 	public static final int SOCKET_TIMEOUT_MS = 20000;
 	public static final int MAX_TOTAL_CONNECTIONS = 20;
@@ -209,35 +211,18 @@ public final class NetHelper {
 			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
 					"10.0.0.172", 80));
 		} else {
-			if (App.DEBUG) {
-				Log.d(TAG, "use no proxy, direct connect");
-			}
 			params.removeParameter(ConnRoutePNames.DEFAULT_PROXY);
 		}
 	}
 	
 	public static final HttpResponse execute(final HttpClient client, final HttpUriRequest request)
 			throws IOException {
-		NetHelper.setProxy(client);
 		if (App.DEBUG) {
-			Log.d(TAG,"==========[Request]==========");
-			Log.d(TAG,request.getRequestLine().toString());
-			// Header[] headers = request.getAllHeaders();
-			// for (Header header : headers) {
-			// log(header.getName() + ":"
-			// + header.getValue());
-			// }
+			Log.d(TAG,"[Request] "+request.getRequestLine().toString());
 		}
 		HttpResponse response = client.execute(request);
 		if (App.DEBUG) {
-			Log.d(TAG,"==========[Response]==========");
-			Log.d(TAG,response.getStatusLine().toString());
-//			 Header[] headers = response.getAllHeaders();
-//			 for (Header header : headers) {
-//			 log(header.getName() + ":"
-//			 + header.getValue());
-//			 }
-//			 log("\n");
+			Log.d(TAG,"[Response] "+response.getStatusLine().toString());
 		}
 		return response;
 	}

@@ -84,7 +84,6 @@ final class ImageCache implements ICache<Bitmap> {
 			} else {
 				memoryCache.put(key, new SoftReference<Bitmap>(bitmap));
 			}
-		} else {
 		}
 		return bitmap;
 	}

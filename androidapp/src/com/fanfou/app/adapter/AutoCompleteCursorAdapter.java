@@ -1,5 +1,7 @@
 package com.fanfou.app.adapter;
 
+import java.util.regex.Pattern;
+
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
@@ -45,10 +47,17 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 		return cursor.getString(cursor.getColumnIndex(UserInfo.SCREEN_NAME));
 	}
 
+//	private static final Pattern PATTERN_SQL=Pattern.compile("[\\W]+");
 	@Override
 	public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
 		if (TextUtils.isEmpty(constraint)) {
 			return null;
+		}
+		
+//		String condition=PATTERN_SQL.matcher(constraint).replaceAll("");
+		if(App.DEBUG){
+			Log.d(TAG, "constraint = "+constraint);
+//			Log.d(TAG, "condition = "+condition);
 		}
 		
 		final String[] projection = new String[] { BaseColumns._ID,

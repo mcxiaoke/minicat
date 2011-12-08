@@ -73,7 +73,7 @@ public class PhotoAdapter extends BaseAdapter {
 		final Photo photo = mImageList.get(position);
 		if (photo != null) {
 			holder.image.setTag(photo.thumbUrl);
-			mLoader.set(photo.thumbUrl, holder.image, R.drawable.photo_frame);
+			mLoader.displayImage(photo.thumbUrl, holder.image, R.drawable.photo_frame);
 		}
 
 		return convertView;

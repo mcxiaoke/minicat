@@ -104,7 +104,7 @@ public class MessageCursorAdapter extends BaseCursorAdapter {
 
 		if (!isTextMode()) {
 			holder.headIcon.setTag(dm.senderProfileImageUrl);
-			mLoader.set(dm.senderProfileImageUrl, holder.headIcon,
+			mLoader.displayImage(dm.senderProfileImageUrl, holder.headIcon,
 					R.drawable.default_head);
 		}
 

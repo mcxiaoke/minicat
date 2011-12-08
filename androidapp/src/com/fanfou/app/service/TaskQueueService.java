@@ -86,7 +86,7 @@ public class TaskQueueService extends WakefulIntentService {
 				photo.delete();
 			}
 			if (result != null && !result.isNull()) {
-				IOHelper.storeStatus(this, result);
+//				IOHelper.storeStatus(this, result);
 				res = true;
 			}
 		} catch (ApiException e) {

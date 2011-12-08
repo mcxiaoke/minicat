@@ -125,7 +125,7 @@ public class PostStatusService extends WakefulIntentService {
 			}
 			nm.cancel(0);
 			if (result != null && !result.isNull()) {
-				IOHelper.storeStatus(this, result);
+//				IOHelper.storeStatus(this, result);
 				res = true;
 			}
 		} catch (ApiException e) {

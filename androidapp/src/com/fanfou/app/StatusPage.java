@@ -1,11 +1,13 @@
 package com.fanfou.app;
 
 import java.io.File;
+import java.io.Serializable;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.Log;
@@ -45,25 +47,17 @@ import com.fanfou.app.util.Utils;
  * @version 2.6 2011.11.17
  * @version 2.7 2011.11.22
  * @version 2.8 2011.11.28
+ * @version 2.9 2011.12.08
  * 
  */
 public class StatusPage extends BaseActivity {
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
+	private static final int PHOTO_LOADING = -1;
+	private static final int PHOTO_ICON = 0;
+	private static final int PHOTO_SMALL = 1;
+	private static final int PHOTO_LARGE = 2;
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
-
-	private static final String TAG = StatusPage.class.getSimpleName();
-
-	private void log(String message) {
-		Log.d(TAG, message);
-	}
+	private int mPhotoState = PHOTO_ICON;
 
 	private ActionBar mActionBar;
 
@@ -71,7 +65,6 @@ public class StatusPage extends BaseActivity {
 
 	private String statusId;
 	private Status status;
-	private Status thread;
 
 	private View vUser;
 
@@ -93,21 +86,35 @@ public class StatusPage extends BaseActivity {
 
 	private TextView vConversation;
 
-	private Handler mHandler;
-
 	private boolean isMe;
+
+	private String mPhotoUrl;
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+	}
+
+	private static final String TAG = StatusPage.class.getSimpleName();
+
+	private void log(String message) {
+		Log.d(TAG, message);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mLoader = ImageLoader.getInstance(this);
-		mHandler = new Handler();
-
 		setContentView(R.layout.status);
-		
-//		View root=findViewById(R.id.root);
-//		ThemeHelper.setBackgroundColor(root);
-		
+
+		// View root=findViewById(R.id.root);
+		// ThemeHelper.setBackgroundColor(root);
+
 		setActionBar();
 		setLayout();
 		parseIntent();
@@ -196,7 +203,7 @@ public class StatusPage extends BaseActivity {
 				iUserHead.setVisibility(View.GONE);
 			} else {
 				iUserHead.setTag(status.userProfileImageUrl);
-				mLoader.set(status.userProfileImageUrl, iUserHead,
+				mLoader.displayImage(status.userProfileImageUrl, iUserHead,
 						R.drawable.default_head);
 			}
 
@@ -224,12 +231,6 @@ public class StatusPage extends BaseActivity {
 		}
 	}
 
-	private int mPhotoState = PHOTO_ICON;
-	private static final int PHOTO_LOADING = -1;
-	private static final int PHOTO_ICON = 0;
-	private static final int PHOTO_SMALL = 1;
-	private static final int PHOTO_LARGE = 2;
-
 	private void checkPhoto(boolean textMode, Status s) {
 		if (!s.hasPhoto) {
 			iPhoto.setVisibility(View.GONE);
@@ -241,18 +242,30 @@ public class StatusPage extends BaseActivity {
 		iPhoto.setOnClickListener(this);
 
 		// 先检查本地是否有大图缓存
-		Bitmap bitmap = mLoader.load(s.photoLargeUrl, null);
+		Bitmap bitmap = mLoader.getImage(s.photoLargeUrl, null);
+		mPhotoUrl = s.photoLargeUrl;
 		if (bitmap != null) {
 			iPhoto.setImageBitmap(bitmap);
 			mPhotoState = PHOTO_LARGE;
+			if (App.DEBUG) {
+				Log.d(TAG,
+						"checkPhoto has large cache, mPhotoState=PHOTO_LARGE "
+								+ mPhotoState);
+			}
 			return;
 		}
 
 		// 再检查本地是否有缩略图缓存
-		bitmap = mLoader.load(s.photoImageUrl, null);
+		bitmap = mLoader.getImage(s.photoImageUrl, null);
+		mPhotoUrl = s.photoImageUrl;
 		if (bitmap != null) {
 			iPhoto.setImageBitmap(bitmap);
 			mPhotoState = PHOTO_SMALL;
+			if (App.DEBUG) {
+				Log.d(TAG,
+						"checkPhoto has thumb cache, mPhotoState=PHOTO_SMALL "
+								+ mPhotoState);
+			}
 			return;
 		}
 
@@ -325,7 +338,7 @@ public class StatusPage extends BaseActivity {
 	}
 
 	private String getPhotoPath(String key) {
-		if(TextUtils.isEmpty(key)){
+		if (TextUtils.isEmpty(key)) {
 			return null;
 		}
 		File file = new File(IOHelper.getImageCacheDir(mContext),
@@ -342,6 +355,9 @@ public class StatusPage extends BaseActivity {
 	}
 
 	private void onClickPhoto() {
+		if (App.DEBUG) {
+			Log.d(TAG, "onClickPhoto() mPhotoState=" + mPhotoState);
+		}
 		switch (mPhotoState) {
 		case PHOTO_ICON:
 			loadPhoto(PHOTO_LARGE);
@@ -360,51 +376,104 @@ public class StatusPage extends BaseActivity {
 	}
 
 	private void goPhotoViewer() {
-		Intent intent = new Intent(mContext, PhotoViewPage.class);
-		intent.putExtra(Commons.EXTRA_URL,
-				getPhotoPath((String) iPhoto.getTag()));
-		mContext.startActivity(intent);
-		overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_enter);
+		if (!TextUtils.isEmpty(mPhotoUrl)) {
+			String filePath=getPhotoPath(mPhotoUrl);
+			if (App.DEBUG) {
+				Log.d(TAG, "goPhotoViewer() url=" + filePath);
+			}
+			Intent intent = new Intent(mContext, PhotoViewPage.class);
+			intent.putExtra(Commons.EXTRA_URL, filePath);
+			mContext.startActivity(intent);
+			overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_enter);
+		}
 	}
 
 	private void loadPhoto(final int type) {
-		if(type==PHOTO_ICON){
+		if (type == PHOTO_ICON) {
 			iPhoto.setImageResource(R.drawable.photo_icon);
+			if (App.DEBUG) {
+				Log.d(TAG, "loadPhoto mPhotoState=" + mPhotoState + " type="
+						+ type);
+			}
 			return;
 		}
 		mPhotoState = PHOTO_LOADING;
 		iPhoto.setImageResource(R.drawable.photo_loading);
-		final ImageLoaderCallback callback = new ImageLoaderCallback() {
+		if (App.DEBUG) {
+			Log.d(TAG, "loadPhoto mPhotoState=" + mPhotoState + " type=" + type);
+		}
+		final Handler handler = new Handler() {
 
 			@Override
-			public void onFinish(String key, Bitmap bitmap) {
-				if (bitmap != null) {
-					iPhoto.setImageBitmap(bitmap);
-					mPhotoState = type;
-				} else {
+			public void handleMessage(Message msg) {
+				int what = msg.what;
+				if (what == ImageLoader.MESSAGE_FINISH) {
+					Bitmap bitmap = msg.getData().getParcelable(
+							ImageLoader.EXTRA_BITMAP);
+					if (App.DEBUG) {
+						Log.d(TAG, "handler onfinish bitmap=" + bitmap);
+					}
+					if (bitmap != null) {
+						iPhoto.setImageBitmap(bitmap);
+						mPhotoState = type;
+					} else {
+						iPhoto.setImageResource(R.drawable.photo_icon);
+						mPhotoState = PHOTO_ICON;
+					}
+				} else if (what == ImageLoader.MESSAGE_ERROR) {
 					iPhoto.setImageResource(R.drawable.photo_icon);
 					mPhotoState = PHOTO_ICON;
 				}
 			}
-
-			@Override
-			public void onError(String message) {
-				iPhoto.setImageResource(R.drawable.photo_icon);
-				mPhotoState = PHOTO_ICON;
-			}
 		};
-		
-		String photoUrl = null;
+		// final ImageLoaderCallback callback = new ImageLoaderCallback() {
+		//
+		// @Override
+		// public void onFinish(String key, Bitmap bitmap) {
+		// if (App.DEBUG) {
+		// Log.d(TAG, "callback onfinish bitmap=" + bitmap);
+		// }
+		// if (bitmap != null) {
+		// iPhoto.setImageBitmap(bitmap);
+		// mPhotoState = type;
+		// } else {
+		// iPhoto.setImageResource(R.drawable.photo_icon);
+		// mPhotoState = PHOTO_ICON;
+		// }
+		// }
+		//
+		// @Override
+		// public void onError(String url, String message) {
+		// iPhoto.setImageResource(R.drawable.photo_icon);
+		// mPhotoState = PHOTO_ICON;
+		// }
+		//
+		// @Override
+		// public String toString(){
+		// return "ImageLoaderCallback:"+this.hashCode();
+		// }
+		// };
+
 		if (type == PHOTO_LARGE) {
-			photoUrl = status.photoLargeUrl;
+			mPhotoUrl = status.photoLargeUrl;
 		} else if (type == PHOTO_SMALL) {
-			photoUrl = status.photoThumbUrl;
+			mPhotoUrl = status.photoThumbUrl;
 		}
-		iPhoto.setTag(photoUrl);
-		Bitmap bitmap = mLoader.load(photoUrl, callback);
+
+		if (App.DEBUG) {
+			Log.d(TAG, "loadPhoto mPhotoState=" + mPhotoState + " type=" + type
+					+ " url=" + mPhotoUrl);
+		}
+
+		iPhoto.setTag(mPhotoUrl);
+		Bitmap bitmap = mLoader.getImage(mPhotoUrl, handler);
 		if (bitmap != null) {
 			iPhoto.setImageBitmap(bitmap);
 			mPhotoState = type;
+			if (App.DEBUG) {
+				Log.d(TAG, "loadPhoto has cache url=" + mPhotoUrl + " type="
+						+ type);
+			}
 		}
 	}
 

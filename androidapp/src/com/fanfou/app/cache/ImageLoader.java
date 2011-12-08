@@ -1,22 +1,21 @@
 package com.fanfou.app.cache;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Comparator;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.PriorityBlockingQueue;
-
-import org.apache.http.HttpResponse;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
+
 import com.fanfou.app.App;
 import com.fanfou.app.http.NetClient;
 import com.fanfou.app.util.ImageHelper;
@@ -31,31 +30,28 @@ import com.fanfou.app.util.ImageHelper;
  * @version 3.0 2011.11.29
  * @version 4.0 2011.12.02
  * @version 4.1 2011.12.06
- * @version 4.2 2011.12.07
+ * @version 5.0 2011.12.08
  * 
  */
-public class ImageLoader implements IImageLoader {
+public class ImageLoader implements IImageLoader, Runnable {
 
 	public static final String TAG = ImageLoader.class.getSimpleName();
 
-	private static final String EXTRA_TASK = "task";
-	private static final String EXTRA_BITMAP = "bitmap";
-	private static final int MESSAGE_FINISH = 0;
-	private static final int MESSAGE_ERROR = 1;
+	public static final int MESSAGE_FINISH = 0;
+	public static final int MESSAGE_ERROR = 1;
+
+	public static final String EXTRA_URL = "extra_url";
+	public static final String EXTRA_BITMAP = "extra_bitmap";
+
 	private static final int CORE_POOL_SIZE = 2;
 
-	// private final ExecutorService mExecutorService =
-	// Executors.newSingleThreadExecutor();
-	private final BlockingQueue<ImageLoaderTask> mTaskQueue = new PriorityBlockingQueue<ImageLoaderTask>(
-			20, new ImageLoaderTaskComparator());
-	// private final BlockingQueue<ImageLoaderTask> mTaskQueue = new
-	// LinkedBlockingQueue<ImageLoader.ImageLoaderTask>();
-	private final ConcurrentHashMap<ImageLoaderTask, ImageLoaderCallback> mCallbackMap = new ConcurrentHashMap<ImageLoaderTask, ImageLoaderCallback>();
+	// private final ExecutorService mExecutorService;
+	private final PriorityBlockingQueue<Task> mTaskQueue = new PriorityBlockingQueue<Task>(
+			20, new TaskComparator());
+	private final Map<String, ImageView> mViewsMap;
 	private final ImageCache mCache;
 	private final Handler mHandler;
 	private final NetClient mClient;
-
-	private Daemon mDaemon;
 
 	private static ImageLoader INSTANCE = null;
 
@@ -63,11 +59,18 @@ public class ImageLoader implements IImageLoader {
 		if (App.DEBUG) {
 			Log.d(TAG, "ImageLoader new instance.");
 		}
+		// this.mExecutorService =
+		// Executors.newFixedThreadPool(CORE_POOL_SIZE,new
+		// NameCountThreadFactory());
+		// this.mExecutorService = Executors
+		// .newFixedThreadPool(CORE_POOL_SIZE,new NameCountThreadFactory());
+		// .newSingleThreadExecutor(new NameCountThreadFactory());
 		this.mCache = ImageCache.getInstance(context);
-		this.mClient =new NetClient();
-		this.mHandler = new ImageDownloadHandler(mCallbackMap);
-		this.mDaemon = new Daemon();
-		this.mDaemon.start();
+		this.mViewsMap = new HashMap<String, ImageView>();
+		this.mClient = new NetClient();
+		this.mHandler = new InnerHandler();
+		new Thread(this).start();
+		// this.mExecutorService.execute(this);
 	}
 
 	public static ImageLoader getInstance(Context context) {
@@ -78,169 +81,136 @@ public class ImageLoader implements IImageLoader {
 	}
 
 	@Override
-	public Bitmap load(String key, ImageLoaderCallback callback) {
-		Bitmap bitmap = null;
-		if (!TextUtils.isEmpty(key)) {
-			if (mCache.containsKey(key)) {
-				bitmap = mCache.get(key);
-			}
-			if (bitmap == null) {
-				if (callback != null) {
-					addToQueue(new ImageLoaderTask(key, null), callback);
+	public void run() {
+		while (true) {
+			try {
+				final Task task = mTaskQueue.take();
+				download(task);
+				// final Worker worker = new Worker(pair, mCache, mClient);
+				// mExecutorService.execute(worker);
+			} catch (InterruptedException e) {
+				if (App.DEBUG) {
+					e.printStackTrace();
 				}
 			}
+		}
+	}
+
+	private void download(final Task task) {
+		if (!mCache.containsKey(task.url)) {
+			Bitmap bitmap = null;
+			try {
+				bitmap = mClient.getBitmap(task.url);
+			} catch (IOException e) {
+				if (App.DEBUG) {
+					Log.e(TAG, "download() error:" + e.toString());
+				}
+			}
+			if (bitmap != null) {
+				mCache.put(task.url, bitmap);
+				if (App.DEBUG) {
+					Log.d(TAG, "download() put bitmap to cache ");
+				}
+			}
+			if (task.handler != null) {
+				final Message message = task.handler.obtainMessage();
+				if (bitmap != null) {
+					message.what = MESSAGE_FINISH;
+					message.getData().putParcelable(EXTRA_BITMAP, bitmap);
+				} else {
+					message.what = MESSAGE_ERROR;
+				}
+				if (App.DEBUG) {
+					Log.d(TAG, "download() handle can use, bitmap= " + bitmap);
+				}
+				message.getData().putString(EXTRA_URL, task.url);
+				task.handler.sendMessage(message);
+			} else {
+				if (App.DEBUG) {
+					Log.d(TAG, "download() handle is null, bitmap= " + bitmap);
+				}
+			}
+		}
+	}
+
+	@Override
+	public Bitmap getImage(String key, final Handler handler) {
+		if (TextUtils.isEmpty(key)) {
+			return null;
+		}
+		Bitmap bitmap = mCache.get(key);
+		if (bitmap == null && handler != null) {
+			addTask(key, handler);
 		}
 		return bitmap;
 
 	}
 
 	@Override
-	public void set(final String url, final ImageView imageView,
-			final int iconId) {
-		if (url == null || imageView == null) {
+	public void displayImage(String url, final ImageView view, final int iconId) {
+		if (TextUtils.isEmpty(url) || view == null) {
 			return;
 		}
-		final ImageLoaderTask task = new ImageLoaderTask(url, imageView);
-		Bitmap bitmap = null;
-		if (mCache.containsKey(task.url)) {
-			bitmap = mCache.get(task.url);
-		}
-		if (bitmap != null) {
-			task.imageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(
-					bitmap, 6));
+		Bitmap bitmap = mCache.get(url);
+		if (bitmap == null) {
+			view.setImageResource(iconId);
+			addInnerTask(url, view);
 		} else {
-			task.imageView.setImageResource(iconId);
-			addToQueue(task, new InternelCallback(task.imageView));
+
+			view.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap,
+					6));
 		}
 	}
 
-	private void addToQueue(final ImageLoaderTask task,
-			final ImageLoaderCallback callback) {
-		if (!mTaskQueue.contains(task)) {
-			if (App.DEBUG) {
-				Log.d(TAG, "addToQueue " + task.url);
-			}
-			mTaskQueue.add(task);
-			mCallbackMap.put(task, callback);
+	private void addTask(String url, final Handler handler) {
+		if (mTaskQueue.contains(url)) {
+			return;
 		}
-	}
-
-	private final class Daemon extends Thread {
-
-		public Daemon() {
-			super("ImageLoader Daemon");
-			setPriority(MIN_PRIORITY);
-		}
-
-		@Override
-		public void run() {
-			while (true) {
-				try {
-					if (App.DEBUG) {
-						Log.d(TAG, "Daemon Thread isRunning");
-					}
-					final ImageLoaderTask task = mTaskQueue.take();
-					handleDownloadTask(mCache, task, mClient, mHandler);
-				} catch (InterruptedException e) {
-					if (App.DEBUG) {
-						Log.d(TAG,
-								"Daemon Thread is interrupted:"
-										+ e.getMessage());
-					}
-					// break;
-				}
-			}
-		}
-	}
-
-	@SuppressWarnings("unused")
-	private static final class Worker implements Runnable {
-		private final ImageLoaderTask task;
-		private final Handler handler;
-		private final ImageCache cache;
-		private final NetClient conn;
-
-		public Worker(final ImageLoaderTask task, final Handler handler,
-				final ImageCache cache, final NetClient conn) {
-			this.task = task;
-			this.handler = handler;
-			this.cache = cache;
-			this.conn = conn;
-		}
-
-		@Override
-		public void run() {
-			handleDownloadTask(cache, task, conn, handler);
-		}
-	}
-
-	private static void handleDownloadTask(final ImageCache cache,
-			final ImageLoaderTask task, final NetClient conn,
-			final Handler handler) {
-		if (!cache.containsKey(task.url)) {
-			Bitmap bitmap = null;
-			try {
-				bitmap = downloadImage(conn, task.url);
-			} catch (IOException e) {
-				if (App.DEBUG) {
-					e.printStackTrace();
-				}
-			}
-			final Message message = handler.obtainMessage();
-			if (bitmap != null) {
-				cache.put(task.url, bitmap);
-				message.what = MESSAGE_FINISH;
-				message.getData().putParcelable(EXTRA_BITMAP, bitmap);
-			} else {
-				message.what = MESSAGE_ERROR;
-			}
-			message.getData().putSerializable(EXTRA_TASK, task);
-			handler.sendMessage(message);
-		}
-	}
-
-	private static Bitmap downloadImage(NetClient conn, String url)
-			throws IOException {
-		HttpResponse response = conn.get(url);
-		int statusCode = response.getStatusLine().getStatusCode();
 		if (App.DEBUG) {
-			Log.d(TAG, "downloadImage() statusCode=" + statusCode + " [" + url
-					+ "]");
+			Log.d(TAG, "addTask url=" + url + " handler=" + handler);
 		}
-		Bitmap bitmap = null;
-		if (statusCode == 200) {
-			bitmap = BitmapFactory.decodeStream(response.getEntity()
-					.getContent());
-		}
-		return bitmap;
+		final Task pair = new Task(url, handler);
+		mTaskQueue.add(pair);
 	}
 
-	private static class ImageDownloadHandler extends Handler {
-		private ConcurrentHashMap<ImageLoaderTask, ImageLoaderCallback> map;
-
-		public ImageDownloadHandler(
-				final ConcurrentHashMap<ImageLoaderTask, ImageLoaderCallback> map) {
-			this.map = map;
+	private void addInnerTask(String url, final ImageView view) {
+		if (mTaskQueue.contains(url)) {
+			return;
 		}
+		if (App.DEBUG) {
+			Log.d(TAG, "addInnerTask url=" + url + " mHandler=" + mHandler);
+		}
+		final Task pair = new Task(url, mHandler);
+		mTaskQueue.add(pair);
+		mViewsMap.put(url, view);
+	}
+
+	private class InnerHandler extends Handler {
 
 		@Override
 		public void handleMessage(Message msg) {
+			String url = msg.getData().getString(EXTRA_URL);
+			final ImageView view = mViewsMap.get(url);
+			if (App.DEBUG) {
+				Log.d(TAG, "InnerHandler what=" + msg.what + " url=" + url
+						+ " view=" + view);
+			}
 			switch (msg.what) {
 			case MESSAGE_FINISH:
-				final ImageLoaderTask task = (ImageLoaderTask) msg.getData()
-						.getSerializable(EXTRA_TASK);
-				final ImageLoaderCallback callback = map.get(task);
 				final Bitmap bitmap = (Bitmap) msg.getData().getParcelable(
 						EXTRA_BITMAP);
-				if (callback != null) {
-					callback.onFinish(task.url, bitmap);
+				if (bitmap != null && view != null) {
+					if (!isExpired(view, url)) {
+						if (App.DEBUG) {
+							Log.d(TAG, "InnerHandler onFinish() url=" + url);
+						}
+						view.setImageBitmap(bitmap);
+					}
 				}
-				map.remove(task);
+				mViewsMap.remove(url);
 				break;
 			case MESSAGE_ERROR:
-				final ImageLoaderTask task2 = (ImageLoaderTask) msg.getData()
-						.getSerializable(EXTRA_TASK);
-				map.remove(task2);
+				mViewsMap.remove(url);
 				break;
 			default:
 				break;
@@ -248,81 +218,124 @@ public class ImageLoader implements IImageLoader {
 		}
 	}
 
-	private static class InternelCallback implements ImageLoaderCallback {
-		private ImageView imageView;
+	private static final class Task implements Comparable<Task> {
+		public final String url;
+		public final Handler handler;
+		public final long timestamp;
 
-		public InternelCallback(final ImageView imageView) {
-			this.imageView = imageView;
+		public Task(String url, final Handler handler) {
+			this.url = url;
+			this.handler = handler;
+			this.timestamp = System.currentTimeMillis();
 		}
 
 		@Override
-		public void onFinish(String url, Bitmap bitmap) {
-			if (bitmap != null) {
-				String tag = (String) imageView.getTag();
-				if (tag != null && tag.equals(url)) {
-					if (App.DEBUG) {
-						Log.d(TAG, "InternelCallback.onFinish() url=" + url);
-					}
-					imageView.setImageBitmap(bitmap);
-				}
-			}
-		}
-
-		@Override
-		public void onError(String message) {
-		}
-
-	}
-
-	private static class ImageLoaderTaskComparator implements
-			Comparator<ImageLoaderTask> {
-
-		@Override
-		public int compare(ImageLoaderTask a, ImageLoaderTask b) {
-			if (a.timestamp > b.timestamp) {
-				return -1;
-			} else if (a.timestamp < b.timestamp) {
+		public int compareTo(Task another) {
+			if (timestamp > another.timestamp) {
 				return 1;
+			} else if (timestamp < another.timestamp) {
+				return -1;
 			} else {
 				return 0;
 			}
 		}
 
-	}
-
-	private class ImageLoaderTask implements Serializable {
-
-		private static final long serialVersionUID = 8580178675788143663L;
-		public final long timestamp;
-		public final String url;
-		public final ImageView imageView;
-
-		public ImageLoaderTask(String url, ImageView imageView) {
-			this.timestamp = System.currentTimeMillis();
-			this.url = url;
-			this.imageView = imageView;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (o instanceof ImageLoaderTask) {
-				if (((ImageLoaderTask) o).url.equals(url)) {
-					return true;
-				}
-			}
-			return false;
-		}
-
-		@Override
-		public int hashCode() {
-			return url.hashCode();
-		}
-
 		@Override
 		public String toString() {
-			return "time:" + timestamp + " url:" + url;
+			return new StringBuilder().append("[Task] url:").append(url)
+					.append(" handler:").append(handler).append(" timestamp:")
+					.append(timestamp).toString();
+		}
+	}
+
+	private static final class TaskComparator implements Comparator<Task> {
+		@Override
+		public int compare(Task t1, Task t2) {
+			if (t1.timestamp > t2.timestamp) {
+				return -1;
+			} else if (t1.timestamp < t2.timestamp) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+	}
+
+	private static final class Worker implements Runnable {
+		private String url;
+		private final Handler handler;
+		private final ImageCache cache;
+		private final NetClient conn;
+
+		public Worker(final Task pair, final ImageCache cache,
+				final NetClient conn) {
+			this.url = pair.url;
+			this.handler = pair.handler;
+			this.cache = cache;
+			this.conn = conn;
 		}
 
+		@Override
+		public void run() {
+			download();
+		}
+
+		private void download() {
+			if (!cache.containsKey(url)) {
+				Bitmap bitmap = null;
+				try {
+					bitmap = conn.getBitmap(url);
+				} catch (IOException e) {
+					if (App.DEBUG) {
+						Log.e(TAG, "download() error:" + e.toString());
+					}
+				}
+				if (bitmap != null) {
+					cache.put(url, bitmap);
+					if (App.DEBUG) {
+						Log.d(TAG, "download() put bitmap to cache ");
+					}
+				}
+				if (handler != null) {
+					final Message message = handler.obtainMessage();
+					if (bitmap != null) {
+						message.what = MESSAGE_FINISH;
+						message.getData().putParcelable(EXTRA_BITMAP, bitmap);
+					} else {
+						message.what = MESSAGE_ERROR;
+					}
+					if (App.DEBUG) {
+						Log.d(TAG, "download() handle can use, bitmap= "
+								+ bitmap);
+					}
+					message.getData().putString(EXTRA_URL, url);
+					handler.sendMessage(message);
+				} else {
+					if (App.DEBUG) {
+						Log.d(TAG, "download() handle is null, bitmap= "
+								+ bitmap);
+					}
+				}
+			}
+		}
+	}
+
+	private static class NameCountThreadFactory implements ThreadFactory {
+		private static AtomicInteger count = new AtomicInteger();
+
+		@Override
+		public Thread newThread(Runnable r) {
+			Thread t = new Thread(r);
+			t.setName("ImageLoaderThread #" + count.getAndIncrement());
+			t.setPriority(Thread.MIN_PRIORITY);
+			return t;
+		}
+
+	}
+
+	private static boolean isExpired(final ImageView view, String url) {
+		String tag = (String) view.getTag();
+		return tag == null || !tag.equals(url);
 	}
 
 	@Override
@@ -339,7 +352,6 @@ public class ImageLoader implements IImageLoader {
 	@Override
 	public void clearQueue() {
 		mTaskQueue.clear();
-		mCallbackMap.clear();
+		mViewsMap.clear();
 	}
-
 }

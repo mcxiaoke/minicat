@@ -94,7 +94,7 @@ public class SearchResultsAdapter extends BaseArrayAdapter<Status> {
 
 		if (!isTextMode()) {
 			holder.headIcon.setTag(s.userProfileImageUrl);
-			mLoader.set(s.userProfileImageUrl, holder.headIcon,
+			mLoader.displayImage(s.userProfileImageUrl, holder.headIcon,
 					R.drawable.default_head);
 			holder.headIcon.setOnClickListener(new View.OnClickListener() {
 

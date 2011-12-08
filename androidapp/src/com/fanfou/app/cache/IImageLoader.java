@@ -1,6 +1,7 @@
 package com.fanfou.app.cache;
 
 import android.graphics.Bitmap;
+import android.os.Handler;
 import android.widget.ImageView;
 
 /**
@@ -11,9 +12,9 @@ import android.widget.ImageView;
  */
 public interface IImageLoader {
 
-	Bitmap load(String key, ImageLoaderCallback callback);
+	Bitmap getImage(String key, final Handler handler);
 
-	void set(String key, ImageView imageView, int defaultImageResId);
+	void displayImage(String key, ImageView imageView, int stubId);
 
 	void shutdown();
 
@@ -24,7 +25,7 @@ public interface IImageLoader {
 	public interface ImageLoaderCallback {
 		void onFinish(String url, Bitmap bitmap);
 
-		void onError(String message);
+		void onError(String url, String message);
 	}
 
 }

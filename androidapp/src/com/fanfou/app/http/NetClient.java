@@ -11,6 +11,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -56,6 +58,20 @@ public class NetClient {
 			mHttpClient.getConnectionManager().shutdown();
 			mHttpClient=null;
 		}
+	}
+	
+	public final Bitmap getBitmap(String url) throws IOException{
+		HttpResponse response = get(url);
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (App.DEBUG) {
+			Log.d(TAG, "getBitmap() statusCode=" + statusCode + " [" + url
+					+ "]");
+		}
+		if (statusCode == 200) {
+			return BitmapFactory.decodeStream(response.getEntity()
+					.getContent());
+		}
+		return null;
 	}
 
 	public final HttpResponse get(String url) throws IOException {

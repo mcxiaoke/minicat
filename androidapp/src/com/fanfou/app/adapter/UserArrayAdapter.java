@@ -69,7 +69,7 @@ public class UserArrayAdapter extends BaseArrayAdapter<User> {
 
 		if (!isTextMode()) {
 			holder.headIcon.setTag(u.profileImageUrl);
-			mLoader.set(u.profileImageUrl, holder.headIcon,
+			mLoader.displayImage(u.profileImageUrl, holder.headIcon,
 					R.drawable.default_head);
 			holder.headIcon.setOnClickListener(new View.OnClickListener() {
 

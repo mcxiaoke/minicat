@@ -195,7 +195,7 @@ public class EditProfilePage extends BaseActivity {
 		mHeadView.setImageResource(R.drawable.default_head);
 		mHeadView.invalidate();
 		mHeadView.setTag(user.profileImageUrl);
-		mLoader.set(user.profileImageUrl, mHeadView, R.drawable.default_head);
+		mLoader.displayImage(user.profileImageUrl, mHeadView, R.drawable.default_head);
 
 	}
 

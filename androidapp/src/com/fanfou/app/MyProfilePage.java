@@ -187,7 +187,7 @@ public class MyProfilePage extends BaseActivity {
 		}
 
 		mHead.setTag(user.profileImageUrl);
-		mLoader.set(user.profileImageUrl, mHead, R.drawable.default_head);
+		mLoader.displayImage(user.profileImageUrl, mHead, R.drawable.default_head);
 		mName.setText(user.screenName);
 
 		mStatusesInfo.setText("" + user.statusesCount);
