@@ -32,6 +32,7 @@ import com.fanfou.app.R;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.http.NetClient;
 import com.fanfou.app.update.VersionInfo;
+import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
@@ -99,17 +100,26 @@ public class DownloadService extends BaseIntentService {
 				.getSystemService(Context.ALARM_SERVICE);
 		am.setInexactRepeating(AlarmManager.RTC, c.getTimeInMillis(), interval,
 				getPendingIntent(context));
+		if(App.DEBUG){
+			Log.d(TAG, "set interval=2day first time="+DateTimeHelper.formatDate(c.getTime()));
+		}
 	}
 
 	public static void unset(Context context) {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(getPendingIntent(context));
+		if(App.DEBUG){
+			Log.d(TAG, "unset");
+		}
 	}
 
 	public static void setIfNot(Context context) {
 		boolean set = OptionHelper.readBoolean(R.string.option_set_auto_update,
 				false);
+		if(App.DEBUG){
+			Log.d(TAG, "setIfNot flag="+set);
+		}
 		if (!set) {
 			OptionHelper.saveBoolean(R.string.option_set_auto_update, true);
 			set(context);

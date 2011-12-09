@@ -2,6 +2,7 @@ package com.fanfou.app.util;
 
 import android.app.Notification;
 import android.content.Context;
+import android.content.SharedPreferences.Editor;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -31,12 +32,17 @@ public final class AlarmHelper {
 		if (App.DEBUG) {
 			Log.d("App", "cleanAlarmFlags");
 		}
-		OptionHelper.cleanAlarmFlags();
+		Editor editor = App.getPreferences().edit();
+		editor.remove(App.getApp().getString(R.string.option_set_auto_clean));
+		editor.remove(App.getApp().getString(R.string.option_set_auto_update));
+		editor.remove(App.getApp().getString(R.string.option_set_auto_complete));
+		editor.remove(App.getApp().getString(R.string.option_set_notification));
+		editor.commit();
 	}
 
 	public final static void unsetScheduledTasks(Context context) {
 		if (App.DEBUG) {
-			Log.d(TAG, "clearAlarms");
+			Log.d(TAG, "unsetScheduledTasks");
 		}
 		DownloadService.unset(context);
 		NotificationService.unset(context);
@@ -45,7 +51,16 @@ public final class AlarmHelper {
 
 	public final static void setScheduledTasks(Context context) {
 		if (App.DEBUG) {
-			Log.d(TAG, "setAlarms");
+			Log.d(TAG, "setScheduledTasks");
+		}
+		DownloadService.set(context);
+		NotificationService.set(context);
+		AutoCompleteService.set(context);
+	}
+	
+	public final static void checkScheduledTasks(Context context) {
+		if (App.DEBUG) {
+			Log.d(TAG, "checkScheduledTasks");
 		}
 		DownloadService.setIfNot(context);
 		NotificationService.setIfNot(context);

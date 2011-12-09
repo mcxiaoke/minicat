@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.PowerManager;
 import android.util.Log;
 
 import com.fanfou.app.App;
@@ -27,6 +26,7 @@ import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.FanFouProvider;
+import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.Utils;
@@ -41,6 +41,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.1 2011.11.23
  * @version 2.2 2011.11.25
  * @version 2.5 2011.12.02
+ * @version 2.6 2011.12.09
  * 
  */
 public class NotificationService extends BaseIntentService {
@@ -53,26 +54,10 @@ public class NotificationService extends BaseIntentService {
 	private static final int DEFAULT_COUNT = FanFouApiConfig.DEFAULT_TIMELINE_COUNT;
 	private static final int MAX_COUNT = FanFouApiConfig.MAX_TIMELINE_COUNT;
 	private static final int DEFAULT_PAGE = 0;
-
-	private PowerManager.WakeLock mWakeLock;
 	private Api mApi;
 
 	public NotificationService() {
 		super("NotificationService");
-	}
-
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
-		mWakeLock.acquire();
-	}
-
-	@Override
-	public void onDestroy() {
-		mWakeLock.release();
-		super.onDestroy();
 	}
 
 	public static void set(Context context, boolean set) {
@@ -96,17 +81,28 @@ public class NotificationService extends BaseIntentService {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		am.set(AlarmManager.RTC, c.getTimeInMillis(), getPendingIntent(context));
+
+		if (App.DEBUG) {
+			Log.d(TAG, "set interval=" + interval + " next time="
+					+ DateTimeHelper.formatDate(c.getTime()));
+		}
 	}
 
 	public static void unset(Context context) {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(getPendingIntent(context));
+		if (App.DEBUG) {
+			Log.d(TAG, "unset");
+		}
 	}
 
 	public static void setIfNot(Context context) {
 		boolean set = OptionHelper.readBoolean(
 				R.string.option_set_notification, false);
+		if (App.DEBUG) {
+			Log.d(TAG, "setIfNot flag=" + set);
+		}
 		if (!set) {
 			OptionHelper.saveBoolean(R.string.option_set_notification, true);
 			set(context);
@@ -122,10 +118,6 @@ public class NotificationService extends BaseIntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		if (App.DEBUG) {
-			Log.i(TAG, "onHandleIntent");
-		}
-
 		boolean need = OptionHelper.readBoolean(R.string.option_notification,
 				false);
 		if (!need) {
@@ -164,13 +156,14 @@ public class NotificationService extends BaseIntentService {
 				handleHome(count);
 
 			}
-			set(this);
 		} catch (ApiException e) {
 			if (App.DEBUG) {
-				Log.e(TAG, "error code=" + e.statusCode + " error message="
-						+ e.errorMessage);
+				Log.e(TAG,
+						" code=" + e.statusCode + " message=" + e.getMessage());
 				e.printStackTrace();
 			}
+		} finally {
+			set(this);
 		}
 	}
 

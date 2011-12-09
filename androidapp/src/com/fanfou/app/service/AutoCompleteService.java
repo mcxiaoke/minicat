@@ -17,6 +17,7 @@ import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.User;
 import com.fanfou.app.db.Contents.UserInfo;
+import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.OptionHelper;
 
 /**
@@ -57,24 +58,31 @@ public class AutoCompleteService extends BaseIntentService {
 		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
 				c.get(Calendar.DAY_OF_MONTH), 20, 0);
 		c.add(Calendar.MINUTE, 30);
-		long interval = 3 * 24 * 3600 * 1000;
+		long interval = 5 * 24 * 3600 * 1000;
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-		// am.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
-		// getPendingIntent(context));
 		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
 				interval, getPendingIntent(context));
+		if(App.DEBUG){
+			Log.d(TAG, "set repeat interval=3day first time="+DateTimeHelper.formatDate(c.getTime()));
+		}
 	}
 
 	public static void unset(Context context) {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(getPendingIntent(context));
+		if(App.DEBUG){
+			Log.d(TAG, "unset");
+		}
 	}
 
 	public static void setIfNot(Context context) {
 		boolean set = OptionHelper.readBoolean(
 				R.string.option_set_auto_complete, false);
+		if(App.DEBUG){
+			Log.d(TAG, "setIfNot flag="+set);
+		}
 		if (!set) {
 			OptionHelper.saveBoolean(
 					R.string.option_set_auto_complete, true);

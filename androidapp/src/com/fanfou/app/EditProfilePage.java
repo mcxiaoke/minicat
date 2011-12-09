@@ -85,7 +85,7 @@ public class EditProfilePage extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		parseIntent();
-		mLoader = ImageLoader.getInstance(this);
+		mLoader = App.getImageLoader();
 		setLayout();
 		updateUI();
 	}

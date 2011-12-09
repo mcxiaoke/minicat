@@ -17,11 +17,6 @@ public class OAuthNetClient extends NetClient {
 		super();
 	}
 	
-	public static OAuthNetClient getInstance(OAuthService oauth) {
-		sClient.setOAuthService(oauth);
-		return sClient;
-	}
-	
 	public static OAuthNetClient getInstance() {
 		return sClient;
 	}

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 
+import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.cache.ImageLoader;
@@ -52,7 +53,7 @@ public abstract class BaseCursorAdapter extends CursorAdapter {
 	private void init(Context context, Cursor c) {
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);
-		this.mLoader = ImageLoader.getInstance(mContext);
+		this.mLoader = App.getImageLoader();
 		this.mCursor = c;
 		this.textMode = OptionHelper.readBoolean(
 				R.string.option_text_mode, false);

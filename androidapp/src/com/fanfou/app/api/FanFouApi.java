@@ -61,8 +61,9 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 
 	private FanFouApi() {
 		oauth = new OAuthService(new FanFouOAuthProvider());
-		conn = OAuthNetClient.getInstance(oauth);
-		setOAuthToken(App.getOAuthToken());
+		oauth.setOAuthToken(App.getOAuthToken());
+		conn = OAuthNetClient.getInstance();
+		conn.setOAuthService(oauth);
 	}
 
 	public static FanFouApi newInstance() {

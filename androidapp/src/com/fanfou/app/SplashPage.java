@@ -1,10 +1,11 @@
 package com.fanfou.app;
 
-import com.fanfou.app.util.IntentHelper;
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceManager;
+
+import com.fanfou.app.cache.ImageCache;
+import com.fanfou.app.cache.ImageLoader;
+import com.fanfou.app.util.IntentHelper;
 
 /**
  * @author mcxiaoke
@@ -16,32 +17,15 @@ import android.preference.PreferenceManager;
  * 
  */
 public class SplashPage extends Activity {
-	private Handler mHandler = new Handler();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		checkLogin();
-		// boolean showSplash = OptionHelper.readBoolean(this,
-		// R.string.option_show_splash_screen, true);
-		// if (showSplash) {
-		// setContentView(R.layout.splash);
-		// mHandler.postDelayed(new Runnable() {
-		//
-		// @Override
-		// public void run() {
-		// checkLogin();
-		// }
-		// }, 2000);
-		// } else {
-		// checkLogin();
-		// }
 
 	}
 
 	private void checkLogin() {
-		// 可以将大部分的初始化工作从App中转移到这里
 		if (App.verified) {
 			IntentHelper.goHomePage(this, 0);
 		} else {

@@ -197,7 +197,7 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 	@Override
 	protected void onStop() {
 		super.onStop();
-		ImageLoader.getInstance(this).clearQueue();
+		App.getImageLoader().clearQueue();
 	}
 
 	private static final String LIST_STATE = "listState";

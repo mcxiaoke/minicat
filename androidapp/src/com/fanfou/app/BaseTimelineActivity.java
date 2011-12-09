@@ -18,6 +18,7 @@ import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.ui.ActionBar;
+import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.ActionBar.Action;
 import com.fanfou.app.ui.UIManager;
 import com.fanfou.app.ui.widget.EndlessListView;
@@ -283,12 +284,11 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 
 	@Override
 	public void performAction(View view) {
-		Intent intent = new Intent(this, WritePage.class);
-		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
+		String text=null;
 		if (user != null) {
-			intent.putExtra(Commons.EXTRA_TEXT, "@" + user.screenName + " "); // 此时设置会报空指针
+			text="@" + user.screenName + " ";
 		}
-		startActivity(intent);
+		ActionManager.doWrite(this, text);
 	}
 
 	@Override

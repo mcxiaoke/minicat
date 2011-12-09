@@ -481,25 +481,22 @@ final public class ImageHelper {
 	}
 
 	public static boolean writeToFile(File file, Bitmap bitmap) {
-		if (bitmap == null) {
+		if (bitmap == null || file == null || file.exists()) {
 			return false;
 		}
-		boolean result = false;
 		BufferedOutputStream bos = null;
 		try {
-			if (!file.exists()) {
-				bos = new BufferedOutputStream(new FileOutputStream(file),
-						OUTPUT_BUFFER_SIZE);
-				bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-			}
-			result = true;
+			bos = new BufferedOutputStream(new FileOutputStream(file),
+					OUTPUT_BUFFER_SIZE);
+			return bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
 		} catch (IOException e) {
-			if (App.DEBUG)
-				e.printStackTrace();
+			if(App.DEBUG){
+				Log.d(TAG, "writeToFile:" + e.getMessage());
+			}
 		} finally {
 			IOHelper.forceClose(bos);
 		}
-		return result;
+		return false;
 	}
 
 	public static File prepareUploadFile(Context context, File file, int quality) {

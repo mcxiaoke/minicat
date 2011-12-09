@@ -212,7 +212,7 @@ public final class ActionManager {
 				for (String name : names) {
 					sb.append("@").append(name).append(" ");
 				}
-			}else{
+			} else {
 				sb.append("@").append(status.userScreenName).append(" ");
 			}
 
@@ -226,18 +226,25 @@ public final class ActionManager {
 		}
 
 	}
+	
+	public static void doWrite(Context context, String text, File file, int type) {
+		Intent intent = new Intent(context, WritePage.class);
+		intent.putExtra(Commons.EXTRA_TYPE, type);
+		intent.putExtra(Commons.EXTRA_TEXT, text);
+		intent.putExtra(Commons.EXTRA_FILE, file);
+		context.startActivity(intent);
+	}
+	
+	public static void doWrite(Context context, String text, int type) {
+		doWrite(context, text, null, type);
+	}
 
 	public static void doWrite(Context context, String text) {
-		Intent intent = new Intent(context, WritePage.class);
-		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
-		intent.putExtra(Commons.EXTRA_TEXT, text);
-		context.startActivity(intent);
+		doWrite(context, text,WritePage.TYPE_NORMAL);
 	}
 
 	public static void doWrite(Context context) {
-		Intent intent = new Intent(context, WritePage.class);
-		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
-		context.startActivity(intent);
+		doWrite(context, null);
 	}
 
 	public static void doSend(Context context) {

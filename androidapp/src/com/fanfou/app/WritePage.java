@@ -354,10 +354,10 @@ public class WritePage extends BaseActivity {
 	private void setLayout() {
 
 		setContentView(R.layout.write);
-		
-		View root=findViewById(R.id.root);
+
+		View root = findViewById(R.id.root);
 		ThemeHelper.setBackgroundColor(root);
-		
+
 		setActionBar();
 		setAutoComplete();
 

@@ -144,7 +144,7 @@ public class ProfilePage extends BaseActivity {
 
 	private void initialize() {
 		mHandler = new Handler();
-		mLoader = ImageLoader.getInstance(this);
+		mLoader = App.getImageLoader();
 	}
 
 	private void setLayout() {

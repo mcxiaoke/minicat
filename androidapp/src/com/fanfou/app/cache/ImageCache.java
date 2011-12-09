@@ -23,9 +23,10 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.5 2011.11.23
  * @version 1.6 2011.11.24
  * @version 1.7 2011.12.05
+ * @version 1.8 2011.12.09
  * 
  */
-final class ImageCache implements ICache<Bitmap> {
+public final class ImageCache implements ICache<Bitmap> {
 	private static final String TAG = ImageCache.class.getSimpleName();
 
 	public static final int IMAGE_QUALITY = 100;
@@ -44,16 +45,9 @@ final class ImageCache implements ICache<Bitmap> {
 		this.mCacheDir = IOHelper.getImageCacheDir(mContext);
 	}
 
-	public static ImageCache init(Context context) {
+	public static ImageCache getInstance() {
 		if (INSTANCE == null) {
-			INSTANCE = new ImageCache(context);
-		}
-		return INSTANCE;
-	}
-
-	public static ImageCache getInstance(Context context) {
-		if (INSTANCE == null) {
-			INSTANCE = new ImageCache(context);
+			INSTANCE = new ImageCache(App.getApp());
 		}
 		return INSTANCE;
 	}
@@ -76,12 +70,12 @@ final class ImageCache implements ICache<Bitmap> {
 		}
 		if (bitmap == null) {
 			bitmap = loadFromFile(key);
-			if (App.DEBUG) {
-				Log.d(TAG, "get() bitmap from disk, bitmap=" + bitmap);
-			}
 			if (bitmap == null) {
 				memoryCache.remove(key);
 			} else {
+				if (App.DEBUG) {
+					Log.d(TAG, "get() bitmap from disk, put to memory cache");
+				}
 				memoryCache.put(key, new SoftReference<Bitmap>(bitmap));
 			}
 		}
@@ -94,7 +88,11 @@ final class ImageCache implements ICache<Bitmap> {
 			return false;
 		}
 		memoryCache.put(key, new SoftReference<Bitmap>(bitmap));
-		return writeToFile(key, bitmap);
+		boolean result= writeToFile(key, bitmap);
+		if (App.DEBUG) {
+			Log.d(TAG, "put() put to cache, write to disk result="+result);
+		}
+		return result;
 	}
 
 	@Override
@@ -125,42 +123,29 @@ final class ImageCache implements ICache<Bitmap> {
 	}
 
 	private Bitmap loadFromFile(String key) {
-
-		Bitmap bitmap = null;
 		String filename = StringHelper.md5(key) + ".jpg";
 		File file = new File(mCacheDir, filename);
-		if (!file.exists()) {
-			return null;
-		}
 		FileInputStream fis = null;
+		Bitmap bitmap=null;
 		try {
 			fis = new FileInputStream(file);
-			bitmap = BitmapFactory.decodeStream(fis);
+			bitmap=BitmapFactory.decodeStream(fis);
 			if (App.DEBUG) {
 				Log.d(TAG, "loadFromFile() key is " + key);
 			}
 		} catch (FileNotFoundException e) {
 			if (App.DEBUG) {
-				Log.e(TAG, e.getMessage());
+				Log.e(TAG, "loadFromFile: "+e.getMessage());
 			}
-			memoryCache.remove(key);
 		} finally {
 			IOHelper.forceClose(fis);
 		}
-
 		return bitmap;
 	}
 
 	private boolean writeToFile(String key, Bitmap bitmap) {
-		if (bitmap == null || StringHelper.isEmpty(key)) {
-			return false;
-		}
 		String filename = StringHelper.md5(key) + ".jpg";
-		File file = new File(mCacheDir, filename);
-		if (App.DEBUG) {
-			Log.d(TAG, "writeToFile: " + file.getPath());
-		}
-		return ImageHelper.writeToFile(file, bitmap);
+		return ImageHelper.writeToFile(new File(mCacheDir, filename), bitmap);
 	}
 
 	@Override

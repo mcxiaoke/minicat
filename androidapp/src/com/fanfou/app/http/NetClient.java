@@ -9,6 +9,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.graphics.Bitmap;
@@ -52,15 +53,15 @@ public class NetClient {
 	private void prepareHttpClient() {
 		mHttpClient = NetHelper.newHttpClient();
 	}
-	
-	public void close(){
-		if(mHttpClient!=null){
+
+	public void close() {
+		if (mHttpClient != null) {
 			mHttpClient.getConnectionManager().shutdown();
-			mHttpClient=null;
+			mHttpClient = null;
 		}
 	}
-	
-	public final Bitmap getBitmap(String url) throws IOException{
+
+	public final Bitmap getBitmap(String url) throws IOException {
 		HttpResponse response = get(url);
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (App.DEBUG) {
@@ -68,8 +69,8 @@ public class NetClient {
 					+ "]");
 		}
 		if (statusCode == 200) {
-			return BitmapFactory.decodeStream(response.getEntity()
-					.getContent());
+			return BitmapFactory
+					.decodeStream(response.getEntity().getContent());
 		}
 		return null;
 	}
@@ -94,12 +95,20 @@ public class NetClient {
 		return executeImpl(cr.request);
 	}
 
-	protected void signRequest(NetRequest cr){}
+	protected void signRequest(NetRequest cr) {
+	}
 
 	private final HttpResponse executeImpl(HttpRequestBase request)
 			throws IOException {
 		NetHelper.setProxy(mHttpClient);
-		return NetHelper.execute(mHttpClient, request);
+		if (App.DEBUG) {
+			Log.d(TAG, "[Request] " + request.getRequestLine().toString());
+		}
+		HttpResponse response = mHttpClient.execute(request);
+		if (App.DEBUG) {
+			Log.d(TAG, "[Response] " + response.getStatusLine().toString());
+		}
+		return response;
 	}
 
 	protected DefaultHttpClient getHttpClient() {

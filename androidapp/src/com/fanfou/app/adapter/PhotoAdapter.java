@@ -2,6 +2,7 @@ package com.fanfou.app.adapter;
 
 import java.util.List;
 
+import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Photo;
 import com.fanfou.app.cache.IImageLoader;
@@ -26,7 +27,7 @@ public class PhotoAdapter extends BaseAdapter {
 			throw new NullPointerException("data cannot be null.");
 		}
 		mContext = context;
-		mLoader = ImageLoader.getInstance(mContext);
+		mLoader = App.getImageLoader();
 		mImageList = list;
 	}
 

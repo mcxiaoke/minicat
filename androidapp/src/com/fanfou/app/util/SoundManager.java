@@ -8,10 +8,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.util.Log;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.11.16
+ * @version 1.1 2011.12.09
  * @see http
  *      ://www.droidnova.com/creating-sound-effects-in-android-part-2,695.html
  * 
@@ -24,6 +26,7 @@ public final class SoundManager {
 	private static Activity mContext;
 
 	private SoundManager() {
+		mSoundPoolMap = new HashMap<Integer, Integer>();
 	}
 
 	/**
@@ -44,13 +47,11 @@ public final class SoundManager {
 	 * @param theContext
 	 *            The Application context
 	 */
-	public static void initSounds(Activity theContext) {
-		mContext = theContext;
-		mSoundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
-		mSoundPoolMap = new HashMap<Integer, Integer>();
+	public static void initSounds(Activity context) {
+		mContext = context;
 		mAudioManager = (AudioManager) mContext
 				.getSystemService(Context.AUDIO_SERVICE);
-		mContext.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+		mSoundPool = new SoundPool(2, AudioManager.STREAM_MUSIC, 0);
 	}
 
 	/**
@@ -87,8 +88,12 @@ public final class SoundManager {
 				.getStreamVolume(AudioManager.STREAM_MUSIC);
 		streamVolume = streamVolume
 				/ mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-		mSoundPool.play(mSoundPoolMap.get(index), streamVolume, streamVolume,
-				1, 0, speed);
+		try {
+			mSoundPool.play(mSoundPoolMap.get(index), streamVolume, streamVolume,
+					1, 0, speed);
+		} catch (RuntimeException e) {
+			Log.e("SoundManager", "playSound: index "+index+" error:"+e.getMessage());
+		}
 	}
 
 	/**

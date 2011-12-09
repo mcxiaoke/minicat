@@ -33,7 +33,7 @@ public class ImageLoaderNew implements IImageLoader{
 	public ImageLoaderNew(Context context) {
 //		this.mContext=context;
 		this.mClient = new NetClient();
-		this.mCache = ImageCache.getInstance(context);
+		this.mCache = ImageCache.getInstance();
 		this.mExecutorService = Executors.newFixedThreadPool(2);
 	}
 

@@ -275,12 +275,8 @@ public abstract class BaseActivity extends Activity implements
 	}
 
 	protected void onMenuFeedbackClick() {
-		Intent intent = new Intent(this, WritePage.class);
-		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
-		intent.putExtra(Commons.EXTRA_TEXT,
-				getString(R.string.config_feedback_account) + " ("
-						+ Build.MODEL + "-" + Build.VERSION.RELEASE + " "+App.appVersionName+") ");
-		startActivity(intent);
+		ActionManager.doWrite(this, getString(R.string.config_feedback_account) + " ("
+				+ Build.MODEL + "-" + Build.VERSION.RELEASE + " "+App.appVersionName+") ");
 	}
 
 	protected void onMenuHomeClick() {

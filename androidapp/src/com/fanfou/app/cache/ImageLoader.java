@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -18,6 +20,7 @@ import android.widget.ImageView;
 
 import com.fanfou.app.App;
 import com.fanfou.app.http.NetClient;
+import com.fanfou.app.http.OAuthNetClient;
 import com.fanfou.app.util.ImageHelper;
 
 /**
@@ -31,6 +34,7 @@ import com.fanfou.app.util.ImageHelper;
  * @version 4.0 2011.12.02
  * @version 4.1 2011.12.06
  * @version 5.0 2011.12.08
+ * @version 5.1 2011.12.09
  * 
  */
 public class ImageLoader implements IImageLoader, Runnable {
@@ -45,39 +49,37 @@ public class ImageLoader implements IImageLoader, Runnable {
 
 	private static final int CORE_POOL_SIZE = 2;
 
-	// private final ExecutorService mExecutorService;
+	private final ExecutorService mExecutorService;
 	private final PriorityBlockingQueue<Task> mTaskQueue = new PriorityBlockingQueue<Task>(
-			20, new TaskComparator());
+			60, new TaskComparator());
 	private final Map<String, ImageView> mViewsMap;
 	private final ImageCache mCache;
 	private final Handler mHandler;
 	private final NetClient mClient;
+	
+	private static final class ImageLoaderHolder{
+		private static final ImageLoader INSTANCE=new ImageLoader();
+	}
 
-	private static ImageLoader INSTANCE = null;
-
-	private ImageLoader(Context context) {
+	private ImageLoader() {
 		if (App.DEBUG) {
 			Log.d(TAG, "ImageLoader new instance.");
 		}
 		// this.mExecutorService =
 		// Executors.newFixedThreadPool(CORE_POOL_SIZE,new
 		// NameCountThreadFactory());
-		// this.mExecutorService = Executors
-		// .newFixedThreadPool(CORE_POOL_SIZE,new NameCountThreadFactory());
-		// .newSingleThreadExecutor(new NameCountThreadFactory());
-		this.mCache = ImageCache.getInstance(context);
+		this.mExecutorService = Executors.newSingleThreadExecutor(new NameCountThreadFactory());
+		this.mCache = ImageCache.getInstance();
 		this.mViewsMap = new HashMap<String, ImageView>();
-		this.mClient = new NetClient();
+//		this.mClient = new NetClient();
+		this.mClient=OAuthNetClient.getInstance();
 		this.mHandler = new InnerHandler();
 		new Thread(this).start();
 		// this.mExecutorService.execute(this);
 	}
 
-	public static ImageLoader getInstance(Context context) {
-		if (INSTANCE == null) {
-			INSTANCE = new ImageLoader(context.getApplicationContext());
-		}
-		return INSTANCE;
+	public static ImageLoader getInstance() {
+		return ImageLoaderHolder.INSTANCE;
 	}
 
 	@Override
@@ -85,9 +87,9 @@ public class ImageLoader implements IImageLoader, Runnable {
 		while (true) {
 			try {
 				final Task task = mTaskQueue.take();
-				download(task);
-				// final Worker worker = new Worker(pair, mCache, mClient);
-				// mExecutorService.execute(worker);
+//				download(task);
+				 final Worker worker = new Worker(task, mCache, mClient);
+				 mExecutorService.execute(worker);
 			} catch (InterruptedException e) {
 				if (App.DEBUG) {
 					e.printStackTrace();
@@ -97,38 +99,40 @@ public class ImageLoader implements IImageLoader, Runnable {
 	}
 
 	private void download(final Task task) {
-		if (!mCache.containsKey(task.url)) {
-			Bitmap bitmap = null;
+		String url=task.url;
+		Handler handler=task.handler;
+		Bitmap bitmap=mCache.get(url);
+		if (bitmap==null) {
 			try {
-				bitmap = mClient.getBitmap(task.url);
+				bitmap = mClient.getBitmap(url);
 			} catch (IOException e) {
-				if (App.DEBUG) {
-					Log.e(TAG, "download() error:" + e.toString());
-				}
+					Log.e(TAG, "download error:" + e.getMessage());
 			}
 			if (bitmap != null) {
-				mCache.put(task.url, bitmap);
+				mCache.put(url, bitmap);
 				if (App.DEBUG) {
-					Log.d(TAG, "download() put bitmap to cache ");
+					Log.d(TAG, "download put bitmap to cache ");
 				}
 			}
-			if (task.handler != null) {
-				final Message message = task.handler.obtainMessage();
-				if (bitmap != null) {
-					message.what = MESSAGE_FINISH;
-					message.getData().putParcelable(EXTRA_BITMAP, bitmap);
-				} else {
-					message.what = MESSAGE_ERROR;
-				}
-				if (App.DEBUG) {
-					Log.d(TAG, "download() handle can use, bitmap= " + bitmap);
-				}
-				message.getData().putString(EXTRA_URL, task.url);
-				task.handler.sendMessage(message);
+		}
+		if (handler != null) {
+			final Message message = handler.obtainMessage();
+			if (bitmap != null) {
+				message.what = MESSAGE_FINISH;
+				message.getData().putParcelable(EXTRA_BITMAP, bitmap);
 			} else {
-				if (App.DEBUG) {
-					Log.d(TAG, "download() handle is null, bitmap= " + bitmap);
-				}
+				message.what = MESSAGE_ERROR;
+			}
+			if (App.DEBUG) {
+				Log.d(TAG, "download handle can use, bitmap= "
+						+ bitmap);
+			}
+			message.getData().putString(EXTRA_URL, url);
+			handler.sendMessage(message);
+		} else {
+			if (App.DEBUG) {
+				Log.d(TAG, "download handle is null, bitmap= "
+						+ bitmap);
 			}
 		}
 	}
@@ -157,8 +161,7 @@ public class ImageLoader implements IImageLoader, Runnable {
 			addInnerTask(url, view);
 		} else {
 
-			view.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap,
-					6));
+			view.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap, 6));
 		}
 	}
 
@@ -190,7 +193,7 @@ public class ImageLoader implements IImageLoader, Runnable {
 		@Override
 		public void handleMessage(Message msg) {
 			String url = msg.getData().getString(EXTRA_URL);
-			final ImageView view = mViewsMap.get(url);
+			final ImageView view = mViewsMap.remove(url);
 			if (App.DEBUG) {
 				Log.d(TAG, "InnerHandler what=" + msg.what + " url=" + url
 						+ " view=" + view);
@@ -207,10 +210,8 @@ public class ImageLoader implements IImageLoader, Runnable {
 						view.setImageBitmap(bitmap);
 					}
 				}
-				mViewsMap.remove(url);
 				break;
 			case MESSAGE_ERROR:
-				mViewsMap.remove(url);
 				break;
 			default:
 				break;
@@ -252,9 +253,9 @@ public class ImageLoader implements IImageLoader, Runnable {
 		@Override
 		public int compare(Task t1, Task t2) {
 			if (t1.timestamp > t2.timestamp) {
-				return -1;
-			} else if (t1.timestamp < t2.timestamp) {
 				return 1;
+			} else if (t1.timestamp < t2.timestamp) {
+				return -1;
 			} else {
 				return 0;
 			}
@@ -281,40 +282,38 @@ public class ImageLoader implements IImageLoader, Runnable {
 		}
 
 		private void download() {
-			if (!cache.containsKey(url)) {
-				Bitmap bitmap = null;
+			Bitmap bitmap=cache.get(url);
+			if (bitmap==null) {
 				try {
 					bitmap = conn.getBitmap(url);
 				} catch (IOException e) {
-					if (App.DEBUG) {
-						Log.e(TAG, "download() error:" + e.toString());
-					}
+						Log.e(TAG, "download error:" + e.getMessage());
 				}
 				if (bitmap != null) {
 					cache.put(url, bitmap);
 					if (App.DEBUG) {
-						Log.d(TAG, "download() put bitmap to cache ");
+						Log.d(TAG, "download put bitmap to cache ");
 					}
 				}
-				if (handler != null) {
-					final Message message = handler.obtainMessage();
-					if (bitmap != null) {
-						message.what = MESSAGE_FINISH;
-						message.getData().putParcelable(EXTRA_BITMAP, bitmap);
-					} else {
-						message.what = MESSAGE_ERROR;
-					}
-					if (App.DEBUG) {
-						Log.d(TAG, "download() handle can use, bitmap= "
-								+ bitmap);
-					}
-					message.getData().putString(EXTRA_URL, url);
-					handler.sendMessage(message);
+			}
+			if (handler != null) {
+				final Message message = handler.obtainMessage();
+				if (bitmap != null) {
+					message.what = MESSAGE_FINISH;
+					message.getData().putParcelable(EXTRA_BITMAP, bitmap);
 				} else {
-					if (App.DEBUG) {
-						Log.d(TAG, "download() handle is null, bitmap= "
-								+ bitmap);
-					}
+					message.what = MESSAGE_ERROR;
+				}
+				if (App.DEBUG) {
+					Log.d(TAG, "download send message bitmap= "
+							+ bitmap);
+				}
+				message.getData().putString(EXTRA_URL, url);
+				handler.sendMessage(message);
+			} else {
+				if (App.DEBUG) {
+					Log.d(TAG, "download handle is null, bitmap= "
+							+ bitmap);
 				}
 			}
 		}

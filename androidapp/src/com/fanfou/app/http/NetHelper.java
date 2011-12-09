@@ -214,18 +214,6 @@ public final class NetHelper {
 			params.removeParameter(ConnRoutePNames.DEFAULT_PROXY);
 		}
 	}
-	
-	public static final HttpResponse execute(final HttpClient client, final HttpUriRequest request)
-			throws IOException {
-		if (App.DEBUG) {
-			Log.d(TAG,"[Request] "+request.getRequestLine().toString());
-		}
-		HttpResponse response = client.execute(request);
-		if (App.DEBUG) {
-			Log.d(TAG,"[Response] "+response.getStatusLine().toString());
-		}
-		return response;
-	}
 
 	public static Parameter[] getParameterArray(String name, String value) {
 		return new Parameter[] { new Parameter(name, value) };

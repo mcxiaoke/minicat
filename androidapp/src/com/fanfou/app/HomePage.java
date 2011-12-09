@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.AnimationDrawable;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -44,6 +45,7 @@ import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.service.FetchService;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionBar;
+import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.UIManager;
 import com.fanfou.app.ui.viewpager.TitlePageIndicator;
 import com.fanfou.app.ui.viewpager.TitleProvider;
@@ -77,6 +79,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.9 2011.12.02
  * @version 5.0 2011.12.05
  * @version 5.1 2011.12.06
+ * @version 5.2 2011.12.09
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
@@ -140,10 +143,10 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 		init();
 		setContentView(R.layout.home);
-		
-		View root=findViewById(R.id.root);
+
+		View root = findViewById(R.id.root);
 		ThemeHelper.setBackgroundColor(root);
-		
+
 		setActionBar();
 		setBottom();
 		setListViews();
@@ -159,14 +162,14 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				R.string.option_page_scroll_endless, false);
 		soundEffect = OptionHelper.readBoolean(
 				R.string.option_play_sound_effect, true);
-
-		ImageLoader.getInstance(this);
 		mHandler = new Handler();
-		initSendSuccessReceiver();
+		ImageLoader.getInstance();
 		initSoundManager();
+		initSendSuccessReceiver();
 	}
 
 	private void initSoundManager() {
+		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		SoundManager.getInstance();
 		SoundManager.initSounds(this);
 		SoundManager.loadSounds();
@@ -222,15 +225,15 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	 */
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		 mActionBar.setLeftAction(new HomeLogoAction());
+		mActionBar.setLeftAction(new HomeLogoAction());
 		mActionBar.setRightAction(new ActionBar.WriteAction(this, null));
 		mActionBar.setRefreshEnabled(this);
-		
-//		if(App.TEST){
-//			mActionBar.setTitle("测试版 "+App.appVersionName);
-//		}
+
+		// if(App.TEST){
+		// mActionBar.setTitle("测试版 "+App.appVersionName);
+		// }
 		if (App.DEBUG) {
-			mActionBar.setTitle("开发版 "+App.appVersionName);
+			mActionBar.setTitle("开发版 " + App.appVersionName);
 		}
 	}
 
@@ -305,9 +308,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		mViewPager.setOnPageChangeListener(this);
 		mViewPager.setAdapter(mViewAdapter);
 		mPageIndicator = (TitlePageIndicator) findViewById(R.id.viewindicator);
-		
+
 		ThemeHelper.setBackgroundColor(mPageIndicator);
-		
+
 		mPageIndicator.setTitleProvider(this);
 
 		if (initPage > 0) {
@@ -407,10 +410,10 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	private void initAdapters() {
-		adapters[0] = new StatusCursorAdapter(true,this, cursors[0]);
-		adapters[1] = new StatusCursorAdapter(true,this, cursors[1]);
+		adapters[0] = new StatusCursorAdapter(true, this, cursors[0]);
+		adapters[1] = new StatusCursorAdapter(true, this, cursors[1]);
 		adapters[2] = new MessageCursorAdapter(this, cursors[2]);
-		adapters[3] = new StatusCursorAdapter(true,this, cursors[3]);
+		adapters[3] = new StatusCursorAdapter(true, this, cursors[3]);
 	}
 
 	private void setAdapters() {
@@ -453,7 +456,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			return;
 		}
 		if (App.getApnType() != ApnType.WIFI) {
-			ImageLoader.getInstance(this).clearQueue();
+			App.getImageLoader().clearQueue();
 		}
 		Bundle b = new Bundle();
 		b.putInt(Commons.EXTRA_COUNT, FanFouApiConfig.DEFAULT_TIMELINE_COUNT);
@@ -636,14 +639,14 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	protected void onStop() {
 		super.onStop();
 		if (App.getApnType() != ApnType.WIFI) {
-			ImageLoader.getInstance(this).clearQueue();
+			App.getImageLoader().clearQueue();
 		}
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		ImageLoader.getInstance(this).shutdown();
+		App.getImageLoader().shutdown();
 		SoundManager.cleanup();
 		if (App.DEBUG) {
 			log("onDestroy()");
@@ -838,9 +841,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			onRefreshClick();
 			break;
 		case R.id.write_bottom:
-			Intent intent = new Intent(this, WritePage.class);
-			intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
-			startActivity(intent);
+			ActionManager.doWrite(this);
 			break;
 		default:
 			break;

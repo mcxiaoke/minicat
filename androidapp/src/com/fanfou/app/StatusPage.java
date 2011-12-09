@@ -109,7 +109,7 @@ public class StatusPage extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mLoader = ImageLoader.getInstance(this);
+		mLoader = App.getImageLoader();
 		setContentView(R.layout.status);
 
 		// View root=findViewById(R.id.root);

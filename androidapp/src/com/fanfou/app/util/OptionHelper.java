@@ -127,18 +127,6 @@ public final class OptionHelper {
 		sp.commit();
 	}
 	
-	public final static void cleanAlarmFlags() {
-		if (App.DEBUG) {
-			Log.d("App", "cleanAlarmFlags");
-		}
-		Editor editor = App.getPreferences().edit();
-		editor.remove(App.getApp().getString(R.string.option_set_auto_clean));
-		editor.remove(App.getApp().getString(R.string.option_set_auto_update));
-		editor.remove(App.getApp().getString(R.string.option_set_auto_complete));
-		editor.remove(App.getApp().getString(R.string.option_set_notification));
-		editor.commit();
-	}
-	
 	public final static void updateAccountInfo(final User u,
 			final OAuthToken otoken) {
 		Editor editor = App.getPreferences().edit();

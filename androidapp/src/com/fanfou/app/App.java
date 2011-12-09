@@ -1,6 +1,7 @@
 package com.fanfou.app;
 
 import java.util.TimeZone;
+import java.util.logging.Logger;
 
 import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
@@ -17,6 +18,8 @@ import com.fanfou.app.api.Api;
 import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.User;
 import com.fanfou.app.auth.OAuthToken;
+import com.fanfou.app.cache.IImageLoader;
+import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.NetworkHelper;
@@ -46,17 +49,17 @@ import com.fanfou.app.util.StringHelper;
 @ReportsCrashes(formKey = "", formUri = "http://apps.fanfou.com/andstat/cr/")
 public class App extends Application {
 
-	public static final boolean DEBUG = false;
-	public static final boolean TEST=true;
-	
+	public static final boolean DEBUG = true;
+	public static final boolean TEST = true;
+
 	public static boolean active = false;
-	public static boolean noConnection=false;
+	public static boolean noConnection = false;
 	public static boolean verified;
 	public static boolean mounted;
 
 	public static int appVersionCode;
 	public static String appVersionName;
-	
+
 	private static String sUserId;
 	private static String sUserScreenName;
 
@@ -66,11 +69,11 @@ public class App extends Application {
 	private static SharedPreferences sPreferences;
 	private static OAuthToken sToken;
 	private static ApnType sApnType;
-
+	private static IImageLoader sLoader;
 
 	@Override
 	public void onCreate() {
-		
+
 		super.onCreate();
 		init();
 		initAppInfo();
@@ -81,55 +84,50 @@ public class App extends Application {
 	}
 
 	private void init() {
-		if(DEBUG){
-//		         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll()
-//		                 .penaltyLog()
-//		                 .build());
-//		         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll()
-//		                 .penaltyLog()
-//		                 .penaltyDeath()
-//		                 .build());
+		if (DEBUG) {
+			// StrictMode.setThreadPolicy(new
+			// StrictMode.ThreadPolicy.Builder().detectAll()
+			// .penaltyLog()
+			// .build());
+			// StrictMode.setVmPolicy(new
+			// StrictMode.VmPolicy.Builder().detectAll()
+			// .penaltyLog()
+			// .penaltyDeath()
+			// .build());
 		}
-		
+
 		App.sInstance = this;
 		App.sApnType = NetworkHelper.getApnType(this);
-		App.sPreferences=PreferenceManager.getDefaultSharedPreferences(this);
+		App.sPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
 		DateTimeHelper.FANFOU_DATE_FORMAT.setTimeZone(TimeZone
 				.getTimeZone("GMT"));
 
 		if (DEBUG) {
-			java.util.logging.Logger.getLogger("org.apache.http").setLevel(
-					java.util.logging.Level.FINEST);
-			java.util.logging.Logger.getLogger("org.apache.http.wire")
-					.setLevel(java.util.logging.Level.FINER);
-			java.util.logging.Logger.getLogger("org.apache.http.headers")
-					.setLevel(java.util.logging.Level.OFF);
-			java.util.logging.Logger.getLogger("httpclient.wire.header")
-					.setLevel(java.util.logging.Level.FINEST);
-			java.util.logging.Logger.getLogger("httpclient.wire.content")
-					.setLevel(java.util.logging.Level.FINEST);
+			Logger.getLogger("org.apache.http.wire").setLevel(
+					java.util.logging.Level.FINE);
+			// Logger.getLogger("org.apache.http.headers")
+			// .setLevel(java.util.logging.Level.FINE);
 
 			// and shell command
 			// adb shell setprop log.tag.org.apache.http VERBOSE
 			// adb shell setprop log.tag.org.apache.http.wire VERBOSE
 			// adb shell setprop log.tag.org.apache.http.headers VERBOSE
-			// adb shell setprop log.tag.httpclient.wire.header VERBOSE
-			// adb shell setprop log.tag.httpclient.wire.content VERBOSE
 		}
 	}
 
 	private void initPreferences() {
-		PreferenceManager.setDefaultValues(this,R.xml.options, false);
-		sUserId = OptionHelper.readString(R.string.option_userid,
+		PreferenceManager.setDefaultValues(this, R.xml.options, false);
+		sUserId = OptionHelper.readString(R.string.option_userid, null);
+		sUserScreenName = OptionHelper.readString(R.string.option_username,
 				null);
-		sUserScreenName = OptionHelper.readString(R.string.option_username, null);
-		String oauthAccessToken = OptionHelper.readString(R.string.option_oauth_token, null);
-		String oauthAccessTokenSecret = OptionHelper.readString(R.string.option_oauth_token_secret, null);
+		String oauthAccessToken = OptionHelper.readString(
+				R.string.option_oauth_token, null);
+		String oauthAccessTokenSecret = OptionHelper.readString(
+				R.string.option_oauth_token_secret, null);
 		App.verified = !StringHelper.isEmpty(oauthAccessTokenSecret);
 		if (App.verified) {
-			sToken = new OAuthToken(oauthAccessToken,
-					oauthAccessTokenSecret);
+			sToken = new OAuthToken(oauthAccessToken, oauthAccessTokenSecret);
 		}
 	}
 
@@ -152,21 +150,21 @@ public class App extends Application {
 	}
 
 	private void versionCheck() {
-		if (DEBUG) {
-			Log.d("App", "versionCheck");
-		}
-		if (OptionHelper.readInt(R.string.option_old_version_code, 0) < appVersionCode) {
+		int oldVersionCode = OptionHelper.readInt(
+				R.string.option_old_version_code, 0);
+		if (oldVersionCode < appVersionCode) {
 			OptionHelper.saveInt(R.string.option_old_version_code,
 					appVersionCode);
 			AlarmHelper.cleanAlarmFlags(this);
-			AlarmHelper.setScheduledTasks(this);
 		}
+		if (DEBUG) {
+			Log.d("App", "versionCheck old=" + oldVersionCode + " current="
+					+ appVersionCode);
+		}
+		AlarmHelper.checkScheduledTasks(this);
 	}
 
-
-
-	public static void updateAccountInfo(final User u,
-			final OAuthToken otoken) {
+	public static void updateAccountInfo(final User u, final OAuthToken otoken) {
 		if (DEBUG) {
 			Log.d("App", "updateAccountInfo");
 		}
@@ -207,28 +205,28 @@ public class App extends Application {
 			((FanFouApi) App.sApi).setOAuthToken(sToken);
 		}
 	}
-	
-	public static Api getApi(){
+
+	public static Api getApi() {
 		return sApi;
 	}
-	
-	public static App getApp(){
+
+	public static App getApp() {
 		return sInstance;
 	}
-	
-	public static String getUserId(){
+
+	public static String getUserId() {
 		return sUserId;
 	}
-	
-	public static String getUserName(){
+
+	public static String getUserName() {
 		return sUserScreenName;
 	}
-	
-	public static OAuthToken getOAuthToken(){
+
+	public static OAuthToken getOAuthToken() {
 		return sToken;
 	}
-	
-	public static ApnType getApnType(){
+
+	public static ApnType getApnType() {
 		return sApnType;
 	}
 
@@ -239,9 +237,16 @@ public class App extends Application {
 	public static void setApnType(ApnType sApnType) {
 		App.sApnType = sApnType;
 	}
-	
-	public static SharedPreferences getPreferences(){
+
+	public static SharedPreferences getPreferences() {
 		return sPreferences;
+	}
+
+	public static IImageLoader getImageLoader() {
+		if (sLoader == null) {
+			sLoader = ImageLoader.getInstance();
+		}
+		return sLoader;
 	}
 
 	public static enum ApnType {

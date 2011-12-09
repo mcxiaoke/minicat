@@ -246,7 +246,7 @@ public class UserChoosePage extends BaseActivity implements
 	@Override
 	protected void onStop() {
 		super.onStop();
-		ImageLoader.getInstance(this).clearQueue();
+		App.getImageLoader().clearQueue();
 	}
 
 	@Override
