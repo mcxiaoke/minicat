@@ -147,7 +147,6 @@ public class ImageLoader implements IImageLoader, Runnable {
 			addTask(key, handler);
 		}
 		return bitmap;
-
 	}
 
 	@Override
@@ -160,7 +159,6 @@ public class ImageLoader implements IImageLoader, Runnable {
 			view.setImageResource(iconId);
 			addInnerTask(url, view);
 		} else {
-
 			view.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap, 6));
 		}
 	}
@@ -172,8 +170,7 @@ public class ImageLoader implements IImageLoader, Runnable {
 		if (App.DEBUG) {
 			Log.d(TAG, "addTask url=" + url + " handler=" + handler);
 		}
-		final Task pair = new Task(url, handler);
-		mTaskQueue.add(pair);
+		mTaskQueue.add(new Task(url, handler));
 	}
 
 	private void addInnerTask(String url, final ImageView view) {
@@ -183,8 +180,7 @@ public class ImageLoader implements IImageLoader, Runnable {
 		if (App.DEBUG) {
 			Log.d(TAG, "addInnerTask url=" + url + " mHandler=" + mHandler);
 		}
-		final Task pair = new Task(url, mHandler);
-		mTaskQueue.add(pair);
+		mTaskQueue.add(new Task(url, mHandler));
 		mViewsMap.put(url, view);
 	}
 
@@ -253,9 +249,9 @@ public class ImageLoader implements IImageLoader, Runnable {
 		@Override
 		public int compare(Task t1, Task t2) {
 			if (t1.timestamp > t2.timestamp) {
-				return 1;
-			} else if (t1.timestamp < t2.timestamp) {
 				return -1;
+			} else if (t1.timestamp < t2.timestamp) {
+				return 1;
 			} else {
 				return 0;
 			}

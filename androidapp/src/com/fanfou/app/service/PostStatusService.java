@@ -120,12 +120,12 @@ public class PostStatusService extends WakefulIntentService {
 					result = api.photosUpload(photo, text, null, location,
 							FanFouApiConfig.FORMAT_HTML,
 							FanFouApiConfig.MODE_LITE);
+					photo.delete();
 				}
-				photo.delete();
+
 			}
 			nm.cancel(0);
 			if (result != null && !result.isNull()) {
-//				IOHelper.storeStatus(this, result);
 				res = true;
 			}
 		} catch (ApiException e) {
