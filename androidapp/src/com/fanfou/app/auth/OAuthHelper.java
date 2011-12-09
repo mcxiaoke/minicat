@@ -19,6 +19,7 @@ import org.apache.http.protocol.HTTP;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.http.NetHelper;
 import com.fanfou.app.http.Parameter;
 import com.fanfou.app.util.Base64;
@@ -208,21 +209,24 @@ public final class OAuthHelper {
 			url = url.substring(0, index);
 		}
 		int slashIndex = url.indexOf("/", 8);
-		String baseURL = url.substring(0, slashIndex).toLowerCase();
-		int colonIndex = baseURL.indexOf(":", 8);
-		if (-1 != colonIndex) {
-			if (baseURL.startsWith("http://") && baseURL.endsWith(":80")) {
-				baseURL = baseURL.substring(0, colonIndex);
-			} else if (baseURL.startsWith("https://")
-					&& baseURL.endsWith(":443")) {
-				baseURL = baseURL.substring(0, colonIndex);
-			}
-		}
-		url = baseURL + url.substring(slashIndex);
-		if (App.DEBUG) {
-			Log.d(TAG, "constructRequestURL result=" + url);
-		}
-		return url;
+		
+		return FanFouApiConfig.API_DOMAIN+url.substring(slashIndex);
+		
+//		String baseURL = url.substring(0, slashIndex).toLowerCase();
+//		int colonIndex = baseURL.indexOf(":", 8);
+//		if (-1 != colonIndex) {
+//			if (baseURL.startsWith("http://") && baseURL.endsWith(":80")) {
+//				baseURL = baseURL.substring(0, colonIndex);
+//			} else if (baseURL.startsWith("https://")
+//					&& baseURL.endsWith(":443")) {
+//				baseURL = baseURL.substring(0, colonIndex);
+//			}
+//		}
+//		url = baseURL + url.substring(slashIndex);
+//		if (App.DEBUG) {
+//			Log.d(TAG, "constructRequestURL result=" + url);
+//		}
+//		return url;
 	}
 
 	static String encode(String value) {

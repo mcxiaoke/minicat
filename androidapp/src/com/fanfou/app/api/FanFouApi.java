@@ -98,7 +98,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 			throw new ApiException(statusCode, Parser.error(response));
 		} catch (IOException e) {
 			if (App.DEBUG) {
-				Log.e(TAG, e.getMessage() + " " + e.toString());
+				Log.e(TAG, e.toString());
 			}
 			throw new ApiException(ERROR_IO_EXCEPTION, e.toString(),
 					e.getCause());
