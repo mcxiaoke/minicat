@@ -150,7 +150,7 @@ public class StatusHelper {
 	private static final Pattern namePattern = Pattern.compile("@(.*?)\\s");
 	private static final int MAX_NAME_LENGTH = 12;
 
-	public static HashSet<String> getMentionedNames(String text) {
+	private static HashSet<String> getMentionedNames(String text) {
 
 		HashSet<String> names = new HashSet<String>();
 		Matcher m = namePattern.matcher(text);

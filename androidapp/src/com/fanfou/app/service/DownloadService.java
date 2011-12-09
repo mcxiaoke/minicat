@@ -50,9 +50,7 @@ import com.fanfou.app.util.Utils;
 public class DownloadService extends BaseIntentService {
 	private static final String TAG = DownloadService.class.getSimpleName();
 
-	public static final String APP_SITE_BASE_URL = "http://apps.fanfou.com/android/";
-	public static final String APP_UPDATE_SITE = APP_SITE_BASE_URL
-			+ "update.json";
+	public static final String UPDATE_VERSION_FILE = "http://apps.fanfou.com/android/update.json";
 
 	private static final int NOTIFICATION_PROGRESS_ID = 1;
 	private NotificationManager nm;
@@ -298,7 +296,7 @@ public class DownloadService extends BaseIntentService {
 	public static VersionInfo fetchVersionInfo() {
 		NetClient client = new NetClient();
 		try {
-			HttpResponse response = client.get(APP_UPDATE_SITE);
+			HttpResponse response = client.get(UPDATE_VERSION_FILE);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (App.DEBUG) {
 				Log.d(TAG, "statusCode=" + statusCode);

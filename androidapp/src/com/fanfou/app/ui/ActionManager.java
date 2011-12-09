@@ -42,6 +42,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.1 2011.11.09
  * @version 2.2 2011.11.11
  * @version 2.3 2011.11.21
+ * @version 2.4 2011.12.08
  * 
  */
 public final class ActionManager {
@@ -211,6 +212,8 @@ public final class ActionManager {
 				for (String name : names) {
 					sb.append("@").append(name).append(" ");
 				}
+			}else{
+				sb.append("@").append(status.userScreenName).append(" ");
 			}
 
 			Intent intent = new Intent(context, WritePage.class);
