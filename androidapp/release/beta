@@ -3,8 +3,6 @@
 if [ $1 ]; then
     file=$1
     echo "发布类型: 测试版"
-    echo "发布文件："${file}
-    scp $file sankuai@58.83.129.16:/opt/sankuai/apps.fanfou.com/android/test/
     echo "发布文件：fanfou.apk"
     scp $file sankuai@58.83.129.16:/opt/sankuai/apps.fanfou.com/android/test/fanfou.apk
     echo "文件已成功发布到测试站点."
