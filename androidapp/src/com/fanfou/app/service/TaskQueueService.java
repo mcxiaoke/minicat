@@ -82,8 +82,8 @@ public class TaskQueueService extends WakefulIntentService {
 					result = api.photosUpload(photo, d.text, null, null,
 							FanFouApiConfig.FORMAT_HTML,
 							FanFouApiConfig.MODE_LITE);
+					photo.delete();
 				}
-				photo.delete();
 			}
 			if (result != null && !result.isNull()) {
 //				IOHelper.storeStatus(this, result);

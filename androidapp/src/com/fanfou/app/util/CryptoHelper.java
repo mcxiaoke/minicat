@@ -11,10 +11,15 @@ import javax.crypto.spec.SecretKeySpec;
 
 import com.fanfou.app.App;
 
+/**
+ * @author mcxiaoke
+ * @version 1.0 2011.12.09
+ *
+ */
 public final class CryptoHelper {
 	private static final String EncodeAlgorithm = "DES";
 	private static final String HEX = "0123456789ABCDEF";
-	private static final String SECURE_KEY = "com.fanfou.app.#ertf%[$^(:_+@<>a$%nfo0}4u.c&%om$%";
+	private static final String SECURE_KEY = "g$#Tdg%$^mc[54jxiaoke";
 	private static CryptoHelper instance = null;
 
 	public static CryptoHelper getInstance() {
@@ -68,11 +73,11 @@ public final class CryptoHelper {
 		return null;
 	}
 
-	public Cipher getEncodeCipher() {
+	private Cipher getEncodeCipher() {
 		return this.getCipher(Cipher.ENCRYPT_MODE);
 	}
 
-	public Cipher getDecodeCipher() {
+	private Cipher getDecodeCipher() {
 		return this.getCipher(Cipher.DECRYPT_MODE);
 	}
 
@@ -192,7 +197,7 @@ public final class CryptoHelper {
 	public static String decrypt(String seed, String encrypted)
 			throws Exception {
 		byte[] rawKey = getRawKey(seed.getBytes());
-		byte[] enc = toByte(encrypted);
+		byte[] enc = encrypted.getBytes();
 		byte[] result = decrypt(rawKey, enc);
 		return new String(result);
 	}
@@ -223,20 +228,12 @@ public final class CryptoHelper {
 		byte[] decrypted = cipher.doFinal(encrypted);
 		return decrypted;
 	}
-
-	public static String toHex(String txt) {
-		return toHex(txt.getBytes());
-	}
-
-	public static String fromHex(String hex) {
-		return new String(toByte(hex));
-	}
 	
 	private static void appendHex(StringBuffer sb, byte b) {
 		sb.append(HEX.charAt((b >> 4) & 0x0f)).append(HEX.charAt(b & 0x0f));
 	}
 
-	public static byte[] toByte(String hexString) {
+	private static byte[] toByte(String hexString) {
 		int len = hexString.length() / 2;
 		byte[] result = new byte[len];
 		for (int i = 0; i < len; i++)
@@ -245,7 +242,7 @@ public final class CryptoHelper {
 		return result;
 	}
 
-	public static String toHex(byte[] buf) {
+	private static String toHex(byte[] buf) {
 		if (buf == null)
 			return "";
 		StringBuffer result = new StringBuffer(2 * buf.length);

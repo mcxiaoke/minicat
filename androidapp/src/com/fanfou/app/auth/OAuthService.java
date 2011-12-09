@@ -4,6 +4,7 @@ import java.util.List;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.message.BasicHeader;
 import com.fanfou.app.http.Parameter;
+import com.fanfou.app.util.CryptoHelper;
 
 /**
  * @author mcxiaoke

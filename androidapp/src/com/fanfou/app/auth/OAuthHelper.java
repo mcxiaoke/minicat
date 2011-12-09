@@ -34,6 +34,7 @@ import com.fanfou.app.util.Base64;
 public final class OAuthHelper {
 	public static final String OAUTH_VERSION1 = "1.0";
 	public static final String HMAC_SHA1 = "HmacSHA1";
+	public final static String KEY_SUFFIX="FE0687E249EBF374";
 	public static final Parameter OAUTH_SIGNATURE_METHOD = new Parameter(
 			"oauth_signature_method", "HMAC-SHA1");
 
@@ -316,4 +317,5 @@ public final class OAuthHelper {
 		return new SecretKeySpec(oauthSignature.getBytes(),
 				OAuthHelper.HMAC_SHA1);
 	}
+	
 }

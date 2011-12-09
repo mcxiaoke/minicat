@@ -92,6 +92,8 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 			}
 			if (statusCode == HTTP_OK) {
 				return new NetResponse(response);
+			}else if(statusCode==HTTP_UNAUTHORIZED){
+				throw new ApiException(statusCode, "验证失效，请重新登录");
 			}
 			throw new ApiException(statusCode, Parser.error(response));
 		} catch (IOException e) {
