@@ -210,9 +210,8 @@ public final class OAuthHelper {
 		}
 		int slashIndex = url.indexOf("/", 8);
 		
-		return FanFouApiConfig.API_DOMAIN+url.substring(slashIndex);
+		String baseURL = url.substring(0, slashIndex).toLowerCase();
 		
-//		String baseURL = url.substring(0, slashIndex).toLowerCase();
 //		int colonIndex = baseURL.indexOf(":", 8);
 //		if (-1 != colonIndex) {
 //			if (baseURL.startsWith("http://") && baseURL.endsWith(":80")) {
@@ -222,11 +221,12 @@ public final class OAuthHelper {
 //				baseURL = baseURL.substring(0, colonIndex);
 //			}
 //		}
-//		url = baseURL + url.substring(slashIndex);
-//		if (App.DEBUG) {
-//			Log.d(TAG, "constructRequestURL result=" + url);
-//		}
-//		return url;
+		
+		url = baseURL + url.substring(slashIndex);
+		if (App.DEBUG) {
+			Log.d(TAG, "constructRequestURL result=" + url);
+		}
+		return url;
 	}
 
 	static String encode(String value) {

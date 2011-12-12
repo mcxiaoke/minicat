@@ -164,7 +164,6 @@ public final class NetHelper {
 		HttpConnectionParams.setTcpNoDelay(params, true);
 		HttpProtocolParams.setUserAgent(params, "FanFou for Android/"
 				+ App.appVersionName);
-		HttpClientParams.setRedirecting(params, false);
 
 		SchemeRegistry schReg = new SchemeRegistry();
 		schReg.register(new Scheme("http", PlainSocketFactory
@@ -193,8 +192,6 @@ public final class NetHelper {
 		HttpConnectionParams.setTcpNoDelay(params, true);
 		HttpProtocolParams.setUserAgent(params, "FanFou for Android/"
 				+ App.appVersionName);
-
-		HttpClientParams.setRedirecting(params, false);
 
 		ConnManagerParams.setMaxConnectionsPerRoute(params,
 				new ConnPerRouteBean(MAX_TOTAL_CONNECTIONS));

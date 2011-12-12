@@ -17,10 +17,7 @@ package com.fanfou.app.api;
 public interface FanFouApiConfig {
 
 	public static final String HOST = "http://fanfou.com/";
-	public static final String API_DOMAIN_BASE = "api.fanfou.com";
-	public static final String API_DOMAIN = "http://" + API_DOMAIN_BASE;
-	 public static final String API_IP = "http://58.83.129.19";
-	public static final String API_BASE = API_IP;
+	public static final String API_BASE = "http://api.fanfou.com";
 	public static final String EXTENSION = ".json";
 	public static final int MAX_TIMELINE_COUNT = 60;
 	public static final int DEFAULT_TIMELINE_COUNT = 20;

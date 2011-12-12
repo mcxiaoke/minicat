@@ -36,7 +36,7 @@ public class OAuthService {
 		String authorization = OAuthHelper.buildOAuthHeader(
 				request.getMethod(), request.getURI().toString(), params,
 				mOAuthProvider, mOAuthToken);
-		request.addHeader(new BasicHeader("Host", FanFouApiConfig.API_DOMAIN_BASE));
+//		request.addHeader(new BasicHeader("Host", "api.fanfou.com"));
 		request.addHeader(new BasicHeader("Authorization", authorization));
 	}
 
