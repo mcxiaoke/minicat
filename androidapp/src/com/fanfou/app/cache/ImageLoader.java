@@ -71,8 +71,7 @@ public class ImageLoader implements IImageLoader, Runnable {
 		this.mExecutorService = Executors.newSingleThreadExecutor(new NameCountThreadFactory());
 		this.mCache = ImageCache.getInstance();
 		this.mViewsMap = new HashMap<String, ImageView>();
-//		this.mClient = new NetClient();
-		this.mClient=OAuthNetClient.getInstance();
+		this.mClient=new NetClient();
 		this.mHandler = new InnerHandler();
 		new Thread(this).start();
 		// this.mExecutorService.execute(this);

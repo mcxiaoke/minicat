@@ -135,7 +135,7 @@ public final class ImageCache implements ICache<Bitmap> {
 			}
 		} catch (FileNotFoundException e) {
 			if (App.DEBUG) {
-				Log.e(TAG, "loadFromFile: "+e.getMessage());
+				Log.d(TAG, "loadFromFile: "+e.getMessage());
 			}
 		} finally {
 			IOHelper.forceClose(fis);

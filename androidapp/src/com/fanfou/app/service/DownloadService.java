@@ -225,7 +225,6 @@ public class DownloadService extends BaseIntentService {
 		} finally {
 			IOHelper.forceClose(is);
 			IOHelper.forceClose(fos);
-			client.close();
 		}
 	}
 
@@ -328,7 +327,6 @@ public class DownloadService extends BaseIntentService {
 				e.printStackTrace();
 			}
 		} finally {
-			client.close();
 		}
 		return null;
 	}

@@ -22,6 +22,7 @@ import com.fanfou.app.http.NetRequest;
 import com.fanfou.app.http.NetResponse;
 import com.fanfou.app.http.OAuthNetClient;
 import com.fanfou.app.http.ResponseCode;
+import com.fanfou.app.util.Logger;
 import com.fanfou.app.util.StringHelper;
 
 /**
@@ -45,11 +46,11 @@ import com.fanfou.app.util.StringHelper;
  * @version 4.7 2011.12.02
  * @version 4.8 2011.12.05
  * @version 4.9 2011.12.06
+ * @version 5.0 2011.12.12
  * 
  */
 public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	private static final String TAG = FanFouApi.class.getSimpleName();
-	private OAuthNetClient conn;
 	private OAuthService oauth;
 
 	/**
@@ -62,8 +63,6 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	private FanFouApi() {
 		oauth = new OAuthService(new FanFouOAuthProvider());
 		oauth.setOAuthToken(App.getOAuthToken());
-		conn = OAuthNetClient.getInstance();
-		conn.setOAuthService(oauth);
 	}
 
 	public static FanFouApi newInstance() {
@@ -82,18 +81,16 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	 * @throws ApiException
 	 */
 	private NetResponse fetch(final NetRequest request) throws ApiException {
+		OAuthNetClient client=new OAuthNetClient(oauth);
 		try {
-			HttpResponse response = conn.exec(request);
+			HttpResponse response = client.open(request);
 			int statusCode = response.getStatusLine().getStatusCode();
-
 			if (App.DEBUG) {
 				log("fetch() url=" + request.url + " post=" + request.post
 						+ " statusCode=" + statusCode);
 			}
 			if (statusCode == HTTP_OK) {
 				return new NetResponse(response);
-			}else if(statusCode==HTTP_UNAUTHORIZED){
-				throw new ApiException(statusCode, "验证失效，请重新登录");
 			}
 			throw new ApiException(statusCode, Parser.error(response));
 		} catch (IOException e) {

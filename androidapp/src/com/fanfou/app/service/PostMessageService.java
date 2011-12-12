@@ -93,7 +93,7 @@ public class PostMessageService extends WakefulIntentService {
 								+ e.getMessage());
 			}
 			IOHelper.copyToClipBoard(this, content);
-			showFailedNotification("私信未发送，内容已保存到剪贴板",e.getMessage());
+			showFailedNotification("私信未发送，内容已保存到剪贴板",getString(R.string.connection_error_msg));
 		} finally {
 			nm.cancel(12);
 		}

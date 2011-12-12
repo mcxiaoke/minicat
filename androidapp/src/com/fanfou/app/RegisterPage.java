@@ -338,7 +338,6 @@ public class RegisterPage extends Activity implements OnClickListener {
 					}
 				}
 			}
-			client.close();
 			return result;
 		}
 	}

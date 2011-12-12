@@ -24,6 +24,7 @@ import com.fanfou.app.http.NetRequest;
  * @version 4.1 2011.12.02
  * @version 4.2 2011.12.05
  * @version 4.3 2011.12.07
+ * @version 4.4 2011.12.12
  * 
  */
 public class XAuthService {
@@ -47,7 +48,7 @@ public class XAuthService {
 		NetRequest nr = NetRequest.newBuilder()
 				.url(mOAuthProvider.getAccessTokenURL())
 				.header("Authorization", authorization).build();
-		NetClient client = new NetClient();
+		NetClient client =new NetClient();
 		HttpResponse response = client.exec(nr);
 		int statusCode = response.getStatusLine().getStatusCode();
 		String content = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
@@ -58,7 +59,6 @@ public class XAuthService {
 		if (statusCode == 200) {
 			return OAuthToken.from(content);
 		}
-		client.close();
 		throw new OAuthTokenException(Parser.error(content));
 	}
 }

@@ -18,6 +18,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.auth.OAuthService;
 
 /**
  * @author mcxiaoke
@@ -38,27 +39,14 @@ import com.fanfou.app.App;
  * @version 4.1 2011.12.02
  * @version 4.2 2011.12.05
  * @version 4.3 2011.12.07
+ * @version 5.0 2011.12.12
  * 
  */
 public class NetClient {
 
 	private static final String TAG = NetClient.class.getSimpleName();
 
-	private DefaultHttpClient mHttpClient;
-
 	public NetClient() {
-		prepareHttpClient();
-	}
-
-	private void prepareHttpClient() {
-		mHttpClient = NetHelper.newHttpClient();
-	}
-
-	public void close() {
-		if (mHttpClient != null) {
-			mHttpClient.getConnectionManager().shutdown();
-			mHttpClient = null;
-		}
 	}
 
 	public final Bitmap getBitmap(String url) throws IOException {
@@ -81,9 +69,8 @@ public class NetClient {
 
 	public final HttpResponse post(String url, List<Parameter> params)
 			throws IOException {
-		NetRequest nr = NetRequest.newBuilder().url(url).params(params).post()
-				.build();
-		return executeImpl(nr.request);
+		return executeImpl(NetRequest.newBuilder().url(url).params(params).post()
+				.build().request);
 	}
 
 	public HttpResponse exec(NetRequest cr) throws IOException {
@@ -97,26 +84,26 @@ public class NetClient {
 
 	protected void signRequest(NetRequest cr) {
 	}
+	
+	protected HttpClient getHttpClient(){
+		return NetHelper.newThreadSafeHttpClient();
+	}
 
 	private final HttpResponse executeImpl(HttpRequestBase request)
 			throws IOException {
-		NetHelper.setProxy(mHttpClient);
+		final HttpClient client=getHttpClient();
+		NetHelper.setProxy(client);
 		if (App.DEBUG) {
 			Log.d(TAG, "[Request] " + request.getRequestLine().toString());
 		}
-		HttpResponse response = mHttpClient.execute(request);
+		HttpResponse response = client.execute(request);
 		if (App.DEBUG) {
 			Log.d(TAG, "[Response] " + response.getStatusLine().toString());
 		}
 		return response;
 	}
+	
+	
 
-	protected DefaultHttpClient getHttpClient() {
-		return this.mHttpClient;
-	}
-
-	protected void setHttpClient(DefaultHttpClient mHttpClient) {
-		this.mHttpClient = mHttpClient;
-	}
 
 }

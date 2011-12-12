@@ -17,8 +17,10 @@ public class FanFouOAuthProvider implements OAuthProvider {
 	// 1EABD7AA1DD250E7981D6D9CE7E07DC907645E76ABEBF14B4E524F6D36597D3AFE0687E249EBF374
 	// SECURE_KEY = "g$#Tdg%$^mc[54jxiaoke";
 	// 这两个是反的，加密后，而且缺少最后一节
-	public static final String CONSUMER_KEY = "1EABD7AA1DD250E7981D6D9CE7E07DC907645E76ABEBF14B4E524F6D36597D3A";
-	public static final String CONSUMER_SECRET = "ECF318CA13B0E89CF847BC48BCBAECD64082AC3B7FE78C8D21B4FB5D98861344";
+//	public static final String CONSUMER_KEY = "1EABD7AA1DD250E7981D6D9CE7E07DC907645E76ABEBF14B4E524F6D36597D3A";
+//	public static final String CONSUMER_SECRET = "ECF318CA13B0E89CF847BC48BCBAECD64082AC3B7FE78C8D21B4FB5D98861344";
+	public static final String CONSUMER_KEY = "c403d5a51bde9cce58fe31f4cec06b0a";
+	public static final String CONSUMER_SECRET = "5da0bcda353f7d2fe8e3de01e3c97741";
 	
 	public FanFouOAuthProvider() {
 	}
@@ -55,7 +57,7 @@ public class FanFouOAuthProvider implements OAuthProvider {
 //			key = CryptoHelper.getInstance().decode(encoded);
 //		}
 //		return key;
-		return "c403d5a51bde9cce58fe31f4cec06b0a";
+		return CONSUMER_KEY;
 	}
 
 	@Override
@@ -65,7 +67,7 @@ public class FanFouOAuthProvider implements OAuthProvider {
 //			secret = CryptoHelper.getInstance().decode(encoded);
 //		}
 //		return secret;
-		return "5da0bcda353f7d2fe8e3de01e3c97741";
+		return CONSUMER_SECRET;
 	}
 
 }

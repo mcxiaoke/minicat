@@ -1,6 +1,5 @@
 package com.fanfou.app.http;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -9,12 +8,10 @@ import java.util.List;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
@@ -28,6 +25,7 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -35,25 +33,25 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.App.ApnType;
+import com.fanfou.app.util.Logger;
 import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.12.02
  * @version 1.1 2011.12.07
+ * @version 1.2 2011.12.12
  * 
  */
 public final class NetHelper {
-	private static final String TAG=NetHelper.class.getSimpleName();
-	public static final int SOCKET_BUFFER_SIZE = 16*1024;
-	public static final int CONNECTION_TIMEOUT_MS = 20000;
-	public static final int SOCKET_TIMEOUT_MS = 20000;
+	private static final String TAG = NetHelper.class.getSimpleName();
+	public static final int SOCKET_BUFFER_SIZE = 16 * 1024;
+	public static final int CONNECTION_TIMEOUT_MS = 30000;
+	public static final int SOCKET_TIMEOUT_MS = 30000;
 	public static final int MAX_TOTAL_CONNECTIONS = 20;
 	public static final int MAX_RETRY_TIMES = 3;
 
@@ -156,10 +154,35 @@ public final class NetHelper {
 		return containsFile;
 	}
 
-	public final static synchronized DefaultHttpClient newHttpClient() {
+	public final static DefaultHttpClient newSingleHttpClient() {
 		HttpParams params = new BasicHttpParams();
+		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+		HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+		HttpConnectionParams
+				.setConnectionTimeout(params, CONNECTION_TIMEOUT_MS);
+		HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT_MS);
+		HttpConnectionParams.setTcpNoDelay(params, true);
+		HttpProtocolParams.setUserAgent(params, "FanFou for Android/"
+				+ App.appVersionName);
+		HttpClientParams.setRedirecting(params, false);
 
-		HttpConnectionParams.setStaleCheckingEnabled(params, false);
+		SchemeRegistry schReg = new SchemeRegistry();
+		schReg.register(new Scheme("http", PlainSocketFactory
+				.getSocketFactory(), 80));
+		schReg.register(new Scheme("https",
+				SSLSocketFactory.getSocketFactory(), 443));
+		SingleClientConnManager manager = new SingleClientConnManager(params,
+				schReg);
+		DefaultHttpClient client = new DefaultHttpClient(manager, params);
+		client.addRequestInterceptor(new GzipRequestInterceptor());
+		client.addResponseInterceptor(new GzipResponseInterceptor());
+		client.setHttpRequestRetryHandler(new RequestRetryHandler(
+				MAX_RETRY_TIMES));
+		return client;
+	}
+
+	public final static DefaultHttpClient newThreadSafeHttpClient() {
+		HttpParams params = new BasicHttpParams();
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 		HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
 		HttpProtocolParams.setUseExpectContinue(params, true);
@@ -189,7 +212,30 @@ public final class NetHelper {
 		client.addResponseInterceptor(new GzipResponseInterceptor());
 		client.setHttpRequestRetryHandler(new RequestRetryHandler(
 				MAX_RETRY_TIMES));
+
 		return client;
+	}
+
+	private final static void setProxy(final HttpParams params) {
+		if (params == null) {
+			return;
+		}
+		ApnType type = App.getApnType();
+		if (type == ApnType.CTWAP) {
+			if (App.DEBUG) {
+				Log.d(TAG, "use proxy 10.0.0.200:80");
+			}
+			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
+					"10.0.0.200", 80));
+		} else if (type == ApnType.WAP) {
+			if (App.DEBUG) {
+				Log.d(TAG, "use proxy 10.0.0.172:80");
+			}
+			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
+					"10.0.0.172", 80));
+		} else {
+			params.removeParameter(ConnRoutePNames.DEFAULT_PROXY);
+		}
 	}
 
 	public final static void setProxy(final HttpClient client) {
