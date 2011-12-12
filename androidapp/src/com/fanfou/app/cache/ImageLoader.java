@@ -49,9 +49,9 @@ public class ImageLoader implements IImageLoader, Runnable {
 
 	private static final int CORE_POOL_SIZE = 2;
 
-	private final ExecutorService mExecutorService;
+//	private final ExecutorService mExecutorService;
 	private final PriorityBlockingQueue<Task> mTaskQueue = new PriorityBlockingQueue<Task>(
-			60, new TaskComparator());
+			60,new TaskComparator());
 	private final Map<String, ImageView> mViewsMap;
 	private final ImageCache mCache;
 	private final Handler mHandler;
@@ -68,7 +68,7 @@ public class ImageLoader implements IImageLoader, Runnable {
 		// this.mExecutorService =
 		// Executors.newFixedThreadPool(CORE_POOL_SIZE,new
 		// NameCountThreadFactory());
-		this.mExecutorService = Executors.newSingleThreadExecutor(new NameCountThreadFactory());
+//		this.mExecutorService = Executors.newSingleThreadExecutor(new NameCountThreadFactory());
 		this.mCache = ImageCache.getInstance();
 		this.mViewsMap = new HashMap<String, ImageView>();
 		this.mClient=new NetClient();
@@ -86,9 +86,9 @@ public class ImageLoader implements IImageLoader, Runnable {
 		while (true) {
 			try {
 				final Task task = mTaskQueue.take();
-//				download(task);
-				 final Worker worker = new Worker(task, mCache, mClient);
-				 mExecutorService.execute(worker);
+				download(task);
+//				 final Worker worker = new Worker(task, mCache, mClient);
+//				 mExecutorService.execute(worker);
 			} catch (InterruptedException e) {
 				if (App.DEBUG) {
 					e.printStackTrace();
@@ -214,7 +214,7 @@ public class ImageLoader implements IImageLoader, Runnable {
 		}
 	}
 
-	private static final class Task implements Comparable<Task> {
+	private static final class Task{
 		public final String url;
 		public final Handler handler;
 		public final long timestamp;
@@ -222,19 +222,19 @@ public class ImageLoader implements IImageLoader, Runnable {
 		public Task(String url, final Handler handler) {
 			this.url = url;
 			this.handler = handler;
-			this.timestamp = System.currentTimeMillis();
+			this.timestamp = System.nanoTime();
 		}
-
-		@Override
-		public int compareTo(Task another) {
-			if (timestamp > another.timestamp) {
-				return 1;
-			} else if (timestamp < another.timestamp) {
-				return -1;
-			} else {
-				return 0;
-			}
-		}
+//
+//		@Override
+//		public int compareTo(Task another) {
+//			if (timestamp > another.timestamp) {
+//				return 1;
+//			} else if (timestamp < another.timestamp) {
+//				return -1;
+//			} else {
+//				return 0;
+//			}
+//		}
 
 		@Override
 		public String toString() {
