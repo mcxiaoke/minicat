@@ -405,8 +405,7 @@ public class StatusPage extends BaseActivity {
 			public void handleMessage(Message msg) {
 				int what = msg.what;
 				if (what == ImageLoader.MESSAGE_FINISH) {
-					Bitmap bitmap = msg.getData().getParcelable(
-							ImageLoader.EXTRA_BITMAP);
+					Bitmap bitmap = (Bitmap) msg.obj;
 					if (App.DEBUG) {
 						Log.d(TAG, "handler onfinish bitmap=" + bitmap);
 					}

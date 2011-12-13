@@ -150,12 +150,20 @@ import android.os.Process;
  * second execution is attempted.)</li>
  * </ul>
  */
+/**
+ * @author mcxiaoke
+ * @version 1.1 2011.12.13
+ *
+ * @param <Params> init parameters
+ * @param <Progress> progress indicator type
+ * @param <Result> result type
+ */
 public abstract class UserTask<Params, Progress, Result> {
 	private static final String LOG_TAG = "UserTask";
 
 	private static final int CORE_POOL_SIZE = 1;
-	private static final int MAXIMUM_POOL_SIZE = 10;
-	private static final int KEEP_ALIVE = 10;
+	private static final int MAXIMUM_POOL_SIZE = 4;
+	private static final int KEEP_ALIVE = 4;
 
 	private static final BlockingQueue<Runnable> sWorkQueue = new LinkedBlockingQueue<Runnable>(
 			MAXIMUM_POOL_SIZE);
@@ -217,6 +225,7 @@ public abstract class UserTask<Params, Progress, Result> {
 		};
 
 		mFuture = new FutureTask<Result>(mWorker) {
+			@SuppressWarnings("unchecked")
 			@Override
 			protected void done() {
 				Message message;
@@ -313,7 +322,6 @@ public abstract class UserTask<Params, Progress, Result> {
 	 * @see #publishProgress(Object[])
 	 * @see #doInBackground(Object[])
 	 */
-	@SuppressWarnings({ "UnusedDeclaration" })
 	public void onProgressUpdate(Progress... values) {
 	}
 
@@ -467,10 +475,10 @@ public abstract class UserTask<Params, Progress, Result> {
 	}
 
 	private static class InternalHandler extends Handler {
-		@SuppressWarnings({ "unchecked", "RawUseOfParameterizedType" })
+		@SuppressWarnings({ "unchecked" })
 		@Override
 		public void handleMessage(Message msg) {
-			UserTaskResult result = (UserTaskResult) msg.obj;
+			UserTaskResult<?> result = (UserTaskResult<?>) msg.obj;
 			switch (msg.what) {
 			case MESSAGE_POST_RESULT:
 				// There is only one result
@@ -491,11 +499,13 @@ public abstract class UserTask<Params, Progress, Result> {
 		Params[] mParams;
 	}
 
-	@SuppressWarnings({ "RawUseOfParameterizedType" })
 	private static class UserTaskResult<Data> {
+
+		@SuppressWarnings("rawtypes")
 		final UserTask mTask;
 		final Data[] mData;
 
+		@SuppressWarnings("rawtypes")
 		UserTaskResult(UserTask task, Data... data) {
 			mTask = task;
 			mData = data;

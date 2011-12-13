@@ -31,6 +31,7 @@ import com.fanfou.app.util.ImageHelper;
  * @version 4.1 2011.12.06
  * @version 5.0 2011.12.08
  * @version 5.1 2011.12.09
+ * @version 5.2 2011.12.13
  * 
  */
 public class ImageLoader implements IImageLoader, Runnable {
@@ -41,7 +42,6 @@ public class ImageLoader implements IImageLoader, Runnable {
 	public static final int MESSAGE_ERROR = 1;
 
 	public static final String EXTRA_URL = "extra_url";
-	public static final String EXTRA_BITMAP = "extra_bitmap";
 
 	private static final int CORE_POOL_SIZE = 2;
 
@@ -99,31 +99,29 @@ public class ImageLoader implements IImageLoader, Runnable {
 		Handler handler = task.handler;
 		Bitmap bitmap = mCache.get(url);
 		if (bitmap == null) {
-			try {
-				bitmap = mClient.getBitmap(url);
-			} catch (IOException e) {
-				Log.e(TAG, "download error:" + e.getMessage());
-			}
-			if (bitmap != null) {
-				mCache.put(url, bitmap);
-				if (App.DEBUG) {
-					Log.d(TAG, "download put bitmap to cache ");
+			if (!isExpired(mViewsMap.get(url), url)) {
+				try {
+					bitmap = mClient.getBitmap(url);
+				} catch (IOException e) {
+					Log.e(TAG, "download error:" + e.getMessage());
+				}
+				if (bitmap != null) {
+					mCache.put(url, bitmap);
+					if (App.DEBUG) {
+						Log.d(TAG, "download put bitmap to cache ");
+					}
 				}
 			}
 		}
 		if (handler != null) {
 			final Message message = handler.obtainMessage();
-			if (bitmap != null) {
-				message.what = MESSAGE_FINISH;
-				message.getData().putParcelable(EXTRA_BITMAP, bitmap);
-			} else {
-				message.what = MESSAGE_ERROR;
-			}
+			message.getData().putString(EXTRA_URL, url);
+			message.what = bitmap == null ? MESSAGE_ERROR : MESSAGE_FINISH;
+			message.obj = bitmap;
+			handler.sendMessage(message);
 			if (App.DEBUG) {
 				Log.d(TAG, "download handle can use, bitmap= " + bitmap);
 			}
-			message.getData().putString(EXTRA_URL, url);
-			handler.sendMessage(message);
 		} else {
 			if (App.DEBUG) {
 				Log.d(TAG, "download handle is null, bitmap= " + bitmap);
@@ -190,8 +188,7 @@ public class ImageLoader implements IImageLoader, Runnable {
 			}
 			switch (msg.what) {
 			case MESSAGE_FINISH:
-				final Bitmap bitmap = (Bitmap) msg.getData().getParcelable(
-						EXTRA_BITMAP);
+				final Bitmap bitmap = (Bitmap) msg.obj;
 				if (bitmap != null && view != null) {
 					if (!isExpired(view, url)) {
 						if (App.DEBUG) {
@@ -291,7 +288,7 @@ public class ImageLoader implements IImageLoader, Runnable {
 				final Message message = handler.obtainMessage();
 				if (bitmap != null) {
 					message.what = MESSAGE_FINISH;
-					message.getData().putParcelable(EXTRA_BITMAP, bitmap);
+					message.obj = bitmap;
 				} else {
 					message.what = MESSAGE_ERROR;
 				}
@@ -322,6 +319,9 @@ public class ImageLoader implements IImageLoader, Runnable {
 	}
 
 	private static boolean isExpired(final ImageView view, String url) {
+		if (view == null) {
+			return true;
+		}
 		String tag = (String) view.getTag();
 		return tag == null || !tag.equals(url);
 	}
