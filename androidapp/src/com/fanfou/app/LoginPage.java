@@ -62,6 +62,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 	public static final String TAG = LoginPage.class.getSimpleName();
 
 	private LoginPage mContext;
+	private boolean destroyed;
 
 	private GoogleAnalyticsTracker g;
 	private int page;
@@ -236,6 +237,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		destroyed=true;
 		if (g != null) {
 			g.stopSession();
 		}
@@ -352,7 +354,9 @@ public final class LoginPage extends Activity implements OnClickListener {
 
 		@Override
 		protected void onPostExecute(ResultInfo result) {
-			progressDialog.dismiss();
+			if(progressDialog!=null&&!destroyed){
+				progressDialog.dismiss();
+			}
 			switch (result.code) {
 			case LOGIN_IO_ERROR:
 			case LOGIN_AUTH_FAILED:
