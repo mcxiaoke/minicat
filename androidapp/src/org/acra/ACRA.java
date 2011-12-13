@@ -19,6 +19,9 @@ import static org.acra.ReportField.*;
 
 import org.acra.annotation.ReportsCrashes;
 import org.acra.sender.HttpPostSender;
+
+import com.fanfou.app.App;
+
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -105,7 +108,10 @@ public class ACRA {
 	public static void init(Application app) {
 
 		if (mApplication != null) {
-			throw new IllegalStateException("ACRA#init called more than once");
+			if(App.DEBUG){
+				throw new IllegalStateException("ACRA#init called more than once");
+			}
+			return;
 		}
 
 		mApplication = app;
@@ -124,9 +130,11 @@ public class ACRA {
 		try {
 			checkCrashResources();
 
-			Log.d(LOG_TAG,
-					"ACRA is enabled for " + mApplication.getPackageName()
-							+ ", intializing...");
+			if(App.DEBUG){
+				Log.d(LOG_TAG,
+						"ACRA is enabled for " + mApplication.getPackageName()
+								+ ", intializing...");
+			}
 
 			// Initialize ErrorReporter with all required data
 			final boolean enableAcra = !shouldDisableACRA(prefs);
@@ -139,7 +147,9 @@ public class ACRA {
 			errorReporterSingleton = errorReporter;
 
 		} catch (ACRAConfigurationException e) {
-			Log.w(LOG_TAG, "Error : ", e);
+			if(App.DEBUG){
+				Log.w(LOG_TAG, "Error : ", e);
+			}
 		}
 
 		// We HAVE to keep a reference otherwise the listener could be garbage
