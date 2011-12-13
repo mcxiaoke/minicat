@@ -8,6 +8,7 @@ import android.widget.ImageView;
  * @author mcxiaoke
  * @version 1.0 2011.09.23
  * @version 1.1 2011.09.27
+ * @version 1.2 2011.12.13
  * 
  */
 public interface IImageLoader {
@@ -21,11 +22,5 @@ public interface IImageLoader {
 	void clearCache();
 
 	void clearQueue();
-
-	public interface ImageLoaderCallback {
-		void onFinish(String url, Bitmap bitmap);
-
-		void onError(String url, String message);
-	}
 
 }
