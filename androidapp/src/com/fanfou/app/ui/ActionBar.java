@@ -259,7 +259,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 			try {
 				mContext.startActivity(mIntent);
 			} catch (ActivityNotFoundException e) {
-				Utils.notify(mContext, R.string.actionbar_activity_not_found);
+				Utils.notify(mContext, "Activity Not Found.");
 			}
 		}
 	}

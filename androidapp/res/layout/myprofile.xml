@@ -35,11 +35,10 @@
 
 			<LinearLayout style="@style/Profile.Item" android:id="@id/user_statuses_view">
 				<TextView style="@style/Text.Large" android:id="@id/user_statuses_title"
-					android:text="我的消息" android:layout_alignParentLeft="true" />
+					android:text="我的消息" />
 				<View android:layout_width="0dp"
 					android:layout_height="0dp" android:layout_weight="1" />
-				<TextView android:id="@id/user_statuses" style="@style/Text.Small"
-					android:layout_alignParentRight="true" />
+				<TextView android:id="@id/user_statuses" style="@style/Text.Small" />
 			</LinearLayout>
 
 			<LinearLayout style="@style/Profile.Item" android:id="@id/user_favorites_view">

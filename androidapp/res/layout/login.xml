@@ -20,10 +20,9 @@
 			android:padding="20dp">
 
 			<EditText android:id="@+id/login_username" style="@style/EditText.Login"
-				android:layout_below="@id/actionbar" android:hint="输入饭否帐号/Email/手机号" />
+ android:hint="输入饭否帐号/Email/手机号" />
 
-			<EditText android:id="@+id/login_password" style="@style/EditText.Login"
-				android:layout_below="@id/login_username" android:hint="输入饭否密码"
+			<EditText android:id="@+id/login_password" style="@style/EditText.Login" android:hint="输入饭否密码"
 				android:inputType="textPassword" android:password="true" />
 
 

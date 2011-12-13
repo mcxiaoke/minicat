@@ -20,15 +20,15 @@
 			android:layout_below="@id/register_logo">
 
 			<EditText android:id="@+id/register_nickname" style="@style/EditText.Login"
-				android:layout_below="@id/actionbar" android:hint="输入昵称"
+ android:hint="输入昵称"
 				android:maxLength="12" />
 
 			<EditText android:id="@+id/register_email" style="@style/EditText.Login"
-				android:layout_below="@id/actionbar" android:hint="输入Email地址"
+ android:hint="输入Email地址"
 				android:inputType="textEmailAddress" />
 
 			<EditText android:id="@+id/register_password" style="@style/EditText.Login"
-				android:layout_below="@id/actionbar" android:hint="输入密码"
+ android:hint="输入密码"
 				android:password="true" android:inputType="textPassword"/>
 
 			<EditText android:id="@+id/register_password_confirm" style="@style/EditText.Login"

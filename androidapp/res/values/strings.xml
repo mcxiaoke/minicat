@@ -11,8 +11,6 @@
 	<string name="accessToken">accessToken</string>
 	<string name="accessTokenSecret">accessTokenSecret</string>
 
-	<string name="actionbar_activity_not_found">Failed to open intent...</string>
-
 	<string name="login_signup_web">Signup via Web</string>
 	<string name="login_signup_sms">Signup via Sms</string>
 

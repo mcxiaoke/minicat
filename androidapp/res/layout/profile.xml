@@ -52,13 +52,13 @@
 			<LinearLayout android:id="@id/user_statuses_view" style="@style/Profile.Item">
 
 				<TextView android:id="@id/user_statuses_title" style="@style/Text.Large"
-					android:layout_alignParentLeft="true" />
+					/>
 
 				<View android:layout_width="0dp"
 					android:layout_height="0dp" android:layout_weight="1" />
 
 				<TextView android:id="@id/user_statuses" style="@style/Text.Small"
-					android:layout_alignParentRight="true" />
+					/>
 			</LinearLayout>
 
 			<LinearLayout android:id="@id/user_favorites_view"
