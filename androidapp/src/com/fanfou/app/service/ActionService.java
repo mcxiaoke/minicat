@@ -24,6 +24,7 @@ import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -294,16 +295,7 @@ public class ActionService extends BaseIntentService {
 						"performAction: id=" + id + " type=" + type
 								+ e.getMessage());
 			}
-			String message = e.getMessage();
-			if (e.statusCode == ResponseCode.ERROR_IO_EXCEPTION
-					|| e.statusCode >= 500) {
-				message = getString(R.string.connection_error_msg);
-			}
-			Bundle b = new Bundle();
-			b.putInt(Commons.EXTRA_TYPE, type);
-			b.putInt(Commons.EXTRA_ERROR_CODE, e.statusCode);
-			b.putString(Commons.EXTRA_ERROR_MESSAGE, message);
-			receiver.send(Commons.RESULT_CODE_ERROR, b);
+			Utils.sendErrorMessage(this, receiver, e);
 		}
 	}
 }

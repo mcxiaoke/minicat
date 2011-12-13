@@ -24,6 +24,7 @@ import com.fanfou.app.util.IOHelper;
  * @version 1.1 2011.10.25
  * @version 2.0 2011.11.18
  * @version 2.1 2011.11.21
+ * @version 2.2 2011.12.13
  * 
  */
 public class PostMessageService extends WakefulIntentService {
@@ -93,8 +94,13 @@ public class PostMessageService extends WakefulIntentService {
 								+ e.getMessage());
 			}
 			IOHelper.copyToClipBoard(this, content);
-			showFailedNotification("私信未发送，内容已保存到剪贴板",
-					getString(R.string.connection_error_msg));
+			if (e.statusCode >= 500) {
+				showFailedNotification("私信未发送，内容已保存到剪贴板",
+						getString(R.string.msg_server_error));
+			} else {
+				showFailedNotification("私信未发送，内容已保存到剪贴板",
+						getString(R.string.msg_connection_error));
+			}
 		} finally {
 			nm.cancel(12);
 		}

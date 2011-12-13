@@ -14,7 +14,8 @@
 	<string name="login_signup_web">Signup via Web</string>
 	<string name="login_signup_sms">Signup via Sms</string>
 
-	<string name="connection_error_msg">connection error, please try again later.</string>
+	<string name="msg_connection_error">connection error, please try again later.</string>
+	<string name="msg_server_error">api server error, please try again later.</string>
 
 	<string name="crash_toast_text">Ooooops ! I crashed, but a report will be sent to
 		fanfou developers to help them fix the issue !</string>

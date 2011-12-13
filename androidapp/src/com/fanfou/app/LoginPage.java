@@ -312,7 +312,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 				if (App.DEBUG)
 					e.printStackTrace();
 				return new ResultInfo(LOGIN_IO_ERROR,
-						getString(R.string.connection_error_msg));
+						getString(R.string.msg_connection_error));
 			} catch (OAuthTokenException e) {
 				if (App.DEBUG)
 					e.printStackTrace();

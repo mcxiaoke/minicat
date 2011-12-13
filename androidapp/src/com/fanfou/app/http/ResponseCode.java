@@ -10,6 +10,7 @@ package com.fanfou.app.http;
  * @version 1.2 2011.05.17
  * @version 1.3 2011.10.28
  * @version 1.4 2011.11.21
+ * @version 1.5 2011.12.13
  * 
  */
 public interface ResponseCode {
@@ -18,9 +19,7 @@ public interface ResponseCode {
 	public static final int HTTP_UNAUTHORIZED = 401;// Not Authorized
 	public static final int HTTP_FORBIDDEN = 403;// Forbidden
 	public static final int HTTP_NOT_FOUND = 404;// Not Found
-	public static final int HTTP_INTERNAL_SERVER_ERROR = 500;// Internal Server
-	public static final int HTTP_BAD_GATEWAY = 502;// Bad Gateway
-	public static final int HTTP_SERVICE_UNAVAILABLE = 503;// Service
+	public static final int HTTP_SERVER_ERROR = 500;// Internal Server
 
 	public static final int ERROR_NORMAL = 0;
 	public static final int ERROR_IO_EXCEPTION = -1;

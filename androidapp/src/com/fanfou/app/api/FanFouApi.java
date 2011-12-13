@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 
+import org.acra.ErrorReporter;
 import org.apache.http.HttpResponse;
 import org.apache.http.protocol.HTTP;
 
@@ -96,14 +97,15 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 				return res;
 			}else if(statusCode==HTTP_UNAUTHORIZED){
 				throw new ApiException(statusCode, "验证信息失效，请重新登录");
-			}else{	
+			}
+			else{	
 				throw new ApiException(statusCode, Parser.error(res.getContent()));
 			}
 		} catch (IOException e) {
 			if (App.DEBUG) {
 				Log.e(TAG, e.toString());
 			}
-			throw new ApiException(ERROR_IO_EXCEPTION, e.toString(),
+			throw new ApiException(ERROR_IO_EXCEPTION, e.getMessage(),
 					e.getCause());
 		}
 	}

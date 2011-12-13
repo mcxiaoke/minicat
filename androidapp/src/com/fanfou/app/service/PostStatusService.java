@@ -128,9 +128,18 @@ public class PostStatusService extends WakefulIntentService {
 				res = true;
 			}
 		} catch (ApiException e) {
-			Log.e(TAG, e.toString());
-			showFailedNotification("消息未发送，已保存到草稿箱",
-					getString(R.string.connection_error_msg));
+			if (App.DEBUG) {
+				Log.e(TAG, e.toString());
+				e.printStackTrace();
+			}
+			if (e.statusCode >= 500) {
+				showFailedNotification("消息未发送，已保存到草稿箱",
+						getString(R.string.msg_server_error));
+			} else {
+				showFailedNotification("消息未发送，已保存到草稿箱",
+						getString(R.string.msg_connection_error));
+			}
+
 		} finally {
 			nm.cancel(0);
 		}

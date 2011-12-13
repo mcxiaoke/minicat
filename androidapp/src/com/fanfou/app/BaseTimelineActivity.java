@@ -35,6 +35,7 @@ import com.fanfou.app.util.Utils;
  * @version 3.1 2011.10.24
  * @version 3.2 2011.10.29
  * @version 3.3 2011.11.18
+ * @version 3.4 2011.12.13
  * 
  */
 public abstract class BaseTimelineActivity extends BaseActivity implements
@@ -233,7 +234,8 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 				break;
 			case Commons.RESULT_CODE_ERROR:
 				String msg = resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
-				Utils.notify(mContext, msg);
+				int errorCode=resultData.getInt(Commons.EXTRA_ERROR_CODE);
+				
 				if (!isInitialized) {
 					showContent();
 				}
@@ -242,6 +244,9 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 				} else {
 					mListView.onRefreshComplete();
 				}
+				
+				Utils.notify(mContext, msg);
+				Utils.checkAuthorization(mContext, errorCode);
 				break;
 			default:
 				break;

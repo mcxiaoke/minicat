@@ -79,6 +79,7 @@ import com.fanfou.app.util.Utils;
  * @version 5.0 2011.12.05
  * @version 5.1 2011.12.06
  * @version 5.2 2011.12.09
+ * @version 5.3 2011.12.13
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
@@ -768,12 +769,14 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			case Commons.RESULT_CODE_ERROR:
 				String errorMessage = resultData
 						.getString(Commons.EXTRA_ERROR_MESSAGE);
-				Utils.notify(mContext, errorMessage);
+				int errorCode = resultData.getInt(Commons.EXTRA_ERROR_CODE);
 				if (doGetMore) {
 					views[i].onLoadMoreComplete();
 				} else {
 					stopRefreshAnimation();
 				}
+				Utils.notify(mContext, errorMessage);
+				Utils.checkAuthorization(mContext, errorCode);
 				break;
 			default:
 				break;

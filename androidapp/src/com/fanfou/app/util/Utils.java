@@ -14,6 +14,8 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.ResultReceiver;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.WindowManager;
@@ -31,9 +33,11 @@ import com.fanfou.app.PhotoViewPage;
 import com.fanfou.app.R;
 import com.fanfou.app.SendPage;
 import com.fanfou.app.StatusPage;
+import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Commons;
+import com.fanfou.app.http.ResponseCode;
 
 /**
  * 
@@ -306,6 +310,29 @@ public final class Utils {
 			}
 		}
 		return false;
+	}
+	
+	public static void sendErrorMessage(Context context, ResultReceiver receiver,ApiException e) {
+
+		if (receiver != null) {
+			String message = e.getMessage();
+			if (e.statusCode == ResponseCode.ERROR_IO_EXCEPTION) {
+				message = context.getString(R.string.msg_connection_error);
+			}else if(e.statusCode >= 500){
+				message = context.getString(R.string.msg_server_error);
+			}
+			Bundle b = new Bundle();
+			b.putInt(Commons.EXTRA_ERROR_CODE, e.statusCode);
+			b.putString(Commons.EXTRA_ERROR_MESSAGE, message);
+			receiver.send(Commons.RESULT_CODE_ERROR, b);
+		}
+	}
+	
+	public static void checkAuthorization(Activity context, int statusCode){
+		if(statusCode==ResponseCode.HTTP_UNAUTHORIZED){
+			IntentHelper.goLoginPage(context);
+			context.finish();
+		}
 	}
 
 }

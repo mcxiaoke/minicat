@@ -41,6 +41,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.1 2011.11.09
  * @version 2.2 2011.11.18
  * @version 2.3 2011.11.21
+ * @version 2.4 2011.12.13
  * 
  */
 public class UserListPage extends BaseActivity implements OnRefreshListener,
@@ -295,9 +296,8 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 				updateUI();
 				break;
 			case Commons.RESULT_CODE_ERROR:
-				int code = resultData.getInt(Commons.EXTRA_ERROR_CODE);
 				String msg = resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
-				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+				int errorCode = resultData.getInt(Commons.EXTRA_ERROR_CODE);
 				if (!isInitialized) {
 					showContent();
 				}
@@ -306,6 +306,9 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 				} else {
 					mListView.onRefreshComplete();
 				}
+
+				Utils.notify(mContext, msg);
+				Utils.checkAuthorization(mContext, errorCode);
 				break;
 			default:
 				break;

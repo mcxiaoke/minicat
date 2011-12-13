@@ -227,7 +227,7 @@ public class RegisterPage extends Activity implements OnClickListener {
 					Log.e(TAG, e.toString());
 				}
 				return new ResultInfo(REGISTER_IO_ERROR,
-						getString(R.string.connection_error_msg));
+						getString(R.string.msg_connection_error));
 			}
 		}
 

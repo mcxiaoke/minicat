@@ -48,6 +48,7 @@ import com.fanfou.app.util.Utils;
  * @version 5.0 2011.11.18
  * @version 5.1 2011.11.21
  * @version 5.2 2011.11.22
+ * @version 5.3 2011.12.13
  * 
  */
 public class FetchService extends BaseIntentService {
@@ -158,7 +159,7 @@ public class FetchService extends BaseIntentService {
 			if (App.DEBUG) {
 				e.printStackTrace();
 			}
-			handleError(e);
+			Utils.sendErrorMessage(this, receiver, e);
 		}
 	}
 
@@ -231,7 +232,7 @@ public class FetchService extends BaseIntentService {
 			if (App.DEBUG) {
 				e.printStackTrace();
 			}
-			handleError(e);
+			Utils.sendErrorMessage(this, receiver, e);
 		} finally {
 			oc.close();
 			ic.close();
@@ -275,7 +276,7 @@ public class FetchService extends BaseIntentService {
 			if (App.DEBUG) {
 				e.printStackTrace();
 			}
-			handleError(e);
+			Utils.sendErrorMessage(this, receiver, e);
 		} finally {
 			oc.close();
 			ic.close();
@@ -424,7 +425,7 @@ public class FetchService extends BaseIntentService {
 						+ e.errorMessage);
 				e.printStackTrace();
 			}
-			handleError(e);
+			Utils.sendErrorMessage(this, receiver, e);
 		}
 	}
 
@@ -456,20 +457,7 @@ public class FetchService extends BaseIntentService {
 		return result;
 	}
 
-	private void handleError(ApiException e) {
 
-		if (receiver != null) {
-			String message = e.getMessage();
-			if (e.statusCode == ResponseCode.ERROR_IO_EXCEPTION
-					|| e.statusCode >= 500) {
-				message = getString(R.string.connection_error_msg);
-			}
-			Bundle b = new Bundle();
-			b.putInt(Commons.EXTRA_ERROR_CODE, e.statusCode);
-			b.putString(Commons.EXTRA_ERROR_MESSAGE, message);
-			receiver.send(Commons.RESULT_CODE_ERROR, b);
-		}
-	}
 
 	public static void start(Context context, int type,
 			ResultReceiver receiver, Bundle bundle) {
