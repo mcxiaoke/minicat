@@ -13,6 +13,7 @@ import android.util.Log;
 import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.WritePage;
+import com.fanfou.app.App.ApnType;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Draft;
@@ -33,6 +34,7 @@ import com.fanfou.app.util.OptionHelper;
  * @version 3.1 2011.11.22
  * @version 3.2 2011.11.28
  * @version 3.3 2011.12.05
+ * @version 3.4 2011.12.13
  * 
  */
 public class TaskQueueService extends WakefulIntentService {
@@ -70,9 +72,13 @@ public class TaskQueueService extends WakefulIntentService {
 							FanFouApiConfig.MODE_LITE);
 				}
 			} else {
-				int quality = OptionHelper.parseInt(
-						R.string.option_photo_quality,
-						String.valueOf(ImageHelper.IMAGE_QUALITY_MEDIUM));
+				int quality = ImageHelper.IMAGE_QUALITY_LOW;
+				ApnType apnType = App.getApnType();
+				if (apnType == ApnType.WIFI) {
+					quality = ImageHelper.IMAGE_QUALITY_HIGH;
+				} else if (apnType == ApnType.HSDPA) {
+					quality = ImageHelper.IMAGE_QUALITY_MEDIUM;
+				}
 				File photo = ImageHelper.prepareUploadFile(this, srcFile,
 						quality);
 				if (photo != null && photo.length() > 0) {
@@ -86,7 +92,7 @@ public class TaskQueueService extends WakefulIntentService {
 				}
 			}
 			if (result != null && !result.isNull()) {
-//				IOHelper.storeStatus(this, result);
+				// IOHelper.storeStatus(this, result);
 				res = true;
 			}
 		} catch (ApiException e) {
@@ -118,8 +124,8 @@ public class TaskQueueService extends WakefulIntentService {
 				cursor.moveToNext();
 			}
 		}
-		
-		int nums=0;
+
+		int nums = 0;
 		while (running) {
 			final Draft d = queue.poll();
 			if (d != null) {
@@ -139,11 +145,11 @@ public class TaskQueueService extends WakefulIntentService {
 				running = false;
 			}
 		}
-		if(nums>0){
+		if (nums > 0) {
 			sendSuccessBroadcast();
 		}
 	}
-	
+
 	private void sendSuccessBroadcast() {
 		Intent intent = new Intent(Actions.ACTION_STATUS_SENT);
 		intent.setPackage(getPackageName());

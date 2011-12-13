@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string-array name="photo_quality">
-		<item>高质量</item>
-		<item>中等质量</item>
-		<item>低质量</item>
-	</string-array>
-	<string-array name="photo_quality_values">
-		<item>95</item>
-		<item>80</item>
-		<item>70</item>
-	</string-array>
-
 	<string-array name="pic_level">
 		<item>原始图片</item>
 		<item>缩略图</item>

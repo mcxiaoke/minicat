@@ -1,6 +1,7 @@
 package com.fanfou.app.service;
 
 import java.io.File;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,6 +11,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.App.ApnType;
 import com.fanfou.app.DraftsPage;
 import com.fanfou.app.R;
 import com.fanfou.app.WritePage;
@@ -21,10 +23,7 @@ import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.DraftInfo;
-import com.fanfou.app.App.ApnType;
-import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.ImageHelper;
-import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
 
 /**
@@ -37,6 +36,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 3.0 2011.11.18
  * @version 3.1 2011.11.28
  * @version 3.2 2011.12.05
+ * @version 3.3 2011.12.13
  * 
  */
 public class PostStatusService extends WakefulIntentService {
@@ -103,13 +103,12 @@ public class PostStatusService extends WakefulIntentService {
 							FanFouApiConfig.MODE_LITE);
 				}
 			} else {
-				int quality = ImageHelper.IMAGE_QUALITY_MEDIUM;
-				if (App.getApnType() == ApnType.WIFI) {
+				int quality = ImageHelper.IMAGE_QUALITY_LOW;
+				ApnType apnType = App.getApnType();
+				if (apnType == ApnType.WIFI) {
 					quality = ImageHelper.IMAGE_QUALITY_HIGH;
-				} else {
-					quality = OptionHelper.parseInt(
-							R.string.option_photo_quality,
-							String.valueOf(ImageHelper.IMAGE_QUALITY_MEDIUM));
+				} else if (apnType == ApnType.HSDPA) {
+					quality = ImageHelper.IMAGE_QUALITY_MEDIUM;
 				}
 				File photo = ImageHelper.prepareUploadFile(this, srcFile,
 						quality);
@@ -129,8 +128,9 @@ public class PostStatusService extends WakefulIntentService {
 				res = true;
 			}
 		} catch (ApiException e) {
-			Log.e(TAG,e.toString());
-			showFailedNotification("消息未发送，已保存到草稿箱",getString(R.string.connection_error_msg));
+			Log.e(TAG, e.toString());
+			showFailedNotification("消息未发送，已保存到草稿箱",
+					getString(R.string.connection_error_msg));
 		} finally {
 			nm.cancel(0);
 		}

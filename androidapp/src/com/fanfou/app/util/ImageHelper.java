@@ -53,7 +53,7 @@ import com.fanfou.app.App;
  */
 final public class ImageHelper {
 	private static final String TAG = ImageHelper.class.getSimpleName();
-	public static final int IMAGE_QUALITY_HIGH = 90;
+	public static final int IMAGE_QUALITY_HIGH = 95;
 	public static final int IMAGE_QUALITY_MEDIUM = 80;
 	public static final int IMAGE_QUALITY_LOW = 70;
 	public static final int IMAGE_MAX_WIDTH = 500;// 640 596
