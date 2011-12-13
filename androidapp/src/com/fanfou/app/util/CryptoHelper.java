@@ -14,7 +14,7 @@ import com.fanfou.app.App;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.12.09
- *
+ * 
  */
 public final class CryptoHelper {
 	private static final String EncodeAlgorithm = "DES";
@@ -228,7 +228,7 @@ public final class CryptoHelper {
 		byte[] decrypted = cipher.doFinal(encrypted);
 		return decrypted;
 	}
-	
+
 	private static void appendHex(StringBuffer sb, byte b) {
 		sb.append(HEX.charAt((b >> 4) & 0x0f)).append(HEX.charAt(b & 0x0f));
 	}

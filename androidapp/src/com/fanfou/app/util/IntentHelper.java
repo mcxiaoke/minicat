@@ -12,7 +12,6 @@ import com.fanfou.app.App;
 import com.fanfou.app.HomePage;
 import com.fanfou.app.LoginPage;
 import com.fanfou.app.R;
-import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.config.Commons;
 
 public final class IntentHelper {

@@ -2,18 +2,17 @@ package com.fanfou.app.adapter;
 
 import java.util.List;
 
-import com.fanfou.app.App;
-import com.fanfou.app.R;
-import com.fanfou.app.api.Photo;
-import com.fanfou.app.cache.IImageLoader;
-import com.fanfou.app.cache.ImageLoader;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+
+import com.fanfou.app.App;
+import com.fanfou.app.R;
+import com.fanfou.app.api.Photo;
+import com.fanfou.app.cache.IImageLoader;
 
 public class PhotoAdapter extends BaseAdapter {
 
@@ -74,7 +73,8 @@ public class PhotoAdapter extends BaseAdapter {
 		final Photo photo = mImageList.get(position);
 		if (photo != null) {
 			holder.image.setTag(photo.thumbUrl);
-			mLoader.displayImage(photo.thumbUrl, holder.image, R.drawable.photo_frame);
+			mLoader.displayImage(photo.thumbUrl, holder.image,
+					R.drawable.photo_frame);
 		}
 
 		return convertView;

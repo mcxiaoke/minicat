@@ -17,8 +17,7 @@ public class LogoutDialogPreference extends DialogPreference {
 
 	public LogoutDialogPreference(BaseActivity context, AttributeSet attrs) {
 		super(context, attrs);
-		setSummary("当前登录帐号:" + App.getUserName() + "(" + App.getUserId()
-				+ ")");
+		setSummary("当前登录帐号:" + App.getUserName() + "(" + App.getUserId() + ")");
 	}
 
 	@Override

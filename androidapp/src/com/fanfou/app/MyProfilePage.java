@@ -18,14 +18,12 @@ import android.widget.Toast;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.cache.IImageLoader;
-import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.service.ActionService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.ThemeHelper;
 
 /**
  * @author mcxiaoke
@@ -93,9 +91,9 @@ public class MyProfilePage extends BaseActivity {
 
 	private void setLayout() {
 		setContentView(R.layout.myprofile);
-		
-//		View root=findViewById(R.id.root);
-//		ThemeHelper.setBackgroundColor(root);
+
+		// View root=findViewById(R.id.root);
+		// ThemeHelper.setBackgroundColor(root);
 
 		setActionBar();
 
@@ -187,7 +185,8 @@ public class MyProfilePage extends BaseActivity {
 		}
 
 		mHead.setTag(user.profileImageUrl);
-		mLoader.displayImage(user.profileImageUrl, mHead, R.drawable.default_head);
+		mLoader.displayImage(user.profileImageUrl, mHead,
+				R.drawable.default_head);
 		mName.setText(user.screenName);
 
 		mStatusesInfo.setText("" + user.statusesCount);

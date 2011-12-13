@@ -63,8 +63,10 @@ public class AutoCompleteService extends BaseIntentService {
 				.getSystemService(Context.ALARM_SERVICE);
 		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
 				interval, getPendingIntent(context));
-		if(App.DEBUG){
-			Log.d(TAG, "set repeat interval=3day first time="+DateTimeHelper.formatDate(c.getTime()));
+		if (App.DEBUG) {
+			Log.d(TAG,
+					"set repeat interval=3day first time="
+							+ DateTimeHelper.formatDate(c.getTime()));
 		}
 	}
 
@@ -72,7 +74,7 @@ public class AutoCompleteService extends BaseIntentService {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(getPendingIntent(context));
-		if(App.DEBUG){
+		if (App.DEBUG) {
 			Log.d(TAG, "unset");
 		}
 	}
@@ -80,12 +82,11 @@ public class AutoCompleteService extends BaseIntentService {
 	public static void setIfNot(Context context) {
 		boolean set = OptionHelper.readBoolean(
 				R.string.option_set_auto_complete, false);
-		if(App.DEBUG){
-			Log.d(TAG, "setIfNot flag="+set);
+		if (App.DEBUG) {
+			Log.d(TAG, "setIfNot flag=" + set);
 		}
 		if (!set) {
-			OptionHelper.saveBoolean(
-					R.string.option_set_auto_complete, true);
+			OptionHelper.saveBoolean(R.string.option_set_auto_complete, true);
 			set(context);
 		}
 	}

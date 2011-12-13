@@ -16,14 +16,14 @@
 
 package com.fanfou.app.preferences.colorpicker;
 
-import com.fanfou.app.R;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import com.fanfou.app.R;
 
 public class ColorPickerDialog extends Dialog implements
 		ColorPickerView.OnColorChangedListener, View.OnClickListener {

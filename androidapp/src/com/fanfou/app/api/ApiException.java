@@ -46,7 +46,8 @@ public class ApiException extends Exception {
 
 	@Override
 	public String toString() {
-		return new StringBuilder().append("code:").append(statusCode).append(" msg:").append(getMessage()).toString();
+		return new StringBuilder().append("code:").append(statusCode)
+				.append(" msg:").append(getMessage()).toString();
 	}
 
 }

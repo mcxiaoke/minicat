@@ -22,7 +22,6 @@ import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
-import com.fanfou.app.auth.FanFouOAuthProvider;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
@@ -30,7 +29,6 @@ import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.http.ResponseCode;
-import com.fanfou.app.util.CryptoHelper;
 import com.fanfou.app.util.Utils;
 
 /**

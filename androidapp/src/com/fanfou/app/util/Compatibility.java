@@ -5,8 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import com.fanfou.app.ui.widget.ScaleGestureDetector;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
@@ -15,6 +13,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
+
+import com.fanfou.app.ui.widget.ScaleGestureDetector;
 
 public class Compatibility {
 	private static final String LOG_TAG = Compatibility.class.getSimpleName();

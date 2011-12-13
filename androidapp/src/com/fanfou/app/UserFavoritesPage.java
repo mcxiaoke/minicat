@@ -1,13 +1,14 @@
 package com.fanfou.app;
 
+import android.database.Cursor;
+import android.os.Bundle;
+
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.service.FetchService;
-import android.database.Cursor;
-import android.os.Bundle;
 
 /**
  * @author mcxiaoke

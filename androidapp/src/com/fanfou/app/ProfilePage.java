@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.cache.IImageLoader;
-import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
@@ -31,7 +30,6 @@ import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -134,8 +132,8 @@ public class ProfilePage extends BaseActivity {
 		if (user != null) {
 			userId = user.id;
 		}
-		
-		if(App.getUserId().equals(userId)){
+
+		if (App.getUserId().equals(userId)) {
 			ActionManager.doMyProfile(this);
 			finish();
 		}
@@ -149,9 +147,9 @@ public class ProfilePage extends BaseActivity {
 
 	private void setLayout() {
 		setContentView(R.layout.profile);
-		
-//		View root=findViewById(R.id.root);
-//		ThemeHelper.setBackgroundColor(root);
+
+		// View root=findViewById(R.id.root);
+		// ThemeHelper.setBackgroundColor(root);
 
 		setActionBar();
 
@@ -255,13 +253,14 @@ public class ProfilePage extends BaseActivity {
 		if (App.DEBUG)
 			log("updateUI user.name=" + user.screenName);
 
-		boolean textMode = OptionHelper.readBoolean(
-				R.string.option_text_mode, false);
+		boolean textMode = OptionHelper.readBoolean(R.string.option_text_mode,
+				false);
 		if (textMode) {
 			mHead.setVisibility(View.GONE);
 		} else {
 			mHead.setTag(user.profileImageUrl);
-			mLoader.displayImage(user.profileImageUrl, mHead, R.drawable.default_head);
+			mLoader.displayImage(user.profileImageUrl, mHead,
+					R.drawable.default_head);
 		}
 
 		mName.setText(user.screenName);
@@ -302,11 +301,7 @@ public class ProfilePage extends BaseActivity {
 		updateFollowButton(user.following);
 
 		if (!noPermission) {
-			boolean need = OptionHelper.readBoolean(
-					R.string.option_fetch_relationships, false);
-			if (need) {
-				doFetchRelationshipInfo();
-			}
+			doFetchRelationshipInfo();
 		}
 	}
 

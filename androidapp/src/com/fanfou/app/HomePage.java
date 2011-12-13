@@ -37,10 +37,10 @@ import com.fanfou.app.api.Status;
 import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
-import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
+import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.service.FetchService;
 import com.fanfou.app.service.NotificationService;
@@ -54,7 +54,6 @@ import com.fanfou.app.ui.widget.EndlessListViewNoHeader.OnLoadDataListener;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.SoundManager;
-import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -143,9 +142,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 		init();
 		setContentView(R.layout.home);
-
-		View root = findViewById(R.id.root);
-		ThemeHelper.setBackgroundColor(root);
 
 		setActionBar();
 		setBottom();
@@ -308,9 +304,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		mViewPager.setOnPageChangeListener(this);
 		mViewPager.setAdapter(mViewAdapter);
 		mPageIndicator = (TitlePageIndicator) findViewById(R.id.viewindicator);
-
-		ThemeHelper.setBackgroundColor(mPageIndicator);
-
 		mPageIndicator.setTitleProvider(this);
 
 		if (initPage > 0) {

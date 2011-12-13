@@ -1,5 +1,12 @@
 package com.fanfou.app.widget;
 
+import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProvider;
+import android.content.Context;
+import android.content.Intent;
+import android.widget.RemoteViews;
+
 import com.fanfou.app.HomePage;
 import com.fanfou.app.MyProfilePage;
 import com.fanfou.app.R;
@@ -7,13 +14,6 @@ import com.fanfou.app.SearchPage;
 import com.fanfou.app.SplashPage;
 import com.fanfou.app.config.Actions;
 import com.fanfou.app.config.Commons;
-
-import android.app.PendingIntent;
-import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProvider;
-import android.content.Context;
-import android.content.Intent;
-import android.widget.RemoteViews;
 
 /**
  * @author mcxiaoke

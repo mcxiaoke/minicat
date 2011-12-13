@@ -22,7 +22,6 @@ import com.fanfou.app.http.NetRequest;
 import com.fanfou.app.http.NetResponse;
 import com.fanfou.app.http.OAuthNetClient;
 import com.fanfou.app.http.ResponseCode;
-import com.fanfou.app.util.Logger;
 import com.fanfou.app.util.StringHelper;
 
 /**
@@ -81,7 +80,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	 * @throws ApiException
 	 */
 	private NetResponse fetch(final NetRequest request) throws ApiException {
-		OAuthNetClient client=new OAuthNetClient(oauth);
+		OAuthNetClient client = new OAuthNetClient(oauth);
 		try {
 			HttpResponse response = client.open(request);
 			int statusCode = response.getStatusLine().getStatusCode();
@@ -368,9 +367,9 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		if (App.DEBUG) {
 			log("statusUpdate()---statusCode=" + statusCode);
 		}
-		Status s= Status.parse(response, Status.TYPE_HOME);
-		if(App.DEBUG){
-			log("statusesCreate "+s);
+		Status s = Status.parse(response, Status.TYPE_HOME);
+		if (App.DEBUG) {
+			log("statusesCreate " + s);
 		}
 		return s;
 	}
@@ -416,7 +415,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	public List<Status> search(String keyword, String sinceId, String maxId,
 			int count, String format, String mode) throws ApiException {
 		if (StringHelper.isEmpty(keyword)) {
-				throw new IllegalArgumentException("搜索词不能为空");
+			throw new IllegalArgumentException("搜索词不能为空");
 		}
 
 		NetRequest.Builder builder = new NetRequest.Builder();

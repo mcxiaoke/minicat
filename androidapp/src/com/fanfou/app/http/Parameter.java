@@ -1,6 +1,7 @@
 package com.fanfou.app.http;
 
 import java.io.File;
+
 import org.apache.http.NameValuePair;
 
 /**

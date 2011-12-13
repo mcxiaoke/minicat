@@ -1,12 +1,11 @@
 package com.fanfou.app.auth;
 
 import java.util.List;
+
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.message.BasicHeader;
 
-import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.http.Parameter;
-import com.fanfou.app.util.CryptoHelper;
 
 /**
  * @author mcxiaoke
@@ -36,7 +35,7 @@ public class OAuthService {
 		String authorization = OAuthHelper.buildOAuthHeader(
 				request.getMethod(), request.getURI().toString(), params,
 				mOAuthProvider, mOAuthToken);
-//		request.addHeader(new BasicHeader("Host", "api.fanfou.com"));
+		// request.addHeader(new BasicHeader("Host", "api.fanfou.com"));
 		request.addHeader(new BasicHeader("Authorization", authorization));
 	}
 

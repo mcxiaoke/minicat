@@ -13,18 +13,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+
 import com.fanfou.app.adapter.StatusCursorAdapter;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.ActionBar.Action;
+import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.UIManager;
 import com.fanfou.app.ui.widget.EndlessListView;
 import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
 import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -79,16 +79,13 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 	protected void initialize() {
 		mHandler = new ResultHandler();
 		mCursor = getCursor();
-		mCursorAdapter = new StatusCursorAdapter(true,this, mCursor);
+		mCursorAdapter = new StatusCursorAdapter(true, this, mCursor);
 
 	}
 
 	private void setLayout() {
 		setContentView(R.layout.list);
-		
-		View root=findViewById(R.id.root);
-		ThemeHelper.setBackgroundColor(root);
-		
+
 		setActionBar();
 
 		mEmptyView = (ViewGroup) findViewById(R.id.empty);
@@ -284,9 +281,9 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 
 	@Override
 	public void performAction(View view) {
-		String text=null;
+		String text = null;
 		if (user != null) {
-			text="@" + user.screenName + " ";
+			text = "@" + user.screenName + " ";
 		}
 		ActionManager.doWrite(this, text);
 	}

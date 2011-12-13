@@ -88,9 +88,9 @@ public final class ImageCache implements ICache<Bitmap> {
 			return false;
 		}
 		memoryCache.put(key, new SoftReference<Bitmap>(bitmap));
-		boolean result= writeToFile(key, bitmap);
+		boolean result = writeToFile(key, bitmap);
 		if (App.DEBUG) {
-			Log.d(TAG, "put() put to cache, write to disk result="+result);
+			Log.d(TAG, "put() put to cache, write to disk result=" + result);
 		}
 		return result;
 	}
@@ -126,16 +126,16 @@ public final class ImageCache implements ICache<Bitmap> {
 		String filename = StringHelper.md5(key) + ".jpg";
 		File file = new File(mCacheDir, filename);
 		FileInputStream fis = null;
-		Bitmap bitmap=null;
+		Bitmap bitmap = null;
 		try {
 			fis = new FileInputStream(file);
-			bitmap=BitmapFactory.decodeStream(fis);
+			bitmap = BitmapFactory.decodeStream(fis);
 			if (App.DEBUG) {
 				Log.d(TAG, "loadFromFile() key is " + key);
 			}
 		} catch (FileNotFoundException e) {
 			if (App.DEBUG) {
-				Log.d(TAG, "loadFromFile: "+e.getMessage());
+				Log.d(TAG, "loadFromFile: " + e.getMessage());
 			}
 		} finally {
 			IOHelper.forceClose(fis);

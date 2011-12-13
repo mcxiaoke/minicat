@@ -2,6 +2,16 @@ package com.fanfou.app;
 
 import java.io.File;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+
 import com.fanfou.app.adapter.DraftsCursorAdaper;
 import com.fanfou.app.api.Draft;
 import com.fanfou.app.config.Commons;
@@ -11,18 +21,7 @@ import com.fanfou.app.service.TaskQueueService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
-
-import android.content.Intent;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
 
 /**
  * @author mcxiaoke
@@ -46,10 +45,7 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 
 	private void setLayout() {
 		setContentView(R.layout.list_drafts);
-		
-		View root=findViewById(R.id.root);
-		ThemeHelper.setBackgroundColor(root);
-		
+
 		setActionBar();
 		setListView();
 

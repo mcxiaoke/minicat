@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.util.IntentHelper;
-import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -177,9 +176,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
 
 		this.mActionBar = (ViewGroup) mInflater.inflate(R.layout.actionbar,
 				null);
-		
-		ThemeHelper.setBackgroundColor(mActionBar);
-		
+
 		addView(mActionBar);
 		this.mLeftButton = (ImageView) mActionBar
 				.findViewById(R.id.actionbar_left);

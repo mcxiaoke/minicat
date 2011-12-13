@@ -331,7 +331,8 @@ public final class Parser implements ResponseCode {
 		if (App.DEBUG) {
 			Log.e(TAG, e.getMessage());
 		}
-		throw new ApiException(ERROR_JSON_EXCEPTION, e.getMessage(), e.getCause());
+		throw new ApiException(ERROR_JSON_EXCEPTION, e.getMessage(),
+				e.getCause());
 	}
 
 	static final Pattern PATTERN_SOURCE = Pattern

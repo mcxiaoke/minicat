@@ -6,15 +6,15 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.fanfou.app.App;
-import com.fanfou.app.api.Status;
-
 import android.text.Html;
 import android.text.Spannable;
 import android.text.style.URLSpan;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
+
+import com.fanfou.app.App;
+import com.fanfou.app.api.Status;
 
 /**
  * @author mcxiaoke

@@ -100,8 +100,10 @@ public class DownloadService extends BaseIntentService {
 				.getSystemService(Context.ALARM_SERVICE);
 		am.setInexactRepeating(AlarmManager.RTC, c.getTimeInMillis(), interval,
 				getPendingIntent(context));
-		if(App.DEBUG){
-			Log.d(TAG, "set interval=2day first time="+DateTimeHelper.formatDate(c.getTime()));
+		if (App.DEBUG) {
+			Log.d(TAG,
+					"set interval=2day first time="
+							+ DateTimeHelper.formatDate(c.getTime()));
 		}
 	}
 
@@ -109,7 +111,7 @@ public class DownloadService extends BaseIntentService {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(getPendingIntent(context));
-		if(App.DEBUG){
+		if (App.DEBUG) {
 			Log.d(TAG, "unset");
 		}
 	}
@@ -117,8 +119,8 @@ public class DownloadService extends BaseIntentService {
 	public static void setIfNot(Context context) {
 		boolean set = OptionHelper.readBoolean(R.string.option_set_auto_update,
 				false);
-		if(App.DEBUG){
-			Log.d(TAG, "setIfNot flag="+set);
+		if (App.DEBUG) {
+			Log.d(TAG, "setIfNot flag=" + set);
 		}
 		if (!set) {
 			OptionHelper.saveBoolean(R.string.option_set_auto_update, true);

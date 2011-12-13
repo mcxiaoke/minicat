@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.fanfou.app.adapter.UserCursorAdapter;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.User;
-import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
@@ -27,7 +26,6 @@ import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.ui.widget.EndlessListView;
 import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
-import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -114,10 +112,7 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 
 	private void setLayout() {
 		setContentView(R.layout.list_users);
-		
-		View root=findViewById(R.id.root);
-		ThemeHelper.setBackgroundColor(root);
-		
+
 		setActionBar();
 
 		mEmptyView = (ViewGroup) findViewById(R.id.empty);

@@ -1,7 +1,5 @@
 package com.fanfou.app.dialog;
 
-import com.fanfou.app.R;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +9,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.fanfou.app.R;
 
 /**
  * @author mcxiaoke

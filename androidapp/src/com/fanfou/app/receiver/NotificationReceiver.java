@@ -10,8 +10,8 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.HomePage;
-import com.fanfou.app.SendPage;
 import com.fanfou.app.R;
+import com.fanfou.app.SendPage;
 import com.fanfou.app.StatusPage;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;

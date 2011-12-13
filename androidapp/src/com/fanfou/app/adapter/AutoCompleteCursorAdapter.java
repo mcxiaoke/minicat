@@ -1,7 +1,5 @@
 package com.fanfou.app.adapter;
 
-import java.util.regex.Pattern;
-
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
@@ -32,14 +30,14 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 			.getSimpleName();
 
 	private Activity mContext;
-//	private Cursor mCursor;
+	// private Cursor mCursor;
 	private LayoutInflater mInflater;
 
 	public AutoCompleteCursorAdapter(Activity context, Cursor cursor) {
 		super(context, cursor);
 		mContext = context;
-		mInflater=LayoutInflater.from(mContext);
-//		mCursor = cursor;
+		mInflater = LayoutInflater.from(mContext);
+		// mCursor = cursor;
 	}
 
 	@Override
@@ -47,19 +45,19 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 		return cursor.getString(cursor.getColumnIndex(UserInfo.SCREEN_NAME));
 	}
 
-//	private static final Pattern PATTERN_SQL=Pattern.compile("[\\W]+");
+	// private static final Pattern PATTERN_SQL=Pattern.compile("[\\W]+");
 	@Override
 	public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
 		if (TextUtils.isEmpty(constraint)) {
 			return null;
 		}
-		
-//		String condition=PATTERN_SQL.matcher(constraint).replaceAll("");
-		if(App.DEBUG){
-			Log.d(TAG, "constraint = "+constraint);
-//			Log.d(TAG, "condition = "+condition);
+
+		// String condition=PATTERN_SQL.matcher(constraint).replaceAll("");
+		if (App.DEBUG) {
+			Log.d(TAG, "constraint = " + constraint);
+			// Log.d(TAG, "condition = "+condition);
 		}
-		
+
 		final String[] projection = new String[] { BaseColumns._ID,
 				UserInfo.ID, UserInfo.SCREEN_NAME, UserInfo.TYPE,
 				UserInfo.OWNER_ID };
@@ -71,17 +69,18 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 			Log.d(TAG, "runQueryOnBackgroundThread where=" + where);
 		}
 
-//		Cursor oldCursor = getCursor();
+		// Cursor oldCursor = getCursor();
 
-//		return mContext.getContentResolver().query(UserInfo.CONTENT_URI,
-//				projection, where, null, null);
-		
-		return mContext.managedQuery(UserInfo.CONTENT_URI, projection, where, null, null);
-//		if(oldCursor!=null){
-//			oldCursor.close();
-//			oldCursor = null;
-//		}
-//		return newCursor;
+		// return mContext.getContentResolver().query(UserInfo.CONTENT_URI,
+		// projection, where, null, null);
+
+		return mContext.managedQuery(UserInfo.CONTENT_URI, projection, where,
+				null, null);
+		// if(oldCursor!=null){
+		// oldCursor.close();
+		// oldCursor = null;
+		// }
+		// return newCursor;
 	}
 
 	@Override
@@ -95,7 +94,8 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		View view=mInflater.inflate(R.layout.list_item_autocomplete, parent,false);
+		View view = mInflater.inflate(R.layout.list_item_autocomplete, parent,
+				false);
 		return view;
 	}
 

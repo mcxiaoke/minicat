@@ -16,9 +16,9 @@
 
 package com.fanfou.app.util;
 
-import android.util.Log;
-
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import android.util.Log;
 
 /**
  * Base class for a task that runs at most one instance at any given moment.

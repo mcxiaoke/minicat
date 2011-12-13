@@ -1,6 +1,7 @@
 package com.fanfou.app.auth;
 
 import java.io.IOException;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.protocol.HTTP;
@@ -48,7 +49,7 @@ public class XAuthService {
 		NetRequest nr = NetRequest.newBuilder()
 				.url(mOAuthProvider.getAccessTokenURL())
 				.header("Authorization", authorization).build();
-		NetClient client =new NetClient();
+		NetClient client = new NetClient();
 		HttpResponse response = client.exec(nr);
 		int statusCode = response.getStatusLine().getStatusCode();
 		String content = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);

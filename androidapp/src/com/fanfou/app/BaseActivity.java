@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.ui.ActionBar.OnRefreshClickListener;
 import com.fanfou.app.ui.ActionManager;
@@ -275,8 +274,9 @@ public abstract class BaseActivity extends Activity implements
 	}
 
 	protected void onMenuFeedbackClick() {
-		ActionManager.doWrite(this, getString(R.string.config_feedback_account) + " ("
-				+ Build.MODEL + "-" + Build.VERSION.RELEASE + " "+App.appVersionName+") ");
+		ActionManager.doWrite(this, getString(R.string.config_feedback_account)
+				+ " (" + Build.MODEL + "-" + Build.VERSION.RELEASE + " "
+				+ App.appVersionName + ") ");
 	}
 
 	protected void onMenuHomeClick() {

@@ -2,6 +2,7 @@ package com.fanfou.app.ui;
 
 import java.io.File;
 import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,10 +15,10 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.DraftsPage;
-import com.fanfou.app.R;
-import com.fanfou.app.SendPage;
 import com.fanfou.app.MyProfilePage;
 import com.fanfou.app.ProfilePage;
+import com.fanfou.app.R;
+import com.fanfou.app.SendPage;
 import com.fanfou.app.UserFavoritesPage;
 import com.fanfou.app.UserListPage;
 import com.fanfou.app.UserTimelinePage;
@@ -226,7 +227,7 @@ public final class ActionManager {
 		}
 
 	}
-	
+
 	public static void doWrite(Context context, String text, File file, int type) {
 		Intent intent = new Intent(context, WritePage.class);
 		intent.putExtra(Commons.EXTRA_TYPE, type);
@@ -234,13 +235,13 @@ public final class ActionManager {
 		intent.putExtra(Commons.EXTRA_FILE, file);
 		context.startActivity(intent);
 	}
-	
+
 	public static void doWrite(Context context, String text, int type) {
 		doWrite(context, text, null, type);
 	}
 
 	public static void doWrite(Context context, String text) {
-		doWrite(context, text,WritePage.TYPE_NORMAL);
+		doWrite(context, text, WritePage.TYPE_NORMAL);
 	}
 
 	public static void doWrite(Context context) {

@@ -33,7 +33,6 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 
 	private int mMentionedBgColor;// = 0x332266aa;
 	private int mSelfBgColor;// = 0x33999999;
-	private boolean mUseHighlight;
 	private boolean colored;
 
 	public static final String TAG = StatusCursorAdapter.class.getSimpleName();
@@ -61,22 +60,16 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 	private void init(Context context, boolean colored) {
 		this.colored = colored;
 		if (colored) {
-			mUseHighlight = OptionHelper.readBoolean(
-					R.string.option_color_use_highlight, true);
-			if (mUseHighlight) {
-				mMentionedBgColor = OptionHelper.readInt(
-						R.string.option_color_highlight_mention,
-						context.getResources()
-								.getColor(R.color.mentioned_color));
-				mSelfBgColor = OptionHelper.readInt(
-						R.string.option_color_highlight_self, context
-								.getResources().getColor(R.color.self_color));
-				if (App.DEBUG) {
-					log("init mMentionedBgColor="
-							+ Integer.toHexString(mMentionedBgColor));
-					log("init mSelfBgColor="
-							+ Integer.toHexString(mSelfBgColor));
-				}
+			mMentionedBgColor = OptionHelper.readInt(
+					R.string.option_color_highlight_mention, context
+							.getResources().getColor(R.color.mentioned_color));
+			mSelfBgColor = OptionHelper.readInt(
+					R.string.option_color_highlight_self, context
+							.getResources().getColor(R.color.self_color));
+			if (App.DEBUG) {
+				log("init mMentionedBgColor="
+						+ Integer.toHexString(mMentionedBgColor));
+				log("init mSelfBgColor=" + Integer.toHexString(mSelfBgColor));
 			}
 		}
 	}
@@ -142,7 +135,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 
 		final Status s = Status.parse(cursor);
 
-		if (mUseHighlight && colored) {
+		if (colored) {
 			int itemType = getItemViewType(cursor.getPosition());
 			switch (itemType) {
 			case MENTION:

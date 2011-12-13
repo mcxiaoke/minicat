@@ -490,7 +490,7 @@ final public class ImageHelper {
 					OUTPUT_BUFFER_SIZE);
 			return bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
 		} catch (IOException e) {
-			if(App.DEBUG){
+			if (App.DEBUG) {
 				Log.d(TAG, "writeToFile:" + e.getMessage());
 			}
 		} finally {

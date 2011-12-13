@@ -15,14 +15,12 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.util.Log;
 
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.preferences.SeekBarPreference;
 import com.fanfou.app.preferences.colorpicker.ColorPickerPreference;
 import com.fanfou.app.service.DownloadService;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.update.VersionInfo;
 import com.fanfou.app.util.IntentHelper;
-import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -34,6 +32,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.7 2011.11.25
  * @version 2.0 2011.12.02
  * @version 2.1 2011.12.05
+ * @version 2.2 2011.12.13
  * 
  */
 public class SettingsPage extends PreferenceActivity implements
@@ -77,9 +76,6 @@ public class SettingsPage extends PreferenceActivity implements
 
 		addPreferencesFromResource(R.xml.options);
 
-		ListPreference photoQuality = (ListPreference) findPreference(getText(R.string.option_photo_quality));
-		photoQuality.setSummary(photoQuality.getEntry());
-
 		ListPreference picLevel = (ListPreference) findPreference(getText(R.string.option_pic_level));
 		picLevel.setSummary(picLevel.getEntry());
 
@@ -95,12 +91,6 @@ public class SettingsPage extends PreferenceActivity implements
 		Preference currentAccount = findPreference(getText(R.string.option_current_account));
 		currentAccount.setSummary("" + App.getUserName() + "("
 				+ App.getUserId() + ")");
-
-		Preference resetColor = findPreference(getText(R.string.option_color_reset_all));
-		resetColor.setOnPreferenceClickListener(this);
-
-		Preference useHightlight = findPreference(getText(R.string.option_color_use_highlight));
-		// useHightlight.setOnPreferenceClickListener(this);
 
 		Preference checkUpdate = findPreference(getText(R.string.option_check_update));
 		checkUpdate.setOnPreferenceClickListener(this);
@@ -142,11 +132,6 @@ public class SettingsPage extends PreferenceActivity implements
 		IntentHelper.sendFeedback(this, "");
 	}
 
-	private void resetColor() {
-		OptionHelper.resetColor();
-		Utils.notify(this, "已清除所有自定义颜色设置");
-	}
-
 	@Override
 	public boolean onPreferenceClick(Preference preference) {
 		if (App.DEBUG) {
@@ -157,9 +142,6 @@ public class SettingsPage extends PreferenceActivity implements
 		} else if (preference.getKey().equals(
 				getString(R.string.option_feedback))) {
 			feedback();
-		} else if (preference.getKey().equals(
-				getString(R.string.option_color_reset_all))) {
-			resetColor();
 		}
 		return true;
 	}
@@ -200,10 +182,7 @@ public class SettingsPage extends PreferenceActivity implements
 			ColorPickerPreference cp = (ColorPickerPreference) p;
 			cp.setPreviewColor();
 			needRestart = true;
-		} else if (key.equals(getString(R.string.option_color_use_highlight))) {
-			needRestart = true;
-		}
-		else if (p instanceof ListPreference) {
+		} else if (p instanceof ListPreference) {
 			ListPreference lp = (ListPreference) p;
 			lp.setSummary(lp.getEntry());
 		}

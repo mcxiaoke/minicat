@@ -2,14 +2,14 @@ package com.fanfou.app.api;
 
 import java.util.Date;
 
-import com.fanfou.app.db.Contents.DraftInfo;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.BaseColumns;
 import android.util.Log;
+
+import com.fanfou.app.db.Contents.DraftInfo;
 
 /**
  * @author mcxiaoke

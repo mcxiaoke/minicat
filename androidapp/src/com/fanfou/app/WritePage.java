@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.fanfou.app.adapter.AtTokenizer;
 import com.fanfou.app.adapter.AutoCompleteCursorAdapter;
 import com.fanfou.app.api.Draft;
@@ -39,7 +40,6 @@ import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.ImageHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -57,6 +57,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.2 2011.11.18
  * @version 4.4 2011.11.21
  * @version 4.5 2011.12.05
+ * @version 4.6 2011.12.13
  * 
  */
 public class WritePage extends BaseActivity {
@@ -355,9 +356,6 @@ public class WritePage extends BaseActivity {
 
 		setContentView(R.layout.write);
 
-		View root = findViewById(R.id.root);
-		ThemeHelper.setBackgroundColor(root);
-
 		setActionBar();
 		setAutoComplete();
 
@@ -411,13 +409,7 @@ public class WritePage extends BaseActivity {
 		if (StringHelper.isEmpty(content)) {
 			super.onBackPressed();
 		} else {
-			boolean needConfirm = OptionHelper.readBoolean(
-					R.string.option_save_on_back_press, true);
-			if (needConfirm) {
-				checkSave();
-			} else {
-				super.onBackPressed();
-			}
+			checkSave();
 		}
 
 	}

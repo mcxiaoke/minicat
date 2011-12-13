@@ -1,16 +1,12 @@
 package com.fanfou.app.http;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,7 +14,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
-import com.fanfou.app.auth.OAuthService;
 
 /**
  * @author mcxiaoke
@@ -69,8 +64,8 @@ public class NetClient {
 
 	public final HttpResponse post(String url, List<Parameter> params)
 			throws IOException {
-		return executeImpl(NetRequest.newBuilder().url(url).params(params).post()
-				.build().request);
+		return executeImpl(NetRequest.newBuilder().url(url).params(params)
+				.post().build().request);
 	}
 
 	public HttpResponse exec(NetRequest cr) throws IOException {
@@ -84,14 +79,14 @@ public class NetClient {
 
 	protected void signRequest(NetRequest cr) {
 	}
-	
-	protected HttpClient getHttpClient(){
+
+	protected HttpClient getHttpClient() {
 		return NetHelper.newThreadSafeHttpClient();
 	}
 
 	private final HttpResponse executeImpl(HttpRequestBase request)
 			throws IOException {
-		final HttpClient client=getHttpClient();
+		final HttpClient client = getHttpClient();
 		NetHelper.setProxy(client);
 		if (App.DEBUG) {
 			Log.d(TAG, "[Request] " + request.getRequestLine().toString());
@@ -102,8 +97,5 @@ public class NetClient {
 		}
 		return response;
 	}
-	
-	
-
 
 }

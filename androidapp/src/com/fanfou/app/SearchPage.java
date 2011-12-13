@@ -20,7 +20,6 @@ import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Search;
 import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.util.ThemeHelper;
 
 /**
  * @author mcxiaoke
@@ -53,10 +52,7 @@ public class SearchPage extends BaseActivity implements OnItemClickListener {
 
 	private void setLayout() {
 		setContentView(R.layout.search);
-		
-		View root=findViewById(R.id.root);
-		ThemeHelper.setBackgroundColor(root);
-		
+
 		setActionBar();
 		mEmptyView = findViewById(R.id.empty);
 		TextView tv = (TextView) findViewById(R.id.empty_text);

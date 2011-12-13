@@ -15,15 +15,8 @@
     <string name="option_fontsize">fontsize</string>
     <string name="option_text_mode">text_mode</string>
     <string name="option_pic_level">pic_level</string>
-    <string name="option_color_use_custom">color_use_custom</string>
-    <string name="option_color_use_highlight">color_use_highlight</string>
     <string name="option_color_highlight_mention">color_highlight_mention</string>
     <string name="option_color_highlight_self">color_highlight_self</string>
-    <string name="option_color_background">color_timeline_background</string>
-    <string name="option_color_name">color_timeline_item_name</string>
-    <string name="option_color_text">color_timeline_item_text</string>
-    <string name="option_color_metainfo">color_timeline_item_metainfo</string>
-    <string name="option_color_reset_all">color_reset_all</string>
     <string name="option_bottom_refresh_icon">bottom_refresh_icon</string>
     <string name="option_bottom_write_icon">bottom_write_icon</string>
     <string name="option_version">app_version</string>
@@ -32,7 +25,6 @@
     <string name="option_refresh_after_send">refresh_after_send</string>
     <string name="option_reply_to_all_default">reply_to_all_default</string>
     <string name="option_fast_scroll_on">fast_scroll_on</string>
-    <string name="option_save_on_back_press">save_on_back_press</string>
     <string name="option_send_on_enter">send_on_enter</string>
     <string name="option_show_splash_screen">show_splash_screen</string>
     <string name="option_confirm_on_exit">confirm_on_exit</string>
@@ -42,9 +34,7 @@
     <string name="option_website">website</string>
     <string name="option_check_update">check_update</string>
     <string name="option_autoupdate">autoupdate</string>
-    <string name="option_autoupdate_interval">autoupdate_interval</string>
     <string name="option_current_account">current_account</string>
-    <string name="option_fetch_relationships">fetch_relationships</string>
     <string name="option_clear_data_and_settings">clear_data_and_settings</string>
     <string name="option_logout">logout</string>
     <string name="option_cleanpic">cleanpic</string>

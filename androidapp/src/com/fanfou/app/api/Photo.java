@@ -5,13 +5,13 @@ import java.util.Date;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.fanfou.app.App;
-import com.fanfou.app.db.Contents.StatusInfo;
-import com.fanfou.app.http.ResponseCode;
-
 import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.fanfou.app.App;
+import com.fanfou.app.db.Contents.StatusInfo;
+import com.fanfou.app.http.ResponseCode;
 
 /**
  * @author mcxiaoke

@@ -16,20 +16,18 @@
 
 package com.fanfou.app.preferences.colorpicker;
 
-import com.fanfou.app.App;
-
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Bitmap.Config;
+import android.graphics.Color;
 import android.preference.Preference;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.fanfou.app.App;
 
 /**
  * A preference type that allows a user to choose a time
@@ -39,7 +37,8 @@ import android.widget.LinearLayout;
 public class ColorPickerPreference extends Preference implements
 		Preference.OnPreferenceClickListener,
 		ColorPickerDialog.OnColorChangedListener {
-	private static final String TAG=ColorPickerPreference.class.getSimpleName();
+	private static final String TAG = ColorPickerPreference.class
+			.getSimpleName();
 
 	View mView;
 	int mDefaultValue = Color.BLACK;
@@ -71,7 +70,7 @@ public class ColorPickerPreference extends Preference implements
 	}
 
 	private void init(Context context, AttributeSet attrs) {
-		if(App.DEBUG){
+		if (App.DEBUG) {
 			Log.d(TAG, "init");
 		}
 		mDensity = getContext().getResources().getDisplayMetrics().density;
@@ -156,8 +155,7 @@ public class ColorPickerPreference extends Preference implements
 		} catch (ClassCastException e) {
 			mValue = mDefaultValue;
 		}
-		Log.d(TAG, "getValue(): "
-				+ Integer.toHexString(mValue));
+		Log.d(TAG, "getValue(): " + Integer.toHexString(mValue));
 		return mValue;
 	}
 

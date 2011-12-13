@@ -19,8 +19,7 @@ class BasicNetClient extends NetClient {
 		createBasicAuthHeader();
 	}
 
-	static final BasicNetClient newInstance(String username,
-			String password) {
+	static final BasicNetClient newInstance(String username, String password) {
 		return new BasicNetClient(username, password);
 	}
 

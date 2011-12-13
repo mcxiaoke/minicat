@@ -35,13 +35,12 @@ import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.service.PostMessageService;
 import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
+import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -126,10 +125,7 @@ public class SendPage extends BaseActivity {
 
 	private void setLayout() {
 		setContentView(R.layout.send);
-		
-		View root=findViewById(R.id.root);
-		ThemeHelper.setBackgroundColor(root);
-		
+
 		setActionBar();
 		mEditText = (EditText) findViewById(R.id.msgchat_input);
 		mEditText.addTextChangedListener(new TextChangeListener() {

@@ -33,7 +33,6 @@ import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.util.DeviceHelper;
 import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -95,12 +94,9 @@ public class RegisterPage extends Activity implements OnClickListener {
 
 	private void setLayout() {
 		setContentView(R.layout.register);
-		
-		View root=findViewById(R.id.root);
-		ThemeHelper.setBackgroundColor(root);
-		
+
 		setActionBar();
-		
+
 		eNickName = (EditText) findViewById(R.id.register_nickname);
 		eEmail = (EditText) findViewById(R.id.register_email);
 		ePassword = (EditText) findViewById(R.id.register_password);
@@ -226,7 +222,7 @@ public class RegisterPage extends Activity implements OnClickListener {
 				} else {
 					return new ResultInfo(REGISTER_FAILED, "注册失败");
 				}
-			}catch (IOException e) {
+			} catch (IOException e) {
 				if (App.DEBUG) {
 					Log.e(TAG, e.toString());
 				}
@@ -321,19 +317,20 @@ public class RegisterPage extends Activity implements OnClickListener {
 					Log.d("RegisterTask", parameter.toString());
 				}
 			}
-			
-			NetClient client=new NetClient();
-			HttpResponse response = client.post(FanFouApiConfig.URL_REGISTER, params);
+
+			NetClient client = new NetClient();
+			HttpResponse response = client.post(FanFouApiConfig.URL_REGISTER,
+					params);
 			NetResponse res = new NetResponse(response);
 			if (App.DEBUG) {
-				Log.d("RegisterTask", "Response: "+res.getContent());
+				Log.d("RegisterTask", "Response: " + res.getContent());
 			}
-			User result=null;
+			User result = null;
 			if (res.statusCode == ResponseCode.HTTP_OK) {
 				try {
-					result= User.parse(res);
+					result = User.parse(res);
 				} catch (ApiException e) {
-					if(App.DEBUG){
+					if (App.DEBUG) {
 						Log.e(TAG, e.toString());
 					}
 				}

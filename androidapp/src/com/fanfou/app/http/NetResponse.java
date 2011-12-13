@@ -25,7 +25,7 @@ import com.fanfou.app.api.ApiException;
  * 
  */
 public class NetResponse implements ResponseInterface, ResponseCode {
-	private static final String TAG=NetResponse.class.getSimpleName();
+	private static final String TAG = NetResponse.class.getSimpleName();
 
 	// private HttpResponse response;
 	private HttpEntity entity;
@@ -50,8 +50,8 @@ public class NetResponse implements ResponseInterface, ResponseCode {
 			content = EntityUtils.toString(entity, HTTP.UTF_8);
 			used = true;
 		}
-		if(App.DEBUG){
-			Log.d(TAG, "getContent() ["+content+"]");
+		if (App.DEBUG) {
+			Log.d(TAG, "getContent() [" + content + "]");
 		}
 		return content;
 	}

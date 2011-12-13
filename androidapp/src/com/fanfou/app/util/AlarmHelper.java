@@ -57,7 +57,7 @@ public final class AlarmHelper {
 		NotificationService.set(context);
 		AutoCompleteService.set(context);
 	}
-	
+
 	public final static void checkScheduledTasks(Context context) {
 		if (App.DEBUG) {
 			Log.d(TAG, "checkScheduledTasks");

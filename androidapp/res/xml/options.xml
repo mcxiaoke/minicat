@@ -71,16 +71,9 @@
 
     <PreferenceScreen android:title="显示设置" >
 
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/option_color_use_highlight"
-            android:summary="我的消息和@消息背景高亮显示"
-            android:title="背景高亮" />
-
         <com.fanfou.app.preferences.colorpicker.ColorPickerPreference
             alphaSlider="true"
             android:defaultValue="@color/self_color"
-            android:dependency="@string/option_color_use_highlight"
             android:key="@string/option_color_highlight_self"
             android:summary="时间线上我的消息背景颜色"
             android:title="我的消息" />
@@ -88,7 +81,6 @@
         <com.fanfou.app.preferences.colorpicker.ColorPickerPreference
             alphaSlider="true"
             android:defaultValue="@color/mentioned_color"
-            android:dependency="@string/option_color_use_highlight"
             android:key="@string/option_color_highlight_mention"
             android:summary="时间线上\@消息背景颜色"
             android:title="\@消息" />
@@ -129,82 +121,8 @@
             android:summary="强制竖屏显示"
             android:title="锁定竖屏" />
     </PreferenceScreen>
-    <!--
-    <PreferenceScreen android:title="颜色设置" >
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/option_color_use_highlight"
-            android:summary="我的消息和@消息背景高亮显示"
-            android:title="背景高亮" />
-
-        <com.fanfou.app.preferences.colorpicker.ColorPickerPreference
-            alphaSlider="true"
-            android:defaultValue="@color/self_color"
-            android:dependency="@string/option_color_use_highlight"
-            android:key="@string/option_color_highlight_self"
-            android:summary="时间线上我的消息背景颜色"
-            android:title="我的消息" />
-
-        <com.fanfou.app.preferences.colorpicker.ColorPickerPreference
-            alphaSlider="true"
-            android:defaultValue="@color/mentioned_color"
-            android:dependency="@string/option_color_use_highlight"
-            android:key="@string/option_color_highlight_mention"
-            android:summary="时间线上\@消息背景颜色"
-            android:title="\@消息" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/option_color_use_custom"
-            android:summary="启用高级自定义颜色设置"
-            android:title="高级设置" />
-
-        <com.fanfou.app.preferences.colorpicker.ColorPickerPreference
-            alphaSlider="true"
-            android:defaultValue="@color/soft_black"
-            android:dependency="@string/option_color_use_custom"
-            android:key="@string/option_color_name"
-            android:summary="所有界面用户名文字颜色"
-            android:title="名字颜色" />
-
-        <com.fanfou.app.preferences.colorpicker.ColorPickerPreference
-            alphaSlider="true"
-            android:defaultValue="@color/soft_black"
-            android:dependency="@string/option_color_use_custom"
-            android:key="@string/option_color_text"
-            android:summary="所有界面内容文字颜色"
-            android:title="文本颜色" />
-
-        <com.fanfou.app.preferences.colorpicker.ColorPickerPreference
-            alphaSlider="true"
-            android:defaultValue="@color/soft_white"
-            android:dependency="@string/option_color_use_custom"
-            android:key="@string/option_color_metainfo"
-            android:summary="所有界面时间来源文字颜色"
-            android:title="信息颜色" />
-
-        <com.fanfou.app.preferences.colorpicker.ColorPickerPreference
-            alphaSlider="true"
-            android:defaultValue="@color/background_color"
-            android:dependency="@string/option_color_use_custom"
-            android:key="@string/option_color_background"
-            android:summary="所有界面背景颜色"
-            android:title="背景颜色" /> 
-
-        <Preference
-            android:key="@string/option_color_reset_all"
-            android:summary="清除自定义颜色，恢复默认设置"
-            android:title="清除设置" />
-    </PreferenceScreen>
-    -->
 
     <PreferenceScreen android:title="使用偏好" >
-
-        <!--
-             <CheckBoxPreference android:defaultValue="true" android:key="@string/option_show_splash_screen" 
-			android:summary="启动时显示闪屏画面" android:title="显示启动画面" />
-        -->
 
         <ListPreference
             android:defaultValue="right"
@@ -256,18 +174,6 @@
 
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="@string/option_save_on_back_press"
-            android:summary="保存未发送消息为草稿"
-            android:title="保存草稿" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/option_fetch_relationships"
-            android:summary="个人空间显示对方是否关注你"
-            android:title="显示关注状态" />
-
-        <CheckBoxPreference
-            android:defaultValue="true"
             android:key="@string/option_play_sound_effect"
             android:summary="时间线有新消息时播放音效"
             android:title="音效反馈" />
@@ -286,11 +192,6 @@
     </PreferenceScreen>
 
     <PreferenceScreen android:title="其它功能" >
-
-        <Preference
-            android:key="@string/option_color_reset_all"
-            android:summary="清除自定义颜色，恢复默认设置"
-            android:title="清除自定义颜色" />
 
         <com.fanfou.app.preferences.ClearDataDialogPreference
             android:dialogMessage="是否要清空数据库中缓存的消息，私信和个人数据？（提示：客户端会自动清理过旧的数据，不建议手动清空）"
@@ -340,7 +241,6 @@
             android:key="@string/option_changelog"
             android:summary="查看客户端更新日志"
             android:title="更新日志" >
-
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="http://apps.fanfou.com/android/changelog.html" />
@@ -350,16 +250,11 @@
             android:key="@string/option_website"
             android:summary="访问饭否网站获取更多信息"
             android:title="访问网站" >
-
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="http://fanfou.com/" />
         </Preference>
 
-        <!--
-             <CheckBoxPreference android:defaultValue="false" android:key="@string/option_debug_on" 
-			android:summary="启用开发者模式(对发布版无效)" android:title="开发模式" />
-        -->
     </PreferenceScreen>
 
 </PreferenceScreen>

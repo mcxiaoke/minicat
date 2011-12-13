@@ -3,8 +3,6 @@ package com.fanfou.app;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.fanfou.app.cache.ImageCache;
-import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.util.IntentHelper;
 
 /**

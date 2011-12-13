@@ -16,27 +16,25 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.fanfou.app.adapter.UserChooseCursorAdapter;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.User;
-import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.service.AutoCompleteService;
 import com.fanfou.app.service.FetchService;
 import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
+import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.ThemeHelper;
 
 /**
  * @author mcxiaoke
@@ -139,10 +137,7 @@ public class UserChoosePage extends BaseActivity implements
 
 	private void setLayout() {
 		setContentView(R.layout.user_choose);
-		
-		View root=findViewById(R.id.root);
-		ThemeHelper.setBackgroundColor(root);
-		
+
 		setActionBar();
 
 		mViewStub = (ViewStub) findViewById(R.id.stub);

@@ -2,13 +2,13 @@ package com.fanfou.app.util;
 
 import java.util.HashMap;
 
-import com.fanfou.app.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.util.Log;
+
+import com.fanfou.app.R;
 
 /**
  * @author mcxiaoke
@@ -89,10 +89,11 @@ public final class SoundManager {
 		streamVolume = streamVolume
 				/ mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		try {
-			mSoundPool.play(mSoundPoolMap.get(index), streamVolume, streamVolume,
-					1, 0, speed);
+			mSoundPool.play(mSoundPoolMap.get(index), streamVolume,
+					streamVolume, 1, 0, speed);
 		} catch (RuntimeException e) {
-			Log.e("SoundManager", "playSound: index "+index+" error:"+e.getMessage());
+			Log.e("SoundManager",
+					"playSound: index " + index + " error:" + e.getMessage());
 		}
 	}
 

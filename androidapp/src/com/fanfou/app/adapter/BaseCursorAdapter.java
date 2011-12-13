@@ -4,14 +4,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 
 import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.cache.IImageLoader;
-import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.util.OptionHelper;
 
 /**
@@ -41,7 +39,7 @@ public abstract class BaseCursorAdapter extends CursorAdapter {
 	}
 
 	public BaseCursorAdapter(Context context, Cursor c) {
-		super(context, c,false);
+		super(context, c, false);
 		init(context, c);
 	}
 
@@ -55,10 +53,10 @@ public abstract class BaseCursorAdapter extends CursorAdapter {
 		this.mInflater = LayoutInflater.from(mContext);
 		this.mLoader = App.getImageLoader();
 		this.mCursor = c;
-		this.textMode = OptionHelper.readBoolean(
-				R.string.option_text_mode, false);
-		this.fontSize = OptionHelper.readInt(R.string.option_fontsize,
-				context.getResources().getInteger(R.integer.defaultFontSize));
+		this.textMode = OptionHelper.readBoolean(R.string.option_text_mode,
+				false);
+		this.fontSize = OptionHelper.readInt(R.string.option_fontsize, context
+				.getResources().getInteger(R.integer.defaultFontSize));
 	}
 
 	@Override

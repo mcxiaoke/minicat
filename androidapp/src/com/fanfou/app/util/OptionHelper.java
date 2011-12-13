@@ -1,15 +1,11 @@
 ﻿package com.fanfou.app.util;
 
+import android.content.SharedPreferences.Editor;
+
 import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.User;
 import com.fanfou.app.auth.OAuthToken;
-
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.preference.PreferenceManager;
-import android.util.Log;
 
 /**
  * @author mcxiaoke
@@ -62,8 +58,7 @@ public final class OptionHelper {
 		return res;
 	}
 
-	public final static boolean readBoolean(String key,
-			boolean defValue) {
+	public final static boolean readBoolean(String key, boolean defValue) {
 		boolean res = App.getPreferences().getBoolean(key, defValue);
 		return res;
 	}
@@ -79,7 +74,8 @@ public final class OptionHelper {
 	}
 
 	public final static int parseInt(int resId) {
-		String res = App.getPreferences().getString(App.getApp().getString(resId), "-1");
+		String res = App.getPreferences().getString(
+				App.getApp().getString(resId), "-1");
 		return Integer.parseInt(res);
 	}
 
@@ -89,23 +85,26 @@ public final class OptionHelper {
 	}
 
 	public final static int parseInt(int resId, String defaultValue) {
-		String res = App.getPreferences().getString(App.getApp().getString(resId), defaultValue);
+		String res = App.getPreferences().getString(
+				App.getApp().getString(resId), defaultValue);
 		return Integer.parseInt(res);
 	}
 
 	public final static int readInt(int resId, int defValue) {
-		int res = App.getPreferences().getInt(App.getApp().getString(resId), defValue);
+		int res = App.getPreferences().getInt(App.getApp().getString(resId),
+				defValue);
 		return res;
 	}
 
-	public final static boolean readBoolean(int resId,
-			boolean defValue) {
-		boolean res = App.getPreferences().getBoolean(App.getApp().getString(resId), defValue);
+	public final static boolean readBoolean(int resId, boolean defValue) {
+		boolean res = App.getPreferences().getBoolean(
+				App.getApp().getString(resId), defValue);
 		return res;
 	}
 
 	public final static String readString(int resId, String defValue) {
-		String res = App.getPreferences().getString(App.getApp().getString(resId), defValue);
+		String res = App.getPreferences().getString(
+				App.getApp().getString(resId), defValue);
 		return res;
 	}
 
@@ -126,48 +125,41 @@ public final class OptionHelper {
 		sp.clear();
 		sp.commit();
 	}
-	
+
 	public final static void updateAccountInfo(final User u,
 			final OAuthToken otoken) {
 		Editor editor = App.getPreferences().edit();
 		editor.putString(App.getApp().getString(R.string.option_userid), u.id);
-		editor.putString(App.getApp().getString(R.string.option_username), u.screenName);
+		editor.putString(App.getApp().getString(R.string.option_username),
+				u.screenName);
 		editor.putString(App.getApp().getString(R.string.option_profile_image),
 				u.profileImageUrl);
 		editor.putString(App.getApp().getString(R.string.option_oauth_token),
 				otoken.getToken());
-		editor.putString(App.getApp().getString(R.string.option_oauth_token_secret),
+		editor.putString(
+				App.getApp().getString(R.string.option_oauth_token_secret),
 				otoken.getTokenSecret());
 		editor.commit();
 	}
-	
+
 	public final static void removeAccountInfo() {
 		Editor editor = App.getPreferences().edit();
 		editor.remove(App.getApp().getString(R.string.option_userid));
 		editor.remove(App.getApp().getString(R.string.option_username));
 		editor.remove(App.getApp().getString(R.string.option_profile_image));
 		editor.remove(App.getApp().getString(R.string.option_oauth_token));
-		editor.remove(App.getApp().getString(R.string.option_oauth_token_secret));
+		editor.remove(App.getApp()
+				.getString(R.string.option_oauth_token_secret));
 		editor.commit();
 	}
-	
+
 	public final static void updateUserInfo(final User u) {
 		Editor editor = App.getPreferences().edit();
 		editor.putString(App.getApp().getString(R.string.option_userid), u.id);
-		editor.putString(App.getApp().getString(R.string.option_username), u.screenName);
+		editor.putString(App.getApp().getString(R.string.option_username),
+				u.screenName);
 		editor.putString(App.getApp().getString(R.string.option_profile_image),
 				u.profileImageUrl);
-		editor.commit();
-	}
-	
-	public final static void resetColor(){
-		Editor editor = App.getPreferences().edit();
-		editor.remove(App.getApp().getString(R.string.option_color_highlight_mention));
-		editor.remove(App.getApp().getString(R.string.option_color_highlight_self));
-		editor.remove(App.getApp().getString(R.string.option_color_background));
-		editor.remove(App.getApp().getString(R.string.option_color_name));
-		editor.remove(App.getApp().getString(R.string.option_color_text));
-		editor.remove(App.getApp().getString(R.string.option_color_metainfo));
 		editor.commit();
 	}
 

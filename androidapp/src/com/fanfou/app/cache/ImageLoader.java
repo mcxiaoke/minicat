@@ -4,13 +4,10 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
@@ -20,7 +17,6 @@ import android.widget.ImageView;
 
 import com.fanfou.app.App;
 import com.fanfou.app.http.NetClient;
-import com.fanfou.app.http.OAuthNetClient;
 import com.fanfou.app.util.ImageHelper;
 
 /**
@@ -49,16 +45,16 @@ public class ImageLoader implements IImageLoader, Runnable {
 
 	private static final int CORE_POOL_SIZE = 2;
 
-//	private final ExecutorService mExecutorService;
+	// private final ExecutorService mExecutorService;
 	private final PriorityBlockingQueue<Task> mTaskQueue = new PriorityBlockingQueue<Task>(
-			60,new TaskComparator());
+			60, new TaskComparator());
 	private final Map<String, ImageView> mViewsMap;
 	private final ImageCache mCache;
 	private final Handler mHandler;
 	private final NetClient mClient;
-	
-	private static final class ImageLoaderHolder{
-		private static final ImageLoader INSTANCE=new ImageLoader();
+
+	private static final class ImageLoaderHolder {
+		private static final ImageLoader INSTANCE = new ImageLoader();
 	}
 
 	private ImageLoader() {
@@ -68,10 +64,11 @@ public class ImageLoader implements IImageLoader, Runnable {
 		// this.mExecutorService =
 		// Executors.newFixedThreadPool(CORE_POOL_SIZE,new
 		// NameCountThreadFactory());
-//		this.mExecutorService = Executors.newSingleThreadExecutor(new NameCountThreadFactory());
+		// this.mExecutorService = Executors.newSingleThreadExecutor(new
+		// NameCountThreadFactory());
 		this.mCache = ImageCache.getInstance();
 		this.mViewsMap = new HashMap<String, ImageView>();
-		this.mClient=new NetClient();
+		this.mClient = new NetClient();
 		this.mHandler = new InnerHandler();
 		new Thread(this).start();
 		// this.mExecutorService.execute(this);
@@ -87,8 +84,8 @@ public class ImageLoader implements IImageLoader, Runnable {
 			try {
 				final Task task = mTaskQueue.take();
 				download(task);
-//				 final Worker worker = new Worker(task, mCache, mClient);
-//				 mExecutorService.execute(worker);
+				// final Worker worker = new Worker(task, mCache, mClient);
+				// mExecutorService.execute(worker);
 			} catch (InterruptedException e) {
 				if (App.DEBUG) {
 					e.printStackTrace();
@@ -98,14 +95,14 @@ public class ImageLoader implements IImageLoader, Runnable {
 	}
 
 	private void download(final Task task) {
-		String url=task.url;
-		Handler handler=task.handler;
-		Bitmap bitmap=mCache.get(url);
-		if (bitmap==null) {
+		String url = task.url;
+		Handler handler = task.handler;
+		Bitmap bitmap = mCache.get(url);
+		if (bitmap == null) {
 			try {
 				bitmap = mClient.getBitmap(url);
 			} catch (IOException e) {
-					Log.e(TAG, "download error:" + e.getMessage());
+				Log.e(TAG, "download error:" + e.getMessage());
 			}
 			if (bitmap != null) {
 				mCache.put(url, bitmap);
@@ -123,15 +120,13 @@ public class ImageLoader implements IImageLoader, Runnable {
 				message.what = MESSAGE_ERROR;
 			}
 			if (App.DEBUG) {
-				Log.d(TAG, "download handle can use, bitmap= "
-						+ bitmap);
+				Log.d(TAG, "download handle can use, bitmap= " + bitmap);
 			}
 			message.getData().putString(EXTRA_URL, url);
 			handler.sendMessage(message);
 		} else {
 			if (App.DEBUG) {
-				Log.d(TAG, "download handle is null, bitmap= "
-						+ bitmap);
+				Log.d(TAG, "download handle is null, bitmap= " + bitmap);
 			}
 		}
 	}
@@ -214,7 +209,7 @@ public class ImageLoader implements IImageLoader, Runnable {
 		}
 	}
 
-	private static final class Task{
+	private static final class Task {
 		public final String url;
 		public final Handler handler;
 		public final long timestamp;
@@ -224,17 +219,18 @@ public class ImageLoader implements IImageLoader, Runnable {
 			this.handler = handler;
 			this.timestamp = System.nanoTime();
 		}
-//
-//		@Override
-//		public int compareTo(Task another) {
-//			if (timestamp > another.timestamp) {
-//				return 1;
-//			} else if (timestamp < another.timestamp) {
-//				return -1;
-//			} else {
-//				return 0;
-//			}
-//		}
+
+		//
+		// @Override
+		// public int compareTo(Task another) {
+		// if (timestamp > another.timestamp) {
+		// return 1;
+		// } else if (timestamp < another.timestamp) {
+		// return -1;
+		// } else {
+		// return 0;
+		// }
+		// }
 
 		@Override
 		public String toString() {
@@ -277,12 +273,12 @@ public class ImageLoader implements IImageLoader, Runnable {
 		}
 
 		private void download() {
-			Bitmap bitmap=cache.get(url);
-			if (bitmap==null) {
+			Bitmap bitmap = cache.get(url);
+			if (bitmap == null) {
 				try {
 					bitmap = conn.getBitmap(url);
 				} catch (IOException e) {
-						Log.e(TAG, "download error:" + e.getMessage());
+					Log.e(TAG, "download error:" + e.getMessage());
 				}
 				if (bitmap != null) {
 					cache.put(url, bitmap);
@@ -300,15 +296,13 @@ public class ImageLoader implements IImageLoader, Runnable {
 					message.what = MESSAGE_ERROR;
 				}
 				if (App.DEBUG) {
-					Log.d(TAG, "download send message bitmap= "
-							+ bitmap);
+					Log.d(TAG, "download send message bitmap= " + bitmap);
 				}
 				message.getData().putString(EXTRA_URL, url);
 				handler.sendMessage(message);
 			} else {
 				if (App.DEBUG) {
-					Log.d(TAG, "download handle is null, bitmap= "
-							+ bitmap);
+					Log.d(TAG, "download handle is null, bitmap= " + bitmap);
 				}
 			}
 		}

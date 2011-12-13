@@ -4,23 +4,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fanfou.app.api.Api;
-import com.fanfou.app.api.ApiException;
-import com.fanfou.app.api.FanFouApiConfig;
-import com.fanfou.app.api.ResultInfo;
-import com.fanfou.app.api.User;
-import com.fanfou.app.cache.IImageLoader;
-import com.fanfou.app.cache.ImageLoader;
-import com.fanfou.app.config.Commons;
-import com.fanfou.app.db.FanFouProvider;
-import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.TextChangeListener;
-import com.fanfou.app.util.IOHelper;
-import com.fanfou.app.util.ImageHelper;
-import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.ThemeHelper;
-import com.fanfou.app.util.Utils;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -37,6 +20,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.fanfou.app.api.Api;
+import com.fanfou.app.api.ApiException;
+import com.fanfou.app.api.FanFouApiConfig;
+import com.fanfou.app.api.ResultInfo;
+import com.fanfou.app.api.User;
+import com.fanfou.app.cache.IImageLoader;
+import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.FanFouProvider;
+import com.fanfou.app.ui.ActionBar;
+import com.fanfou.app.ui.TextChangeListener;
+import com.fanfou.app.util.IOHelper;
+import com.fanfou.app.util.ImageHelper;
+import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -96,9 +94,6 @@ public class EditProfilePage extends BaseActivity {
 
 	private void setLayout() {
 		setContentView(R.layout.edit_profile);
-		
-		View root=findViewById(R.id.root);
-		ThemeHelper.setBackgroundColor(root);
 
 		mBar = (ActionBar) findViewById(R.id.actionbar);
 
@@ -195,7 +190,8 @@ public class EditProfilePage extends BaseActivity {
 		mHeadView.setImageResource(R.drawable.default_head);
 		mHeadView.invalidate();
 		mHeadView.setTag(user.profileImageUrl);
-		mLoader.displayImage(user.profileImageUrl, mHeadView, R.drawable.default_head);
+		mLoader.displayImage(user.profileImageUrl, mHeadView,
+				R.drawable.default_head);
 
 	}
 

@@ -1,7 +1,6 @@
 package com.fanfou.app;
 
 import java.io.File;
-import java.io.Serializable;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -21,7 +20,6 @@ import com.fanfou.app.api.Status;
 import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.cache.ImageLoader;
-import com.fanfou.app.cache.IImageLoader.ImageLoaderCallback;
 import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.ui.ActionBar;
@@ -31,7 +29,6 @@ import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StatusHelper;
 import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -377,7 +374,7 @@ public class StatusPage extends BaseActivity {
 
 	private void goPhotoViewer() {
 		if (!TextUtils.isEmpty(mPhotoUrl)) {
-			String filePath=getPhotoPath(mPhotoUrl);
+			String filePath = getPhotoPath(mPhotoUrl);
 			if (App.DEBUG) {
 				Log.d(TAG, "goPhotoViewer() url=" + filePath);
 			}

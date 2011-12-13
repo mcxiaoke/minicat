@@ -17,9 +17,8 @@ import android.widget.ImageView;
 import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.http.NetClient;
-import com.fanfou.app.http.NetHelper;
 
-public class ImageLoaderNew implements IImageLoader{
+public class ImageLoaderNew implements IImageLoader {
 	private static final String TAG = ImageLoaderNew.class.getSimpleName();
 	private Map<ImageView, String> mViewsMap = Collections
 			.synchronizedMap(new WeakHashMap<ImageView, String>());
@@ -27,18 +26,19 @@ public class ImageLoaderNew implements IImageLoader{
 	private final ImageCache mCache;
 	private final NetClient mClient;
 	private final ExecutorService mExecutorService;
-//	private final Context mContext;
-//	private final Handler mHandler;
+
+	// private final Context mContext;
+	// private final Handler mHandler;
 
 	public ImageLoaderNew(Context context) {
-//		this.mContext=context;
+		// this.mContext=context;
 		this.mClient = new NetClient();
 		this.mCache = ImageCache.getInstance();
 		this.mExecutorService = Executors.newFixedThreadPool(2);
 	}
 
 	final int stub_id = R.drawable.default_head;
-	
+
 	@Override
 	public Bitmap getImage(String key, final Handler handler) {
 		return null;
@@ -48,10 +48,10 @@ public class ImageLoaderNew implements IImageLoader{
 	public void displayImage(String key, ImageView imageView, int stubId) {
 		mViewsMap.put(imageView, key);
 		Bitmap bitmap = mCache.get(key);
-		if (bitmap == null){
+		if (bitmap == null) {
 			queuePhoto(key, imageView);
 			imageView.setImageResource(stubId);
-		}else{
+		} else {
 			imageView.setImageBitmap(bitmap);
 		}
 	}
@@ -79,7 +79,7 @@ public class ImageLoaderNew implements IImageLoader{
 			imageView.setImageResource(stub_id);
 		}
 	}
-	
+
 	public void load(String url, ImageView imageView) {
 	}
 

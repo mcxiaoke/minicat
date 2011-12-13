@@ -1,8 +1,8 @@
 package com.fanfou.app;
 
-import com.fanfou.app.util.Utils;
-
 import android.os.Bundle;
+
+import com.fanfou.app.util.Utils;
 
 public class WebviewPage extends BaseActivity {
 

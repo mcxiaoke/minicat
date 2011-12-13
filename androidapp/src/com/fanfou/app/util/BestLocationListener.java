@@ -1,14 +1,14 @@
 package com.fanfou.app.util;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Observable;
+
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Observable;
 
 import com.fanfou.app.App;
 

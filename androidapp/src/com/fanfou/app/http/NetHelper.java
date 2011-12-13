@@ -12,7 +12,6 @@ import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRouteBean;
@@ -37,7 +36,6 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.App.ApnType;
-import com.fanfou.app.util.Logger;
 import com.fanfou.app.util.Utils;
 
 /**

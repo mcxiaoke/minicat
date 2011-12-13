@@ -2,6 +2,7 @@ package com.fanfou.app.adapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.text.TextPaint;

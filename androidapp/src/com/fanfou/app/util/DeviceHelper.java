@@ -35,8 +35,8 @@ public final class DeviceHelper {
 	}
 
 	private static String generateUUID() {
-		String uuid = Settings.Secure.getString(App.getApp().getContentResolver(),
-				Settings.Secure.ANDROID_ID);
+		String uuid = Settings.Secure.getString(App.getApp()
+				.getContentResolver(), Settings.Secure.ANDROID_ID);
 		if (App.DEBUG)
 			Log.d("DeviceHelper", "generateUUID uuid=" + uuid);
 		if (uuid == null || uuid.equals("9774d56d682e549c")) {

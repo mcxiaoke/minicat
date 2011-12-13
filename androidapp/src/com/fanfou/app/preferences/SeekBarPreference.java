@@ -1,7 +1,5 @@
 package com.fanfou.app.preferences;
 
-import com.fanfou.app.App;
-
 import android.content.Context;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
@@ -12,6 +10,8 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.fanfou.app.App;
 
 /**
  * @author mcxiaoke

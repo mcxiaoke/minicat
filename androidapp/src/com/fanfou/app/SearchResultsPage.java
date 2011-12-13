@@ -13,8 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ListView;
 
 import com.fanfou.app.App.ApnType;
 import com.fanfou.app.adapter.SearchResultsAdapter;
@@ -26,7 +26,6 @@ import com.fanfou.app.ui.UIManager;
 import com.fanfou.app.ui.widget.EndlessListView;
 import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
 import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.ThemeHelper;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -80,10 +79,7 @@ public class SearchResultsPage extends BaseActivity implements
 
 	private void setLayout() {
 		setContentView(R.layout.list);
-		
-		View root=findViewById(R.id.root);
-		ThemeHelper.setBackgroundColor(root);
-		
+
 		setActionBar();
 		mEmptyView = (ViewGroup) findViewById(R.id.empty);
 		mListView = (EndlessListView) findViewById(R.id.list);
