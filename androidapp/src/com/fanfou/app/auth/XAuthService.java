@@ -60,6 +60,7 @@ public class XAuthService {
 		if (statusCode == 200) {
 			return OAuthToken.from(content);
 		}
-		throw new OAuthTokenException(Parser.error(content));
+//		throw new OAuthTokenException(Parser.error(content));
+		throw new OAuthTokenException("登录失败，帐号或密码错误");
 	}
 }

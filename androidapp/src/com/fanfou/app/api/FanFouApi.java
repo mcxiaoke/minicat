@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
+import com.fanfou.app.LoginPage;
 import com.fanfou.app.auth.FanFouOAuthProvider;
 import com.fanfou.app.auth.OAuthService;
 import com.fanfou.app.auth.OAuthToken;
@@ -22,6 +23,7 @@ import com.fanfou.app.http.NetRequest;
 import com.fanfou.app.http.NetResponse;
 import com.fanfou.app.http.OAuthNetClient;
 import com.fanfou.app.http.ResponseCode;
+import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.StringHelper;
 
 /**
@@ -46,6 +48,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 4.8 2011.12.05
  * @version 4.9 2011.12.06
  * @version 5.0 2011.12.12
+ * @version 5.1 2011.12.13
  * 
  */
 public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
@@ -83,15 +86,19 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		OAuthNetClient client = new OAuthNetClient(oauth);
 		try {
 			HttpResponse response = client.open(request);
+			NetResponse res=new NetResponse(response);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (App.DEBUG) {
 				log("fetch() url=" + request.url + " post=" + request.post
 						+ " statusCode=" + statusCode);
 			}
 			if (statusCode == HTTP_OK) {
-				return new NetResponse(response);
+				return res;
+			}else if(statusCode==HTTP_UNAUTHORIZED){
+				throw new ApiException(statusCode, "验证信息失效，请重新登录");
+			}else{	
+				throw new ApiException(statusCode, Parser.error(res.getContent()));
 			}
-			throw new ApiException(statusCode, Parser.error(response));
 		} catch (IOException e) {
 			if (App.DEBUG) {
 				Log.e(TAG, e.toString());

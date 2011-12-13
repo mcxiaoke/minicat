@@ -52,6 +52,7 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * @version 2.8 2011.11.26
  * @version 3.0 2011.12.01
  * @version 3.1 2011.12.06
+ * @version 3.2 2011.12.13
  * 
  */
 public final class LoginPage extends Activity implements OnClickListener {
@@ -310,7 +311,6 @@ public final class LoginPage extends Activity implements OnClickListener {
 					e.printStackTrace();
 				return new ResultInfo(LOGIN_IO_ERROR,
 						getString(R.string.connection_error_msg));
-
 			} catch (OAuthTokenException e) {
 				if (App.DEBUG)
 					e.printStackTrace();
@@ -352,28 +352,20 @@ public final class LoginPage extends Activity implements OnClickListener {
 
 		@Override
 		protected void onPostExecute(ResultInfo result) {
-			try {
-				if (progressDialog != null && progressDialog.isShowing()) {
-					progressDialog.dismiss();
-				}
-			} catch (Exception e) {
-			}
-
+			progressDialog.dismiss();
 			switch (result.code) {
 			case LOGIN_IO_ERROR:
-				Utils.notify(mContext, result.message);
-				break;
 			case LOGIN_AUTH_FAILED:
 				Utils.notify(mContext, result.message);
 				break;
 			case LOGIN_CANCELLED_BY_USER:
 				break;
 			case LOGIN_AUTH_SUCCESS:
-				g.setCustomVar(2, "username", username);
-				g.setCustomVar(2, "api", String.valueOf(Build.VERSION.SDK_INT));
-				g.setCustomVar(2, "device", Build.MODEL);
-				g.setCustomVar(2, "uuid", DeviceHelper.uuid(mContext));
 				if (g != null) {
+					g.setCustomVar(2, "username", username);
+					g.setCustomVar(2, "api", Build.VERSION.SDK);
+					g.setCustomVar(2, "device", Build.MODEL);
+					g.setCustomVar(2, "uuid", DeviceHelper.uuid(mContext));
 					g.dispatch();
 				}
 				AlarmHelper.setScheduledTasks(mContext);
