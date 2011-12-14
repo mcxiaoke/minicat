@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -85,15 +86,10 @@ public class App extends Application {
 
 	private void init() {
 		if (DEBUG) {
-			// StrictMode.setThreadPolicy(new
-			// StrictMode.ThreadPolicy.Builder().detectAll()
-			// .penaltyLog()
-			// .build());
-			// StrictMode.setVmPolicy(new
-			// StrictMode.VmPolicy.Builder().detectAll()
-			// .penaltyLog()
-			// .penaltyDeath()
-			// .build());
+			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+					.detectAll().penaltyLog().build());
+			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+					.detectAll().penaltyLog().penaltyDeath().build());
 		}
 
 		App.sInstance = this;
@@ -250,18 +246,7 @@ public class App extends Application {
 	}
 
 	public static enum ApnType {
-		WIFI("wifi"), HSDPA("hsdpa"), NET("net"), WAP("wap"), CTWAP("ctwap"), ;
-
-		private String tag;
-
-		ApnType(String tag) {
-			this.tag = tag;
-		}
-
-		@Override
-		public String toString() {
-			return tag;
-		}
+		WIFI, HSDPA, NET, WAP;
 	}
 
 }

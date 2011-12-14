@@ -159,7 +159,6 @@ public class DownloadService extends BaseIntentService {
 			String url = intent.getStringExtra(Commons.EXTRA_DOWNLOAD_URL);
 			log("onHandleIntent TYPE_DOWNLOAD url=" + url);
 			if (!StringHelper.isEmpty(url)) {
-
 				download(url);
 			}
 		}
@@ -220,11 +219,13 @@ public class DownloadService extends BaseIntentService {
 				}
 			}
 		} catch (IOException e) {
-			if (App.DEBUG)
+			if (App.DEBUG) {
 				Log.e(TAG, "download error: " + e.getMessage());
-			e.printStackTrace();
-			nm.cancel(NOTIFICATION_PROGRESS_ID);
+				e.printStackTrace();
+			}
+
 		} finally {
+			nm.cancel(NOTIFICATION_PROGRESS_ID);
 			IOHelper.forceClose(is);
 			IOHelper.forceClose(fos);
 		}
@@ -245,7 +246,6 @@ public class DownloadService extends BaseIntentService {
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				new Intent(), 0);
 		notification.contentIntent = contentIntent;
-
 		nm.notify(NOTIFICATION_PROGRESS_ID, notification);
 
 	}
@@ -269,7 +269,6 @@ public class DownloadService extends BaseIntentService {
 				Utils.open(DownloadService.this, filePath);
 			}
 		}
-
 	}
 
 	private void updateProgress(final int progress) {

@@ -69,12 +69,14 @@ public class TaskQueueService extends WakefulIntentService {
 							FanFouApiConfig.MODE_LITE);
 				}
 			} else {
-				int quality = ImageHelper.IMAGE_QUALITY_LOW;
+				int quality;
 				ApnType apnType = App.getApnType();
 				if (apnType == ApnType.WIFI) {
 					quality = ImageHelper.IMAGE_QUALITY_HIGH;
 				} else if (apnType == ApnType.HSDPA) {
 					quality = ImageHelper.IMAGE_QUALITY_MEDIUM;
+				}else{
+					quality = ImageHelper.IMAGE_QUALITY_LOW;
 				}
 				File photo = ImageHelper.prepareUploadFile(this, srcFile,
 						quality);

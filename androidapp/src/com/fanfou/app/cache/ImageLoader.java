@@ -34,7 +34,7 @@ import com.fanfou.app.util.ImageHelper;
  * @version 5.2 2011.12.13
  * 
  */
-public class ImageLoader implements IImageLoader, Runnable {
+public class ImageLoader implements IImageLoader {
 
 	public static final String TAG = ImageLoader.class.getSimpleName();
 
@@ -52,6 +52,7 @@ public class ImageLoader implements IImageLoader, Runnable {
 	private final ImageCache mCache;
 	private final Handler mHandler;
 	private final NetClient mClient;
+	private final Thread mDaemon;
 
 	private static final class ImageLoaderHolder {
 		private static final ImageLoader INSTANCE = new ImageLoader();
@@ -70,7 +71,8 @@ public class ImageLoader implements IImageLoader, Runnable {
 		this.mViewsMap = new HashMap<String, ImageView>();
 		this.mClient = new NetClient();
 		this.mHandler = new InnerHandler();
-		new Thread(this).start();
+		this.mDaemon = new Daemon();
+		this.mDaemon.start();
 		// this.mExecutorService.execute(this);
 	}
 
@@ -78,20 +80,35 @@ public class ImageLoader implements IImageLoader, Runnable {
 		return ImageLoaderHolder.INSTANCE;
 	}
 
-	@Override
-	public void run() {
-		while (true) {
-			try {
-				final Task task = mTaskQueue.take();
-				download(task);
-				// final Worker worker = new Worker(task, mCache, mClient);
-				// mExecutorService.execute(worker);
-			} catch (InterruptedException e) {
+	private final class Daemon extends Thread {
+
+		@Override
+		public synchronized void start() {
+			super.start();
+			if (App.DEBUG) {
+				Log.d(TAG, "Daemon is start.");
+			}
+		}
+
+		@Override
+		public void run() {
+			while (true) {
 				if (App.DEBUG) {
-					e.printStackTrace();
+					Log.d(TAG, "Daemon is running.");
+				}
+				try {
+					final Task task = mTaskQueue.take();
+					download(task);
+					// final Worker worker = new Worker(task, mCache, mClient);
+					// mExecutorService.execute(worker);
+				} catch (InterruptedException e) {
+					if (App.DEBUG) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
+
 	}
 
 	private void download(final Task task) {
@@ -99,19 +116,17 @@ public class ImageLoader implements IImageLoader, Runnable {
 		Handler handler = task.handler;
 		Bitmap bitmap = mCache.get(url);
 		if (bitmap == null) {
-//			if (!isExpired(mViewsMap.get(url), url)) {
-				try {
-					bitmap = mClient.getBitmap(url);
-				} catch (IOException e) {
-					Log.e(TAG, "download error:" + e.getMessage());
+			try {
+				bitmap = mClient.getBitmap(url);
+			} catch (IOException e) {
+				Log.e(TAG, "download error:" + e.getMessage());
+			}
+			if (bitmap != null) {
+				mCache.put(url, bitmap);
+				if (App.DEBUG) {
+					Log.d(TAG, "download put bitmap to cache ");
 				}
-				if (bitmap != null) {
-					mCache.put(url, bitmap);
-					if (App.DEBUG) {
-						Log.d(TAG, "download put bitmap to cache ");
-					}
-				}
-//			}
+			}
 		}
 		if (handler != null) {
 			final Message message = handler.obtainMessage();

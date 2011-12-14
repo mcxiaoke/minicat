@@ -160,7 +160,7 @@ public final class NetHelper {
 				.setConnectionTimeout(params, CONNECTION_TIMEOUT_MS);
 		HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT_MS);
 		HttpConnectionParams.setTcpNoDelay(params, true);
-		HttpProtocolParams.setUserAgent(params, "FanFou for Android/"
+		HttpProtocolParams.setUserAgent(params, "FanFou for Android(com.fanfou.app)/"
 				+ App.appVersionName);
 
 		SchemeRegistry schReg = new SchemeRegistry();
@@ -211,41 +211,13 @@ public final class NetHelper {
 		return client;
 	}
 
-	private final static void setProxy(final HttpParams params) {
-		if (params == null) {
-			return;
-		}
-		ApnType type = App.getApnType();
-		if (type == ApnType.CTWAP) {
-			if (App.DEBUG) {
-				Log.d(TAG, "use proxy 10.0.0.200:80");
-			}
-			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
-					"10.0.0.200", 80));
-		} else if (type == ApnType.WAP) {
-			if (App.DEBUG) {
-				Log.d(TAG, "use proxy 10.0.0.172:80");
-			}
-			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
-					"10.0.0.172", 80));
-		} else {
-			params.removeParameter(ConnRoutePNames.DEFAULT_PROXY);
-		}
-	}
-
 	public final static void setProxy(final HttpClient client) {
 		if (client == null) {
 			return;
 		}
 		HttpParams params = client.getParams();
 		ApnType type = App.getApnType();
-		if (type == ApnType.CTWAP) {
-			if (App.DEBUG) {
-				Log.d(TAG, "use proxy 10.0.0.200:80");
-			}
-			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
-					"10.0.0.200", 80));
-		} else if (type == ApnType.WAP) {
+		if (type == ApnType.WAP) {
 			if (App.DEBUG) {
 				Log.d(TAG, "use proxy 10.0.0.172:80");
 			}

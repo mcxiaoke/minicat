@@ -87,9 +87,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 				if (!TextUtils.isEmpty(apnTypeName)) {
 					if (apnTypeName.equals("3gnet")) {
 						App.setApnType(ApnType.HSDPA);
-					} else if (apnTypeName.equals("ctwap")) {
-						App.setApnType(ApnType.CTWAP);
-					} else if (apnTypeName.contains("wap")) {
+					}else if (apnTypeName.contains("wap")) {
 						App.setApnType(ApnType.WAP);
 					}
 				}

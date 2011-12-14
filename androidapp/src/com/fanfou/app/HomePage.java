@@ -449,9 +449,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			Utils.notify(this, "未通过验证，请登录");
 			return;
 		}
-		if (App.getApnType() != ApnType.WIFI) {
-			App.getImageLoader().clearQueue();
-		}
 		Bundle b = new Bundle();
 		b.putInt(Commons.EXTRA_COUNT, FanFouApiConfig.DEFAULT_TIMELINE_COUNT);
 		b.putBoolean(Commons.EXTRA_FORMAT, false);

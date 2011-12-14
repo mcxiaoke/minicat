@@ -56,14 +56,7 @@ public final class NetworkHelper {
 		HttpURLConnection conn = null;
 		URL serverUrl;
 		String domain = getDomain(url);
-		if (apnType == ApnType.CTWAP) {
-			url = "http://10.0.0.200:80/" + getUrlNoDomain(url);
-			serverUrl = new URL(url);
-			conn = (HttpURLConnection) serverUrl.openConnection();
-			conn.setRequestMethod("GET");
-			conn.setRequestProperty("X-Online-Host", domain);
-			conn.setRequestProperty("Host", domain);
-		} else if (apnType == ApnType.WAP) {
+		if (apnType == ApnType.WAP) {
 			url = "http://10.0.0.172:80/" + getUrlNoDomain(url);
 			serverUrl = new URL(url);
 			conn = (HttpURLConnection) serverUrl.openConnection();
@@ -82,6 +75,7 @@ public final class NetworkHelper {
 		// conn.setRequestProperty("User-Agent", mContext
 		// .getString(R.string.userAgent));
 		conn.setDoInput(true);
+		conn.setDoOutput(true);
 		return conn;
 	}
 
@@ -136,13 +130,7 @@ public final class NetworkHelper {
 	}
 
 	public static void setProxy(final HttpParams params, final ApnType type) {
-		if (type == ApnType.CTWAP) {
-			if (App.DEBUG) {
-				Log.d("setProxy", "set proxy for ctwap");
-			}
-			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
-					"10.0.0.200", 80));
-		} else if (type == ApnType.WAP) {
+		if (type == ApnType.WAP) {
 			if (App.DEBUG) {
 				Log.d("setProxy", "set proxy for wap");
 			}
@@ -162,13 +150,7 @@ public final class NetworkHelper {
 		}
 		HttpParams params = client.getParams();
 		ApnType type = App.getApnType();
-		if (type == ApnType.CTWAP) {
-			if (App.DEBUG) {
-				Log.d("setProxy", "set proxy for ctwap");
-			}
-			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
-					"10.0.0.200", 80));
-		} else if (type == ApnType.WAP) {
+		if (type == ApnType.WAP) {
 			if (App.DEBUG) {
 				Log.d("setProxy", "set proxy for wap");
 			}
@@ -200,8 +182,6 @@ public final class NetworkHelper {
 					if (!TextUtils.isEmpty(apnTypeName)) {
 						if (apnTypeName.equals("3gnet")) {
 							type = ApnType.HSDPA;
-						} else if (apnTypeName.equals("ctwap")) {
-							type = ApnType.CTWAP;
 						} else if (apnTypeName.contains("wap")) {
 							type = ApnType.WAP;
 						}
@@ -211,6 +191,9 @@ public final class NetworkHelper {
 				App.noConnection = true;
 			}
 		} catch (Exception e) {
+			if(App.DEBUG){
+				Log.d("NetworkHelper", e.toString());
+			}
 		}
 		return type;
 	}

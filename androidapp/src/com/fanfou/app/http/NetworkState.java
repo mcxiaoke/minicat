@@ -63,9 +63,7 @@ public class NetworkState {
 					if (!TextUtils.isEmpty(apnTypeName)) {
 						if (apnTypeName.equals("3gnet")) {
 							apnType = ApnType.HSDPA;
-						} else if (apnTypeName.equals("ctwap")) {
-							apnType = ApnType.CTWAP;
-						} else if (apnTypeName.contains("wap")) {
+						}else if (apnTypeName.contains("wap")) {
 							apnType = ApnType.WAP;
 						}
 					}

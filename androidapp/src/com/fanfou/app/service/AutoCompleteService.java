@@ -120,6 +120,9 @@ public class AutoCompleteService extends BaseIntentService {
 						FanFouApiConfig.MAX_USERS_COUNT, page,
 						FanFouApiConfig.MODE_LITE);
 			} catch (ApiException e) {
+				if(App.DEBUG){
+					Log.e(TAG, e.toString());
+				}
 			}
 			if (result != null && result.size() > 0) {
 				int size = result.size();
