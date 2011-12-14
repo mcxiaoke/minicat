@@ -99,7 +99,7 @@ public class ImageLoader implements IImageLoader, Runnable {
 		Handler handler = task.handler;
 		Bitmap bitmap = mCache.get(url);
 		if (bitmap == null) {
-			if (!isExpired(mViewsMap.get(url), url)) {
+//			if (!isExpired(mViewsMap.get(url), url)) {
 				try {
 					bitmap = mClient.getBitmap(url);
 				} catch (IOException e) {
@@ -111,7 +111,7 @@ public class ImageLoader implements IImageLoader, Runnable {
 						Log.d(TAG, "download put bitmap to cache ");
 					}
 				}
-			}
+//			}
 		}
 		if (handler != null) {
 			final Message message = handler.obtainMessage();
