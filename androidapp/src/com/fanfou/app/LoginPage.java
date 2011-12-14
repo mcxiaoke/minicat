@@ -13,10 +13,14 @@ import android.os.Bundle;
 import android.text.Selection;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.FanFouApiConfig;
@@ -53,6 +57,7 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * @version 3.0 2011.12.01
  * @version 3.1 2011.12.06
  * @version 3.2 2011.12.13
+ * @version 3.3 2011.12.14
  * 
  */
 public final class LoginPage extends Activity implements OnClickListener {
@@ -124,6 +129,21 @@ public final class LoginPage extends Activity implements OnClickListener {
 				password = s.toString();
 			}
 		});
+		editPassword.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView v, int actionId,
+					KeyEvent event) {
+				if(App.DEBUG){
+					Log.d(TAG, "actionId="+actionId+" KeyEvent="+event);
+				}
+				if (actionId == EditorInfo.IME_ACTION_SEND) {
+					doLogin();
+					return true;
+				}
+				return false;
+			}
+		});
 
 		// mButtonRegister = (Button) findViewById(R.id.button_register);
 		// mButtonRegister.setOnClickListener(this);
@@ -170,17 +190,21 @@ public final class LoginPage extends Activity implements OnClickListener {
 		// goRegisterPage(mContext);
 		// break;
 		case R.id.button_signin:
-			if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
-				Utils.notify(mContext, "密码和帐号不能为空");
-			} else {
-				Utils.hideKeyboard(this, editPassword);
-				g.setCustomVar(1, "username", username);
-				g.trackEvent("Action", "onClick", "Login", 1);
-				new LoginTask().execute();
-			}
+			doLogin();
 			break;
 		default:
 			break;
+		}
+	}
+
+	private void doLogin() {
+		if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
+			Utils.notify(mContext, "密码和帐号不能为空");
+		} else {
+			Utils.hideKeyboard(this, editPassword);
+			g.setCustomVar(1, "username", username);
+			g.trackEvent("Action", "onClick", "Login", 1);
+			new LoginTask().execute();
 		}
 	}
 
@@ -237,7 +261,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		destroyed=true;
+		destroyed = true;
 		if (g != null) {
 			g.stopSession();
 		}
@@ -354,7 +378,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 
 		@Override
 		protected void onPostExecute(ResultInfo result) {
-			if(progressDialog!=null&&!destroyed){
+			if (progressDialog != null && !destroyed) {
 				progressDialog.dismiss();
 			}
 			switch (result.code) {

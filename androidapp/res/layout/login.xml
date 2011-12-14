@@ -1,37 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:background="@color/background_color" android:scrollbars="none" android:id="@+id/root">
+    android:id="@+id/root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_color"
+    android:scrollbars="none" >
 
-	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="fill_parent" android:layout_height="wrap_content">
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
 
-		<com.fanfou.app.ui.ActionBar android:id="@id/actionbar"
-			style="@style/ActionBar" android:layout_alignParentTop="true" />
+        <com.fanfou.app.ui.ActionBar
+            android:id="@id/actionbar"
+            style="@style/ActionBar"
+            android:layout_alignParentTop="true" />
 
-		<ImageView android:id="@+id/login_logo"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:layout_below="@id/actionbar" android:layout_centerHorizontal="true"
-			android:layout_marginTop="20dp" android:src="@drawable/login_logo" />
+        <ImageView
+            android:id="@+id/login_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/actionbar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/login_logo" />
 
-		<LinearLayout android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:layout_below="@id/login_logo"
-			android:gravity="center_horizontal" android:orientation="vertical"
-			android:padding="20dp">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_logo"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="20dp" >
 
-			<EditText android:id="@+id/login_username" style="@style/EditText.Login"
- android:hint="输入饭否帐号/Email/手机号" />
+            <EditText
+                android:id="@+id/login_username"
+                style="@style/EditText.Login"
+                android:hint="@string/login_username_hint" />
 
-			<EditText android:id="@+id/login_password" style="@style/EditText.Login" android:hint="输入饭否密码"
-				android:inputType="textPassword" android:password="true" />
+            <EditText
+                android:id="@+id/login_password"
+                style="@style/EditText.Login"
+                android:hint="@string/login_password_hint"
+                android:inputType="textPassword"
+                android:password="true" android:imeOptions="actionSend"/>
 
-
-			<Button style="@style/Button.Blue.Login" android:id="@+id/button_signin"
-				android:text="登  录" />
-
-
-		</LinearLayout>
-
-	</RelativeLayout>
+            <Button
+                android:id="@+id/button_signin"
+                style="@style/Button.Blue.Login"
+                android:text="@string/login_button_text" />
+        </LinearLayout>
+    </RelativeLayout>
 
 </ScrollView>

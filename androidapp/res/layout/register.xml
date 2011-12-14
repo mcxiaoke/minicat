@@ -1,56 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:scrollbars="none" android:background="@color/background_color" android:id="@+id/root">
-	
-	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="fill_parent" android:layout_height="wrap_content">
-		<com.fanfou.app.ui.ActionBar android:id="@id/actionbar"
-			style="@style/ActionBar" android:layout_alignParentTop="true" />
+    android:id="@+id/root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_color"
+    android:scrollbars="none" >
 
-		<ImageView android:layout_width="wrap_content" android:id="@+id/register_logo"
-			android:layout_height="wrap_content" android:src="@drawable/register_logo"
-			android:layout_centerHorizontal="true" android:layout_marginTop="20dp"
-			android:layout_below="@id/actionbar" />
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
 
-		<LinearLayout android:orientation="vertical"
-			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:padding="20dp" android:gravity="center_horizontal"
-			android:layout_below="@id/register_logo">
+        <com.fanfou.app.ui.ActionBar
+            android:id="@id/actionbar"
+            style="@style/ActionBar"
+            android:layout_alignParentTop="true" />
 
-			<EditText android:id="@+id/register_nickname" style="@style/EditText.Login"
- android:hint="输入昵称"
-				android:maxLength="12" />
+        <ImageView
+            android:id="@+id/register_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/actionbar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/register_logo" />
 
-			<EditText android:id="@+id/register_email" style="@style/EditText.Login"
- android:hint="输入Email地址"
-				android:inputType="textEmailAddress" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/register_logo"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="20dp" >
 
-			<EditText android:id="@+id/register_password" style="@style/EditText.Login"
- android:hint="输入密码"
-				android:password="true" android:inputType="textPassword"/>
+            <EditText
+                android:id="@+id/register_nickname"
+                style="@style/EditText.Login"
+                android:hint="@string/register_nickname_hint"
+                android:maxLength="12" />
 
-			<EditText android:id="@+id/register_password_confirm" style="@style/EditText.Login"
-				android:password="true" android:inputType="textPassword"
-				android:hint="再次输入密码" />
+            <EditText
+                android:id="@+id/register_email"
+                style="@style/EditText.Login"
+                android:hint="@string/register_email_hint"
+                android:inputType="textEmailAddress" />
 
-			<LinearLayout android:orientation="horizontal"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:gravity="center_vertical" android:padding="4dp">
-				<CheckBox android:id="@+id/register_follow_random"
-					android:checked="true" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:button="@drawable/cb_followrandom" />
-				<TextView android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:text="关注推荐的活跃用户"
-					android:textSize="@dimen/text_size_medium" android:textColor="@color/soft_white" />
-			</LinearLayout>
+            <EditText
+                android:id="@+id/register_password"
+                style="@style/EditText.Login"
+                android:hint="@string/register_password_hint"
+                android:inputType="textPassword"
+                android:password="true" />
 
-			<Button style="@style/Button.Blue.Login" android:id="@+id/button_register"
-				android:text="注  册" />
-		</LinearLayout>
+            <EditText
+                android:id="@+id/register_password_confirm"
+                style="@style/EditText.Login"
+                android:hint="@string/register_password_confirm_hint"
+                android:inputType="textPassword" 
+                android:password="true" android:imeOptions="actionSend"/>
 
-	</RelativeLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="4dp" >
+
+                <CheckBox
+                    android:id="@+id/register_follow_suggestions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/cb_followrandom"
+                    android:checked="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/register_follow_suggestions_text"
+                    android:textColor="@color/soft_white"
+                    android:textSize="@dimen/text_size_medium" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button_register"
+                style="@style/Button.Blue.Login"
+                android:text="@string/register_button_text" />
+        </LinearLayout>
+    </RelativeLayout>
+
 </ScrollView>
-	
-

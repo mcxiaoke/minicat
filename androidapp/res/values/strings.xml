@@ -51,6 +51,15 @@
 	<string name="color3_summary">picker with alpha slider</string>
 	<string name="color4_title">Color 4</string>
 	<string name="color4_summary">color set with HEX code in xml</string>
-
+	
+	<string name="login_username_hint">输入饭否帐号/Email/手机号</string>
+	<string name="login_password_hint">输入饭否密码</string>
+	<string name="login_button_text">登  录</string>
+	<string name="register_nickname_hint">输入昵称</string>
+	<string name="register_email_hint">输入Email地址</string>
+	<string name="register_password_hint">输入密码</string>
+	<string name="register_password_confirm_hint">再次输入密码</string>
+	<string name="register_button_text">注  册</string>
+	<string name="register_follow_suggestions_text">关注推荐的活跃用户</string>
 
 </resources>

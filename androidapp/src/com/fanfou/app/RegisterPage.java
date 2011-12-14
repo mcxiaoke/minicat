@@ -13,11 +13,14 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.FanFouApiConfig;
@@ -45,11 +48,10 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * @version 1.4 2011.11.18
  * @version 1.5 2011.11.28
  * @version 1.6 2011.12.07
+ * @version 1.7 2011.12.14
  * 
  */
 public class RegisterPage extends Activity implements OnClickListener {
-
-	/** @see http://code.fanfouapps.com/issues/2691 */
 
 	private static final String TAG = RegisterPage.class.getSimpleName();
 
@@ -101,7 +103,24 @@ public class RegisterPage extends Activity implements OnClickListener {
 		eEmail = (EditText) findViewById(R.id.register_email);
 		ePassword = (EditText) findViewById(R.id.register_password);
 		ePasswordConfirm = (EditText) findViewById(R.id.register_password_confirm);
-		cFollowPushed = (CheckBox) findViewById(R.id.register_follow_random);
+		ePasswordConfirm
+				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+					@Override
+					public boolean onEditorAction(TextView v, int actionId,
+							KeyEvent event) {
+						if(App.DEBUG){
+							Log.d(TAG, "actionId="+actionId+" KeyEvent="+event);
+						}
+						if (actionId == EditorInfo.IME_ACTION_SEND) {
+							doRegister();
+							return true;
+						}
+						return false;
+					}
+				});
+
+		cFollowPushed = (CheckBox) findViewById(R.id.register_follow_suggestions);
 		mButtonRegister = (Button) findViewById(R.id.button_register);
 		mButtonRegister.setOnClickListener(this);
 	}
@@ -196,6 +215,8 @@ public class RegisterPage extends Activity implements OnClickListener {
 			Utils.notify(this, "密码至少4个字符");
 			return;
 		}
+
+		Utils.hideKeyboard(this, ePasswordConfirm);
 		new RegisterTask().execute();
 	}
 
