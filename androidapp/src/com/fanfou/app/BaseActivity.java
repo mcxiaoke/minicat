@@ -162,89 +162,25 @@ public abstract class BaseActivity extends Activity implements
 		return false;
 	}
 
-	protected static final int MENU_ID_PROFILE = 0;
-	protected static final int MENU_ID_OPTION = 1;
-	protected static final int MENU_ID_SEARCH = 2;
-	protected static final int MENU_ID_ABOUT = 3;
-	protected static final int MENU_ID_FEEDBACK = 4;
-	protected static final int MENU_ID_LOGOUT = 5;
-	protected static final int MENU_ID_HOME = 6;
-	protected static final int MENU_ID_CLEAR = 7;
-	protected static final int MENU_ID_REFRESH = 8;
-	protected static final int MENU_ID_SAVE = 9;
-
-	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		int id = item.getItemId();
-		switch (id) {
-		case MENU_ID_OPTION:
-			onMenuOptionClick();
-			break;
-		case MENU_ID_PROFILE:
-			onMenuProfileClick();
-			break;
-		case MENU_ID_SEARCH:
-			onMenuSearchClick();
-			break;
-		case MENU_ID_LOGOUT:
-			onMenuLogoutClick();
-			break;
-		case MENU_ID_ABOUT:
-			onMenuAboutClick();
-			break;
-		case MENU_ID_FEEDBACK:
-			onMenuFeedbackClick();
-			break;
-		case MENU_ID_HOME:
-			onMenuHomeClick();
-			break;
-		case MENU_ID_CLEAR:
-			onMenuClearClick();
-			break;
-		case MENU_ID_REFRESH:
-			onMenuRefreshClick();
-			break;
-		case MENU_ID_SAVE:
-			onMenuSaveClick();
-			break;
-		default:
-			break;
-		}
-		return super.onMenuItemSelected(featureId, item);
-	}
+	protected static final int MENU_ID_HOME = 0;
+	protected static final int MENU_ID_SAVE = 1;
+	protected static final int MENU_ID_CLEAR=2;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// MenuItem option = menu.add(0, MENU_ID_OPTION, MENU_ID_OPTION,
-		// "功能设置");
-		// option.setIcon(R.drawable.i_menu_option);
-		//
-		// MenuItem profile = menu
-		// .add(0, MENU_ID_PROFILE, MENU_ID_PROFILE, "我的空间");
-		// profile.setIcon(R.drawable.i_menu_profile);
-		//
-		// MenuItem search = menu.add(0, MENU_ID_SEARCH, MENU_ID_SEARCH,
-		// "热词搜索");
-		// search.setIcon(R.drawable.i_menu_search);
-		//
-		// MenuItem logout = menu.add(0, MENU_ID_LOGOUT, MENU_ID_LOGOUT,
-		// "注销登录");
-		// logout.setIcon(R.drawable.i_menu_logout);
-		//
-		// MenuItem about = menu.add(0, MENU_ID_ABOUT, MENU_ID_ABOUT, "关于饭否");
-		// about.setIcon(R.drawable.i_menu_about);
-		//
-		// MenuItem feedback = menu.add(0, MENU_ID_FEEDBACK, MENU_ID_FEEDBACK,
-		// "意见反馈");
-		// feedback.setIcon(R.drawable.i_menu_feedback);
-
+		super.onCreateOptionsMenu(menu);
 		MenuItem home = menu.add(0, MENU_ID_HOME, MENU_ID_HOME, "返回首页");
 		home.setIcon(R.drawable.ic_menu_home);
-		//
-		// MenuItem clear = menu.add(0, MENU_ID_CLEAR, MENU_ID_CLEAR, "清空草稿");
-		// clear.setIcon(R.drawable.i_menu_clear);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if(item.getItemId()==MENU_ID_HOME){
+			onMenuHomeClick();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -255,59 +191,9 @@ public abstract class BaseActivity extends Activity implements
 	public void onClick(View v) {
 	}
 
-	protected void onMenuOptionClick() {
-		Intent intent = new Intent(this, SettingsPage.class);
-		startActivity(intent);
-	}
-
-	protected void onMenuProfileClick() {
-		ActionManager.doMyProfile(this);
-	}
-
-	protected void onMenuSearchClick() {
-		Intent intent = new Intent(this, SearchPage.class);
-		startActivity(intent);
-	}
-
-	protected void onMenuAboutClick() {
-		Utils.goAboutPage(this);
-	}
-
-	protected void onMenuFeedbackClick() {
-		ActionManager.doWrite(this, getString(R.string.config_feedback_account)
-				+ " (" + Build.MODEL + "-" + Build.VERSION.RELEASE + " "
-				+ App.appVersionName + ") ");
-	}
-
 	protected void onMenuHomeClick() {
 		IntentHelper.goHomePage(this, -1);
 		finish();
-	}
-
-	protected void onMenuClearClick() {
-	};
-
-	protected void onMenuRefreshClick() {
-
-	};
-
-	protected void onMenuSaveClick() {
-
-	}
-
-	protected void onMenuLogoutClick() {
-		final ConfirmDialog dialog = new ConfirmDialog(this, "注销",
-				"确定注销当前登录帐号吗？");
-		dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
-
-			@Override
-			public void onButton1Click() {
-				App.setOAuthToken(null);
-				IntentHelper.goLoginPage(mContext);
-				finish();
-			}
-		});
-		dialog.show();
 	}
 
 	protected void startRefreshAnimation() {

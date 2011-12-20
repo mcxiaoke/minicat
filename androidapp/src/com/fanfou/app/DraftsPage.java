@@ -45,7 +45,6 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 
 	private void setLayout() {
 		setContentView(R.layout.list_drafts);
-
 		setActionBar();
 		setListView();
 
@@ -71,30 +70,24 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		return super.onPrepareOptionsMenu(menu);
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
 		MenuItem clear = menu.add(0, MENU_ID_CLEAR, MENU_ID_CLEAR, "清空草稿");
 		clear.setIcon(R.drawable.ic_menu_clear);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		switch (id) {
+		case MENU_ID_CLEAR:
+			onMenuClearClick();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+
 	}
 
 	@Override
@@ -102,8 +95,7 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 		return PAGE_DRAFTS;
 	}
 
-	@Override
-	protected void onMenuClearClick() {
+	private void onMenuClearClick() {
 		getContentResolver().delete(DraftInfo.CONTENT_URI, null, null);
 		mCursor.requery();
 		Utils.notify(this, "草稿箱已清空");

@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -19,6 +20,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -616,38 +618,77 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	}
-
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		if (App.DEBUG)
-			log("onConfigurationChanged() ");
-		super.onConfigurationChanged(newConfig);
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem option = menu.add(0, MENU_ID_OPTION, MENU_ID_OPTION, "功能设置");
-		option.setIcon(R.drawable.ic_menu_option);
-
-		MenuItem profile = menu
-				.add(0, MENU_ID_PROFILE, MENU_ID_PROFILE, "我的空间");
-		profile.setIcon(R.drawable.ic_menu_profile);
-
-		MenuItem search = menu.add(0, MENU_ID_SEARCH, MENU_ID_SEARCH, "热词搜索");
-		search.setIcon(R.drawable.ic_menu_search);
-
-		MenuItem logout = menu.add(0, MENU_ID_LOGOUT, MENU_ID_LOGOUT, "注销登录");
-		logout.setIcon(R.drawable.ic_menu_logout);
-
-		MenuItem about = menu.add(0, MENU_ID_ABOUT, MENU_ID_ABOUT, "关于饭否");
-		about.setIcon(R.drawable.ic_menu_about);
-
-		MenuItem feedback = menu.add(0, MENU_ID_FEEDBACK, MENU_ID_FEEDBACK,
-				"意见反馈");
-		feedback.setIcon(R.drawable.ic_menu_feedback);
+//		super.onCreateOptionsMenu(menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.home_menu, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		switch (id) {
+		case R.id.menu_option:
+			onMenuOptionClick();
+			return true;
+		case R.id.menu_profile:
+			onMenuProfileClick();
+			return true;
+		case R.id.menu_search:
+			onMenuSearchClick();
+			return true;
+		case R.id.menu_logout:
+			onMenuLogoutClick();
+			return true;
+		case R.id.menu_about:
+			onMenuAboutClick();
+			return true;
+		case R.id.menu_feedback:
+			onMenuFeedbackClick();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void onMenuOptionClick() {
+		Intent intent = new Intent(this, SettingsPage.class);
+		startActivity(intent);
+	}
+
+	private void onMenuProfileClick() {
+		ActionManager.doMyProfile(this);
+	}
+
+	private void onMenuSearchClick() {
+		Intent intent = new Intent(this, SearchPage.class);
+		startActivity(intent);
+	}
+
+	private void onMenuAboutClick() {
+		Utils.goAboutPage(this);
+	}
+
+	private void onMenuFeedbackClick() {
+		ActionManager.doWrite(this, getString(R.string.config_feedback_account)
+				+ " (" + Build.MODEL + "-" + Build.VERSION.RELEASE + " "
+				+ App.appVersionName + ") ");
+	}
+
+	private void onMenuLogoutClick() {
+		final ConfirmDialog dialog = new ConfirmDialog(this, "注销",
+				"确定注销当前登录帐号吗？");
+		dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
+
+			@Override
+			public void onButton1Click() {
+				App.setOAuthToken(null);
+				IntentHelper.goLoginPage(mContext);
+				finish();
+			}
+		});
+		dialog.show();
 	}
 
 	private long lastPressTime = 0;

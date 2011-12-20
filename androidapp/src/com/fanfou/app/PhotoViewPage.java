@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.fanfou.app.service.Constants;
 import com.fanfou.app.ui.imagezoom.ImageViewTouch;
@@ -87,20 +88,23 @@ public class PhotoViewPage extends BaseActivity {
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		return super.onMenuItemSelected(featureId, item);
-	}
-
-	@Override
-	protected void onMenuSaveClick() {
-		doSave();
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
 		MenuItem option = menu.add(0, MENU_ID_SAVE, MENU_ID_SAVE, "保存图片");
 		option.setIcon(R.drawable.ic_menu_save);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id=item.getItemId();
+		switch (id) {
+		case MENU_ID_SAVE:
+			doSave();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}	
 	}
 
 	@Override

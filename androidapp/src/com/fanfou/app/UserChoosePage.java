@@ -161,7 +161,7 @@ public class UserChoosePage extends BaseActivity implements
 
 		mListView.setOnItemClickListener(this);
 		mListView.setItemsCanFocus(false);
-		mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+		mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		mListView.setAdapter(mCursorAdapter);
 	}
 
