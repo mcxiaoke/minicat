@@ -18,8 +18,8 @@ import android.widget.Toast;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.cache.IImageLoader;
-import com.fanfou.app.config.Commons;
-import com.fanfou.app.service.ActionService;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
@@ -32,6 +32,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.3 2011.11.07
  * @version 1.4 2011.11.08
  * @version 1.5 2011.12.06
+ * @version 1.6 2011.12.19
  * 
  */
 public class MyProfilePage extends BaseActivity {
@@ -246,11 +247,7 @@ public class MyProfilePage extends BaseActivity {
 
 	private void doRefresh() {
 		ResultReceiver receiver = new MyResultReceiver();
-		Intent intent = new Intent(this, ActionService.class);
-		intent.putExtra(Commons.EXTRA_TYPE, Commons.ACTION_USER_SHOW);
-		intent.putExtra(Commons.EXTRA_ID, userId);// 如果只传了ID就用这个
-		intent.putExtra(Commons.EXTRA_RECEIVER, receiver);
-		startService(intent);
+		FanFouService.doProfile(this, userId, receiver);
 		if (isInitialized) {
 			startRefreshAnimation();
 		}
@@ -260,7 +257,7 @@ public class MyProfilePage extends BaseActivity {
 
 	private static void goEditProfilePage(Activity context, final User user) {
 		Intent intent = new Intent(context, EditProfilePage.class);
-		intent.putExtra(Commons.EXTRA_USER, user);
+		intent.putExtra(Constants.EXTRA_DATA, user);
 		context.startActivityForResult(intent, REQUEST_CODE_UPDATE_PROFILE);
 	}
 
@@ -270,7 +267,7 @@ public class MyProfilePage extends BaseActivity {
 		if (resultCode == RESULT_OK) {
 			if (requestCode == REQUEST_CODE_UPDATE_PROFILE) {
 				User result = (User) data
-						.getParcelableExtra(Commons.EXTRA_USER);
+						.getParcelableExtra(Constants.EXTRA_DATA);
 				if (result != null) {
 					user = result;
 					userId = user.id;
@@ -337,14 +334,14 @@ public class MyProfilePage extends BaseActivity {
 		@Override
 		protected void onReceiveResult(int resultCode, Bundle resultData) {
 			switch (resultCode) {
-			case Commons.RESULT_CODE_FINISH:
+			case Constants.RESULT_SUCCESS:
 				if (resultData != null) {
 					if (App.DEBUG) {
 						log("result ok, update ui");
 					}
-					int type = resultData.getInt(Commons.EXTRA_TYPE);
+					int type = resultData.getInt(Constants.EXTRA_TYPE);
 					User result = (User) resultData
-							.getParcelable(Commons.EXTRA_USER);
+							.getParcelable(Constants.EXTRA_DATA);
 					if (result != null) {
 						App.getApp().updateUserInfo(result);
 						user = result;
@@ -352,7 +349,7 @@ public class MyProfilePage extends BaseActivity {
 					if (!isInitialized) {
 						showContent();
 					}
-					if (type == Commons.ACTION_USER_SHOW) {
+					if (type == Constants.TYPE_USERS_SHOW) {
 						log("show result=" + user.id);
 						updateUI();
 						if (isInitialized) {
@@ -361,15 +358,15 @@ public class MyProfilePage extends BaseActivity {
 					}
 				}
 				break;
-			case Commons.RESULT_CODE_ERROR:
-				int type = resultData.getInt(Commons.EXTRA_TYPE);
-				if (type == Commons.ACTION_USER_SHOW) {
+			case Constants.RESULT_ERROR:
+				int type = resultData.getInt(Constants.EXTRA_TYPE);
+				if (type == Constants.TYPE_USERS_SHOW) {
 					stopRefreshAnimation();
 				}
 				if (!isInitialized) {
 					showContent();
 				}
-				String msg = resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
+				String msg = resultData.getString(Constants.EXTRA_ERROR);
 				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
 				if (App.DEBUG) {
 					log("result error");

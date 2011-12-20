@@ -2,8 +2,6 @@ package com.fanfou.app.api;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,12 +14,12 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.http.NetResponse;
 import com.fanfou.app.http.ResponseCode;
+import com.fanfou.app.service.Constants;
 import com.fanfou.app.util.StatusHelper;
 import com.fanfou.app.util.StringHelper;
 
@@ -38,25 +36,17 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.0 2011.11.10
  * @version 2.1 2011.11.11
  * @version 2.2 2011.12.01
+ * @version 2.3 2011.12.16
+ * @version 2.4 2011.12.19
  * 
  */
 public class Status implements Storable<Status> {
-
-	private static final long serialVersionUID = -7878720905855956354L;
 
 	public static final String TAG = Status.class.getSimpleName();
 
 	private static void log(String message) {
 		Log.d(TAG, message);
 	}
-
-	public static final int TYPE_HOME = Commons.STATUS_TYPE_HOME;
-	public static final int TYPE_MENTION = Commons.STATUS_TYPE_MENTION;
-	public static final int TYPE_PUBLIC = Commons.STATUS_TYPE_PUBLIC;
-	public static final int TYPE_USER = Commons.STATUS_TYPE_USER;
-	public static final int TYPE_FAVORITES = Commons.STATUS_TYPE_FAVORITES;
-	public static final int TYPE_SEARCH = Commons.STATUS_TYPE_SEARCH;
-	public static final int TYPE_CONTEXT = Commons.STATUS_TYPE_CONTEXT;
 
 	public String id;
 	public String ownerId;
@@ -109,7 +99,7 @@ public class Status implements Storable<Status> {
 		return StringHelper.isEmpty(id);
 	}
 
-	public static List<Status> parseStatuses(NetResponse r, int type)
+	public static ArrayList<Status> parseStatuses(NetResponse r, int type)
 			throws ApiException {
 		if (App.DEBUG) {
 			log("parseStatuses response");
@@ -117,7 +107,7 @@ public class Status implements Storable<Status> {
 		return Status.parseStatuses(r.getJSONArray(), type);
 	}
 
-	public static List<Status> parseStatuses(String content, int type)
+	public static ArrayList<Status> parseStatuses(String content, int type)
 			throws ApiException {
 		if (App.DEBUG) {
 			log("parseStatuses content");
@@ -135,7 +125,7 @@ public class Status implements Storable<Status> {
 		return parseStatuses(a, type);
 	}
 
-	public static List<Status> parseStatuses(JSONArray a, int type)
+	public static ArrayList<Status> parseStatuses(JSONArray a, int type)
 			throws ApiException {
 		if (a == null) {
 			return null;
@@ -144,7 +134,7 @@ public class Status implements Storable<Status> {
 			log("parseStatuses jsonarray.size=" + a.length());
 		}
 		try {
-			List<Status> statuses = new ArrayList<Status>();
+			ArrayList<Status> statuses = new ArrayList<Status>();
 			for (int i = 0; i < a.length(); i++) {
 				JSONObject o = a.getJSONObject(i);
 				Status s = Status.parse(o, type);
@@ -217,7 +207,7 @@ public class Status implements Storable<Status> {
 	}
 
 	public static Status parse(String content) throws ApiException {
-		return parse(content, Commons.TYPE_NONE);
+		return parse(content, Constants.TYPE_NONE);
 	}
 
 	public static Status parse(String content, int type) throws ApiException {
@@ -233,7 +223,7 @@ public class Status implements Storable<Status> {
 	}
 
 	public static Status parse(JSONObject o) throws ApiException {
-		return parse(o, Commons.TYPE_NONE);
+		return parse(o, Constants.TYPE_NONE);
 	}
 
 	public static Status parse(JSONObject o, int type) throws ApiException {

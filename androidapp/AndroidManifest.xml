@@ -6,7 +6,15 @@
 
     <uses-sdk
         android:minSdkVersion="7"
-        android:targetSdkVersion="14" />
+        android:targetSdkVersion="15" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -21,6 +29,7 @@
         android:name=".App"
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
+        
         <activity
             android:name=".SplashPage"
             android:configChanges="keyboardHidden|orientation"
@@ -32,35 +41,37 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         <activity
             android:name=".LoginPage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:theme="@style/Theme" />
+        
         <activity
             android:name=".RegisterPage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
-            android:theme="@style/Theme" >
-        </activity>
+            android:theme="@style/Theme" />
+         
         <activity
             android:name=".DraftsPage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
-            android:theme="@style/Theme" >
-        </activity>
+            android:theme="@style/Theme" />
+        
         <activity
             android:name=".WebviewPage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
-            android:theme="@style/Theme" >
-        </activity>
+            android:theme="@style/Theme" />
+
         <activity
             android:name=".NewVersionPage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
-            android:theme="@style/Theme" >
-        </activity>
+            android:theme="@style/Theme" />
+
         <activity
             android:name=".HomePage"
             android:configChanges="keyboardHidden|orientation"
@@ -71,6 +82,7 @@
                 android:name="android.app.default_searchable"
                 android:value=".SearchResultsPage" />
         </activity>
+        
         <activity
             android:name=".SearchPage"
             android:configChanges="keyboardHidden|orientation"
@@ -82,37 +94,29 @@
 
             <intent-filter>
                 <action android:name="com.fanfou.app.action.SEARCH" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        
         <activity
             android:name=".EditProfilePage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:theme="@style/Theme"
-            android:windowSoftInputMode="adjustResize" >
-        </activity>
+            android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".AboutPage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:theme="@style/Theme" />
+        
         <activity
             android:name=".PhotoViewPage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_photoviewer_name"
-            android:theme="@style/ThemeBlack" >
+            android:theme="@style/ThemeBlack" />
 
-            <!--
-     			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:mimeType="image/*" />
-			</intent-filter>
-            -->
-        </activity>
         <activity
             android:name=".StatusPage"
             android:configChanges="keyboardHidden|orientation"
@@ -120,134 +124,109 @@
             android:theme="@style/Theme" >
             <intent-filter>
                 <action android:name="com.fanfou.app.action.STATUS" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        
         <activity
             android:name=".UserChoosePage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:theme="@style/Theme"
             android:windowSoftInputMode="stateHidden" />
+        
         <activity
             android:name=".UserListPage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:theme="@style/Theme"
             android:windowSoftInputMode="stateHidden" >
-            <intent-filter>
-                <action android:name="com.fanfou.app.action.FRIENDS" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.fanfou.app.action.FOLLOWERS" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+            
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data
                     android:host="timeline"
                     android:scheme="fanfou" />
+                
             </intent-filter>
         </activity>
+        
         <activity
             android:name=".UserTimelinePage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:theme="@style/Theme" >
-            <intent-filter>
-                <action android:name="com.fanfou.app.action.TIMELINE" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data
                     android:host="timeline"
                     android:scheme="fanfou" />
             </intent-filter>
         </activity>
+        
         <activity
             android:name=".UserFavoritesPage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:theme="@style/Theme" >
-            <intent-filter>
-                <action android:name="com.fanfou.app.action.FAVORITES" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+            
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data
                     android:host="favorites"
                     android:scheme="fanfou" />
             </intent-filter>
         </activity>
+        
         <activity
             android:name=".ConversationPage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:theme="@style/Theme" />
+        
         <activity
             android:name=".RegisterPage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:theme="@style/Theme" />
+        
         <activity
             android:name=".MyProfilePage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
-            android:theme="@style/Theme" >
-            <intent-filter>
-                <action android:name="com.fanfou.app.action.PROFILE" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/Theme" />
+        
         <activity
             android:name=".ProfilePage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:theme="@style/Theme" >
             <intent-filter>
-                <action android:name="com.fanfou.app.action.PROFILE" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data
                     android:host="user"
                     android:scheme="fanfou" />
             </intent-filter>
         </activity>
+        
         <activity
             android:name=".SendPage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:theme="@style/Theme.AutoCompleteTextViewFix"
             android:windowSoftInputMode="adjustResize" />
+        
         <activity
             android:name=".UserSelectPage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:theme="@style/Theme" />
+        
         <activity
             android:name=".WritePage"
             android:configChanges="keyboardHidden|orientation"
@@ -255,54 +234,55 @@
             android:launchMode="singleTask"
             android:theme="@style/Theme.AutoCompleteTextViewFix"
             android:windowSoftInputMode="stateVisible|adjustPan" >
+            
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="text/plain" />
             </intent-filter>
+            
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="image/*" />
             </intent-filter>
+            
             <intent-filter>
                 <action android:name="com.fanfou.app.action.SEND" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+            
             <intent-filter>
                 <action android:name="com.fanfou.app.action.GALLERY" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+            
             <intent-filter>
                 <action android:name="com.fanfou.app.action.CAMERA" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+            
         </activity>
+        
         <activity
             android:name=".SettingsPage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name" />
+        
         <activity
             android:name=".SearchResultsPage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/Theme" >
+            
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
+            
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data
                     android:host="search"
                     android:scheme="fanfou" />
@@ -318,9 +298,6 @@
             android:authorities="com.fanfou.app.provider" />
 
         <service
-            android:name=".service.FetchService"
-            android:label="@string/app_name" />
-        <service
             android:name=".service.PostStatusService"
             android:label="@string/app_name" />
         <service
@@ -330,22 +307,16 @@
             android:name=".service.PostMessageService"
             android:label="@string/app_name" />
         <service
-            android:name=".service.ActionService"
-            android:label="@string/app_name" />
-        <service
-            android:name=".service.CleanService"
-            android:label="@string/app_name" />
-        <service
             android:name=".service.NotificationService"
             android:label="@string/app_name" />
         <service
             android:name=".service.AutoCompleteService"
             android:label="@string/app_name" />
         <service
-            android:name=".service.TaskQueueService"
+            android:name=".service.QueueService"
             android:label="@string/app_name" />
         <service
-            android:name=".service.WebService"
+            android:name=".service.FanFouService"
             android:label="@string/app_name" />
 
         <receiver android:name=".receiver.BootReceiver" >

@@ -14,7 +14,6 @@
     <string name="option_set_auto_update">set_auto_update</string>
     <string name="option_fontsize">fontsize</string>
     <string name="option_text_mode">text_mode</string>
-    <string name="option_pic_level">pic_level</string>
     <string name="option_color_highlight_mention">color_highlight_mention</string>
     <string name="option_color_highlight_self">color_highlight_self</string>
     <string name="option_bottom_refresh_icon">bottom_refresh_icon</string>
@@ -24,10 +23,8 @@
     <string name="option_page_scroll_endless">page_scroll_endless</string>
     <string name="option_refresh_after_send">refresh_after_send</string>
     <string name="option_reply_to_all_default">reply_to_all_default</string>
-    <string name="option_fast_scroll_on">fast_scroll_on</string>
     <string name="option_send_on_enter">send_on_enter</string>
     <string name="option_show_splash_screen">show_splash_screen</string>
-    <string name="option_confirm_on_exit">confirm_on_exit</string>
     <string name="option_feedback">feedback</string>
     <string name="option_debug_on">debug_on</string>
     <string name="option_changelog">changelog</string>
@@ -40,7 +37,6 @@
     <string name="option_cleanpic">cleanpic</string>
     <string name="option_cleandb">cleandb</string>
     <string name="option_force_portrait">force_portrait</string>
-    <string name="option_force_fullscreen">force_fullscreen</string>
     <string name="option_play_sound_effect">play_sound_effect</string>
     <string name="option_old_version_code">old_version_code</string>
     <string name="option_notification">notification</string>

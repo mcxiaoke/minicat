@@ -2,8 +2,6 @@ package com.fanfou.app.api;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,11 +12,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.fanfou.app.App;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.http.NetResponse;
 import com.fanfou.app.http.ResponseCode;
+import com.fanfou.app.service.Constants;
 import com.fanfou.app.util.StringHelper;
 
 /**
@@ -32,14 +30,13 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.0 2011.11.10
  * @version 2.1 2011.11.11
  * @version 2.5 2011.11.15
+ * @version 2.6 2011.12.16
+ * @version 2.7 2011.12.19
  * 
  */
 public class User implements Storable<User> {
 
 	public static final String TAG = User.class.getSimpleName();
-
-	public static final int TYPE_FRIENDS = Commons.USER_TYPE_FRIENDS;
-	public static final int TYPE_FOLLOWERS = Commons.USER_TYPE_FOLLOWERS;
 
 	public Date createdAt;
 	public String id;
@@ -81,15 +78,15 @@ public class User implements Storable<User> {
 		return StringHelper.isEmpty(id);
 	}
 
-	public static List<User> parseUsers(NetResponse r) throws ApiException {
+	public static ArrayList<User> parseUsers(NetResponse r) throws ApiException {
 		return User.parseUsers(r.getJSONArray());
 	}
 
-	public static List<User> parseUsers(JSONArray a) throws ApiException {
+	public static ArrayList<User> parseUsers(JSONArray a) throws ApiException {
 		if (a == null) {
 			return null;
 		}
-		List<User> users = new ArrayList<User>();
+		ArrayList<User> users = new ArrayList<User>();
 		try {
 			for (int i = 0; i < a.length(); i++) {
 				JSONObject o = a.getJSONObject(i);
@@ -154,7 +151,7 @@ public class User implements Storable<User> {
 			user.following = o.getBoolean(UserInfo.FOLLOWING);
 			user.createdAt = Parser.date(o.getString(BasicColumns.CREATED_AT));
 
-			user.type = Commons.TYPE_NONE;
+			user.type = Constants.TYPE_NONE;
 			user.ownerId = App.getUserId();
 			return user;
 		} catch (JSONException e) {

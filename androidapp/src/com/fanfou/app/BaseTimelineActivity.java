@@ -17,7 +17,7 @@ import android.widget.ListView;
 import com.fanfou.app.adapter.StatusCursorAdapter;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
-import com.fanfou.app.config.Commons;
+import com.fanfou.app.service.Constants;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.Action;
 import com.fanfou.app.ui.ActionManager;
@@ -130,9 +130,9 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 
 	protected boolean parseIntent() {
 		Intent intent = getIntent();
-		user = (User) intent.getParcelableExtra(Commons.EXTRA_USER);
+		user = (User) intent.getParcelableExtra(Constants.EXTRA_DATA);
 		if (user == null) {
-			userId = intent.getStringExtra(Commons.EXTRA_ID);
+			userId = intent.getStringExtra(Constants.EXTRA_ID);
 		} else {
 			userId = user.id;
 			userName = user.screenName;
@@ -149,19 +149,10 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 	}
 
 	protected void doRetrieve(boolean isGetMore) {
-		if (!App.verified) {
-			Utils.notify(this, "未通过验证，请登录");
-			return;
-		}
-		Bundle b = new Bundle();
-		b.putString(Commons.EXTRA_ID, userId);
-		b.putBoolean(Commons.EXTRA_FORMAT, true);
-		MyResultHandler receiver = new MyResultHandler(mHandler, isGetMore);
-		doRetrieveImpl(b, receiver);
+		doRetrieveImpl(new MyResultHandler(mHandler, isGetMore));
 	}
 
-	protected abstract void doRetrieveImpl(Bundle bundle,
-			MyResultHandler receiver);
+	protected abstract void doRetrieveImpl(final MyResultHandler receiver);
 
 	protected abstract Cursor getCursor();
 
@@ -219,9 +210,7 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 		@Override
 		protected void onReceiveResult(int resultCode, Bundle resultData) {
 			switch (resultCode) {
-			case Commons.RESULT_CODE_START:
-				break;
-			case Commons.RESULT_CODE_FINISH:
+			case Constants.RESULT_SUCCESS:
 				if (!isInitialized) {
 					showContent();
 				}
@@ -232,10 +221,10 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 				}
 				updateUI();
 				break;
-			case Commons.RESULT_CODE_ERROR:
-				String msg = resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
-				int errorCode=resultData.getInt(Commons.EXTRA_ERROR_CODE);
-				
+			case Constants.RESULT_ERROR:
+				String msg = resultData.getString(Constants.EXTRA_ERROR);
+				int errorCode = resultData.getInt(Constants.EXTRA_CODE);
+
 				if (!isInitialized) {
 					showContent();
 				}
@@ -244,7 +233,7 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 				} else {
 					mListView.onRefreshComplete();
 				}
-				
+
 				Utils.notify(mContext, msg);
 				Utils.checkAuthorization(mContext, errorCode);
 				break;

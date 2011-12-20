@@ -11,8 +11,8 @@ import android.widget.BaseAdapter;
 import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
+import com.fanfou.app.service.FanFouService;
 import com.lib.quickaction.ActionItem;
 import com.lib.quickaction.QuickAction;
 
@@ -24,6 +24,7 @@ import com.lib.quickaction.QuickAction;
  * @version 1.3 2011.10.28
  * @version 2.0 2011.10.29
  * @version 2.1 2011.11.07
+ * @version 3.0 2011.12.19
  * 
  */
 public final class UIManager {
@@ -98,7 +99,7 @@ public final class UIManager {
 					break;
 				case QUICK_ACTION_ID_FAVORITE:
 				case QUICK_ACTION_ID_UNFAVORITE:
-					UIManager.doFavorite(a, s, adapter);
+					FanFouService.doFavorite(a, s, adapter);
 					break;
 				case QUICK_ACTION_ID_RETWEET:
 					ActionManager.doRetweet(a, s);
@@ -145,7 +146,7 @@ public final class UIManager {
 					break;
 				case QUICK_ACTION_ID_FAVORITE:
 				case QUICK_ACTION_ID_UNFAVORITE:
-					UIManager.doFavorite(a, s, c);
+					FanFouService.doFavorite(a, s, c);
 					break;
 				case QUICK_ACTION_ID_RETWEET:
 					ActionManager.doRetweet(a, s);
@@ -191,7 +192,7 @@ public final class UIManager {
 					break;
 				case QUICK_ACTION_ID_FAVORITE:
 				case QUICK_ACTION_ID_UNFAVORITE:
-					doFavorite(a, s, adapter);
+					FanFouService.doFavorite(a, s, adapter);
 					break;
 				case QUICK_ACTION_ID_RETWEET:
 					ActionManager.doRetweet(a, s);
@@ -219,7 +220,7 @@ public final class UIManager {
 				adapter.notifyDataSetChanged();
 			}
 		};
-		ActionManager.doStatusDelete(activity, s.id, li);
+		FanFouService.doStatusDelete(activity, s.id, li);
 	}
 
 	public static void doDelete(final Activity activity, final Status s,
@@ -230,7 +231,7 @@ public final class UIManager {
 				c.requery();
 			}
 		};
-		ActionManager.doStatusDelete(activity, s.id, li);
+		FanFouService.doStatusDelete(activity, s.id, li);
 	}
 
 	public static void doDelete(final Activity activity, final Status s,
@@ -241,34 +242,7 @@ public final class UIManager {
 				adapter.notifyDataSetChanged();
 			}
 		};
-		ActionManager.doStatusDelete(activity, s.id, li);
-	}
-
-	public static void doFavorite(final Activity activity, final Status s,
-			final BaseAdapter adapter) {
-		ResultHandler li = new ResultHandler() {
-			@Override
-			public void onActionSuccess(int type, String message) {
-				if (type == Commons.ACTION_STATUS_FAVORITE) {
-					s.favorited = true;
-				} else {
-					s.favorited = false;
-				}
-				adapter.notifyDataSetChanged();
-			}
-		};
-		ActionManager.doFavorite(activity, s, li);
-	}
-
-	public static void doFavorite(final Activity activity, final Status s,
-			final Cursor c) {
-		ResultHandler li = new ResultHandler() {
-			@Override
-			public void onActionSuccess(int type, String message) {
-				c.requery();
-			}
-		};
-		ActionManager.doFavorite(activity, s, li);
+		FanFouService.doStatusDelete(activity, s.id, li);
 	}
 
 	public abstract static class ResultHandler implements

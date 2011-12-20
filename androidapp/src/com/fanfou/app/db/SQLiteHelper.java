@@ -3,6 +3,7 @@ package com.fanfou.app.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
@@ -25,7 +26,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	public static final String TAG = "SQLiteHelper";
 
 	public static final String DATABASE_NAME = "fanfou.db";
-	public static final int DATABASE_VERSION = 10;
+	public static final int DATABASE_VERSION = 11;
 
 	/**
 	 * @param context

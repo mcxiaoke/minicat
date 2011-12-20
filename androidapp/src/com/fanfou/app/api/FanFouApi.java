@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.acra.ErrorReporter;
 import org.apache.http.HttpResponse;
 import org.apache.http.protocol.HTTP;
 
@@ -14,17 +14,16 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
-import com.fanfou.app.LoginPage;
 import com.fanfou.app.auth.FanFouOAuthProvider;
 import com.fanfou.app.auth.OAuthService;
 import com.fanfou.app.auth.OAuthToken;
 import com.fanfou.app.cache.CacheManager;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.http.NetRequest;
 import com.fanfou.app.http.NetResponse;
 import com.fanfou.app.http.OAuthNetClient;
 import com.fanfou.app.http.ResponseCode;
-import com.fanfou.app.util.IntentHelper;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.util.StringHelper;
 
 /**
@@ -50,6 +49,8 @@ import com.fanfou.app.util.StringHelper;
  * @version 4.9 2011.12.06
  * @version 5.0 2011.12.12
  * @version 5.1 2011.12.13
+ * @version 6.0 2011.12.16
+ * @version 6.1 2011.12.20
  * 
  */
 public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
@@ -111,28 +112,6 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	/**
-	 * fetch useres --get
-	 * 
-	 * @param url
-	 * @param userId
-	 * @return
-	 * @throws ApiException
-	 */
-	List<User> fetchUsers(String url, String userId, String mode)
-			throws ApiException {
-		NetRequest request = new NetRequest.Builder().url(url).id(userId)
-				.mode(mode).build();
-		NetResponse response = fetch(request);
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("fetchStatuses()---statusCode=" + statusCode + " url="
-					+ request.url);
-		}
-		return User.parseUsers(response);
-
-	}
-
-	/**
 	 * fetch statuses --get
 	 * 
 	 * @param url
@@ -152,7 +131,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	 * @return statuses list
 	 * @throws ApiException
 	 */
-	List<Status> fetchStatuses(String url, int count, int page, String userId,
+	ArrayList<Status> fetchStatuses(String url, int count, int page, String userId,
 			String sinceId, String maxId, String format, String mode, int type)
 			throws ApiException {
 		NetRequest.Builder builder = new NetRequest.Builder();
@@ -225,66 +204,66 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public List<Status> pubicTimeline(int count, String format, String mode)
+	public ArrayList<Status> pubicTimeline(int count, String format, String mode)
 			throws ApiException {
-		List<Status> ss = fetchStatuses(URL_TIMELINE_PUBLIC, count, 0, null,
-				null, null, format, mode, Status.TYPE_PUBLIC);
+		ArrayList<Status> ss = fetchStatuses(URL_TIMELINE_PUBLIC, count, 0, null,
+				null, null, format, mode, Constants.TYPE_STATUSES_PUBLIC_TIMELINE);
 		return ss;
 	}
 
 	@Override
-	public List<Status> homeTimeline(int count, int page, String sinceId,
+	public ArrayList<Status> homeTimeline(int count, int page, String sinceId,
 			String maxId, String format, String mode) throws ApiException {
-		List<Status> ss = fetchStatuses(URL_TIMELINE_HOME, count, page, null,
-				sinceId, maxId, format, mode, Status.TYPE_HOME);
+		ArrayList<Status> ss = fetchStatuses(URL_TIMELINE_HOME, count, page, null,
+				sinceId, maxId, format, mode, Constants.TYPE_STATUSES_HOME_TIMELINE);
 		return ss;
 	}
 
 	@Override
-	public List<Status> userTimeline(int count, int page, String userId,
+	public ArrayList<Status> userTimeline(int count, int page, String userId,
 			String sinceId, String maxId, String format, String mode)
 			throws ApiException {
 		if (TextUtils.isEmpty(userId)) {
 			throw new NullPointerException(
 					"userTimeline() userId must not be empty or null.");
 		}
-		List<Status> ss = fetchStatuses(URL_TIMELINE_USER, count, page, userId,
-				sinceId, maxId, format, mode, Status.TYPE_USER);
+		ArrayList<Status> ss = fetchStatuses(URL_TIMELINE_USER, count, page, userId,
+				sinceId, maxId, format, mode, Constants.TYPE_STATUSES_USER_TIMELINE);
 		return ss;
 	}
 
 	@Override
-	public List<Status> mentions(int count, int page, String sinceId,
+	public ArrayList<Status> mentions(int count, int page, String sinceId,
 			String maxId, String format, String mode) throws ApiException {
-		List<Status> ss = fetchStatuses(URL_TIMELINE_MENTIONS, count, page,
-				null, sinceId, maxId, format, mode, Status.TYPE_MENTION);
+		ArrayList<Status> ss = fetchStatuses(URL_TIMELINE_MENTIONS, count, page,
+				null, sinceId, maxId, format, mode, Constants.TYPE_STATUSES_MENTIONS);
 		return ss;
 	}
 
 	@Override
-	public List<Status> contextTimeline(String id, String format, String mode)
+	public ArrayList<Status> contextTimeline(String id, String format, String mode)
 			throws ApiException {
 		NetRequest.Builder builder = new NetRequest.Builder();
 		builder.url(URL_TIMELINE_CONTEXT).id(id).format("html").mode("lite");
 		NetResponse response = fetch(builder.build());
-		List<Status> ss = Status.parseStatuses(response, Status.TYPE_CONTEXT);
+		ArrayList<Status> ss = Status.parseStatuses(response, Constants.TYPE_STATUSES_CONTEXT_TIMELINE);
 		return ss;
 	}
 
 	@Override
-	public List<Status> replies(int count, int page, String userId,
+	public ArrayList<Status> replies(int count, int page, String userId,
 			String sinceId, String maxId, String format, String mode)
 			throws ApiException {
-		List<Status> ss = fetchStatuses(URL_TIMELINE_REPLIES, count, page,
-				userId, sinceId, maxId, format, mode, Status.TYPE_MENTION);
+		ArrayList<Status> ss = fetchStatuses(URL_TIMELINE_REPLIES, count, page,
+				userId, sinceId, maxId, format, mode, Constants.TYPE_STATUSES_MENTIONS);
 		return ss;
 	}
 
 	@Override
-	public List<Status> favorites(int count, int page, String userId,
+	public ArrayList<Status> favorites(int count, int page, String userId,
 			String format, String mode) throws ApiException {
-		List<Status> ss = fetchStatuses(URL_FAVORITES_LIST, count, page,
-				userId, null, null, format, mode, Status.TYPE_FAVORITES);
+		ArrayList<Status> ss = fetchStatuses(URL_FAVORITES_LIST, count, page,
+				userId, null, null, format, mode, Constants.TYPE_FAVORITES_LIST);
 
 		if (userId != null && ss != null) {
 			for (Status status : ss) {
@@ -376,7 +355,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		if (App.DEBUG) {
 			log("statusUpdate()---statusCode=" + statusCode);
 		}
-		Status s = Status.parse(response, Status.TYPE_HOME);
+		Status s = Status.parse(response, Constants.TYPE_STATUSES_HOME_TIMELINE);
 		if (App.DEBUG) {
 			log("statusesCreate " + s);
 		}
@@ -417,11 +396,11 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		if (App.DEBUG) {
 			log("photoUpload()---statusCode=" + statusCode);
 		}
-		return Status.parse(response, Status.TYPE_HOME);
+		return Status.parse(response, Constants.TYPE_STATUSES_HOME_TIMELINE);
 	}
 
 	@Override
-	public List<Status> search(String keyword, String sinceId, String maxId,
+	public ArrayList<Status> search(String keyword, String sinceId, String maxId,
 			int count, String format, String mode) throws ApiException {
 		if (StringHelper.isEmpty(keyword)) {
 			throw new IllegalArgumentException("搜索词不能为空");
@@ -439,12 +418,12 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		if (App.DEBUG) {
 			log("search()---statusCode=" + statusCode);
 		}
-		return Status.parseStatuses(response, Status.TYPE_SEARCH);
+		return Status.parseStatuses(response, Constants.TYPE_SEARCH_PUBLIC_TIMELINE);
 
 	}
 
 	@Override
-	public List<User> searchUsers(String keyword, int count, int page,
+	public ArrayList<User> searchUsers(String keyword, int count, int page,
 			String mode) throws ApiException {
 		if (StringHelper.isEmpty(keyword)) {
 			if (App.DEBUG)
@@ -469,7 +448,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public List<Search> trends() throws ApiException {
+	public ArrayList<Search> trends() throws ApiException {
 		NetResponse response = fetch(new NetRequest.Builder().url(
 				URL_TRENDS_LIST).build());
 
@@ -483,7 +462,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public List<Search> savedSearchesList() throws ApiException {
+	public ArrayList<Search> savedSearchesList() throws ApiException {
 		NetResponse response = fetch(new NetRequest.Builder().url(
 				URL_SAVED_SEARCHES_LIST).build());
 
@@ -548,7 +527,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		return Parser.savedSearch(response);
 	}
 
-	private List<User> fetchUsers(String url, String userId, int count, int page)
+	private ArrayList<User> fetchUsers(String url, String userId, int count, int page)
 			throws ApiException {
 		NetRequest.Builder builder = new NetRequest.Builder();
 		builder.url(url).id(userId).count(count).page(page)
@@ -559,12 +538,12 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public List<User> usersFriends(String userId, int count, int page,
+	public ArrayList<User> usersFriends(String userId, int count, int page,
 			String mode) throws ApiException {
-		List<User> users = fetchUsers(URL_USERS_FRIENDS, userId, count, page);
+		ArrayList<User> users = fetchUsers(URL_USERS_FRIENDS, userId, count, page);
 		if (users != null && users.size() > 0) {
 			for (User user : users) {
-				user.type = User.TYPE_FRIENDS;
+				user.type = Constants.TYPE_USERS_FRIENDS;
 				user.ownerId = (userId == null ? App.getUserId() : userId);
 			}
 		}
@@ -577,7 +556,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		List<User> users = fetchUsers(URL_USERS_FOLLOWERS, userId, count, page);
 		if (users != null && users.size() > 0) {
 			for (User user : users) {
-				user.type = User.TYPE_FOLLOWERS;
+				user.type = Constants.TYPE_USERS_FOLLOWERS;
 				user.ownerId = (userId == null ? App.getUserId() : userId);
 			}
 		}
@@ -749,7 +728,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	// 最大2000
-	private List<String> ids(String url, String userId, int count, int page)
+	private ArrayList<String> ids(String url, String userId, int count, int page)
 			throws ApiException {
 		NetRequest.Builder builder = new NetRequest.Builder();
 		builder.url(url);
@@ -768,18 +747,18 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public List<String> friendsIDs(String userId, int count, int page)
+	public ArrayList<String> friendsIDs(String userId, int count, int page)
 			throws ApiException {
 		return ids(URL_USERS_FRIENDS_IDS, userId, count, page);
 	}
 
 	@Override
-	public List<String> followersIDs(String userId, int count, int page)
+	public ArrayList<String> followersIDs(String userId, int count, int page)
 			throws ApiException {
 		return ids(URL_USERS_FOLLOWERS_IDS, userId, count, page);
 	}
 
-	private List<DirectMessage> messages(String url, int count, int page,
+	private ArrayList<DirectMessage> messages(String url, int count, int page,
 			String sinceId, String maxId, String mode, int type)
 			throws ApiException {
 		NetRequest.Builder builder = new NetRequest.Builder();
@@ -803,10 +782,10 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public List<DirectMessage> directMessagesInbox(int count, int page,
+	public ArrayList<DirectMessage> directMessagesInbox(int count, int page,
 			String sinceId, String maxId, String mode) throws ApiException {
-		List<DirectMessage> dms = messages(URL_DIRECT_MESSAGES_INBOX, count,
-				page, sinceId, maxId, mode, DirectMessage.TYPE_IN);
+		ArrayList<DirectMessage> dms = messages(URL_DIRECT_MESSAGES_INBOX, count,
+				page, sinceId, maxId, mode, Constants.TYPE_DIRECT_MESSAGES_INBOX);
 		// TODO new dm api, need type set to type_user
 		if (dms != null && dms.size() > 0) {
 			for (DirectMessage dm : dms) {
@@ -818,10 +797,10 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public List<DirectMessage> directMessagesOutbox(int count, int page,
+	public ArrayList<DirectMessage> directMessagesOutbox(int count, int page,
 			String sinceId, String maxId, String mode) throws ApiException {
-		List<DirectMessage> dms = messages(URL_DIRECT_MESSAGES_OUTBOX, count,
-				page, sinceId, maxId, mode, DirectMessage.TYPE_OUT);
+		ArrayList<DirectMessage> dms = messages(URL_DIRECT_MESSAGES_OUTBOX, count,
+				page, sinceId, maxId, mode, Constants.TYPE_DIRECT_MESSAGES_OUTBOX);
 		// TODO new dm api, need type set to type_user
 		if (dms != null && dms.size() > 0) {
 			for (DirectMessage dm : dms) {
@@ -833,7 +812,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public List<DirectMessage> directMessagesConversationList(int count,
+	public ArrayList<DirectMessage> directMessagesConversationList(int count,
 			int page, String mode) throws ApiException {
 		NetRequest.Builder builder = NetRequest.newBuilder();
 		builder.url(URL_DIRECT_MESSAGES_CONVERSATION).count(count).page(page)
@@ -843,7 +822,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public List<DirectMessage> directMessagesConversation(String userId,
+	public ArrayList<DirectMessage> directMessagesConversation(String userId,
 			String maxId, int count, String mode) throws ApiException {
 		if (TextUtils.isEmpty(userId)) {
 			throw new NullPointerException(
@@ -883,9 +862,8 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 		}
 
 		DirectMessage dm = DirectMessage
-				.parse(response, DirectMessage.TYPE_OUT);
+				.parse(response, Constants.TYPE_DIRECT_MESSAGES_OUTBOX);
 		if (dm != null && !dm.isNull()) {
-			dm.type = DirectMessage.TYPE_OUT;
 			dm.threadUserId = dm.recipientId;
 			dm.threadUserName = dm.recipientScreenName;
 			return dm;
@@ -909,15 +887,15 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 			log("DirectMessagesDelete()---statusCode=" + statusCode + " url="
 					+ url);
 		}
-		return DirectMessage.parse(response, Commons.TYPE_NONE);
+		return DirectMessage.parse(response, Constants.TYPE_NONE);
 	}
 
 	@Override
-	public List<Status> photosTimeline(int count, int page, String userId,
+	public ArrayList<Status> photosTimeline(int count, int page, String userId,
 			String sinceId, String maxId, String format, String mode)
 			throws ApiException {
-		List<Status> ss = fetchStatuses(URL_PHOTO_USER_TIMELINE, count, page,
-				userId, sinceId, maxId, format, mode, Status.TYPE_USER);
+		ArrayList<Status> ss = fetchStatuses(URL_PHOTO_USER_TIMELINE, count, page,
+				userId, sinceId, maxId, format, mode, Constants.TYPE_STATUSES_USER_TIMELINE);
 		if (App.DEBUG) {
 			log("photosTimeline()");
 		}
@@ -966,7 +944,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public List<User> blocksBlocking(int count, int page, String mode)
+	public ArrayList<User> blocksBlocking(int count, int page, String mode)
 			throws ApiException {
 		NetRequest.Builder builder = new NetRequest.Builder();
 		builder.url(URL_BLOCKS_USERS);
@@ -980,7 +958,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	}
 
 	@Override
-	public List<String> blocksIDs() throws ApiException {
+	public ArrayList<String> blocksIDs() throws ApiException {
 		NetRequest.Builder builder = new NetRequest.Builder();
 		builder.url(URL_BLOCKS_IDS);
 		NetResponse response = fetch(builder.build());

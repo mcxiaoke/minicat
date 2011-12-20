@@ -31,18 +31,15 @@ import com.fanfou.app.adapter.BaseCursorAdapter;
 import com.fanfou.app.adapter.MessageCursorAdapter;
 import com.fanfou.app.adapter.StatusCursorAdapter;
 import com.fanfou.app.adapter.ViewsAdapter;
-import com.fanfou.app.api.DirectMessage;
-import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.cache.ImageLoader;
-import com.fanfou.app.config.Actions;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.dialog.ConfirmDialog;
-import com.fanfou.app.service.FetchService;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
@@ -80,6 +77,7 @@ import com.fanfou.app.util.Utils;
  * @version 5.1 2011.12.06
  * @version 5.2 2011.12.09
  * @version 5.3 2011.12.13
+ * @version 6.0 2011.12.19
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
@@ -119,12 +117,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	private boolean endlessScroll;
 	private boolean soundEffect;
 
-	private OptionHelper mOptionHelper;
-
 	public static final String TAG = "HomePage";
-
-	BroadcastReceiver mSendSuccessReceiver;
-	IntentFilter mSendSuccessFilter;
 
 	private void log(String message) {
 		Log.d(TAG, message);
@@ -135,11 +128,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		super.onCreate(savedInstanceState);
 		if (App.DEBUG)
 			log("onCreate()");
-		// if (!App.me.isLogin) {
-		// IntentHelper.goLoginPage(this);
-		// finish();
-		// return;
-		// }
 
 		init();
 		setContentView(R.layout.home);
@@ -154,7 +142,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	private void init() {
-		initPage = getIntent().getIntExtra(Commons.EXTRA_PAGE, 0);
+		initPage = getIntent().getIntExtra(Constants.EXTRA_PAGE, 0);
 		endlessScroll = OptionHelper.readBoolean(
 				R.string.option_page_scroll_endless, false);
 		soundEffect = OptionHelper.readBoolean(
@@ -162,7 +150,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		mHandler = new Handler();
 		ImageLoader.getInstance();
 		initSoundManager();
-		initSendSuccessReceiver();
 	}
 
 	private void initSoundManager() {
@@ -170,51 +157,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		SoundManager.getInstance();
 		SoundManager.initSounds(this);
 		SoundManager.loadSounds();
-	}
-
-	private void initSendSuccessReceiver() {
-		mSendSuccessReceiver = new SendSuccessReceiver();
-		mSendSuccessFilter = new IntentFilter(Actions.ACTION_STATUS_SENT);
-		// mSendSuccessFilter.addAction(Actions.ACTION_MESSAGE_SEND);
-		mSendSuccessFilter.setPriority(1000);
-	}
-
-	private class SendSuccessReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (App.DEBUG) {
-				log("SendSuccessReceiver.received");
-				IntentHelper.logIntent(TAG, intent);
-			}
-			if (onSendSuccess(intent)) {
-				abortBroadcast();
-			}
-
-		}
-
-	}
-
-	private boolean onSendSuccess(Intent intent) {
-		// String action=intent.getAction();
-		boolean result = true;
-
-		// if(action.equals(Actions.ACTION_STATUS_SEND)){
-		if (cursors[0] != null) {
-			cursors[0].requery();
-		}
-		// }
-
-		// else if(action.equals(Actions.ACTION_MESSAGE_SEND)){
-		// boolean success=intent.getBooleanExtra(Commons.EXTRA_BOOLEAN, true);
-		// String text=intent.getStringExtra(Commons.EXTRA_TEXT);
-		// if(!success){
-		// Utils.notify(this, text);
-		// }else{
-		// Utils.notify(this, "私信未发送："+text);
-		// }
-		// }
-		return result;
 	}
 
 	/**
@@ -397,10 +339,10 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	private void setCursors() {
-		cursors[0] = initStatusCursor(Status.TYPE_HOME);
-		cursors[1] = initStatusCursor(Status.TYPE_MENTION);
+		cursors[0] = initStatusCursor(Constants.TYPE_STATUSES_HOME_TIMELINE);
+		cursors[1] = initStatusCursor(Constants.TYPE_STATUSES_MENTIONS);
 		cursors[2] = initMessageCursor();
-		cursors[3] = initStatusCursor(Status.TYPE_PUBLIC);
+		cursors[3] = initStatusCursor(Constants.TYPE_STATUSES_PUBLIC_TIMELINE);
 	}
 
 	private void initAdapters() {
@@ -445,15 +387,10 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	 *            类型参数：Home/Mention/Message/Public
 	 */
 	private void doRetrieve(final int page, boolean doGetMore) {
-		if (!App.verified) {
-			Utils.notify(this, "未通过验证，请登录");
-			return;
+		if (App.DEBUG) {
+			log("doRetrieve() page=" + page + " doGetMore=" + doGetMore);
 		}
-		Bundle b = new Bundle();
-		b.putInt(Commons.EXTRA_COUNT, FanFouApiConfig.DEFAULT_TIMELINE_COUNT);
-		b.putBoolean(Commons.EXTRA_FORMAT, false);
 		ResultReceiver receiver = new HomeResultReceiver(page, doGetMore);
-		;
 		String sinceId = null;
 		String maxId = null;
 		Cursor cursor = cursors[page];
@@ -461,31 +398,26 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		case 0:
 			if (doGetMore) {
 				maxId = Utils.getMaxId(cursor);
-				b.putString(Commons.EXTRA_MAX_ID, maxId);
 			} else {
 				sinceId = Utils.getSinceId(cursor);
-				b.putString(Commons.EXTRA_SINCE_ID, sinceId);
 			}
-			FetchService.start(this, Status.TYPE_HOME, receiver, b);
+			FanFouService.doFetchHomeTimeline(this, receiver, sinceId, maxId);
 			break;
 		case 1:
 			if (doGetMore) {
 				maxId = Utils.getMaxId(cursor);
-				b.putString(Commons.EXTRA_MAX_ID, maxId);
 			} else {
 				sinceId = Utils.getSinceId(cursor);
-				b.putString(Commons.EXTRA_SINCE_ID, sinceId);
 			}
-			b.putString(Commons.EXTRA_SINCE_ID, sinceId);
-			FetchService.start(this, Status.TYPE_MENTION, receiver, b);
+			FanFouService.doFetchMentions(this, receiver, sinceId, maxId);
 			break;
 		case 2:
-			b.putBoolean(Commons.EXTRA_BOOLEAN, doGetMore);
-			FetchService.start(this, DirectMessage.TYPE_ALL, receiver, b);
+			FanFouService.doFetchDirectMessagesConversationList(this, receiver,
+					doGetMore);
 			break;
 		case 3:
 			if (!doGetMore) {
-				FetchService.start(this, Status.TYPE_PUBLIC, receiver, b);
+				FanFouService.doFetchPublicTimeline(this, receiver);
 			}
 			break;
 		default:
@@ -504,21 +436,25 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	 * 刷新，载入更新的消息
 	 */
 	private void doRefresh() {
+		if (App.DEBUG) {
+			log("doRefresh()");
+		}
 		doRetrieve(mCurrentPage, false);
 	}
 
 	@Override
 	protected IntentFilter getIntentFilter() {
 		IntentFilter filter = new IntentFilter();
-		filter.addAction(Actions.ACTION_STATUS_SENT);
-		filter.addAction(Actions.ACTION_NOTIFICATION);
+		filter.addAction(Constants.ACTION_STATUS_SENT);
+		filter.addAction(Constants.ACTION_DRAFTS_SENT);
+		filter.addAction(Constants.ACTION_NOTIFICATION);
 		return filter;
 	}
 
 	@Override
 	protected boolean onBroadcastReceived(Intent intent) {
 		String action = intent.getAction();
-		if (action.equals(Actions.ACTION_STATUS_SENT)) {
+		if (action.equals(Constants.ACTION_STATUS_SENT)) {
 			if (App.DEBUG) {
 				log("onBroadcastReceived ACTION_STATUS_SENT");
 			}
@@ -531,12 +467,24 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				}
 			}
 
-		} else if (action.equals(Actions.ACTION_NOTIFICATION)) {
+		} else if (action.equals(Constants.ACTION_DRAFTS_SENT)) {
+			if (App.DEBUG) {
+				log("onBroadcastReceived ACTION_DRAFTS_SENT");
+			}
+
+			if (mCurrentPage == 0) {
+				boolean needRefresh = OptionHelper.readBoolean(
+						R.string.option_refresh_after_send, false);
+				if (needRefresh) {
+					onRefreshClick();
+				}
+			}
+		} else if (action.equals(Constants.ACTION_NOTIFICATION)) {
 			if (App.DEBUG) {
 				log("onBroadcastReceived ACTION_NOTIFICATION");
 			}
-			int type = intent.getIntExtra(Commons.EXTRA_TYPE, -1);
-			int count = intent.getIntExtra(Commons.EXTRA_COUNT, 0);
+			int type = intent.getIntExtra(Constants.EXTRA_TYPE, -1);
+			int count = intent.getIntExtra(Constants.EXTRA_COUNT, 0);
 			switch (type) {
 			case NotificationService.NOTIFICATION_TYPE_HOME:
 				if (count > 0) {
@@ -609,7 +557,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		super.onResume();
 		if (App.DEBUG)
 			log("onResume");
-		registerReceiver(mSendSuccessReceiver, mSendSuccessFilter);
+
 		for (int i = 0; i < views.length; i++) {
 			if (views[i] != null && states[i] != null) {
 				views[i].onRestoreInstanceState(states[i]);
@@ -620,7 +568,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	@Override
 	protected void onPause() {
-		unregisterReceiver(mSendSuccessReceiver);
 		super.onPause();
 		if (App.DEBUG)
 			log("onPause");
@@ -658,7 +605,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		setIntent(intent);
-		initPage = getIntent().getIntExtra(Commons.EXTRA_PAGE, 0);
+		initPage = getIntent().getIntExtra(Constants.EXTRA_PAGE, 0);
 		if (App.DEBUG) {
 			log("onNewIntent page=" + initPage);
 		}
@@ -734,23 +681,22 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		protected void onReceiveResult(int resultCode, Bundle resultData) {
 			setBusy(false);
 			switch (resultCode) {
-			case Commons.RESULT_CODE_FINISH:
-				int type = resultData.getInt(Commons.EXTRA_TYPE,
-						Status.TYPE_HOME);
-				int count = resultData.getInt(Commons.EXTRA_COUNT);
+			case Constants.RESULT_SUCCESS:
+				int type = resultData.getInt(Constants.EXTRA_TYPE,
+						Constants.TYPE_STATUSES_HOME_TIMELINE);
+				int count = resultData.getInt(Constants.EXTRA_COUNT);
 				if (doGetMore) {
 					if (i < NUMS_OF_PAGE - 1) {
 						views[i].onLoadMoreComplete();
 					}
 					cursors[i].requery();
 				} else {
-
 					stopRefreshAnimation();
 					if (i < NUMS_OF_PAGE - 1) {
 						views[i].addFooter();
 					}
 					if (count > 0) {
-						if (type == DirectMessage.TYPE_ALL) {
+						if (type == Constants.TYPE_DIRECT_MESSAGES_CONVERSTATION_LIST) {
 							Utils.notify(mContext, count + "条新私信");
 						} else {
 							Utils.notify(mContext, count + "条新消息");
@@ -763,10 +709,10 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 					}
 				}
 				break;
-			case Commons.RESULT_CODE_ERROR:
+			case Constants.RESULT_ERROR:
 				String errorMessage = resultData
-						.getString(Commons.EXTRA_ERROR_MESSAGE);
-				int errorCode = resultData.getInt(Commons.EXTRA_ERROR_CODE);
+						.getString(Constants.EXTRA_ERROR);
+				int errorCode = resultData.getInt(Constants.EXTRA_CODE);
 				if (doGetMore) {
 					views[i].onLoadMoreComplete();
 				} else {
@@ -873,26 +819,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	@Override
-	public void onBackPressed() {
-		boolean needConfirm = OptionHelper.readBoolean(
-				R.string.option_confirm_on_exit, false);
-		if (needConfirm) {
-			final ConfirmDialog dialog = new ConfirmDialog(this, "提示",
-					"确认退出饭否吗？");
-			dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
-
-				@Override
-				public void onButton1Click() {
-					mContext.finish();
-				}
-			});
-			dialog.show();
-		} else {
-			finish();
-		}
-	}
-
-	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
 		// if (mCurrentPage > 0) {
@@ -914,7 +840,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	@Override
 	public void onRefreshClick() {
 		if (App.DEBUG) {
-			log("onRefreshClick page=" + mCurrentPage);
+			log("onRefreshClick page=" + mCurrentPage + " isBusy" + isBusy);
 		}
 		if (isBusy) {
 			return;

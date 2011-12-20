@@ -18,10 +18,7 @@ import com.fanfou.app.WritePage;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Draft;
-import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
-import com.fanfou.app.config.Actions;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.util.ImageHelper;
 import com.fanfou.app.util.StringHelper;
@@ -75,11 +72,11 @@ public class PostStatusService extends WakefulIntentService {
 	}
 
 	private void parseIntent(Intent intent) {
-		type = intent.getIntExtra(Commons.EXTRA_TYPE, WritePage.TYPE_NORMAL);
-		text = intent.getStringExtra(Commons.EXTRA_TEXT);
-		srcFile = (File) intent.getSerializableExtra(Commons.EXTRA_FILE);
-		relationId = intent.getStringExtra(Commons.EXTRA_IN_REPLY_TO_ID);
-		location = intent.getStringExtra(Commons.EXTRA_LOCATION);
+		type = intent.getIntExtra(Constants.EXTRA_TYPE, WritePage.TYPE_NORMAL);
+		text = intent.getStringExtra(Constants.EXTRA_TEXT);
+		srcFile = (File) intent.getSerializableExtra(Constants.EXTRA_DATA);
+		relationId = intent.getStringExtra(Constants.EXTRA_IN_REPLY_TO_ID);
+		location = intent.getStringExtra(Constants.EXTRA_LOCATION);
 		if (App.DEBUG) {
 			log("location="
 					+ (StringHelper.isEmpty(location) ? "null" : location));
@@ -95,12 +92,12 @@ public class PostStatusService extends WakefulIntentService {
 			if (srcFile == null || !srcFile.exists()) {
 				if (type == WritePage.TYPE_REPLY) {
 					result = api.statusesCreate(text, relationId, null,
-							location, null, FanFouApiConfig.FORMAT_HTML,
-							FanFouApiConfig.MODE_LITE);
+							location, null, Constants.FORMAT,
+							Constants.MODE);
 				} else {
 					result = api.statusesCreate(text, null, null, location,
-							relationId, FanFouApiConfig.FORMAT_HTML,
-							FanFouApiConfig.MODE_LITE);
+							relationId, Constants.FORMAT,
+							Constants.MODE);
 				}
 			} else {
 				int quality;
@@ -109,7 +106,7 @@ public class PostStatusService extends WakefulIntentService {
 					quality = ImageHelper.IMAGE_QUALITY_HIGH;
 				} else if (apnType == ApnType.HSDPA) {
 					quality = ImageHelper.IMAGE_QUALITY_MEDIUM;
-				}else{
+				} else {
 					quality = ImageHelper.IMAGE_QUALITY_LOW;
 				}
 				File photo = ImageHelper.prepareUploadFile(this, srcFile,
@@ -119,8 +116,7 @@ public class PostStatusService extends WakefulIntentService {
 						log("photo file=" + srcFile.getName() + " size="
 								+ photo.length() / 1024 + " quality=" + quality);
 					result = api.photosUpload(photo, text, null, location,
-							FanFouApiConfig.FORMAT_HTML,
-							FanFouApiConfig.MODE_LITE);
+							Constants.FORMAT, Constants.MODE);
 					photo.delete();
 				}
 
@@ -189,7 +185,7 @@ public class PostStatusService extends WakefulIntentService {
 	}
 
 	private void sendSuccessBroadcast() {
-		Intent intent = new Intent(Actions.ACTION_STATUS_SENT);
+		Intent intent = new Intent(Constants.ACTION_STATUS_SENT);
 		intent.setPackage(getPackageName());
 		sendOrderedBroadcast(intent, null);
 	}

@@ -68,11 +68,7 @@ public class EndlessListViewNoHeader extends ListView implements
 		setVerticalScrollBarEnabled(false);
 		setOnItemClickListener(this);
 
-		boolean fastScroll = OptionHelper.readBoolean(
-				R.string.option_fast_scroll_on, false);
-		if (fastScroll) {
-			setFastScrollEnabled(true);
-		}
+		setFastScrollEnabled(true);
 
 		initHeaderAndFooter();
 	}

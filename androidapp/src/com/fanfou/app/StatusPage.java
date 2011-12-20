@@ -16,12 +16,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.fanfou.app.App.ApnType;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.cache.ImageLoader;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
@@ -137,8 +139,8 @@ public class StatusPage extends BaseActivity {
 
 	private void parseIntent() {
 		Intent intent = getIntent();
-		statusId = intent.getStringExtra(Commons.EXTRA_STATUS_ID);
-		status = (Status) intent.getParcelableExtra(Commons.EXTRA_STATUS);
+		statusId = intent.getStringExtra(Constants.EXTRA_ID);
+		status = (Status) intent.getParcelableExtra(Constants.EXTRA_DATA);
 
 		if (status == null && statusId != null) {
 			status = CacheManager.getStatus(this, statusId);
@@ -244,11 +246,6 @@ public class StatusPage extends BaseActivity {
 		if (bitmap != null) {
 			iPhoto.setImageBitmap(bitmap);
 			mPhotoState = PHOTO_LARGE;
-			if (App.DEBUG) {
-				Log.d(TAG,
-						"checkPhoto has large cache, mPhotoState=PHOTO_LARGE "
-								+ mPhotoState);
-			}
 			return;
 		}
 
@@ -258,11 +255,6 @@ public class StatusPage extends BaseActivity {
 		if (bitmap != null) {
 			iPhoto.setImageBitmap(bitmap);
 			mPhotoState = PHOTO_SMALL;
-			if (App.DEBUG) {
-				Log.d(TAG,
-						"checkPhoto has thumb cache, mPhotoState=PHOTO_SMALL "
-								+ mPhotoState);
-			}
 			return;
 		}
 
@@ -270,21 +262,10 @@ public class StatusPage extends BaseActivity {
 		if (textMode) {
 			iPhoto.setImageResource(R.drawable.photo_icon);
 		} else {
-			// 再根据系统设置处理
-			int set = OptionHelper.parseInt(R.string.option_pic_level);
-			switch (set) {
-			case 2:
-				// 如果设置为大图
+			if (App.getApnType() == ApnType.WIFI) {
 				loadPhoto(PHOTO_LARGE);
-				break;
-			case 1:
-				// 如果设置为缩略图
-				loadPhoto(PHOTO_SMALL);
-				break;
-			default:
-				// 设置为图标
-				loadPhoto(PHOTO_ICON);
-				break;
+			} else {
+				iPhoto.setImageResource(R.drawable.photo_icon);
 			}
 		}
 	}
@@ -319,7 +300,7 @@ public class StatusPage extends BaseActivity {
 			break;
 		case R.id.status_thread:
 			Intent intent = new Intent(mContext, ConversationPage.class);
-			intent.putExtra(Commons.EXTRA_STATUS, status);
+			intent.putExtra(Constants.EXTRA_DATA, status);
 			mContext.startActivity(intent);
 			// testAnimation();
 			break;
@@ -379,7 +360,7 @@ public class StatusPage extends BaseActivity {
 				Log.d(TAG, "goPhotoViewer() url=" + filePath);
 			}
 			Intent intent = new Intent(mContext, PhotoViewPage.class);
-			intent.putExtra(Commons.EXTRA_URL, filePath);
+			intent.putExtra(Constants.EXTRA_URL, filePath);
 			mContext.startActivity(intent);
 			overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_enter);
 		}
@@ -479,7 +460,7 @@ public class StatusPage extends BaseActivity {
 		dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
 			@Override
 			public void onButton1Click() {
-				ActionManager.doStatusDelete(mContext, status.id, true);
+				FanFouService.doStatusDelete(mContext, status.id, true);
 			}
 		});
 		dialog.show();
@@ -493,9 +474,9 @@ public class StatusPage extends BaseActivity {
 			public void onActionSuccess(int type, String message) {
 				if (App.DEBUG)
 					log("type="
-							+ (type == Commons.ACTION_STATUS_FAVORITE ? "收藏"
+							+ (type == Constants.TYPE_FAVORITES_CREATE ? "收藏"
 									: "取消收藏") + " message=" + message);
-				if (type == Commons.ACTION_STATUS_FAVORITE) {
+				if (type == Constants.TYPE_FAVORITES_CREATE) {
 					status.favorited = true;
 				} else {
 					status.favorited = false;
@@ -508,7 +489,7 @@ public class StatusPage extends BaseActivity {
 			}
 		};
 		updateFavoriteButton(!status.favorited);
-		ActionManager.doFavorite(this, status, li);
+		FanFouService.doFavorite(this, status, li);
 	}
 
 	private void doCopy(String content) {

@@ -16,9 +16,9 @@ import android.widget.ListView;
 import com.fanfou.app.adapter.ConversationAdapter;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
-import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
-import com.fanfou.app.config.Commons;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.UIManager;
 import com.fanfou.app.ui.widget.EndlessListView;
@@ -93,7 +93,7 @@ public class ConversationPage extends BaseActivity implements
 
 	protected boolean parseIntent() {
 		Intent intent = getIntent();
-		mStatus = (Status) intent.getParcelableExtra(Commons.EXTRA_STATUS);
+		mStatus = (Status) intent.getParcelableExtra(Constants.EXTRA_DATA);
 		return mStatus != null;
 	}
 
@@ -161,8 +161,8 @@ public class ConversationPage extends BaseActivity implements
 			String id = mStatus.id;
 			try {
 				if (!StringHelper.isEmpty(id)) {
-					return api.contextTimeline(id, FanFouApiConfig.FORMAT_HTML,
-							FanFouApiConfig.MODE_LITE);
+					return api.contextTimeline(id, Constants.FORMAT,
+							Constants.MODE);
 				}
 			} catch (ApiException e) {
 				if (App.DEBUG) {

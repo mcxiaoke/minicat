@@ -14,8 +14,10 @@ import android.widget.TextView;
 
 import com.fanfou.app.App;
 import com.fanfou.app.R;
-import com.fanfou.app.api.User;
+import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.FanFouService;
 
 /**
  * @author mcxiaoke
@@ -59,12 +61,12 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 		}
 
 		final String[] projection = new String[] { BaseColumns._ID,
-				UserInfo.ID, UserInfo.SCREEN_NAME, UserInfo.TYPE,
-				UserInfo.OWNER_ID };
-		String where = UserInfo.OWNER_ID + " = '" + App.getUserId() + "' AND "
-				+ UserInfo.TYPE + " = '" + User.TYPE_FRIENDS + "' AND "
-				+ UserInfo.SCREEN_NAME + " like '%" + constraint + "%' OR "
-				+ UserInfo.ID + " like '%" + constraint + "%'";
+				BasicColumns.ID, UserInfo.SCREEN_NAME, BasicColumns.TYPE,
+				BasicColumns.OWNER_ID };
+		String where = BasicColumns.OWNER_ID + " = '" + App.getUserId() + "' AND "
+				+ BasicColumns.TYPE + " = '" + Constants.TYPE_USERS_FRIENDS
+				+ "' AND " + UserInfo.SCREEN_NAME + " like '%" + constraint
+				+ "%' OR " + BasicColumns.ID + " like '%" + constraint + "%'";
 		if (App.DEBUG) {
 			Log.d(TAG, "runQueryOnBackgroundThread where=" + where);
 		}
@@ -74,7 +76,7 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 		// return mContext.getContentResolver().query(UserInfo.CONTENT_URI,
 		// projection, where, null, null);
 
-		return mContext.managedQuery(UserInfo.CONTENT_URI, projection, where,
+		return mContext.getContentResolver().query(UserInfo.CONTENT_URI, projection, where,
 				null, null);
 		// if(oldCursor!=null){
 		// oldCursor.close();
@@ -85,7 +87,7 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		String id = cursor.getString(cursor.getColumnIndex(UserInfo.ID));
+		String id = cursor.getString(cursor.getColumnIndex(BasicColumns.ID));
 		String screenName = cursor.getString(cursor
 				.getColumnIndex(UserInfo.SCREEN_NAME));
 		TextView tv = (TextView) view.findViewById(R.id.item_user_name);

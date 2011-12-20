@@ -13,7 +13,6 @@ import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
-import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.User;
 import com.fanfou.app.db.Contents.UserInfo;
@@ -28,9 +27,10 @@ import com.fanfou.app.util.OptionHelper;
  * @version 2.1 2011.11.24
  * @version 2.2 2011.11.28
  * @version 2.3 2011.11.29
+ * @version 2.4 2011.12.19
  * 
  */
-public class AutoCompleteService extends BaseIntentService {
+public class AutoCompleteService extends WakefulIntentService {
 	private static final String TAG = AutoCompleteService.class.getSimpleName();
 
 	public void log(String message) {
@@ -50,7 +50,8 @@ public class AutoCompleteService extends BaseIntentService {
 		c.add(Calendar.MINUTE, 5);
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-		am.set(AlarmManager.RTC, c.getTimeInMillis(), getPendingIntent(context));
+		am.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
+				getPendingIntent(context));
 	}
 
 	public static void set(Context context) {
@@ -116,11 +117,10 @@ public class AutoCompleteService extends BaseIntentService {
 		while (more) {
 			List<User> result = null;
 			try {
-				result = api.usersFriends(null,
-						FanFouApiConfig.MAX_USERS_COUNT, page,
-						FanFouApiConfig.MODE_LITE);
+				result = api.usersFriends(null, Constants.MAX_USERS_COUNT,
+						page, Constants.MODE);
 			} catch (ApiException e) {
-				if(App.DEBUG){
+				if (App.DEBUG) {
 					Log.e(TAG, e.toString());
 				}
 			}
@@ -134,7 +134,7 @@ public class AutoCompleteService extends BaseIntentService {
 					log("doFetchAutoComplete page==" + page + " size=" + size
 							+ " insert rows=" + insertedNums);
 				}
-				if (size < FanFouApiConfig.MAX_USERS_COUNT || page >= 20) {
+				if (size < Constants.MAX_USERS_COUNT || page >= 20) {
 					more = false;
 				}
 			} else {

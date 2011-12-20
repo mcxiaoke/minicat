@@ -16,11 +16,12 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.App;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.http.NetResponse;
 import com.fanfou.app.http.ResponseCode;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.util.StringHelper;
 
 /**
@@ -34,6 +35,8 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.9 2011.11.21
  * @version 2.0 2011.11.23
  * @version 2.1 2011.12.01
+ * @version 2.2 2011.12.16
+ * @version 2.3 2011.12.19
  * 
  */
 public class DirectMessage implements Storable<DirectMessage> {
@@ -43,12 +46,6 @@ public class DirectMessage implements Storable<DirectMessage> {
 	private static void log(String message) {
 		Log.d(TAG, message);
 	}
-
-	public static final int TYPE_IN = Commons.DIRECT_MESSAGE_TYPE_INBOX;
-	public static final int TYPE_OUT = Commons.DIRECT_MESSAGE_TYPE_OUTBOX;
-	public static final int TYPE_ALL = Commons.DIRECT_MESSAGE_TYPE_ALL;
-	public static final int TYPE_LIST = Commons.DIRECT_MESSAGE_TYPE_CONVERSATION_LIST;
-	public static final int TYPE_USER = Commons.DIRECT_MESSAGE_TYPE_CONVERSATION_USER;
 
 	public String id;
 	public String ownerId;
@@ -91,18 +88,18 @@ public class DirectMessage implements Storable<DirectMessage> {
 		return StringHelper.isEmpty(id);
 	}
 
-	public static List<DirectMessage> parseMessges(NetResponse r, int type)
+	public static ArrayList<DirectMessage> parseMessges(NetResponse r, int type)
 			throws ApiException {
 		JSONArray a = r.getJSONArray();
 		return parseMessges(a, type);
 	}
 
-	public static List<DirectMessage> parseMessges(JSONArray a, int type)
+	public static ArrayList<DirectMessage> parseMessges(JSONArray a, int type)
 			throws ApiException {
 		if (a == null) {
 			return null;
 		}
-		List<DirectMessage> dms = new ArrayList<DirectMessage>();
+		ArrayList<DirectMessage> dms = new ArrayList<DirectMessage>();
 		try {
 			for (int i = 0; i < a.length(); i++) {
 				JSONObject o = a.getJSONObject(i);
@@ -116,22 +113,22 @@ public class DirectMessage implements Storable<DirectMessage> {
 		return dms;
 	}
 
-	public static List<DirectMessage> parseConversationList(NetResponse response)
+	public static ArrayList<DirectMessage> parseConversationList(NetResponse response)
 			throws ApiException {
 		return parseConversationList(response.getJSONArray());
 	}
 
-	public static List<DirectMessage> parseConversationList(JSONArray a)
+	public static ArrayList<DirectMessage> parseConversationList(JSONArray a)
 			throws ApiException {
 		if (a == null) {
 			return null;
 		}
-		List<DirectMessage> dms = new ArrayList<DirectMessage>();
+		ArrayList<DirectMessage> dms = new ArrayList<DirectMessage>();
 		try {
 			for (int i = 0; i < a.length(); i++) {
 				JSONObject io = a.getJSONObject(i);
 				JSONObject dmo = io.getJSONObject("dm");
-				DirectMessage dm = parse(dmo, TYPE_LIST);
+				DirectMessage dm = parse(dmo, Constants.TYPE_DIRECT_MESSAGES_CONVERSTATION_LIST);
 				dms.add(dm);
 			}
 		} catch (JSONException e) {
@@ -148,7 +145,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 
 	public static List<DirectMessage> parseConversationUser(JSONArray a)
 			throws ApiException {
-		return parseMessges(a, TYPE_USER);
+		return parseMessges(a, Constants.TYPE_DIRECT_MESSAGES_CONVERSTATION);
 	}
 
 	public static DirectMessage parse(Cursor c) {

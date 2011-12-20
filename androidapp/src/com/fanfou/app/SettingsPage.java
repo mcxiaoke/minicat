@@ -76,9 +76,6 @@ public class SettingsPage extends PreferenceActivity implements
 
 		addPreferencesFromResource(R.xml.options);
 
-		ListPreference picLevel = (ListPreference) findPreference(getText(R.string.option_pic_level));
-		picLevel.setSummary(picLevel.getEntry());
-
 		ListPreference bottomWriteIcon = (ListPreference) findPreference(getText(R.string.option_bottom_write_icon));
 		bottomWriteIcon.setSummary(bottomWriteIcon.getEntry());
 
@@ -218,7 +215,8 @@ public class SettingsPage extends PreferenceActivity implements
 				}
 				return;
 			}
-			if (info != null && info.versionCode > App.getApp().appVersionCode) {
+			App.getApp();
+			if (info != null && info.versionCode > App.appVersionCode) {
 				DownloadService.showUpdateConfirmDialog(c, info);
 			} else {
 				Utils.notify(c, "你使用的已经是最新版");

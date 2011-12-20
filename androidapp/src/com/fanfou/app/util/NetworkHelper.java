@@ -191,7 +191,7 @@ public final class NetworkHelper {
 				App.noConnection = true;
 			}
 		} catch (Exception e) {
-			if(App.DEBUG){
+			if (App.DEBUG) {
 				Log.d("NetworkHelper", e.toString());
 			}
 		}

@@ -1,6 +1,7 @@
 package com.fanfou.app.api;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,7 +67,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Status> pubicTimeline(int count, String format, String mode)
+	ArrayList<Status> pubicTimeline(int count, String format, String mode)
 			throws ApiException;
 
 	// friends timeline
@@ -81,7 +82,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Status> homeTimeline(int count, int page, String sinceId,
+	ArrayList<Status> homeTimeline(int count, int page, String sinceId,
 			String maxId, String format, String mode) throws ApiException;
 
 	// user timeline
@@ -96,7 +97,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Status> userTimeline(int count, int page, String userId,
+	ArrayList<Status> userTimeline(int count, int page, String userId,
 			String sinceId, String maxId, String format, String mode)
 			throws ApiException;
 
@@ -112,7 +113,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Status> photosTimeline(int count, int page, String userId,
+	ArrayList<Status> photosTimeline(int count, int page, String userId,
 			String sinceId, String maxId, String format, String mode)
 			throws ApiException;
 
@@ -128,8 +129,8 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Status> mentions(int count, int page, String sinceId, String maxId,
-			String format, String mode) throws ApiException;
+	ArrayList<Status> mentions(int count, int page, String sinceId,
+			String maxId, String format, String mode) throws ApiException;
 
 	// replies timeline
 	/**
@@ -143,8 +144,9 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Status> replies(int count, int page, String userId, String sinceId,
-			String maxId, String format, String mode) throws ApiException;
+	ArrayList<Status> replies(int count, int page, String userId,
+			String sinceId, String maxId, String format, String mode)
+			throws ApiException;
 
 	/**
 	 * favorites
@@ -155,8 +157,8 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Status> favorites(int count, int page, String userId, String format,
-			String mode) throws ApiException;
+	ArrayList<Status> favorites(int count, int page, String userId,
+			String format, String mode) throws ApiException;
 
 	/**
 	 * msg context timeline
@@ -167,7 +169,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Status> contextTimeline(String id, String format, String mode)
+	ArrayList<Status> contextTimeline(String id, String format, String mode)
 			throws ApiException;
 
 	/**
@@ -246,7 +248,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Status> search(String keyword, String sinceId, String maxId,
+	ArrayList<Status> search(String keyword, String sinceId, String maxId,
 			int count, String format, String mode) throws ApiException;
 
 	/**
@@ -259,7 +261,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<User> searchUsers(String keyword, int count, int page, String mode)
+	ArrayList<User> searchUsers(String keyword, int count, int page, String mode)
 			throws ApiException;
 
 	/**
@@ -268,7 +270,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Search> trends() throws ApiException;
+	ArrayList<Search> trends() throws ApiException;
 
 	/**
 	 * get saved searches
@@ -276,7 +278,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<Search> savedSearchesList() throws ApiException;
+	ArrayList<Search> savedSearchesList() throws ApiException;
 
 	/**
 	 * show a saved search
@@ -312,7 +314,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<User> usersFriends(String userId, int count, int page, String mode)
+	ArrayList<User> usersFriends(String userId, int count, int page, String mode)
 			throws ApiException;
 
 	/**
@@ -386,7 +388,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<User> blocksBlocking(int count, int page, String mode)
+	ArrayList<User> blocksBlocking(int count, int page, String mode)
 			throws ApiException;
 
 	/**
@@ -395,7 +397,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<String> blocksIDs() throws ApiException;
+	ArrayList<String> blocksIDs() throws ApiException;
 
 	/**
 	 * check two users is or not friends, check a is or not follow b.
@@ -414,7 +416,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<String> friendsIDs(String userId, int count, int page)
+	ArrayList<String> friendsIDs(String userId, int count, int page)
 			throws ApiException;
 
 	/**
@@ -424,7 +426,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<String> followersIDs(String userId, int count, int page)
+	ArrayList<String> followersIDs(String userId, int count, int page)
 			throws ApiException;
 
 	/**
@@ -437,7 +439,7 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<DirectMessage> directMessagesInbox(int count, int page,
+	ArrayList<DirectMessage> directMessagesInbox(int count, int page,
 			String sinceId, String maxId, String mode) throws ApiException;
 
 	/**
@@ -450,14 +452,14 @@ public interface Api {
 	 * @return
 	 * @throws ApiException
 	 */
-	List<DirectMessage> directMessagesOutbox(int count, int page,
+	ArrayList<DirectMessage> directMessagesOutbox(int count, int page,
 			String sinceId, String maxId, String mode) throws ApiException;
 
-	List<DirectMessage> directMessagesConversationList(int count, int page,
-			String mode) throws ApiException;
+	ArrayList<DirectMessage> directMessagesConversationList(int count,
+			int page, String mode) throws ApiException;
 
-	List<DirectMessage> directMessagesConversation(String userId, String maxId,
-			int count, String mode) throws ApiException;
+	ArrayList<DirectMessage> directMessagesConversation(String userId,
+			String maxId, int count, String mode) throws ApiException;
 
 	/**
 	 * send a dm

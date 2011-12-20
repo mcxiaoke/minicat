@@ -143,6 +143,7 @@ public class ImageLoaderNew implements IImageLoader {
 			task = t;
 		}
 
+		@Override
 		public void run() {
 			if (isExpired(mViewsMap, task))
 				return;

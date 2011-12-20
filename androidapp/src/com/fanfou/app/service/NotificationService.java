@@ -17,11 +17,8 @@ import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
-import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.Status;
-import com.fanfou.app.config.Actions;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
@@ -42,17 +39,18 @@ import com.fanfou.app.util.Utils;
  * @version 2.2 2011.11.25
  * @version 2.5 2011.12.02
  * @version 2.6 2011.12.09
+ * @version 2.7 2011.12.19
  * 
  */
-public class NotificationService extends BaseIntentService {
+public class NotificationService extends WakefulIntentService {
 	private static final String TAG = NotificationService.class.getSimpleName();
 
-	public static final int NOTIFICATION_TYPE_HOME = Status.TYPE_HOME;
-	public static final int NOTIFICATION_TYPE_MENTION = Status.TYPE_MENTION; // @消息
-	public static final int NOTIFICATION_TYPE_DM = DirectMessage.TYPE_IN; // 私信
+	public static final int NOTIFICATION_TYPE_HOME = Constants.TYPE_STATUSES_HOME_TIMELINE;
+	public static final int NOTIFICATION_TYPE_MENTION = Constants.TYPE_STATUSES_MENTIONS; // @消息
+	public static final int NOTIFICATION_TYPE_DM = Constants.TYPE_DIRECT_MESSAGES_INBOX; // 私信
 
-	private static final int DEFAULT_COUNT = FanFouApiConfig.DEFAULT_TIMELINE_COUNT;
-	private static final int MAX_COUNT = FanFouApiConfig.MAX_TIMELINE_COUNT;
+	private static final int DEFAULT_COUNT = Constants.DEFAULT_TIMELINE_COUNT;
+	private static final int MAX_COUNT = Constants.MAX_TIMELINE_COUNT;
 	private static final int DEFAULT_PAGE = 0;
 	private Api mApi;
 
@@ -80,7 +78,8 @@ public class NotificationService extends BaseIntentService {
 		c.add(Calendar.MINUTE, interval);
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-		am.set(AlarmManager.RTC, c.getTimeInMillis(), getPendingIntent(context));
+		am.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
+				getPendingIntent(context));
 
 		if (App.DEBUG) {
 			Log.d(TAG, "set interval=" + interval + " next time="
@@ -168,9 +167,9 @@ public class NotificationService extends BaseIntentService {
 	}
 
 	private void handleDm(int count) throws ApiException {
-		Cursor mc = initCursor(DirectMessage.TYPE_IN);
+		Cursor mc = initCursor(Constants.TYPE_DIRECT_MESSAGES_INBOX);
 		List<DirectMessage> dms = mApi.directMessagesInbox(count, DEFAULT_PAGE,
-				Utils.getDmSinceId(mc), null, FanFouApiConfig.MODE_LITE);
+				Utils.getDmSinceId(mc), null, Constants.MODE);
 		mc.close();
 		if (dms != null) {
 			int size = dms.size();
@@ -197,10 +196,10 @@ public class NotificationService extends BaseIntentService {
 	}
 
 	private void handleMention(int count) throws ApiException {
-		Cursor mc = initCursor(Status.TYPE_MENTION);
+		Cursor mc = initCursor(Constants.TYPE_STATUSES_MENTIONS);
 		List<Status> ss = mApi.mentions(count, DEFAULT_PAGE,
-				Utils.getSinceId(mc), null, FanFouApiConfig.FORMAT_HTML,
-				FanFouApiConfig.MODE_LITE);
+				Utils.getSinceId(mc), null, Constants.FORMAT,
+				Constants.MODE);
 		mc.close();
 		if (ss != null) {
 			int size = ss.size();
@@ -226,10 +225,10 @@ public class NotificationService extends BaseIntentService {
 	}
 
 	private void handleHome(int count) throws ApiException {
-		Cursor mc = initCursor(Status.TYPE_HOME);
+		Cursor mc = initCursor(Constants.TYPE_STATUSES_HOME_TIMELINE);
 		List<Status> ss = mApi.homeTimeline(count, DEFAULT_PAGE,
-				Utils.getSinceId(mc), null, FanFouApiConfig.FORMAT_HTML,
-				FanFouApiConfig.MODE_LITE);
+				Utils.getSinceId(mc), null, Constants.FORMAT,
+				Constants.MODE);
 		mc.close();
 		if (ss != null) {
 			int size = ss.size();
@@ -276,7 +275,7 @@ public class NotificationService extends BaseIntentService {
 		Uri uri = StatusInfo.CONTENT_URI;
 		String[] columns = StatusInfo.COLUMNS;
 		String orderBy = FanFouProvider.ORDERBY_DATE_DESC;
-		if (type == DirectMessage.TYPE_IN) {
+		if (type == Constants.TYPE_DIRECT_MESSAGES_INBOX) {
 			uri = DirectMessageInfo.CONTENT_URI;
 			columns = DirectMessageInfo.COLUMNS;
 		}
@@ -291,10 +290,10 @@ public class NotificationService extends BaseIntentService {
 					+ " active=" + App.active);
 		}
 		Intent intent = new Intent();
-		intent.putExtra(Commons.EXTRA_TYPE, type);
-		intent.putExtra(Commons.EXTRA_COUNT, count);
-		intent.putExtra(Commons.EXTRA_STATUS, status);
-		intent.setAction(Actions.ACTION_NOTIFICATION);
+		intent.putExtra(Constants.EXTRA_TYPE, type);
+		intent.putExtra(Constants.EXTRA_COUNT, count);
+		intent.putExtra(Constants.EXTRA_DATA, status);
+		intent.setAction(Constants.ACTION_NOTIFICATION);
 		broadcast(intent);
 	}
 
@@ -304,10 +303,10 @@ public class NotificationService extends BaseIntentService {
 					+ count + " active=" + App.active);
 		}
 		Intent intent = new Intent();
-		intent.putExtra(Commons.EXTRA_TYPE, type);
-		intent.putExtra(Commons.EXTRA_COUNT, count);
-		intent.putExtra(Commons.EXTRA_MESSAGE, dm);
-		intent.setAction(Actions.ACTION_NOTIFICATION);
+		intent.putExtra(Constants.EXTRA_TYPE, type);
+		intent.putExtra(Constants.EXTRA_COUNT, count);
+		intent.putExtra(Constants.EXTRA_DATA, dm);
+		intent.setAction(Constants.ACTION_NOTIFICATION);
 		broadcast(intent);
 	}
 

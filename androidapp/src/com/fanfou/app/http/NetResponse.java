@@ -1,12 +1,15 @@
 ﻿package com.fanfou.app.http;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
+import org.apache.http.util.CharArrayBuffer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +18,7 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.api.ApiException;
+import com.fanfou.app.util.IOHelper;
 
 /**
  * @author mcxiaoke
@@ -26,6 +30,8 @@ import com.fanfou.app.api.ApiException;
  */
 public class NetResponse implements ResponseInterface, ResponseCode {
 	private static final String TAG = NetResponse.class.getSimpleName();
+
+	private static final int BUFFER_SIZE = 8196;
 
 	// private HttpResponse response;
 	private HttpEntity entity;
@@ -47,7 +53,8 @@ public class NetResponse implements ResponseInterface, ResponseCode {
 	@Override
 	public final String getContent() throws IOException {
 		if (content == null) {
-			content = EntityUtils.toString(entity, HTTP.UTF_8);
+			// content = EntityUtils.toString(entity, HTTP.UTF_8);
+			content = entityToString(entity);
 			used = true;
 		}
 		if (App.DEBUG) {
@@ -85,5 +92,38 @@ public class NetResponse implements ResponseInterface, ResponseCode {
 	public String toString() {
 		return "HttpResponse{" + "statusCode=" + statusCode + ", content='"
 				+ content + '\'' + ", used=" + used + '}';
+	}
+
+	public static String entityToString(final HttpEntity entity)
+			throws IOException {
+		if (entity == null) {
+			return "";
+		}
+		InputStream is = entity.getContent();
+		if (is == null) {
+			return "";
+		}
+		if (entity.getContentLength() > Integer.MAX_VALUE) {
+			throw new IllegalArgumentException(
+					"HTTP entity too large to be buffered in memory");
+		}
+		int i = (int) entity.getContentLength();
+		if (i < 0) {
+			i = 4096;
+		}
+		String charset = HTTP.UTF_8;
+		Reader reader = new InputStreamReader(is, charset);
+		CharArrayBuffer buffer = new CharArrayBuffer(i);
+		try {
+			char[] tmp = new char[BUFFER_SIZE];
+			int c;
+			while ((c = reader.read(tmp)) != -1) {
+				buffer.append(tmp, 0, c);
+			}
+		} finally {
+			IOHelper.forceClose(reader);
+			IOHelper.forceClose(is);
+		}
+		return buffer.toString();
 	}
 }

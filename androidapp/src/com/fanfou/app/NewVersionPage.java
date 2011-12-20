@@ -10,7 +10,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.fanfou.app.config.Commons;
+import com.fanfou.app.service.Constants;
 import com.fanfou.app.service.DownloadService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.update.VersionInfo;
@@ -53,7 +53,7 @@ public class NewVersionPage extends Activity implements View.OnClickListener {
 	}
 
 	private void parseIntent(Intent intent) {
-		mVersionInfo = intent.getParcelableExtra(Commons.EXTRA_DATA);
+		mVersionInfo = intent.getParcelableExtra(Constants.EXTRA_DATA);
 	}
 
 	private void setLayout() {

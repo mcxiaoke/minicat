@@ -26,12 +26,12 @@ import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.ResultInfo;
 import com.fanfou.app.api.User;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.AlertInfoDialog;
 import com.fanfou.app.http.NetClient;
 import com.fanfou.app.http.NetResponse;
 import com.fanfou.app.http.Parameter;
 import com.fanfou.app.http.ResponseCode;
+import com.fanfou.app.service.Constants;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.util.DeviceHelper;
@@ -109,8 +109,9 @@ public class RegisterPage extends Activity implements OnClickListener {
 					@Override
 					public boolean onEditorAction(TextView v, int actionId,
 							KeyEvent event) {
-						if(App.DEBUG){
-							Log.d(TAG, "actionId="+actionId+" KeyEvent="+event);
+						if (App.DEBUG) {
+							Log.d(TAG, "actionId=" + actionId + " KeyEvent="
+									+ event);
 						}
 						if (actionId == EditorInfo.IME_ACTION_SEND) {
 							doRegister();
@@ -314,7 +315,7 @@ public class RegisterPage extends Activity implements OnClickListener {
 					data.putExtra("password", mPassword);
 					data.putExtra("email", mEmail);
 					if (!cFollowPushed.isChecked()) {
-						data.putExtra(Commons.EXTRA_PAGE, 3);
+						data.putExtra(Constants.EXTRA_PAGE, 3);
 					}
 					setResult(Activity.RESULT_OK, data);
 					finish();

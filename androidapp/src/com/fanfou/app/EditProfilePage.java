@@ -23,12 +23,12 @@ import android.widget.TextView;
 
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
-import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.ResultInfo;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.IImageLoader;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.FanFouProvider;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.util.IOHelper;
@@ -89,7 +89,7 @@ public class EditProfilePage extends BaseActivity {
 	}
 
 	private void parseIntent() {
-		user = (User) getIntent().getParcelableExtra(Commons.EXTRA_USER);
+		user = (User) getIntent().getParcelableExtra(Constants.EXTRA_DATA);
 	}
 
 	private void setLayout() {
@@ -325,7 +325,7 @@ public class EditProfilePage extends BaseActivity {
 			User user = (User) result.content;
 			if (user != null) {
 				Intent intent = new Intent();
-				intent.putExtra(Commons.EXTRA_USER, user);
+				intent.putExtra(Constants.EXTRA_DATA, user);
 				mContext.setResult(RESULT_OK, intent);
 				mContext.finish();
 			}
@@ -366,7 +366,7 @@ public class EditProfilePage extends BaseActivity {
 			String url = map.get("url");
 			try {
 				User user = api.updateProfile(description, name, location, url,
-						FanFouApiConfig.MODE_LITE);
+						Constants.MODE);
 				if (isCancelled) {
 					return new ResultInfo(ResultInfo.CODE_CANCELED, "用户取消");
 				}
@@ -433,7 +433,7 @@ public class EditProfilePage extends BaseActivity {
 			if (user != null) {
 				FanFouProvider.updateUserInfo(mEditProfilePage, user);
 				Intent intent = new Intent();
-				intent.putExtra(Commons.EXTRA_USER, user);
+				intent.putExtra(Constants.EXTRA_DATA, user);
 				mEditProfilePage.setResult(RESULT_OK, intent);
 				mEditProfilePage.user = user;
 				mEditProfilePage.updateProfileImagePreview();
@@ -473,8 +473,7 @@ public class EditProfilePage extends BaseActivity {
 			try {
 				File file = ImageHelper.prepareProfileImage(mEditProfilePage,
 						srcFile);
-				User user = api.updateProfileImage(file,
-						FanFouApiConfig.MODE_LITE);
+				User user = api.updateProfileImage(file, Constants.MODE);
 				if (isCancelled) {
 					return new ResultInfo(ResultInfo.CODE_CANCELED, "用户取消");
 				}

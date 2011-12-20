@@ -16,9 +16,7 @@ import com.fanfou.app.WritePage;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Draft;
-import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.Status;
-import com.fanfou.app.config.Actions;
 import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.util.ImageHelper;
 
@@ -34,12 +32,12 @@ import com.fanfou.app.util.ImageHelper;
  * @version 3.4 2011.12.13
  * 
  */
-public class TaskQueueService extends WakefulIntentService {
-	public TaskQueueService() {
+public class QueueService extends WakefulIntentService {
+	public QueueService() {
 		super("TaskQueueService");
 	}
 
-	private static final String TAG = TaskQueueService.class.getSimpleName();
+	private static final String TAG = QueueService.class.getSimpleName();
 
 	private void log(String message) {
 		Log.d(TAG, message);
@@ -61,12 +59,12 @@ public class TaskQueueService extends WakefulIntentService {
 			if (srcFile == null || !srcFile.exists()) {
 				if (d.type == WritePage.TYPE_REPLY) {
 					result = api.statusesCreate(d.text, d.replyTo, null, null,
-							null, FanFouApiConfig.FORMAT_HTML,
-							FanFouApiConfig.MODE_LITE);
+							null, Constants.FORMAT, Constants.MODE);
 				} else {
-					result = api.statusesCreate(d.text, null, null, null,
-							d.replyTo, FanFouApiConfig.FORMAT_HTML,
-							FanFouApiConfig.MODE_LITE);
+					result = api
+							.statusesCreate(d.text, null, null, null,
+									d.replyTo, Constants.FORMAT,
+									Constants.MODE);
 				}
 			} else {
 				int quality;
@@ -75,7 +73,7 @@ public class TaskQueueService extends WakefulIntentService {
 					quality = ImageHelper.IMAGE_QUALITY_HIGH;
 				} else if (apnType == ApnType.HSDPA) {
 					quality = ImageHelper.IMAGE_QUALITY_MEDIUM;
-				}else{
+				} else {
 					quality = ImageHelper.IMAGE_QUALITY_LOW;
 				}
 				File photo = ImageHelper.prepareUploadFile(this, srcFile,
@@ -85,8 +83,7 @@ public class TaskQueueService extends WakefulIntentService {
 						log("photo file=" + srcFile.getName() + " size="
 								+ photo.length() / 1024 + " quality=" + quality);
 					result = api.photosUpload(photo, d.text, null, null,
-							FanFouApiConfig.FORMAT_HTML,
-							FanFouApiConfig.MODE_LITE);
+							Constants.FORMAT, Constants.MODE);
 					photo.delete();
 				}
 			}
@@ -150,7 +147,7 @@ public class TaskQueueService extends WakefulIntentService {
 	}
 
 	private void sendSuccessBroadcast() {
-		Intent intent = new Intent(Actions.ACTION_STATUS_SENT);
+		Intent intent = new Intent(Constants.ACTION_STATUS_SENT);
 		intent.setPackage(getPackageName());
 		sendOrderedBroadcast(intent, null);
 	}

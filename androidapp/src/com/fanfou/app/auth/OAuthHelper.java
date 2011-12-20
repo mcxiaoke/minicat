@@ -77,11 +77,11 @@ public final class OAuthHelper {
 		}
 		parseGetParams(url, signatureBaseParams);
 
-		String encodedUrl = OAuthHelper.encodeForOAuth(
-				OAuthHelper.constructRequestURL(url), HTTP.UTF_8);
+		String encodedUrl = OAuthHelper.encode(
+				OAuthHelper.constructRequestURL(url));
 
-		String encodedParams = OAuthHelper.encodeForOAuth(
-				OAuthHelper.alignParams(signatureBaseParams), HTTP.UTF_8);
+		String encodedParams = OAuthHelper.encode(
+				OAuthHelper.alignParams(signatureBaseParams));
 
 		StringBuffer base = new StringBuffer(method).append("&")
 				.append(encodedUrl).append("&").append(encodedParams);
@@ -250,33 +250,6 @@ public final class OAuthHelper {
 			} else {
 				buf.append(focus);
 			}
-		}
-		return buf.toString();
-	}
-
-	static String encodeForOAuth(String s, String enc) {
-		if (s == null || enc == null) {
-			throw new NullPointerException();
-		}
-		StringBuilder buf = new StringBuilder(s.length() + 16);
-		int start = -1;
-		for (int i = 0; i < s.length(); i++) {
-			char ch = s.charAt(i);
-			if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')
-					|| (ch >= '0' && ch <= '9') || " .-*_".indexOf(ch) > -1) {
-				if (start >= 0) {
-					convert(s.substring(start, i), buf, enc);
-					start = -1;
-				}
-				buf.append(ch);
-			} else {
-				if (start < 0) {
-					start = i;
-				}
-			}
-		}
-		if (start >= 0) {
-			convert(s.substring(start, s.length()), buf, enc);
 		}
 		return buf.toString();
 	}

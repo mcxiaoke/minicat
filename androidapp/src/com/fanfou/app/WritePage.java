@@ -12,6 +12,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Selection;
@@ -24,12 +25,12 @@ import android.widget.TextView;
 import com.fanfou.app.adapter.AtTokenizer;
 import com.fanfou.app.adapter.AutoCompleteCursorAdapter;
 import com.fanfou.app.api.Draft;
-import com.fanfou.app.api.User;
-import com.fanfou.app.config.Actions;
-import com.fanfou.app.config.Commons;
+import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.dialog.ConfirmDialog;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.service.PostStatusService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
@@ -74,7 +75,6 @@ public class WritePage extends BaseActivity {
 
 	private ActionBar mActionBar;
 	private MyAutoCompleteTextView mAutoCompleteTextView;
-	private Cursor mCursor;
 
 	private View mPictureView;
 	private ImageView iPicturePrieview;
@@ -249,18 +249,18 @@ public class WritePage extends BaseActivity {
 		if (intent != null) {
 			String action = intent.getAction();
 			if (action == null) {
-				type = intent.getIntExtra(Commons.EXTRA_TYPE, TYPE_NORMAL);
-				text = intent.getStringExtra(Commons.EXTRA_TEXT);
+				type = intent.getIntExtra(Constants.EXTRA_TYPE, TYPE_NORMAL);
+				text = intent.getStringExtra(Constants.EXTRA_TEXT);
 				inReplyToStatusId = intent
-						.getStringExtra(Commons.EXTRA_IN_REPLY_TO_ID);
+						.getStringExtra(Constants.EXTRA_IN_REPLY_TO_ID);
 				File file = (File) intent
-						.getSerializableExtra(Commons.EXTRA_FILE);
-				int draftId = intent.getIntExtra(Commons.EXTRA_DRAFT_ID, -1);
+						.getSerializableExtra(Constants.EXTRA_DATA);
+				int draftId = intent.getIntExtra(Constants.EXTRA_ID, -1);
 				parsePhoto(file);
 				updateUI();
 				deleteDraft(draftId);
 			} else if (action.equals(Intent.ACTION_SEND)
-					|| action.equals(Actions.ACTION_SEND)) {
+					|| action.equals(Constants.ACTION_SEND)) {
 				Bundle extras = intent.getExtras();
 				if (extras != null) {
 					text = extras.getString(Intent.EXTRA_TEXT);
@@ -268,10 +268,10 @@ public class WritePage extends BaseActivity {
 					parsePhoto(uri);
 					updateUI();
 				}
-			} else if (action.equals(Actions.ACTION_SEND_FROM_GALLERY)) {
+			} else if (action.equals(Constants.ACTION_SEND_FROM_GALLERY)) {
 				type = TYPE_GALLERY;
 				startAddPicture();
-			} else if (action.equals(Actions.ACTION_SEND_FROM_CAMERA)) {
+			} else if (action.equals(Constants.ACTION_SEND_FROM_CAMERA)) {
 				type = TYPE_CAMERA;
 				startCameraShot();
 			}
@@ -342,14 +342,19 @@ public class WritePage extends BaseActivity {
 
 		mAutoCompleteTextView.setTokenizer(new AtTokenizer());
 		mAutoCompleteTextView.setBackgroundResource(R.drawable.input_bg);
-		final String[] projection = new String[] { UserInfo._ID, UserInfo.ID,
-				UserInfo.SCREEN_NAME, UserInfo.TYPE, UserInfo.OWNER_ID };
-		String where = UserInfo.OWNER_ID + " = '" + App.getUserId() + "' AND "
-				+ UserInfo.TYPE + " = '" + User.TYPE_FRIENDS + "'";
-		mCursor = managedQuery(UserInfo.CONTENT_URI, projection, where, null,
-				null);
+		final String[] projection = new String[] { BaseColumns._ID,
+				BasicColumns.ID, UserInfo.SCREEN_NAME, BasicColumns.TYPE,
+				BasicColumns.OWNER_ID };
+		String where = BasicColumns.OWNER_ID + " = '" + App.getUserId()
+				+ "' AND " + BasicColumns.TYPE + " = '"
+				+ Constants.TYPE_USERS_FRIENDS + "'";
+		// Cursor cursor = managedQuery(UserInfo.CONTENT_URI, projection, where,
+		// null,
+		// null);
+		Cursor cursor = getContentResolver().query(UserInfo.CONTENT_URI,
+				projection, where, null, null);
 		mAutoCompleteTextView.setAdapter(new AutoCompleteCursorAdapter(this,
-				mCursor));
+				cursor));
 	}
 
 	private void setLayout() {
@@ -519,7 +524,7 @@ public class WritePage extends BaseActivity {
 	}
 
 	private void insertNames(Intent intent) {
-		String names = intent.getStringExtra(Commons.EXTRA_TEXT);
+		String names = intent.getStringExtra(Constants.EXTRA_TEXT);
 		if (App.DEBUG) {
 			log("doAddUserNames: " + names);
 		}
@@ -543,11 +548,11 @@ public class WritePage extends BaseActivity {
 
 	private void startSendService() {
 		Intent i = new Intent(mContext, PostStatusService.class);
-		i.putExtra(Commons.EXTRA_TYPE, type);
-		i.putExtra(Commons.EXTRA_TEXT, content);
-		i.putExtra(Commons.EXTRA_FILE, photo);
-		i.putExtra(Commons.EXTRA_LOCATION, mLocationString);
-		i.putExtra(Commons.EXTRA_IN_REPLY_TO_ID, inReplyToStatusId);
+		i.putExtra(Constants.EXTRA_TYPE, type);
+		i.putExtra(Constants.EXTRA_TEXT, content);
+		i.putExtra(Constants.EXTRA_DATA, photo);
+		i.putExtra(Constants.EXTRA_LOCATION, mLocationString);
+		i.putExtra(Constants.EXTRA_IN_REPLY_TO_ID, inReplyToStatusId);
 		if (App.DEBUG) {
 			log("intent=" + i);
 		}

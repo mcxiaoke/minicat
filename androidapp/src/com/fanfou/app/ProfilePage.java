@@ -20,10 +20,9 @@ import android.widget.Toast;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.cache.IImageLoader;
-import com.fanfou.app.config.Actions;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.dialog.ConfirmDialog;
-import com.fanfou.app.service.ActionService;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.ui.ActionManager;
@@ -43,6 +42,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.6 2011.11.16
  * @version 1.7 2011.11.18
  * @version 1.8 2011.11.22
+ * @version 2.0 2011.12.19
  * 
  */
 public class ProfilePage extends BaseActivity {
@@ -108,16 +108,10 @@ public class ProfilePage extends BaseActivity {
 		Intent intent = getIntent();
 		String action = intent.getAction();
 		if (action == null) {
-			userId = intent.getStringExtra(Commons.EXTRA_ID);
-			user = (User) intent.getParcelableExtra(Commons.EXTRA_USER);
+			userId = intent.getStringExtra(Constants.EXTRA_ID);
+			user = (User) intent.getParcelableExtra(Constants.EXTRA_DATA);
 			if (user != null) {
 				userId = user.id;
-			}
-		} else if (action.equals(Actions.ACTION_PROFILE)) {
-			Bundle extras = intent.getExtras();
-			if (extras != null) {
-				userId = extras.getString(Commons.EXTRA_ID);
-				user = (User) extras.getParcelable(Commons.EXTRA_USER);
 			}
 		} else if (action.equals(Intent.ACTION_VIEW)) {
 			Uri data = intent.getData();
@@ -336,11 +330,7 @@ public class ProfilePage extends BaseActivity {
 
 	private void doRefresh() {
 		ResultReceiver receiver = new MyResultReceiver();
-		Intent intent = new Intent(this, ActionService.class);
-		intent.putExtra(Commons.EXTRA_TYPE, Commons.ACTION_USER_SHOW);
-		intent.putExtra(Commons.EXTRA_ID, userId);// 如果只传了ID就用这个
-		intent.putExtra(Commons.EXTRA_RECEIVER, receiver);
-		startService(intent);
+		FanFouService.doProfile(this, userId, receiver);
 		if (isInitialized) {
 			startRefreshAnimation();
 		}
@@ -348,14 +338,8 @@ public class ProfilePage extends BaseActivity {
 
 	private void doFetchRelationshipInfo() {
 		ResultReceiver receiver = new MyResultReceiver();
-		Intent intent = new Intent(this, ActionService.class);
-		intent.putExtra(Commons.EXTRA_TYPE, Commons.ACTION_USER_RELATION);
-		if (App.DEBUG)
-			log("App.userId=" + App.getUserId());
-		intent.putExtra("user_a", user.id);
-		intent.putExtra("user_b", App.getUserId());
-		intent.putExtra(Commons.EXTRA_RECEIVER, receiver);
-		startService(intent);
+		FanFouService.doFriendshipsExists(this, user.id, App.getUserId(),
+				receiver);
 	}
 
 	private void updateFollowButton(boolean following) {
@@ -381,7 +365,7 @@ public class ProfilePage extends BaseActivity {
 				@Override
 				public void onButton1Click() {
 					updateFollowButton(false);
-					ActionManager.doFollow(mContext, user,
+					FanFouService.doFollow(mContext, user,
 							new MyResultReceiver());
 				}
 			});
@@ -389,7 +373,7 @@ public class ProfilePage extends BaseActivity {
 			dialog.show();
 		} else {
 			updateFollowButton(true);
-			ActionManager.doFollow(mContext, user, new MyResultReceiver());
+			FanFouService.doFollow(mContext, user, new MyResultReceiver());
 		}
 
 	}
@@ -480,34 +464,34 @@ public class ProfilePage extends BaseActivity {
 		@Override
 		protected void onReceiveResult(int resultCode, Bundle resultData) {
 			switch (resultCode) {
-			case Commons.RESULT_CODE_FINISH:
+			case Constants.RESULT_SUCCESS:
 				if (resultData != null) {
 					if (App.DEBUG)
 						log("result ok, update ui");
-					int type = resultData.getInt(Commons.EXTRA_TYPE);
+					int type = resultData.getInt(Constants.EXTRA_TYPE);
 					User result = (User) resultData
-							.getParcelable(Commons.EXTRA_USER);
+							.getParcelable(Constants.EXTRA_DATA);
 					if (result != null) {
 						user = result;
 					}
 					if (!isInitialized) {
 						showContent();
 					}
-					if (type == Commons.ACTION_USER_RELATION) {
+					if (type == Constants.TYPE_FRIENDSHIPS_EXISTS) {
 						boolean follow = resultData
-								.getBoolean(Commons.EXTRA_BOOLEAN);
+								.getBoolean(Constants.EXTRA_BOOLEAN);
 						if (App.DEBUG)
 							log("user relationship result=" + follow);
 						updateRelationshipState(follow);
-					} else if (type == Commons.ACTION_USER_SHOW) {
+					} else if (type == Constants.TYPE_USERS_SHOW) {
 						if (App.DEBUG)
 							log("show result=" + user.id);
 						updateUI();
 						if (isInitialized) {
 							stopRefreshAnimation();
 						}
-					} else if (type == Commons.ACTION_USER_FOLLOW
-							|| type == Commons.ACTION_USER_UNFOLLOW) {
+					} else if (type == Constants.TYPE_FRIENDSHIPS_CREATE
+							|| type == Constants.TYPE_FRIENDSHIPS_DESTROY) {
 						if (App.DEBUG)
 							log("user.following=" + user.following);
 						updateFollowButton(user.following);
@@ -516,23 +500,23 @@ public class ProfilePage extends BaseActivity {
 					}
 				}
 				break;
-			case Commons.RESULT_CODE_ERROR:
+			case Constants.RESULT_ERROR:
 				if (App.DEBUG)
 					log("result error");
 				if (!isInitialized) {
 					mEmptyView.setVisibility(View.GONE);
 				}
-				int type = resultData.getInt(Commons.EXTRA_TYPE);
-				if (type == Commons.ACTION_USER_RELATION) {
+				int type = resultData.getInt(Constants.EXTRA_TYPE);
+				if (type == Constants.TYPE_FRIENDSHIPS_EXISTS) {
 					return;
-				} else if (type == Commons.ACTION_USER_SHOW) {
+				} else if (type == Constants.TYPE_USERS_SHOW) {
 					stopRefreshAnimation();
-				} else if (type == Commons.ACTION_USER_FOLLOW
-						|| type == Commons.ACTION_USER_UNFOLLOW) {
+				} else if (type == Constants.TYPE_FRIENDSHIPS_CREATE
+						|| type == Constants.TYPE_FRIENDSHIPS_DESTROY) {
 					updateFollowButton(user.following);
 				}
 
-				String msg = resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
+				String msg = resultData.getString(Constants.EXTRA_ERROR);
 				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
 				break;
 			default:

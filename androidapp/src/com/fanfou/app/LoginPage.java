@@ -23,18 +23,18 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.fanfou.app.api.ApiException;
-import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.ResultInfo;
 import com.fanfou.app.api.User;
 import com.fanfou.app.auth.FanFouOAuthProvider;
 import com.fanfou.app.auth.OAuthToken;
 import com.fanfou.app.auth.XAuthService;
 import com.fanfou.app.auth.exception.OAuthTokenException;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.ui.TextChangeListener;
@@ -134,8 +134,8 @@ public final class LoginPage extends Activity implements OnClickListener {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId,
 					KeyEvent event) {
-				if(App.DEBUG){
-					Log.d(TAG, "actionId="+actionId+" KeyEvent="+event);
+				if (App.DEBUG) {
+					Log.d(TAG, "actionId=" + actionId + " KeyEvent=" + event);
 				}
 				if (actionId == EditorInfo.IME_ACTION_SEND) {
 					doLogin();
@@ -213,7 +213,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 		if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_REGISTER) {
 			editUsername.setText(data.getStringExtra("email"));
 			editPassword.setText(data.getStringExtra("password"));
-			page = data.getIntExtra(Commons.EXTRA_PAGE, 0);
+			page = data.getIntExtra(Constants.EXTRA_PAGE, 0);
 			new LoginTask().execute();
 		}
 	}
@@ -300,8 +300,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 				if (token != null) {
 					publishProgress(1);
 					App.setOAuthToken(token);
-					User u = App.getApi().verifyAccount(
-							FanFouApiConfig.MODE_LITE);
+					User u = App.getApi().verifyAccount(Constants.MODE);
 
 					if (isCancelled) {
 						if (App.DEBUG) {

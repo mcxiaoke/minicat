@@ -12,7 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.fanfou.app.config.Commons;
+import com.fanfou.app.service.Constants;
 import com.fanfou.app.ui.imagezoom.ImageViewTouch;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.ImageHelper;
@@ -74,7 +74,7 @@ public class PhotoViewPage extends BaseActivity {
 	private void parseIntent(Intent intent) {
 		String action = intent.getAction();
 		if (action == null) {
-			mPhotoPath = intent.getStringExtra(Commons.EXTRA_URL);
+			mPhotoPath = intent.getStringExtra(Constants.EXTRA_URL);
 		} else if (action.equals(Intent.ACTION_VIEW)) {
 			Uri uri = intent.getData();
 			if (uri.getScheme().equals("content")) {

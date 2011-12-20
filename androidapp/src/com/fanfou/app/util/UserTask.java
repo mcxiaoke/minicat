@@ -153,10 +153,13 @@ import android.os.Process;
 /**
  * @author mcxiaoke
  * @version 1.1 2011.12.13
- *
- * @param <Params> init parameters
- * @param <Progress> progress indicator type
- * @param <Result> result type
+ * 
+ * @param <Params>
+ *            init parameters
+ * @param <Progress>
+ *            progress indicator type
+ * @param <Result>
+ *            result type
  */
 public abstract class UserTask<Params, Progress, Result> {
 	private static final String LOG_TAG = "UserTask";

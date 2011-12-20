@@ -19,14 +19,6 @@ public interface FanFouApiConfig {
 	public static final String HOST = "http://fanfou.com/";
 	public static final String API_BASE = "http://api.fanfou.com";
 	public static final String EXTENSION = ".json";
-	public static final int MAX_TIMELINE_COUNT = 60;
-	public static final int DEFAULT_TIMELINE_COUNT = 20;
-	public static final int MAX_USERS_COUNT = 60;
-	public static final int DEFAULT_USERS_COUNT = 20;
-	public static final int MAX_IDS_COUNT = 2000;
-
-	public static final String FORMAT_HTML = "html";
-	public static final String MODE_LITE = "lite";
 
 	// verify account
 	public static final String URL_VERIFY_CREDENTIALS = API_BASE

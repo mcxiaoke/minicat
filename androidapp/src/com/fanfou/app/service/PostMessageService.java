@@ -13,9 +13,6 @@ import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
-import com.fanfou.app.api.FanFouApiConfig;
-import com.fanfou.app.config.Actions;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.util.IOHelper;
 
 /**
@@ -59,9 +56,9 @@ public class PostMessageService extends WakefulIntentService {
 	}
 
 	private void parseIntent(Intent intent) {
-		userId = intent.getStringExtra(Commons.EXTRA_USER_ID);
-		userName = intent.getStringExtra(Commons.EXTRA_USER_NAME);
-		content = intent.getStringExtra(Commons.EXTRA_TEXT);
+		userId = intent.getStringExtra(Constants.EXTRA_ID);
+		userName = intent.getStringExtra(Constants.EXTRA_USER_NAME);
+		content = intent.getStringExtra(Constants.EXTRA_TEXT);
 		if (App.DEBUG) {
 			log("parseIntent userId=" + userId);
 			log("parseIntent userName=" + userName);
@@ -75,7 +72,7 @@ public class PostMessageService extends WakefulIntentService {
 		Api api = App.getApi();
 		try {
 			DirectMessage result = api.directMessagesCreate(userId, content,
-					null, FanFouApiConfig.MODE_LITE);
+					null, Constants.MODE);
 			nm.cancel(10);
 			if (result == null || result.isNull()) {
 				IOHelper.copyToClipBoard(this, content);
@@ -150,7 +147,7 @@ public class PostMessageService extends WakefulIntentService {
 	}
 
 	private void sendSuccessBroadcast() {
-		Intent intent = new Intent(Actions.ACTION_MESSAGE_SENT);
+		Intent intent = new Intent(Constants.ACTION_MESSAGE_SENT);
 		intent.setPackage(getPackageName());
 		sendOrderedBroadcast(intent, null);
 	}

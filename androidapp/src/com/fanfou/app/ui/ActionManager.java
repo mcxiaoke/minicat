@@ -3,14 +3,9 @@ package com.fanfou.app.ui;
 import java.io.File;
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.ResultReceiver;
 import android.util.Log;
 
 import com.fanfou.app.App;
@@ -26,12 +21,11 @@ import com.fanfou.app.WritePage;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
-import com.fanfou.app.config.Commons;
-import com.fanfou.app.service.ActionService;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StatusHelper;
 import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -44,6 +38,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.2 2011.11.11
  * @version 2.3 2011.11.21
  * @version 2.4 2011.12.08
+ * @version 3.0 2011.12.19
  * 
  */
 public final class ActionManager {
@@ -54,43 +49,29 @@ public final class ActionManager {
 
 	public static void doShowTimeline(Context context, final User user) {
 		Intent intent = new Intent(context, UserTimelinePage.class);
-		intent.putExtra(Commons.EXTRA_USER, user);
+		intent.putExtra(Constants.EXTRA_DATA, user);
 		context.startActivity(intent);
 	}
 
 	public static void doShowFavorites(Context context, final User user) {
 		Intent intent = new Intent(context, UserFavoritesPage.class);
-		intent.putExtra(Commons.EXTRA_USER, user);
+		intent.putExtra(Constants.EXTRA_DATA, user);
 		context.startActivity(intent);
 	}
 
 	public static void doShowFriends(Context context, final User user) {
 		Intent intent = new Intent(context, UserListPage.class);
-		intent.putExtra(Commons.EXTRA_USER, user);
-		intent.putExtra(Commons.EXTRA_TYPE, User.TYPE_FRIENDS);
+		intent.putExtra(Constants.EXTRA_DATA, user);
+		intent.putExtra(Constants.EXTRA_TYPE, Constants.TYPE_USERS_FRIENDS);
 		context.startActivity(intent);
 	}
 
 	public static void doShowFollowers(Context context, final User user) {
 		Intent intent = new Intent(context, UserListPage.class);
-		intent.putExtra(Commons.EXTRA_USER, user);
-		intent.putExtra(Commons.EXTRA_TYPE, User.TYPE_FOLLOWERS);
+		intent.putExtra(Constants.EXTRA_DATA, user);
+		intent.putExtra(Constants.EXTRA_TYPE,
+				Constants.TYPE_USERS_FOLLOWERS);
 		context.startActivity(intent);
-	}
-
-	public static void doFollow(Context context, final User user,
-			final ResultReceiver receiver) {
-		int type = Commons.ACTION_USER_FOLLOW;
-		if (user.following) {
-			type = Commons.ACTION_USER_UNFOLLOW;
-		}
-		// ResultReceiver receiver = new MyResultReceiver();
-		Intent intent = new Intent(context, ActionService.class);
-		intent.putExtra(Commons.EXTRA_TYPE, type);
-		intent.putExtra(Commons.EXTRA_ID, user.id);
-		intent.putExtra(Commons.EXTRA_RECEIVER, receiver);
-		context.startService(intent);
-
 	}
 
 	public static void doShowDrafts(Context context) {
@@ -115,7 +96,7 @@ public final class ActionManager {
 			return;
 		}
 		Intent intent = new Intent(context, ProfilePage.class);
-		intent.putExtra(Commons.EXTRA_ID, userId);
+		intent.putExtra(Constants.EXTRA_ID, userId);
 		context.startActivity(intent);
 	}
 
@@ -131,9 +112,9 @@ public final class ActionManager {
 			return;
 		}
 		Intent intent = new Intent(context, ProfilePage.class);
-		intent.putExtra(Commons.EXTRA_ID, dm.senderId);
-		intent.putExtra(Commons.EXTRA_USER_NAME, dm.senderScreenName);
-		intent.putExtra(Commons.EXTRA_USER_HEAD, dm.senderProfileImageUrl);
+		intent.putExtra(Constants.EXTRA_ID, dm.senderId);
+		intent.putExtra(Constants.EXTRA_USER_NAME, dm.senderScreenName);
+		intent.putExtra(Constants.EXTRA_USER_HEAD, dm.senderProfileImageUrl);
 		context.startActivity(intent);
 	}
 
@@ -149,9 +130,9 @@ public final class ActionManager {
 			return;
 		}
 		Intent intent = new Intent(context, ProfilePage.class);
-		intent.putExtra(Commons.EXTRA_ID, status.userId);
-		intent.putExtra(Commons.EXTRA_USER_NAME, status.userScreenName);
-		intent.putExtra(Commons.EXTRA_USER_HEAD, status.userProfileImageUrl);
+		intent.putExtra(Constants.EXTRA_ID, status.userId);
+		intent.putExtra(Constants.EXTRA_USER_NAME, status.userScreenName);
+		intent.putExtra(Constants.EXTRA_USER_HEAD, status.userProfileImageUrl);
 		context.startActivity(intent);
 	}
 
@@ -167,7 +148,7 @@ public final class ActionManager {
 			return;
 		}
 		Intent intent = new Intent(context, ProfilePage.class);
-		intent.putExtra(Commons.EXTRA_USER, user);
+		intent.putExtra(Constants.EXTRA_DATA, user);
 		context.startActivity(intent);
 	}
 
@@ -218,9 +199,9 @@ public final class ActionManager {
 			}
 
 			Intent intent = new Intent(context, WritePage.class);
-			intent.putExtra(Commons.EXTRA_IN_REPLY_TO_ID, status.id);
-			intent.putExtra(Commons.EXTRA_TEXT, sb.toString());
-			intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_REPLY);
+			intent.putExtra(Constants.EXTRA_IN_REPLY_TO_ID, status.id);
+			intent.putExtra(Constants.EXTRA_TEXT, sb.toString());
+			intent.putExtra(Constants.EXTRA_TYPE, WritePage.TYPE_REPLY);
 			context.startActivity(intent);
 		} else {
 			doWrite(context, null);
@@ -230,9 +211,9 @@ public final class ActionManager {
 
 	public static void doWrite(Context context, String text, File file, int type) {
 		Intent intent = new Intent(context, WritePage.class);
-		intent.putExtra(Commons.EXTRA_TYPE, type);
-		intent.putExtra(Commons.EXTRA_TEXT, text);
-		intent.putExtra(Commons.EXTRA_FILE, file);
+		intent.putExtra(Constants.EXTRA_TYPE, type);
+		intent.putExtra(Constants.EXTRA_TEXT, text);
+		intent.putExtra(Constants.EXTRA_DATA, file);
 		context.startActivity(intent);
 	}
 
@@ -258,235 +239,24 @@ public final class ActionManager {
 			throw new NullPointerException("status cannot be null.");
 		}
 		Intent intent = new Intent(context, WritePage.class);
-		intent.putExtra(Commons.EXTRA_TYPE, WritePage.TYPE_REPOST);
-		intent.putExtra(Commons.EXTRA_IN_REPLY_TO_ID, status.id);
-		intent.putExtra(Commons.EXTRA_TEXT, "转@" + status.userScreenName + " "
-				+ status.simpleText);
+		intent.putExtra(Constants.EXTRA_TYPE, WritePage.TYPE_REPOST);
+		intent.putExtra(Constants.EXTRA_IN_REPLY_TO_ID, status.id);
+		intent.putExtra(Constants.EXTRA_TEXT, "转@" + status.userScreenName
+				+ " " + status.simpleText);
 		context.startActivity(intent);
-	}
-
-	public static void doStatusDelete(final Activity activity, final String id) {
-		doStatusDelete(activity, id, null);
-	}
-
-	public static void doStatusDelete(final Activity activity, final String id,
-			final ResultListener li) {
-		doStatusDelete(activity, id, li, false);
-	}
-
-	public static void doStatusDelete(final Activity activity, final String id,
-			final boolean finish) {
-		doStatusDelete(activity, id, null, finish);
-	}
-
-	public static void doStatusDelete(final Activity activity, final String id,
-			final ResultListener li, final boolean finish) {
-		if (StringHelper.isEmpty(id)) {
-			if (App.DEBUG) {
-				Log.d(TAG, "doStatusDelete: status id is null.");
-			}
-			throw new NullPointerException("statusid cannot be null.");
-		}
-		ResultReceiver receiver = new ResultReceiver(new Handler(
-				activity.getMainLooper())) {
-
-			@Override
-			protected void onReceiveResult(int resultCode, Bundle resultData) {
-				switch (resultCode) {
-				case Commons.RESULT_CODE_START:
-					break;
-				case Commons.RESULT_CODE_FINISH:
-					Utils.notify(activity.getApplicationContext(), "删除成功");
-					onSuccess(li, Commons.ACTION_STATUS_DELETE, "删除成功");
-					if (finish && activity != null) {
-						activity.finish();
-					}
-					break;
-				case Commons.RESULT_CODE_ERROR:
-					String msg = resultData
-							.getString(Commons.EXTRA_ERROR_MESSAGE);
-					Utils.notify(activity.getApplicationContext(), msg);
-					onFailed(li, Commons.ACTION_STATUS_DELETE, "删除失败");
-					break;
-				default:
-					break;
-				}
-			}
-		};
-		startService(activity, Commons.ACTION_STATUS_DELETE, id, receiver);
-	}
-
-	public static void doFavorite(final Activity activity, final Status status) {
-		doFavorite(activity, status, null, false);
-	}
-
-	public static void doFavorite(final Activity activity, final Status status,
-			boolean finish) {
-		doFavorite(activity, status, null, finish);
-	}
-
-	public static void doFavorite(final Activity activity, final Status status,
-			final ResultListener li) {
-		doFavorite(activity, status, li, false);
-	}
-
-	public static void doFavorite(final Activity activity, final Status status,
-			final ResultListener li, final boolean finish) {
-		if (status == null || status.isNull()) {
-			if (App.DEBUG) {
-				Log.d(TAG, "doFavorite: status is null.");
-			}
-			throw new NullPointerException("status cannot be null.");
-		}
-		final int type = status.favorited ? Commons.ACTION_STATUS_UNFAVORITE
-				: Commons.ACTION_STATUS_FAVORITE;
-		ResultReceiver receiver = new ResultReceiver(new Handler(
-				activity.getMainLooper())) {
-
-			@Override
-			protected void onReceiveResult(int resultCode, Bundle resultData) {
-				switch (resultCode) {
-				case Commons.RESULT_CODE_START:
-					break;
-				case Commons.RESULT_CODE_FINISH:
-					Status result = (Status) resultData
-							.getParcelable(Commons.EXTRA_STATUS);
-					String text = result.favorited ? "收藏成功" : "取消收藏成功";
-					Utils.notify(activity.getApplicationContext(), text);
-					onSuccess(li, type, text);
-					if (finish) {
-						activity.finish();
-					}
-					break;
-				case Commons.RESULT_CODE_ERROR:
-					String msg = resultData
-							.getString(Commons.EXTRA_ERROR_MESSAGE);
-					Utils.notify(activity.getApplicationContext(), msg);
-					onFailed(li, type, "收藏失败");
-					break;
-				default:
-					break;
-				}
-			}
-		};
-		startService(activity, type, status.id, receiver);
-	}
-
-	public static void doMessageDelete(final Activity activity,
-			final String id, final ResultListener li, final boolean finish) {
-		if (StringHelper.isEmpty(id)) {
-			if (App.DEBUG) {
-				Log.d(TAG, "doMessageDelete: status id is null.");
-			}
-			throw new NullPointerException("directmessageid cannot be null.");
-		}
-		ResultReceiver receiver = new ResultReceiver(new Handler(
-				activity.getMainLooper())) {
-
-			@Override
-			protected void onReceiveResult(int resultCode, Bundle resultData) {
-				switch (resultCode) {
-				case Commons.RESULT_CODE_START:
-					break;
-				case Commons.RESULT_CODE_FINISH:
-					Utils.notify(activity.getApplicationContext(), "删除成功");
-					onSuccess(li, Commons.ACTION_DIRECT_MESSAGE_DELETE, "删除成功");
-					if (finish && activity != null) {
-						activity.finish();
-					}
-					break;
-				case Commons.RESULT_CODE_ERROR:
-					String msg = resultData
-							.getString(Commons.EXTRA_ERROR_MESSAGE);
-					Utils.notify(activity.getApplicationContext(), msg);
-					onFailed(li, Commons.ACTION_DIRECT_MESSAGE_DELETE, "删除失败");
-					break;
-				default:
-					break;
-				}
-			}
-		};
-		startService(activity, Commons.ACTION_DIRECT_MESSAGE_DELETE, id,
-				receiver);
 	}
 
 	public static void doMessage(Context context, final User user) {
 		final Intent intent = new Intent(context, SendPage.class);
-		intent.putExtra(Commons.EXTRA_USER_ID, user.id);
-		intent.putExtra(Commons.EXTRA_USER_NAME, user.screenName);
+		intent.putExtra(Constants.EXTRA_ID, user.id);
+		intent.putExtra(Constants.EXTRA_USER_NAME, user.screenName);
 		context.startActivity(intent);
-	}
-
-	private static void startService(Context context, int type, String id,
-			ResultReceiver receiver) {
-		Intent intent = new Intent(context, ActionService.class);
-		intent.putExtra(Commons.EXTRA_TYPE, type);
-		intent.putExtra(Commons.EXTRA_ID, id);
-		intent.putExtra(Commons.EXTRA_RECEIVER, receiver);
-		context.startService(intent);
-	}
-
-	private static void onSuccess(ResultListener li, int type, String message) {
-		if (li != null) {
-			li.onActionSuccess(type, message);
-		}
-	}
-
-	private static void onFailed(ResultListener li, int type, String message) {
-		if (li != null) {
-			li.onActionFailed(type, message);
-		}
 	}
 
 	public interface ResultListener {
 		public void onActionSuccess(int type, String message);
 
 		public void onActionFailed(int type, String message);
-	}
-
-	private static final int MSG_ACTION_SUCCESS = -1;
-	private static final int MSG_ACTION_FAILED = -2;
-
-	@SuppressWarnings("unused")
-	private void sendMessage(int what, int type, String message) {
-		// Message m = mHandler.obtainMessage();
-		// m.what = what;
-		// m.getData().putInt(Commons.EXTRA_TYPE, type);
-		// m.getData().putString(Commons.EXTRA_TEXT, message);
-		// mHandler.sendMessage(m);
-	}
-
-	@SuppressWarnings("unused")
-	private static class ActionHandler extends Handler {
-		private Activity a;
-		private ResultListener l;
-
-		public ActionHandler(Activity a, ResultListener l) {
-			super(a.getMainLooper());
-			this.a = a;
-			this.l = l;
-		}
-
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case MSG_ACTION_SUCCESS:
-				if (l != null) {
-					l.onActionSuccess(msg.getData().getInt(Commons.EXTRA_TYPE),
-							msg.getData().getString(Commons.EXTRA_TEXT));
-				}
-				break;
-			case MSG_ACTION_FAILED:
-				if (l != null) {
-					l.onActionFailed(msg.getData().getInt(Commons.EXTRA_TYPE),
-							msg.getData().getString(Commons.EXTRA_TEXT));
-				}
-				break;
-			default:
-				break;
-			}
-		}
-
 	}
 
 }

@@ -29,7 +29,6 @@ import android.widget.RemoteViews;
 import com.fanfou.app.App;
 import com.fanfou.app.NewVersionPage;
 import com.fanfou.app.R;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.http.NetClient;
 import com.fanfou.app.update.VersionInfo;
 import com.fanfou.app.util.DateTimeHelper;
@@ -46,6 +45,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.2 2011.11.25
  * @version 2.3 2011.11.28
  * @version 2.4 2011.12.02
+ * @version 2.5 2011.12.19
  * 
  */
 public class DownloadService extends BaseIntentService {
@@ -130,7 +130,7 @@ public class DownloadService extends BaseIntentService {
 
 	private final static PendingIntent getPendingIntent(Context context) {
 		Intent intent = new Intent(context, DownloadService.class);
-		intent.putExtra(Commons.EXTRA_TYPE, DownloadService.TYPE_CHECK);
+		intent.putExtra(Constants.EXTRA_TYPE, DownloadService.TYPE_CHECK);
 		PendingIntent pi = PendingIntent.getService(context, 0, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		return pi;
@@ -138,25 +138,25 @@ public class DownloadService extends BaseIntentService {
 
 	public static void startDownload(Context context, String url) {
 		Intent intent = new Intent(context, DownloadService.class);
-		intent.putExtra(Commons.EXTRA_TYPE, TYPE_DOWNLOAD);
-		intent.putExtra(Commons.EXTRA_DOWNLOAD_URL, url);
+		intent.putExtra(Constants.EXTRA_TYPE, TYPE_DOWNLOAD);
+		intent.putExtra(Constants.EXTRA_URL, url);
 		context.startService(intent);
 	}
 
 	public static void startCheck(Context context) {
 		Intent intent = new Intent(context, DownloadService.class);
-		intent.putExtra(Commons.EXTRA_TYPE, TYPE_CHECK);
+		intent.putExtra(Constants.EXTRA_TYPE, TYPE_CHECK);
 		context.startService(intent);
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		int type = intent.getIntExtra(Commons.EXTRA_TYPE, TYPE_CHECK);
+		int type = intent.getIntExtra(Constants.EXTRA_TYPE, TYPE_CHECK);
 		if (type == TYPE_CHECK) {
 			check();
 		} else if (type == TYPE_DOWNLOAD) {
-			String url = intent.getStringExtra(Commons.EXTRA_DOWNLOAD_URL);
+			String url = intent.getStringExtra(Constants.EXTRA_URL);
 			log("onHandleIntent TYPE_DOWNLOAD url=" + url);
 			if (!StringHelper.isEmpty(url)) {
 				download(url);
@@ -213,7 +213,7 @@ public class DownloadService extends BaseIntentService {
 				if (download >= total) {
 					Message message = new Message();
 					message.what = MSG_SUCCESS;
-					message.getData().putString(Commons.EXTRA_FILENAME,
+					message.getData().putString(Constants.EXTRA_FILENAME,
 							file.getAbsolutePath());
 					mHandler.sendMessage(message);
 				}
@@ -265,7 +265,7 @@ public class DownloadService extends BaseIntentService {
 				updateProgress(progress);
 			} else if (MSG_SUCCESS == msg.what) {
 				String filePath = msg.getData().getString(
-						Commons.EXTRA_FILENAME);
+						Constants.EXTRA_FILENAME);
 				Utils.open(DownloadService.this, filePath);
 			}
 		}
@@ -378,7 +378,7 @@ public class DownloadService extends BaseIntentService {
 	public static Intent getNewVersionIntent(Context context,
 			final VersionInfo info) {
 		Intent intent = new Intent(context, NewVersionPage.class);
-		intent.putExtra(Commons.EXTRA_DATA, info);
+		intent.putExtra(Constants.EXTRA_DATA, info);
 		return intent;
 	}
 

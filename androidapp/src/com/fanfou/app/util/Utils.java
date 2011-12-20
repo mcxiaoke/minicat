@@ -36,8 +36,8 @@ import com.fanfou.app.StatusPage;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.http.ResponseCode;
+import com.fanfou.app.service.Constants;
 
 /**
  * 
@@ -76,7 +76,7 @@ public final class Utils {
 	public static void goStatusPage(Context context, String id) {
 		if (!StringHelper.isEmpty(id)) {
 			Intent intent = new Intent(context, StatusPage.class);
-			intent.putExtra(Commons.EXTRA_STATUS_ID, id);
+			intent.putExtra(Constants.EXTRA_ID, id);
 			context.startActivity(intent);
 		}
 	}
@@ -84,7 +84,7 @@ public final class Utils {
 	public static void goStatusPage(Context context, Status s) {
 		if (s != null) {
 			Intent intent = new Intent(context, StatusPage.class);
-			intent.putExtra(Commons.EXTRA_STATUS, s);
+			intent.putExtra(Constants.EXTRA_DATA, s);
 			context.startActivity(intent);
 		}
 	}
@@ -94,8 +94,8 @@ public final class Utils {
 			final DirectMessage dm = DirectMessage.parse(c);
 			if (dm != null) {
 				final Intent intent = new Intent(context, SendPage.class);
-				intent.putExtra(Commons.EXTRA_USER_ID, dm.senderId);
-				intent.putExtra(Commons.EXTRA_USER_NAME, dm.senderScreenName);
+				intent.putExtra(Constants.EXTRA_ID, dm.senderId);
+				intent.putExtra(Constants.EXTRA_USER_NAME, dm.senderScreenName);
 				context.startActivity(intent);
 			}
 		}
@@ -108,7 +108,7 @@ public final class Utils {
 
 	public static void goPhotoViewPage(Context context, String photoUrl) {
 		Intent intent = new Intent(context, PhotoViewPage.class);
-		intent.putExtra(Commons.EXTRA_PHOTO_URL, photoUrl);
+		intent.putExtra(Constants.EXTRA_URL, photoUrl);
 		context.startActivity(intent);
 	}
 
@@ -227,14 +227,6 @@ public final class Utils {
 	}
 
 	public static void initScreenConfig(final Activity context) {
-		boolean fullscreen = OptionHelper.readBoolean(
-				R.string.option_force_fullscreen, false);
-		if (fullscreen) {
-			context.getWindow().setFlags(
-					WindowManager.LayoutParams.FLAG_FULLSCREEN,
-					WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		}
-
 		boolean portrait = OptionHelper.readBoolean(
 				R.string.option_force_portrait, false);
 		if (portrait) {
@@ -311,25 +303,26 @@ public final class Utils {
 		}
 		return false;
 	}
-	
-	public static void sendErrorMessage(Context context, ResultReceiver receiver,ApiException e) {
+
+	public static void sendErrorMessage(Context context,
+			ResultReceiver receiver, ApiException e) {
 
 		if (receiver != null) {
 			String message = e.getMessage();
 			if (e.statusCode == ResponseCode.ERROR_IO_EXCEPTION) {
 				message = context.getString(R.string.msg_connection_error);
-			}else if(e.statusCode >= 500){
+			} else if (e.statusCode >= 500) {
 				message = context.getString(R.string.msg_server_error);
 			}
 			Bundle b = new Bundle();
-			b.putInt(Commons.EXTRA_ERROR_CODE, e.statusCode);
-			b.putString(Commons.EXTRA_ERROR_MESSAGE, message);
-			receiver.send(Commons.RESULT_CODE_ERROR, b);
+			b.putInt(Constants.EXTRA_CODE, e.statusCode);
+			b.putString(Constants.EXTRA_ERROR, message);
+			receiver.send(Constants.RESULT_ERROR, b);
 		}
 	}
-	
-	public static void checkAuthorization(Activity context, int statusCode){
-		if(statusCode==ResponseCode.HTTP_UNAUTHORIZED){
+
+	public static void checkAuthorization(Activity context, int statusCode) {
+		if (statusCode == ResponseCode.HTTP_UNAUTHORIZED) {
 			IntentHelper.goLoginPage(context);
 			context.finish();
 		}

@@ -24,13 +24,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.fanfou.app.adapter.UserChooseCursorAdapter;
-import com.fanfou.app.api.FanFouApiConfig;
 import com.fanfou.app.api.User;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.service.AutoCompleteService;
-import com.fanfou.app.service.FetchService;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.ui.TextChangeListener;
@@ -100,7 +99,8 @@ public class UserChoosePage extends BaseActivity implements
 	protected void initCursorAdapter() {
 		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
 				+ "=?";
-		String[] whereArgs = new String[] { String.valueOf(User.TYPE_FRIENDS),
+		String[] whereArgs = new String[] {
+				String.valueOf(Constants.TYPE_USERS_FRIENDS),
 				App.getUserId() };
 		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				whereArgs, null);
@@ -212,11 +212,8 @@ public class UserChoosePage extends BaseActivity implements
 	}
 
 	protected void doRetrieve(boolean isGetMore) {
-		Bundle b = new Bundle();
-		b.putString(Commons.EXTRA_ID, App.getUserId());
-		b.putInt(Commons.EXTRA_PAGE, page);
-		b.putInt(Commons.EXTRA_COUNT, FanFouApiConfig.MAX_USERS_COUNT);
-		FetchService.start(this, User.TYPE_FRIENDS, mResultReceiver, b);
+		FanFouService.doFetchFriends(this, mResultReceiver, page,
+				App.getUserId());
 	}
 
 	protected void updateUI() {
@@ -269,7 +266,7 @@ public class UserChoosePage extends BaseActivity implements
 				log("User Names: " + sb.toString());
 			}
 			Intent intent = new Intent();
-			intent.putExtra(Commons.EXTRA_TEXT, sb.toString());
+			intent.putExtra(Constants.EXTRA_TEXT, sb.toString());
 			setResult(RESULT_OK, intent);
 		}
 		finish();
@@ -305,20 +302,18 @@ public class UserChoosePage extends BaseActivity implements
 		@Override
 		protected void onReceiveResult(int resultCode, Bundle resultData) {
 			switch (resultCode) {
-			case Commons.RESULT_CODE_START:
-				break;
-			case Commons.RESULT_CODE_FINISH:
+			case Constants.RESULT_SUCCESS:
 				if (!isInitialized) {
 					showContent();
 				}
-				int count = resultData.getInt(Commons.EXTRA_COUNT);
+				int count = resultData.getInt(Constants.EXTRA_COUNT);
 				if (count > 0) {
 					updateUI();
 				}
 				break;
-			case Commons.RESULT_CODE_ERROR:
-				int code = resultData.getInt(Commons.EXTRA_ERROR_CODE);
-				String msg = resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
+			case Constants.RESULT_ERROR:
+				int code = resultData.getInt(Constants.EXTRA_CODE);
+				String msg = resultData.getString(Constants.EXTRA_ERROR);
 				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
 				if (!isInitialized) {
 					showContent();
@@ -337,7 +332,8 @@ public class UserChoosePage extends BaseActivity implements
 
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
-		String where = BasicColumns.TYPE + " = " + User.TYPE_FRIENDS + " AND "
+		String where = BasicColumns.TYPE + " = "
+				+ Constants.TYPE_USERS_FRIENDS + " AND "
 				+ BasicColumns.OWNER_ID + " = '" + App.getUserId() + "' AND ("
 				+ UserInfo.SCREEN_NAME + " like '%" + constraint + "%' OR "
 				+ BasicColumns.ID + " like '%" + constraint + "%' )";

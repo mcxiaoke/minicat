@@ -38,6 +38,7 @@ import com.fanfou.app.util.DateTimeHelper;
  * @version 1.5 2011.11.15
  * @version 1.6 2011.11.23
  * @version 1.7 2011.12.01
+ * @version 1.8 2011.12.16
  * 
  */
 public final class Parser implements ResponseCode {
@@ -89,11 +90,11 @@ public final class Parser implements ResponseCode {
 	public static final String REQUEST = "request";
 	public static final String ERROR = "error";
 
-	public static List<String> ids(NetResponse r) throws ApiException {
+	public static ArrayList<String> ids(NetResponse r) throws ApiException {
 		return ids(r.getJSONArray());
 	}
 
-	public static List<Search> trends(NetResponse r) throws ApiException {
+	public static ArrayList<Search> trends(NetResponse r) throws ApiException {
 		return trends(r.getJSONObject());
 	}
 
@@ -101,7 +102,7 @@ public final class Parser implements ResponseCode {
 		return savedSearch(r.getJSONObject());
 	}
 
-	public static List<Search> savedSearches(NetResponse r) throws ApiException {
+	public static ArrayList<Search> savedSearches(NetResponse r) throws ApiException {
 		return savedSearches(r.getJSONArray());
 	}
 
@@ -109,7 +110,7 @@ public final class Parser implements ResponseCode {
 		return trend(r.getJSONObject());
 	}
 
-	public static List<String> ids(String content) throws ApiException {
+	public static ArrayList<String> ids(String content) throws ApiException {
 		try {
 			JSONArray a = new JSONArray(content);
 			return ids(a);
@@ -121,9 +122,9 @@ public final class Parser implements ResponseCode {
 		}
 	}
 
-	public static List<String> ids(JSONArray a) throws ApiException {
+	public static ArrayList<String> ids(JSONArray a) throws ApiException {
 		try {
-			List<String> ids = new ArrayList<String>();
+			ArrayList<String> ids = new ArrayList<String>();
 			for (int i = 0; i < a.length(); i++) {
 				ids.add(a.getString(i));
 			}
@@ -162,7 +163,7 @@ public final class Parser implements ResponseCode {
 		}
 	}
 
-	public static List<Search> trends(String content) throws ApiException {
+	public static ArrayList<Search> trends(String content) throws ApiException {
 		try {
 			JSONObject o = new JSONObject(content);
 			return trends(o);
@@ -175,8 +176,8 @@ public final class Parser implements ResponseCode {
 		}
 	}
 
-	public static List<Search> trends(JSONObject o) throws ApiException {
-		List<Search> ts = new ArrayList<Search>();
+	public static ArrayList<Search> trends(JSONObject o) throws ApiException {
+		ArrayList<Search> ts = new ArrayList<Search>();
 		try {
 			JSONArray a = o.getJSONArray(TRENDS);
 			for (int i = 0; i < a.length(); i++) {
@@ -236,9 +237,9 @@ public final class Parser implements ResponseCode {
 		}
 	}
 
-	public static List<Search> savedSearches(JSONArray a) throws ApiException {
+	public static ArrayList<Search> savedSearches(JSONArray a) throws ApiException {
 		try {
-			List<Search> ss = new ArrayList<Search>();
+			ArrayList<Search> ss = new ArrayList<Search>();
 			for (int i = 0; i < a.length(); i++) {
 				JSONObject o = a.getJSONObject(i);
 				Search s = savedSearch(o);

@@ -14,10 +14,10 @@ import android.widget.ListView;
 
 import com.fanfou.app.adapter.DraftsCursorAdaper;
 import com.fanfou.app.api.Draft;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.dialog.ConfirmDialog;
-import com.fanfou.app.service.TaskQueueService;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.QueueService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.util.StringHelper;
@@ -124,7 +124,7 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 	}
 
 	private void startTaskQueueService() {
-		startService(new Intent(this, TaskQueueService.class));
+		startService(new Intent(this, QueueService.class));
 	}
 
 	private void doSendAll() {
@@ -157,12 +157,12 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 		}
 
 		Intent intent = new Intent(this, WritePage.class);
-		intent.putExtra(Commons.EXTRA_TYPE, draft.type);
-		intent.putExtra(Commons.EXTRA_TEXT, draft.text);
-		intent.putExtra(Commons.EXTRA_DRAFT_ID, draft.id);
-		intent.putExtra(Commons.EXTRA_IN_REPLY_TO_ID, draft.replyTo);
+		intent.putExtra(Constants.EXTRA_TYPE, draft.type);
+		intent.putExtra(Constants.EXTRA_TEXT, draft.text);
+		intent.putExtra(Constants.EXTRA_ID, draft.id);
+		intent.putExtra(Constants.EXTRA_IN_REPLY_TO_ID, draft.replyTo);
 		if (!StringHelper.isEmpty(draft.filePath)) {
-			intent.putExtra(Commons.EXTRA_FILE, new File(draft.filePath));
+			intent.putExtra(Constants.EXTRA_DATA, new File(draft.filePath));
 		}
 		startActivity(intent);
 		finish();

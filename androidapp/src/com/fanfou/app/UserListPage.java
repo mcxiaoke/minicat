@@ -13,17 +13,14 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.fanfou.app.App.ApnType;
 import com.fanfou.app.adapter.UserCursorAdapter;
-import com.fanfou.app.api.FanFouApiConfig;
-import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
-import com.fanfou.app.service.FetchService;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.TextChangeListener;
@@ -165,9 +162,9 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		if (user != null) {
-			if (type == User.TYPE_FRIENDS) {
+			if (type == Constants.TYPE_USERS_FRIENDS) {
 				mActionBar.setTitle(user.screenName + "关注的人");
-			} else if (type == User.TYPE_FOLLOWERS) {
+			} else if (type == Constants.TYPE_USERS_FOLLOWERS) {
 				mActionBar.setTitle("关注" + user.screenName + "的人");
 			}
 		}
@@ -175,10 +172,11 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 
 	protected boolean parseIntent() {
 		Intent intent = getIntent();
-		type = intent.getIntExtra(Commons.EXTRA_TYPE, Status.TYPE_USER);
-		user = (User) intent.getParcelableExtra(Commons.EXTRA_USER);
+		type = intent.getIntExtra(Constants.EXTRA_TYPE,
+				Constants.TYPE_USERS_FRIENDS);
+		user = (User) intent.getParcelableExtra(Constants.EXTRA_DATA);
 		if (user == null) {
-			userId = intent.getStringExtra(Commons.EXTRA_ID);
+			userId = intent.getStringExtra(Constants.EXTRA_ID);
 		} else {
 			userId = user.id;
 			userName = user.screenName;
@@ -197,21 +195,17 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected void doRetrieve(boolean isGetMore) {
-		if (!App.verified) {
-			Utils.notify(this, "未通过验证，请登录");
-			return;
-		}
 		if (userId == null) {
 			if (App.DEBUG)
 				log("userId is null");
 			return;
 		}
-		Bundle b = new Bundle();
-		b.putString(Commons.EXTRA_ID, userId);
-		b.putInt(Commons.EXTRA_PAGE, page);
-		b.putInt(Commons.EXTRA_COUNT, FanFouApiConfig.MAX_USERS_COUNT);
 		ResultReceiver receiver = new MyResultHandler(mHandler, isGetMore);
-		FetchService.start(this, type, receiver, b);
+		if (type == Constants.TYPE_USERS_FRIENDS) {
+			FanFouService.doFetchFriends(this, receiver, page, userId);
+		} else {
+			FanFouService.doFetchFollowers(this, receiver, page, userId);
+		}
 	}
 
 	protected void updateUI() {
@@ -281,13 +275,11 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 		@Override
 		protected void onReceiveResult(int resultCode, Bundle resultData) {
 			switch (resultCode) {
-			case Commons.RESULT_CODE_START:
-				break;
-			case Commons.RESULT_CODE_FINISH:
+			case Constants.RESULT_SUCCESS:
 				if (!isInitialized) {
 					showContent();
 				}
-				int count = resultData.getInt(Commons.EXTRA_COUNT);
+				int count = resultData.getInt(Constants.EXTRA_COUNT);
 				if (doGetMore) {
 					mListView.onLoadMoreComplete();
 				} else {
@@ -295,9 +287,9 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 				}
 				updateUI();
 				break;
-			case Commons.RESULT_CODE_ERROR:
-				String msg = resultData.getString(Commons.EXTRA_ERROR_MESSAGE);
-				int errorCode = resultData.getInt(Commons.EXTRA_ERROR_CODE);
+			case Constants.RESULT_ERROR:
+				String msg = resultData.getString(Constants.EXTRA_ERROR);
+				int errorCode = resultData.getInt(Constants.EXTRA_CODE);
 				if (!isInitialized) {
 					showContent();
 				}

@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string-array name="pic_level">
-		<item>原始图片</item>
-		<item>缩略图</item>
-		<item>不显示图片</item>
-	</string-array>
-
-	<string-array name="pic_level_values">
-		<item>2</item>
-		<item>1</item>
-		<item>0</item>
-	</string-array>
-
 	<string-array name="bottom_icon_position">
 		<item>左下角</item>
 		<item>右下角</item>

@@ -17,6 +17,7 @@ import com.fanfou.app.App;
  * @author mcxiaoke
  * @version 1.0 2011.11.09
  * @version 1.5 2011.11.10
+ * @version 1.6 2011.12.19
  * 
  */
 public class SeekBarPreference extends DialogPreference implements
@@ -40,6 +41,11 @@ public class SeekBarPreference extends DialogPreference implements
 		mSuffix = attrs.getAttributeValue(androidns, "text");
 		mDefault = attrs.getAttributeIntValue(androidns, "defaultValue", 0);
 		mMax = attrs.getAttributeIntValue(androidns, "max", 100);
+
+		if (App.DEBUG) {
+			Log.d(TAG, "SeekBarPreference() mDefault=" + mDefault);
+			Log.d(TAG, "SeekBarPreference() mValue=" + mValue);
+		}
 
 	}
 
@@ -68,17 +74,30 @@ public class SeekBarPreference extends DialogPreference implements
 		layout.addView(mSeekBar, new LinearLayout.LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 
-		if (shouldPersist())
+		if (shouldPersist()) {
 			mValue = getPersistedInt(mDefault);
+		}
 
-		mSeekBar.setMax(mMax);
-		mSeekBar.setProgress(mValue);
+		// if(App.DEBUG){
+		// Log.d(TAG, "onCreateDialogView() mDefault="+mDefault);
+		// Log.d(TAG, "onCreateDialogView() mMax="+mMax);
+		// Log.d(TAG, "onCreateDialogView() mValue="+mValue);
+		// }
+
+		// mSeekBar.setMax(mMax);
+		// mSeekBar.setProgress(mValue);
 		return layout;
 	}
 
 	@Override
 	protected void onBindDialogView(View v) {
 		super.onBindDialogView(v);
+
+		if (App.DEBUG) {
+			Log.d(TAG, "onBindDialogView() mDefault=" + mDefault);
+			Log.d(TAG, "onBindDialogView() mValue=" + mValue);
+		}
+
 		mSeekBar.setMax(mMax);
 		mSeekBar.setProgress(mValue);
 	}
@@ -91,6 +110,11 @@ public class SeekBarPreference extends DialogPreference implements
 		else
 			mValue = (Integer) defaultValue;
 
+		if (App.DEBUG) {
+			Log.d(TAG, "onSetInitialValue() mDefault=" + mDefault);
+			Log.d(TAG, "onSetInitialValue() mValue=" + mValue);
+		}
+
 		setSummary("" + mValue + mSuffix);
 	}
 
@@ -101,8 +125,15 @@ public class SeekBarPreference extends DialogPreference implements
 					+ mValue);
 		}
 		if (positiveResult) {
-			if (shouldPersist())
+			if (shouldPersist()) {
 				persistInt(mValue);
+			}
+
+			if (App.DEBUG) {
+				Log.d(TAG, "onDialogClosed() mDefault=" + mDefault);
+				Log.d(TAG, "onDialogClosed() mValue=" + mValue);
+			}
+
 			callChangeListener(new Integer(mValue));
 		}
 	}
@@ -110,11 +141,18 @@ public class SeekBarPreference extends DialogPreference implements
 	@Override
 	public void onProgressChanged(SeekBar seek, int value, boolean fromTouch) {
 		String t = String.valueOf(value);
-		mValue = value;
-		mValueText.setText(mSuffix == null ? t : t.concat(mSuffix));
-		if (App.DEBUG) {
-			Log.d(TAG, "onProgressChanged mvalue=" + mValue);
+
+		if (value > 0) {
+			mValue = value;
 		}
+
+		if (App.DEBUG) {
+			Log.d(TAG, "onProgressChanged() mDefault=" + mDefault);
+			Log.d(TAG, "onProgressChanged() mValue=" + mValue);
+			Log.d(TAG, "onProgressChanged() value=" + value);
+		}
+
+		mValueText.setText(mSuffix == null ? t : t.concat(mSuffix));
 		// if (shouldPersist())
 		// persistInt(value);
 		// callChangeListener(new Integer(value));

@@ -1,15 +1,12 @@
 package com.fanfou.app;
 
 import android.database.Cursor;
-import android.os.Bundle;
 
-import com.fanfou.app.api.FanFouApiConfig;
-import com.fanfou.app.api.Status;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.FanFouProvider;
-import com.fanfou.app.service.FetchService;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -29,16 +26,16 @@ public class UserTimelinePage extends BaseTimelineActivity {
 	}
 
 	@Override
-	protected void doRetrieveImpl(Bundle b, MyResultHandler receiver) {
+	protected void doRetrieveImpl(final MyResultHandler receiver) {
+		String sinceId = null;
+		String maxId = null;
 		if (receiver.doGetMore) {
-			String maxId = Utils.getMaxId(mCursor);
-			b.putString(Commons.EXTRA_MAX_ID, maxId);
+			maxId = Utils.getMaxId(mCursor);
 		} else {
-			String sinceId = Utils.getSinceId(mCursor);
-			b.putString(Commons.EXTRA_SINCE_ID, sinceId);
+			sinceId = Utils.getSinceId(mCursor);
 		}
-		b.putInt(Commons.EXTRA_COUNT, FanFouApiConfig.DEFAULT_TIMELINE_COUNT);
-		FetchService.start(this, getType(), receiver, b);
+		FanFouService.doFetchUserTimeline(this, receiver, userId, sinceId,
+				maxId);
 	}
 
 	@Override
@@ -47,7 +44,7 @@ public class UserTimelinePage extends BaseTimelineActivity {
 	}
 
 	protected int getType() {
-		return Status.TYPE_USER;
+		return Constants.TYPE_STATUSES_USER_TIMELINE;
 	}
 
 }

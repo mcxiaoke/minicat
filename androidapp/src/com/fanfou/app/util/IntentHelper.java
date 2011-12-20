@@ -12,7 +12,7 @@ import com.fanfou.app.App;
 import com.fanfou.app.HomePage;
 import com.fanfou.app.LoginPage;
 import com.fanfou.app.R;
-import com.fanfou.app.config.Commons;
+import com.fanfou.app.service.Constants;
 
 public final class IntentHelper {
 	private static final String TAG = IntentHelper.class.getSimpleName();
@@ -20,7 +20,7 @@ public final class IntentHelper {
 	public static void goHomePage(Context context, final int page) {
 		Intent intent = new Intent(context, HomePage.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		intent.putExtra(Commons.EXTRA_PAGE, page);
+		intent.putExtra(Constants.EXTRA_PAGE, page);
 		context.startActivity(intent);
 	}
 
@@ -72,7 +72,7 @@ public final class IntentHelper {
 		} else {
 			sb.append("\nNO EXTRAS");
 		}
-		Log.v(tag, sb.toString());
+		Log.i(tag, sb.toString());
 	}
 
 	public static int sdkVersion() {

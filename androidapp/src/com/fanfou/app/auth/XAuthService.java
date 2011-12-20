@@ -4,16 +4,14 @@ import java.io.IOException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 
 import android.util.Log;
 
 import com.fanfou.app.App;
-import com.fanfou.app.api.Parser;
 import com.fanfou.app.auth.exception.OAuthTokenException;
 import com.fanfou.app.http.NetClient;
 import com.fanfou.app.http.NetRequest;
+import com.fanfou.app.http.NetResponse;
 
 /**
  * @author mcxiaoke
@@ -51,16 +49,16 @@ public class XAuthService {
 				.header("Authorization", authorization).build();
 		NetClient client = new NetClient();
 		HttpResponse response = client.exec(nr);
-		int statusCode = response.getStatusLine().getStatusCode();
-		String content = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
+		NetResponse res = new NetResponse(response);
+		String content = res.getContent();
 		if (App.DEBUG) {
-			log("requestOAuthAccessToken() code=" + statusCode + " response="
-					+ content);
+			log("requestOAuthAccessToken() code=" + res.statusCode
+					+ " response=" + content);
 		}
-		if (statusCode == 200) {
+		if (res.statusCode == 200) {
 			return OAuthToken.from(content);
 		}
-//		throw new OAuthTokenException(Parser.error(content));
+		// throw new OAuthTokenException(Parser.error(content));
 		throw new OAuthTokenException("登录失败，帐号或密码错误");
 	}
 }

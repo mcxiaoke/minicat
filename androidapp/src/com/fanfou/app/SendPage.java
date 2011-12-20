@@ -28,15 +28,14 @@ import com.fanfou.app.adapter.MessageCursorAdapter;
 import com.fanfou.app.adapter.SpaceTokenizer;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.User;
-import com.fanfou.app.config.Actions;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.UserInfo;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.service.PostMessageService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
-import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.IntentHelper;
@@ -76,39 +75,23 @@ public class SendPage extends BaseActivity {
 
 	private String mContent;
 
-	private BroadcastReceiver mSendSuccessReceiver;
-	private IntentFilter mSendSuccessFilter;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		parseIntent();
-		initSendSuccessReceiver();
 		setLayout();
 		checkUserId();
 	}
 
-	private void initSendSuccessReceiver() {
-		mSendSuccessReceiver = new SendSuccessReceiver();
-		mSendSuccessFilter = new IntentFilter(Actions.ACTION_MESSAGE_SENT);
-		mSendSuccessFilter.setPriority(1000);
+	@Override
+	protected IntentFilter getIntentFilter() {
+		IntentFilter filter= new IntentFilter(Constants.ACTION_MESSAGE_SENT);
+		filter.setPriority(1000);
+		return filter;
 	}
 
-	private class SendSuccessReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (App.DEBUG) {
-				Log.d(TAG, "SendSuccessReceiver.received");
-			}
-			if (onSendSuccess()) {
-				abortBroadcast();
-			}
-		}
-
-	}
-
-	private boolean onSendSuccess() {
+	@Override
+	protected boolean onBroadcastReceived(Intent intent) {
 		Utils.notify(this, "私信发送成功！");
 		mListView.setSelection(mCursorAdapter.getCount());
 		return true;
@@ -116,8 +99,8 @@ public class SendPage extends BaseActivity {
 
 	private void parseIntent() {
 		Intent intent = getIntent();
-		mUserId = intent.getStringExtra(Commons.EXTRA_USER_ID);
-		mUserName = intent.getStringExtra(Commons.EXTRA_USER_NAME);
+		mUserId = intent.getStringExtra(Constants.EXTRA_ID);
+		mUserName = intent.getStringExtra(Constants.EXTRA_USER_NAME);
 		if (App.DEBUG) {
 			IntentHelper.logIntent(TAG, intent);
 		}
@@ -166,7 +149,8 @@ public class SendPage extends BaseActivity {
 		mSelectAutoComplete.setBackgroundColor(R.color.background_color);
 		String[] projection = new String[] { BaseColumns._ID, BasicColumns.ID,
 				UserInfo.SCREEN_NAME };
-		String where = BasicColumns.TYPE + " = '" + User.TYPE_FRIENDS + "'";
+		String where = BasicColumns.TYPE + " = '"
+				+ Constants.TYPE_USERS_FRIENDS + "'";
 		Cursor c = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				null, null);
 		mSelectAutoComplete.setAdapter(new AutoCompleteCursorAdapter(this, c));
@@ -243,12 +227,10 @@ public class SendPage extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		registerReceiver(mSendSuccessReceiver, mSendSuccessFilter);
 	}
 
 	@Override
 	protected void onPause() {
-		unregisterReceiver(mSendSuccessReceiver);
 		super.onPause();
 	}
 
@@ -279,8 +261,8 @@ public class SendPage extends BaseActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			if (requestCode == REQUEST_CODE_SELECT_USER) {
-				mUserId = data.getStringExtra(Commons.EXTRA_USER_ID);
-				mUserName = data.getStringExtra(Commons.EXTRA_USER_NAME);
+				mUserId = data.getStringExtra(Constants.EXTRA_ID);
+				mUserName = data.getStringExtra(Constants.EXTRA_USER_NAME);
 				mSelectAutoComplete.setText(mUserName);
 				Selection.setSelection(mSelectAutoComplete.getEditableText(),
 						mSelectAutoComplete.getEditableText().length());
@@ -327,7 +309,7 @@ public class SendPage extends BaseActivity {
 	}
 
 	private void doDelete(DirectMessage dm) {
-		ActionManager.doMessageDelete(this, dm.id, null, false);
+		FanFouService.doMessageDelete(this, dm.id, null, false);
 		// if (dm.type == DirectMessage.TYPE_OUT) {
 		// ActionManager.doMessageDelete(this, dm.id, null, false);
 		// } else {
@@ -369,9 +351,9 @@ public class SendPage extends BaseActivity {
 
 	private void startSendService() {
 		Intent i = new Intent(mContext, PostMessageService.class);
-		i.putExtra(Commons.EXTRA_USER_ID, mUserId);
-		i.putExtra(Commons.EXTRA_USER_NAME, mUserName);
-		i.putExtra(Commons.EXTRA_TEXT, mContent);
+		i.putExtra(Constants.EXTRA_ID, mUserId);
+		i.putExtra(Constants.EXTRA_USER_NAME, mUserName);
+		i.putExtra(Constants.EXTRA_TEXT, mContent);
 		startService(i);
 	}
 

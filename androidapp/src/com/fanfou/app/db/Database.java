@@ -11,11 +11,12 @@ import android.database.sqlite.SQLiteDatabase;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
-import com.fanfou.app.config.Commons;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -24,6 +25,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.1 2011.05.01
  * @version 1.2 2011.05.02
  * @version 2.0 2011.05.25
+ * @version 2.1 2011.12.19
  */
 public class Database {
 	private static final String tag = "Database";
@@ -239,13 +241,13 @@ public class Database {
 			// + " (SELECT "+ StatusInfo.CREATED_AT
 			// + " FROM " + StatusInfo.TABLE_NAME;
 
-			if (type != Commons.TYPE_NONE) {
+			if (type != Constants.TYPE_NONE) {
 				where += " WHERE " + BasicColumns.TYPE + " = " + type + " ";
 			}
 			where += " ORDER BY " + BasicColumns.CREATED_AT
 					+ " DESC LIMIT 1 OFFSET " + STATUS_STORE_MAX + ")";
 
-			if (type != Commons.TYPE_NONE) {
+			if (type != Constants.TYPE_NONE) {
 				where += " AND " + BasicColumns.TYPE + " = " + type + " ";
 			}
 			// sql+=where;
@@ -291,7 +293,8 @@ public class Database {
 	 */
 	public long statusDeleteHome() {
 		String where = BasicColumns.TYPE + "=?";
-		String[] whereArgs = new String[] { String.valueOf(Status.TYPE_HOME) };
+		String[] whereArgs = new String[] { String
+				.valueOf(Constants.TYPE_STATUSES_HOME_TIMELINE) };
 		return statusDeleteByCondition(where, whereArgs);
 	}
 
@@ -302,7 +305,8 @@ public class Database {
 	 */
 	public long statusDeleteMention() {
 		String where = BasicColumns.TYPE + "=?";
-		String[] whereArgs = new String[] { String.valueOf(Status.TYPE_MENTION) };
+		String[] whereArgs = new String[] { String
+				.valueOf(Constants.TYPE_STATUSES_MENTIONS) };
 		return statusDeleteByCondition(where, whereArgs);
 	}
 
@@ -437,7 +441,7 @@ public class Database {
 		int result = -1;
 		String sql = "SELECT COUNT(" + BasicColumns.ID + ") FROM "
 				+ StatusInfo.TABLE_NAME;
-		if (type == Commons.TYPE_NONE) {
+		if (type == Constants.TYPE_NONE) {
 			sql += " ;";
 		} else {
 			sql += " WHERE " + BasicColumns.TYPE + "=" + type + ";";
@@ -483,7 +487,7 @@ public class Database {
 	 * @return
 	 */
 	public int statusCount() {
-		return statusCountByType(Commons.TYPE_NONE);
+		return statusCountByType(Constants.TYPE_NONE);
 	}
 
 	public Cursor query(String table, String[] columns, String selection,

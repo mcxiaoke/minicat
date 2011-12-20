@@ -91,15 +91,6 @@
             android:summary="文本模式，不显示头像和图片"
             android:title="使用文本模式" />
 
-        <ListPreference
-            android:defaultValue="0"
-            android:dialogTitle="选择消息页面图片显示方式"
-            android:entries="@array/pic_level"
-            android:entryValues="@array/pic_level_values"
-            android:key="@string/option_pic_level"
-            android:summary="设置消息页面图片大小"
-            android:title="消息图片预览" />
-
         <com.fanfou.app.preferences.SeekBarPreference
             android:defaultValue="15"
             android:dialogTitle="选择字体大小"
@@ -108,12 +99,6 @@
             android:summary="设置文本内容字体大小"
             android:text="号"
             android:title="文本字体大小" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/option_force_fullscreen"
-            android:summary="隐藏系统状态栏"
-            android:title="全屏显示" />
 
         <CheckBoxPreference
             android:defaultValue="false"
@@ -156,12 +141,6 @@
 
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="@string/option_fast_scroll_on"
-            android:summary="显示列表快速拖动滑块"
-            android:title="快速拖动" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
             android:key="@string/option_page_scroll_endless"
             android:summary="页面切换使用循环滚动"
             android:title="循环滚动" />
@@ -177,12 +156,6 @@
             android:key="@string/option_play_sound_effect"
             android:summary="时间线有新消息时播放音效"
             android:title="音效反馈" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/option_confirm_on_exit"
-            android:summary="退出客户端时需要确认"
-            android:title="退出确认" />
 
         <CheckBoxPreference
             android:defaultValue="true"

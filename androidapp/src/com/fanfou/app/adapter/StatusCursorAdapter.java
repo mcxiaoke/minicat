@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -84,7 +86,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 		if (s == null || s.isNull()) {
 			return NONE;
 		}
-		if (s.type == Status.TYPE_MENTION
+		if (s.type == Constants.TYPE_STATUSES_MENTIONS
 				|| s.simpleText.contains("@" + App.getUserName())) {
 			return MENTION;
 		}

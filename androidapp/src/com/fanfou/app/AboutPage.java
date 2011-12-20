@@ -67,8 +67,10 @@ public class AboutPage extends Activity implements OnClickListener {
 		mTitle.setText("饭否Android客户端");
 		TextPaint t1 = mTitle.getPaint();
 		t1.setFakeBoldText(true);
-		String version = App.getApp().appVersionName + "(Build"
-				+ App.getApp().appVersionCode + ")";
+		App.getApp();
+		App.getApp();
+		String version = App.appVersionName + "(Build"
+				+ App.appVersionCode + ")";
 		mVersion.setText("版本：" + version);
 		mIntroduction.setText(R.string.introduction_text);
 		mSupport.setText("技术支持");

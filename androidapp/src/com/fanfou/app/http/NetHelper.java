@@ -160,8 +160,8 @@ public final class NetHelper {
 				.setConnectionTimeout(params, CONNECTION_TIMEOUT_MS);
 		HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT_MS);
 		HttpConnectionParams.setTcpNoDelay(params, true);
-		HttpProtocolParams.setUserAgent(params, "FanFou for Android(com.fanfou.app)/"
-				+ App.appVersionName);
+		HttpProtocolParams.setUserAgent(params,
+				"FanFou for Android(com.fanfou.app)/" + App.appVersionName);
 
 		SchemeRegistry schReg = new SchemeRegistry();
 		schReg.register(new Scheme("http", PlainSocketFactory

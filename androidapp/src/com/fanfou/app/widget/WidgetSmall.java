@@ -12,13 +12,14 @@ import com.fanfou.app.MyProfilePage;
 import com.fanfou.app.R;
 import com.fanfou.app.SearchPage;
 import com.fanfou.app.SplashPage;
-import com.fanfou.app.config.Actions;
-import com.fanfou.app.config.Commons;
+import com.fanfou.app.service.Constants;
+import com.fanfou.app.service.FanFouService;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.11.08
  * @version 1.5 2011.11.11
+ * @version 1.6 2011.12.19
  * 
  */
 public class WidgetSmall extends AppWidgetProvider {
@@ -49,36 +50,36 @@ public class WidgetSmall extends AppWidgetProvider {
 
 	private PendingIntent getMentionPendingIntent(Context context) {
 		Intent intent = new Intent(context, HomePage.class);
-		intent.putExtra(Commons.EXTRA_PAGE, 1);
+		intent.putExtra(Constants.EXTRA_PAGE, 1);
 		return getPendingIntent(context, intent);
 	}
 
 	private PendingIntent getMessagePendingIntent(Context context) {
 		Intent intent = new Intent(context, HomePage.class);
-		intent.putExtra(Commons.EXTRA_PAGE, 2);
+		intent.putExtra(Constants.EXTRA_PAGE, 2);
 		return getPendingIntent(context, intent);
 	}
 
 	private PendingIntent getPublicPendingIntent(Context context) {
 		Intent intent = new Intent(context, HomePage.class);
-		intent.putExtra(Commons.EXTRA_PAGE, 3);
+		intent.putExtra(Constants.EXTRA_PAGE, 3);
 		return getPendingIntent(context, intent);
 	}
 
 	private PendingIntent getWritePendingIntent(Context context) {
-		Intent intent = new Intent(Actions.ACTION_SEND);
+		Intent intent = new Intent(Constants.ACTION_SEND);
 		intent.setPackage(context.getPackageName());
 		return getPendingIntent(context, intent);
 	}
 
 	private PendingIntent getGalleryPendingIntent(Context context) {
-		Intent intent = new Intent(Actions.ACTION_SEND_FROM_GALLERY);
+		Intent intent = new Intent(Constants.ACTION_SEND_FROM_GALLERY);
 		intent.setPackage(context.getPackageName());
 		return getPendingIntent(context, intent);
 	}
 
 	private PendingIntent getCameraPendingIntent(Context context) {
-		Intent intent = new Intent(Actions.ACTION_SEND_FROM_CAMERA);
+		Intent intent = new Intent(Constants.ACTION_SEND_FROM_CAMERA);
 		intent.setPackage(context.getPackageName());
 		return getPendingIntent(context, intent);
 	}
