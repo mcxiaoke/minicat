@@ -32,6 +32,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.5 2011.11.15
  * @version 2.6 2011.12.16
  * @version 2.7 2011.12.19
+ * @version 3.0 2011.12.21
  * 
  */
 public class User implements Storable<User> {
@@ -65,8 +66,27 @@ public class User implements Storable<User> {
 	}
 
 	public User(Parcel in) {
-		ContentValues cv = in.readParcelable(null);
-		fromContentValues(cv);
+		id = in.readString();
+		ownerId = in.readString();
+		createdAt = new Date(in.readLong());
+		type = in.readInt();
+
+		screenName = in.readString();
+		location = in.readString();
+		gender = in.readString();
+		birthday = in.readString();
+
+		description = in.readString();
+		profileImageUrl = in.readString();
+		url = in.readString();
+		protect = in.readInt() == 0 ? false : true;
+
+		followersCount = in.readInt();
+		friendsCount = in.readInt();
+		favouritesCount = in.readInt();
+		statusesCount = in.readInt();
+
+		following = in.readInt() == 0 ? false : true;
 	}
 
 	@Override
@@ -216,33 +236,6 @@ public class User implements Storable<User> {
 	}
 
 	@Override
-	public void fromContentValues(final ContentValues cv) {
-		id = cv.getAsString(BasicColumns.ID);
-		ownerId = cv.getAsString(BasicColumns.OWNER_ID);
-
-		screenName = cv.getAsString(UserInfo.SCREEN_NAME);
-		location = cv.getAsString(UserInfo.LOCATION);
-		gender = cv.getAsString(UserInfo.GENDER);
-		birthday = cv.getAsString(UserInfo.BIRTHDAY);
-
-		description = cv.getAsString(UserInfo.DESCRIPTION);
-		profileImageUrl = cv.getAsString(UserInfo.PROFILE_IMAGE_URL);
-		url = cv.getAsString(UserInfo.URL);
-		protect = cv.getAsBoolean(UserInfo.PROTECTED);
-
-		followersCount = cv.getAsInteger(UserInfo.FOLLOWERS_COUNT);
-		friendsCount = cv.getAsInteger(UserInfo.FRIENDS_COUNT);
-		favouritesCount = cv.getAsInteger(UserInfo.FAVORITES_COUNT);
-		statusesCount = cv.getAsInteger(UserInfo.STATUSES_COUNT);
-
-		following = cv.getAsBoolean(UserInfo.FOLLOWING);
-		createdAt = new Date(cv.getAsLong(BasicColumns.CREATED_AT));
-
-		type = cv.getAsInteger(BasicColumns.TYPE);
-
-	}
-
-	@Override
 	public String toString() {
 		return "[User] " + BasicColumns.ID + "=" + id + " "
 				+ UserInfo.SCREEN_NAME + "=" + screenName + " "
@@ -283,8 +276,28 @@ public class User implements Storable<User> {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		ContentValues cv = toContentValues();
-		dest.writeParcelable(cv, flags);
+		dest.writeString(id);
+		dest.writeString(ownerId);
+		dest.writeLong(createdAt.getTime());
+		dest.writeInt(type);
+
+		dest.writeString(screenName);
+		dest.writeString(location);
+		dest.writeString(gender);
+		dest.writeString(birthday);
+
+		dest.writeString(description);
+		dest.writeString(profileImageUrl);
+		dest.writeString(url);
+		dest.writeInt(protect ? 1 : 0);
+
+		dest.writeInt(followersCount);
+		dest.writeInt(friendsCount);
+		dest.writeInt(favouritesCount);
+		dest.writeInt(statusesCount);
+
+		dest.writeInt(following ? 1 : 0);
+
 	}
 
 	public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {

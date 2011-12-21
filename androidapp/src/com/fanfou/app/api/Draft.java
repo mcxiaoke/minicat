@@ -16,6 +16,7 @@ import com.fanfou.app.db.Contents.DraftInfo;
  * @version 1.0 2011.10.26
  * @version 1.1 2011.11.04
  * @version 2.0 2011.11.10
+ * @version 3.0 2011.12.21
  * 
  */
 public class Draft implements Storable<Draft> {
@@ -25,8 +26,13 @@ public class Draft implements Storable<Draft> {
 	}
 
 	public Draft(Parcel in) {
-		ContentValues cv = in.readParcelable(null);
-		fromContentValues(cv);
+		id = in.readInt();
+		type = in.readInt();
+		createdAt = new Date(in.readLong());
+		ownerId = in.readString();
+		text = in.readString();
+		replyTo = in.readString();
+		filePath = in.readString();
 	}
 
 	@Override
@@ -37,13 +43,7 @@ public class Draft implements Storable<Draft> {
 	public static final int TYPE_NONE = 0;
 	public static final int ID_NONE = 0;
 
-	private static final long serialVersionUID = 8363607193025710949L;
-
-	public static final String tag = Draft.class.getSimpleName();
-
-	private static void log(String message) {
-		Log.d(tag, message);
-	}
+	public static final String TAG = Draft.class.getSimpleName();
 
 	public int id;
 	public String ownerId;
@@ -86,18 +86,10 @@ public class Draft implements Storable<Draft> {
 	}
 
 	@Override
-	public void fromContentValues(ContentValues values) {
-		ContentValues cv = values;
-		ownerId = cv.getAsString(DraftInfo.OWNER_ID);
-		text = cv.getAsString(DraftInfo.TEXT);
-		createdAt = new Date(cv.getAsLong(DraftInfo.CREATED_AT));
-		type = cv.getAsInteger(DraftInfo.TYPE);
-		replyTo = cv.getAsString(DraftInfo.REPLY_TO);
-		filePath = cv.getAsString(DraftInfo.FILE_PATH);
-	}
-
-	@Override
 	public boolean equals(Object o) {
+		if (o == this) {
+			return true;
+		}
 		if (o instanceof Draft) {
 			Draft d = (Draft) o;
 			if (id == d.id && text.equals(d.text)) {
@@ -108,19 +100,19 @@ public class Draft implements Storable<Draft> {
 	}
 
 	@Override
-	public int hashCode() {
-		return id + text.hashCode();
-	}
-
-	@Override
 	public int describeContents() {
 		return 0;
 	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		ContentValues cv = toContentValues();
-		dest.writeParcelable(cv, flags);
+		dest.writeInt(id);
+		dest.writeInt(type);
+		dest.writeLong(createdAt.getTime());
+		dest.writeString(ownerId);
+		dest.writeString(text);
+		dest.writeString(replyTo);
+		dest.writeString(filePath);
 	}
 
 	public static final Parcelable.Creator<Draft> CREATOR = new Parcelable.Creator<Draft>() {
@@ -132,7 +124,6 @@ public class Draft implements Storable<Draft> {
 
 		@Override
 		public Draft[] newArray(int size) {
-			// TODO Auto-generated method stub
 			return new Draft[size];
 		}
 	};

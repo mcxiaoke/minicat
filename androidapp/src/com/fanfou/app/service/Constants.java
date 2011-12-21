@@ -101,44 +101,32 @@ public final class Constants {
 	public static final String EXTRA_SINCE_ID = "com.fanfou.app.EXTRA_SINCE_ID";
 	public static final String EXTRA_MAX_ID = "com.fanfou.app.EXTRA_MAX_ID";
 	public static final String EXTRA_DATA = "com.fanfou.app.EXTRA_DATA";
-
 	public static final String EXTRA_URL = "com.fanfou.app.EXTRA_URL";
-
 	public static final String EXTRA_USER_NAME = "com.fanfou.app.EXTRA_USER_NAME";
 	public static final String EXTRA_USER_HEAD = "com.fanfou.app.EXTRA_USER_HEAD";
-
 	public static final String EXTRA_TEXT = "com.fanfou.app.EXTRA_TEXT";
-
 	public static final String EXTRA_FILENAME = "com.fanfou.app.EXTRA_FILENAME";
 	public static final String EXTRA_LOCATION = "com.fanfou.app.EXTRA_LOCATION";
 	public static final String EXTRA_IN_REPLY_TO_ID = "com.fanfou.app.EXTRA_IN_REPLY_TO_ID";
 	public static final String EXTRA_REPOST_ID = "com.fanfou.app.EXTRA_REPOST_ID";
 
 	public static final String ACTION_PACKAGE = "com.fanfou.app.action.";
-
 	public static final String ACTION_STATUS = ACTION_PACKAGE + "STATUS";
 	public static final String ACTION_SHARE = ACTION_PACKAGE + "SHARE";
-
 	public static final String ACTION_SEARCH = ACTION_PACKAGE + "SEARCH";
-
 	public static final String ACTION_MESSAGES = ACTION_PACKAGE + "MESSAGES";
-
 	public static final String ACTION_REPEAT = ACTION_PACKAGE + "REPEAT";
-
 	public static final String ACTION_NOTIFICATION = ACTION_PACKAGE
 			+ "NOTIFICATION";
-
 	public static final String ACTION_SEND = ACTION_PACKAGE + "SEND";
 	public static final String ACTION_SEND_FROM_GALLERY = ACTION_PACKAGE
 			+ "GALLERY";
 	public static final String ACTION_SEND_FROM_CAMERA = ACTION_PACKAGE
 			+ "CAMERA";
-
 	public static final String ACTION_MESSAGE_SENT = ACTION_PACKAGE
 			+ "ACTION_MESSAGE_SEND";
 	public static final String ACTION_STATUS_SENT = ACTION_PACKAGE
 			+ "ACTION_STATUS_SEND";
-
 	public static final String ACTION_DRAFTS_SENT = ACTION_PACKAGE
 			+ "ACTION_DRAFTS_SENT";
 
@@ -146,12 +134,12 @@ public final class Constants {
 	public static final int RESULT_FAILED = -2;
 	public static final int RESULT_ERROR = -3;
 
-	public static final String FORMAT = "html";
-	public static final String MODE = "lite";
-
 	public static final int MAX_TIMELINE_COUNT = 60;
 	public static final int DEFAULT_TIMELINE_COUNT = 20;
 	public static final int MAX_USERS_COUNT = 60;
 	public static final int DEFAULT_USERS_COUNT = 20;
 	public static final int MAX_IDS_COUNT = 2000;
+	
+	public static final String FORMAT = "html";
+	public static final String MODE = "lite";
 }

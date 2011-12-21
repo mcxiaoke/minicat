@@ -16,6 +16,7 @@ import com.fanfou.app.http.ResponseCode;
 /**
  * @author mcxiaoke
  * @version 1.0 2011.11.10
+ * @version 2.0 2011.12.21
  * 
  */
 public class Photo implements Storable<Photo> {
@@ -26,7 +27,6 @@ public class Photo implements Storable<Photo> {
 	public String imageUrl;
 
 	public Photo() {
-
 	}
 
 	public static Photo parse(JSONObject o) throws ApiException {
@@ -59,16 +59,6 @@ public class Photo implements Storable<Photo> {
 	}
 
 	@Override
-	public void fromContentValues(ContentValues values) {
-		ContentValues cv = values;
-		id = cv.getAsString("id");
-		createdAt = new Date(cv.getAsLong("createdAt"));
-		imageUrl = cv.getAsString("imageUrl");
-		thumbUrl = cv.getAsString("thumbUrl");
-		largeUrl = cv.getAsString("largeUrl");
-	}
-
-	@Override
 	public int compareTo(Photo another) {
 		return 0;
 	}
@@ -90,8 +80,11 @@ public class Photo implements Storable<Photo> {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		ContentValues cv = toContentValues();
-		dest.writeParcelable(cv, flags);
+		dest.writeString(id);
+		dest.writeLong(createdAt.getTime());
+		dest.writeString(imageUrl);
+		dest.writeString(largeUrl);
+		dest.writeString(thumbUrl);
 	}
 
 	public static final Parcelable.Creator<Photo> CREATOR = new Parcelable.Creator<Photo>() {
@@ -108,8 +101,11 @@ public class Photo implements Storable<Photo> {
 	};
 
 	public Photo(Parcel in) {
-		ContentValues cv = in.readParcelable(null);
-		fromContentValues(cv);
+		id = in.readString();
+		createdAt = new Date(in.readLong());
+		imageUrl = in.readString();
+		largeUrl = in.readString();
+		thumbUrl = in.readString();
 	}
 
 }

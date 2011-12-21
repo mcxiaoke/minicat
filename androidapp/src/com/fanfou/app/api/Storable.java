@@ -14,10 +14,4 @@ public interface Storable<T> extends Parcelable, Comparable<T> {
 
 	ContentValues toContentValues();
 
-	void fromContentValues(ContentValues values);
-
-	// Bundle toBundle();
-	//
-	// void fromBundle(Bundle bundle);
-
 }

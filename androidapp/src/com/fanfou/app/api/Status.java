@@ -38,6 +38,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.2 2011.12.01
  * @version 2.3 2011.12.16
  * @version 2.4 2011.12.19
+ * @version 3.0 2011.12.21
  * 
  */
 public class Status implements Storable<Status> {
@@ -86,8 +87,37 @@ public class Status implements Storable<Status> {
 	}
 
 	public Status(Parcel in) {
-		ContentValues cv = in.readParcelable(null);
-		fromContentValues(cv);
+		id=in.readString();
+		ownerId=in.readString();
+		createdAt=new Date(in.readLong());
+		type=in.readInt();
+		
+		text=in.readString();
+		simpleText=in.readString();
+		source=in.readString();
+		
+		inReplyToStatusId=in.readString();
+		inReplyToUserId=in.readString();
+		inReplyToScreenName=in.readString();
+		
+		photoImageUrl=in.readString();
+		photoLargeUrl=in.readString();
+		photoThumbUrl=in.readString();
+		
+		userId=in.readString();
+		userScreenName=in.readString();
+		userProfileImageUrl=in.readString();
+		
+		truncated=in.readInt()==0?false:true;
+		favorited=in.readInt()==0?false:true;
+		self=in.readInt()==0?false:true;
+		
+		isRead=in.readInt()==0?false:true;
+		isThread=in.readInt()==0?false:true;
+		hasPhoto=in.readInt()==0?false:true;
+		
+		special=in.readInt()==0?false:true;
+		
 	}
 
 	@Override
@@ -327,41 +357,6 @@ public class Status implements Storable<Status> {
 	}
 
 	@Override
-	public void fromContentValues(final ContentValues cv) {
-		id = cv.getAsString(BasicColumns.ID);
-		ownerId = cv.getAsString(BasicColumns.OWNER_ID);
-		createdAt = new Date(cv.getAsLong(BasicColumns.CREATED_AT));
-
-		text = cv.getAsString(StatusInfo.TEXT);
-		simpleText = cv.getAsString(StatusInfo.SIMPLE_TEXT);
-		source = cv.getAsString(StatusInfo.SOURCE);
-
-		inReplyToStatusId = cv.getAsString(StatusInfo.IN_REPLY_TO_STATUS_ID);
-		inReplyToUserId = cv.getAsString(StatusInfo.IN_REPLY_TO_USER_ID);
-		inReplyToScreenName = cv
-				.getAsString(StatusInfo.IN_REPLY_TO_SCREEN_NAME);
-
-		photoImageUrl = cv.getAsString(StatusInfo.PHOTO_IMAGE_URL);
-		photoThumbUrl = cv.getAsString(StatusInfo.PHOTO_THUMB_URL);
-		photoLargeUrl = cv.getAsString(StatusInfo.PHOTO_LARGE_URL);
-
-		userId = cv.getAsString(StatusInfo.USER_ID);
-		userScreenName = cv.getAsString(StatusInfo.USER_SCREEN_NAME);
-		userProfileImageUrl = cv.getAsString(StatusInfo.USER_PROFILE_IMAGE_URL);
-
-		truncated = cv.getAsBoolean(StatusInfo.TRUNCATED);
-		favorited = cv.getAsBoolean(StatusInfo.FAVORITED);
-		self = cv.getAsBoolean(StatusInfo.IS_SELF);
-
-		isRead = cv.getAsBoolean(StatusInfo.IS_READ);
-		isThread = cv.getAsBoolean(StatusInfo.IS_THREAD);
-		hasPhoto = cv.getAsBoolean(StatusInfo.HAS_PHOTO);
-		special = cv.getAsBoolean(StatusInfo.SPECIAL);
-
-		type = cv.getAsInteger(BasicColumns.TYPE);
-	}
-
-	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Status) {
 			Status s = (Status) o;
@@ -402,11 +397,44 @@ public class Status implements Storable<Status> {
 	public int describeContents() {
 		return 0;
 	}
+	
+	public Status readFromParcel(Parcel source){
+		return new Status(source);
+	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		ContentValues cv = toContentValues();
-		dest.writeParcelable(cv, flags);
+		dest.writeString(id);
+		dest.writeString(ownerId);
+		dest.writeLong(createdAt.getTime());
+		dest.writeInt(type);		
+		
+		dest.writeString(text);
+		dest.writeString(simpleText);
+		dest.writeString(source);
+		
+		dest.writeString(inReplyToStatusId);
+		dest.writeString(inReplyToUserId);
+		dest.writeString(inReplyToScreenName);
+		
+		dest.writeString(photoImageUrl);
+		dest.writeString(photoLargeUrl);
+		dest.writeString(photoThumbUrl);
+		
+		dest.writeString(userId);
+		dest.writeString(userScreenName);
+		dest.writeString(userProfileImageUrl);
+		
+		dest.writeInt(truncated?1:0);
+		dest.writeInt(favorited?1:0);
+		dest.writeInt(self?1:0);
+		
+		dest.writeInt(isRead?1:0);
+		dest.writeInt(isThread?1:0);
+		dest.writeInt(hasPhoto?1:0);
+		
+		dest.writeInt(special?1:0);
+		
 	}
 
 	public static final Parcelable.Creator<Status> CREATOR = new Parcelable.Creator<Status>() {

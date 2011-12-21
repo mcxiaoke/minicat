@@ -37,6 +37,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.1 2011.12.01
  * @version 2.2 2011.12.16
  * @version 2.3 2011.12.19
+ * @version 3.0 2011.12.21
  * 
  */
 public class DirectMessage implements Storable<DirectMessage> {
@@ -75,8 +76,24 @@ public class DirectMessage implements Storable<DirectMessage> {
 	}
 
 	public DirectMessage(Parcel in) {
-		ContentValues cv = in.readParcelable(null);
-		fromContentValues(cv);
+		id = in.readString();
+		ownerId = in.readString();
+		createdAt = new Date(in.readLong());
+		type = in.readInt();
+		
+		senderId=in.readString();
+		recipientId=in.readString();
+		text=in.readString();
+		
+		senderScreenName=in.readString();
+		recipientScreenName=in.readString();
+		senderProfileImageUrl=in.readString();
+		recipientProfileImageUrl=in.readString();
+		
+		senderId=in.readString();
+		senderId=in.readString();
+		
+		isRead = in.readInt() == 0 ? false : true;
 	}
 
 	@Override
@@ -239,11 +256,12 @@ public class DirectMessage implements Storable<DirectMessage> {
 
 		cv.put(BasicColumns.ID, this.id);
 		cv.put(BasicColumns.OWNER_ID, this.ownerId);
-		cv.put(DirectMessageInfo.TEXT, this.text);
 		cv.put(BasicColumns.CREATED_AT, this.createdAt.getTime());
+		cv.put(BasicColumns.TYPE, this.type);
 
 		cv.put(DirectMessageInfo.SENDER_ID, this.senderId);
 		cv.put(DirectMessageInfo.RECIPIENT_ID, this.recipientId);
+		cv.put(DirectMessageInfo.TEXT, this.text);
 
 		cv.put(DirectMessageInfo.SENDER_SCREEN_NAME, this.senderScreenName);
 		cv.put(DirectMessageInfo.RECIPIENT_SCREEN_NAME,
@@ -254,37 +272,12 @@ public class DirectMessage implements Storable<DirectMessage> {
 		cv.put(DirectMessageInfo.RECIPIENT_PROFILE_IMAGE_URL,
 				this.recipientProfileImageUrl);
 
-		cv.put(BasicColumns.TYPE, this.type);
 
 		cv.put(DirectMessageInfo.THREAD_USER_ID, this.threadUserId);
 		cv.put(DirectMessageInfo.THREAD_USER_NAME, this.threadUserName);
 		cv.put(DirectMessageInfo.IS_READ, this.isRead);
 
 		return cv;
-	}
-
-	@Override
-	public void fromContentValues(final ContentValues cv) {
-		id = cv.getAsString(BasicColumns.ID);
-		ownerId = cv.getAsString(BasicColumns.OWNER_ID);
-		text = cv.getAsString(DirectMessageInfo.TEXT);
-		createdAt = new Date(cv.getAsLong(BasicColumns.CREATED_AT));
-
-		senderId = cv.getAsString(DirectMessageInfo.SENDER_ID);
-		senderScreenName = cv.getAsString(DirectMessageInfo.SENDER_SCREEN_NAME);
-		senderProfileImageUrl = cv
-				.getAsString(DirectMessageInfo.SENDER_PROFILE_IMAGE_URL);
-
-		recipientId = cv.getAsString(DirectMessageInfo.RECIPIENT_ID);
-		recipientScreenName = cv
-				.getAsString(DirectMessageInfo.RECIPIENT_SCREEN_NAME);
-		recipientProfileImageUrl = cv
-				.getAsString(DirectMessageInfo.RECIPIENT_PROFILE_IMAGE_URL);
-
-		type = cv.getAsInteger(BasicColumns.TYPE);
-		threadUserId = cv.getAsString(DirectMessageInfo.THREAD_USER_ID);
-		threadUserName = cv.getAsString(DirectMessageInfo.THREAD_USER_NAME);
-		isRead = cv.getAsBoolean(DirectMessageInfo.IS_READ);
 	}
 
 	@Override
@@ -319,8 +312,25 @@ public class DirectMessage implements Storable<DirectMessage> {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		ContentValues cv = toContentValues();
-		dest.writeParcelable(cv, flags);
+		dest.writeString(id);
+		dest.writeString(ownerId);
+		dest.writeLong(createdAt.getTime());
+		dest.writeInt(type);
+		
+		dest.writeString(senderId);
+		dest.writeString(recipientId);
+		dest.writeString(text);
+		
+		dest.writeString(senderScreenName);
+		dest.writeString(recipientScreenName);
+		dest.writeString(senderProfileImageUrl);
+		dest.writeString(recipientProfileImageUrl);
+		
+		dest.writeString(threadUserId);
+		dest.writeString(threadUserName);
+		
+		dest.writeInt(isRead?1:0);
+		
 	}
 
 	public static final Parcelable.Creator<DirectMessage> CREATOR = new Parcelable.Creator<DirectMessage>() {
