@@ -414,7 +414,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			FanFouService.doFetchMentions(this, receiver, sinceId, maxId);
 			break;
 		case 2:
-			FanFouService.doFetchDirectMessagesInbox(this, receiver, doGetMore);
+			FanFouService.doFetchDirectMessagesConversationList(this, receiver, doGetMore);
 			break;
 		case 3:
 			if (!doGetMore) {

@@ -155,7 +155,6 @@ public class ColorPickerPreference extends Preference implements
 		} catch (ClassCastException e) {
 			mValue = mDefaultValue;
 		}
-		Log.d(TAG, "getValue(): " + Integer.toHexString(mValue));
 		return mValue;
 	}
 

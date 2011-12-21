@@ -47,6 +47,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.7 2011.11.22
  * @version 2.8 2011.11.28
  * @version 2.9 2011.12.08
+ * @version 3.0 2011.12.21
  * 
  */
 public class StatusPage extends BaseActivity {
@@ -377,6 +378,8 @@ public class StatusPage extends BaseActivity {
 		}
 		mPhotoState = PHOTO_LOADING;
 		iPhoto.setImageResource(R.drawable.photo_loading);
+		// clear queue before load big photos;
+		ImageLoader.getInstance().clearQueue();
 		if (App.DEBUG) {
 			Log.d(TAG, "loadPhoto mPhotoState=" + mPhotoState + " type=" + type);
 		}
