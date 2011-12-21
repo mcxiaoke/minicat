@@ -1,13 +1,21 @@
 package com.fanfou.app.http;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.http.Header;
+import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestInterceptor;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -20,6 +28,7 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
@@ -31,6 +40,7 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.protocol.HttpContext;
 
 import android.util.Log;
 
@@ -43,6 +53,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.0 2011.12.02
  * @version 1.1 2011.12.07
  * @version 1.2 2011.12.12
+ * @version 1.3 2011.12.21
  * 
  */
 public final class NetHelper {
@@ -247,4 +258,59 @@ public final class NetHelper {
 		return getParameterArray(name1, String.valueOf(value1), name2,
 				String.valueOf(value2));
 	}
+	
+	
+    private static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
+    private static final String ENCODING_GZIP = "gzip";
+	
+    /**
+     * Simple {@link HttpRequestInterceptor} that adds GZIP accept encoding header.
+     */
+	private static class GZIPHttpRequestInterceptor implements HttpRequestInterceptor {
+        public void process(final HttpRequest request, final HttpContext context) {
+            // Add header to accept gzip content
+            if (!request.containsHeader(HEADER_ACCEPT_ENCODING)) {
+                request.addHeader(HEADER_ACCEPT_ENCODING, ENCODING_GZIP);
+            }
+        }
+    }
+
+    /**
+     * Simple {@link HttpResponseInterceptor} that inflates response if GZIP encoding header.
+     */
+	private static class GZIPHttpResponseInterceptor implements HttpResponseInterceptor {
+        public void process(final HttpResponse response, final HttpContext context) {
+            // Inflate any responses compressed with gzip
+            final HttpEntity entity = response.getEntity();
+            final Header encoding = entity.getContentEncoding();
+            if (encoding != null) {
+                for (HeaderElement element : encoding.getElements()) {
+                    if (element.getName().equalsIgnoreCase(ENCODING_GZIP)) {
+                        response.setEntity(new GZIPInflatingEntity(response.getEntity()));
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Simple {@link HttpEntityWrapper} that inflates the wrapped {@link HttpEntity} by passing it
+     * through {@link GZIPInputStream}.
+     */
+    private static class GZIPInflatingEntity extends HttpEntityWrapper {
+        public GZIPInflatingEntity(final HttpEntity wrapped) {
+            super(wrapped);
+        }
+
+        @Override
+        public InputStream getContent() throws IOException {
+            return new GZIPInputStream(wrappedEntity.getContent());
+        }
+
+        @Override
+        public long getContentLength() {
+            return -1;
+        }
+    }
 }
