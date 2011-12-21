@@ -799,6 +799,15 @@ public class FanFouService extends WakefulIntentService{
 		intent.putExtra(EXTRA_BOOLEAN, doGetMore);
 		context.startService(intent);
 	}
+	
+	public static void doFetchDirectMessagesInbox(Context context,
+			final ResultReceiver receiver, boolean doGetMore) {
+		Intent intent = new Intent(context, FanFouService.class);
+		intent.putExtra(EXTRA_TYPE, TYPE_DIRECT_MESSAGES_INBOX);
+		intent.putExtra(EXTRA_RECEIVER, receiver);
+		intent.putExtra(EXTRA_BOOLEAN, doGetMore);
+		context.startService(intent);
+	}
 
 	private void fetchDirectMessagesInbox(Intent intent) {
 		int count = intent.getIntExtra(EXTRA_COUNT,
@@ -841,7 +850,7 @@ public class FanFouService extends WakefulIntentService{
 	private int fetchDirectMessagesInbox(int count, boolean doGetMore)
 			throws ApiException {
 		Api api = App.getApi();
-		Cursor ic = initMessagesCursor(false);
+		Cursor ic = initInboxMessagesCursor();
 		List<DirectMessage> messages = null;
 		if (doGetMore) {
 			messages = api.directMessagesInbox(count, 0, null,
@@ -871,7 +880,7 @@ public class FanFouService extends WakefulIntentService{
 	private int fetchDirectMessagesOutbox(int count, boolean doGetMore)
 			throws ApiException {
 		Api api = App.getApi();
-		Cursor ic = initMessagesCursor(true);
+		Cursor ic = initOutboxMessagesCursor();
 		List<DirectMessage> messages = null;
 		if (doGetMore) {
 			messages = api.directMessagesOutbox(count, 0, null,
@@ -900,8 +909,8 @@ public class FanFouService extends WakefulIntentService{
 
 	private int fetchNewDirectMessages(int count) throws ApiException {
 		Api api = App.getApi();
-		Cursor ic = initMessagesCursor(false);
-		Cursor oc = initMessagesCursor(true);
+		Cursor ic = initInboxMessagesCursor();
+		Cursor oc = initOutboxMessagesCursor();
 		try {
 			String inboxSinceId = Utils.getDmSinceId(ic);
 			String outboxSinceId = Utils.getDmSinceId(oc);
@@ -939,8 +948,8 @@ public class FanFouService extends WakefulIntentService{
 
 	private int fetchOldDirectMessages(int count) throws ApiException {
 		Api api = App.getApi();
-		Cursor ic = initMessagesCursor(false);
-		Cursor oc = initMessagesCursor(true);
+		Cursor ic = initInboxMessagesCursor();
+		Cursor oc = initOutboxMessagesCursor();
 		try {
 			String inboxMaxId = Utils.getDmMaxId(ic);
 			String outboxMaxid = Utils.getDmMaxId(oc);
@@ -976,11 +985,18 @@ public class FanFouService extends WakefulIntentService{
 		return 0;
 	}
 
-	private Cursor initMessagesCursor(final boolean outbox) {
+	private Cursor initInboxMessagesCursor() {
 		String where = BasicColumns.TYPE + " = ? ";
 		String[] whereArgs = new String[] { String
-				.valueOf(outbox ? TYPE_DIRECT_MESSAGES_INBOX
-						: TYPE_DIRECT_MESSAGES_OUTBOX) };
+				.valueOf(TYPE_DIRECT_MESSAGES_INBOX) };
+		return getContentResolver().query(DirectMessageInfo.CONTENT_URI,
+				DirectMessageInfo.COLUMNS, where, whereArgs, null);
+	}
+	
+	private Cursor initOutboxMessagesCursor() {
+		String where = BasicColumns.TYPE + " = ? ";
+		String[] whereArgs = new String[] { String
+				.valueOf(TYPE_DIRECT_MESSAGES_OUTBOX ) };
 		return getContentResolver().query(DirectMessageInfo.CONTENT_URI,
 				DirectMessageInfo.COLUMNS, where, whereArgs, null);
 	}
