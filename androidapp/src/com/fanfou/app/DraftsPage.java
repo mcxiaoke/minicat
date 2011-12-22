@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.OnHierarchyChangeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -127,7 +128,7 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 			@Override
 			public void onButton1Click() {
 				startTaskQueueService();
-				finish();
+				onMenuHomeClick();
 			}
 		});
 		dialog.show();

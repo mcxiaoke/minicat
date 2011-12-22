@@ -170,9 +170,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		mActionBar.setRightAction(new ActionBar.WriteAction(this, null));
 		mActionBar.setRefreshEnabled(this);
 
-		// if(App.TEST){
-		// mActionBar.setTitle("测试版 "+App.appVersionName);
-		// }
 		if (App.DEBUG) {
 			mActionBar.setTitle("开发版 " + App.appVersionName);
 		}
@@ -414,7 +411,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			FanFouService.doFetchMentions(this, receiver, sinceId, maxId);
 			break;
 		case 2:
-			FanFouService.doFetchDirectMessagesConversationList(this, receiver, doGetMore);
+			FanFouService.doFetchDirectMessagesConversationList(this, receiver,
+					doGetMore);
 			break;
 		case 3:
 			if (!doGetMore) {
@@ -593,6 +591,25 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	@Override
+	public void onBackPressed() {
+		boolean needConfirm = OptionHelper.readBoolean(R.string.option_confirm_on_exit, false);
+		if (needConfirm) {
+			final ConfirmDialog dialog = new ConfirmDialog(this, "提示",
+					"确认退出饭否吗？");
+			dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
+
+				@Override
+				public void onButton1Click() {
+					mContext.finish();
+				}
+			});
+			dialog.show();
+		} else {
+			super.onBackPressed();
+		}
+	}
+
+	@Override
 	protected int getPageType() {
 		return PAGE_HOME;
 	}
@@ -618,7 +635,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-//		super.onCreateOptionsMenu(menu);
+		// super.onCreateOptionsMenu(menu);
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.home_menu, menu);
 		return true;

@@ -68,8 +68,6 @@ public class EndlessListViewNoHeader extends ListView implements
 		setVerticalScrollBarEnabled(false);
 		setOnItemClickListener(this);
 
-		setFastScrollEnabled(true);
-
 		initHeaderAndFooter();
 	}
 

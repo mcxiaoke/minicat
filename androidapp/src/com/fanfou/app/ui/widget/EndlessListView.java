@@ -81,7 +81,6 @@ public class EndlessListView extends ListView implements OnItemClickListener {
 		setCacheColorHint(0);
 		setSelector(getResources().getDrawable(R.drawable.list_selector));
 		setDivider(getResources().getDrawable(R.drawable.separator));
-		setFastScrollEnabled(true);
 
 		initHeaderAndFooter();
 	}
