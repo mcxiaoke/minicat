@@ -1,5 +1,76 @@
 package com.fanfou.app.service;
 
+import static com.fanfou.app.service.Constants.DEFAULT_TIMELINE_COUNT;
+import static com.fanfou.app.service.Constants.DEFAULT_USERS_COUNT;
+import static com.fanfou.app.service.Constants.EXTRA_BOOLEAN;
+import static com.fanfou.app.service.Constants.EXTRA_CODE;
+import static com.fanfou.app.service.Constants.EXTRA_COUNT;
+import static com.fanfou.app.service.Constants.EXTRA_DATA;
+import static com.fanfou.app.service.Constants.EXTRA_ERROR;
+import static com.fanfou.app.service.Constants.EXTRA_ID;
+import static com.fanfou.app.service.Constants.EXTRA_MAX_ID;
+import static com.fanfou.app.service.Constants.EXTRA_PAGE;
+import static com.fanfou.app.service.Constants.EXTRA_RECEIVER;
+import static com.fanfou.app.service.Constants.EXTRA_SINCE_ID;
+import static com.fanfou.app.service.Constants.EXTRA_TYPE;
+import static com.fanfou.app.service.Constants.FORMAT;
+import static com.fanfou.app.service.Constants.MAX_TIMELINE_COUNT;
+import static com.fanfou.app.service.Constants.MAX_USERS_COUNT;
+import static com.fanfou.app.service.Constants.MODE;
+import static com.fanfou.app.service.Constants.RESULT_ERROR;
+import static com.fanfou.app.service.Constants.RESULT_SUCCESS;
+import static com.fanfou.app.service.Constants.TYPE_ACCOUNT_NOTIFICATION;
+import static com.fanfou.app.service.Constants.TYPE_ACCOUNT_RATE_LIMIT_STATUS;
+import static com.fanfou.app.service.Constants.TYPE_ACCOUNT_REGISTER;
+import static com.fanfou.app.service.Constants.TYPE_ACCOUNT_UPDATE_PROFILE;
+import static com.fanfou.app.service.Constants.TYPE_ACCOUNT_UPDATE_PROFILE_IMAGE;
+import static com.fanfou.app.service.Constants.TYPE_ACCOUNT_VERIFY_CREDENTIALS;
+import static com.fanfou.app.service.Constants.TYPE_BLOCKS;
+import static com.fanfou.app.service.Constants.TYPE_BLOCKS_CREATE;
+import static com.fanfou.app.service.Constants.TYPE_BLOCKS_DESTROY;
+import static com.fanfou.app.service.Constants.TYPE_BLOCKS_EXISTS;
+import static com.fanfou.app.service.Constants.TYPE_BLOCKS_IDS;
+import static com.fanfou.app.service.Constants.TYPE_DIRECT_MESSAGES_CONVERSTATION;
+import static com.fanfou.app.service.Constants.TYPE_DIRECT_MESSAGES_CONVERSTATION_LIST;
+import static com.fanfou.app.service.Constants.TYPE_DIRECT_MESSAGES_CREATE;
+import static com.fanfou.app.service.Constants.TYPE_DIRECT_MESSAGES_DESTROY;
+import static com.fanfou.app.service.Constants.TYPE_DIRECT_MESSAGES_INBOX;
+import static com.fanfou.app.service.Constants.TYPE_DIRECT_MESSAGES_OUTBOX;
+import static com.fanfou.app.service.Constants.TYPE_FAVORITES_CREATE;
+import static com.fanfou.app.service.Constants.TYPE_FAVORITES_DESTROY;
+import static com.fanfou.app.service.Constants.TYPE_FAVORITES_LIST;
+import static com.fanfou.app.service.Constants.TYPE_FOLLOWERS_IDS;
+import static com.fanfou.app.service.Constants.TYPE_FRIENDSHIPS_ACCEPT;
+import static com.fanfou.app.service.Constants.TYPE_FRIENDSHIPS_CREATE;
+import static com.fanfou.app.service.Constants.TYPE_FRIENDSHIPS_DENY;
+import static com.fanfou.app.service.Constants.TYPE_FRIENDSHIPS_DESTROY;
+import static com.fanfou.app.service.Constants.TYPE_FRIENDSHIPS_EXISTS;
+import static com.fanfou.app.service.Constants.TYPE_FRIENDSHIPS_REQUESTS;
+import static com.fanfou.app.service.Constants.TYPE_FRIENDSHIPS_SHOW;
+import static com.fanfou.app.service.Constants.TYPE_FRIENDS_IDS;
+import static com.fanfou.app.service.Constants.TYPE_NONE;
+import static com.fanfou.app.service.Constants.TYPE_PHOTOS_UPLOAD;
+import static com.fanfou.app.service.Constants.TYPE_PHOTOS_USER_TIMELINE;
+import static com.fanfou.app.service.Constants.TYPE_SAVED_SEARCHES_CREATE;
+import static com.fanfou.app.service.Constants.TYPE_SAVED_SEARCHES_DESTROY;
+import static com.fanfou.app.service.Constants.TYPE_SAVED_SEARCHES_LIST;
+import static com.fanfou.app.service.Constants.TYPE_SAVED_SEARCHES_SHOW;
+import static com.fanfou.app.service.Constants.TYPE_SEARCH_PUBLIC_TIMELINE;
+import static com.fanfou.app.service.Constants.TYPE_SEARCH_USERS;
+import static com.fanfou.app.service.Constants.TYPE_SEARCH_USER_TIMELINE;
+import static com.fanfou.app.service.Constants.TYPE_STATUSES_CONTEXT_TIMELINE;
+import static com.fanfou.app.service.Constants.TYPE_STATUSES_DESTROY;
+import static com.fanfou.app.service.Constants.TYPE_STATUSES_HOME_TIMELINE;
+import static com.fanfou.app.service.Constants.TYPE_STATUSES_MENTIONS;
+import static com.fanfou.app.service.Constants.TYPE_STATUSES_PUBLIC_TIMELINE;
+import static com.fanfou.app.service.Constants.TYPE_STATUSES_SHOW;
+import static com.fanfou.app.service.Constants.TYPE_STATUSES_UPDATE;
+import static com.fanfou.app.service.Constants.TYPE_STATUSES_USER_TIMELINE;
+import static com.fanfou.app.service.Constants.TYPE_TRENDS_LIST;
+import static com.fanfou.app.service.Constants.TYPE_USERS_FOLLOWERS;
+import static com.fanfou.app.service.Constants.TYPE_USERS_FRIENDS;
+import static com.fanfou.app.service.Constants.TYPE_USERS_SHOW;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +107,6 @@ import com.fanfou.app.ui.ActionManager.ResultListener;
 import com.fanfou.app.ui.UIManager.ResultHandler;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
-
-import static com.fanfou.app.service.Constants.*;
 
 /**
  * @author mcxiaoke

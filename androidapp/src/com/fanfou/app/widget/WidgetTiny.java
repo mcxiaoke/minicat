@@ -13,7 +13,6 @@ import com.fanfou.app.R;
 import com.fanfou.app.SearchPage;
 import com.fanfou.app.SplashPage;
 import com.fanfou.app.service.Constants;
-import com.fanfou.app.service.FanFouService;
 
 /**
  * @author mcxiaoke

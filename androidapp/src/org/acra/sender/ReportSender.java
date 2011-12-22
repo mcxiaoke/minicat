@@ -15,8 +15,8 @@
  */
 package org.acra.sender;
 
-import org.acra.collector.CrashReportData;
 import org.acra.ReportField;
+import org.acra.collector.CrashReportData;
 
 /**
  * A simple interface for defining various crash report senders. You can reuse

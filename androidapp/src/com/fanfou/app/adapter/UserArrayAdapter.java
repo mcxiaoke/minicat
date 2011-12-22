@@ -19,10 +19,6 @@ public class UserArrayAdapter extends BaseArrayAdapter<User> {
 
 	private static final String tag = UserArrayAdapter.class.getSimpleName();
 
-	private void log(String message) {
-		Log.e(tag, message);
-	}
-
 	private List<User> mUsers;
 
 	public UserArrayAdapter(Context context, List<User> users) {

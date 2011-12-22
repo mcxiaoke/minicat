@@ -23,9 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.acra.ACRA;
-import org.acra.collector.CrashReportData;
 import org.acra.ReportField;
 import org.acra.annotation.ReportsCrashes;
+import org.acra.collector.CrashReportData;
 import org.acra.util.HttpRequest;
 
 import android.net.Uri;

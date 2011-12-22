@@ -13,7 +13,6 @@ import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.service.Constants;
-import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.OptionHelper;

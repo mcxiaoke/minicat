@@ -31,10 +31,6 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter {
 	private ArrayList<Boolean> mStates;
 	private HashMap<Integer, Boolean> mStateMap;
 
-	private void log(String message) {
-		Log.e(tag, message);
-	}
-
 	public UserChooseCursorAdapter(Context context, Cursor c) {
 		super(context, c, false);
 		init();

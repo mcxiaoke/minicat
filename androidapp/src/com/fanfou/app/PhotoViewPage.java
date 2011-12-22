@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.fanfou.app.service.Constants;
 import com.fanfou.app.ui.imagezoom.ImageViewTouch;

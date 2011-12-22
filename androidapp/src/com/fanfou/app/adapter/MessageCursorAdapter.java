@@ -30,10 +30,6 @@ public class MessageCursorAdapter extends BaseCursorAdapter {
 	private static final int[] TYPES = new int[] { ITEM_TYPE_ME, ITEM_TYPE_NONE };
 	private boolean autoLink;
 
-	private void log(String message) {
-		Log.e(TAG, message);
-	}
-
 	public MessageCursorAdapter(Context context, Cursor c) {
 		super(context, c, false);
 		this.autoLink = false;

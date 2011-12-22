@@ -5,6 +5,7 @@ import java.util.Date;
 import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
 

@@ -25,10 +25,6 @@ import com.fanfou.app.util.DateTimeHelper;
 public class UserCursorAdapter extends BaseCursorAdapter {
 	private static final String tag = UserCursorAdapter.class.getSimpleName();
 
-	private void log(String message) {
-		Log.e(tag, message);
-	}
-
 	public UserCursorAdapter(Context context, Cursor c) {
 		super(context, c, false);
 	}

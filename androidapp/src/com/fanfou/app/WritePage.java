@@ -30,7 +30,6 @@ import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.service.Constants;
-import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.service.PostStatusService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.AbstractAction;

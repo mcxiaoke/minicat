@@ -22,7 +22,6 @@ import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.service.Constants;
-import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.util.StringHelper;
 
 /**

@@ -22,7 +22,6 @@ import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.service.Constants;
-import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StatusHelper;
 import com.fanfou.app.util.StringHelper;

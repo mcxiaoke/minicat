@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.fanfou.app.App;
 import com.fanfou.app.R;
-import com.fanfou.app.util.OptionHelper;
 
 /**
  * @author mcxiaoke

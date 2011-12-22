@@ -14,7 +14,6 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.protocol.HTTP;
 
 import android.util.Log;
 

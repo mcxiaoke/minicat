@@ -18,7 +18,6 @@ import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.service.Constants;
-import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.UIManager;
 import com.fanfou.app.ui.widget.EndlessListView;

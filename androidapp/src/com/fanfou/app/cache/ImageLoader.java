@@ -265,6 +265,7 @@ public class ImageLoader implements IImageLoader {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private static final class Worker implements Runnable {
 		private String url;
 		private final Handler handler;

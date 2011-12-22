@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -15,9 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.fanfou.app.dialog.ConfirmDialog;
 import com.fanfou.app.ui.ActionBar.OnRefreshClickListener;
-import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.Utils;
 

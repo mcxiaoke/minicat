@@ -21,7 +21,6 @@ import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.http.NetResponse;
 import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.service.Constants;
-import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.util.StringHelper;
 
 /**

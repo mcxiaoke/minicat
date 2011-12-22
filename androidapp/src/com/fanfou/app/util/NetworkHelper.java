@@ -115,6 +115,7 @@ public final class NetworkHelper {
 	 * Build and return a user-agent string that can identify this application
 	 * to remote servers. Contains the package name and version code.
 	 */
+	@SuppressWarnings("unused")
 	private static String buildUserAgent(Context context) {
 		try {
 			final PackageManager manager = context.getPackageManager();

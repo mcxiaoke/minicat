@@ -28,7 +28,6 @@ import com.fanfou.app.api.User;
 import com.fanfou.app.cache.IImageLoader;
 import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.service.Constants;
-import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.util.IOHelper;

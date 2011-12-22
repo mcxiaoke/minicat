@@ -1,7 +1,6 @@
 package org.acra.util;
 
 import static org.acra.ACRA.LOG_TAG;
-
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;

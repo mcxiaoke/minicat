@@ -17,7 +17,6 @@ import com.fanfou.app.R;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.service.Constants;
-import com.fanfou.app.service.FanFouService;
 
 /**
  * @author mcxiaoke
