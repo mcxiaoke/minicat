@@ -8,8 +8,8 @@
     <string name="login_signup_web">网站注册</string>
     <string name="login_signup_sms">短信注册</string>
     
-    <string name="msg_connection_error">网络连接异常，暂时无法完成请求</string>
-	<string name="msg_server_error">服务器异常，暂时无法完成请求</string>
+    <string name="msg_connection_error">现在无法连接服务器，请稍后重试</string>
+	<string name="msg_server_error">服务器异常，请稍后重试</string>
     
     <string name="crash_toast_text">啊噢，客户端崩溃了，一份包含错误信息的崩溃报告已经被发送给开发者用于分析出错原因 !</string>
     <string name="support_text">意见和建议提交，问题反馈，获取版本更新信息，请关注官方技术支持帐号 @Android客户端</string>

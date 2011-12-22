@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fanfou.app"
     android:versionCode="20111222"
-    android:versionName="1.8.6-test2" >
+    android:versionName="1.8.6" >
 
     <uses-sdk
         android:minSdkVersion="7"
