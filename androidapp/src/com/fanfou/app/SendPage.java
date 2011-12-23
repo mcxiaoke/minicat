@@ -145,11 +145,12 @@ public class SendPage extends BaseActivity {
 		mSelectAutoComplete = (MultiAutoCompleteTextView) findViewById(R.id.send_select_edit);
 		mSelectAutoComplete.setTokenizer(new SpaceTokenizer());
 		mSelectAutoComplete.setBackgroundColor(R.color.background_color);
-		String[] projection = new String[] { BaseColumns._ID, BasicColumns.ID,
-				UserInfo.SCREEN_NAME };
+		final String[] projection = new String[] { BaseColumns._ID,
+				BasicColumns.ID, UserInfo.SCREEN_NAME, BasicColumns.TYPE,
+				BasicColumns.OWNER_ID };
 		String where = BasicColumns.TYPE + " = '"
 				+ Constants.TYPE_USERS_FRIENDS + "'";
-		Cursor c = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
+		Cursor c = managedQuery(UserInfo.CONTENT_URI, projection, where,
 				null, null);
 		mSelectAutoComplete.setAdapter(new AutoCompleteCursorAdapter(this, c));
 		mSelectAutoComplete.addTextChangedListener(new TextChangeListener() {

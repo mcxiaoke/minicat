@@ -26,9 +26,9 @@ import com.fanfou.app.util.AlarmHelper;
  * 
  */
 public class NotificationReceiver extends BroadcastReceiver {
-	public static final int NOTIFICATION_ID_DM = 0;
-	public static final int NOTIFICATION_ID_MENTION = 1;
-	public static final int NOTIFICATION_ID_HOME = 2;
+	private static final int NOTIFICATION_ID_DM = -101;
+	private static final int NOTIFICATION_ID_MENTION = -102;
+	private static final int NOTIFICATION_ID_HOME = -103;
 	private static final String TAG = NotificationReceiver.class
 			.getSimpleName();
 
@@ -78,9 +78,9 @@ public class NotificationReceiver extends BroadcastReceiver {
 		}
 	}
 
-	private static void showHomeOneNotification(Context context, Status status) {
+	private static void showHomeOneNotification(Context context, final Status status) {
 		if (App.DEBUG) {
-			Log.d(TAG, "showHomeOneNotification");
+			Log.d(TAG, "showHomeOneNotification "+status);
 		}
 		String title = status.userScreenName;
 		String message = status.simpleText;
@@ -109,9 +109,9 @@ public class NotificationReceiver extends BroadcastReceiver {
 	}
 
 	private static void showMentionOneNotification(Context context,
-			Status status) {
+			final Status status) {
 		if (App.DEBUG) {
-			Log.i(TAG, "showMentionOneNotification");
+			Log.i(TAG, "showMentionOneNotification "+status);
 		}
 		String title = status.userScreenName + "@你的消息";
 		String message = status.simpleText;
@@ -139,9 +139,9 @@ public class NotificationReceiver extends BroadcastReceiver {
 				title, message, R.drawable.ic_notify_mention);
 	}
 
-	private static void showDmOneNotification(Context context, DirectMessage dm) {
+	private static void showDmOneNotification(Context context, final DirectMessage dm) {
 		if (App.DEBUG) {
-			Log.d(TAG, "showDmOneNotification");
+			Log.d(TAG, "showDmOneNotification "+dm);
 		}
 		Intent intent = new Intent(context, SendPage.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());

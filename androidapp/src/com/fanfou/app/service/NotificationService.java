@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.fanfou.app.App;
@@ -40,6 +41,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.5 2011.12.02
  * @version 2.6 2011.12.09
  * @version 2.7 2011.12.19
+ * @version 2.8 2011.12.23
  * 
  */
 public class NotificationService extends WakefulIntentService {
@@ -136,40 +138,32 @@ public class NotificationService extends WakefulIntentService {
 		if (App.getApnType() == ApnType.WIFI) {
 			count = MAX_COUNT;
 		}
-		try {
-			if (dm) {
-				handleDm(count);
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-				}
-			}
-			if (mention) {
-				handleMention(count);
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-				}
-			}
-			if (home) {
-				handleHome(count);
+		if (dm) {
+			handleDm(count);
+			SystemClock.sleep(500);
+		}
+		if (mention) {
+			handleMention(count);
+			SystemClock.sleep(500);
+		}
+		if (home) {
+			handleHome(count);
+		}
+		set(this);
+	}
 
-			}
+	private void handleDm(int count) {
+		Cursor mc = initCursor(Constants.TYPE_DIRECT_MESSAGES_INBOX);
+		List<DirectMessage> dms=null;
+		try {
+			dms = mApi.directMessagesInbox(count, DEFAULT_PAGE,
+					Utils.getDmSinceId(mc), null, Constants.MODE);
 		} catch (ApiException e) {
 			if (App.DEBUG) {
 				Log.e(TAG,
 						" code=" + e.statusCode + " message=" + e.getMessage());
-				e.printStackTrace();
 			}
-		} finally {
-			set(this);
 		}
-	}
-
-	private void handleDm(int count) throws ApiException {
-		Cursor mc = initCursor(Constants.TYPE_DIRECT_MESSAGES_INBOX);
-		List<DirectMessage> dms = mApi.directMessagesInbox(count, DEFAULT_PAGE,
-				Utils.getDmSinceId(mc), null, Constants.MODE);
 		mc.close();
 		if (dms != null) {
 			int size = dms.size();
@@ -195,11 +189,18 @@ public class NotificationService extends WakefulIntentService {
 
 	}
 
-	private void handleMention(int count) throws ApiException {
+	private void handleMention(int count){
 		Cursor mc = initCursor(Constants.TYPE_STATUSES_MENTIONS);
-		List<Status> ss = mApi.mentions(count, DEFAULT_PAGE,
-				Utils.getSinceId(mc), null, Constants.FORMAT,
-				Constants.MODE);
+		List<Status> ss=null;
+		try {
+			ss = mApi.mentions(count, DEFAULT_PAGE,
+					Utils.getSinceId(mc), null, Constants.FORMAT, Constants.MODE);
+		} catch (ApiException e) {
+			if (App.DEBUG) {
+				Log.e(TAG,
+						" code=" + e.statusCode + " message=" + e.getMessage());
+			}
+		}
 		mc.close();
 		if (ss != null) {
 			int size = ss.size();
@@ -224,11 +225,18 @@ public class NotificationService extends WakefulIntentService {
 
 	}
 
-	private void handleHome(int count) throws ApiException {
+	private void handleHome(int count){
 		Cursor mc = initCursor(Constants.TYPE_STATUSES_HOME_TIMELINE);
-		List<Status> ss = mApi.homeTimeline(count, DEFAULT_PAGE,
-				Utils.getSinceId(mc), null, Constants.FORMAT,
-				Constants.MODE);
+		List<Status> ss=null;
+		try {
+			ss = mApi.homeTimeline(count, DEFAULT_PAGE,
+					Utils.getSinceId(mc), null, Constants.FORMAT, Constants.MODE);
+		} catch (ApiException e) {
+			if (App.DEBUG) {
+				Log.e(TAG,
+						" code=" + e.statusCode + " message=" + e.getMessage());
+			}
+		}
 		mc.close();
 		if (ss != null) {
 			int size = ss.size();
@@ -300,7 +308,7 @@ public class NotificationService extends WakefulIntentService {
 	private void sendMessageNotification(int type, int count, DirectMessage dm) {
 		if (App.DEBUG) {
 			Log.d(TAG, "sendMessageNotification type=" + type + " count="
-					+ count + " active=" + App.active);
+					+ count + " dm=" + dm);
 		}
 		Intent intent = new Intent();
 		intent.putExtra(Constants.EXTRA_TYPE, type);

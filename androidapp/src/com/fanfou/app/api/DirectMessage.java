@@ -37,6 +37,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.2 2011.12.16
  * @version 2.3 2011.12.19
  * @version 3.0 2011.12.21
+ * @version 3.1 2011.12.23
  * 
  */
 public class DirectMessage implements Storable<DirectMessage> {
@@ -74,7 +75,7 @@ public class DirectMessage implements Storable<DirectMessage> {
 
 	}
 
-	public DirectMessage(Parcel in) {
+	public DirectMessage(Parcel in) {	
 		id = in.readString();
 		ownerId = in.readString();
 		createdAt = new Date(in.readLong());
@@ -89,8 +90,8 @@ public class DirectMessage implements Storable<DirectMessage> {
 		senderProfileImageUrl=in.readString();
 		recipientProfileImageUrl=in.readString();
 		
-		senderId=in.readString();
-		senderId=in.readString();
+		threadUserId=in.readString();
+		threadUserName=in.readString();
 		
 		isRead = in.readInt() == 0 ? false : true;
 	}
