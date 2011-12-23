@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.os.ResultReceiver;
 import android.text.TextPaint;
 import android.util.Log;
@@ -24,6 +25,7 @@ import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -246,8 +248,7 @@ public class MyProfilePage extends BaseActivity {
 	}
 
 	private void doRefresh() {
-		ResultReceiver receiver = new MyResultReceiver();
-		FanFouService.doProfile(this, userId, receiver);
+		FanFouService.doProfile(this, userId, new ResultHandler());
 		if (isInitialized) {
 			startRefreshAnimation();
 		}
@@ -325,23 +326,19 @@ public class MyProfilePage extends BaseActivity {
 		mActionBar.stopAnimation();
 	}
 
-	private class MyResultReceiver extends ResultReceiver {
-
-		public MyResultReceiver() {
-			super(mHandler);
-		}
+	private class ResultHandler extends Handler {
 
 		@Override
-		protected void onReceiveResult(int resultCode, Bundle resultData) {
-			switch (resultCode) {
+		public void handleMessage(Message msg) {
+			int type = msg.arg1;
+			switch (msg.what) {
 			case Constants.RESULT_SUCCESS:
-				if (resultData != null) {
+				if (msg.getData() != null) {
 					if (App.DEBUG) {
 						log("result ok, update ui");
 					}
-					int type = resultData.getInt(Constants.EXTRA_TYPE);
-					User result = (User) resultData
-							.getParcelable(Constants.EXTRA_DATA);
+					User result = (User) msg.getData().getParcelable(
+							Constants.EXTRA_DATA);
 					if (result != null) {
 						App.getApp().updateUserInfo(result);
 						user = result;
@@ -359,15 +356,15 @@ public class MyProfilePage extends BaseActivity {
 				}
 				break;
 			case Constants.RESULT_ERROR:
-				int type = resultData.getInt(Constants.EXTRA_TYPE);
 				if (type == Constants.TYPE_USERS_SHOW) {
 					stopRefreshAnimation();
 				}
 				if (!isInitialized) {
 					showContent();
 				}
-				String msg = resultData.getString(Constants.EXTRA_ERROR);
-				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+				String errorMessage = msg.getData().getString(
+						Constants.EXTRA_ERROR);
+				Utils.notify(mContext, errorMessage);
 				if (App.DEBUG) {
 					log("result error");
 				}

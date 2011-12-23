@@ -25,6 +25,7 @@ import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.ui.widget.EndlessListView;
 import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
+import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -45,9 +46,6 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 
 	protected Cursor mCursor;
 	protected UserCursorAdapter mCursorAdapter;
-
-	protected Handler mHandler;
-	protected ResultReceiver mResultReceiver;
 
 	private boolean isInitialized = false;
 
@@ -70,9 +68,6 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected void initialize() {
-		mHandler = new ResultHandler();
-		mResultReceiver = new MyResultHandler(mHandler);
-		// clearDB();
 		initCursor();
 	}
 
@@ -164,7 +159,7 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected void doRetrieve(boolean isGetMore) {
-		FanFouService.doFetchFriends(this, mResultReceiver, page,
+		FanFouService.doFetchFriends(this, new ResultHandler(isGetMore), page,
 				App.getUserId());
 	}
 
@@ -215,51 +210,46 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected class ResultHandler extends Handler {
+		private boolean doGetMore;
+
+		public ResultHandler(boolean doGetMore) {
+			this.doGetMore = doGetMore;
+		}
 
 		@Override
 		public void handleMessage(Message msg) {
-		}
-
-	}
-
-	protected class MyResultHandler extends ResultReceiver {
-
-		@Override
-		protected void onReceiveResult(int resultCode, Bundle resultData) {
-			switch (resultCode) {
+			switch (msg.what) {
 			case Constants.RESULT_SUCCESS:
 				if (!isInitialized) {
 					showContent();
 				}
-				mListView.onRefreshComplete();
-				int count = resultData.getInt(Constants.EXTRA_COUNT);
-				if (count < 100) {
-					mListView.onNoLoadMore();
-				} else {
+				int count = msg.getData().getInt(Constants.EXTRA_COUNT);
+				if (doGetMore) {
 					mListView.onLoadMoreComplete();
+				} else {
+					mListView.onRefreshComplete();
 				}
 				updateUI();
 				break;
 			case Constants.RESULT_ERROR:
-				int code = resultData.getInt(Constants.EXTRA_CODE);
-				String msg = resultData.getString(Constants.EXTRA_ERROR);
-				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+				String errorMessage = msg.getData().getString(
+						Constants.EXTRA_ERROR);
+				int errorCode = msg.getData().getInt(Constants.EXTRA_CODE);
 				if (!isInitialized) {
 					showContent();
-					mListView.onNoRefresh();
-					mListView.onNoLoadMore();
+				}
+				if (doGetMore) {
+					mListView.onLoadMoreComplete();
 				} else {
 					mListView.onRefreshComplete();
-					mListView.onLoadMoreComplete();
 				}
+
+				Utils.notify(mContext, errorMessage);
+				Utils.checkAuthorization(mContext, errorCode);
 				break;
 			default:
 				break;
 			}
-		}
-
-		public MyResultHandler(Handler handler) {
-			super(handler);
 		}
 
 	}

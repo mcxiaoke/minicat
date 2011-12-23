@@ -1116,3 +1116,7 @@ TODO LIST
 20111223
 修改私信通知点击进入为空的问题
 将OAuthClient移到FanfouApi内部
+修复一些BUG，发布1.8.6版
+使用Messenger替代所有的ResultReceiver
+
+

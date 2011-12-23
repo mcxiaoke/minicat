@@ -1,6 +1,7 @@
 package com.fanfou.app;
 
 import android.database.Cursor;
+import android.os.Messenger;
 
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.StatusInfo;
@@ -26,13 +27,13 @@ public class UserFavoritesPage extends BaseTimelineActivity {
 	}
 
 	@Override
-	protected void doRetrieveImpl(final MyResultHandler receiver) {
-		if (receiver.doGetMore) {
+	protected void doRetrieveImpl(final Messenger messenger, boolean isGetMore) {
+		if (isGetMore) {
 			page++;
 		} else {
 			page = 1;
 		}
-		FanFouService.doFetchFavorites(this, receiver, page, userId);
+		FanFouService.doFetchFavorites(this, messenger, page, userId);
 	}
 
 	@Override

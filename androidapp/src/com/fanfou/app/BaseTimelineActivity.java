@@ -1,12 +1,13 @@
 package com.fanfou.app;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Messenger;
 import android.os.Parcelable;
-import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
 import com.fanfou.app.service.Constants;
 import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.ActionBar.Action;
+import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.UIManager;
 import com.fanfou.app.ui.widget.EndlessListView;
@@ -36,10 +37,11 @@ import com.fanfou.app.util.Utils;
  * @version 3.2 2011.10.29
  * @version 3.3 2011.11.18
  * @version 3.4 2011.12.13
+ * @version 3.5 2011.12.23
  * 
  */
 public abstract class BaseTimelineActivity extends BaseActivity implements
-		OnRefreshListener, Action, OnItemLongClickListener {
+		OnRefreshListener, OnItemLongClickListener {
 
 	protected ActionBar mActionBar;
 	protected EndlessListView mListView;
@@ -47,8 +49,6 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 
 	protected Cursor mCursor;
 	protected StatusCursorAdapter mCursorAdapter;
-
-	protected Handler mHandler;
 
 	protected String userId;
 	protected String userName;
@@ -78,7 +78,6 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 	}
 
 	protected void initialize() {
-		mHandler = new ResultHandler();
 		mCursor = getCursor();
 		mCursorAdapter = new StatusCursorAdapter(true, this, mCursor);
 
@@ -122,9 +121,25 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitleClickListener(this);
-		mActionBar.setRightAction(this);
+		mActionBar.setRightAction(new WriteAction(this));
 		if (user != null) {
 			mActionBar.setTitle(user.screenName + "的" + getPageTitle());
+		}
+	}
+
+	public class WriteAction extends AbstractAction {
+
+		public WriteAction(Context context) {
+			super(R.drawable.i_write);
+		}
+
+		@Override
+		public void performAction(View view) {
+			String text = null;
+			if (user != null) {
+				text = "@" + user.screenName + " ";
+			}
+			ActionManager.doWrite(mContext, text);
 		}
 	}
 
@@ -148,11 +163,12 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 		doRetrieve(true);
 	}
 
-	protected void doRetrieve(boolean isGetMore) {
-		doRetrieveImpl(new MyResultHandler(mHandler, isGetMore));
+	protected void doRetrieve(boolean doGetMore) {
+		doRetrieveImpl(new Messenger(new ResultHandler(doGetMore)), doGetMore);
 	}
 
-	protected abstract void doRetrieveImpl(final MyResultHandler receiver);
+	protected abstract void doRetrieveImpl(final Messenger messenger,
+			boolean isGetMore);
 
 	protected abstract Cursor getCursor();
 
@@ -196,21 +212,18 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 		super.onPause();
 	}
 
-	protected class ResultHandler extends Handler {
+	private class ResultHandler extends Handler {
+		private final boolean doGetMore;
+
+		public ResultHandler(boolean doGetMore) {
+			this.doGetMore = doGetMore;
+		}
 
 		@Override
 		public void handleMessage(Message msg) {
-		}
-
-	}
-
-	protected class MyResultHandler extends ResultReceiver {
-		public final boolean doGetMore;
-
-		@Override
-		protected void onReceiveResult(int resultCode, Bundle resultData) {
-			switch (resultCode) {
+			switch (msg.what) {
 			case Constants.RESULT_SUCCESS:
+				int type=msg.arg1;
 				if (!isInitialized) {
 					showContent();
 				}
@@ -222,8 +235,9 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 				updateUI();
 				break;
 			case Constants.RESULT_ERROR:
-				String msg = resultData.getString(Constants.EXTRA_ERROR);
-				int errorCode = resultData.getInt(Constants.EXTRA_CODE);
+				String errorMessage = msg.getData().getString(
+						Constants.EXTRA_ERROR);
+				int errorCode = msg.getData().getInt(Constants.EXTRA_CODE);
 
 				if (!isInitialized) {
 					showContent();
@@ -234,17 +248,12 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 					mListView.onRefreshComplete();
 				}
 
-				Utils.notify(mContext, msg);
+				Utils.notify(mContext, errorMessage);
 				Utils.checkAuthorization(mContext, errorCode);
 				break;
 			default:
 				break;
 			}
-		}
-
-		public MyResultHandler(Handler handler, boolean doGetMore) {
-			super(handler);
-			this.doGetMore = doGetMore;
 		}
 
 	}
@@ -266,20 +275,6 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 			final Status s = Status.parse(c);
 			Utils.goStatusPage(mContext, s);
 		}
-	}
-
-	@Override
-	public int getDrawable() {
-		return R.drawable.i_write;
-	}
-
-	@Override
-	public void performAction(View view) {
-		String text = null;
-		if (user != null) {
-			text = "@" + user.screenName + " ";
-		}
-		ActionManager.doWrite(this, text);
 	}
 
 	@Override

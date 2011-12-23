@@ -33,6 +33,7 @@ import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -45,6 +46,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.5 2011.11.21
  * @version 2.6 2011.11.25
  * @version 2.7 2011.12.02
+ * @version 2.8 2011.12.23
  */
 public class UserChoosePage extends BaseActivity implements
 		FilterQueryProvider, OnItemClickListener {
@@ -61,9 +63,6 @@ public class UserChoosePage extends BaseActivity implements
 
 	protected Cursor mCursor;
 	protected UserChooseCursorAdapter mCursorAdapter;
-
-	protected Handler mHandler;
-	protected ResultReceiver mResultReceiver;
 
 	private List<String> mUserNames;
 
@@ -89,8 +88,6 @@ public class UserChoosePage extends BaseActivity implements
 
 	protected void initialize() {
 		mUserNames = new ArrayList<String>();
-		mHandler = new ResultHandler();
-		mResultReceiver = new MyResultHandler(mHandler);
 		initCursorAdapter();
 
 	}
@@ -211,7 +208,7 @@ public class UserChoosePage extends BaseActivity implements
 	}
 
 	protected void doRetrieve(boolean isGetMore) {
-		FanFouService.doFetchFriends(this, mResultReceiver, page,
+		FanFouService.doFetchFriends(this, new ResultHandler(), page,
 				App.getUserId());
 	}
 
@@ -271,14 +268,6 @@ public class UserChoosePage extends BaseActivity implements
 		finish();
 	}
 
-	protected class ResultHandler extends Handler {
-
-		@Override
-		public void handleMessage(Message msg) {
-		}
-
-	}
-
 	private class MyTextWatcher extends TextChangeListener {
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before,
@@ -296,24 +285,24 @@ public class UserChoosePage extends BaseActivity implements
 		mListView.clearChoices();
 	}
 
-	protected class MyResultHandler extends ResultReceiver {
-
+	protected class ResultHandler extends Handler {
+		
 		@Override
-		protected void onReceiveResult(int resultCode, Bundle resultData) {
-			switch (resultCode) {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
 			case Constants.RESULT_SUCCESS:
 				if (!isInitialized) {
 					showContent();
 				}
-				int count = resultData.getInt(Constants.EXTRA_COUNT);
+				int count = msg.getData().getInt(Constants.EXTRA_COUNT);
 				if (count > 0) {
 					updateUI();
 				}
 				break;
 			case Constants.RESULT_ERROR:
-				int code = resultData.getInt(Constants.EXTRA_CODE);
-				String msg = resultData.getString(Constants.EXTRA_ERROR);
-				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+				int code = msg.getData().getInt(Constants.EXTRA_CODE);
+				String errorMessage = msg.getData().getString(Constants.EXTRA_ERROR);
+				Utils.notify(mContext, errorMessage);
 				if (!isInitialized) {
 					showContent();
 				}
@@ -321,10 +310,6 @@ public class UserChoosePage extends BaseActivity implements
 			default:
 				break;
 			}
-		}
-
-		public MyResultHandler(Handler handler) {
-			super(handler);
 		}
 
 	}

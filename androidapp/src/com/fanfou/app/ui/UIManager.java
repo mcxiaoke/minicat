@@ -25,6 +25,7 @@ import com.lib.quickaction.QuickAction;
  * @version 2.0 2011.10.29
  * @version 2.1 2011.11.07
  * @version 3.0 2011.12.19
+ * @version 3.1 2011.12.23
  * 
  */
 public final class UIManager {
@@ -213,7 +214,7 @@ public final class UIManager {
 
 	public static void doDelete(final Activity activity, final Status s,
 			final BaseAdapter adapter, final List<Status> ss) {
-		ResultHandler li = new ResultHandler() {
+		ActionResultHandler li = new ActionResultHandler() {
 			@Override
 			public void onActionSuccess(int type, String message) {
 				ss.remove(s);
@@ -225,7 +226,7 @@ public final class UIManager {
 
 	public static void doDelete(final Activity activity, final Status s,
 			final Cursor c) {
-		ResultHandler li = new ResultHandler() {
+		ActionResultHandler li = new ActionResultHandler() {
 			@Override
 			public void onActionSuccess(int type, String message) {
 				c.requery();
@@ -236,7 +237,7 @@ public final class UIManager {
 
 	public static void doDelete(final Activity activity, final Status s,
 			final BaseAdapter adapter) {
-		ResultHandler li = new ResultHandler() {
+		ActionResultHandler li = new ActionResultHandler() {
 			@Override
 			public void onActionSuccess(int type, String message) {
 				adapter.notifyDataSetChanged();
@@ -245,7 +246,7 @@ public final class UIManager {
 		FanFouService.doStatusDelete(activity, s.id, li);
 	}
 
-	public abstract static class ResultHandler implements
+	public abstract static class ActionResultHandler implements
 			ActionManager.ResultListener {
 		@Override
 		public void onActionFailed(int type, String message) {

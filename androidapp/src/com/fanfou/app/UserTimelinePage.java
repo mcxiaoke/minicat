@@ -1,6 +1,7 @@
 package com.fanfou.app;
 
 import android.database.Cursor;
+import android.os.Messenger;
 
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.StatusInfo;
@@ -26,15 +27,15 @@ public class UserTimelinePage extends BaseTimelineActivity {
 	}
 
 	@Override
-	protected void doRetrieveImpl(final MyResultHandler receiver) {
+	protected void doRetrieveImpl(final Messenger messenger, boolean isGetMore) {
 		String sinceId = null;
 		String maxId = null;
-		if (receiver.doGetMore) {
+		if (isGetMore) {
 			maxId = Utils.getMaxId(mCursor);
 		} else {
 			sinceId = Utils.getSinceId(mCursor);
 		}
-		FanFouService.doFetchUserTimeline(this, receiver, userId, sinceId,
+		FanFouService.doFetchUserTimeline(this, messenger, userId, sinceId,
 				maxId);
 	}
 

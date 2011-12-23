@@ -304,23 +304,6 @@ public final class Utils {
 		return false;
 	}
 
-	public static void sendErrorMessage(Context context,
-			ResultReceiver receiver, ApiException e) {
-
-		if (receiver != null) {
-			String message = e.getMessage();
-			if (e.statusCode == ResponseCode.ERROR_IO_EXCEPTION) {
-				message = context.getString(R.string.msg_connection_error);
-			} else if (e.statusCode >= 500) {
-				message = context.getString(R.string.msg_server_error);
-			}
-			Bundle b = new Bundle();
-			b.putInt(Constants.EXTRA_CODE, e.statusCode);
-			b.putString(Constants.EXTRA_ERROR, message);
-			receiver.send(Constants.RESULT_ERROR, b);
-		}
-	}
-
 	public static void checkAuthorization(Activity context, int statusCode) {
 		if (statusCode == ResponseCode.HTTP_UNAUTHORIZED) {
 			IntentHelper.goLoginPage(context);

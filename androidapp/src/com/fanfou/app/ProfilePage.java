@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.os.ResultReceiver;
 import android.text.TextPaint;
 import android.util.Log;
@@ -329,17 +330,15 @@ public class ProfilePage extends BaseActivity {
 	}
 
 	private void doRefresh() {
-		ResultReceiver receiver = new MyResultReceiver();
-		FanFouService.doProfile(this, userId, receiver);
+		FanFouService.doProfile(this, userId, new ResultHandler());
 		if (isInitialized) {
 			startRefreshAnimation();
 		}
 	}
 
 	private void doFetchRelationshipInfo() {
-		ResultReceiver receiver = new MyResultReceiver();
 		FanFouService.doFriendshipsExists(this, user.id, App.getUserId(),
-				receiver);
+				new ResultHandler());
 	}
 
 	private void updateFollowButton(boolean following) {
@@ -365,15 +364,14 @@ public class ProfilePage extends BaseActivity {
 				@Override
 				public void onButton1Click() {
 					updateFollowButton(false);
-					FanFouService.doFollow(mContext, user,
-							new MyResultReceiver());
+					FanFouService.doFollow(mContext, user, new ResultHandler());
 				}
 			});
 
 			dialog.show();
 		} else {
 			updateFollowButton(true);
-			FanFouService.doFollow(mContext, user, new MyResultReceiver());
+			FanFouService.doFollow(mContext, user, new ResultHandler());
 		}
 
 	}
@@ -455,30 +453,27 @@ public class ProfilePage extends BaseActivity {
 		return true;
 	}
 
-	private class MyResultReceiver extends ResultReceiver {
-
-		public MyResultReceiver() {
-			super(mHandler);
-		}
+	private class ResultHandler extends Handler {
 
 		@Override
-		protected void onReceiveResult(int resultCode, Bundle resultData) {
-			switch (resultCode) {
+		public void handleMessage(Message msg) {
+			int type = msg.arg1;
+			Bundle bundle = msg.getData();
+			switch (msg.what) {
 			case Constants.RESULT_SUCCESS:
-				if (resultData != null) {
+				if (!isInitialized) {
+					showContent();
+				}
+				if (bundle != null) {
 					if (App.DEBUG)
 						log("result ok, update ui");
-					int type = resultData.getInt(Constants.EXTRA_TYPE);
-					User result = (User) resultData
+					User result = (User) bundle
 							.getParcelable(Constants.EXTRA_DATA);
 					if (result != null) {
 						user = result;
 					}
-					if (!isInitialized) {
-						showContent();
-					}
 					if (type == Constants.TYPE_FRIENDSHIPS_EXISTS) {
-						boolean follow = resultData
+						boolean follow = bundle
 								.getBoolean(Constants.EXTRA_BOOLEAN);
 						if (App.DEBUG)
 							log("user relationship result=" + follow);
@@ -486,10 +481,11 @@ public class ProfilePage extends BaseActivity {
 					} else if (type == Constants.TYPE_USERS_SHOW) {
 						if (App.DEBUG)
 							log("show result=" + user.id);
-						updateUI();
 						if (isInitialized) {
 							stopRefreshAnimation();
 						}
+						updateUI();
+
 					} else if (type == Constants.TYPE_FRIENDSHIPS_CREATE
 							|| type == Constants.TYPE_FRIENDSHIPS_DESTROY) {
 						if (App.DEBUG)
@@ -506,7 +502,6 @@ public class ProfilePage extends BaseActivity {
 				if (!isInitialized) {
 					mEmptyView.setVisibility(View.GONE);
 				}
-				int type = resultData.getInt(Constants.EXTRA_TYPE);
 				if (type == Constants.TYPE_FRIENDSHIPS_EXISTS) {
 					return;
 				} else if (type == Constants.TYPE_USERS_SHOW) {
@@ -516,8 +511,8 @@ public class ProfilePage extends BaseActivity {
 					updateFollowButton(user.following);
 				}
 
-				String msg = resultData.getString(Constants.EXTRA_ERROR);
-				Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+				String errorMessage = bundle.getString(Constants.EXTRA_ERROR);
+				Utils.notify(mContext, errorMessage);
 				break;
 			default:
 				break;

@@ -89,6 +89,7 @@ public final class Constants {
 	public static final int TYPE_TRENDS_LIST = 154;
 
 	public static final String EXTRA_RECEIVER = "com.fanfou.app.EXTRA_RECEIVER";
+	public static final String EXTRA_MESSENGER = "com.fanfou.app.EXTRA_MESSENGER";
 	public static final String EXTRA_BUNDLE = "com.fanfou.app.EXTRA_BUNDLE";
 	public static final String EXTRA_CODE = "com.fanfou.app.EXTRA_CODE";
 	public static final String EXTRA_ERROR = "com.fanfou.app.EXTRA_ERROR";

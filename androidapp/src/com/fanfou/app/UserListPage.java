@@ -39,6 +39,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.2 2011.11.18
  * @version 2.3 2011.11.21
  * @version 2.4 2011.12.13
+ * @version 2.5 2011.12.23
  * 
  */
 public class UserListPage extends BaseActivity implements OnRefreshListener,
@@ -52,8 +53,6 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 
 	protected Cursor mCursor;
 	protected UserCursorAdapter mCursorAdapter;
-
-	protected Handler mHandler;
 
 	protected String userId;
 	protected String userName;
@@ -85,7 +84,6 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected void initialize() {
-		mHandler = new ResultHandler();
 		initCursor();
 	}
 
@@ -200,11 +198,11 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 				log("userId is null");
 			return;
 		}
-		ResultReceiver receiver = new MyResultHandler(mHandler, isGetMore);
+		final Handler handler = new ResultHandler(isGetMore);
 		if (type == Constants.TYPE_USERS_FRIENDS) {
-			FanFouService.doFetchFriends(this, receiver, page, userId);
+			FanFouService.doFetchFriends(this, handler, page, userId);
 		} else {
-			FanFouService.doFetchFollowers(this, receiver, page, userId);
+			FanFouService.doFetchFollowers(this, handler, page, userId);
 		}
 	}
 
@@ -257,29 +255,20 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected class ResultHandler extends Handler {
-
-		@Override
-		public void handleMessage(Message msg) {
-		}
-
-	}
-
-	protected class MyResultHandler extends ResultReceiver {
 		private boolean doGetMore;
 
-		public MyResultHandler(Handler handler, boolean doGetMore) {
-			super(handler);
+		public ResultHandler(boolean doGetMore) {
 			this.doGetMore = doGetMore;
 		}
 
 		@Override
-		protected void onReceiveResult(int resultCode, Bundle resultData) {
-			switch (resultCode) {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
 			case Constants.RESULT_SUCCESS:
 				if (!isInitialized) {
 					showContent();
 				}
-				int count = resultData.getInt(Constants.EXTRA_COUNT);
+				int count = msg.getData().getInt(Constants.EXTRA_COUNT);
 				if (doGetMore) {
 					mListView.onLoadMoreComplete();
 				} else {
@@ -288,8 +277,9 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 				updateUI();
 				break;
 			case Constants.RESULT_ERROR:
-				String msg = resultData.getString(Constants.EXTRA_ERROR);
-				int errorCode = resultData.getInt(Constants.EXTRA_CODE);
+				String errorMessage = msg.getData().getString(
+						Constants.EXTRA_ERROR);
+				int errorCode = msg.getData().getInt(Constants.EXTRA_CODE);
 				if (!isInitialized) {
 					showContent();
 				}
@@ -299,7 +289,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 					mListView.onRefreshComplete();
 				}
 
-				Utils.notify(mContext, msg);
+				Utils.notify(mContext, errorMessage);
 				Utils.checkAuthorization(mContext, errorCode);
 				break;
 			default:

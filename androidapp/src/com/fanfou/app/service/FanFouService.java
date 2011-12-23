@@ -10,6 +10,7 @@ import static com.fanfou.app.service.Constants.EXTRA_ERROR;
 import static com.fanfou.app.service.Constants.EXTRA_ID;
 import static com.fanfou.app.service.Constants.EXTRA_MAX_ID;
 import static com.fanfou.app.service.Constants.EXTRA_PAGE;
+import static com.fanfou.app.service.Constants.EXTRA_MESSENGER;
 import static com.fanfou.app.service.Constants.EXTRA_RECEIVER;
 import static com.fanfou.app.service.Constants.EXTRA_SINCE_ID;
 import static com.fanfou.app.service.Constants.EXTRA_TYPE;
@@ -83,8 +84,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.os.Parcelable;
-import android.os.ResultReceiver;
+import android.os.RemoteException;
 import android.util.Log;
 import android.widget.BaseAdapter;
 
@@ -104,7 +107,7 @@ import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.http.ResponseCode;
 import com.fanfou.app.ui.ActionManager.ResultListener;
-import com.fanfou.app.ui.UIManager.ResultHandler;
+import com.fanfou.app.ui.UIManager.ActionResultHandler;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
 
@@ -128,13 +131,14 @@ import com.fanfou.app.util.Utils;
  * @version 5.3 2011.12.13
  * @version 6.0 2011.12.16
  * @version 6.1 2011.12.19
+ * @version 7.0 2011.12.23
  * 
  */
-public class FanFouService extends WakefulIntentService{
+public class FanFouService extends WakefulIntentService {
 	private static final String TAG = FanFouService.class.getSimpleName();
 
-	private ResultReceiver receiver;
 	private int type;
+	private Messenger messenger;
 
 	public FanFouService() {
 		super("FetchService");
@@ -149,7 +153,8 @@ public class FanFouService extends WakefulIntentService{
 		if (intent == null) {
 			return;
 		}
-		receiver = intent.getParcelableExtra(EXTRA_RECEIVER);
+		
+		messenger = intent.getParcelableExtra(EXTRA_MESSENGER);
 		type = intent.getIntExtra(EXTRA_TYPE, -1);
 
 		if (App.DEBUG) {
@@ -282,12 +287,12 @@ public class FanFouService extends WakefulIntentService{
 			}
 			throw new NullPointerException("directmessageid cannot be null.");
 		}
-		ResultReceiver receiver = new ResultReceiver(new Handler(
-				activity.getMainLooper())) {
+
+		final Handler handler = new Handler() {
 
 			@Override
-			protected void onReceiveResult(int resultCode, Bundle resultData) {
-				switch (resultCode) {
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
 				case Constants.RESULT_SUCCESS:
 					Utils.notify(activity.getApplicationContext(), "删除成功");
 					onSuccess(li, Constants.TYPE_DIRECT_MESSAGES_DESTROY,
@@ -297,8 +302,9 @@ public class FanFouService extends WakefulIntentService{
 					}
 					break;
 				case Constants.RESULT_ERROR:
-					String msg = resultData.getString(Constants.EXTRA_ERROR);
-					Utils.notify(activity.getApplicationContext(), msg);
+					String errorMessage = msg.getData().getString(
+							Constants.EXTRA_ERROR);
+					Utils.notify(activity.getApplicationContext(), errorMessage);
 					onFailed(li, Constants.TYPE_DIRECT_MESSAGES_DESTROY, "删除失败");
 					break;
 				default:
@@ -306,15 +312,15 @@ public class FanFouService extends WakefulIntentService{
 				}
 			}
 		};
-		FanFouService.doDirectMessagesDelete(activity, id, receiver);
+		FanFouService.doDirectMessagesDelete(activity, id, handler);
 	}
 
 	public static void doDirectMessagesDelete(Context context, String id,
-			final ResultReceiver receiver) {
+			final Handler handler) {
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra(EXTRA_TYPE, TYPE_DIRECT_MESSAGES_DESTROY);
 		intent.putExtra(EXTRA_ID, id);
-		intent.putExtra(EXTRA_RECEIVER, receiver);
+		intent.putExtra(EXTRA_MESSENGER, new Messenger(handler));
 		context.startService(intent);
 	}
 
@@ -382,30 +388,30 @@ public class FanFouService extends WakefulIntentService{
 	}
 
 	public static void doFollow(Context context, final User user,
-			final ResultReceiver receiver) {
+			final Handler handler) {
 		if (user.following) {
-			doUnFollow(context, user.id, receiver);
+			doUnFollow(context, user.id, handler);
 		} else {
-			doFollow(context, user.id, receiver);
+			doFollow(context, user.id, handler);
 		}
 	}
 
 	public static void doFollow(Context context, String userId,
-			final ResultReceiver receiver) {
+			final Handler handler) {
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra(EXTRA_TYPE, TYPE_FRIENDSHIPS_CREATE);
 		intent.putExtra(EXTRA_ID, userId);
-		intent.putExtra(EXTRA_RECEIVER, receiver);
+		intent.putExtra(EXTRA_MESSENGER, new Messenger(handler));
 		context.startService(intent);
 
 	}
 
 	public static void doUnFollow(Context context, String userId,
-			final ResultReceiver receiver) {
+			final Handler handler) {
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra(EXTRA_TYPE, TYPE_FRIENDSHIPS_DESTROY);
 		intent.putExtra(EXTRA_ID, userId);
-		intent.putExtra(EXTRA_RECEIVER, receiver);
+		intent.putExtra(EXTRA_MESSENGER, new Messenger(handler));
 		context.startService(intent);
 
 	}
@@ -499,15 +505,15 @@ public class FanFouService extends WakefulIntentService{
 		}
 		final int type = status.favorited ? Constants.TYPE_FAVORITES_DESTROY
 				: Constants.TYPE_FAVORITES_CREATE;
-		ResultReceiver receiver = new ResultReceiver(new Handler(
-				activity.getMainLooper())) {
+
+		final Handler handler = new Handler() {
 
 			@Override
-			protected void onReceiveResult(int resultCode, Bundle resultData) {
-				switch (resultCode) {
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
 				case Constants.RESULT_SUCCESS:
-					Status result = (Status) resultData
-							.getParcelable(Constants.EXTRA_DATA);
+					Status result = (Status) msg.getData().getParcelable(
+							Constants.EXTRA_DATA);
 					String text = result.favorited ? "收藏成功" : "取消收藏成功";
 					Utils.notify(activity.getApplicationContext(), text);
 					onSuccess(li, type, text);
@@ -516,8 +522,9 @@ public class FanFouService extends WakefulIntentService{
 					}
 					break;
 				case Constants.RESULT_ERROR:
-					String msg = resultData.getString(Constants.EXTRA_ERROR);
-					Utils.notify(activity.getApplicationContext(), msg);
+					String errorMessage = msg.getData().getString(
+							Constants.EXTRA_ERROR);
+					Utils.notify(activity.getApplicationContext(), errorMessage);
 					onFailed(li, type, "收藏失败");
 					break;
 				default:
@@ -526,15 +533,15 @@ public class FanFouService extends WakefulIntentService{
 			}
 		};
 		if (status.favorited) {
-			FanFouService.doUnfavorite(activity, status.id, receiver);
+			FanFouService.doUnfavorite(activity, status.id, handler);
 		} else {
-			FanFouService.doFavorite(activity, status.id, receiver);
+			FanFouService.doFavorite(activity, status.id, handler);
 		}
 	}
 
 	public static void doFavorite(final Activity activity, final Status s,
 			final BaseAdapter adapter) {
-		ResultHandler li = new ResultHandler() {
+		ActionResultHandler li = new ActionResultHandler() {
 			@Override
 			public void onActionSuccess(int type, String message) {
 				if (type == Constants.TYPE_FAVORITES_CREATE) {
@@ -550,7 +557,7 @@ public class FanFouService extends WakefulIntentService{
 
 	public static void doFavorite(final Activity activity, final Status s,
 			final Cursor c) {
-		ResultHandler li = new ResultHandler() {
+		ActionResultHandler li = new ActionResultHandler() {
 			@Override
 			public void onActionSuccess(int type, String message) {
 				c.requery();
@@ -560,11 +567,11 @@ public class FanFouService extends WakefulIntentService{
 	}
 
 	public static void doFavorite(Context context, String id,
-			final ResultReceiver receiver) {
+			final Handler handler) {
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra(EXTRA_TYPE, TYPE_FAVORITES_CREATE);
 		intent.putExtra(EXTRA_ID, id);
-		intent.putExtra(EXTRA_RECEIVER, receiver);
+		intent.putExtra(EXTRA_MESSENGER, new Messenger(handler));
 		context.startService(intent);
 	}
 
@@ -598,11 +605,11 @@ public class FanFouService extends WakefulIntentService{
 	}
 
 	public static void doUnfavorite(Context context, String id,
-			final ResultReceiver receiver) {
+			final Handler handler) {
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra(EXTRA_TYPE, TYPE_FAVORITES_DESTROY);
 		intent.putExtra(EXTRA_ID, id);
-		intent.putExtra(EXTRA_RECEIVER, receiver);
+		intent.putExtra(EXTRA_MESSENGER, new Messenger(handler));
 		context.startService(intent);
 	}
 
@@ -659,12 +666,11 @@ public class FanFouService extends WakefulIntentService{
 			}
 			throw new NullPointerException("statusid cannot be null.");
 		}
-		ResultReceiver receiver = new ResultReceiver(new Handler(
-				activity.getMainLooper())) {
+		final Handler handler=new Handler(){
 
 			@Override
-			protected void onReceiveResult(int resultCode, Bundle resultData) {
-				switch (resultCode) {
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
 				case Constants.RESULT_SUCCESS:
 					Utils.notify(activity.getApplicationContext(), "删除成功");
 					onSuccess(li, Constants.TYPE_STATUSES_DESTROY, "删除成功");
@@ -673,24 +679,23 @@ public class FanFouService extends WakefulIntentService{
 					}
 					break;
 				case Constants.RESULT_ERROR:
-					String msg = resultData.getString(Constants.EXTRA_ERROR);
-					Utils.notify(activity.getApplicationContext(), msg);
+					String errorMessage = msg.getData().getString(Constants.EXTRA_ERROR);
+					Utils.notify(activity.getApplicationContext(), errorMessage);
 					onFailed(li, Constants.TYPE_STATUSES_DESTROY, "删除失败");
 					break;
 				default:
 					break;
 				}
-			}
-		};
-		FanFouService.doStatusesDelete(activity, id, receiver);
+			}};
+		FanFouService.doStatusesDelete(activity, id, handler);
 	}
 
 	public static void doStatusesDelete(Context context, String id,
-			final ResultReceiver receiver) {
+			final Handler handler) {
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra(EXTRA_TYPE, TYPE_STATUSES_DESTROY);
 		intent.putExtra(EXTRA_ID, id);
-		intent.putExtra(EXTRA_RECEIVER, receiver);
+		intent.putExtra(EXTRA_MESSENGER, new Messenger(handler));
 		context.startService(intent);
 	}
 
@@ -719,11 +724,11 @@ public class FanFouService extends WakefulIntentService{
 	}
 
 	public static void doProfile(Context context, String userId,
-			final ResultReceiver receiver) {
+			final Handler handler) {
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra(EXTRA_TYPE, TYPE_USERS_SHOW);
 		intent.putExtra(EXTRA_ID, userId);
-		intent.putExtra(EXTRA_RECEIVER, receiver);
+		intent.putExtra(EXTRA_MESSENGER, new Messenger(handler));
 		context.startService(intent);
 	}
 
@@ -754,12 +759,12 @@ public class FanFouService extends WakefulIntentService{
 	}
 
 	public static void doFriendshipsExists(Context context, String userA,
-			String userB, final ResultReceiver receiver) {
+			String userB, final Handler handler) {
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra(EXTRA_TYPE, TYPE_FRIENDSHIPS_EXISTS);
 		intent.putExtra("user_a", userA);
 		intent.putExtra("user_b", userB);
-		intent.putExtra(EXTRA_RECEIVER, receiver);
+		intent.putExtra(EXTRA_MESSENGER, new Messenger(handler));
 		context.startService(intent);
 	}
 
@@ -861,19 +866,19 @@ public class FanFouService extends WakefulIntentService{
 	}
 
 	public static void doFetchDirectMessagesConversationList(Context context,
-			final ResultReceiver receiver, boolean doGetMore) {
+			final Messenger messenger, boolean doGetMore) {
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra(EXTRA_TYPE, TYPE_DIRECT_MESSAGES_CONVERSTATION_LIST);
-		intent.putExtra(EXTRA_RECEIVER, receiver);
+		intent.putExtra(EXTRA_MESSENGER, messenger);
 		intent.putExtra(EXTRA_BOOLEAN, doGetMore);
 		context.startService(intent);
 	}
-	
+
 	public static void doFetchDirectMessagesInbox(Context context,
-			final ResultReceiver receiver, boolean doGetMore) {
+			final Messenger messenger, boolean doGetMore) {
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra(EXTRA_TYPE, TYPE_DIRECT_MESSAGES_INBOX);
-		intent.putExtra(EXTRA_RECEIVER, receiver);
+		intent.putExtra(EXTRA_MESSENGER, messenger);
 		intent.putExtra(EXTRA_BOOLEAN, doGetMore);
 		context.startService(intent);
 	}
@@ -1061,11 +1066,11 @@ public class FanFouService extends WakefulIntentService{
 		return getContentResolver().query(DirectMessageInfo.CONTENT_URI,
 				DirectMessageInfo.COLUMNS, where, whereArgs, null);
 	}
-	
+
 	private Cursor initOutboxMessagesCursor() {
 		String where = BasicColumns.TYPE + " = ? ";
 		String[] whereArgs = new String[] { String
-				.valueOf(TYPE_DIRECT_MESSAGES_OUTBOX ) };
+				.valueOf(TYPE_DIRECT_MESSAGES_OUTBOX) };
 		return getContentResolver().query(DirectMessageInfo.CONTENT_URI,
 				DirectMessageInfo.COLUMNS, where, whereArgs, null);
 	}
@@ -1193,42 +1198,42 @@ public class FanFouService extends WakefulIntentService{
 	}
 
 	public static void doFetchHomeTimeline(Context context,
-			final ResultReceiver receiver, String sinceId, String maxId) {
-		doFetchTimeline(context, TYPE_STATUSES_HOME_TIMELINE, receiver, 0,
+			final Messenger messenger, String sinceId, String maxId) {
+		doFetchTimeline(context, TYPE_STATUSES_HOME_TIMELINE, messenger, 0,
 				null, sinceId, maxId);
 	}
 
 	public static void doFetchMentions(Context context,
-			final ResultReceiver receiver, String sinceId, String maxId) {
-		doFetchTimeline(context, TYPE_STATUSES_MENTIONS, receiver, 0, null,
+			final Messenger messenger, String sinceId, String maxId) {
+		doFetchTimeline(context, TYPE_STATUSES_MENTIONS, messenger, 0, null,
 				sinceId, maxId);
 	}
 
 	public static void doFetchUserTimeline(Context context,
-			final ResultReceiver receiver, String userId, String sinceId,
+			final Messenger messenger, String userId, String sinceId,
 			String maxId) {
-		doFetchTimeline(context, TYPE_STATUSES_USER_TIMELINE, receiver, 0,
+		doFetchTimeline(context, TYPE_STATUSES_USER_TIMELINE, messenger, 0,
 				userId, sinceId, maxId);
 	}
 
 	public static void doFetchPublicTimeline(Context context,
-			final ResultReceiver receiver) {
-		doFetchTimeline(context, TYPE_STATUSES_PUBLIC_TIMELINE, receiver, 0,
+			final Messenger messenger) {
+		doFetchTimeline(context, TYPE_STATUSES_PUBLIC_TIMELINE, messenger, 0,
 				null, null, null);
 	}
 
 	public static void doFetchFavorites(Context context,
-			final ResultReceiver receiver, int page, String userId) {
-		doFetchTimeline(context, TYPE_FAVORITES_LIST, receiver, page, userId,
+			final Messenger messenger, int page, String userId) {
+		doFetchTimeline(context, TYPE_FAVORITES_LIST, messenger, page, userId,
 				null, null);
 	}
 
 	private static void doFetchTimeline(Context context, int type,
-			final ResultReceiver receiver, int page, String userId,
-			String sinceId, String maxId) {
+			final Messenger messenger, int page, String userId, String sinceId,
+			String maxId) {
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra(EXTRA_TYPE, type);
-		intent.putExtra(EXTRA_RECEIVER, receiver);
+		intent.putExtra(EXTRA_MESSENGER, messenger);
 		intent.putExtra(EXTRA_COUNT, MAX_TIMELINE_COUNT);
 		intent.putExtra(EXTRA_PAGE, page);
 		intent.putExtra(EXTRA_ID, userId);
@@ -1241,21 +1246,21 @@ public class FanFouService extends WakefulIntentService{
 		context.startService(intent);
 	}
 
-	public static void doFetchFriends(Context context,
-			final ResultReceiver receiver, int page, String userId) {
-		doFetchUsers(context, TYPE_USERS_FRIENDS, receiver, page, userId);
+	public static void doFetchFriends(Context context, final Handler handler,
+			int page, String userId) {
+		doFetchUsers(context, TYPE_USERS_FRIENDS, handler, page, userId);
 	}
 
-	public static void doFetchFollowers(Context context,
-			final ResultReceiver receiver, int page, String userId) {
-		doFetchUsers(context, TYPE_USERS_FOLLOWERS, receiver, page, userId);
+	public static void doFetchFollowers(Context context, final Handler handler,
+			int page, String userId) {
+		doFetchUsers(context, TYPE_USERS_FOLLOWERS, handler, page, userId);
 	}
 
 	private static void doFetchUsers(Context context, int type,
-			final ResultReceiver receiver, int page, String userId) {
+			final Handler handler, int page, String userId) {
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra(EXTRA_TYPE, type);
-		intent.putExtra(EXTRA_RECEIVER, receiver);
+		intent.putExtra(EXTRA_MESSENGER, new Messenger(handler));
 		intent.putExtra(EXTRA_COUNT, MAX_USERS_COUNT);
 		intent.putExtra(EXTRA_PAGE, page);
 		intent.putExtra(EXTRA_ID, userId);
@@ -1263,56 +1268,54 @@ public class FanFouService extends WakefulIntentService{
 	}
 
 	private void sendErrorMessage(ApiException e) {
-		if (receiver != null) {
-			String message = e.getMessage();
-			if (e.statusCode == ResponseCode.ERROR_IO_EXCEPTION) {
-				message = getString(R.string.msg_connection_error);
-			} else if (e.statusCode >= 500) {
-				message = getString(R.string.msg_server_error);
-			}
-			Bundle data = new Bundle();
-			data.putInt(EXTRA_CODE, e.statusCode);
-			data.putString(EXTRA_ERROR, message);
-			sendMessage(RESULT_ERROR, data);
+		String message = e.getMessage();
+		if (e.statusCode == ResponseCode.ERROR_IO_EXCEPTION) {
+			message = getString(R.string.msg_connection_error);
+		} else if (e.statusCode >= 500) {
+			message = getString(R.string.msg_server_error);
 		}
+		Bundle bundle = new Bundle();
+		bundle.putInt(EXTRA_CODE, e.statusCode);
+		bundle.putString(EXTRA_ERROR, message);
+		sendMessage(RESULT_ERROR, bundle);
 	}
 
 	private void sendIntMessage(int size) {
-		if (receiver != null) {
-			Bundle update = new Bundle();
-			update.putInt(EXTRA_COUNT, size);
-			sendMessage(RESULT_SUCCESS, update);
-		}
+		Bundle bundle = new Bundle();
+		bundle.putInt(EXTRA_COUNT, size);
+		sendMessage(RESULT_SUCCESS, bundle);
 	}
 
 	private void sendParcelableMessage(Parcelable parcel) {
-		if (receiver != null) {
-			Bundle data = new Bundle();
-			data.putParcelable(EXTRA_DATA, parcel);
-			sendMessage(RESULT_SUCCESS, data);
-		}
+		Bundle bundle = new Bundle();
+		bundle.putParcelable(EXTRA_DATA, parcel);
+		sendMessage(RESULT_SUCCESS, bundle);
 	}
 
-	private void sendSuccessMessage(Bundle data) {
-		if (receiver != null) {
-			sendMessage(RESULT_SUCCESS, data);
-		}
+	private void sendSuccessMessage(Bundle bundle) {
+		sendMessage(RESULT_SUCCESS, bundle);
 	}
 
 	private void sendSuccessMessage() {
-		if (receiver != null) {
-			sendMessage(RESULT_SUCCESS, new Bundle());
-		}
+		sendMessage(RESULT_SUCCESS, null);
 	}
 
-	private void sendMessage(int code, Bundle data) {
-		if (data == null) {
-			throw new NullPointerException(
-					"sendSuccessMessage() bundle cannot be bull.");
+	private void sendMessage(int what, final Bundle bundle) {
+		if (messenger == null) {
+			return;
 		}
-		if (receiver != null) {
-			data.putInt(EXTRA_TYPE, type);
-			receiver.send(code, data);
+		Message m = Message.obtain();
+		m.what = what;
+		m.arg1 = type;
+		if (bundle != null) {
+			m.getData().putAll(bundle);
+		}
+		try {
+			messenger.send(m);
+		} catch (RemoteException e) {
+			if (App.DEBUG) {
+				e.printStackTrace();
+			}
 		}
 	}
 

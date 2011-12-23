@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.os.Parcelable;
 import android.os.ResultReceiver;
 import android.support.v4.view.ViewPager;
@@ -77,16 +79,17 @@ import com.fanfou.app.util.Utils;
  * @version 5.2 2011.12.09
  * @version 5.3 2011.12.13
  * @version 6.0 2011.12.19
+ * @version 3.1 2011.12.23
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
 		OnLoadDataListener, OnItemLongClickListener, TitleProvider {
+	ResultReceiver a;
 
 	public static final int NUMS_OF_PAGE = 4;
 
 	private ActionBar mActionBar;
 
-	private Handler mHandler;
 	private ViewPager mViewPager;
 	private ViewsAdapter mViewAdapter;
 	private TitlePageIndicator mPageIndicator;
@@ -146,7 +149,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				R.string.option_page_scroll_endless, false);
 		soundEffect = OptionHelper.readBoolean(
 				R.string.option_play_sound_effect, true);
-		mHandler = new Handler();
 		ImageLoader.getInstance();
 		initSoundManager();
 	}
@@ -386,7 +388,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		if (App.DEBUG) {
 			log("doRetrieve() page=" + page + " doGetMore=" + doGetMore);
 		}
-		ResultReceiver receiver = new HomeResultReceiver(page, doGetMore);
+		final ResultHandler handler = new ResultHandler(page, doGetMore);
 		String sinceId = null;
 		String maxId = null;
 		Cursor cursor = cursors[page];
@@ -397,7 +399,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			} else {
 				sinceId = Utils.getSinceId(cursor);
 			}
-			FanFouService.doFetchHomeTimeline(this, receiver, sinceId, maxId);
+			FanFouService.doFetchHomeTimeline(this, new Messenger(handler), sinceId, maxId);
 			break;
 		case 1:
 			if (doGetMore) {
@@ -405,15 +407,15 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			} else {
 				sinceId = Utils.getSinceId(cursor);
 			}
-			FanFouService.doFetchMentions(this, receiver, sinceId, maxId);
+			FanFouService.doFetchMentions(this, new Messenger(handler), sinceId, maxId);
 			break;
 		case 2:
-			FanFouService.doFetchDirectMessagesConversationList(this, receiver,
+			FanFouService.doFetchDirectMessagesConversationList(this, new Messenger(handler),
 					doGetMore);
 			break;
 		case 3:
 			if (!doGetMore) {
-				FanFouService.doFetchPublicTimeline(this, receiver);
+				FanFouService.doFetchPublicTimeline(this, new Messenger(handler));
 			}
 			break;
 		default:
@@ -721,24 +723,22 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	/**
 	 * FetchService返回数据处理 根据resultData里面的type信息分别处理
 	 */
-	private class HomeResultReceiver extends ResultReceiver {
+	private class ResultHandler extends Handler {
 		private int i;
 		private boolean doGetMore;
 
-		public HomeResultReceiver(int page, boolean getMore) {
-			super(mHandler);
+		public ResultHandler(int page, boolean getMore) {
 			this.i = page;
 			this.doGetMore = getMore;
 		}
 
 		@Override
-		protected void onReceiveResult(int resultCode, Bundle resultData) {
-			setBusy(false);
-			switch (resultCode) {
+		public void handleMessage(Message msg) {
+			Bundle bundle=msg.getData();
+			int type=msg.arg1;
+			switch (msg.what) {
 			case Constants.RESULT_SUCCESS:
-				int type = resultData.getInt(Constants.EXTRA_TYPE,
-						Constants.TYPE_STATUSES_HOME_TIMELINE);
-				int count = resultData.getInt(Constants.EXTRA_COUNT);
+				int count = bundle.getInt(Constants.EXTRA_COUNT);
 				if (doGetMore) {
 					if (i < NUMS_OF_PAGE - 1) {
 						views[i].onLoadMoreComplete();
@@ -764,9 +764,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				}
 				break;
 			case Constants.RESULT_ERROR:
-				String errorMessage = resultData
+				String errorMessage = bundle
 						.getString(Constants.EXTRA_ERROR);
-				int errorCode = resultData.getInt(Constants.EXTRA_CODE);
+				int errorCode = bundle.getInt(Constants.EXTRA_CODE);
 				if (doGetMore) {
 					views[i].onLoadMoreComplete();
 				} else {
