@@ -58,6 +58,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.4 2011.11.21
  * @version 4.5 2011.12.05
  * @version 4.6 2011.12.13
+ * @version 4.7 2011.12.26
  * 
  */
 public class WritePage extends BaseActivity {
@@ -94,6 +95,7 @@ public class WritePage extends BaseActivity {
 	private String mLocationString;
 
 	private LocationManager mLocationManager;
+	private String mLocationProvider;
 	private LocationMonitor mLocationMonitor;
 
 	private boolean enableLocation;
@@ -122,6 +124,13 @@ public class WritePage extends BaseActivity {
 		mLocationManager = (LocationManager) this
 				.getSystemService(Context.LOCATION_SERVICE);
 		mLocationMonitor = new LocationMonitor();
+		for (String provider : mLocationManager.getProviders(true)) {
+			if (LocationManager.NETWORK_PROVIDER.equals(provider)
+					|| LocationManager.GPS_PROVIDER.equals(provider)) {
+				mLocationProvider = provider;
+				break;
+			}
+		}
 
 		if (mDisplayMetrics.heightPixels < 600) {
 			getWindow().setSoftInputMode(
@@ -391,18 +400,18 @@ public class WritePage extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (enableLocation) {
-			mLocationManager.requestLocationUpdates(
-					LocationManager.NETWORK_PROVIDER, 0, 0, mLocationMonitor);
+		if (enableLocation && mLocationProvider != null) {
+			mLocationManager.requestLocationUpdates(mLocationProvider, 0, 0,
+					mLocationMonitor);
 		}
 	}
 
 	@Override
 	protected void onPause() {
+		super.onPause();
 		if (enableLocation) {
 			mLocationManager.removeUpdates(mLocationMonitor);
 		}
-		super.onPause();
 	}
 
 	@Override
@@ -503,7 +512,7 @@ public class WritePage extends BaseActivity {
 
 	private void switchLocation() {
 		enableLocation = !enableLocation;
-		OptionHelper.saveBoolean(mContext,R.string.option_location_enable,
+		OptionHelper.saveBoolean(mContext, R.string.option_location_enable,
 				enableLocation);
 		if (App.DEBUG)
 			log("location enable status=" + enableLocation);
