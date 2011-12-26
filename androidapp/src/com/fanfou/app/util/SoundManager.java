@@ -14,6 +14,7 @@ import com.fanfou.app.R;
  * @author mcxiaoke
  * @version 1.0 2011.11.16
  * @version 1.1 2011.12.09
+ * @version 1.2 2011.12.26
  * @see http
  *      ://www.droidnova.com/creating-sound-effects-in-android-part-2,695.html
  * 
@@ -114,9 +115,6 @@ public final class SoundManager {
 		mSoundPool.release();
 		mSoundPool = null;
 		mSoundPoolMap.clear();
-		mAudioManager.unloadSoundEffects();
 		_instance = null;
-
 	}
-
 }

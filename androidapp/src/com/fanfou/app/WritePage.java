@@ -518,8 +518,10 @@ public class WritePage extends BaseActivity {
 			log("location enable status=" + enableLocation);
 		if (enableLocation) {
 			iLocationIcon.setImageResource(R.drawable.ic_bar_geoon);
-			mLocationManager.requestLocationUpdates(
-					LocationManager.NETWORK_PROVIDER, 0, 0, mLocationMonitor);
+			if(mLocationProvider!=null){
+				mLocationManager.requestLocationUpdates(
+						mLocationProvider, 0, 0, mLocationMonitor);
+			}
 		} else {
 			iLocationIcon.setImageResource(R.drawable.ic_bar_geooff);
 			mLocationManager.removeUpdates(mLocationMonitor);
