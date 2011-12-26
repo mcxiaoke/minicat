@@ -66,7 +66,6 @@ public class App extends Application {
 	private static String sUserScreenName;
 
 	private static App sInstance;
-	private static Api sApi;
 
 	private static SharedPreferences sPreferences;
 	private static OAuthToken sToken;
@@ -82,7 +81,6 @@ public class App extends Application {
 		initPreferences();
 		versionCheck();
 		ACRA.init(this);
-		sApi = FanFouApi.newInstance();
 	}
 
 	private void init() {
@@ -192,20 +190,14 @@ public class App extends Application {
 		OptionHelper.removeAccountInfo(context);
 	}
 
-	public static void setOAuthToken(final OAuthToken otoken) {
+	public synchronized static void setOAuthToken(final OAuthToken otoken) {
 		if (otoken == null) {
 			verified = false;
 			sToken = null;
-			((FanFouApi) App.sApi).setOAuthToken(null);
 		} else {
 			verified = true;
 			sToken = otoken;
-			((FanFouApi) App.sApi).setOAuthToken(sToken);
 		}
-	}
-
-	public static Api getApi() {
-		return sApi;
 	}
 
 	public static App getApp() {

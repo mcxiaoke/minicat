@@ -13,6 +13,7 @@ import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.User;
 import com.fanfou.app.db.Contents.UserInfo;
@@ -111,7 +112,7 @@ public class AutoCompleteService extends WakefulIntentService {
 		if (App.noConnection) {
 			return;
 		}
-		Api api = App.getApi();
+		Api api =FanFouApi.newInstance();
 		int page = 1;
 		boolean more = true;
 		while (more) {

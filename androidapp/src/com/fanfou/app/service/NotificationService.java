@@ -18,6 +18,7 @@ import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.db.Contents.BasicColumns;
@@ -126,7 +127,7 @@ public class NotificationService extends WakefulIntentService {
 			return;
 		}
 
-		mApi = App.getApi();
+		mApi = FanFouApi.newInstance();
 
 		boolean dm = OptionHelper.readBoolean(this,R.string.option_notification_dm,
 				false);

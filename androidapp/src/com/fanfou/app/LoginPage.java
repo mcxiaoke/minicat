@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.ResultInfo;
 import com.fanfou.app.api.User;
 import com.fanfou.app.auth.FanFouOAuthProvider;
@@ -297,7 +298,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 				if (token != null) {
 					publishProgress(1);
 					App.setOAuthToken(token);
-					User u = App.getApi().verifyAccount(Constants.MODE);
+					User u = FanFouApi.newInstance().verifyAccount(Constants.MODE);
 
 					if (isCancelled) {
 						if (App.DEBUG) {

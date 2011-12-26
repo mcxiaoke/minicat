@@ -97,6 +97,7 @@ import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
@@ -132,6 +133,7 @@ import com.fanfou.app.util.Utils;
  * @version 6.0 2011.12.16
  * @version 6.1 2011.12.19
  * @version 7.0 2011.12.23
+ * @version 7.1 2011.12.26
  * 
  */
 public class FanFouService extends WakefulIntentService {
@@ -139,6 +141,7 @@ public class FanFouService extends WakefulIntentService {
 
 	private int type;
 	private Messenger messenger;
+	private Api api;
 
 	public FanFouService() {
 		super("FetchService");
@@ -153,9 +156,9 @@ public class FanFouService extends WakefulIntentService {
 		if (intent == null) {
 			return;
 		}
-		
 		messenger = intent.getParcelableExtra(EXTRA_MESSENGER);
 		type = intent.getIntExtra(EXTRA_TYPE, -1);
+		api = FanFouApi.newInstance();
 
 		if (App.DEBUG) {
 			log("onHandleIntent() type=" + type);
@@ -332,7 +335,7 @@ public class FanFouService extends WakefulIntentService {
 			// 删除消息
 			// 404 说明消息不存在
 			// 403 说明不是你的消息，无权限删除
-			DirectMessage dm = App.getApi().directMessagesDelete(id, MODE);
+			DirectMessage dm = api.directMessagesDelete(id, MODE);
 			if (dm == null || dm.isNull()) {
 				sendSuccessMessage();
 			} else {
@@ -354,7 +357,7 @@ public class FanFouService extends WakefulIntentService {
 		String where = BasicColumns.ID + "=?";
 		String[] whereArgs = new String[] { id };
 		try {
-			User u = App.getApi().blocksCreate(id, MODE);
+			User u = api.blocksCreate(id, MODE);
 			if (u == null || u.isNull()) {
 				sendSuccessMessage();
 			} else {
@@ -373,7 +376,7 @@ public class FanFouService extends WakefulIntentService {
 	private void blocksDelete(Intent intent) {
 		String id = intent.getStringExtra(EXTRA_ID);
 		try {
-			User u = App.getApi().blocksDelete(id, MODE);
+			User u = api.blocksDelete(id, MODE);
 			if (u == null || u.isNull()) {
 				sendSuccessMessage();
 			} else {
@@ -419,7 +422,7 @@ public class FanFouService extends WakefulIntentService {
 	private void friendshipsCreate(Intent intent) {
 		String id = intent.getStringExtra(EXTRA_ID);
 		try {
-			User u = App.getApi().friendshipsCreate(id, MODE);
+			User u = api.friendshipsCreate(id, MODE);
 			if (u == null || u.isNull()) {
 				sendSuccessMessage();
 			} else {
@@ -439,7 +442,7 @@ public class FanFouService extends WakefulIntentService {
 	private void friendshipsDelete(Intent intent) {
 		String id = intent.getStringExtra(EXTRA_ID);
 		try {
-			User u = App.getApi().friendshipsDelete(id, MODE);
+			User u = api.friendshipsDelete(id, MODE);
 			if (u == null || u.isNull()) {
 				sendSuccessMessage();
 			} else {
@@ -463,7 +466,7 @@ public class FanFouService extends WakefulIntentService {
 	private void userShow(Intent intent) {
 		String id = intent.getStringExtra(EXTRA_ID);
 		try {
-			User u = App.getApi().userShow(id, MODE);
+			User u = api.userShow(id, MODE);
 			if (u == null || u.isNull()) {
 				sendSuccessMessage();
 			} else {
@@ -580,7 +583,7 @@ public class FanFouService extends WakefulIntentService {
 		String where = BasicColumns.ID + "=?";
 		String[] whereArgs = new String[] { id };
 		try {
-			Status s = App.getApi().favoritesCreate(id, FORMAT, MODE);
+			Status s = api.favoritesCreate(id, FORMAT, MODE);
 			if (s == null || s.isNull()) {
 				sendSuccessMessage();
 			} else {
@@ -620,7 +623,7 @@ public class FanFouService extends WakefulIntentService {
 		String where = BasicColumns.ID + "=?";
 		String[] whereArgs = new String[] { id };
 		try {
-			Status s = App.getApi().favoritesDelete(id, FORMAT, MODE);
+			Status s = api.favoritesDelete(id, FORMAT, MODE);
 			if (s == null || s.isNull()) {
 				sendSuccessMessage();
 			} else {
@@ -666,7 +669,7 @@ public class FanFouService extends WakefulIntentService {
 			}
 			throw new NullPointerException("statusid cannot be null.");
 		}
-		final Handler handler=new Handler(){
+		final Handler handler = new Handler() {
 
 			@Override
 			public void handleMessage(Message msg) {
@@ -679,14 +682,16 @@ public class FanFouService extends WakefulIntentService {
 					}
 					break;
 				case Constants.RESULT_ERROR:
-					String errorMessage = msg.getData().getString(Constants.EXTRA_ERROR);
+					String errorMessage = msg.getData().getString(
+							Constants.EXTRA_ERROR);
 					Utils.notify(activity.getApplicationContext(), errorMessage);
 					onFailed(li, Constants.TYPE_STATUSES_DESTROY, "删除失败");
 					break;
 				default:
 					break;
 				}
-			}};
+			}
+		};
 		FanFouService.doStatusesDelete(activity, id, handler);
 	}
 
@@ -702,7 +707,7 @@ public class FanFouService extends WakefulIntentService {
 	private void statusesDestroy(Intent intent) {
 		String id = intent.getStringExtra(EXTRA_ID);
 		try {
-			Status s = App.getApi().statusesDelete(id, FORMAT, MODE);
+			Status s = api.statusesDelete(id, FORMAT, MODE);
 			if (s == null || s.isNull()) {
 				sendSuccessMessage();
 			} else {
@@ -735,7 +740,7 @@ public class FanFouService extends WakefulIntentService {
 	private void statusesShow(Intent intent) {
 		String id = intent.getStringExtra(EXTRA_ID);
 		try {
-			Status s = App.getApi().statusesShow(id, FORMAT, MODE);
+			Status s = api.statusesShow(id, FORMAT, MODE);
 			if (s == null || s.isNull()) {
 				sendSuccessMessage();
 			} else {
@@ -771,7 +776,6 @@ public class FanFouService extends WakefulIntentService {
 	private void friendshipsExists(Intent intent) {
 		String userA = intent.getStringExtra("user_a");
 		String userB = intent.getStringExtra("user_b");
-		Api api = App.getApi();
 		boolean result = false;
 		try {
 			result = api.friendshipsExists(userA, userB);
@@ -798,8 +802,6 @@ public class FanFouService extends WakefulIntentService {
 		} else {
 			count = DEFAULT_USERS_COUNT;
 		}
-
-		Api api = App.getApi();
 		try {
 			List<User> users = null;
 			if (type == TYPE_USERS_FRIENDS) {
@@ -923,7 +925,6 @@ public class FanFouService extends WakefulIntentService {
 
 	private int fetchDirectMessagesInbox(int count, boolean doGetMore)
 			throws ApiException {
-		Api api = App.getApi();
 		Cursor ic = initInboxMessagesCursor();
 		List<DirectMessage> messages = null;
 		if (doGetMore) {
@@ -953,7 +954,6 @@ public class FanFouService extends WakefulIntentService {
 
 	private int fetchDirectMessagesOutbox(int count, boolean doGetMore)
 			throws ApiException {
-		Api api = App.getApi();
 		Cursor ic = initOutboxMessagesCursor();
 		List<DirectMessage> messages = null;
 		if (doGetMore) {
@@ -982,7 +982,6 @@ public class FanFouService extends WakefulIntentService {
 	}
 
 	private int fetchNewDirectMessages(int count) throws ApiException {
-		Api api = App.getApi();
 		Cursor ic = initInboxMessagesCursor();
 		Cursor oc = initOutboxMessagesCursor();
 		try {
@@ -1021,7 +1020,6 @@ public class FanFouService extends WakefulIntentService {
 	}
 
 	private int fetchOldDirectMessages(int count) throws ApiException {
-		Api api = App.getApi();
 		Cursor ic = initInboxMessagesCursor();
 		Cursor oc = initOutboxMessagesCursor();
 		try {
@@ -1079,7 +1077,6 @@ public class FanFouService extends WakefulIntentService {
 		if (App.DEBUG) {
 			Log.d(TAG, "fetchTimeline");
 		}
-		Api api = App.getApi();
 		List<Status> statuses = null;
 
 		int page = intent.getIntExtra(EXTRA_PAGE, 0);

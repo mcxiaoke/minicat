@@ -52,30 +52,21 @@ import com.fanfou.app.util.StringHelper;
  * @version 6.0 2011.12.16
  * @version 6.1 2011.12.20
  * @version 6.2 2011.12.23
+ * @version 6.3 2011.12.26
  * 
  */
 public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	private static final String TAG = FanFouApi.class.getSimpleName();
-	private OAuthService mOAuthService;
 
-	/**
-	 * @param message
-	 */
 	private void log(String message) {
 		Log.d(TAG, message);
 	}
 
 	private FanFouApi() {
-		mOAuthService = new OAuthService(new FanFouOAuthProvider());
-		mOAuthService.setOAuthToken(App.getOAuthToken());
 	}
 
 	public static FanFouApi newInstance() {
 		return new FanFouApi();
-	}
-
-	public void setOAuthToken(OAuthToken token) {
-		mOAuthService.setOAuthToken(token);
 	}
 
 	/**
@@ -86,7 +77,10 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	 * @throws ApiException
 	 */
 	private NetResponse fetch(final NetRequest request) throws ApiException {
-		OAuthClient client = new OAuthClient(mOAuthService,request);
+		final FanFouOAuthProvider provider=new FanFouOAuthProvider();
+		final OAuthToken token=App.getOAuthToken();
+		final OAuthService service=new OAuthService(provider,token);
+		final OAuthClient client = new OAuthClient(service,request);
 		try {
 			HttpResponse response = client.exec();
 			NetResponse res = new NetResponse(response);
@@ -103,7 +97,7 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 				throw new ApiException(statusCode, Parser.error(res
 						.getContent()));
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			if (App.DEBUG) {
 				Log.e(TAG, e.toString());
 			}

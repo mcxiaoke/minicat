@@ -18,7 +18,9 @@ import android.widget.ListView;
 
 import com.fanfou.app.App.ApnType;
 import com.fanfou.app.adapter.SearchResultsAdapter;
+import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.service.Constants;
 import com.fanfou.app.ui.ActionBar;
@@ -50,6 +52,8 @@ public class SearchResultsPage extends BaseActivity implements
 
 	protected String keyword;
 	protected String maxId;
+	
+	private Api api;
 
 	private boolean showListView = false;
 
@@ -75,6 +79,7 @@ public class SearchResultsPage extends BaseActivity implements
 
 	protected void initialize() {
 		mStatuses = new ArrayList<Status>();
+		api=FanFouApi.newInstance();
 	}
 
 	private void setLayout() {
@@ -242,7 +247,7 @@ public class SearchResultsPage extends BaseActivity implements
 				count = Constants.MAX_TIMELINE_COUNT;
 			}
 			try {
-				result = App.getApi().search(keyword, null, maxId, count,
+				result = api.search(keyword, null, maxId, count,
 						Constants.FORMAT, Constants.MODE);
 			} catch (ApiException e) {
 				if (App.DEBUG)

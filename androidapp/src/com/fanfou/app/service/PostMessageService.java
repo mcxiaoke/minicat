@@ -13,6 +13,7 @@ import com.fanfou.app.R;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.DirectMessage;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.util.IOHelper;
 
 /**
@@ -69,7 +70,7 @@ public class PostMessageService extends WakefulIntentService {
 	private boolean doSend() {
 		showSendingNotification();
 		boolean res = true;
-		Api api = App.getApi();
+		Api api = FanFouApi.newInstance();
 		try {
 			DirectMessage result = api.directMessagesCreate(userId, content,
 					null, Constants.MODE);

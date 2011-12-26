@@ -49,82 +49,17 @@ import com.fanfou.app.App;
  * @version 2.0 2011.09.23
  * @version 3.0 2011.10.29
  * @version 3.1 2011.11.08
+ * @version 3.2 2011.12.26
  * 
  */
 final public class ImageHelper {
 	private static final String TAG = ImageHelper.class.getSimpleName();
-	public static final int IMAGE_QUALITY_HIGH = 95;
+	public static final int IMAGE_QUALITY_HIGH = 90;
 	public static final int IMAGE_QUALITY_MEDIUM = 80;
 	public static final int IMAGE_QUALITY_LOW = 70;
-	public static final int IMAGE_MAX_WIDTH = 500;// 640 596
-	public static final int IMAGE_MAX_HEIGHT = 1192;// 1320 1192
-	public static final int PROFILE_IMAGE_WIDTH = 100;
-	public static final int IMAGE_ORIGINAL_WIDTH = 800;
-	public static final int IMAGE_ORIGINAL_HEIGHT = 1600;
-
+	public static final int IMAGE_MAX_WIDTH = 596;// 640 596
+//	public static final int IMAGE_MAX_HEIGHT = 1200;// 1320 1192
 	public static final int OUTPUT_BUFFER_SIZE = 8196;
-
-	private static final float EDGE_START = 0.0f;
-	private static final float EDGE_END = 4.0f;
-	private static final int EDGE_COLOR_START = 0x7F000000;
-	private static final int EDGE_COLOR_END = 0x00000000;
-	private static final Paint EDGE_PAINT = new Paint();
-
-	private static final int END_EDGE_COLOR_START = 0x00000000;
-	private static final int END_EDGE_COLOR_END = 0x4F000000;
-	private static final Paint END_EDGE_PAINT = new Paint();
-
-	private static final float FOLD_START = 5.0f;
-	private static final float FOLD_END = 13.0f;
-	private static final int FOLD_COLOR_START = 0x00000000;
-	private static final int FOLD_COLOR_END = 0x26000000;
-	private static final Paint FOLD_PAINT = new Paint();
-
-	private static final float SHADOW_RADIUS = 12.0f;
-	private static final int SHADOW_COLOR = 0x99000000;
-	private static final Paint SHADOW_PAINT = new Paint();
-
-	private static final float PHOTO_BORDER_WIDTH = 4.0f;
-	private static final int PHOTO_BORDER_COLOR = 0xffffffff;
-
-	private static final float ROTATION_ANGLE_MIN = 2.5f;
-	private static final float ROTATION_ANGLE_EXTRA = 5.5f;
-
-	private static final Random sRandom = new Random();
-	private static final Paint sPaint = new Paint(Paint.ANTI_ALIAS_FLAG
-			| Paint.FILTER_BITMAP_FLAG);
-	private static final Paint sStrokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
-	static {
-
-		sStrokePaint.setStrokeWidth(PHOTO_BORDER_WIDTH);
-		sStrokePaint.setStyle(Paint.Style.STROKE);
-		sStrokePaint.setColor(PHOTO_BORDER_COLOR);
-
-		Shader shader = new LinearGradient(EDGE_START, 0.0f, EDGE_END, 0.0f,
-				EDGE_COLOR_START, EDGE_COLOR_END, Shader.TileMode.CLAMP);
-		EDGE_PAINT.setShader(shader);
-
-		shader = new LinearGradient(EDGE_START, 0.0f, EDGE_END, 0.0f,
-				END_EDGE_COLOR_START, END_EDGE_COLOR_END, Shader.TileMode.CLAMP);
-		END_EDGE_PAINT.setShader(shader);
-
-		shader = new LinearGradient(
-				FOLD_START,
-				0.0f,
-				FOLD_END,
-				0.0f,
-				new int[] { FOLD_COLOR_START, FOLD_COLOR_END, FOLD_COLOR_START },
-				new float[] { 0.0f, 0.5f, 1.0f }, Shader.TileMode.CLAMP);
-		FOLD_PAINT.setShader(shader);
-
-		SHADOW_PAINT.setShadowLayer(SHADOW_RADIUS / 2.0f, 0.0f, 0.0f,
-				SHADOW_COLOR);
-		SHADOW_PAINT.setAntiAlias(true);
-		SHADOW_PAINT.setFilterBitmap(true);
-		SHADOW_PAINT.setColor(0xFF000000);
-		SHADOW_PAINT.setStyle(Paint.Style.FILL);
-	}
 
 	/**
 	 * 
@@ -509,8 +444,8 @@ final public class ImageHelper {
 	public static File prepareProfileImage(Context context, File file) {
 		File destFile = new File(IOHelper.getImageCacheDir(context),
 				"fanfouprofileimage.jpg");
-		return compressForUpload(file.getPath(), destFile.getPath(),
-				PROFILE_IMAGE_WIDTH, IMAGE_QUALITY_MEDIUM);
+		return compressForUpload(file.getPath(), destFile.getPath(), 100,
+				IMAGE_QUALITY_MEDIUM);
 	}
 
 	private static File compressForUpload(String srcFileName,
@@ -520,12 +455,11 @@ final public class ImageHelper {
 			return null;
 		}
 		if (App.DEBUG) {
-			Log.d(TAG, "compressForUpload bitmap.width=" + bitmap.getWidth()
-					+ " height=" + bitmap.getHeight());
+			Log.d(TAG, "compressForUpload bitmap=(" + bitmap.getWidth() + ","
+					+ bitmap.getHeight() + ")");
 		}
-		OutputStream os = null;
+		FileOutputStream fos = null;
 		try {
-			os = new FileOutputStream(destFileName);
 			Bitmap.CompressFormat format = CompressFormat.JPEG;
 			if (srcFileName.toLowerCase().lastIndexOf("png") > -1) {
 				format = CompressFormat.PNG;
@@ -535,7 +469,8 @@ final public class ImageHelper {
 			} else if (quality < IMAGE_QUALITY_LOW) {
 				quality = IMAGE_QUALITY_LOW;
 			}
-			bitmap.compress(format, quality, os);
+			fos = new FileOutputStream(destFileName);
+			bitmap.compress(format, quality, fos);
 			return new File(destFileName);
 		} catch (FileNotFoundException e) {
 			if (App.DEBUG) {
@@ -543,44 +478,44 @@ final public class ImageHelper {
 			}
 			return null;
 		} finally {
-			IOHelper.forceClose(os);
+			IOHelper.forceClose(fos);
 		}
 	}
 
 	public static Bitmap compressImage(String path, int maxDim) {
-
-		BitmapFactory.Options bfo = new BitmapFactory.Options();
-		bfo.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(path, bfo);
-		int w = bfo.outWidth;
-		BitmapFactory.Options optsDownSample = new BitmapFactory.Options();
-		int sampleSize = 1;
-		while (w / sampleSize > maxDim) {
-			sampleSize += 1;
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(path, options);
+		int inSampleSize = 1;
+		for (int w = options.outWidth; w > maxDim * 2; w /= 2) {
+			inSampleSize += 1;
 		}
-		optsDownSample.inSampleSize = sampleSize;
-		Bitmap bitmap = BitmapFactory.decodeFile(path, optsDownSample);
+		if (App.DEBUG) {
+			Log.d(TAG, "compressImage original=(" + options.outWidth + ","
+					+ options.outHeight + ")");
+			Log.d(TAG, "compressImage inSampleSize=" + inSampleSize);
+		}
+		options.inSampleSize = inSampleSize;
+		options.inJustDecodeBounds = false;
+		Bitmap bitmap = BitmapFactory.decodeFile(path, options);
 		if (bitmap != null) {
 			int bw = bitmap.getWidth();
 			int bh = bitmap.getHeight();
 			Matrix m = new Matrix();
 			if (bw > maxDim || bh > maxDim) {
-				float scale = 1.0f;
-				float s1 = (float) bw / (float) maxDim;
-				float s2 = (float) bh / (float) maxDim;
-				if (s1 > s2) {
-					scale = s1;
-				} else {
-					scale = s2;
-				}
+				float scale = (float) maxDim / (float) bw;
 				m.postScale(scale, scale);
-			}
-			int sdk = new Integer(Build.VERSION.SDK).intValue();
-			if (sdk > 4) {
-				int rotation = getExifOrientation(path);
-				if (rotation != 0) {
-					m.postRotate(rotation);
+				if (App.DEBUG) {
+					Log.d(TAG, "compressImage matrix scale=" + scale);
 				}
+			}
+			int rotation = getExifOrientation(path);
+			if (getExifOrientation(path) != 0) {
+				m.postRotate(rotation);
+			}
+			if (App.DEBUG) {
+				Log.d(TAG, "compressImage matrix rotation=" + rotation);
+				Log.d(TAG, "compressImage bitmap=(" + bw + "," + bh + ")");
 			}
 			return Bitmap.createBitmap(bitmap, 0, 0, bw, bh, m, true);
 		}
@@ -724,54 +659,6 @@ final public class ImageHelper {
 		canvas.drawBitmap(bitmap, rect, rect, paint);
 
 		return output;
-	}
-
-	/**
-	 * Rotate specified Bitmap by a random angle. The angle is either negative
-	 * or positive, and ranges, in degrees, from 2.5 to 8. After rotation a
-	 * frame is overlaid on top of the rotated image.
-	 * 
-	 * This method is not thread safe.
-	 * 
-	 * @param bitmap
-	 *            The Bitmap to rotate and apply a frame onto.
-	 * 
-	 * @return A new Bitmap whose dimension are different from the original
-	 *         bitmap.
-	 */
-	public static Bitmap rotateAndFrame(Bitmap bitmap) {
-		final boolean positive = sRandom.nextFloat() >= 0.5f;
-		final float angle = (ROTATION_ANGLE_MIN + sRandom.nextFloat()
-				* ROTATION_ANGLE_EXTRA)
-				* (positive ? 1.0f : -1.0f);
-		final double radAngle = Math.toRadians(angle);
-
-		final int bitmapWidth = bitmap.getWidth();
-		final int bitmapHeight = bitmap.getHeight();
-
-		final double cosAngle = Math.abs(Math.cos(radAngle));
-		final double sinAngle = Math.abs(Math.sin(radAngle));
-
-		final int strokedWidth = (int) (bitmapWidth + 2 * PHOTO_BORDER_WIDTH);
-		final int strokedHeight = (int) (bitmapHeight + 2 * PHOTO_BORDER_WIDTH);
-
-		final int width = (int) (strokedHeight * sinAngle + strokedWidth
-				* cosAngle);
-		final int height = (int) (strokedWidth * sinAngle + strokedHeight
-				* cosAngle);
-
-		final float x = (width - bitmapWidth) / 2.0f;
-		final float y = (height - bitmapHeight) / 2.0f;
-
-		final Bitmap decored = Bitmap.createBitmap(width, height,
-				Bitmap.Config.ARGB_8888);
-		final Canvas canvas = new Canvas(decored);
-
-		canvas.rotate(angle, width / 2.0f, height / 2.0f);
-		canvas.drawBitmap(bitmap, x, y, sPaint);
-		canvas.drawRect(x, y, x + bitmapWidth, y + bitmapHeight, sStrokePaint);
-
-		return decored;
 	}
 
 	public static Bitmap loadFromUri(Context context, String uri, int maxW,

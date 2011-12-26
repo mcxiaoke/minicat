@@ -18,6 +18,7 @@ import com.fanfou.app.WritePage;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Draft;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.util.ImageHelper;
@@ -34,6 +35,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 3.1 2011.11.28
  * @version 3.2 2011.12.05
  * @version 3.3 2011.12.13
+ * @version 3.4 2011.12.26
  * 
  */
 public class PostStatusService extends WakefulIntentService {
@@ -86,18 +88,16 @@ public class PostStatusService extends WakefulIntentService {
 	private boolean doSend() {
 		showSendingNotification();
 		boolean res = false;
-		Api api = App.getApi();
+		Api api = FanFouApi.newInstance();
 		try {
 			Status result = null;
 			if (srcFile == null || !srcFile.exists()) {
 				if (type == WritePage.TYPE_REPLY) {
 					result = api.statusesCreate(text, relationId, null,
-							location, null, Constants.FORMAT,
-							Constants.MODE);
+							location, null, Constants.FORMAT, Constants.MODE);
 				} else {
 					result = api.statusesCreate(text, null, null, location,
-							relationId, Constants.FORMAT,
-							Constants.MODE);
+							relationId, Constants.FORMAT, Constants.MODE);
 				}
 			} else {
 				int quality;
@@ -114,7 +114,7 @@ public class PostStatusService extends WakefulIntentService {
 				if (photo != null && photo.length() > 0) {
 					if (App.DEBUG)
 						log("photo file=" + srcFile.getName() + " size="
-								+ photo.length() / 1024 + " quality=" + quality);
+								+ photo.length() / 1024 + " quality=" + quality+" apnType="+apnType);
 					result = api.photosUpload(photo, text, null, location,
 							Constants.FORMAT, Constants.MODE);
 					photo.delete();

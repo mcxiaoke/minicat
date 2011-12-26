@@ -16,6 +16,7 @@ import com.fanfou.app.WritePage;
 import com.fanfou.app.api.Api;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.api.Draft;
+import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.db.Contents.DraftInfo;
 import com.fanfou.app.util.ImageHelper;
@@ -30,6 +31,7 @@ import com.fanfou.app.util.ImageHelper;
  * @version 3.2 2011.11.28
  * @version 3.3 2011.12.05
  * @version 3.4 2011.12.13
+ * @version 3.4 2011.12.26
  * 
  */
 public class QueueService extends WakefulIntentService {
@@ -53,7 +55,7 @@ public class QueueService extends WakefulIntentService {
 	private boolean doSend(final Draft d) {
 		boolean res = false;
 		try {
-			Api api = App.getApi();
+			Api api = FanFouApi.newInstance();
 			Status result = null;
 			File srcFile = new File(d.filePath);
 			if (srcFile == null || !srcFile.exists()) {
@@ -81,7 +83,7 @@ public class QueueService extends WakefulIntentService {
 				if (photo != null && photo.length() > 0) {
 					if (App.DEBUG)
 						log("photo file=" + srcFile.getName() + " size="
-								+ photo.length() / 1024 + " quality=" + quality);
+								+ photo.length() / 1024 + " quality=" + quality+" apnType="+apnType);
 					result = api.photosUpload(photo, d.text, null, null,
 							Constants.FORMAT, Constants.MODE);
 					photo.delete();
