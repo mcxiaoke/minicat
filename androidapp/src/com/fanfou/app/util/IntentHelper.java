@@ -26,7 +26,7 @@ public final class IntentHelper {
 
 	public static void goLoginPage(Context context) {
 		AlarmHelper.unsetScheduledTasks(context);
-		App.removeAccountInfo();
+		App.removeAccountInfo(context);
 		App.getImageLoader().clearQueue();
 		Intent intent = new Intent(context, LoginPage.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

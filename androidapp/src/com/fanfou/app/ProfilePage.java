@@ -248,7 +248,7 @@ public class ProfilePage extends BaseActivity {
 		if (App.DEBUG)
 			log("updateUI user.name=" + user.screenName);
 
-		boolean textMode = OptionHelper.readBoolean(R.string.option_text_mode,
+		boolean textMode = OptionHelper.readBoolean(mContext,R.string.option_text_mode,
 				false);
 		if (textMode) {
 			mHead.setVisibility(View.GONE);

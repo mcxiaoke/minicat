@@ -70,10 +70,10 @@ public class StatusArrayAdapter extends BaseArrayAdapter<Status> {
 	private void init(Context context, boolean colored) {
 		this.colored = colored;
 		if (colored) {
-			mMentionedBgColor = OptionHelper.readInt(
+			mMentionedBgColor = OptionHelper.readInt(mContext,
 					R.string.option_color_highlight_mention, context
 							.getResources().getColor(R.color.mentioned_color));
-			mSelfBgColor = OptionHelper.readInt(
+			mSelfBgColor = OptionHelper.readInt(mContext,
 					R.string.option_color_highlight_self, context
 							.getResources().getColor(R.color.self_color));
 			if (App.DEBUG) {

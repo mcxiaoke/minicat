@@ -42,6 +42,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.6 2011.12.09
  * @version 2.7 2011.12.19
  * @version 2.8 2011.12.23
+ * @version 2.9 2011.12.26
  * 
  */
 public class NotificationService extends WakefulIntentService {
@@ -69,12 +70,12 @@ public class NotificationService extends WakefulIntentService {
 	}
 
 	public static void set(Context context) {
-		boolean need = OptionHelper.readBoolean(R.string.option_notification,
+		boolean need = OptionHelper.readBoolean(context,R.string.option_notification,
 				true);
 		if (!need) {
 			return;
 		}
-		int interval = OptionHelper.parseInt(
+		int interval = OptionHelper.parseInt(context,
 				R.string.option_notification_interval, "5");
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MINUTE, interval);
@@ -99,13 +100,13 @@ public class NotificationService extends WakefulIntentService {
 	}
 
 	public static void setIfNot(Context context) {
-		boolean set = OptionHelper.readBoolean(
+		boolean set = OptionHelper.readBoolean(context,
 				R.string.option_set_notification, false);
 		if (App.DEBUG) {
 			Log.d(TAG, "setIfNot flag=" + set);
 		}
 		if (!set) {
-			OptionHelper.saveBoolean(R.string.option_set_notification, true);
+			OptionHelper.saveBoolean(context,R.string.option_set_notification, true);
 			set(context);
 		}
 	}
@@ -119,7 +120,7 @@ public class NotificationService extends WakefulIntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		boolean need = OptionHelper.readBoolean(R.string.option_notification,
+		boolean need = OptionHelper.readBoolean(this,R.string.option_notification,
 				false);
 		if (!need) {
 			return;
@@ -127,11 +128,11 @@ public class NotificationService extends WakefulIntentService {
 
 		mApi = App.getApi();
 
-		boolean dm = OptionHelper.readBoolean(R.string.option_notification_dm,
+		boolean dm = OptionHelper.readBoolean(this,R.string.option_notification_dm,
 				false);
-		boolean mention = OptionHelper.readBoolean(
+		boolean mention = OptionHelper.readBoolean(this,
 				R.string.option_notification_mention, false);
-		boolean home = OptionHelper.readBoolean(
+		boolean home = OptionHelper.readBoolean(this,
 				R.string.option_notification_home, false);
 
 		int count = DEFAULT_COUNT;

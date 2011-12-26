@@ -186,7 +186,7 @@ public final class ActionManager {
 				Log.d(TAG, "doReply: status is null.");
 			}
 			StringBuilder sb = new StringBuilder();
-			boolean replyToAll = OptionHelper.readBoolean(
+			boolean replyToAll = OptionHelper.readBoolean(context,
 					R.string.option_reply_to_all_default, true);
 			if (replyToAll) {
 				ArrayList<String> names = StatusHelper.getMentions(status);

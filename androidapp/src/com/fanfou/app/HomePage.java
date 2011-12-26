@@ -79,7 +79,8 @@ import com.fanfou.app.util.Utils;
  * @version 5.2 2011.12.09
  * @version 5.3 2011.12.13
  * @version 6.0 2011.12.19
- * @version 3.1 2011.12.23
+ * @version 6.1 2011.12.23
+ * @version 6.2 2011.12.26
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
@@ -145,9 +146,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	private void init() {
 		initPage = getIntent().getIntExtra(Constants.EXTRA_PAGE, 0);
-		endlessScroll = OptionHelper.readBoolean(
+		endlessScroll = OptionHelper.readBoolean(this,
 				R.string.option_page_scroll_endless, false);
-		soundEffect = OptionHelper.readBoolean(
+		soundEffect = OptionHelper.readBoolean(this,
 				R.string.option_play_sound_effect, true);
 		ImageLoader.getInstance();
 		initSoundManager();
@@ -280,9 +281,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		onRight.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		onRight.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
-		String writePostion = OptionHelper.readString(
+		String writePostion = OptionHelper.readString(this,
 				R.string.option_bottom_write_icon, "none");
-		String refreshPostion = OptionHelper.readString(
+		String refreshPostion = OptionHelper.readString(this,
 				R.string.option_bottom_refresh_icon, "right");
 
 		if (writePostion.equals(refreshPostion)
@@ -367,7 +368,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	private void checkRefresh() {
-		boolean refresh = OptionHelper.readBoolean(
+		boolean refresh = OptionHelper.readBoolean(this,
 				R.string.option_refresh_on_open, false);
 		if (refresh || (cursors[0].getCount() == 0 && mCurrentPage == 0)) {
 			onRefreshClick();
@@ -458,7 +459,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			}
 
 			if (mCurrentPage == 0) {
-				boolean needRefresh = OptionHelper.readBoolean(
+				boolean needRefresh = OptionHelper.readBoolean(this,
 						R.string.option_refresh_after_send, false);
 				if (needRefresh) {
 					onRefreshClick();
@@ -471,7 +472,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			}
 
 			if (mCurrentPage == 0) {
-				boolean needRefresh = OptionHelper.readBoolean(
+				boolean needRefresh = OptionHelper.readBoolean(this,
 						R.string.option_refresh_after_send, false);
 				if (needRefresh) {
 					onRefreshClick();
@@ -591,7 +592,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	@Override
 	public void onBackPressed() {
-		boolean needConfirm = OptionHelper.readBoolean(R.string.option_confirm_on_exit, false);
+		boolean needConfirm = OptionHelper.readBoolean(this,R.string.option_confirm_on_exit, false);
 		if (needConfirm) {
 			final ConfirmDialog dialog = new ConfirmDialog(this, "提示",
 					"确认退出饭否吗？");

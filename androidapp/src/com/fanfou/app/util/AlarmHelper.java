@@ -23,6 +23,7 @@ import com.fanfou.app.service.NotificationService;
  * @version 2.5 2011.11.25
  * @version 3.0 2011.12.02
  * @version 3.1 2011.12.05
+ * @version 3.2 2011.12.26
  * 
  */
 public final class AlarmHelper {
@@ -72,7 +73,7 @@ public final class AlarmHelper {
 		AudioManager am = (AudioManager) context
 				.getSystemService(Context.AUDIO_SERVICE);
 		if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-			String ringFile = OptionHelper.readString(
+			String ringFile = OptionHelper.readString(context,
 					R.string.option_notification_ringtone, null);
 			Uri ringTone = null;
 			if (!TextUtils.isEmpty(ringFile)) {
@@ -81,7 +82,7 @@ public final class AlarmHelper {
 			}
 		}
 
-		boolean vibrate = OptionHelper.readBoolean(
+		boolean vibrate = OptionHelper.readBoolean(context,
 				R.string.option_notification_vibrate, false);
 		if (vibrate) {
 			notification.defaults |= Notification.DEFAULT_VIBRATE;
@@ -89,7 +90,7 @@ public final class AlarmHelper {
 			notification.vibrate = null;
 		}
 
-		boolean led = OptionHelper.readBoolean(
+		boolean led = OptionHelper.readBoolean(context,
 				R.string.option_notification_led, false);
 		if (led) {
 			notification.defaults |= Notification.DEFAULT_LIGHTS;

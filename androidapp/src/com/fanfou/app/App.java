@@ -7,6 +7,7 @@ import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -43,6 +44,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 5.6 2011.12.01
  * @version 5.7 2011.12.05
  * @version 6.0 2011.12.06
+ * @version 6.1 2011.12.26
  * 
  */
 
@@ -113,12 +115,12 @@ public class App extends Application {
 
 	private void initPreferences() {
 		PreferenceManager.setDefaultValues(this, R.xml.options, false);
-		sUserId = OptionHelper.readString(R.string.option_userid, null);
-		sUserScreenName = OptionHelper.readString(R.string.option_username,
-				null);
-		String oauthAccessToken = OptionHelper.readString(
+		sUserId = OptionHelper.readString(this, R.string.option_userid, null);
+		sUserScreenName = OptionHelper.readString(this,
+				R.string.option_username, null);
+		String oauthAccessToken = OptionHelper.readString(this,
 				R.string.option_oauth_token, null);
-		String oauthAccessTokenSecret = OptionHelper.readString(
+		String oauthAccessTokenSecret = OptionHelper.readString(this,
 				R.string.option_oauth_token_secret, null);
 		App.verified = !StringHelper.isEmpty(oauthAccessTokenSecret);
 		if (App.verified) {
@@ -145,10 +147,10 @@ public class App extends Application {
 	}
 
 	private void versionCheck() {
-		int oldVersionCode = OptionHelper.readInt(
+		int oldVersionCode = OptionHelper.readInt(this,
 				R.string.option_old_version_code, 0);
 		if (oldVersionCode < appVersionCode) {
-			OptionHelper.saveInt(R.string.option_old_version_code,
+			OptionHelper.saveInt(this, R.string.option_old_version_code,
 					appVersionCode);
 			AlarmHelper.cleanAlarmFlags(this);
 		}
@@ -159,14 +161,15 @@ public class App extends Application {
 		AlarmHelper.checkScheduledTasks(this);
 	}
 
-	public static void updateAccountInfo(final User u, final OAuthToken otoken) {
+	public static void updateAccountInfo(Context context, final User u,
+			final OAuthToken otoken) {
 		if (DEBUG) {
 			Log.d("App", "updateAccountInfo");
 		}
 		sUserId = u.id;
 		sUserScreenName = u.screenName;
 		setOAuthToken(otoken);
-		OptionHelper.updateAccountInfo(u, otoken);
+		OptionHelper.updateAccountInfo(context, u, otoken);
 
 	}
 
@@ -176,17 +179,17 @@ public class App extends Application {
 		}
 		sUserId = u.id;
 		sUserScreenName = u.screenName;
-		OptionHelper.updateUserInfo(u);
+		OptionHelper.updateUserInfo(this, u);
 	}
 
-	public static void removeAccountInfo() {
+	public static void removeAccountInfo(Context context) {
 		if (DEBUG) {
 			Log.d("App", "removeAccountInfo");
 		}
 		setOAuthToken(null);
 		sUserId = null;
 		sUserScreenName = null;
-		OptionHelper.removeAccountInfo();
+		OptionHelper.removeAccountInfo(context);
 	}
 
 	public static void setOAuthToken(final OAuthToken otoken) {

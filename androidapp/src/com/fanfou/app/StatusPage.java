@@ -197,7 +197,7 @@ public class StatusPage extends BaseActivity {
 
 			mActionBar.setTitle(status.userScreenName);
 
-			boolean textMode = OptionHelper.readBoolean(
+			boolean textMode = OptionHelper.readBoolean(mContext,
 					R.string.option_text_mode, false);
 			if (textMode) {
 				iUserHead.setVisibility(View.GONE);

@@ -81,13 +81,13 @@ public class AutoCompleteService extends WakefulIntentService {
 	}
 
 	public static void setIfNot(Context context) {
-		boolean set = OptionHelper.readBoolean(
+		boolean set = OptionHelper.readBoolean(context,
 				R.string.option_set_auto_complete, false);
 		if (App.DEBUG) {
 			Log.d(TAG, "setIfNot flag=" + set);
 		}
 		if (!set) {
-			OptionHelper.saveBoolean(R.string.option_set_auto_complete, true);
+			OptionHelper.saveBoolean(context,R.string.option_set_auto_complete, true);
 			set(context);
 		}
 	}

@@ -85,7 +85,7 @@ public class DownloadService extends BaseIntentService {
 	}
 
 	public static void set(Context context) {
-		boolean need = OptionHelper.readBoolean(R.string.option_autoupdate,
+		boolean need = OptionHelper.readBoolean(context,R.string.option_autoupdate,
 				true);
 		if (!need) {
 			return;
@@ -116,13 +116,13 @@ public class DownloadService extends BaseIntentService {
 	}
 
 	public static void setIfNot(Context context) {
-		boolean set = OptionHelper.readBoolean(R.string.option_set_auto_update,
+		boolean set = OptionHelper.readBoolean(context,R.string.option_set_auto_update,
 				false);
 		if (App.DEBUG) {
 			Log.d(TAG, "setIfNot flag=" + set);
 		}
 		if (!set) {
-			OptionHelper.saveBoolean(R.string.option_set_auto_update, true);
+			OptionHelper.saveBoolean(context,R.string.option_set_auto_update, true);
 			set(context);
 		}
 	}

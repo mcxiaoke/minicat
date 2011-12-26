@@ -53,9 +53,9 @@ public abstract class BaseCursorAdapter extends CursorAdapter {
 		this.mInflater = LayoutInflater.from(mContext);
 		this.mLoader = App.getImageLoader();
 		this.mCursor = c;
-		this.textMode = OptionHelper.readBoolean(R.string.option_text_mode,
+		this.textMode = OptionHelper.readBoolean(mContext,R.string.option_text_mode,
 				false);
-		this.fontSize = OptionHelper.readInt(R.string.option_fontsize, context
+		this.fontSize = OptionHelper.readInt(mContext,R.string.option_fontsize, context
 				.getResources().getInteger(R.integer.defaultFontSize));
 	}
 

@@ -53,7 +53,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 	}
 
 	public static void startUpdateCheck(Context context) {
-		boolean autoUpdate = OptionHelper.readBoolean(
+		boolean autoUpdate = OptionHelper.readBoolean(context,
 				R.string.option_autoupdate, true);
 		if (autoUpdate) {
 			DownloadService.startCheck(context);

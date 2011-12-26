@@ -1,5 +1,6 @@
 ﻿package com.fanfou.app.util;
 
+import android.content.Context;
 import android.content.SharedPreferences.Editor;
 
 import com.fanfou.app.App;
@@ -13,6 +14,7 @@ import com.fanfou.app.auth.OAuthToken;
  * @version 1.1 2011.10.10
  * @version 1.2 2011.10.26
  * @version 2.0 2011.12.06
+ * @version 3.0 2011.12.26
  * 
  */
 public final class OptionHelper {
@@ -35,21 +37,21 @@ public final class OptionHelper {
 		sp.commit();
 	}
 
-	public final static void saveInt(int resId, int value) {
+	public final static void saveInt(Context context, int resId, int value) {
 		Editor sp = App.getPreferences().edit();
-		sp.putInt(App.getApp().getString(resId), value);
+		sp.putInt(context.getString(resId), value);
 		sp.commit();
 	}
 
-	public final static void saveBoolean(int resId, boolean value) {
+	public final static void saveBoolean(Context context, int resId, boolean value) {
 		Editor sp = App.getPreferences().edit();
-		sp.putBoolean(App.getApp().getString(resId), value);
+		sp.putBoolean(context.getString(resId), value);
 		sp.commit();
 	}
 
-	public final static void saveString(int resId, String value) {
+	public final static void saveString(Context context, int resId, String value) {
 		Editor sp = App.getPreferences().edit();
-		sp.putString(App.getApp().getString(resId), value);
+		sp.putString(context.getString(resId), value);
 		sp.commit();
 	}
 
@@ -73,9 +75,9 @@ public final class OptionHelper {
 		return Integer.parseInt(res);
 	}
 
-	public final static int parseInt(int resId) {
+	public final static int parseInt(Context context, int resId) {
 		String res = App.getPreferences().getString(
-				App.getApp().getString(resId), "-1");
+				context.getString(resId), "-1");
 		return Integer.parseInt(res);
 	}
 
@@ -84,27 +86,27 @@ public final class OptionHelper {
 		return Integer.parseInt(res);
 	}
 
-	public final static int parseInt(int resId, String defaultValue) {
+	public final static int parseInt(Context context, int resId, String defaultValue) {
 		String res = App.getPreferences().getString(
-				App.getApp().getString(resId), defaultValue);
+				context.getString(resId), defaultValue);
 		return Integer.parseInt(res);
 	}
 
-	public final static int readInt(int resId, int defValue) {
-		int res = App.getPreferences().getInt(App.getApp().getString(resId),
+	public final static int readInt(Context context, int resId, int defValue) {
+		int res = App.getPreferences().getInt(context.getString(resId),
 				defValue);
 		return res;
 	}
 
-	public final static boolean readBoolean(int resId, boolean defValue) {
+	public final static boolean readBoolean(Context context, int resId, boolean defValue) {
 		boolean res = App.getPreferences().getBoolean(
-				App.getApp().getString(resId), defValue);
+				context.getString(resId), defValue);
 		return res;
 	}
 
-	public final static String readString(int resId, String defValue) {
+	public final static String readString(Context context, int resId, String defValue) {
 		String res = App.getPreferences().getString(
-				App.getApp().getString(resId), defValue);
+				context.getString(resId), defValue);
 		return res;
 	}
 
@@ -114,9 +116,9 @@ public final class OptionHelper {
 		sp.commit();
 	}
 
-	public final static void remove(int resId) {
+	public final static void remove(Context context, int resId) {
 		Editor sp = App.getPreferences().edit();
-		sp.remove(App.getApp().getString(resId));
+		sp.remove(context.getString(resId));
 		sp.commit();
 	}
 
@@ -126,39 +128,38 @@ public final class OptionHelper {
 		sp.commit();
 	}
 
-	public final static void updateAccountInfo(final User u,
+	public final static void updateAccountInfo(Context context, final User u,
 			final OAuthToken otoken) {
 		Editor editor = App.getPreferences().edit();
-		editor.putString(App.getApp().getString(R.string.option_userid), u.id);
-		editor.putString(App.getApp().getString(R.string.option_username),
+		editor.putString(context.getString(R.string.option_userid), u.id);
+		editor.putString(context.getString(R.string.option_username),
 				u.screenName);
-		editor.putString(App.getApp().getString(R.string.option_profile_image),
+		editor.putString(context.getString(R.string.option_profile_image),
 				u.profileImageUrl);
-		editor.putString(App.getApp().getString(R.string.option_oauth_token),
+		editor.putString(context.getString(R.string.option_oauth_token),
 				otoken.getToken());
 		editor.putString(
-				App.getApp().getString(R.string.option_oauth_token_secret),
+				context.getString(R.string.option_oauth_token_secret),
 				otoken.getTokenSecret());
 		editor.commit();
 	}
 
-	public final static void removeAccountInfo() {
+	public final static void removeAccountInfo(Context context) {
 		Editor editor = App.getPreferences().edit();
-		editor.remove(App.getApp().getString(R.string.option_userid));
-		editor.remove(App.getApp().getString(R.string.option_username));
-		editor.remove(App.getApp().getString(R.string.option_profile_image));
-		editor.remove(App.getApp().getString(R.string.option_oauth_token));
-		editor.remove(App.getApp()
-				.getString(R.string.option_oauth_token_secret));
+		editor.remove(context.getString(R.string.option_userid));
+		editor.remove(context.getString(R.string.option_username));
+		editor.remove(context.getString(R.string.option_profile_image));
+		editor.remove(context.getString(R.string.option_oauth_token));
+		editor.remove(context.getString(R.string.option_oauth_token_secret));
 		editor.commit();
 	}
 
-	public final static void updateUserInfo(final User u) {
+	public final static void updateUserInfo(Context context, final User u) {
 		Editor editor = App.getPreferences().edit();
-		editor.putString(App.getApp().getString(R.string.option_userid), u.id);
-		editor.putString(App.getApp().getString(R.string.option_username),
+		editor.putString(context.getString(R.string.option_userid), u.id);
+		editor.putString(context.getString(R.string.option_username),
 				u.screenName);
-		editor.putString(App.getApp().getString(R.string.option_profile_image),
+		editor.putString(context.getString(R.string.option_profile_image),
 				u.profileImageUrl);
 		editor.commit();
 	}

@@ -48,6 +48,7 @@ import com.fanfou.app.service.Constants;
  * @version 2.0 2011.09.10
  * @version 3.0 2011.09.28
  * @version 3.5 2011.10.28
+ * @version 3.6 2011.12.26
  * 
  */
 public final class Utils {
@@ -227,7 +228,7 @@ public final class Utils {
 	}
 
 	public static void initScreenConfig(final Activity context) {
-		boolean portrait = OptionHelper.readBoolean(
+		boolean portrait = OptionHelper.readBoolean(context,
 				R.string.option_force_portrait, false);
 		if (portrait) {
 			context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -258,26 +259,26 @@ public final class Utils {
 		}
 	}
 
-	public static void lockScreenOrientation(final Activity activity) {
-		boolean portrait = OptionHelper.readBoolean(
+	public static void lockScreenOrientation(final Activity context) {
+		boolean portrait = OptionHelper.readBoolean(context,
 				R.string.option_force_portrait, false);
 		if (portrait) {
-			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		} else {
-			if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+				context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 			}
-			if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+				context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			}
 		}
 	}
 
-	public static void unlockScreenOrientation(final Activity activity) {
-		boolean portrait = OptionHelper.readBoolean(
+	public static void unlockScreenOrientation(final Activity context) {
+		boolean portrait = OptionHelper.readBoolean(context,
 				R.string.option_force_portrait, false);
 		if (!portrait) {
-			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+			context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}
 	}
 

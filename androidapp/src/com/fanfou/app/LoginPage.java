@@ -277,7 +277,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 		@Override
 		protected ResultInfo doInBackground(Void... params) {
 
-			String savedUserId = OptionHelper.readString(
+			String savedUserId = OptionHelper.readString(mContext,
 					R.string.option_userid, null);
 			try {
 				XAuthService xauth = new XAuthService(new FanFouOAuthProvider());
@@ -308,7 +308,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 					}
 
 					if (u != null && !u.isNull()) {
-						App.updateAccountInfo(u, token);
+						App.updateAccountInfo(mContext,u, token);
 						if (App.DEBUG)
 							log("xauth successful! ");
 

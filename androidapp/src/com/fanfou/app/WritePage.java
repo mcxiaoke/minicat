@@ -117,7 +117,7 @@ public class WritePage extends BaseActivity {
 	}
 
 	private void initialize() {
-		enableLocation = OptionHelper.readBoolean(
+		enableLocation = OptionHelper.readBoolean(mContext,
 				R.string.option_location_enable, true);
 		mLocationManager = (LocationManager) this
 				.getSystemService(Context.LOCATION_SERVICE);
@@ -503,7 +503,7 @@ public class WritePage extends BaseActivity {
 
 	private void switchLocation() {
 		enableLocation = !enableLocation;
-		OptionHelper.saveBoolean(R.string.option_location_enable,
+		OptionHelper.saveBoolean(mContext,R.string.option_location_enable,
 				enableLocation);
 		if (App.DEBUG)
 			log("location enable status=" + enableLocation);
