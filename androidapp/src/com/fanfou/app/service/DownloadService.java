@@ -53,10 +53,9 @@ public class DownloadService extends BaseIntentService {
 
 	public static final String UPDATE_VERSION_FILE = "http://apps.fanfou.com/android/update.json";
 
-	private static final int NOTIFICATION_PROGRESS_ID = 1;
+	private static final int NOTIFICATION_PROGRESS_ID = -12345;
 	private NotificationManager nm;
 	private Notification notification;
-	private RemoteViews remoteViews;
 	private Handler mHandler;
 
 	public static final int TYPE_CHECK = 0;
@@ -209,7 +208,6 @@ public class DownloadService extends BaseIntentService {
 					}
 				}
 				fos.flush();
-				nm.cancel(NOTIFICATION_PROGRESS_ID);
 				if (download >= total) {
 					Message message = new Message();
 					message.what = MSG_SUCCESS;
@@ -236,18 +234,15 @@ public class DownloadService extends BaseIntentService {
 				"正在下载饭否客户端", System.currentTimeMillis());
 		notification.flags |= Notification.FLAG_ONGOING_EVENT;
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		remoteViews = new RemoteViews(getPackageName(),
-				R.layout.download_notification);
-		remoteViews.setTextViewText(R.id.download_notification_text,
-				"正在下载饭否客户端 0%");
-		remoteViews.setProgressBar(R.id.download_notification_progress, 100, 0,
-				false);
-		notification.contentView = remoteViews;
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+		notification.contentIntent = PendingIntent.getActivity(this, 0,
 				new Intent(), 0);
-		notification.contentIntent = contentIntent;
+		notification.contentView = new RemoteViews(getPackageName(),
+				R.layout.download_notification);;
+		notification.contentView.setTextViewText(R.id.download_notification_text,
+				"正在下载饭否客户端 0%");
+		notification.contentView.setProgressBar(R.id.download_notification_progress, 100, 0,
+				false);
 		nm.notify(NOTIFICATION_PROGRESS_ID, notification);
-
 	}
 
 	private static final int MSG_PROGRESS = 0;
@@ -257,13 +252,14 @@ public class DownloadService extends BaseIntentService {
 		@Override
 		public void handleMessage(Message msg) {
 			if (App.DEBUG) {
-				log("DownloadHandler msg.what=" + msg.what + " arg1="
+				log("DownloadHandler what=" + msg.what + " progress="
 						+ msg.arg1);
 			}
 			if (MSG_PROGRESS == msg.what) {
 				int progress = msg.arg1;
 				updateProgress(progress);
 			} else if (MSG_SUCCESS == msg.what) {
+				nm.cancel(NOTIFICATION_PROGRESS_ID);
 				String filePath = msg.getData().getString(
 						Constants.EXTRA_FILENAME);
 				Utils.open(DownloadService.this, filePath);
@@ -272,21 +268,11 @@ public class DownloadService extends BaseIntentService {
 	}
 
 	private void updateProgress(final int progress) {
-		if (progress < 100) {
-			notification.contentView.setTextViewText(
-					R.id.download_notification_text, "正在下载饭否客户端 " + progress
-							+ "%");
-			notification.contentView.setInt(
-					R.id.download_notification_progress, "setProgress",
-					progress);
-			nm.notify(NOTIFICATION_PROGRESS_ID, notification);
-		} else {
-			notification.contentView.setTextViewText(
-					R.id.download_notification_text, "饭否客户端下载完成");
-			notification.contentView.setInt(
-					R.id.download_notification_progress, "setProgress", 100);
-			nm.notify(NOTIFICATION_PROGRESS_ID, notification);
-		}
+		notification.contentView.setTextViewText(
+				R.id.download_notification_text, "正在下载饭否客户端 " + progress + "%");
+		notification.contentView.setInt(R.id.download_notification_progress,
+				"setProgress", progress);
+		nm.notify(NOTIFICATION_PROGRESS_ID, notification);
 	}
 
 	@SuppressWarnings("unused")

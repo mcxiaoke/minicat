@@ -1119,4 +1119,7 @@ TODO LIST
 修复一些BUG，发布1.8.6版
 使用Messenger替代所有的ResultReceiver
 
+20111226
+可能修复了下载新版本时卡死的问题
+
 
