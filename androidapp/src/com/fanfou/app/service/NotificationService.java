@@ -71,8 +71,8 @@ public class NotificationService extends WakefulIntentService {
 	}
 
 	public static void set(Context context) {
-		boolean need = OptionHelper.readBoolean(context,R.string.option_notification,
-				true);
+		boolean need = OptionHelper.readBoolean(context,
+				R.string.option_notification, true);
 		if (!need) {
 			return;
 		}
@@ -107,7 +107,8 @@ public class NotificationService extends WakefulIntentService {
 			Log.d(TAG, "setIfNot flag=" + set);
 		}
 		if (!set) {
-			OptionHelper.saveBoolean(context,R.string.option_set_notification, true);
+			OptionHelper.saveBoolean(context, R.string.option_set_notification,
+					true);
 			set(context);
 		}
 	}
@@ -121,16 +122,16 @@ public class NotificationService extends WakefulIntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		boolean need = OptionHelper.readBoolean(this,R.string.option_notification,
-				false);
+		boolean need = OptionHelper.readBoolean(this,
+				R.string.option_notification, false);
 		if (!need) {
 			return;
 		}
 
 		mApi = FanFouApi.newInstance();
 
-		boolean dm = OptionHelper.readBoolean(this,R.string.option_notification_dm,
-				false);
+		boolean dm = OptionHelper.readBoolean(this,
+				R.string.option_notification_dm, false);
 		boolean mention = OptionHelper.readBoolean(this,
 				R.string.option_notification_mention, false);
 		boolean home = OptionHelper.readBoolean(this,
@@ -156,7 +157,7 @@ public class NotificationService extends WakefulIntentService {
 
 	private void handleDm(int count) {
 		Cursor mc = initCursor(Constants.TYPE_DIRECT_MESSAGES_INBOX);
-		List<DirectMessage> dms=null;
+		List<DirectMessage> dms = null;
 		try {
 			dms = mApi.directMessagesInbox(count, DEFAULT_PAGE,
 					Utils.getDmSinceId(mc), null, Constants.MODE);
@@ -164,6 +165,10 @@ public class NotificationService extends WakefulIntentService {
 			if (App.DEBUG) {
 				Log.e(TAG,
 						" code=" + e.statusCode + " message=" + e.getMessage());
+			}
+		} catch (Exception e) {
+			if (App.DEBUG) {
+				Log.e(TAG, e.getMessage());
 			}
 		}
 		mc.close();
@@ -191,16 +196,20 @@ public class NotificationService extends WakefulIntentService {
 
 	}
 
-	private void handleMention(int count){
+	private void handleMention(int count) {
 		Cursor mc = initCursor(Constants.TYPE_STATUSES_MENTIONS);
-		List<Status> ss=null;
+		List<Status> ss = null;
 		try {
-			ss = mApi.mentions(count, DEFAULT_PAGE,
-					Utils.getSinceId(mc), null, Constants.FORMAT, Constants.MODE);
+			ss = mApi.mentions(count, DEFAULT_PAGE, Utils.getSinceId(mc), null,
+					Constants.FORMAT, Constants.MODE);
 		} catch (ApiException e) {
 			if (App.DEBUG) {
 				Log.e(TAG,
 						" code=" + e.statusCode + " message=" + e.getMessage());
+			}
+		} catch (Exception e) {
+			if (App.DEBUG) {
+				Log.e(TAG, e.getMessage());
 			}
 		}
 		mc.close();
@@ -227,16 +236,20 @@ public class NotificationService extends WakefulIntentService {
 
 	}
 
-	private void handleHome(int count){
+	private void handleHome(int count) {
 		Cursor mc = initCursor(Constants.TYPE_STATUSES_HOME_TIMELINE);
-		List<Status> ss=null;
+		List<Status> ss = null;
 		try {
-			ss = mApi.homeTimeline(count, DEFAULT_PAGE,
-					Utils.getSinceId(mc), null, Constants.FORMAT, Constants.MODE);
+			ss = mApi.homeTimeline(count, DEFAULT_PAGE, Utils.getSinceId(mc),
+					null, Constants.FORMAT, Constants.MODE);
 		} catch (ApiException e) {
 			if (App.DEBUG) {
 				Log.e(TAG,
 						" code=" + e.statusCode + " message=" + e.getMessage());
+			}
+		} catch (Exception e) {
+			if (App.DEBUG) {
+				Log.e(TAG, e.getMessage());
 			}
 		}
 		mc.close();
