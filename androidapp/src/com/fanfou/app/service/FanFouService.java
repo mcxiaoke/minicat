@@ -76,6 +76,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.IntentService;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -136,7 +137,7 @@ import com.fanfou.app.util.Utils;
  * @version 7.1 2011.12.26
  * 
  */
-public class FanFouService extends WakefulIntentService {
+public class FanFouService extends IntentService {
 	private static final String TAG = FanFouService.class.getSimpleName();
 
 	private int type;
@@ -152,7 +153,7 @@ public class FanFouService extends WakefulIntentService {
 	}
 
 	@Override
-	protected void doWakefulWork(Intent intent) {
+	protected void onHandleIntent(Intent intent) {
 		if (intent == null) {
 			return;
 		}

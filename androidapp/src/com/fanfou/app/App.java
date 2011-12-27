@@ -4,6 +4,7 @@ import java.util.TimeZone;
 import java.util.logging.Logger;
 
 import org.acra.ACRA;
+import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
 import android.app.Application;
@@ -15,8 +16,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.fanfou.app.api.Api;
-import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.User;
 import com.fanfou.app.auth.OAuthToken;
 import com.fanfou.app.cache.IImageLoader;
@@ -48,7 +47,7 @@ import com.fanfou.app.util.StringHelper;
  * 
  */
 
-@ReportsCrashes(formKey = "", formUri = "http://apps.fanfou.com/andstat/cr/")
+@ReportsCrashes(formKey = "", formUri = "http://apps.fanfou.com/andstat/cr/",mode=ReportingInteractionMode.SILENT)
 public class App extends Application {
 
 	public static final boolean DEBUG = true;
