@@ -152,7 +152,7 @@ public class FanFouService extends WakefulIntentService {
 	}
 
 	@Override
-	protected void onHandleIntent(Intent intent) {
+	protected void doWakefulWork(Intent intent) {
 		if (intent == null) {
 			return;
 		}

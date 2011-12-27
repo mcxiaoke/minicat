@@ -104,7 +104,7 @@ public class QueueService extends WakefulIntentService {
 	}
 
 	@Override
-	protected void onHandleIntent(Intent intent) {
+	protected void doWakefulWork(Intent intent) {
 		sendQueue();
 	}
 

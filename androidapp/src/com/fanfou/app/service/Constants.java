@@ -116,7 +116,7 @@ public final class Constants {
 	public static final String ACTION_SHARE = ACTION_PACKAGE + "SHARE";
 	public static final String ACTION_SEARCH = ACTION_PACKAGE + "SEARCH";
 	public static final String ACTION_MESSAGES = ACTION_PACKAGE + "MESSAGES";
-	public static final String ACTION_REPEAT = ACTION_PACKAGE + "REPEAT";
+	public static final String ACTION_ALARM = ACTION_PACKAGE + "ALARM";
 	public static final String ACTION_NOTIFICATION = ACTION_PACKAGE
 			+ "NOTIFICATION";
 	public static final String ACTION_SEND = ACTION_PACKAGE + "SEND";
@@ -140,7 +140,7 @@ public final class Constants {
 	public static final int MAX_USERS_COUNT = 60;
 	public static final int DEFAULT_USERS_COUNT = 20;
 	public static final int MAX_IDS_COUNT = 2000;
-	
+
 	public static final String FORMAT = "html";
 	public static final String MODE = "lite";
 }

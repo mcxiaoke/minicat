@@ -326,7 +326,7 @@
         </receiver>
         <receiver android:name=".receiver.AlarmReceiver" >
             <intent-filter>
-                <action android:name="com.fanfou.app.action.REPEAT" />
+                <action android:name="com.fanfou.app.action.ALARM" />
             </intent-filter>
         </receiver>
         <receiver android:name=".receiver.NotificationReceiver" >

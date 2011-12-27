@@ -44,6 +44,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.7 2011.12.19
  * @version 2.8 2011.12.23
  * @version 2.9 2011.12.26
+ * @version 3.0 2011.12.27
  * 
  */
 public class NotificationService extends WakefulIntentService {
@@ -70,6 +71,10 @@ public class NotificationService extends WakefulIntentService {
 		}
 	}
 
+	public static void start(Context context) {
+		sendWakefulWork(context, NotificationService.class);
+	}
+
 	public static void set(Context context) {
 		boolean need = OptionHelper.readBoolean(context,
 				R.string.option_notification, true);
@@ -83,7 +88,7 @@ public class NotificationService extends WakefulIntentService {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		am.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
-				getPendingIntent(context));
+				getBroadcastPendingIntent(context));
 
 		if (App.DEBUG) {
 			Log.d(TAG, "set interval=" + interval + " next time="
@@ -94,7 +99,7 @@ public class NotificationService extends WakefulIntentService {
 	public static void unset(Context context) {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-		am.cancel(getPendingIntent(context));
+		am.cancel(getBroadcastPendingIntent(context));
 		if (App.DEBUG) {
 			Log.d(TAG, "unset");
 		}
@@ -113,15 +118,17 @@ public class NotificationService extends WakefulIntentService {
 		}
 	}
 
-	private final static PendingIntent getPendingIntent(Context context) {
-		Intent intent = new Intent(context, NotificationService.class);
-		PendingIntent pi = PendingIntent.getService(context, 0, intent,
+	private final static PendingIntent getBroadcastPendingIntent(Context context) {
+		Intent intent = new Intent();
+		intent.setPackage(context.getPackageName());
+		intent.setAction(Constants.ACTION_ALARM);
+		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		return pi;
 	}
 
 	@Override
-	protected void onHandleIntent(Intent intent) {
+	protected void doWakefulWork(Intent intent) {
 		boolean need = OptionHelper.readBoolean(this,
 				R.string.option_notification, false);
 		if (!need) {

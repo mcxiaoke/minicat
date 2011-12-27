@@ -2,6 +2,7 @@ package com.fanfou.app.service;
 
 import java.io.File;
 
+import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -38,7 +39,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 3.4 2011.12.26
  * 
  */
-public class PostStatusService extends WakefulIntentService {
+public class PostStatusService extends IntentService {
 
 	private static final String TAG = PostStatusService.class.getSimpleName();
 	private NotificationManager nm;
