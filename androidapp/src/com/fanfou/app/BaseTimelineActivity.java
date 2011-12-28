@@ -85,9 +85,7 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 
 	private void setLayout() {
 		setContentView(R.layout.list);
-
 		setActionBar();
-
 		mEmptyView = (ViewGroup) findViewById(R.id.empty);
 		mListView = (EndlessListView) findViewById(R.id.list);
 		mListView.setOnRefreshListener(this);

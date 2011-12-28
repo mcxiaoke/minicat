@@ -103,6 +103,7 @@ public class WritePage extends BaseActivity {
 	private String inReplyToStatusId;
 	private String text;
 	private int type;
+	private int size;
 
 	public static final int TYPE_NORMAL = 0;
 	public static final int TYPE_REPLY = 1;
@@ -124,6 +125,8 @@ public class WritePage extends BaseActivity {
 		mLocationManager = (LocationManager) this
 				.getSystemService(Context.LOCATION_SERVICE);
 		mLocationMonitor = new LocationMonitor();
+		size = new Float(getResources().getDimension(
+				R.dimen.photo_preview_width)).intValue();
 		for (String provider : mLocationManager.getProviders(true)) {
 			if (LocationManager.NETWORK_PROVIDER.equals(provider)
 					|| LocationManager.GPS_PROVIDER.equals(provider)) {
@@ -148,20 +151,25 @@ public class WritePage extends BaseActivity {
 				if (App.DEBUG) {
 					log("onActivityResult requestCode=REQUEST_PHOTO_LIBRARY");
 				}
-				parsePhoto(data.getData());
-				showPreview();
+				if (data != null) {
+					parsePhoto(data.getData());
+				}
 				break;
 			case REQUEST_PHOTO_CAPTURE:
 				if (App.DEBUG) {
 					log("onActivityResult requestCode=REQUEST_PHOTO_CAPTURE");
 				}
-				doCameraShot(data);
+				if (data != null) {
+					doCameraShot(data);
+				}
 				break;
 			case REQUEST_USERNAME_ADD:
 				if (App.DEBUG) {
 					log("onActivityResult requestCode=REQUEST_USERNAME_ADD");
 				}
-				insertNames(data);
+				if (data != null) {
+					insertNames(data);
+				}
 				break;
 			default:
 				break;
@@ -192,8 +200,6 @@ public class WritePage extends BaseActivity {
 	}
 
 	private void showPreview() {
-		final int size = new Float(getResources().getDimension(
-				R.dimen.photo_preview_width)).intValue();
 		mPictureView.setVisibility(View.VISIBLE);
 		try {
 			iPicturePrieview.setImageBitmap(ImageHelper.getRoundedCornerBitmap(
@@ -239,6 +245,7 @@ public class WritePage extends BaseActivity {
 			}
 			if (App.DEBUG)
 				log("from gallery file=" + path);
+			showPreview();
 		}
 	}
 
@@ -518,9 +525,9 @@ public class WritePage extends BaseActivity {
 			log("location enable status=" + enableLocation);
 		if (enableLocation) {
 			iLocationIcon.setImageResource(R.drawable.ic_bar_geoon);
-			if(mLocationProvider!=null){
-				mLocationManager.requestLocationUpdates(
-						mLocationProvider, 0, 0, mLocationMonitor);
+			if (mLocationProvider != null) {
+				mLocationManager.requestLocationUpdates(mLocationProvider, 0,
+						0, mLocationMonitor);
 			}
 		} else {
 			iLocationIcon.setImageResource(R.drawable.ic_bar_geooff);
