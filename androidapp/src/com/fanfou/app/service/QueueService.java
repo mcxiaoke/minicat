@@ -5,6 +5,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -37,6 +38,10 @@ import com.fanfou.app.util.ImageHelper;
 public class QueueService extends WakefulIntentService {
 	public QueueService() {
 		super("TaskQueueService");
+	}
+	
+	public static void start(Context context){
+		sendWakefulWork(context, QueueService.class);
 	}
 
 	private static final String TAG = QueueService.class.getSimpleName();

@@ -116,7 +116,7 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 	}
 
 	private void startTaskQueueService() {
-		startService(new Intent(this, QueueService.class));
+		QueueService.start(this);
 	}
 
 	private void doSendAll() {

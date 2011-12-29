@@ -39,7 +39,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 3.4 2011.12.26
  * 
  */
-public class PostStatusService extends IntentService {
+public class PostStatusService extends BaseIntentService {
 
 	private static final String TAG = PostStatusService.class.getSimpleName();
 	private NotificationManager nm;

@@ -29,6 +29,7 @@ import com.fanfou.app.util.OptionHelper;
  * @version 2.2 2011.11.28
  * @version 2.3 2011.11.29
  * @version 2.4 2011.12.19
+ * @version 2.5 2011.12.29
  * 
  */
 public class AutoCompleteService extends WakefulIntentService {
@@ -43,7 +44,7 @@ public class AutoCompleteService extends WakefulIntentService {
 	}
 
 	public static void start(Context context) {
-		context.startService(new Intent(context, AutoCompleteService.class));
+		sendWakefulWork(context, AutoCompleteService.class);
 	}
 
 	public final static void startInMinutes(Context context) {

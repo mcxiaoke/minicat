@@ -9,7 +9,4 @@ public abstract class BaseIntentService extends IntentService {
 		super(name);
 	}
 
-	@Override
-	protected abstract void onHandleIntent(Intent intent);
-
 }
