@@ -116,7 +116,11 @@ public final class Constants {
 	public static final String ACTION_SHARE = ACTION_PACKAGE + "SHARE";
 	public static final String ACTION_SEARCH = ACTION_PACKAGE + "SEARCH";
 	public static final String ACTION_MESSAGES = ACTION_PACKAGE + "MESSAGES";
-	public static final String ACTION_ALARM = ACTION_PACKAGE + "ALARM";
+	
+	public static final String ACTION_ALARM_NOTITICATION = ACTION_PACKAGE + "ALARM_NOTITICATION";
+	public static final String ACTION_ALARM_AUTO_COMPLETE = ACTION_PACKAGE + "ALARM_AUTO_COMPLETE";
+	public static final String ACTION_ALARM_AUTO_UPDATE_CHECK = ACTION_PACKAGE + "AUTO_UPDATE_CHECK";
+	
 	public static final String ACTION_NOTIFICATION = ACTION_PACKAGE
 			+ "NOTIFICATION";
 	public static final String ACTION_SEND = ACTION_PACKAGE + "SEND";

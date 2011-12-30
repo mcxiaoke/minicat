@@ -670,6 +670,11 @@ public class StringHelper {
 		}
 		return results;
 	}
+	
+	public static String urlencode_rfc3986(String text) {
+        final String encoded = StringUtils.replace(URLEncoder.encode(text).replace("+", "%20"), "%7E", "~");
+        return encoded;
+    }
 
 	/**
 	 * Tweet Regex Pattern

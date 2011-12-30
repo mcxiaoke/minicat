@@ -110,7 +110,9 @@ public class UserChoosePage extends BaseActivity implements
 			showContent();
 		} else {
 			doRefresh();
-			AutoCompleteService.startInMinutes(this);
+			Handler handler=new Handler();
+			// TODO need delay
+			AutoCompleteService.start(this);
 			showProgress();
 		}
 	}

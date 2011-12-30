@@ -17,6 +17,7 @@ import com.fanfou.app.api.FanFouApi;
 import com.fanfou.app.api.Parser;
 import com.fanfou.app.api.User;
 import com.fanfou.app.db.Contents.UserInfo;
+import com.fanfou.app.receiver.AlarmReceiver;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.OptionHelper;
 
@@ -30,6 +31,7 @@ import com.fanfou.app.util.OptionHelper;
  * @version 2.3 2011.11.29
  * @version 2.4 2011.12.19
  * @version 2.5 2011.12.29
+ * @version 2.6 2011.12.30
  * 
  */
 public class AutoCompleteService extends WakefulIntentService {
@@ -45,15 +47,6 @@ public class AutoCompleteService extends WakefulIntentService {
 
 	public static void start(Context context) {
 		sendWakefulWork(context, AutoCompleteService.class);
-	}
-
-	public final static void startInMinutes(Context context) {
-		Calendar c = Calendar.getInstance();
-		c.add(Calendar.MINUTE, 5);
-		AlarmManager am = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
-		am.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
-				getPendingIntent(context));
 	}
 
 	public static void set(Context context) {
@@ -95,8 +88,16 @@ public class AutoCompleteService extends WakefulIntentService {
 	}
 
 	private final static PendingIntent getPendingIntent(Context context) {
-		Intent intent = new Intent(context, AutoCompleteService.class);
-		PendingIntent pi = PendingIntent.getService(context, 0, intent,
+		
+//		Intent intent = new Intent();
+//		intent.setPackage(context.getPackageName());
+//		intent.setAction(Constants.ACTION_ALARM_NOTITICATION);
+		
+		
+		Intent intent = new Intent(context,AlarmReceiver.class);
+		intent.putExtra(Constants.EXTRA_TYPE, Constants.ACTION_ALARM_AUTO_COMPLETE);
+		
+		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		return pi;
 	}
@@ -121,7 +122,7 @@ public class AutoCompleteService extends WakefulIntentService {
 			try {
 				result = api.usersFriends(null, Constants.MAX_USERS_COUNT,
 						page, Constants.MODE);
-			} catch (ApiException e) {
+			} catch (Exception e) {
 				if (App.DEBUG) {
 					Log.e(TAG, e.toString());
 				}

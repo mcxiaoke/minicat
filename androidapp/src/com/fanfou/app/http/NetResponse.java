@@ -57,9 +57,9 @@ public class NetResponse implements ResponseInterface, ResponseCode {
 			content = entityToString(entity);
 			used = true;
 		}
-		if (App.DEBUG) {
-			Log.d(TAG, "getContent() [" + content + "]");
-		}
+//		if (App.DEBUG) {
+//			Log.d(TAG, "getContent() [" + content + "]");
+//		}
 		return content;
 	}
 

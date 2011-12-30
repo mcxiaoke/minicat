@@ -25,6 +25,7 @@ import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.FanFouProvider;
+import com.fanfou.app.receiver.AlarmReceiver;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -45,6 +46,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.8 2011.12.23
  * @version 2.9 2011.12.26
  * @version 3.0 2011.12.27
+ * @version 3.1 2011.12.30
  * 
  */
 public class NotificationService extends WakefulIntentService {
@@ -88,7 +90,7 @@ public class NotificationService extends WakefulIntentService {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		am.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
-				getBroadcastPendingIntent(context));
+				getPendingIntent(context));
 
 		if (App.DEBUG) {
 			Log.d(TAG, "set interval=" + interval + " next time="
@@ -99,7 +101,7 @@ public class NotificationService extends WakefulIntentService {
 	public static void unset(Context context) {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-		am.cancel(getBroadcastPendingIntent(context));
+		am.cancel(getPendingIntent(context));
 		if (App.DEBUG) {
 			Log.d(TAG, "unset");
 		}
@@ -118,48 +120,53 @@ public class NotificationService extends WakefulIntentService {
 		}
 	}
 
-	private final static PendingIntent getBroadcastPendingIntent(Context context) {
-		Intent intent = new Intent();
-		intent.setPackage(context.getPackageName());
-		intent.setAction(Constants.ACTION_ALARM);
+	private final static PendingIntent getPendingIntent(Context context) {
+		// Intent intent = new Intent();
+		// intent.setPackage(context.getPackageName());
+		// intent.setAction(Constants.ACTION_ALARM_NOTITICATION);
+
+		Intent intent = new Intent(context, AlarmReceiver.class);
+		intent.putExtra(Constants.EXTRA_TYPE, Constants.ACTION_ALARM_NOTITICATION);
+
 		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		return pi;
 	}
 
 	@Override
+	public void onCreate() {
+		super.onCreate();
+		mApi = FanFouApi.newInstance();
+	}
+
+	@Override
 	protected void doWakefulWork(Intent intent) {
 		boolean need = OptionHelper.readBoolean(this,
 				R.string.option_notification, false);
-		if (!need) {
-			return;
+		if (need) {
+			boolean dm = OptionHelper.readBoolean(this,
+					R.string.option_notification_dm, false);
+			boolean mention = OptionHelper.readBoolean(this,
+					R.string.option_notification_mention, false);
+			boolean home = OptionHelper.readBoolean(this,
+					R.string.option_notification_home, false);
+
+			int count = DEFAULT_COUNT;
+			if (App.getApnType() == ApnType.WIFI) {
+				count = MAX_COUNT;
+			}
+			if (dm) {
+				handleDm(count);
+			}
+			if (mention) {
+				handleMention(count);
+			}
+			if (home) {
+				handleHome(count);
+			}
+			set(this);
 		}
 
-		mApi = FanFouApi.newInstance();
-
-		boolean dm = OptionHelper.readBoolean(this,
-				R.string.option_notification_dm, false);
-		boolean mention = OptionHelper.readBoolean(this,
-				R.string.option_notification_mention, false);
-		boolean home = OptionHelper.readBoolean(this,
-				R.string.option_notification_home, false);
-
-		int count = DEFAULT_COUNT;
-		if (App.getApnType() == ApnType.WIFI) {
-			count = MAX_COUNT;
-		}
-		if (dm) {
-			handleDm(count);
-			SystemClock.sleep(500);
-		}
-		if (mention) {
-			handleMention(count);
-			SystemClock.sleep(500);
-		}
-		if (home) {
-			handleHome(count);
-		}
-		set(this);
 	}
 
 	private void handleDm(int count) {

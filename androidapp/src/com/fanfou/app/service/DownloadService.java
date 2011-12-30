@@ -30,6 +30,7 @@ import com.fanfou.app.App;
 import com.fanfou.app.NewVersionPage;
 import com.fanfou.app.R;
 import com.fanfou.app.http.NetClient;
+import com.fanfou.app.receiver.AlarmReceiver;
 import com.fanfou.app.update.VersionInfo;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.IOHelper;
@@ -46,9 +47,10 @@ import com.fanfou.app.util.Utils;
  * @version 2.3 2011.11.28
  * @version 2.4 2011.12.02
  * @version 2.5 2011.12.19
+ * @version 2.6 2011.12.30
  * 
  */
-public class DownloadService extends BaseIntentService {
+public class DownloadService extends WakefulIntentService {
 	private static final String TAG = DownloadService.class.getSimpleName();
 
 	public static final String UPDATE_VERSION_FILE = "http://apps.fanfou.com/android/update.json";
@@ -128,9 +130,13 @@ public class DownloadService extends BaseIntentService {
 	}
 
 	private final static PendingIntent getPendingIntent(Context context) {
-		Intent intent = new Intent(context, DownloadService.class);
-		intent.putExtra(Constants.EXTRA_TYPE, DownloadService.TYPE_CHECK);
-		PendingIntent pi = PendingIntent.getService(context, 0, intent,
+//		Intent intent = new Intent();
+//		intent.setPackage(context.getPackageName());
+//		intent.setAction(Constants.ACTION_ALARM_NOTITICATION);
+		
+		Intent intent = new Intent(context,AlarmReceiver.class);
+		intent.putExtra(Constants.EXTRA_TYPE, Constants.ACTION_ALARM_AUTO_UPDATE_CHECK);
+		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		return pi;
 	}
@@ -139,17 +145,17 @@ public class DownloadService extends BaseIntentService {
 		Intent intent = new Intent(context, DownloadService.class);
 		intent.putExtra(Constants.EXTRA_TYPE, TYPE_DOWNLOAD);
 		intent.putExtra(Constants.EXTRA_URL, url);
-		context.startService(intent);
+		sendWakefulWork(context, intent);
 	}
 
 	public static void startCheck(Context context) {
 		Intent intent = new Intent(context, DownloadService.class);
 		intent.putExtra(Constants.EXTRA_TYPE, TYPE_CHECK);
-		context.startService(intent);
+		sendWakefulWork(context, intent);
 	}
 
 	@Override
-	protected void onHandleIntent(Intent intent) {
+	protected void doWakefulWork(Intent intent) {
 		nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		int type = intent.getIntExtra(Constants.EXTRA_TYPE, TYPE_CHECK);
 		if (type == TYPE_CHECK) {

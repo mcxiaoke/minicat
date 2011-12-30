@@ -7,11 +7,7 @@ package com.fanfou.app.auth;
  */
 public interface OAuthProvider {
 
-	String getProviderBaseURL();
-
 	String getRequestTokenURL();
-
-	String getAuthenticateURL();
 
 	String getAuthorizeURL();
 

@@ -1,13 +1,23 @@
 package com.fanfou.app.util;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
+import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.protocol.HTTP;
+
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.util.Log;
 
 import com.fanfou.app.App;
 
@@ -17,6 +27,7 @@ import com.fanfou.app.App;
  * 
  */
 public final class CryptoHelper {
+	private static final String TAG=CryptoHelper.class.getSimpleName();
 	private static final String EncodeAlgorithm = "DES";
 	private static final String HEX = "0123456789ABCDEF";
 	private static final String SECURE_KEY = "g$#Tdg%$^mc[54jxiaoke";
@@ -251,5 +262,129 @@ public final class CryptoHelper {
 		}
 		return result.toString();
 	}
+	
+    public static String rot13(String text) {
+        if (text == null) {
+            return "";
+        }
+        final StringBuilder result = new StringBuilder();
+        // plaintext flag (do not convert)
+        boolean plaintext = false;
+
+        final int length = text.length();
+        int c;
+        int capitalized;
+        for (int index = 0; index < length; index++) {
+            c = text.charAt(index);
+            if (c == '[') {
+                plaintext = true;
+            } else if (c == ']') {
+                plaintext = false;
+            } else if (!plaintext) {
+                capitalized = c & 32;
+                c &= ~capitalized;
+                c = ((c >= 'A') && (c <= 'Z') ? ((c - 'A' + 13) % 26 + 'A') : c)
+                        | capitalized;
+            }
+            result.append((char) c);
+        }
+        return result.toString();
+    }
+
+    public static String md5(String text) {
+        String hashed = "";
+        try {
+            final MessageDigest digest = MessageDigest.getInstance("MD5");
+            digest.update(text.getBytes(HTTP.UTF_8), 0, text.length());
+            hashed = new BigInteger(1, digest.digest()).toString(16);
+        } catch (Exception e) {
+            Log.e(TAG, "cgBase.md5: " + e.toString());
+        }
+        return hashed;
+    }
+
+    public static String sha1(String text) {
+        String hashed = "";
+
+        try {
+            final MessageDigest digest = MessageDigest.getInstance("SHA-1");
+            digest.update(text.getBytes(), 0, text.length());
+            hashed = new BigInteger(1, digest.digest()).toString(16);
+        } catch (Exception e) {
+            Log.e(TAG, "cgBase.sha1: " + e.toString());
+        }
+
+        return hashed;
+    }
+
+    public static byte[] hashHmac(String text, String salt) {
+        byte[] macBytes = {};
+
+        try {
+            final SecretKeySpec secretKeySpec = new SecretKeySpec(salt.getBytes(), "HmacSHA1");
+            final Mac mac = Mac.getInstance("HmacSHA1");
+            mac.init(secretKeySpec);
+            macBytes = mac.doFinal(text.getBytes());
+        } catch (Exception e) {
+            Log.e(TAG, "cgBase.hashHmac: " + e.toString());
+        }
+
+        return macBytes;
+    }
+
+    public static CharSequence rot13(final Spannable span) {
+        // I needed to re-implement the rot13(String) encryption here because we must work on
+        // a SpannableStringBuilder instead of the pure text and we must replace each character inline.
+        // Otherwise we loose all the images, colors and so on...
+        final SpannableStringBuilder buffer = new SpannableStringBuilder(span);
+        boolean plaintext = false;
+
+        final int length = span.length();
+        int c;
+        int capitalized;
+        for (int index = 0; index < length; index++) {
+            c = span.charAt(index);
+            if (c == '[') {
+                plaintext = true;
+            } else if (c == ']') {
+                plaintext = false;
+            } else if (!plaintext) {
+                capitalized = c & 32;
+                c &= ~capitalized;
+                c = ((c >= 'A') && (c <= 'Z') ? ((c - 'A' + 13) % 26 + 'A') : c)
+                        | capitalized;
+            }
+            buffer.replace(index, index + 1, String.valueOf((char) c));
+        }
+        return buffer;
+    }
+
+    public static String convertToGcBase31(final String gccode) {
+        final String alphabet = "0123456789ABCDEFGHJKMNPQRTVWXYZ";
+
+        if (null == gccode) {
+            return "";
+        }
+
+        char[] characters = gccode.toUpperCase().toCharArray();
+
+        if (characters.length <= 2) {
+            return "";
+        }
+
+        final int base = (characters.length <= 5 || (characters.length == 6 && alphabet.indexOf(characters[2]) < 16)) ? 16 : 31;
+        int result = 0;
+
+        for (int i = 2; i < characters.length; i++) {
+            result *= base;
+            result += alphabet.indexOf(characters[i]);
+        }
+
+        if (31 == base) {
+            result += Math.pow(16, 4) - 16 * Math.pow(31, 3);
+        }
+
+        return Integer.toString(result);
+    }
 
 }
