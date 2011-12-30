@@ -90,8 +90,8 @@ public class SendPage extends BaseActivity {
 
 	@Override
 	protected boolean onBroadcastReceived(Intent intent) {
-		Utils.notify(this, "私信发送成功！");
-		mListView.setSelection(mCursorAdapter.getCount());
+//		Utils.notify(this, "私信发送成功！");
+//		mListView.setSelection(mCursorAdapter.getCount());
 		return true;
 	}
 
@@ -205,6 +205,7 @@ public class SendPage extends BaseActivity {
 		mListView.setSelector(getResources().getDrawable(
 				R.drawable.list_selector));
 		mListView.setDivider(getResources().getDrawable(R.drawable.separator));
+		mListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
 		mListView.setAdapter(mCursorAdapter);
 		mListView.setSelection(mListView.getCount() - 1);
 	}
