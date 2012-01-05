@@ -33,9 +33,7 @@ public class ViewsAdapter extends PagerAdapter {
 	@Override
 	public Object instantiateItem(View container, int position) {
 		View view = mViews[position % mViews.length];
-		if (position < mViews.length) {
-			((ViewPager) container).addView(view);
-		}
+		((ViewPager) container).addView(view);
 		return view;
 	}
 

@@ -12,6 +12,7 @@ import android.util.Log;
 import com.fanfou.app.App;
 import com.fanfou.app.App.ApnType;
 import com.fanfou.app.R;
+import com.fanfou.app.service.Constants;
 import com.fanfou.app.service.DownloadService;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -56,7 +57,9 @@ public class NetworkReceiver extends BroadcastReceiver {
 		boolean autoUpdate = OptionHelper.readBoolean(context,
 				R.string.option_autoupdate, true);
 		if (autoUpdate) {
-			DownloadService.startCheck(context);
+			Intent service = new Intent(context, DownloadService.class);
+			service.putExtra(Constants.EXTRA_TYPE, DownloadService.TYPE_CHECK);
+			DownloadService.sendWakefulWork(context, service);
 		}
 	}
 

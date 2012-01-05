@@ -73,10 +73,6 @@ public class NotificationService extends WakefulIntentService {
 		}
 	}
 
-	public static void start(Context context) {
-		sendWakefulWork(context, NotificationService.class);
-	}
-
 	public static void set(Context context) {
 		boolean need = OptionHelper.readBoolean(context,
 				R.string.option_notification, true);
@@ -145,9 +141,9 @@ public class NotificationService extends WakefulIntentService {
 				R.string.option_notification, false);
 		if (need) {
 			boolean dm = OptionHelper.readBoolean(this,
-					R.string.option_notification_dm, false);
+					R.string.option_notification_dm, true);
 			boolean mention = OptionHelper.readBoolean(this,
-					R.string.option_notification_mention, false);
+					R.string.option_notification_mention, true);
 			boolean home = OptionHelper.readBoolean(this,
 					R.string.option_notification_home, false);
 

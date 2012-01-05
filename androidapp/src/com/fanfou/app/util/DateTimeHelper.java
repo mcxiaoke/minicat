@@ -19,6 +19,7 @@ public class DateTimeHelper {
 
 	private static final String FANFOU_DATE_FORMAT_STRING = "EEE MMM dd HH:mm:ss Z yyyy";
 	private static final String SIMPLE_DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm";
+	private static final String FILENAME_DATE_FORMAT_STRING = "yyyy_MM_dd_HH_mm_ss";
 	private static final String DATE_ONLY_FORMAT_STRING = "yyyy-MM-dd";
 	private static final String TIME_ONLY_FORMAT_STRING = "HH:mm:ss";
 
@@ -27,6 +28,9 @@ public class DateTimeHelper {
 
 	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(
 			SIMPLE_DATE_FORMAT_STRING, Locale.US);
+	
+	private static final SimpleDateFormat FILENAME_DATE_FORMAT = new SimpleDateFormat(
+			FILENAME_DATE_FORMAT_STRING, Locale.US);
 
 	private static final SimpleDateFormat DATE_ONLY_FORMAT = new SimpleDateFormat(
 			DATE_ONLY_FORMAT_STRING, Locale.US);
@@ -104,6 +108,10 @@ public class DateTimeHelper {
 	 */
 	public static String formatDate(Date date) {
 		return formatDate(date, SIMPLE_DATE_FORMAT);
+	}
+	
+	public static String formatDateFileName(Date date) {
+		return formatDate(date, FILENAME_DATE_FORMAT);
 	}
 
 	public static String formatTimeOnly(Date date) {

@@ -1,10 +1,12 @@
 package com.fanfou.app.service;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -48,6 +50,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.4 2011.12.02
  * @version 2.5 2011.12.19
  * @version 2.6 2011.12.30
+ * @version 2.7 2012.01.05
  * 
  */
 public class DownloadService extends WakefulIntentService {
@@ -87,8 +90,8 @@ public class DownloadService extends WakefulIntentService {
 	}
 
 	public static void set(Context context) {
-		boolean need = OptionHelper.readBoolean(context,R.string.option_autoupdate,
-				true);
+		boolean need = OptionHelper.readBoolean(context,
+				R.string.option_autoupdate, true);
 		if (!need) {
 			return;
 		}
@@ -118,24 +121,26 @@ public class DownloadService extends WakefulIntentService {
 	}
 
 	public static void setIfNot(Context context) {
-		boolean set = OptionHelper.readBoolean(context,R.string.option_set_auto_update,
-				false);
+		boolean set = OptionHelper.readBoolean(context,
+				R.string.option_set_auto_update, false);
 		if (App.DEBUG) {
 			Log.d(TAG, "setIfNot flag=" + set);
 		}
 		if (!set) {
-			OptionHelper.saveBoolean(context,R.string.option_set_auto_update, true);
+			OptionHelper.saveBoolean(context, R.string.option_set_auto_update,
+					true);
 			set(context);
 		}
 	}
 
 	private final static PendingIntent getPendingIntent(Context context) {
-//		Intent intent = new Intent();
-//		intent.setPackage(context.getPackageName());
-//		intent.setAction(Constants.ACTION_ALARM_NOTITICATION);
-		
-		Intent intent = new Intent(context,AlarmReceiver.class);
-		intent.putExtra(Constants.EXTRA_TYPE, Constants.ACTION_ALARM_AUTO_UPDATE_CHECK);
+		// Intent intent = new Intent();
+		// intent.setPackage(context.getPackageName());
+		// intent.setAction(Constants.ACTION_ALARM_NOTITICATION);
+
+		Intent intent = new Intent(context, AlarmReceiver.class);
+		intent.putExtra(Constants.EXTRA_TYPE,
+				Constants.ACTION_ALARM_AUTO_UPDATE_CHECK);
 		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		return pi;
@@ -145,12 +150,6 @@ public class DownloadService extends WakefulIntentService {
 		Intent intent = new Intent(context, DownloadService.class);
 		intent.putExtra(Constants.EXTRA_TYPE, TYPE_DOWNLOAD);
 		intent.putExtra(Constants.EXTRA_URL, url);
-		sendWakefulWork(context, intent);
-	}
-
-	public static void startCheck(Context context) {
-		Intent intent = new Intent(context, DownloadService.class);
-		intent.putExtra(Constants.EXTRA_TYPE, TYPE_CHECK);
 		sendWakefulWork(context, intent);
 	}
 
@@ -185,7 +184,7 @@ public class DownloadService extends WakefulIntentService {
 	private void download(String url) {
 		showProgress();
 		InputStream is = null;
-		FileOutputStream fos = null;
+		BufferedOutputStream bos = null;
 		NetClient client = new NetClient();
 		try {
 			HttpResponse response = client.get(url);
@@ -196,13 +195,13 @@ public class DownloadService extends WakefulIntentService {
 				long download = 0;
 				is = entity.getContent();
 				File file = new File(IOHelper.getDownloadDir(this), "fanfou_"
-						+ System.currentTimeMillis() + ".apk");
-				fos = new FileOutputStream(file);
-				// fos = openFileOutput("fanfou.apk", MODE_PRIVATE);
+						+ DateTimeHelper.formatDateFileName(new Date())
+						+ ".apk");
+				bos = new BufferedOutputStream(new FileOutputStream(file));
 				byte[] buffer = new byte[8196];
 				int read = -1;
 				while ((read = is.read(buffer)) != -1) {
-					fos.write(buffer, 0, read);
+					bos.write(buffer, 0, read);
 					download += read;
 					int progress = (int) (100.0 * download / total);
 					Message message = new Message();
@@ -213,7 +212,7 @@ public class DownloadService extends WakefulIntentService {
 						log("progress=" + progress);
 					}
 				}
-				fos.flush();
+				bos.flush();
 				if (download >= total) {
 					Message message = new Message();
 					message.what = MSG_SUCCESS;
@@ -231,7 +230,7 @@ public class DownloadService extends WakefulIntentService {
 		} finally {
 			nm.cancel(NOTIFICATION_PROGRESS_ID);
 			IOHelper.forceClose(is);
-			IOHelper.forceClose(fos);
+			IOHelper.forceClose(bos);
 		}
 	}
 
@@ -242,12 +241,11 @@ public class DownloadService extends WakefulIntentService {
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		notification.contentIntent = PendingIntent.getActivity(this, 0,
 				new Intent(), 0);
-		notification.contentView = new RemoteViews(getPackageName(),
-				R.layout.download_notification);;
-		notification.contentView.setTextViewText(R.id.download_notification_text,
-				"正在下载饭否客户端 0%");
-		notification.contentView.setProgressBar(R.id.download_notification_progress, 100, 0,
-				false);
+		RemoteViews view = new RemoteViews(getPackageName(),
+				R.layout.download_notification);
+		view.setTextViewText(R.id.download_notification_text, "正在下载饭否客户端 0%");
+		view.setProgressBar(R.id.download_notification_progress, 100, 0, false);
+		notification.contentView = view;
 		nm.notify(NOTIFICATION_PROGRESS_ID, notification);
 	}
 
@@ -255,6 +253,9 @@ public class DownloadService extends WakefulIntentService {
 	private static final int MSG_SUCCESS = 1;
 
 	private class DownloadHandler extends Handler {
+		private static final long UPDATE_TIME = 1500;
+		private long lastTime = 0;
+
 		@Override
 		public void handleMessage(Message msg) {
 			if (App.DEBUG) {
@@ -262,8 +263,13 @@ public class DownloadService extends WakefulIntentService {
 						+ msg.arg1);
 			}
 			if (MSG_PROGRESS == msg.what) {
+				long now = System.currentTimeMillis();
+				if (now - lastTime < UPDATE_TIME) {
+					return;
+				}
 				int progress = msg.arg1;
 				updateProgress(progress);
+				lastTime = System.currentTimeMillis();
 			} else if (MSG_SUCCESS == msg.what) {
 				nm.cancel(NOTIFICATION_PROGRESS_ID);
 				String filePath = msg.getData().getString(
@@ -274,10 +280,13 @@ public class DownloadService extends WakefulIntentService {
 	}
 
 	private void updateProgress(final int progress) {
-		notification.contentView.setTextViewText(
-				R.id.download_notification_text, "正在下载饭否客户端 " + progress + "%");
-		notification.contentView.setInt(R.id.download_notification_progress,
-				"setProgress", progress);
+		RemoteViews view = new RemoteViews(getPackageName(),
+				R.layout.download_notification);
+		view.setTextViewText(R.id.download_notification_text, "正在下载饭否客户端 "
+				+ progress + "%");
+		view.setInt(R.id.download_notification_progress, "setProgress",
+				progress);
+		notification.contentView = view;
 		nm.notify(NOTIFICATION_PROGRESS_ID, notification);
 	}
 

@@ -33,7 +33,6 @@ abstract public class WakefulIntentService extends IntentService {
 			lockStatic = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, NAME);
 			lockStatic.setReferenceCounted(true);
 		}
-
 		return (lockStatic);
 	}
 
@@ -48,19 +47,13 @@ abstract public class WakefulIntentService extends IntentService {
 
 	public WakefulIntentService(String name) {
 		super(name);
-		setIntentRedelivery(true);
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if ((flags & START_FLAG_REDELIVERY) != 0) { // if crash restart...
-			getLock(this.getApplicationContext()).acquire(); // ...then quick
-																// grab the lock
-		}
-
+		getLock(this.getApplicationContext()).acquire();
 		super.onStartCommand(intent, flags, startId);
-
-		return (START_REDELIVER_INTENT);
+		return (START_NOT_STICKY);
 	}
 
 	@Override

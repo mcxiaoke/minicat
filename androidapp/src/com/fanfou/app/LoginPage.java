@@ -107,7 +107,7 @@ public final class LoginPage extends Activity implements OnClickListener {
 
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setLeftAction(new LogoAction());
-		mActionBar.setRightAction(new RegisterAction(this));
+//		mActionBar.setRightAction(new RegisterAction(this));
 		// mActionBar.setTitle("登录饭否");
 
 		editUsername = (EditText) findViewById(R.id.login_username);
@@ -151,24 +151,24 @@ public final class LoginPage extends Activity implements OnClickListener {
 
 	}
 
-	private static class RegisterAction extends AbstractAction {
-		Activity mContext;
+//	private static class RegisterAction extends AbstractAction {
+//		Activity mContext;
+//
+//		public RegisterAction(Activity context) {
+//			super(R.drawable.ic_register);
+//			mContext = context;
+//		}
+//
+//		@Override
+//		public void performAction(View view) {
+//			goRegisterPage(mContext);
+//		}
+//	}
 
-		public RegisterAction(Activity context) {
-			super(R.drawable.ic_register);
-			mContext = context;
-		}
-
-		@Override
-		public void performAction(View view) {
-			goRegisterPage(mContext);
-		}
-	}
-
-	private static void goRegisterPage(Activity context) {
-		Intent intent = new Intent(context, RegisterPage.class);
-		context.startActivityForResult(intent, REQUEST_CODE_REGISTER);
-	}
+//	private static void goRegisterPage(Activity context) {
+//		Intent intent = new Intent(context, RegisterPage.class);
+//		context.startActivityForResult(intent, REQUEST_CODE_REGISTER);
+//	}
 
 	private static class LogoAction extends ActionBar.AbstractAction {
 

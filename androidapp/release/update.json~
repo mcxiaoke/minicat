@@ -1,0 +1,1 @@
+{"versionCode":"20111222","versionName":"1.8.6","releaseDate":"2011.12.22","changelog":"1.重写网络模块，提高联网和后台服务稳定性；\n2.重构数据解析部分，优化性能；\n3.修复CMWAP支持，不再支持电信CTWAP；\n4.修复提示验证无效和发不出消息的问题；\n5.修复后台提醒睡眠时无效的问题；\n6.其它细节修改，BUG修复；","downloadUrl":"http://apps.fanfou.com/android/fanfou.apk","versionType":"major","packageName":"fanfou.apk","forceUpdate":"true"}

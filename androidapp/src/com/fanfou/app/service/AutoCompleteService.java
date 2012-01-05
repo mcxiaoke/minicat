@@ -45,10 +45,6 @@ public class AutoCompleteService extends WakefulIntentService {
 		super("AutoCompleteService");
 	}
 
-	public static void start(Context context) {
-		sendWakefulWork(context, AutoCompleteService.class);
-	}
-
 	public static void set(Context context) {
 		Calendar c = Calendar.getInstance();
 		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),

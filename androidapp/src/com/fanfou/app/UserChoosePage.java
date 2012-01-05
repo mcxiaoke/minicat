@@ -111,8 +111,13 @@ public class UserChoosePage extends BaseActivity implements
 		} else {
 			doRefresh();
 			Handler handler=new Handler();
-			// TODO need delay
-			AutoCompleteService.start(this);
+			handler.postDelayed(new Runnable() {
+				
+				@Override
+				public void run() {
+					AutoCompleteService.sendWakefulWork(mContext, AutoCompleteService.class);
+				}
+			}, 30000);
 			showProgress();
 		}
 	}

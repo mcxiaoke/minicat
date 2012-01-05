@@ -22,11 +22,13 @@ public class AlarmReceiver extends BroadcastReceiver {
 //		String action = intent.getAction();
 		String action=intent.getStringExtra(Constants.EXTRA_TYPE);
 		if (action.equals(Constants.ACTION_ALARM_NOTITICATION)) {
-			NotificationService.start(context);
+			NotificationService.sendWakefulWork(context, NotificationService.class);
 		} else if (action.equals(Constants.ACTION_ALARM_AUTO_COMPLETE)) {
-			AutoCompleteService.start(context);
+			AutoCompleteService.sendWakefulWork(context, AutoCompleteService.class);
 		} else if (action.equals(Constants.ACTION_ALARM_AUTO_UPDATE_CHECK)) {
-			DownloadService.startCheck(context);
+			Intent service = new Intent(context, DownloadService.class);
+			service.putExtra(Constants.EXTRA_TYPE, DownloadService.TYPE_CHECK);
+			DownloadService.sendWakefulWork(context, service);
 		}
 		
 	}
