@@ -118,7 +118,7 @@ public class ImageLoader implements IImageLoader {
 		if (bitmap == null) {
 			try {
 				bitmap = mClient.getBitmap(url);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				Log.e(TAG, "download error:" + e.getMessage());
 			}
 			if (bitmap != null) {
