@@ -1,5 +1,6 @@
 *.log
 *.class
+.DS_Store
 androidapp/bin/
 androidapp/gen/
 androidapp/proguard/

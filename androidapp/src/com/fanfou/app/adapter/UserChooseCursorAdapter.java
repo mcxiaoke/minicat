@@ -6,7 +6,6 @@ import java.util.HashMap;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.TextPaint;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;

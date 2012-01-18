@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.ResultReceiver;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
@@ -20,7 +19,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.fanfou.app.adapter.UserChooseCursorAdapter;
 import com.fanfou.app.api.User;

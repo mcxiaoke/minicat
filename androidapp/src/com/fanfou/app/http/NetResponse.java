@@ -14,9 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
-import com.fanfou.app.App;
 import com.fanfou.app.api.ApiException;
 import com.fanfou.app.util.IOHelper;
 

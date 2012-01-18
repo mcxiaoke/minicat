@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.text.TextPaint;
 import android.text.util.Linkify;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;

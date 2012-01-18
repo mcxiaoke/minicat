@@ -34,7 +34,6 @@ import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.service.Constants;
 import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.ui.TextChangeListener;
 import com.fanfou.app.util.AlarmHelper;
 import com.fanfou.app.util.DeviceHelper;

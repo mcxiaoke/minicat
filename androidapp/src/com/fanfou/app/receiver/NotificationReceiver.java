@@ -78,9 +78,10 @@ public class NotificationReceiver extends BroadcastReceiver {
 		}
 	}
 
-	private static void showHomeOneNotification(Context context, final Status status) {
+	private static void showHomeOneNotification(Context context,
+			final Status status) {
 		if (App.DEBUG) {
-			Log.d(TAG, "showHomeOneNotification "+status);
+			Log.d(TAG, "showHomeOneNotification " + status);
 		}
 		String title = status.userScreenName;
 		String message = status.simpleText;
@@ -111,7 +112,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 	private static void showMentionOneNotification(Context context,
 			final Status status) {
 		if (App.DEBUG) {
-			Log.i(TAG, "showMentionOneNotification "+status);
+			Log.i(TAG, "showMentionOneNotification " + status);
 		}
 		String title = status.userScreenName + "@你的消息";
 		String message = status.simpleText;
@@ -139,9 +140,10 @@ public class NotificationReceiver extends BroadcastReceiver {
 				title, message, R.drawable.ic_notify_mention);
 	}
 
-	private static void showDmOneNotification(Context context, final DirectMessage dm) {
+	private static void showDmOneNotification(Context context,
+			final DirectMessage dm) {
 		if (App.DEBUG) {
-			Log.d(TAG, "showDmOneNotification "+dm);
+			Log.d(TAG, "showDmOneNotification " + dm);
 		}
 		Intent intent = new Intent(context, SendPage.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());

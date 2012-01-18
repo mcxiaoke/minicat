@@ -32,7 +32,6 @@ import com.fanfou.app.App;
 import com.fanfou.app.NewVersionPage;
 import com.fanfou.app.R;
 import com.fanfou.app.http.NetClient;
-import com.fanfou.app.receiver.AlarmReceiver;
 import com.fanfou.app.update.VersionInfo;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.IOHelper;
@@ -51,9 +50,10 @@ import com.fanfou.app.util.Utils;
  * @version 2.5 2011.12.19
  * @version 2.6 2011.12.30
  * @version 2.7 2012.01.05
+ * @version 2.8 2012.01.16
  * 
  */
-public class DownloadService extends WakefulIntentService {
+public class DownloadService extends BaseIntentService {
 	private static final String TAG = DownloadService.class.getSimpleName();
 
 	public static final String UPDATE_VERSION_FILE = "http://apps.fanfou.com/android/update.json";
@@ -99,7 +99,7 @@ public class DownloadService extends WakefulIntentService {
 		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
 				c.get(Calendar.DAY_OF_MONTH), 11, 0);
 		c.add(Calendar.DATE, 1);
-		long interval = 2 * 24 * 3600 * 1000;
+		long interval = 3 * 24 * 3600 * 1000;
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		am.setInexactRepeating(AlarmManager.RTC, c.getTimeInMillis(), interval,
@@ -134,14 +134,9 @@ public class DownloadService extends WakefulIntentService {
 	}
 
 	private final static PendingIntent getPendingIntent(Context context) {
-		// Intent intent = new Intent();
-		// intent.setPackage(context.getPackageName());
-		// intent.setAction(Constants.ACTION_ALARM_NOTITICATION);
-
-		Intent intent = new Intent(context, AlarmReceiver.class);
-		intent.putExtra(Constants.EXTRA_TYPE,
-				Constants.ACTION_ALARM_AUTO_UPDATE_CHECK);
-		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent,
+		Intent intent = new Intent(context, DownloadService.class);
+		intent.putExtra(Constants.EXTRA_TYPE, TYPE_CHECK);
+		PendingIntent pi = PendingIntent.getService(context, 0, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		return pi;
 	}
@@ -150,11 +145,11 @@ public class DownloadService extends WakefulIntentService {
 		Intent intent = new Intent(context, DownloadService.class);
 		intent.putExtra(Constants.EXTRA_TYPE, TYPE_DOWNLOAD);
 		intent.putExtra(Constants.EXTRA_URL, url);
-		sendWakefulWork(context, intent);
+		context.startService(intent);
 	}
 
 	@Override
-	protected void doWakefulWork(Intent intent) {
+	protected void onHandleIntent(Intent intent) {
 		nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		int type = intent.getIntExtra(Constants.EXTRA_TYPE, TYPE_CHECK);
 		if (type == TYPE_CHECK) {

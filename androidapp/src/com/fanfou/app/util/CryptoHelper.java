@@ -12,7 +12,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.protocol.HTTP;
 
 import android.text.Spannable;

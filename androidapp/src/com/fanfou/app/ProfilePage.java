@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.ResultReceiver;
 import android.text.TextPaint;
 import android.util.Log;
 import android.view.Gravity;
@@ -16,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.CacheManager;

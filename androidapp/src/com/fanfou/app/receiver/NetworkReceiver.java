@@ -11,11 +11,7 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.App.ApnType;
-import com.fanfou.app.R;
-import com.fanfou.app.service.Constants;
-import com.fanfou.app.service.DownloadService;
 import com.fanfou.app.util.IntentHelper;
-import com.fanfou.app.util.OptionHelper;
 
 /**
  * @author mcxiaoke
@@ -24,6 +20,7 @@ import com.fanfou.app.util.OptionHelper;
  * @version 2.6 2011.11.03
  * @version 2.7 2011.11.10
  * @version 2.8 2011.11.17
+ * @version 2.9 2012.01.16
  * 
  */
 public class NetworkReceiver extends BroadcastReceiver {
@@ -46,20 +43,6 @@ public class NetworkReceiver extends BroadcastReceiver {
 	private void onWifiConnected(Context context) {
 		if (App.DEBUG) {
 			log("onWifiConnected");
-		}
-		// when wifi is connected, start fetch friends for autocomplete and
-		// check update.
-		// AutoCompleteService.start(context);
-		startUpdateCheck(context);
-	}
-
-	public static void startUpdateCheck(Context context) {
-		boolean autoUpdate = OptionHelper.readBoolean(context,
-				R.string.option_autoupdate, true);
-		if (autoUpdate) {
-			Intent service = new Intent(context, DownloadService.class);
-			service.putExtra(Constants.EXTRA_TYPE, DownloadService.TYPE_CHECK);
-			DownloadService.sendWakefulWork(context, service);
 		}
 	}
 

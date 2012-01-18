@@ -35,13 +35,13 @@ import com.fanfou.app.util.ImageHelper;
  * @version 3.4 2011.12.26
  * 
  */
-public class QueueService extends WakefulIntentService {
+public class QueueService extends BaseIntentService {
 	public QueueService() {
 		super("TaskQueueService");
 	}
 	
 	public static void start(Context context){
-		sendWakefulWork(context, QueueService.class);
+		context.startService(new Intent(context, QueueService.class));
 	}
 
 	private static final String TAG = QueueService.class.getSimpleName();
@@ -109,7 +109,7 @@ public class QueueService extends WakefulIntentService {
 	}
 
 	@Override
-	protected void doWakefulWork(Intent intent) {
+	protected void onHandleIntent(Intent intent) {
 		sendQueue();
 	}
 

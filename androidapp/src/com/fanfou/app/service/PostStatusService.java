@@ -2,7 +2,6 @@ package com.fanfou.app.service;
 
 import java.io.File;
 
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;

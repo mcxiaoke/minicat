@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.SystemClock;
 import android.util.Log;
 
 import com.fanfou.app.App;
@@ -25,7 +24,6 @@ import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.DirectMessageInfo;
 import com.fanfou.app.db.Contents.StatusInfo;
 import com.fanfou.app.db.FanFouProvider;
-import com.fanfou.app.receiver.AlarmReceiver;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -47,6 +45,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.9 2011.12.26
  * @version 3.0 2011.12.27
  * @version 3.1 2011.12.30
+ * @version 3.2 2012.01.16
  * 
  */
 public class NotificationService extends WakefulIntentService {
@@ -117,14 +116,8 @@ public class NotificationService extends WakefulIntentService {
 	}
 
 	private final static PendingIntent getPendingIntent(Context context) {
-		// Intent intent = new Intent();
-		// intent.setPackage(context.getPackageName());
-		// intent.setAction(Constants.ACTION_ALARM_NOTITICATION);
-
-		Intent intent = new Intent(context, AlarmReceiver.class);
-		intent.putExtra(Constants.EXTRA_TYPE, Constants.ACTION_ALARM_NOTITICATION);
-
-		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent,
+		Intent intent = new Intent(context, NotificationService.class);
+		PendingIntent pi = PendingIntent.getService(context, 0, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		return pi;
 	}
@@ -137,32 +130,27 @@ public class NotificationService extends WakefulIntentService {
 
 	@Override
 	protected void doWakefulWork(Intent intent) {
-		boolean need = OptionHelper.readBoolean(this,
-				R.string.option_notification, false);
-		if (need) {
-			boolean dm = OptionHelper.readBoolean(this,
-					R.string.option_notification_dm, true);
-			boolean mention = OptionHelper.readBoolean(this,
-					R.string.option_notification_mention, true);
-			boolean home = OptionHelper.readBoolean(this,
-					R.string.option_notification_home, false);
+		boolean dm = OptionHelper.readBoolean(this,
+				R.string.option_notification_dm, true);
+		boolean mention = OptionHelper.readBoolean(this,
+				R.string.option_notification_mention, true);
+		boolean home = OptionHelper.readBoolean(this,
+				R.string.option_notification_home, false);
 
-			int count = DEFAULT_COUNT;
-			if (App.getApnType() == ApnType.WIFI) {
-				count = MAX_COUNT;
-			}
-			if (dm) {
-				handleDm(count);
-			}
-			if (mention) {
-				handleMention(count);
-			}
-			if (home) {
-				handleHome(count);
-			}
-			set(this);
+		int count = DEFAULT_COUNT;
+		if (App.getApnType() == ApnType.WIFI) {
+			count = MAX_COUNT;
 		}
-
+		if (dm) {
+			handleDm(count);
+		}
+		if (mention) {
+			handleMention(count);
+		}
+		if (home) {
+			handleHome(count);
+		}
+		set(this);
 	}
 
 	private void handleDm(int count) {

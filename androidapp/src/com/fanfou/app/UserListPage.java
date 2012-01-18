@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
-import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;

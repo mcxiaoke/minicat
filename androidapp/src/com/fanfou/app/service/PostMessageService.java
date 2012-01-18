@@ -1,6 +1,5 @@
 package com.fanfou.app.service;
 
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -26,7 +25,7 @@ import com.fanfou.app.util.IOHelper;
  * @version 2.2 2011.12.13
  * 
  */
-public class PostMessageService extends IntentService {
+public class PostMessageService extends BaseIntentService {
 
 	private static final String TAG = PostMessageService.class.getSimpleName();
 	private NotificationManager nm;
