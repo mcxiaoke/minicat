@@ -1,3 +1,0 @@
-[submodule "pull-to-refresh"]
-	path = pull-to-refresh
-	url = git://github.com/chrisbanes/Android-PullToRefresh.git
