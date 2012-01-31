@@ -134,6 +134,7 @@ import com.fanfou.app.util.Utils;
  * @version 6.1 2011.12.19
  * @version 7.0 2011.12.23
  * @version 7.1 2011.12.26
+ * @version 7.2 2012.01.31
  * 
  */
 public class FanFouService extends IntentService {
@@ -1074,9 +1075,6 @@ public class FanFouService extends IntentService {
 	}
 
 	private void fetchTimeline(Intent intent) {
-		if (App.DEBUG) {
-			Log.d(TAG, "fetchTimeline");
-		}
 		List<Status> statuses = null;
 
 		int page = intent.getIntExtra(EXTRA_PAGE, 0);
@@ -1090,41 +1088,47 @@ public class FanFouService extends IntentService {
 		} else {
 			count = DEFAULT_TIMELINE_COUNT;
 		}
+
+		if (App.DEBUG) {
+			Log.d(TAG, "fetchTimeline userId=" + id + " sinceId=" + sinceId
+					+ " maxId=" + maxId + " page=" + page + " count=" + count);
+		}
+
 		try {
 			switch (type) {
 			case TYPE_STATUSES_HOME_TIMELINE:
 				if (App.DEBUG)
-					Log.d(TAG, "fetchTimeline TYPE_HOME");
+					Log.d(TAG, "fetchTimeline TYPE_HOME userId=" + id);
 				statuses = api.homeTimeline(count, page, sinceId, maxId,
 						FORMAT, MODE);
 
 				break;
 			case TYPE_STATUSES_MENTIONS:
 				if (App.DEBUG)
-					Log.d(TAG, "fetchTimeline TYPE_MENTION");
+					Log.d(TAG, "fetchTimeline TYPE_MENTION userId=" + id);
 				statuses = api.mentions(count, page, sinceId, maxId, FORMAT,
 						MODE);
 				break;
 			case TYPE_STATUSES_PUBLIC_TIMELINE:
 				count = DEFAULT_TIMELINE_COUNT;
 				if (App.DEBUG)
-					Log.d(TAG, "fetchTimeline TYPE_PUBLIC");
+					Log.d(TAG, "fetchTimeline TYPE_PUBLIC userId=" + id);
 				statuses = api.pubicTimeline(count, FORMAT, MODE);
 				break;
 			case TYPE_FAVORITES_LIST:
 				if (App.DEBUG)
-					Log.d(TAG, "fetchTimeline TYPE_FAVORITES");
+					Log.d(TAG, "fetchTimeline TYPE_FAVORITES userId=" + id);
 				statuses = api.favorites(count, page, id, FORMAT, MODE);
 				break;
 			case TYPE_STATUSES_USER_TIMELINE:
 				if (App.DEBUG)
-					Log.d(TAG, "fetchTimeline TYPE_USER");
+					Log.d(TAG, "fetchTimeline TYPE_USER userId=" + id);
 				statuses = api.userTimeline(count, page, id, sinceId, maxId,
 						FORMAT, MODE);
 				break;
 			case TYPE_STATUSES_CONTEXT_TIMELINE:
 				if (App.DEBUG)
-					Log.d(TAG, "fetchTimeline TYPE_CONTEXT");
+					Log.d(TAG, "fetchTimeline TYPE_CONTEXT userId=" + id);
 				statuses = api.contextTimeline(id, FORMAT, MODE);
 				break;
 			default:
@@ -1133,22 +1137,33 @@ public class FanFouService extends IntentService {
 			if (statuses == null || statuses.size() == 0) {
 				sendIntMessage(0);
 				if (App.DEBUG)
-					Log.d(TAG, "fetchTimeline received no items.");
+					Log.d(TAG, "fetchTimeline received no items. userId=" + id);
 				return;
 			} else {
 				int size = statuses.size();
 				if (App.DEBUG) {
-					Log.d(TAG, "fetchTimeline received items count=" + size);
+					Log.d(TAG, "fetchTimeline received items count=" + size
+							+ " userId=" + id);
 				}
 				ContentResolver cr = getContentResolver();
 				if (size >= count && page <= 1 && maxId == null) {
-					String where = BasicColumns.TYPE + " = ?";
+					String where = BasicColumns.TYPE + " = ? ";
 					String[] whereArgs = new String[] { String.valueOf(type) };
+					if (type == TYPE_STATUSES_USER_TIMELINE) {
+						where = BasicColumns.TYPE + " = ? AND "
+								+ StatusInfo.USER_ID + " =? ";
+						whereArgs = new String[] { String.valueOf(type), id };
+					} else if (type == TYPE_FAVORITES_LIST) {
+						where = BasicColumns.TYPE + " = ? AND "
+								+ StatusInfo.OWNER_ID + " =? ";
+						whereArgs = new String[] { String.valueOf(type), id };
+					}
 					int delete = cr.delete(StatusInfo.CONTENT_URI, where,
 							whereArgs);
 					if (App.DEBUG) {
 						Log.d(TAG, "fetchTimeline items count = " + count
-								+ " ,remove " + delete + " old statuses.");
+								+ " ,remove " + delete
+								+ " old statuses. userId=" + id+" type="+type);
 					}
 				}
 				int insertedCount = cr.bulkInsert(StatusInfo.CONTENT_URI,
@@ -1159,7 +1174,7 @@ public class FanFouService extends IntentService {
 		} catch (ApiException e) {
 			if (App.DEBUG) {
 				log("fetchTimeline [error]" + e.statusCode + ":"
-						+ e.errorMessage);
+						+ e.errorMessage + " userId=" + id);
 				e.printStackTrace();
 			}
 			sendErrorMessage(e);
