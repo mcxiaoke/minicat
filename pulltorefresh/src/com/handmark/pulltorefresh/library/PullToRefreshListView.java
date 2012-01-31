@@ -16,6 +16,10 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 	private LoadingLayout footerLoadingView;
 
 	class InternalListView extends ListView implements EmptyViewMethodAccessor {
+		
+		public InternalListView(Context context) {
+			super(context);
+		}
 
 		public InternalListView(Context context, AttributeSet attrs) {
 			super(context, attrs);
@@ -38,6 +42,11 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 
 	public PullToRefreshListView(Context context) {
 		super(context);
+		this.setDisableScrollingWhileRefreshing(false);
+	}
+	
+	public PullToRefreshListView(Context context, int mode) {
+		super(context, mode);
 		this.setDisableScrollingWhileRefreshing(false);
 	}
 

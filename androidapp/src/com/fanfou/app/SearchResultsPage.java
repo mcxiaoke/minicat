@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
@@ -25,10 +26,10 @@ import com.fanfou.app.api.Status;
 import com.fanfou.app.service.Constants;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.UIManager;
-import com.fanfou.app.ui.widget.EndlessListView;
-import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**
  * @author mcxiaoke
@@ -37,13 +38,16 @@ import com.fanfou.app.util.Utils;
  * @version 1.5 2011.10.24
  * @version 1.6 2011.11.21
  * @version 1.7 2011.11.25
+ * @version 2.0 2012.01.31
  * 
  */
 public class SearchResultsPage extends BaseActivity implements
-		OnRefreshListener, OnItemLongClickListener {
+		OnRefreshListener, OnItemClickListener, OnItemLongClickListener {
+	private static final String TAG = SearchResultsPage.class.getSimpleName();
 
 	protected ActionBar mActionBar;
-	protected EndlessListView mListView;
+	private PullToRefreshListView mPullToRefreshListView;
+	private ListView mList;
 	protected ViewGroup mEmptyView;
 
 	protected SearchResultsAdapter mStatusAdapter;
@@ -52,7 +56,7 @@ public class SearchResultsPage extends BaseActivity implements
 
 	protected String keyword;
 	protected String maxId;
-	
+
 	private Api api;
 
 	private boolean showListView = false;
@@ -79,23 +83,34 @@ public class SearchResultsPage extends BaseActivity implements
 
 	protected void initialize() {
 		mStatuses = new ArrayList<Status>();
-		api=FanFouApi.newInstance();
+		api = FanFouApi.newInstance();
 	}
 
 	private void setLayout() {
-		setContentView(R.layout.list);
+		setContentView(R.layout.list_pull);
 
 		setActionBar();
 		mEmptyView = (ViewGroup) findViewById(R.id.empty);
-		mListView = (EndlessListView) findViewById(R.id.list);
-		mListView.setOnItemLongClickListener(this);
-		mListView.setOnRefreshListener(this);
+		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.list);
+		mList = mPullToRefreshListView.getRefreshableView();
+		configListView(mList);
+	}
+
+	private void configListView(final ListView list) {
+//		list.setHorizontalScrollBarEnabled(false);
+//		list.setVerticalScrollBarEnabled(false);
+//		list.setCacheColorHint(0);
+//		list.setSelector(getResources().getDrawable(R.drawable.list_selector));
+//		list.setDivider(getResources().getDrawable(R.drawable.separator));
+
+		list.setOnItemClickListener(this);
+		list.setOnItemClickListener(this);
 	}
 
 	protected void search() {
 		parseIntent();
 		mStatuses.clear();
-		doSearch();
+		doSearch(true);
 		showProgress();
 
 	}
@@ -118,7 +133,7 @@ public class SearchResultsPage extends BaseActivity implements
 
 	private void showProgress() {
 		showListView = false;
-		mListView.setVisibility(View.GONE);
+		mPullToRefreshListView.setVisibility(View.GONE);
 		mEmptyView.setVisibility(View.VISIBLE);
 	}
 
@@ -126,11 +141,10 @@ public class SearchResultsPage extends BaseActivity implements
 		showListView = true;
 
 		mStatusAdapter = new SearchResultsAdapter(this, mStatuses);
-		mListView.setAdapter(mStatusAdapter);
+		mList.setAdapter(mStatusAdapter);
 
 		mEmptyView.setVisibility(View.GONE);
-		mListView.removeHeader();
-		mListView.setVisibility(View.VISIBLE);
+		mPullToRefreshListView.setVisibility(View.VISIBLE);
 	}
 
 	/**
@@ -143,12 +157,17 @@ public class SearchResultsPage extends BaseActivity implements
 		mActionBar.setRightAction(new ActionBar.SearchAction(this));
 	}
 
-	private void doSearch() {
+	private void doSearch(boolean reset) {
 		if (keyword != null) {
 			if (App.DEBUG) {
 				log("doSearch() keyword=" + keyword);
 			}
 			mActionBar.setTitle(keyword);
+			if(reset){
+				mStatuses.clear();
+				mStatusAdapter.notifyDataSetChanged();
+				mPullToRefreshListView.setRefreshing();
+			}
 			new SearchTask().execute();
 		}
 
@@ -156,11 +175,7 @@ public class SearchResultsPage extends BaseActivity implements
 
 	protected void updateUI(boolean noMore) {
 		mStatusAdapter.updateDataAndUI(mStatuses, keyword);
-		if (noMore) {
-			mListView.onNoLoadMore();
-		} else {
-			mListView.onLoadMoreComplete();
-		}
+		mPullToRefreshListView.onRefreshComplete();
 	}
 
 	private static final String LIST_STATE = "listState";
@@ -169,8 +184,8 @@ public class SearchResultsPage extends BaseActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (mState != null && mListView != null) {
-			mListView.onRestoreInstanceState(mState);
+		if (mState != null && mList != null) {
+			mList.onRestoreInstanceState(mState);
 			mState = null;
 		}
 	}
@@ -184,8 +199,8 @@ public class SearchResultsPage extends BaseActivity implements
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if (mListView != null) {
-			mState = mListView.onSaveInstanceState();
+		if (mList != null) {
+			mState = mList.onSaveInstanceState();
 			outState.putParcelable(LIST_STATE, mState);
 		}
 	}
@@ -193,23 +208,6 @@ public class SearchResultsPage extends BaseActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-	}
-
-	@Override
-	public void onRefresh(ListView view) {
-	}
-
-	@Override
-	public void onLoadMore(ListView view) {
-		doSearch();
-	}
-
-	@Override
-	public void onItemClick(ListView view, View row, int position) {
-		final Status s = (Status) view.getItemAtPosition(position);
-		if (s != null) {
-			Utils.goStatusPage(mContext, s);
-		}
 	}
 
 	private class SearchTask extends AsyncTask<Void, Void, List<Status>> {
@@ -233,6 +231,7 @@ public class SearchResultsPage extends BaseActivity implements
 				mStatuses.addAll(result);
 				updateUI(size < 20);
 			}
+			mPullToRefreshListView.onRefreshComplete();
 		}
 
 		@Override
@@ -286,8 +285,27 @@ public class SearchResultsPage extends BaseActivity implements
 	}
 
 	private void goTop() {
-		if (mListView != null) {
-			mListView.setSelection(0);
+		if (mList != null) {
+			mList.setSelection(0);
+		}
+	}
+
+	@Override
+	public void onRefresh() {
+		boolean fromTop = mPullToRefreshListView.hasPullFromTop();
+		if (App.DEBUG) {
+			Log.d(TAG, "onRefresh() top=" + fromTop);
+		}
+
+		doSearch(fromTop);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		final Status s = (Status) parent.getItemAtPosition(position);
+		if (s != null) {
+			Utils.goStatusPage(mContext, s);
 		}
 	}
 

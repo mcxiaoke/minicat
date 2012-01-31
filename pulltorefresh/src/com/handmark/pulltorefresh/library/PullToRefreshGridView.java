@@ -1,12 +1,12 @@
 package com.handmark.pulltorefresh.library;
 
-import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
 import android.widget.GridView;
+
+import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
 
 public class PullToRefreshGridView extends PullToRefreshAdapterViewBase<GridView> {
 

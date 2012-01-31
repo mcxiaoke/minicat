@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
@@ -23,10 +24,11 @@ import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.UIManager;
-import com.fanfou.app.ui.widget.EndlessListView;
-import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**
  * @author mcxiaoke
@@ -38,13 +40,17 @@ import com.fanfou.app.util.Utils;
  * @version 3.3 2011.11.18
  * @version 3.4 2011.12.13
  * @version 3.5 2011.12.23
+ * @version 4.0 2012.01.30
  * 
  */
 public abstract class BaseTimelineActivity extends BaseActivity implements
-		OnRefreshListener, OnItemLongClickListener {
+		OnRefreshListener, OnItemClickListener, OnItemLongClickListener {
+	private static final String TAG = BaseTimelineActivity.class
+			.getSimpleName();
 
 	protected ActionBar mActionBar;
-	protected EndlessListView mListView;
+	private PullToRefreshListView mPullToRefreshListView;
+	private ListView mList;
 	protected ViewGroup mEmptyView;
 
 	protected Cursor mCursor;
@@ -84,13 +90,24 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 	}
 
 	private void setLayout() {
-		setContentView(R.layout.list);
+		setContentView(R.layout.list_pull);
 		setActionBar();
 		mEmptyView = (ViewGroup) findViewById(R.id.empty);
-		mListView = (EndlessListView) findViewById(R.id.list);
-		mListView.setOnRefreshListener(this);
-		mListView.setOnItemLongClickListener(this);
-		mListView.setAdapter(mCursorAdapter);
+		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.list);
+		mPullToRefreshListView.setOnRefreshListener(this);
+		mList = mPullToRefreshListView.getRefreshableView();
+		mList.setAdapter(mCursorAdapter);
+		configListView(mList);
+	}
+	
+	private void configListView(final ListView list) {
+//		list.setHorizontalScrollBarEnabled(false);
+//		list.setVerticalScrollBarEnabled(false);
+//		list.setCacheColorHint(0);
+//		list.setSelector(getResources().getDrawable(R.drawable.list_selector));
+//		list.setDivider(getResources().getDrawable(R.drawable.separator));
+		list.setOnItemClickListener(this);
+		list.setOnItemClickListener(this);
 	}
 
 	protected void initCheckState() {
@@ -103,14 +120,14 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 	}
 
 	private void showProgress() {
-		mListView.setVisibility(View.GONE);
+		mPullToRefreshListView.setVisibility(View.GONE);
 		mEmptyView.setVisibility(View.VISIBLE);
 	}
 
 	private void showContent() {
 		isInitialized = true;
 		mEmptyView.setVisibility(View.GONE);
-		mListView.setVisibility(View.VISIBLE);
+		mPullToRefreshListView.setVisibility(View.VISIBLE);
 	}
 
 	/**
@@ -162,6 +179,9 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 	}
 
 	protected void doRetrieve(boolean doGetMore) {
+		if (App.DEBUG) {
+			Log.d(TAG, "doRetrieve() doGetMore=" + doGetMore);
+		}
 		doRetrieveImpl(new Messenger(new ResultHandler(doGetMore)), doGetMore);
 	}
 
@@ -184,8 +204,8 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (mState != null && mListView != null) {
-			mListView.onRestoreInstanceState(mState);
+		if (mState != null && mList != null) {
+			mList.onRestoreInstanceState(mState);
 			mState = null;
 		}
 	}
@@ -199,8 +219,8 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if (mListView != null) {
-			mState = mListView.onSaveInstanceState();
+		if (mList != null) {
+			mState = mList.onSaveInstanceState();
 			outState.putParcelable(LIST_STATE, mState);
 		}
 	}
@@ -221,15 +241,14 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case Constants.RESULT_SUCCESS:
-				int type=msg.arg1;
+				int type = msg.arg1;
 				if (!isInitialized) {
 					showContent();
 				}
-				if (doGetMore) {
-					mListView.onLoadMoreComplete();
-				} else {
-					mListView.onRefreshComplete();
+				if (App.DEBUG) {
+					Log.d(TAG, "ResultHandler success onRefreshComplete");
 				}
+				mPullToRefreshListView.onRefreshComplete();
 				updateUI();
 				break;
 			case Constants.RESULT_ERROR:
@@ -240,11 +259,10 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 				if (!isInitialized) {
 					showContent();
 				}
-				if (doGetMore) {
-					mListView.onLoadMoreComplete();
-				} else {
-					mListView.onRefreshComplete();
+				if (App.DEBUG) {
+					Log.d(TAG, "ResultHandler error onRefreshComplete");
 				}
+				mPullToRefreshListView.onRefreshComplete();
 
 				Utils.notify(mContext, errorMessage);
 				Utils.checkAuthorization(mContext, errorCode);
@@ -257,21 +275,16 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void onRefresh(ListView view) {
-		doRefresh();
-	}
+	public void onRefresh() {
+		boolean fromTop = mPullToRefreshListView.hasPullFromTop();
+		if (App.DEBUG) {
+			Log.d(TAG, "onRefresh() top=" + fromTop);
+		}
 
-	@Override
-	public void onLoadMore(ListView viw) {
-		doGetMore();
-	}
-
-	@Override
-	public void onItemClick(ListView view, View row, int position) {
-		final Cursor c = (Cursor) view.getItemAtPosition(position);
-		if (c != null) {
-			final Status s = Status.parse(c);
-			Utils.goStatusPage(mContext, s);
+		if (fromTop) {
+			doRefresh();
+		} else {
+			doGetMore();
 		}
 	}
 
@@ -281,6 +294,16 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 		final Cursor c = (Cursor) parent.getItemAtPosition(position);
 		showPopup(view, c);
 		return true;
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		final Cursor c = (Cursor) parent.getItemAtPosition(position);
+		if (c != null) {
+			final Status s = Status.parse(c);
+			Utils.goStatusPage(mContext, s);
+		}
 	}
 
 	private void showPopup(final View view, final Cursor c) {
@@ -306,8 +329,8 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 	}
 
 	private void goTop() {
-		if (mListView != null) {
-			mListView.setSelection(0);
+		if (mList != null) {
+			mList.setSelection(0);
 		}
 	}
 

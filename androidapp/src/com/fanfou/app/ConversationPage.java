@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
@@ -21,10 +22,10 @@ import com.fanfou.app.api.Status;
 import com.fanfou.app.service.Constants;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.UIManager;
-import com.fanfou.app.ui.widget.EndlessListView;
-import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**
  * @author mcxiaoke
@@ -34,13 +35,15 @@ import com.fanfou.app.util.Utils;
  * @version 1.3 2011.11.07
  * @version 2.0 2011.11.11
  * @version 3.0 2011.11.18
+ * @version 3.5 2012.01.31
  * 
  */
 public class ConversationPage extends BaseActivity implements
-		OnRefreshListener, OnItemLongClickListener {
+		OnRefreshListener,OnItemClickListener, OnItemLongClickListener {
 
 	protected ActionBar mActionBar;
-	protected EndlessListView mListView;
+	private PullToRefreshListView mPullToRefreshListView;
+	private ListView mList;
 	protected ViewGroup mEmptyView;
 
 	protected ConversationAdapter mStatusAdapter;
@@ -75,20 +78,29 @@ public class ConversationPage extends BaseActivity implements
 	}
 
 	private void setLayout() {
-		setContentView(R.layout.list);
+		setContentView(R.layout.list_pull);
 
 		setActionBar();
 
 		mEmptyView = (ViewGroup) findViewById(R.id.empty);
 		mEmptyView.setVisibility(View.GONE);
 
-		mListView = (EndlessListView) findViewById(R.id.list);
-		mListView.setOnRefreshListener(this);
-		mListView.setOnItemLongClickListener(this);
-		mListView.setAdapter(mStatusAdapter);
-		mListView.setHeaderDividersEnabled(false);
-		mListView.setFooterDividersEnabled(false);
-		mListView.removeFooter();
+		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.list);
+		mPullToRefreshListView.setOnRefreshListener(this);
+		mList=mPullToRefreshListView.getRefreshableView();
+		mList.setAdapter(mStatusAdapter);
+		configListView(mList);
+	}
+	
+	private void configListView(final ListView list) {
+		list.setHorizontalScrollBarEnabled(false);
+		list.setVerticalScrollBarEnabled(false);
+		list.setCacheColorHint(0);
+		list.setSelector(getResources().getDrawable(R.drawable.list_selector));
+		list.setDivider(getResources().getDrawable(R.drawable.separator));
+
+		list.setOnItemClickListener(this);
+		list.setOnItemClickListener(this);
 	}
 
 	protected boolean parseIntent() {
@@ -107,7 +119,7 @@ public class ConversationPage extends BaseActivity implements
 
 	private void doFetchThreads() {
 		new FetchTask().execute();
-		mListView.setRefreshing();
+		mPullToRefreshListView.setRefreshing();
 	}
 
 	@Override
@@ -120,22 +132,6 @@ public class ConversationPage extends BaseActivity implements
 	protected void onPause() {
 		App.active = false;
 		super.onPause();
-	}
-
-	@Override
-	public void onRefresh(ListView view) {
-	}
-
-	@Override
-	public void onLoadMore(ListView view) {
-	}
-
-	@Override
-	public void onItemClick(ListView view, View row, int position) {
-		final Status s = (Status) view.getItemAtPosition(position);
-		if (s != null) {
-			Utils.goStatusPage(mContext, s);
-		}
 	}
 
 	@Override
@@ -177,9 +173,24 @@ public class ConversationPage extends BaseActivity implements
 			if (result != null && result.size() > 0) {
 				mThread.addAll(result);
 			}
-			mListView.onNoRefresh();
+			mPullToRefreshListView.onRefreshComplete();
 		}
 
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		final Status s = (Status) parent.getItemAtPosition(position);
+		if (s != null) {
+			Utils.goStatusPage(mContext, s);
+		}
+	}
+
+	@Override
+	public void onRefresh() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

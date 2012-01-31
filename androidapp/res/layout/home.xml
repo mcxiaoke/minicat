@@ -23,12 +23,6 @@
 			android:layout_width="fill_parent" android:layout_height="fill_parent"
 			android:id="@+id/viewpager" android:layout_below="@id/viewindicator" />
 
-		<ImageView android:id="@+id/write_bottom" style="@style/Icon.Fixed"
-			android:src="@drawable/i_write_bottom" />
-
-		<ImageView android:id="@+id/refresh_bottom" style="@style/Icon.Fixed"
-			android:src="@drawable/i_refresh_bottom" />
-
 	</RelativeLayout>
 
 </LinearLayout>

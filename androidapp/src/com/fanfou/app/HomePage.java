@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.Parcelable;
-import android.os.ResultReceiver;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
@@ -23,8 +22,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.fanfou.app.App.ApnType;
@@ -47,12 +48,12 @@ import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.UIManager;
 import com.fanfou.app.ui.viewpager.TitlePageIndicator;
 import com.fanfou.app.ui.viewpager.TitleProvider;
-import com.fanfou.app.ui.widget.EndlessListViewNoHeader;
-import com.fanfou.app.ui.widget.EndlessListViewNoHeader.OnLoadDataListener;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.SoundManager;
 import com.fanfou.app.util.Utils;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**
  * @author mcxiaoke
@@ -81,11 +82,13 @@ import com.fanfou.app.util.Utils;
  * @version 6.0 2011.12.19
  * @version 6.1 2011.12.23
  * @version 6.2 2011.12.26
+ * @version 7.0 2012.01.30
+ * @version 7.1 2012.01.31
  * 
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
-		OnLoadDataListener, OnItemLongClickListener, TitleProvider {
-	ResultReceiver a;
+		OnRefreshListener, OnItemClickListener, OnItemLongClickListener,
+		TitleProvider {
 
 	public static final int NUMS_OF_PAGE = 4;
 
@@ -95,24 +98,18 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	private ViewsAdapter mViewAdapter;
 	private TitlePageIndicator mPageIndicator;
 
-	private ImageView iRefreshBottom;
-	private ImageView iWriteBottom;
-
-	private boolean isBusy;
-
 	private int mCurrentPage;
 
 	private int initPage;
 
-	private EndlessListViewNoHeader[] views = new EndlessListViewNoHeader[NUMS_OF_PAGE];
+	private PullToRefreshListView[] views = new PullToRefreshListView[NUMS_OF_PAGE];
+	private ListView[] lists = new ListView[NUMS_OF_PAGE];
 
 	private Cursor[] cursors = new Cursor[NUMS_OF_PAGE];
 
 	private BaseCursorAdapter[] adapters = new BaseCursorAdapter[NUMS_OF_PAGE];
 
 	private Parcelable[] states = new Parcelable[NUMS_OF_PAGE];
-
-	private boolean[] initializeState = new boolean[NUMS_OF_PAGE];
 
 	private static final String[] PAGE_TITLES = new String[] { "我的主页", "提到我的",
 			"我的私信", "随便看看" };
@@ -136,7 +133,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		setContentView(R.layout.home);
 
 		setActionBar();
-		setBottom();
 		setListViews();
 		setViewPager();
 		setCursors();
@@ -168,7 +164,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setLeftAction(new HomeLogoAction());
 		mActionBar.setRightAction(new ActionBar.WriteAction(this, null));
-		mActionBar.setRefreshEnabled(this);
+		// mActionBar.setRefreshEnabled(this);
 
 		if (App.DEBUG) {
 			mActionBar.setTitle("开发版 " + App.appVersionName);
@@ -185,55 +181,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		public void performAction(View view) {
 			goTop();
 		}
-
-	}
-
-	@Override
-	protected void startRefreshAnimation() {
-		setBusy(true);
-		mActionBar.startAnimation();
-		startBottomAnimation();
-	}
-
-	@Override
-	protected void stopRefreshAnimation() {
-		setBusy(false);
-		mActionBar.stopAnimation();
-		stopBottomAnimation();
-	}
-
-	private void startBottomAnimation() {
-		iRefreshBottom.post(new Runnable() {
-			@Override
-			public void run() {
-				iRefreshBottom.setOnClickListener(null);
-				iRefreshBottom.setImageDrawable(null);
-				iRefreshBottom
-						.setBackgroundResource(R.drawable.animation_refresh);
-				AnimationDrawable frameAnimation = (AnimationDrawable) iRefreshBottom
-						.getBackground();
-				frameAnimation.start();
-			}
-		});
-
-	}
-
-	private void stopBottomAnimation() {
-		iRefreshBottom.post(new Runnable() {
-			@Override
-			public void run() {
-				AnimationDrawable frameAnimation = (AnimationDrawable) iRefreshBottom
-						.getBackground();
-				if (frameAnimation != null) {
-					frameAnimation.stop();
-					iRefreshBottom.setBackgroundDrawable(null);
-					iRefreshBottom
-							.setImageResource(R.drawable.i_refresh_bottom);
-					iRefreshBottom.setOnClickListener(HomePage.this);
-				}
-			}
-		});
-
 	}
 
 	private void setViewPager() {
@@ -255,73 +202,27 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	}
 
-	private void setBottom() {
-
-		iWriteBottom = (ImageView) findViewById(R.id.write_bottom);
-		iWriteBottom.setOnClickListener(this);
-
-		iRefreshBottom = (ImageView) findViewById(R.id.refresh_bottom);
-		iRefreshBottom.setOnClickListener(this);
-
-		final Resources res = getResources();
-		final int size = new Float(res.getDimension(R.dimen.icon_width))
-				.intValue();
-		final int margin = new Float(res.getDimension(R.dimen.bottom_margin))
-				.intValue();
-
-		RelativeLayout.LayoutParams onLeft = new RelativeLayout.LayoutParams(
-				size, size);
-		onLeft.setMargins(margin, margin, margin, margin);
-		onLeft.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		onLeft.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-
-		RelativeLayout.LayoutParams onRight = new RelativeLayout.LayoutParams(
-				size, size);
-		onRight.setMargins(margin, margin, margin, margin);
-		onRight.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		onRight.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-
-		String writePostion = OptionHelper.readString(this,
-				R.string.option_bottom_write_icon, "none");
-		String refreshPostion = OptionHelper.readString(this,
-				R.string.option_bottom_refresh_icon, "right");
-
-		if (writePostion.equals(refreshPostion)
-				&& !refreshPostion.equals("none")) {
-			iRefreshBottom.setLayoutParams(onRight);
-			iWriteBottom.setVisibility(View.GONE);
-		} else {
-			if (refreshPostion.equals("left")) {
-				iRefreshBottom.setLayoutParams(onLeft);
-			} else if (refreshPostion.equals("right")) {
-				iRefreshBottom.setLayoutParams(onRight);
-
-			} else {
-				iRefreshBottom.setVisibility(View.GONE);
-			}
-
-			if (writePostion.equals("left")) {
-				iWriteBottom.setLayoutParams(onLeft);
-			} else if (writePostion.equals("right")) {
-				iWriteBottom.setLayoutParams(onRight);
-			} else {
-				iWriteBottom.setVisibility(View.GONE);
-			}
-		}
-
-	}
-
 	/**
 	 * 初始化并添加四个页面的ListView
 	 */
 	private void setListViews() {
 		for (int i = 0; i < views.length; i++) {
-			views[i] = new EndlessListViewNoHeader(this);
+			views[i] = new PullToRefreshListView(this,
+					PullToRefreshListView.MODE_BOTH);
 			views[i].setOnRefreshListener(this);
-			if (i != 2) {
-				views[i].setOnItemLongClickListener(this);
-			}
+			lists[i] = views[i].getRefreshableView();
+			configListView(lists[i]);
 		}
+	}
+
+	private void configListView(final ListView list) {
+//		list.setHorizontalScrollBarEnabled(false);
+//		list.setVerticalScrollBarEnabled(false);
+		list.setCacheColorHint(0);
+		list.setSelector(getResources().getDrawable(R.drawable.list_selector));
+		list.setDivider(getResources().getDrawable(R.drawable.separator));
+		list.setOnItemClickListener(this);
+		list.setOnItemLongClickListener(this);
 	}
 
 	private Cursor initStatusCursor(int type) {
@@ -354,29 +255,16 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	private void setAdapters() {
 		initAdapters();
 		for (int i = 0; i < adapters.length; i++) {
-			views[i].setAdapter(adapters[i]);
-			// views[i].setOnScrollListener(adapters[i]);
-			if (cursors[i].getCount() == 0) {
-				if (App.DEBUG)
-					log("cursors[" + i
-							+ "] is empty, remove footer and refresh.");
-				views[i].removeFooter();
-			}
+			lists[i].setAdapter(adapters[i]);
 		}
-		views[3].removeFooter();
-
 	}
 
 	private void checkRefresh() {
 		boolean refresh = OptionHelper.readBoolean(this,
 				R.string.option_refresh_on_open, false);
 		if (refresh || (cursors[0].getCount() == 0 && mCurrentPage == 0)) {
-			onRefreshClick();
+			onRefresh();
 		}
-	}
-
-	private void setBusy(boolean busy) {
-		isBusy = busy;
 	}
 
 	/**
@@ -400,7 +288,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			} else {
 				sinceId = Utils.getSinceId(cursor);
 			}
-			FanFouService.doFetchHomeTimeline(this, new Messenger(handler), sinceId, maxId);
+			FanFouService.doFetchHomeTimeline(this, new Messenger(handler),
+					sinceId, maxId);
 			break;
 		case 1:
 			if (doGetMore) {
@@ -408,16 +297,15 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			} else {
 				sinceId = Utils.getSinceId(cursor);
 			}
-			FanFouService.doFetchMentions(this, new Messenger(handler), sinceId, maxId);
+			FanFouService.doFetchMentions(this, new Messenger(handler),
+					sinceId, maxId);
 			break;
 		case 2:
-			FanFouService.doFetchDirectMessagesConversationList(this, new Messenger(handler),
-					doGetMore);
+			FanFouService.doFetchDirectMessagesConversationList(this,
+					new Messenger(handler), doGetMore);
 			break;
 		case 3:
-			if (!doGetMore) {
-				FanFouService.doFetchPublicTimeline(this, new Messenger(handler));
-			}
+			FanFouService.doFetchPublicTimeline(this, new Messenger(handler));
 			break;
 		default:
 			break;
@@ -427,18 +315,21 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	/**
 	 * 载入更多，获取较旧的消息
 	 */
-	private void doGetMore() {
-		doRetrieve(mCurrentPage, true);
+	private void doGetMore(int page) {
+		if (App.DEBUG) {
+			log("doGetMore()");
+		}
+		doRetrieve(page, true);
 	}
 
 	/**
 	 * 刷新，载入更新的消息
 	 */
-	private void doRefresh() {
+	private void doRefresh(int page) {
 		if (App.DEBUG) {
 			log("doRefresh()");
 		}
-		doRetrieve(mCurrentPage, false);
+		doRetrieve(page, false);
 	}
 
 	@Override
@@ -490,7 +381,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 					if (cursors[0] != null) {
 						cursors[0].requery();
 					}
-					views[0].setSelection(0);
+					lists[0].setSelection(0);
 					Utils.notify(this, count + "条新消息");
 					if (soundEffect) {
 						SoundManager.playSound(1, 0);
@@ -502,7 +393,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 					if (cursors[1] != null) {
 						cursors[1].requery();
 					}
-					views[1].setSelection(0);
+					lists[1].setSelection(0);
 					Utils.notify(this, count + "条新@消息");
 					if (soundEffect) {
 						SoundManager.playSound(1, 0);
@@ -515,7 +406,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 					if (cursors[2] != null) {
 						cursors[2].requery();
 					}
-					views[2].setSelection(0);
+					lists[2].setSelection(0);
 					Utils.notify(this, count + "条新私信");
 					if (soundEffect) {
 						SoundManager.playSound(1, 0);
@@ -533,9 +424,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		for (int i = 0; i < views.length; i++) {
-			if (views[i] != null)
-				states[i] = savedInstanceState.getParcelable(views[i]
+		for (int i = 0; i < lists.length; i++) {
+			if (lists[i] != null)
+				states[i] = savedInstanceState.getParcelable(lists[i]
 						.toString());
 		}
 	}
@@ -543,10 +434,10 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		for (int i = 0; i < views.length; i++) {
-			if (views[i] != null) {
-				states[i] = views[i].onSaveInstanceState();
-				outState.putParcelable(views[i].toString(), states[i]);
+		for (int i = 0; i < lists.length; i++) {
+			if (lists[i] != null) {
+				states[i] = lists[i].onSaveInstanceState();
+				outState.putParcelable(lists[i].toString(), states[i]);
 			}
 		}
 	}
@@ -557,9 +448,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		if (App.DEBUG)
 			log("onResume");
 
-		for (int i = 0; i < views.length; i++) {
-			if (views[i] != null && states[i] != null) {
-				views[i].onRestoreInstanceState(states[i]);
+		for (int i = 0; i < lists.length; i++) {
+			if (lists[i] != null && states[i] != null) {
+				lists[i].onRestoreInstanceState(states[i]);
 				states[i] = null;
 			}
 		}
@@ -592,7 +483,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	@Override
 	public void onBackPressed() {
-		boolean needConfirm = OptionHelper.readBoolean(this,R.string.option_confirm_on_exit, false);
+		boolean needConfirm = OptionHelper.readBoolean(this,
+				R.string.option_confirm_on_exit, false);
 		if (needConfirm) {
 			final ConfirmDialog dialog = new ConfirmDialog(this, "提示",
 					"确认退出饭否吗？");
@@ -735,44 +627,30 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 		@Override
 		public void handleMessage(Message msg) {
-			Bundle bundle=msg.getData();
-			int type=msg.arg1;
+			Bundle bundle = msg.getData();
+			int type = msg.arg1;
 			switch (msg.what) {
 			case Constants.RESULT_SUCCESS:
+				views[i].onRefreshComplete();
 				int count = bundle.getInt(Constants.EXTRA_COUNT);
-				if (doGetMore) {
-					if (i < NUMS_OF_PAGE - 1) {
-						views[i].onLoadMoreComplete();
+				if (count > 0) {
+					cursors[i].requery();
+					if (type == Constants.TYPE_DIRECT_MESSAGES_CONVERSTATION_LIST) {
+						Utils.notify(mContext, count + "条新私信");
+					} else {
+						Utils.notify(mContext, count + "条新消息");
 					}
 					cursors[i].requery();
-				} else {
-					stopRefreshAnimation();
-					if (i < NUMS_OF_PAGE - 1) {
-						views[i].addFooter();
-					}
-					if (count > 0) {
-						if (type == Constants.TYPE_DIRECT_MESSAGES_CONVERSTATION_LIST) {
-							Utils.notify(mContext, count + "条新私信");
-						} else {
-							Utils.notify(mContext, count + "条新消息");
-						}
-						if (soundEffect) {
-							SoundManager.playSound(1, 0);
-						}
-						cursors[i].requery();
-						views[i].setSelection(0);
+					// lists[i].setSelection(0);
+					if (soundEffect) {
+						SoundManager.playSound(1, 0);
 					}
 				}
 				break;
 			case Constants.RESULT_ERROR:
-				String errorMessage = bundle
-						.getString(Constants.EXTRA_ERROR);
+				views[i].onRefreshComplete();
+				String errorMessage = bundle.getString(Constants.EXTRA_ERROR);
 				int errorCode = bundle.getInt(Constants.EXTRA_CODE);
-				if (doGetMore) {
-					views[i].onLoadMoreComplete();
-				} else {
-					stopRefreshAnimation();
-				}
 				Utils.notify(mContext, errorMessage);
 				Utils.checkAuthorization(mContext, errorCode);
 				break;
@@ -781,27 +659,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			}
 		}
 
-	}
-
-	@Override
-	public void onLoadMore(EndlessListViewNoHeader view) {
-		doGetMore();
-	}
-
-	@Override
-	public void onItemClick(EndlessListViewNoHeader view, int position) {
-		final Cursor c = (Cursor) view.getItemAtPosition(position);
-		if (c == null) {
-			return;
-		}
-		if (mCurrentPage == 2) {
-			Utils.goMessageChatPage(this, c);
-		} else {
-			final Status s = Status.parse(c);
-			if (s != null && !s.isNull()) {
-				Utils.goStatusPage(this, s);
-			}
-		}
 	}
 
 	@Override
@@ -831,30 +688,22 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		case R.id.actionbar_title:
 			goTop();
 			break;
-		case R.id.refresh_bottom:
-			onRefreshClick();
-			break;
-		case R.id.write_bottom:
-			ActionManager.doWrite(this);
-			break;
 		default:
 			break;
 		}
 	}
 
 	private void goTop() {
-		if (views[mCurrentPage] != null) {
-			views[mCurrentPage].setSelection(0);
+		if (lists[mCurrentPage] != null) {
+			lists[mCurrentPage].setSelection(0);
 		}
 	}
 
 	@Override
 	public void onPageScrolled(int position, float positionOffset,
 			int positionOffsetPixels) {
-		// if (!endlessScroll) {
 		mPageIndicator.onPageScrolled(position, positionOffset,
 				positionOffsetPixels);
-		// }
 
 	}
 
@@ -874,34 +723,40 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-		// if (mCurrentPage > 0) {
-		// mViewPager.setCurrentItem(mCurrentPage - 1);
-		// }
-		// } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-		// if (mCurrentPage < mViewPager.getWidth()-1) {
-		// mViewPager.setCurrentItem(mCurrentPage + 1);
-		// }
-		// }
-		return super.onKeyDown(keyCode, event);
-	}
-
-	@Override
 	public String getTitle(int position) {
 		return PAGE_TITLES[position % NUMS_OF_PAGE];
 	}
 
 	@Override
-	public void onRefreshClick() {
+	public void onRefresh() {
+		int page = mCurrentPage;
+		boolean fromTop = views[mCurrentPage].hasPullFromTop();
 		if (App.DEBUG) {
-			log("onRefreshClick page=" + mCurrentPage + " isBusy" + isBusy);
+			Log.d(TAG, "onRefresh() top=" + fromTop + " page=" + page);
 		}
-		if (isBusy) {
+
+		if (fromTop) {
+			doRefresh(page);
+		} else {
+			doGetMore(page);
+		}
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		final Cursor c = (Cursor) parent.getItemAtPosition(position);
+		if (c == null) {
 			return;
 		}
-		startRefreshAnimation();
-		doRefresh();
+		if (mCurrentPage == 2) {
+			Utils.goMessageChatPage(this, c);
+		} else {
+			final Status s = Status.parse(c);
+			if (s != null && !s.isNull()) {
+				Utils.goStatusPage(this, s);
+			}
+		}
 	}
 
 }

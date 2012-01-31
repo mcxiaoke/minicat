@@ -9,9 +9,11 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.fanfou.app.App.ApnType;
 import com.fanfou.app.adapter.UserCursorAdapter;
@@ -23,10 +25,10 @@ import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.TextChangeListener;
-import com.fanfou.app.ui.widget.EndlessListView;
-import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
 import com.fanfou.app.util.StringHelper;
 import com.fanfou.app.util.Utils;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**
  * @author mcxiaoke
@@ -39,13 +41,16 @@ import com.fanfou.app.util.Utils;
  * @version 2.3 2011.11.21
  * @version 2.4 2011.12.13
  * @version 2.5 2011.12.23
+ * @version 3.0 2012.01.30
  * 
  */
 public class UserListPage extends BaseActivity implements OnRefreshListener,
-		FilterQueryProvider {
+		FilterQueryProvider, OnItemClickListener {
+	private static final String TAG=UserListPage.class.getSimpleName();
 
 	protected ActionBar mActionBar;
-	protected EndlessListView mListView;
+	protected PullToRefreshListView mPullToRefreshListView;
+	private ListView mList;
 	protected ViewGroup mEmptyView;
 
 	protected EditText mEditText;
@@ -104,7 +109,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	private void showProgress() {
-		mListView.setVisibility(View.GONE);
+		mPullToRefreshListView.setVisibility(View.GONE);
 		mEmptyView.setVisibility(View.VISIBLE);
 	}
 
@@ -114,7 +119,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 		}
 		isInitialized = true;
 		mEmptyView.setVisibility(View.GONE);
-		mListView.setVisibility(View.VISIBLE);
+		mPullToRefreshListView.setVisibility(View.VISIBLE);
 	}
 
 	private void setLayout() {
@@ -127,22 +132,15 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 		mEditText = (EditText) findViewById(R.id.choose_input);
 		mEditText.addTextChangedListener(new MyTextWatcher());
 
-		mListView = (EndlessListView) findViewById(R.id.list);
-		mListView.setOnRefreshListener(this);
+		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.list);
+		mPullToRefreshListView.setOnRefreshListener(this);
+		mList=mPullToRefreshListView.getRefreshableView();
+		mList.setOnItemClickListener(this);
 
 		mCursorAdapter = new UserCursorAdapter(mContext, mCursor);
 		mCursorAdapter.setFilterQueryProvider(this);
 
-		mListView.setAdapter(mCursorAdapter);
-		registerForContextMenu(mListView);
-
-		mListView.post(new Runnable() {
-
-			@Override
-			public void run() {
-				mListView.setSelection(1);
-			}
-		});
+		mList.setAdapter(mCursorAdapter);
 	}
 
 	private class MyTextWatcher extends TextChangeListener {
@@ -232,8 +230,8 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (mState != null && mListView != null) {
-			mListView.onRestoreInstanceState(mState);
+		if (mState != null && mList != null) {
+			mList.onRestoreInstanceState(mState);
 			mState = null;
 		}
 	}
@@ -247,8 +245,8 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if (mListView != null) {
-			mState = mListView.onSaveInstanceState();
+		if (mList != null) {
+			mState = mList.onSaveInstanceState();
 			outState.putParcelable(LIST_STATE, mState);
 		}
 	}
@@ -268,11 +266,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 					showContent();
 				}
 				int count = msg.getData().getInt(Constants.EXTRA_COUNT);
-				if (doGetMore) {
-					mListView.onLoadMoreComplete();
-				} else {
-					mListView.onRefreshComplete();
-				}
+				mPullToRefreshListView.onRefreshComplete();
 				updateUI();
 				break;
 			case Constants.RESULT_ERROR:
@@ -282,12 +276,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 				if (!isInitialized) {
 					showContent();
 				}
-				if (doGetMore) {
-					mListView.onLoadMoreComplete();
-				} else {
-					mListView.onRefreshComplete();
-				}
-
+				mPullToRefreshListView.onRefreshComplete();
 				Utils.notify(mContext, errorMessage);
 				Utils.checkAuthorization(mContext, errorCode);
 				break;
@@ -299,52 +288,18 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	@Override
-	public void onRefresh(ListView view) {
-		doRefresh();
-	}
+	public void onRefresh() {
+		boolean fromTop = mPullToRefreshListView.hasPullFromTop();
+		if (App.DEBUG) {
+			Log.d(TAG, "onRefresh() top=" + fromTop);
+		}
 
-	@Override
-	public void onLoadMore(ListView view) {
-		doGetMore();
-	}
-
-	@Override
-	public void onItemClick(ListView view, View row, int position) {
-		final Cursor c = (Cursor) view.getItemAtPosition(position);
-		final User u = User.parse(c);
-		if (u != null) {
-			if (App.DEBUG)
-				log("userId=" + u.id + " username=" + u.screenName);
-			ActionManager.doProfile(mContext, u);
+		if (fromTop) {
+			doRefresh();
+		} else {
+			doGetMore();
 		}
 	}
-
-	// private static final int CONTEXT_MENU_ID_TIMELINE=1001;
-	// private static final int CONTEXT_MENU_ID_FAVORITES=1002;
-	// private static final int CONTEXT_MENU_ID_FRIENDS=1003;
-	// private static final int CONTEXT_MENU_ID_FOLLOWERS=1004;
-	// private static final int CONTEXT_MENU_ID_FOLLOW=1005;
-	// private static final int CONTEXT_MENU_ID_UNFOLLOW=1006;
-	// private static final int CONTEXT_MENU_ID_BLOCK=1007;
-
-	// @Override
-	// public void onCreateContextMenu(ContextMenu menu, View v,
-	// ContextMenuInfo menuInfo) {
-	// MenuItem timeline=menu.add(0, CONTEXT_MENU_ID_TIMELINE,
-	// CONTEXT_MENU_ID_TIMELINE, "查看消息");
-	// MenuItem favorites=menu.add(0, CONTEXT_MENU_ID_FAVORITES,
-	// CONTEXT_MENU_ID_FAVORITES, "查看收藏");
-	// MenuItem friends=menu.add(0, CONTEXT_MENU_ID_FRIENDS,
-	// CONTEXT_MENU_ID_FRIENDS, "查看关注的人");
-	// MenuItem followers=menu.add(0, CONTEXT_MENU_ID_FOLLOWERS,
-	// CONTEXT_MENU_ID_FOLLOWERS, "查看关注者");
-	// MenuItem follow=menu.add(0, CONTEXT_MENU_ID_FOLLOW,
-	// CONTEXT_MENU_ID_FOLLOW, "添加关注");
-	// MenuItem unfollow=menu.add(0,
-	// CONTEXT_MENU_ID_UNFOLLOW,CONTEXT_MENU_ID_UNFOLLOW, "取消关注");
-	// MenuItem delete=menu.add(0, CONTEXT_MENU_ID_BLOCK, CONTEXT_MENU_ID_BLOCK,
-	// "删除关注");
-	// }
 
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
@@ -355,6 +310,18 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 		;
 		return managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				null, null);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		final Cursor c = (Cursor) parent.getItemAtPosition(position);
+		final User u = User.parse(c);
+		if (u != null) {
+			if (App.DEBUG)
+				log("userId=" + u.id + " username=" + u.screenName);
+			ActionManager.doProfile(mContext, u);
+		}
 	}
 
 }

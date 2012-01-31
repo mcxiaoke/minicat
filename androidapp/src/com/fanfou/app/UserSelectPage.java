@@ -9,9 +9,11 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.fanfou.app.adapter.UserCursorAdapter;
 import com.fanfou.app.api.User;
@@ -21,23 +23,27 @@ import com.fanfou.app.service.Constants;
 import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.TextChangeListener;
-import com.fanfou.app.ui.widget.EndlessListView;
-import com.fanfou.app.ui.widget.EndlessListView.OnRefreshListener;
 import com.fanfou.app.util.Utils;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.11.09
  * @version 1.1 2011.11.21
+ * @version 2.0 2012.01.31
  * 
  */
 
 // select direct message target
-public class UserSelectPage extends BaseActivity implements OnRefreshListener,
+public class UserSelectPage extends BaseActivity implements OnItemClickListener,OnRefreshListener,
 		FilterQueryProvider {
+	
+	private static final String TAG=UserSelectPage.class.getSimpleName();
 
 	protected ActionBar mActionBar;
-	protected EndlessListView mListView;
+	private PullToRefreshListView mPullToRefreshListView;
+	private ListView mList;
 	protected ViewGroup mEmptyView;
 
 	protected EditText mEditText;
@@ -89,7 +95,7 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	private void showProgress() {
-		mListView.setVisibility(View.GONE);
+		mPullToRefreshListView.setVisibility(View.GONE);
 		mEmptyView.setVisibility(View.VISIBLE);
 	}
 
@@ -99,7 +105,7 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 		}
 		isInitialized = true;
 		mEmptyView.setVisibility(View.GONE);
-		mListView.setVisibility(View.VISIBLE);
+		mPullToRefreshListView.setVisibility(View.VISIBLE);
 	}
 
 	private void setLayout() {
@@ -112,22 +118,16 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 		mEditText = (EditText) findViewById(R.id.choose_input);
 		mEditText.addTextChangedListener(new MyTextWatcher());
 
-		mListView = (EndlessListView) findViewById(R.id.list);
-		mListView.setOnRefreshListener(this);
+		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.list);
+		mPullToRefreshListView.setOnRefreshListener(this);
+		
+		mList=mPullToRefreshListView.getRefreshableView();
+		mList.setOnItemClickListener(this);
 
 		mCursorAdapter = new UserCursorAdapter(mContext, mCursor);
 		mCursorAdapter.setFilterQueryProvider(this);
 
-		mListView.setAdapter(mCursorAdapter);
-		registerForContextMenu(mListView);
-
-		mListView.post(new Runnable() {
-
-			@Override
-			public void run() {
-				mListView.setSelection(1);
-			}
-		});
+		mList.setAdapter(mCursorAdapter);
 	}
 
 	private class MyTextWatcher extends TextChangeListener {
@@ -186,8 +186,8 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (mState != null && mListView != null) {
-			mListView.onRestoreInstanceState(mState);
+		if (mState != null && mList != null) {
+			mList.onRestoreInstanceState(mState);
 			mState = null;
 		}
 	}
@@ -201,8 +201,8 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if (mListView != null) {
-			mState = mListView.onSaveInstanceState();
+		if (mList != null) {
+			mState = mList.onSaveInstanceState();
 			outState.putParcelable(LIST_STATE, mState);
 		}
 	}
@@ -222,12 +222,8 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 					showContent();
 				}
 				int count = msg.getData().getInt(Constants.EXTRA_COUNT);
-				if (doGetMore) {
-					mListView.onLoadMoreComplete();
-				} else {
-					mListView.onRefreshComplete();
-				}
 				updateUI();
+				mPullToRefreshListView.onRefreshComplete();
 				break;
 			case Constants.RESULT_ERROR:
 				String errorMessage = msg.getData().getString(
@@ -236,12 +232,7 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 				if (!isInitialized) {
 					showContent();
 				}
-				if (doGetMore) {
-					mListView.onLoadMoreComplete();
-				} else {
-					mListView.onRefreshComplete();
-				}
-
+				mPullToRefreshListView.onRefreshComplete();
 				Utils.notify(mContext, errorMessage);
 				Utils.checkAuthorization(mContext, errorCode);
 				break;
@@ -253,23 +244,16 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	@Override
-	public void onRefresh(ListView view) {
-		doRefresh();
-	}
+	public void onRefresh() {
+		boolean fromTop = mPullToRefreshListView.hasPullFromTop();
+		if (App.DEBUG) {
+			Log.d(TAG, "onRefresh() top=" + fromTop);
+		}
 
-	@Override
-	public void onLoadMore(ListView view) {
-		doGetMore();
-	}
-
-	@Override
-	public void onItemClick(ListView view, View row, int position) {
-		final Cursor c = (Cursor) view.getItemAtPosition(position);
-		final User u = User.parse(c);
-		if (u != null) {
-			if (App.DEBUG)
-				log("userId=" + u.id + " username=" + u.screenName);
-			onSelected(u);
+		if (fromTop) {
+			doRefresh();
+		} else {
+			doGetMore();
 		}
 	}
 
@@ -291,6 +275,18 @@ public class UserSelectPage extends BaseActivity implements OnRefreshListener,
 		;
 		return managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				null, null);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		final Cursor c = (Cursor) parent.getItemAtPosition(position);
+		final User u = User.parse(c);
+		if (u != null) {
+			if (App.DEBUG)
+				log("userId=" + u.id + " username=" + u.screenName);
+			onSelected(u);
+		}
 	}
 
 }
