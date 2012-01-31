@@ -42,16 +42,16 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 2.4 2011.12.13
  * @version 2.5 2011.12.23
  * @version 3.0 2012.01.30
+ * @version 3.1 2012.01.31
  * 
  */
 public class UserListPage extends BaseActivity implements OnRefreshListener,
 		FilterQueryProvider, OnItemClickListener {
-	private static final String TAG=UserListPage.class.getSimpleName();
+	private static final String TAG = UserListPage.class.getSimpleName();
 
 	protected ActionBar mActionBar;
 	protected PullToRefreshListView mPullToRefreshListView;
 	private ListView mList;
-	protected ViewGroup mEmptyView;
 
 	protected EditText mEditText;
 
@@ -64,8 +64,8 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	protected int type;
 
 	protected int page = 1;
-
-	private boolean isInitialized = false;
+	
+	private boolean initialized=false;
 
 	private static final String tag = UserListPage.class.getSimpleName();
 
@@ -100,26 +100,13 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected void initCheckState() {
-		if (mCursor.getCount() > 0) {
-			showContent();
+		if (mCursor.getCount() == 0) {
+			onRefresh();
+			mPullToRefreshListView.setRefreshing();
 		} else {
-			doRefresh();
-			showProgress();
+			initialized=true;
+			mEditText.setVisibility(View.VISIBLE);
 		}
-	}
-
-	private void showProgress() {
-		mPullToRefreshListView.setVisibility(View.GONE);
-		mEmptyView.setVisibility(View.VISIBLE);
-	}
-
-	private void showContent() {
-		if (App.DEBUG) {
-			log("showContent()");
-		}
-		isInitialized = true;
-		mEmptyView.setVisibility(View.GONE);
-		mPullToRefreshListView.setVisibility(View.VISIBLE);
 	}
 
 	private void setLayout() {
@@ -127,14 +114,12 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 
 		setActionBar();
 
-		mEmptyView = (ViewGroup) findViewById(R.id.empty);
-
 		mEditText = (EditText) findViewById(R.id.choose_input);
 		mEditText.addTextChangedListener(new MyTextWatcher());
 
 		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.list);
 		mPullToRefreshListView.setOnRefreshListener(this);
-		mList=mPullToRefreshListView.getRefreshableView();
+		mList = mPullToRefreshListView.getRefreshableView();
 		mList.setOnItemClickListener(this);
 
 		mCursorAdapter = new UserCursorAdapter(mContext, mCursor);
@@ -204,8 +189,9 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	}
 
 	protected void updateUI() {
-		if (App.DEBUG)
+		if (App.DEBUG) {
 			log("updateUI()");
+		}
 		if (mCursor != null) {
 			mCursor.requery();
 		}
@@ -262,20 +248,20 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case Constants.RESULT_SUCCESS:
-				if (!isInitialized) {
-					showContent();
-				}
 				int count = msg.getData().getInt(Constants.EXTRA_COUNT);
-				mPullToRefreshListView.onRefreshComplete();
 				updateUI();
+				mPullToRefreshListView.onRefreshComplete();
+				if(!initialized){
+					mEditText.setVisibility(View.VISIBLE);
+				}
 				break;
 			case Constants.RESULT_ERROR:
+				if(!initialized){
+					mEditText.setVisibility(View.VISIBLE);
+				}
 				String errorMessage = msg.getData().getString(
 						Constants.EXTRA_ERROR);
 				int errorCode = msg.getData().getInt(Constants.EXTRA_CODE);
-				if (!isInitialized) {
-					showContent();
-				}
 				mPullToRefreshListView.onRefreshComplete();
 				Utils.notify(mContext, errorMessage);
 				Utils.checkAuthorization(mContext, errorCode);

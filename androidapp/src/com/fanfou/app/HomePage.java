@@ -207,12 +207,13 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	 * 初始化并添加四个页面的ListView
 	 */
 	private void setListViews() {
-		LayoutInflater inflater=LayoutInflater.from(this);
+		LayoutInflater inflater = LayoutInflater.from(this);
 		for (int i = 0; i < views.length; i++) {
-//			views[i] = new PullToRefreshListView(this,
-//					PullToRefreshListView.MODE_BOTH);			
-			views[i]=(PullToRefreshListView) inflater.inflate(R.layout.list_only, null);
-			
+			// views[i] = new PullToRefreshListView(this,
+			// PullToRefreshListView.MODE_BOTH);
+			views[i] = (PullToRefreshListView) inflater.inflate(
+					R.layout.list_only, null);
+
 			views[i].setOnRefreshListener(this);
 			lists[i] = views[i].getRefreshableView();
 			configListView(lists[i]);
@@ -220,11 +221,11 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	private void configListView(final ListView list) {
-//		list.setHorizontalScrollBarEnabled(false);
-//		list.setVerticalScrollBarEnabled(false);
-//		list.setCacheColorHint(0);
-//		list.setSelector(getResources().getDrawable(R.drawable.list_selector));
-//		list.setDivider(getResources().getDrawable(R.drawable.separator));
+		// list.setHorizontalScrollBarEnabled(false);
+		// list.setVerticalScrollBarEnabled(false);
+		// list.setCacheColorHint(0);
+		// list.setSelector(getResources().getDrawable(R.drawable.list_selector));
+		// list.setDivider(getResources().getDrawable(R.drawable.separator));
 		list.setOnItemClickListener(this);
 		list.setOnItemLongClickListener(this);
 	}
@@ -267,7 +268,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		boolean refresh = OptionHelper.readBoolean(this,
 				R.string.option_refresh_on_open, false);
 		if (refresh || (cursors[0].getCount() == 0 && mCurrentPage == 0)) {
-			onRefresh();
+			startRefresh(mCurrentPage);
 		}
 	}
 
@@ -357,7 +358,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				boolean needRefresh = OptionHelper.readBoolean(this,
 						R.string.option_refresh_after_send, false);
 				if (needRefresh) {
-					onRefreshClick();
+					startRefresh(mCurrentPage);
 				}
 			}
 
@@ -370,7 +371,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				boolean needRefresh = OptionHelper.readBoolean(this,
 						R.string.option_refresh_after_send, false);
 				if (needRefresh) {
-					onRefreshClick();
+					startRefresh(mCurrentPage);
 				}
 			}
 		} else if (action.equals(Constants.ACTION_NOTIFICATION)) {
@@ -717,7 +718,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		mPageIndicator.onPageSelected(mCurrentPage);
 		if (cursors[mCurrentPage] != null
 				&& cursors[mCurrentPage].getCount() == 0) {
-			onRefreshClick();
+			startRefresh(mCurrentPage);
 		}
 
 	}
@@ -743,6 +744,13 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 			doRefresh(page);
 		} else {
 			doGetMore(page);
+		}
+	}
+
+	private void startRefresh(int page) {
+		if (views[page] != null) {
+			doRefresh(page);
+			views[page].setRefreshing();
 		}
 	}
 

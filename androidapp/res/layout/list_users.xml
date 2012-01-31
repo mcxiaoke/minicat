@@ -10,8 +10,6 @@
         android:id="@id/actionbar"
         style="@style/ActionBar" />
 
-    <include layout="@layout/empty" />
-
     <EditText
         android:id="@id/choose_input"
         android:layout_width="fill_parent"
@@ -22,7 +20,7 @@
         android:hint="输入文字搜索用户"
         android:padding="10dp"
         android:singleLine="true"
-        android:textSize="@dimen/text_size_medium" />
+        android:textSize="@dimen/text_size_medium" android:visibility="gone"/>
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         xmlns:ptr="http://schemas.android.com/apk/res/com.fanfou.app"

@@ -61,10 +61,8 @@ public class SearchResultsPage extends BaseActivity implements
 
 	private boolean showListView = false;
 
-	private static final String tag = SearchResultsPage.class.getSimpleName();
-
 	private void log(String message) {
-		Log.d(tag, message);
+		Log.d(TAG, message);
 	}
 
 	@Override
@@ -166,9 +164,9 @@ public class SearchResultsPage extends BaseActivity implements
 			if(reset){
 				mStatuses.clear();
 				mStatusAdapter.notifyDataSetChanged();
-				mPullToRefreshListView.setRefreshing();
 			}
 			new SearchTask().execute();
+			mPullToRefreshListView.setRefreshing();
 		}
 
 	}

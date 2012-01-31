@@ -32,8 +32,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.7 2011.12.07
  * 
  */
-public abstract class BaseActivity extends Activity implements
-		OnRefreshClickListener, OnClickListener {
+public abstract class BaseActivity extends Activity implements OnClickListener {
 
 	public static final int STATE_INIT = 0;
 	public static final int STATE_NORMAL = 1;
@@ -181,22 +180,12 @@ public abstract class BaseActivity extends Activity implements
 	}
 
 	@Override
-	public void onRefreshClick() {
-	}
-
-	@Override
 	public void onClick(View v) {
 	}
 
 	protected void onMenuHomeClick() {
 		IntentHelper.goHomePage(this, -1);
 		finish();
-	}
-
-	protected void startRefreshAnimation() {
-	}
-
-	protected void stopRefreshAnimation() {
 	}
 
 }

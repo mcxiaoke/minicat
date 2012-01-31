@@ -41,6 +41,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 3.4 2011.12.13
  * @version 3.5 2011.12.23
  * @version 4.0 2012.01.30
+ * @version 4.1 2012.01.31
  * 
  */
 public abstract class BaseTimelineActivity extends BaseActivity implements
@@ -51,7 +52,6 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 	protected ActionBar mActionBar;
 	private PullToRefreshListView mPullToRefreshListView;
 	private ListView mList;
-	protected ViewGroup mEmptyView;
 
 	protected Cursor mCursor;
 	protected StatusCursorAdapter mCursorAdapter;
@@ -60,20 +60,9 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 	protected String userName;
 	protected User user;
 
-	protected boolean isInitialized = false;
-
-	private static final String tag = BaseTimelineActivity.class
-			.getSimpleName();
-
-	private void log(String message) {
-		Log.d(tag, message);
-	}
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (App.DEBUG)
-			log("onCreate");
 		if (parseIntent()) {
 			initialize();
 			setLayout();
@@ -92,7 +81,6 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 	private void setLayout() {
 		setContentView(R.layout.list_pull);
 		setActionBar();
-		mEmptyView = (ViewGroup) findViewById(R.id.empty);
 		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.list);
 		mPullToRefreshListView.setOnRefreshListener(this);
 		mList = mPullToRefreshListView.getRefreshableView();
@@ -111,23 +99,10 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 	}
 
 	protected void initCheckState() {
-		if (mCursor.getCount() > 0) {
-			showContent();
-		} else {
-			doRefresh();
-			showProgress();
+		if (mCursor.getCount() == 0) {
+			onRefresh();
+			mPullToRefreshListView.setRefreshing();
 		}
-	}
-
-	private void showProgress() {
-		mPullToRefreshListView.setVisibility(View.GONE);
-		mEmptyView.setVisibility(View.VISIBLE);
-	}
-
-	private void showContent() {
-		isInitialized = true;
-		mEmptyView.setVisibility(View.GONE);
-		mPullToRefreshListView.setVisibility(View.VISIBLE);
 	}
 
 	/**
@@ -242,9 +217,6 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 			switch (msg.what) {
 			case Constants.RESULT_SUCCESS:
 				int type = msg.arg1;
-				if (!isInitialized) {
-					showContent();
-				}
 				if (App.DEBUG) {
 					Log.d(TAG, "ResultHandler success onRefreshComplete");
 				}
@@ -255,10 +227,6 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 				String errorMessage = msg.getData().getString(
 						Constants.EXTRA_ERROR);
 				int errorCode = msg.getData().getInt(Constants.EXTRA_CODE);
-
-				if (!isInitialized) {
-					showContent();
-				}
 				if (App.DEBUG) {
 					Log.d(TAG, "ResultHandler error onRefreshComplete");
 				}

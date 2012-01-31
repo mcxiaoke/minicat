@@ -42,6 +42,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.7 2011.11.18
  * @version 1.8 2011.11.22
  * @version 2.0 2011.12.19
+ * @version 2.5 2012.01.31
  * 
  */
 public class ProfilePage extends BaseActivity {
@@ -329,9 +330,6 @@ public class ProfilePage extends BaseActivity {
 
 	private void doRefresh() {
 		FanFouService.doProfile(this, userId, new ResultHandler());
-		if (isInitialized) {
-			startRefreshAnimation();
-		}
 	}
 
 	private void doFetchRelationshipInfo() {
@@ -419,28 +417,8 @@ public class ProfilePage extends BaseActivity {
 
 	}
 
-	@Override
-	public void onRefreshClick() {
-		if (isBusy) {
-			return;
-		}
-		doRefresh();
-	}
-
 	private synchronized void setBusy(boolean busy) {
 		isBusy = busy;
-	}
-
-	@Override
-	protected void startRefreshAnimation() {
-		setBusy(true);
-		mActionBar.startAnimation();
-	}
-
-	@Override
-	protected void stopRefreshAnimation() {
-		setBusy(false);
-		mActionBar.stopAnimation();
 	}
 
 	private boolean hasPermission() {
@@ -479,9 +457,6 @@ public class ProfilePage extends BaseActivity {
 					} else if (type == Constants.TYPE_USERS_SHOW) {
 						if (App.DEBUG)
 							log("show result=" + user.id);
-						if (isInitialized) {
-							stopRefreshAnimation();
-						}
 						updateUI();
 
 					} else if (type == Constants.TYPE_FRIENDSHIPS_CREATE
@@ -502,9 +477,7 @@ public class ProfilePage extends BaseActivity {
 				}
 				if (type == Constants.TYPE_FRIENDSHIPS_EXISTS) {
 					return;
-				} else if (type == Constants.TYPE_USERS_SHOW) {
-					stopRefreshAnimation();
-				} else if (type == Constants.TYPE_FRIENDSHIPS_CREATE
+				}else if (type == Constants.TYPE_FRIENDSHIPS_CREATE
 						|| type == Constants.TYPE_FRIENDSHIPS_DESTROY) {
 					updateFollowButton(user.following);
 				}

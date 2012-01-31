@@ -33,6 +33,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.4 2011.11.08
  * @version 1.5 2011.12.06
  * @version 1.6 2011.12.19
+ * @version 2.0 2012.01.31
  * 
  */
 public class MyProfilePage extends BaseActivity {
@@ -247,9 +248,6 @@ public class MyProfilePage extends BaseActivity {
 
 	private void doRefresh() {
 		FanFouService.doProfile(this, userId, new ResultHandler());
-		if (isInitialized) {
-			startRefreshAnimation();
-		}
 	}
 
 	private static final int REQUEST_CODE_UPDATE_PROFILE = 0;
@@ -300,28 +298,8 @@ public class MyProfilePage extends BaseActivity {
 
 	}
 
-	@Override
-	public void onRefreshClick() {
-		if (isBusy) {
-			return;
-		}
-		doRefresh();
-	}
-
 	private synchronized void setBusy(boolean busy) {
 		isBusy = busy;
-	}
-
-	@Override
-	protected void startRefreshAnimation() {
-		setBusy(true);
-		mActionBar.startAnimation();
-	}
-
-	@Override
-	protected void stopRefreshAnimation() {
-		setBusy(false);
-		mActionBar.stopAnimation();
 	}
 
 	private class ResultHandler extends Handler {
@@ -347,16 +325,10 @@ public class MyProfilePage extends BaseActivity {
 					if (type == Constants.TYPE_USERS_SHOW) {
 						log("show result=" + user.id);
 						updateUI();
-						if (isInitialized) {
-							stopRefreshAnimation();
-						}
 					}
 				}
 				break;
 			case Constants.RESULT_ERROR:
-				if (type == Constants.TYPE_USERS_SHOW) {
-					stopRefreshAnimation();
-				}
 				if (!isInitialized) {
 					showContent();
 				}

@@ -36,29 +36,26 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
  */
 
 // select direct message target
-public class UserSelectPage extends BaseActivity implements OnItemClickListener,OnRefreshListener,
-		FilterQueryProvider {
-	
-	private static final String TAG=UserSelectPage.class.getSimpleName();
+public class UserSelectPage extends BaseActivity implements
+		OnItemClickListener, OnRefreshListener, FilterQueryProvider {
+
+	private static final String TAG = UserSelectPage.class.getSimpleName();
 
 	protected ActionBar mActionBar;
 	private PullToRefreshListView mPullToRefreshListView;
 	private ListView mList;
-	protected ViewGroup mEmptyView;
 
 	protected EditText mEditText;
 
 	protected Cursor mCursor;
 	protected UserCursorAdapter mCursorAdapter;
 
-	private boolean isInitialized = false;
+	private boolean initialized = false;
 
 	private int page = 1;
 
-	private static final String tag = UserSelectPage.class.getSimpleName();
-
 	private void log(String message) {
-		Log.i(tag, message);
+		Log.i(TAG, message);
 	}
 
 	@Override
@@ -79,33 +76,19 @@ public class UserSelectPage extends BaseActivity implements OnItemClickListener,
 		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
 				+ "=?";
 		String[] whereArgs = new String[] {
-				String.valueOf(Constants.TYPE_USERS_FRIENDS),
-				App.getUserId() };
+				String.valueOf(Constants.TYPE_USERS_FRIENDS), App.getUserId() };
 		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				whereArgs, null);
 	}
 
 	protected void initCheckState() {
-		if (mCursor.getCount() > 0) {
-			showContent();
+		if (mCursor.getCount() == 0) {
+			onRefresh();
+			mPullToRefreshListView.setRefreshing();
 		} else {
-			doRefresh();
-			showProgress();
+			initialized = true;
+			mEditText.setVisibility(View.VISIBLE);
 		}
-	}
-
-	private void showProgress() {
-		mPullToRefreshListView.setVisibility(View.GONE);
-		mEmptyView.setVisibility(View.VISIBLE);
-	}
-
-	private void showContent() {
-		if (App.DEBUG) {
-			log("showContent()");
-		}
-		isInitialized = true;
-		mEmptyView.setVisibility(View.GONE);
-		mPullToRefreshListView.setVisibility(View.VISIBLE);
 	}
 
 	private void setLayout() {
@@ -113,15 +96,13 @@ public class UserSelectPage extends BaseActivity implements OnItemClickListener,
 
 		setActionBar();
 
-		mEmptyView = (ViewGroup) findViewById(R.id.empty);
-
 		mEditText = (EditText) findViewById(R.id.choose_input);
 		mEditText.addTextChangedListener(new MyTextWatcher());
 
 		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.list);
 		mPullToRefreshListView.setOnRefreshListener(this);
-		
-		mList=mPullToRefreshListView.getRefreshableView();
+
+		mList = mPullToRefreshListView.getRefreshableView();
 		mList.setOnItemClickListener(this);
 
 		mCursorAdapter = new UserCursorAdapter(mContext, mCursor);
@@ -218,20 +199,20 @@ public class UserSelectPage extends BaseActivity implements OnItemClickListener,
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case Constants.RESULT_SUCCESS:
-				if (!isInitialized) {
-					showContent();
-				}
 				int count = msg.getData().getInt(Constants.EXTRA_COUNT);
 				updateUI();
 				mPullToRefreshListView.onRefreshComplete();
+				if (!initialized) {
+					mEditText.setVisibility(View.VISIBLE);
+				}
 				break;
 			case Constants.RESULT_ERROR:
+				if (!initialized) {
+					mEditText.setVisibility(View.VISIBLE);
+				}
 				String errorMessage = msg.getData().getString(
 						Constants.EXTRA_ERROR);
 				int errorCode = msg.getData().getInt(Constants.EXTRA_CODE);
-				if (!isInitialized) {
-					showContent();
-				}
 				mPullToRefreshListView.onRefreshComplete();
 				Utils.notify(mContext, errorMessage);
 				Utils.checkAuthorization(mContext, errorCode);
@@ -267,11 +248,10 @@ public class UserSelectPage extends BaseActivity implements OnItemClickListener,
 
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
-		String where = BasicColumns.TYPE + " = "
-				+ Constants.TYPE_USERS_FRIENDS + " AND "
-				+ BasicColumns.OWNER_ID + " = '" + App.getUserId() + "' AND ("
-				+ UserInfo.SCREEN_NAME + " like '%" + constraint + "%' OR "
-				+ BasicColumns.ID + " like '%" + constraint + "%' )";
+		String where = BasicColumns.TYPE + " = " + Constants.TYPE_USERS_FRIENDS
+				+ " AND " + BasicColumns.OWNER_ID + " = '" + App.getUserId()
+				+ "' AND (" + UserInfo.SCREEN_NAME + " like '%" + constraint
+				+ "%' OR " + BasicColumns.ID + " like '%" + constraint + "%' )";
 		;
 		return managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				null, null);
