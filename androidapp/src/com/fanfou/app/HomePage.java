@@ -17,6 +17,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -206,9 +207,12 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	 * 初始化并添加四个页面的ListView
 	 */
 	private void setListViews() {
+		LayoutInflater inflater=LayoutInflater.from(this);
 		for (int i = 0; i < views.length; i++) {
-			views[i] = new PullToRefreshListView(this,
-					PullToRefreshListView.MODE_BOTH);
+//			views[i] = new PullToRefreshListView(this,
+//					PullToRefreshListView.MODE_BOTH);			
+			views[i]=(PullToRefreshListView) inflater.inflate(R.layout.list_only, null);
+			
 			views[i].setOnRefreshListener(this);
 			lists[i] = views[i].getRefreshableView();
 			configListView(lists[i]);
@@ -218,9 +222,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	private void configListView(final ListView list) {
 //		list.setHorizontalScrollBarEnabled(false);
 //		list.setVerticalScrollBarEnabled(false);
-		list.setCacheColorHint(0);
-		list.setSelector(getResources().getDrawable(R.drawable.list_selector));
-		list.setDivider(getResources().getDrawable(R.drawable.separator));
+//		list.setCacheColorHint(0);
+//		list.setSelector(getResources().getDrawable(R.drawable.list_selector));
+//		list.setDivider(getResources().getDrawable(R.drawable.separator));
 		list.setOnItemClickListener(this);
 		list.setOnItemLongClickListener(this);
 	}
