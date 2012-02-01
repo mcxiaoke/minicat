@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string-array name="bottom_icon_position">
-		<item>左下角</item>
-		<item>右下角</item>
-		<item>不显示</item>
-	</string-array>
-
-	<string-array name="bottom_icon_position_values">
-		<item>left</item>
-		<item>right</item>
-		<item>none</item>
-	</string-array>
-
 	<string-array name="font_size">
 		<item>12号</item>
 		<item>14号</item>

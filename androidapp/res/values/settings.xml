@@ -16,8 +16,6 @@
     <string name="option_text_mode">text_mode</string>
     <string name="option_color_highlight_mention">color_highlight_mention</string>
     <string name="option_color_highlight_self">color_highlight_self</string>
-    <string name="option_bottom_refresh_icon">bottom_refresh_icon</string>
-    <string name="option_bottom_write_icon">bottom_write_icon</string>
     <string name="option_version">app_version</string>
     <string name="option_refresh_on_open">refresh_on_open</string>
     <string name="option_page_scroll_endless">page_scroll_endless</string>
@@ -28,16 +26,12 @@
     <string name="option_feedback">feedback</string>
     <string name="option_debug_on">debug_on</string>
     <string name="option_changelog">changelog</string>
-    <string name="option_website">website</string>
     <string name="option_check_update">check_update</string>
-    <string name="option_autoupdate">autoupdate</string>
-    <string name="option_current_account">current_account</string>
     <string name="option_clear_data_and_settings">clear_data_and_settings</string>
     <string name="option_logout">logout</string>
     <string name="option_cleanpic">cleanpic</string>
     <string name="option_cleandb">cleandb</string>
     <string name="option_force_portrait">force_portrait</string>
-    <string name="option_confirm_on_exit">confirm_on_exit</string>
     <string name="option_play_sound_effect">play_sound_effect</string>
     <string name="option_old_version_code">old_version_code</string>
     <string name="option_notification">notification</string>

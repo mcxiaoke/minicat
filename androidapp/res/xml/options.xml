@@ -89,22 +89,6 @@
             android:title="文本字体大小" />
     </PreferenceScreen>
     <PreferenceScreen android:title="使用偏好" >
-        <ListPreference
-            android:defaultValue="right"
-            android:dialogTitle="刷新图标位置"
-            android:entries="@array/bottom_icon_position"
-            android:entryValues="@array/bottom_icon_position_values"
-            android:key="@string/option_bottom_refresh_icon"
-            android:summary="设置底部刷新图标位置"
-            android:title="底部刷新图标" />
-        <ListPreference
-            android:defaultValue="none"
-            android:dialogTitle="编辑图标位置"
-            android:entries="@array/bottom_icon_position"
-            android:entryValues="@array/bottom_icon_position_values"
-            android:key="@string/option_bottom_write_icon"
-            android:summary="设置底部编辑图标位置"
-            android:title="底部编辑图标" />
 
         <CheckBoxPreference
             android:defaultValue="false"
@@ -136,16 +120,6 @@
             android:key="@string/option_force_portrait"
             android:summary="强制竖屏显示"
             android:title="锁定竖屏" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/option_confirm_on_exit"
-            android:summary="退出时显示确认框"
-            android:title="退出确认" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/option_autoupdate"
-            android:summary="自动检测新版本"
-            android:title="自动升级" />
     </PreferenceScreen>
     <PreferenceScreen android:title="其它功能" >
         <com.fanfou.app.preferences.ClearDataDialogPreference
@@ -177,9 +151,6 @@
     </PreferenceScreen>
     <PreferenceScreen android:title="软件信息" >
         <Preference
-            android:key="@string/option_current_account"
-            android:title="当前帐号" />
-        <Preference
             android:key="@string/option_check_update"
             android:summary="联网检测是否有新版本"
             android:title="软件升级" />
@@ -194,14 +165,6 @@
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="http://apps.fanfou.com/android/changelog.html" />
-        </Preference>
-        <Preference
-            android:key="@string/option_website"
-            android:summary="访问饭否网站获取更多信息"
-            android:title="访问网站" >
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="http://fanfou.com/" />
         </Preference>
     </PreferenceScreen>
 

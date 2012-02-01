@@ -76,18 +76,8 @@ public class SettingsPage extends PreferenceActivity implements
 
 		addPreferencesFromResource(R.xml.options);
 
-		ListPreference bottomWriteIcon = (ListPreference) findPreference(getText(R.string.option_bottom_write_icon));
-		bottomWriteIcon.setSummary(bottomWriteIcon.getEntry());
-
-		ListPreference bottomRefreshIcon = (ListPreference) findPreference(getText(R.string.option_bottom_refresh_icon));
-		bottomRefreshIcon.setSummary(bottomRefreshIcon.getEntry());
-
 		ListPreference interval = (ListPreference) findPreference(getText(R.string.option_notification_interval));
 		interval.setSummary(interval.getEntry());
-
-		Preference currentAccount = findPreference(getText(R.string.option_current_account));
-		currentAccount.setSummary("" + App.getUserName() + "("
-				+ App.getUserId() + ")");
 
 		Preference checkUpdate = findPreference(getText(R.string.option_check_update));
 		checkUpdate.setOnPreferenceClickListener(this);
@@ -156,10 +146,7 @@ public class SettingsPage extends PreferenceActivity implements
 			NotificationService.set(this, cp.isChecked());
 		} else if (key.equals(getString(R.string.option_notification_interval))) {
 			NotificationService.set(this);
-		} else if (key.equals(getString(R.string.option_autoupdate))) {
-			CheckBoxPreference cp = (CheckBoxPreference) p;
-			DownloadService.set(this, cp.isChecked());
-		} else if (key.equals(getString(R.string.option_force_portrait))) {
+		}else if (key.equals(getString(R.string.option_force_portrait))) {
 			CheckBoxPreference cp = (CheckBoxPreference) p;
 			if (cp.isChecked()) {
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

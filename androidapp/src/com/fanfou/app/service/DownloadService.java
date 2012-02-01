@@ -90,16 +90,11 @@ public class DownloadService extends BaseIntentService {
 	}
 
 	public static void set(Context context) {
-		boolean need = OptionHelper.readBoolean(context,
-				R.string.option_autoupdate, true);
-		if (!need) {
-			return;
-		}
 		Calendar c = Calendar.getInstance();
 		c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
 				c.get(Calendar.DAY_OF_MONTH), 11, 0);
 		c.add(Calendar.DATE, 1);
-		long interval = 3 * 24 * 3600 * 1000;
+		long interval = 5 * 24 * 3600 * 1000;
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		am.setInexactRepeating(AlarmManager.RTC, c.getTimeInMillis(), interval,

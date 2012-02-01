@@ -487,26 +487,6 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	@Override
-	public void onBackPressed() {
-		boolean needConfirm = OptionHelper.readBoolean(this,
-				R.string.option_confirm_on_exit, false);
-		if (needConfirm) {
-			final ConfirmDialog dialog = new ConfirmDialog(this, "提示",
-					"确认退出饭否吗？");
-			dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
-
-				@Override
-				public void onButton1Click() {
-					mContext.finish();
-				}
-			});
-			dialog.show();
-		} else {
-			super.onBackPressed();
-		}
-	}
-
-	@Override
 	protected int getPageType() {
 		return PAGE_HOME;
 	}
