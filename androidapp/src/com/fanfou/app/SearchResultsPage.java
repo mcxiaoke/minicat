@@ -39,6 +39,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 1.6 2011.11.21
  * @version 1.7 2011.11.25
  * @version 2.0 2012.01.31
+ * @version 2.1 2012.02.01
  * 
  */
 public class SearchResultsPage extends BaseActivity implements
@@ -48,7 +49,6 @@ public class SearchResultsPage extends BaseActivity implements
 	protected ActionBar mActionBar;
 	private PullToRefreshListView mPullToRefreshListView;
 	private ListView mList;
-	protected ViewGroup mEmptyView;
 
 	protected SearchResultsAdapter mStatusAdapter;
 
@@ -58,8 +58,6 @@ public class SearchResultsPage extends BaseActivity implements
 	protected String maxId;
 
 	private Api api;
-
-	private boolean showListView = false;
 
 	private void log(String message) {
 		Log.d(TAG, message);
@@ -86,30 +84,21 @@ public class SearchResultsPage extends BaseActivity implements
 
 	private void setLayout() {
 		setContentView(R.layout.list_pull);
-
 		setActionBar();
-		mEmptyView = (ViewGroup) findViewById(R.id.empty);
 		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.list);
+		mPullToRefreshListView.setOnRefreshListener(this);
 		mList = mPullToRefreshListView.getRefreshableView();
-		configListView(mList);
-	}
-
-	private void configListView(final ListView list) {
-//		list.setHorizontalScrollBarEnabled(false);
-//		list.setVerticalScrollBarEnabled(false);
-//		list.setCacheColorHint(0);
-//		list.setSelector(getResources().getDrawable(R.drawable.list_selector));
-//		list.setDivider(getResources().getDrawable(R.drawable.separator));
-
-		list.setOnItemClickListener(this);
-		list.setOnItemClickListener(this);
+		mList.setOnItemClickListener(this);
+		mList.setOnItemLongClickListener(this);
+		mStatusAdapter = new SearchResultsAdapter(this, mStatuses);
+		mList.setAdapter(mStatusAdapter);
 	}
 
 	protected void search() {
 		parseIntent();
 		mStatuses.clear();
 		doSearch(true);
-		showProgress();
+		mPullToRefreshListView.setRefreshing();
 
 	}
 
@@ -129,22 +118,6 @@ public class SearchResultsPage extends BaseActivity implements
 		}
 	}
 
-	private void showProgress() {
-		showListView = false;
-		mPullToRefreshListView.setVisibility(View.GONE);
-		mEmptyView.setVisibility(View.VISIBLE);
-	}
-
-	private void showContent() {
-		showListView = true;
-
-		mStatusAdapter = new SearchResultsAdapter(this, mStatuses);
-		mList.setAdapter(mStatusAdapter);
-
-		mEmptyView.setVisibility(View.GONE);
-		mPullToRefreshListView.setVisibility(View.VISIBLE);
-	}
-
 	/**
 	 * 初始化和设置ActionBar
 	 */
@@ -162,8 +135,7 @@ public class SearchResultsPage extends BaseActivity implements
 			}
 			mActionBar.setTitle(keyword);
 			if(reset){
-				mStatuses.clear();
-				mStatusAdapter.notifyDataSetChanged();
+				maxId=null;
 			}
 			new SearchTask().execute();
 			mPullToRefreshListView.setRefreshing();
@@ -212,13 +184,15 @@ public class SearchResultsPage extends BaseActivity implements
 
 		@Override
 		protected void onPreExecute() {
+			if(maxId==null){
+				mStatuses.clear();
+				mStatusAdapter.notifyDataSetChanged();
+			}
 		}
 
 		@Override
 		protected void onPostExecute(List<com.fanfou.app.api.Status> result) {
-			if (!showListView) {
-				showContent();
-			}
+			mPullToRefreshListView.onRefreshComplete();
 			if (result != null && result.size() > 0) {
 
 				int size = result.size();
