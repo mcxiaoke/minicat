@@ -141,6 +141,7 @@ public class UserListPage extends BaseActivity implements OnRefreshListener,
 	 */
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
+		setActionBarSwipe(mActionBar);
 		if (user != null) {
 			if (type == Constants.TYPE_USERS_FRIENDS) {
 				mActionBar.setTitle(user.screenName + "关注的人");

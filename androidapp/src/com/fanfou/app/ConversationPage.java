@@ -36,6 +36,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 2.0 2011.11.11
  * @version 3.0 2011.11.18
  * @version 3.5 2012.01.31
+ * @version 3.6 2012.02.01
  * 
  */
 public class ConversationPage extends BaseActivity implements
@@ -115,6 +116,7 @@ public class ConversationPage extends BaseActivity implements
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("对话");
+		setActionBarSwipe(mActionBar);
 	}
 
 	private void doFetchThreads() {

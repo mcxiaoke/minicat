@@ -126,11 +126,6 @@ public class StatusHelper {
 		Linkify.addLinks(textView, Linkify.WEB_URLS);
 		linkifyUsers(textView);
 		linkifyTags(textView);
-		if(App.DEBUG){
-			Log.e(TAG, "original text "+text);
-			Log.e(TAG, "processed text "+processedText);
-			Log.e(TAG, "result text "+textView.getText().toString());
-		}
 		userNameIdMap.clear();
 	}
 

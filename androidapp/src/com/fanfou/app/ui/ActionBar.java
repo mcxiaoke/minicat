@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
+import com.fanfou.app.ui.widget.GestureManager.SwipeListener;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.Utils;
 

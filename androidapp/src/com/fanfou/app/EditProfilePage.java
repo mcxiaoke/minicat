@@ -42,6 +42,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.5 2011.11.08
  * @version 1.6 2011.11.09
  * @version 1.7 2011.11.18
+ * @version 1.8 2012.02.01
  * 
  */
 public class EditProfilePage extends BaseActivity {
@@ -52,7 +53,7 @@ public class EditProfilePage extends BaseActivity {
 		Log.d(TAG, message);
 	}
 
-	private ActionBar mBar;
+	private ActionBar mActionBar;
 
 	private ImageView mHeadView;
 	private ImageView mHeadEdit;
@@ -95,7 +96,8 @@ public class EditProfilePage extends BaseActivity {
 	private void setLayout() {
 		setContentView(R.layout.edit_profile);
 
-		mBar = (ActionBar) findViewById(R.id.actionbar);
+		mActionBar = (ActionBar) findViewById(R.id.actionbar);
+		setActionBarSwipe(mActionBar);
 
 		mButtonOK = (Button) findViewById(R.id.button_ok);
 		mButtonOK.setOnClickListener(this);
@@ -173,7 +175,7 @@ public class EditProfilePage extends BaseActivity {
 	}
 
 	private void updateUI() {
-		mBar.setTitle("编辑个人资料");
+		mActionBar.setTitle("编辑个人资料");
 		mNameEdit.setText(user.screenName);
 		mDescriptionEdit.setText(user.description);
 		mUrlEdit.setText(user.url);

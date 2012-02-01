@@ -22,6 +22,7 @@ import com.fanfou.app.api.User;
 import com.fanfou.app.service.Constants;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
+import com.fanfou.app.ui.widget.GestureManager.SwipeListener;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.UIManager;
 import com.fanfou.app.util.StringHelper;
@@ -45,7 +46,18 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * 
  */
 public abstract class BaseTimelineActivity extends BaseActivity implements
-		OnRefreshListener, OnItemClickListener, OnItemLongClickListener {
+		OnRefreshListener, OnItemClickListener, OnItemLongClickListener,SwipeListener {
+	@Override
+	public boolean onSwipeLeft() {
+		finish();
+		return true;
+	}
+
+	@Override
+	public boolean onSwipeRight() {
+		return true;
+	}
+
 	private static final String TAG = BaseTimelineActivity.class
 			.getSimpleName();
 

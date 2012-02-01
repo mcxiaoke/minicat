@@ -8,13 +8,18 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.OnRefreshClickListener;
+import com.fanfou.app.ui.widget.GestureManager.SwipeGestureListener;
+import com.fanfou.app.ui.widget.GestureManager.SwipeListener;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.Utils;
 
@@ -30,9 +35,10 @@ import com.fanfou.app.util.Utils;
  * @version 2.5 2011.11.15
  * @version 2.6 2011.11.22
  * @version 2.7 2011.12.07
+ * @version 2.8 2012.02.01
  * 
  */
-public abstract class BaseActivity extends Activity implements OnClickListener {
+public abstract class BaseActivity extends Activity implements OnClickListener,SwipeListener {
 
 	public static final int STATE_INIT = 0;
 	public static final int STATE_NORMAL = 1;
@@ -140,6 +146,17 @@ public abstract class BaseActivity extends Activity implements OnClickListener {
 		return isActive;
 	}
 
+	@Override
+	public boolean onSwipeLeft() {
+		finish();
+		return false;
+	}
+
+	@Override
+	public boolean onSwipeRight() {
+		return false;
+	}
+
 	protected static final int PAGE_NORMAL = 0;
 	protected static final int PAGE_HOME = 1;
 	protected static final int PAGE_LOGIN = 2;
@@ -186,6 +203,18 @@ public abstract class BaseActivity extends Activity implements OnClickListener {
 	protected void onMenuHomeClick() {
 		IntentHelper.goHomePage(this, -1);
 		finish();
+	}
+	
+	protected void setActionBarSwipe(final ActionBar actionBar){
+		final GestureDetector detector=new GestureDetector(new SwipeGestureListener(this));
+		actionBar.setOnTouchListener(new View.OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				detector.onTouchEvent(event);
+				return true;
+			}
+		});
 	}
 
 }

@@ -126,6 +126,7 @@ public class SearchResultsPage extends BaseActivity implements
 		mActionBar.setTitle("搜索结果");
 		mActionBar.setTitleClickListener(this);
 		mActionBar.setRightAction(new ActionBar.SearchAction(this));
+		setActionBarSwipe(mActionBar);
 	}
 
 	private void doSearch(boolean reset) {

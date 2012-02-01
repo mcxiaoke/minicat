@@ -31,7 +31,7 @@ import com.fanfou.app.util.Utils;
  * 
  */
 public class DraftsPage extends BaseActivity implements OnItemClickListener {
-	private ActionBar mBar;
+	private ActionBar mActionBar;
 	private ListView mListView;
 
 	private Cursor mCursor;
@@ -51,16 +51,17 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 	}
 
 	private void setActionBar() {
-		mBar = (ActionBar) findViewById(R.id.actionbar);
-		mBar.setTitle("草稿箱");
-		mBar.setRightAction(new SendAllAction());
+		mActionBar = (ActionBar) findViewById(R.id.actionbar);
+		mActionBar.setTitle("草稿箱");
+		mActionBar.setRightAction(new SendAllAction());
+		setActionBarSwipe(mActionBar);
 	}
 
 	private void setListView() {
 		mCursor = managedQuery(DraftInfo.CONTENT_URI, DraftInfo.COLUMNS, null,
 				null, null);
 		if (mCursor.getCount() == 0) {
-			mBar.setRightActionEnabled(false);
+			mActionBar.setRightActionEnabled(false);
 		}
 
 		mAdapter = new DraftsCursorAdaper(this, mCursor);

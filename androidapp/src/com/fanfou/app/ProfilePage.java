@@ -7,7 +7,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextPaint;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,6 +26,8 @@ import com.fanfou.app.service.Constants;
 import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
+import com.fanfou.app.ui.widget.GestureManager.SwipeGestureListener;
+import com.fanfou.app.ui.widget.GestureManager.SwipeListener;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -43,6 +47,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.8 2011.11.22
  * @version 2.0 2011.12.19
  * @version 2.5 2012.01.31
+ * @version 2.6 2012.02.01
  * 
  */
 public class ProfilePage extends BaseActivity {
@@ -88,12 +93,12 @@ public class ProfilePage extends BaseActivity {
 
 	private User user;
 
-	private Handler mHandler;
 	private IImageLoader mLoader;
 
 	private boolean isInitialized = false;
 	private boolean noPermission = false;
-	private boolean isBusy = false;
+
+	private GestureDetector mDetector;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -135,8 +140,8 @@ public class ProfilePage extends BaseActivity {
 	}
 
 	private void initialize() {
-		mHandler = new Handler();
 		mLoader = App.getImageLoader();
+		mDetector = new GestureDetector(new SwipeGestureListener(this));
 	}
 
 	private void setLayout() {
@@ -151,6 +156,7 @@ public class ProfilePage extends BaseActivity {
 		mScrollView = (ScrollView) findViewById(R.id.user_profile);
 
 		mHeader = (RelativeLayout) findViewById(R.id.user_headview);
+
 		mHead = (ImageView) findViewById(R.id.user_head);
 		mName = (TextView) findViewById(R.id.user_name);
 		TextPaint tp = mName.getPaint();
@@ -204,6 +210,7 @@ public class ProfilePage extends BaseActivity {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("个人空间");
 		mActionBar.setRightAction(new WriteAction());
+		setActionBarSwipe(mActionBar);
 	}
 
 	private class WriteAction extends AbstractAction {
@@ -247,8 +254,8 @@ public class ProfilePage extends BaseActivity {
 		if (App.DEBUG)
 			log("updateUI user.name=" + user.screenName);
 
-		boolean textMode = OptionHelper.readBoolean(mContext,R.string.option_text_mode,
-				false);
+		boolean textMode = OptionHelper.readBoolean(mContext,
+				R.string.option_text_mode, false);
 		if (textMode) {
 			mHead.setVisibility(View.GONE);
 		} else {
@@ -417,10 +424,6 @@ public class ProfilePage extends BaseActivity {
 
 	}
 
-	private synchronized void setBusy(boolean busy) {
-		isBusy = busy;
-	}
-
 	private boolean hasPermission() {
 		if (noPermission) {
 			Utils.notify(this, "你没有通过这个用户的验证");
@@ -477,7 +480,7 @@ public class ProfilePage extends BaseActivity {
 				}
 				if (type == Constants.TYPE_FRIENDSHIPS_EXISTS) {
 					return;
-				}else if (type == Constants.TYPE_FRIENDSHIPS_CREATE
+				} else if (type == Constants.TYPE_FRIENDSHIPS_CREATE
 						|| type == Constants.TYPE_FRIENDSHIPS_DESTROY) {
 					updateFollowButton(user.following);
 				}
@@ -492,10 +495,10 @@ public class ProfilePage extends BaseActivity {
 
 	}
 
-	private static final String tag = ProfilePage.class.getSimpleName();
+	private static final String TAG = ProfilePage.class.getSimpleName();
 
 	private void log(String message) {
-		Log.d(tag, message);
+		Log.d(TAG, message);
 	}
 
 }

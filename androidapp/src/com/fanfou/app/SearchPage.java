@@ -49,6 +49,7 @@ public class SearchPage extends BaseActivity implements OnItemClickListener {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("搜索");
 		mActionBar.setRightAction(new ActionBar.SearchAction(this));
+		setActionBarSwipe(mActionBar);
 	}
 
 	private void setLayout() {

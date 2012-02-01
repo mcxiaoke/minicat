@@ -187,6 +187,7 @@ public class UserChoosePage extends BaseActivity implements
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("我关注的人");
 		mActionBar.setRightAction(new ConfirmAction());
+		setActionBarSwipe(mActionBar);
 	}
 
 	private class ConfirmAction extends AbstractAction {

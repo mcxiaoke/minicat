@@ -59,6 +59,7 @@ import com.fanfou.app.util.Utils;
  * @version 4.5 2011.12.05
  * @version 4.6 2011.12.13
  * @version 4.7 2011.12.26
+ * @version 4.8 2012.02.01
  * 
  */
 public class WritePage extends BaseActivity {
@@ -326,6 +327,7 @@ public class WritePage extends BaseActivity {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("写消息");
 		mActionBar.setRightAction(new SendAction());
+		setActionBarSwipe(mActionBar);
 
 	}
 
@@ -432,6 +434,16 @@ public class WritePage extends BaseActivity {
 			checkSave();
 		}
 
+	}
+
+	@Override
+	public boolean onSwipeLeft() {
+		if (StringHelper.isEmpty(content)) {
+			finish();
+		} else {
+			checkSave();
+		}
+		return true;
 	}
 
 	@Override

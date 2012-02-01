@@ -12,8 +12,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.fanfou.app.App.ApnType;
@@ -26,6 +29,8 @@ import com.fanfou.app.service.Constants;
 import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
+import com.fanfou.app.ui.widget.GestureManager.SwipeGestureListener;
+import com.fanfou.app.ui.widget.GestureManager.SwipeListener;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.OptionHelper;
@@ -48,6 +53,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.8 2011.11.28
  * @version 2.9 2011.12.08
  * @version 3.0 2011.12.21
+ * @version 3.1 2012.02.01
  * 
  */
 public class StatusPage extends BaseActivity {
@@ -60,6 +66,8 @@ public class StatusPage extends BaseActivity {
 	private int mPhotoState = PHOTO_ICON;
 
 	private ActionBar mActionBar;
+
+	private ScrollView mScrollView;
 
 	private IImageLoader mLoader;
 
@@ -90,6 +98,8 @@ public class StatusPage extends BaseActivity {
 
 	private String mPhotoUrl;
 
+	// private GestureDetector mDetector;
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -109,11 +119,11 @@ public class StatusPage extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mLoader = App.getImageLoader();
-		setContentView(R.layout.status);
 
-		// View root=findViewById(R.id.root);
-		// ThemeHelper.setBackgroundColor(root);
+		mLoader = App.getImageLoader();
+		// mDetector=new GestureDetector(new SwipeGestureListener(this));
+
+		setContentView(R.layout.status);
 
 		setActionBar();
 		setLayout();
@@ -158,9 +168,12 @@ public class StatusPage extends BaseActivity {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("消息");
 		mActionBar.setRightAction(new ActionBar.WriteAction(this, status));
+		setActionBarSwipe(mActionBar);
 	}
 
 	private void setLayout() {
+
+		mScrollView = (ScrollView) findViewById(R.id.status_content);
 
 		vUser = findViewById(R.id.status_top);
 		vUser.setOnClickListener(this);

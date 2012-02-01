@@ -193,6 +193,7 @@ public class SendPage extends BaseActivity {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("写私信");
 		mActionBar.setRightAction(new SendAction());
+		setActionBarSwipe(mActionBar);
 	}
 
 	private void setListView() {

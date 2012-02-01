@@ -125,6 +125,7 @@ public class UserSelectPage extends BaseActivity implements
 	private void setActionBar() {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("我关注的人");
+		setActionBarSwipe(mActionBar);
 	}
 
 	protected void doRefresh() {
