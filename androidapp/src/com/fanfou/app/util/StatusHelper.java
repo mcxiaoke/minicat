@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import android.text.Html;
 import android.text.Spannable;
+import android.text.Spanned;
 import android.text.style.URLSpan;
 import android.util.Log;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import com.fanfou.app.api.Status;
  * @version 1.5 2011.10.26
  * @version 1.6 2011.11.17
  * @version 1.7 2011.11.21
+ * @version 1.8 2012.02.01
  * 
  */
 public class StatusHelper {
@@ -120,10 +122,15 @@ public class StatusHelper {
 
 	public static void setStatus(final TextView textView, final String text) {
 		String processedText = preprocessText(text);
-		textView.setText(Html.fromHtml(processedText), BufferType.SPANNABLE);
+		textView.setText(processedText, BufferType.SPANNABLE);
 		Linkify.addLinks(textView, Linkify.WEB_URLS);
 		linkifyUsers(textView);
 		linkifyTags(textView);
+		if(App.DEBUG){
+			Log.e(TAG, "original text "+text);
+			Log.e(TAG, "processed text "+processedText);
+			Log.e(TAG, "result text "+textView.getText().toString());
+		}
 		userNameIdMap.clear();
 	}
 
