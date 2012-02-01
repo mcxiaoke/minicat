@@ -150,7 +150,8 @@ public class WritePage extends BaseActivity {
 				break;
 			case REQUEST_PHOTO_LIBRARY:
 				if (App.DEBUG) {
-					log("onActivityResult requestCode=REQUEST_PHOTO_LIBRARY");
+					log("onActivityResult requestCode=REQUEST_PHOTO_LIBRARY data="
+							+ data);
 				}
 				if (data != null) {
 					parsePhoto(data.getData());
@@ -160,13 +161,12 @@ public class WritePage extends BaseActivity {
 				if (App.DEBUG) {
 					log("onActivityResult requestCode=REQUEST_PHOTO_CAPTURE");
 				}
-				if (data != null) {
-					doCameraShot(data);
-				}
+				doCameraShot();
 				break;
 			case REQUEST_USERNAME_ADD:
 				if (App.DEBUG) {
-					log("onActivityResult requestCode=REQUEST_USERNAME_ADD");
+					log("onActivityResult requestCode=REQUEST_USERNAME_ADD data="
+							+ data);
 				}
 				if (data != null) {
 					insertNames(data);
@@ -185,19 +185,14 @@ public class WritePage extends BaseActivity {
 		parseIntent();
 	}
 
-	private void doCameraShot(Intent data) {
-		try {
-			if (App.DEBUG) {
-				log("from camera uri=" + photoUri);
-				log("from camera filename=" + photo.getCanonicalPath());
-				log("file.size=" + photo.length());
-			}
-			showPreview();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+	private void doCameraShot() {
+		if (App.DEBUG) {
+			log("doCameraShot() from camera uri=" + photoUri);
+			log("doCameraShot() from camera filename="
+					+ photo.getAbsolutePath());
+			log("doCameraShot() file.size=" + photo.length());
 		}
+		showPreview();
 	}
 
 	private void showPreview() {
@@ -514,6 +509,10 @@ public class WritePage extends BaseActivity {
 	private void startCameraShot() {
 		photo = IOHelper.getPhotoFilePath(this);
 		photoUri = Uri.fromFile(photo);
+		if (App.DEBUG) {
+			log("startCameraShot() photoPath=" + photo.getAbsolutePath());
+			log("startCameraShot() photoUri=" + photoUri);
+		}
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
 		startActivityForResult(Intent.createChooser(intent, "拍摄照片"),

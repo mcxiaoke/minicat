@@ -80,9 +80,6 @@ public final class IOHelper {
 
 	public static File getPhotoFilePath(Context context) {
 		File baseDir = getPhotoDir(context);
-		if (!baseDir.exists()) {
-			baseDir.mkdirs();
-		}
 		Date date = new Date();
 		String filename = FILENAME_FORMAT.format(date);
 		return new File(baseDir, filename);
