@@ -498,7 +498,7 @@ final public class ImageHelper {
 			int bw = bitmap.getWidth();
 			int bh = bitmap.getHeight();
 			Matrix m = new Matrix();
-			if (bw > maxDim || bh > maxDim) {
+			if (bw > maxDim) {
 				float scale = (float) maxDim / (float) bw;
 				m.postScale(scale, scale);
 				if (App.DEBUG) {
