@@ -8,12 +8,16 @@ import android.text.Spannable;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fanfou.app.ui.ActionBar;
+import com.fanfou.app.ui.widget.GestureManager.SwipeGestureListener;
+import com.fanfou.app.ui.widget.GestureManager.SwipeListener;
 import com.fanfou.app.util.Linkify;
 import com.fanfou.app.util.Utils;
 
@@ -24,7 +28,8 @@ import com.fanfou.app.util.Utils;
  * @version 1.2 2011.11.17
  * 
  */
-public class AboutPage extends Activity implements OnClickListener {
+public class AboutPage extends Activity implements OnClickListener,
+		SwipeListener {
 	public static final String COPYRIGHT = "\u00a9";
 	public static final String REGISTERED = "\u00ae";
 
@@ -52,6 +57,8 @@ public class AboutPage extends Activity implements OnClickListener {
 		setContentView(R.layout.about);
 
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
+		setActionBarSwipe(mActionBar);
+
 		mLogo = (ImageView) findViewById(R.id.about_icon);
 		mLogo.setOnClickListener(this);
 
@@ -69,8 +76,8 @@ public class AboutPage extends Activity implements OnClickListener {
 		t1.setFakeBoldText(true);
 		App.getApp();
 		App.getApp();
-		String version = App.appVersionName + "(Build"
-				+ App.appVersionCode + ")";
+		String version = App.appVersionName + "(Build" + App.appVersionCode
+				+ ")";
 		mVersion.setText("版本：" + version);
 		mIntroduction.setText(R.string.introduction_text);
 		mSupport.setText("技术支持");
@@ -84,6 +91,19 @@ public class AboutPage extends Activity implements OnClickListener {
 		mContactText.setText(R.string.contact_text);
 		mCopyright.setText("\u00a9 2007-2011 fanfou.com");
 
+	}
+
+	private void setActionBarSwipe(final ActionBar actionBar) {
+		final GestureDetector detector = new GestureDetector(
+				new SwipeGestureListener(this));
+		actionBar.setOnTouchListener(new View.OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				detector.onTouchEvent(event);
+				return true;
+			}
+		});
 	}
 
 	private void linkifySupport(final TextView textView) {
@@ -108,6 +128,17 @@ public class AboutPage extends Activity implements OnClickListener {
 			intent.setData(uri);
 			startActivity(intent);
 		}
+	}
+
+	@Override
+	public boolean onSwipeLeft() {
+		finish();
+		return true;
+	}
+
+	@Override
+	public boolean onSwipeRight() {
+		return true;
 	}
 
 }

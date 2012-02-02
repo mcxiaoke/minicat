@@ -22,6 +22,7 @@ import com.fanfou.app.api.User;
 import com.fanfou.app.service.Constants;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionBar.AbstractAction;
+import com.fanfou.app.ui.widget.GestureManager;
 import com.fanfou.app.ui.widget.GestureManager.SwipeListener;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.ui.UIManager;
@@ -97,17 +98,8 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 		mPullToRefreshListView.setOnRefreshListener(this);
 		mList = mPullToRefreshListView.getRefreshableView();
 		mList.setAdapter(mCursorAdapter);
-		configListView(mList);
-	}
-	
-	private void configListView(final ListView list) {
-//		list.setHorizontalScrollBarEnabled(false);
-//		list.setVerticalScrollBarEnabled(false);
-//		list.setCacheColorHint(0);
-//		list.setSelector(getResources().getDrawable(R.drawable.list_selector));
-//		list.setDivider(getResources().getDrawable(R.drawable.separator));
-		list.setOnItemClickListener(this);
-		list.setOnItemClickListener(this);
+		mList.setOnItemClickListener(this);
+		mList.setOnItemLongClickListener(this);
 	}
 
 	protected void initCheckState() {
@@ -127,6 +119,7 @@ public abstract class BaseTimelineActivity extends BaseActivity implements
 		if (user != null) {
 			mActionBar.setTitle(user.screenName + "的" + getPageTitle());
 		}
+		setActionBarSwipe(mActionBar);
 	}
 
 	public class WriteAction extends AbstractAction {

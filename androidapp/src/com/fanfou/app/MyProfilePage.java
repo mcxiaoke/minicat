@@ -34,6 +34,7 @@ import com.fanfou.app.util.Utils;
  * @version 1.5 2011.12.06
  * @version 1.6 2011.12.19
  * @version 2.0 2012.01.31
+ * @version 2.1 2012.02.02
  * 
  */
 public class MyProfilePage extends BaseActivity {
@@ -66,11 +67,9 @@ public class MyProfilePage extends BaseActivity {
 
 	private User user;
 
-	private Handler mHandler;
 	private IImageLoader mLoader;
 
 	private boolean isInitialized = false;
-	private boolean isBusy = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +86,6 @@ public class MyProfilePage extends BaseActivity {
 	}
 
 	private void initialize() {
-		mHandler = new Handler();
 		mLoader = App.getImageLoader();
 	}
 
@@ -137,6 +135,7 @@ public class MyProfilePage extends BaseActivity {
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("我的空间");
 		mActionBar.setRightAction(new EditProfileAction());
+		setActionBarSwipe(mActionBar);
 	}
 
 	private class EditProfileAction extends ActionBar.AbstractAction {
@@ -296,10 +295,6 @@ public class MyProfilePage extends BaseActivity {
 			break;
 		}
 
-	}
-
-	private synchronized void setBusy(boolean busy) {
-		isBusy = busy;
 	}
 
 	private class ResultHandler extends Handler {
