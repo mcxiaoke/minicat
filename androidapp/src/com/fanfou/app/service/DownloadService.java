@@ -51,6 +51,7 @@ import com.fanfou.app.util.Utils;
  * @version 2.6 2011.12.30
  * @version 2.7 2012.01.05
  * @version 2.8 2012.01.16
+ * @version 2.9 2012.02.03
  * 
  */
 public class DownloadService extends BaseIntentService {
@@ -176,6 +177,9 @@ public class DownloadService extends BaseIntentService {
 		InputStream is = null;
 		BufferedOutputStream bos = null;
 		NetClient client = new NetClient();
+
+		final long UPDATE_TIME = 2000;
+		long lastTime = 0;
 		try {
 			HttpResponse response = client.get(url);
 			int statusCode = response.getStatusLine().getStatusCode();
@@ -194,13 +198,17 @@ public class DownloadService extends BaseIntentService {
 					bos.write(buffer, 0, read);
 					download += read;
 					int progress = (int) (100.0 * download / total);
-					Message message = new Message();
-					message.what = MSG_PROGRESS;
-					message.arg1 = progress;
-					mHandler.sendMessage(message);
 					if (App.DEBUG) {
 						log("progress=" + progress);
 					}
+					if (System.currentTimeMillis() - lastTime >= UPDATE_TIME) {
+						Message message = mHandler.obtainMessage(MSG_PROGRESS);
+//						message.what = MSG_PROGRESS;
+						message.arg1 = progress;
+						mHandler.sendMessage(message);
+						lastTime = System.currentTimeMillis();
+					}
+					;
 				}
 				bos.flush();
 				if (download >= total) {
@@ -243,8 +251,8 @@ public class DownloadService extends BaseIntentService {
 	private static final int MSG_SUCCESS = 1;
 
 	private class DownloadHandler extends Handler {
-		private static final long UPDATE_TIME = 1500;
-		private long lastTime = 0;
+//		private static final long UPDATE_TIME = 1500;
+//		private long lastTime = 0;
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -253,13 +261,13 @@ public class DownloadService extends BaseIntentService {
 						+ msg.arg1);
 			}
 			if (MSG_PROGRESS == msg.what) {
-				long now = System.currentTimeMillis();
-				if (now - lastTime < UPDATE_TIME) {
-					return;
-				}
+				// long now = System.currentTimeMillis();
+				// if (now - lastTime < UPDATE_TIME) {
+				// return;
+				// }
 				int progress = msg.arg1;
 				updateProgress(progress);
-				lastTime = System.currentTimeMillis();
+				// lastTime = System.currentTimeMillis();
 			} else if (MSG_SUCCESS == msg.what) {
 				nm.cancel(NOTIFICATION_PROGRESS_ID);
 				String filePath = msg.getData().getString(
