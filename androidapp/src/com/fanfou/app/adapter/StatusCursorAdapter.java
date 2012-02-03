@@ -23,6 +23,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.0 2011.06.01
  * @version 1.5 2011.10.24
  * @version 1.6 2011.12.06
+ * @version 1.7 2012.02.03
  * 
  */
 public class StatusCursorAdapter extends BaseCursorAdapter {
@@ -167,16 +168,16 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 			});
 		}
 
-		if (StringHelper.isEmpty(s.inReplyToStatusId)) {
-			holder.replyIcon.setVisibility(View.GONE);
-		} else {
+		if (s.isThread) {
 			holder.replyIcon.setVisibility(View.VISIBLE);
+		} else {
+			holder.replyIcon.setVisibility(View.GONE);
 		}
 
-		if (StringHelper.isEmpty(s.photoLargeUrl)) {
-			holder.photoIcon.setVisibility(View.GONE);
-		} else {
+		if (s.hasPhoto) {
 			holder.photoIcon.setVisibility(View.VISIBLE);
+		} else {
+			holder.photoIcon.setVisibility(View.GONE);
 		}
 
 		holder.nameText.setText(s.userScreenName);
