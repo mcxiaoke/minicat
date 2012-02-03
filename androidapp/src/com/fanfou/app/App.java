@@ -50,7 +50,7 @@ import com.fanfou.app.util.StringHelper;
 @ReportsCrashes(formKey = "", formUri = "http://apps.fanfou.com/andstat/cr/",mode=ReportingInteractionMode.SILENT)
 public class App extends Application {
 
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 	public static final boolean TEST = true;
 
 	public static boolean active = false;
