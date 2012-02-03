@@ -124,6 +124,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	private boolean endlessScroll;
 	private boolean soundEffect;
+	private boolean shakeRefresh;
 
 	private ShakeListener mShakeListener;
 	private Vibrator mVibrator;
@@ -157,11 +158,18 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		initPage = getIntent().getIntExtra(Constants.EXTRA_PAGE, 0);
 		endlessScroll = OptionHelper.readBoolean(this,
 				R.string.option_page_scroll_endless, false);
+		shakeRefresh=OptionHelper.readBoolean(this,R.string.option_refresh_on_shake, false);
 		soundEffect = OptionHelper.readBoolean(this,
 				R.string.option_play_sound_effect, true);
 		ImageLoader.getInstance();
-		initSoundManager();
-		mShakeListener = new ShakeListener(this,this);
+		
+		if(soundEffect){
+			initSoundManager();
+		}
+		
+		if(shakeRefresh){
+			mShakeListener = new ShakeListener(this,this);
+		}
 		mVibrator=(Vibrator) getSystemService(VIBRATOR_SERVICE);
 	}
 
@@ -466,7 +474,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		super.onResume();
 		if (App.DEBUG)
 			log("onResume");
-		mShakeListener.onResume();
+		if(shakeRefresh){
+			mShakeListener.onResume();
+		}
 		for (int i = 0; i < lists.length; i++) {
 			if (lists[i] != null && states[i] != null) {
 				lists[i].onRestoreInstanceState(states[i]);
@@ -477,7 +487,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	@Override
 	protected void onPause() {
-		mShakeListener.onPause();
+		if(shakeRefresh){
+			mShakeListener.onPause();
+		}
 		super.onPause();
 		if (App.DEBUG)
 			log("onPause");
@@ -495,7 +507,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	protected void onDestroy() {
 		super.onDestroy();
 		App.getImageLoader().shutdown();
-		SoundManager.cleanup();
+		if(soundEffect){
+			SoundManager.cleanup();
+		}
 		if (App.DEBUG) {
 			log("onDestroy()");
 		}

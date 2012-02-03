@@ -8,6 +8,7 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.util.Log;
 
+import com.fanfou.app.App;
 import com.fanfou.app.R;
 
 /**
@@ -112,9 +113,15 @@ public final class SoundManager {
 	 * Deallocates the resources and Instance of SoundManager
 	 */
 	public static void cleanup() {
-		mSoundPool.release();
-		mSoundPool = null;
-		mSoundPoolMap.clear();
-		_instance = null;
+		try {
+			mSoundPool.release();
+			mSoundPool = null;
+			mSoundPoolMap.clear();
+			_instance = null;
+		} catch (Exception e) {
+			if(App.DEBUG){
+				e.printStackTrace();
+			}
+		}
 	}
 }

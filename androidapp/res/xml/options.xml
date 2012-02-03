@@ -89,7 +89,11 @@
             android:title="文本字体大小" />
     </PreferenceScreen>
     <PreferenceScreen android:title="使用偏好" >
-
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/option_refresh_on_shake"
+            android:summary="摇晃手机刷新时间线"
+            android:title="摇晃刷新" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/option_refresh_on_open"

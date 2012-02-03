@@ -18,6 +18,7 @@
     <string name="option_color_highlight_self">color_highlight_self</string>
     <string name="option_version">app_version</string>
     <string name="option_refresh_on_open">refresh_on_open</string>
+    <string name="option_refresh_on_shake">refresh_on_shake</string>
     <string name="option_page_scroll_endless">page_scroll_endless</string>
     <string name="option_refresh_after_send">refresh_after_send</string>
     <string name="option_reply_to_all_default">reply_to_all_default</string>
