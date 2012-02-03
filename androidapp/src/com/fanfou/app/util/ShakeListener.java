@@ -5,17 +5,18 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Vibrator;
 import android.util.Log;
 
 /**
  * @author mcxiaoke
- * @version 1.0 2012.02.03
- *
+ * @version 1.1 2012.02.03
+ * 
  */
 public class ShakeListener implements SensorEventListener {
 	private static final int FORCE_THRESHOLD = 350;
 	private static final int TIME_THRESHOLD = 100;
-	private static final int SHAKE_TIMEOUT = 500;
+	private static final int SHAKE_TIMEOUT = 250;
 	private static final int SHAKE_DURATION = 1000;
 	private static final int SHAKE_COUNT = 3;
 
@@ -32,53 +33,37 @@ public class ShakeListener implements SensorEventListener {
 		public void onShake();
 	}
 
-	// This will return null if sensors are not supported
-	public static ShakeListener Create(Context context) {
-		SensorManager sensorMgr = (SensorManager) context
+	public ShakeListener(Context context) {
+		mSensorMgr = (SensorManager) context
 				.getSystemService(Context.SENSOR_SERVICE);
-		if (sensorMgr == null) {
-			Log.d("ShakeListener", "Sensors not supported");
-			return null;
-		}
-		Sensor sensor = sensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		if (sensor == null) {
-			Log.d("ShakeListener", "Accelerometer not supported");
-			return null;
-		}
-		ShakeListener shakeListener = new ShakeListener(sensorMgr, sensor);
-		try {
-			shakeListener.resume();
-		} catch (UnsupportedOperationException e) {
-			Log.d("ShakeListener", e.getMessage());
-			return null;
-		}
-		return shakeListener;
+		mSensor = mSensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 	}
 
-	private ShakeListener(SensorManager sensorMgr, Sensor sensor) {
-		mSensorMgr = sensorMgr;
-		mSensor = sensor;
+	public ShakeListener(Context context, OnShakeListener listener) {
+		this(context);
+		mShakeListener = listener;
 	}
 
 	public void setOnShakeListener(OnShakeListener listener) {
 		mShakeListener = listener;
 	}
 
-	public void resume() {
-		boolean supported = mSensorMgr.registerListener(this, mSensor,
-				SensorManager.SENSOR_DELAY_GAME);
-		if (!supported) {
-			mSensorMgr.unregisterListener(this);
-			throw new UnsupportedOperationException(
-					"Accelerometer not supported");
+	public void onResume() {
+		if (mSensorMgr != null) {
+			boolean supported = mSensorMgr.registerListener(this, mSensor,
+					SensorManager.SENSOR_DELAY_UI);
+			if (!supported) {
+				mSensorMgr.unregisterListener(this);
+			}
 		}
+
 	}
 
-	public void pause() {
+	public void onPause() {
 		if (mSensorMgr != null) {
 			mSensorMgr.unregisterListener(this);
-			mSensorMgr = null;
 		}
+
 	}
 
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {

@@ -5,6 +5,7 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.AnimationDrawable;
+import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
@@ -13,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.Parcelable;
+import android.os.Vibrator;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
@@ -22,6 +24,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -51,6 +55,8 @@ import com.fanfou.app.ui.viewpager.TitlePageIndicator;
 import com.fanfou.app.ui.viewpager.TitleProvider;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
+import com.fanfou.app.util.ShakeListener;
+import com.fanfou.app.util.ShakeListener.OnShakeListener;
 import com.fanfou.app.util.SoundManager;
 import com.fanfou.app.util.Utils;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
@@ -89,12 +95,13 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  */
 public class HomePage extends BaseActivity implements OnPageChangeListener,
 		OnRefreshListener, OnItemClickListener, OnItemLongClickListener,
-		TitleProvider {
+		OnShakeListener, TitleProvider {
 
 	public static final int NUMS_OF_PAGE = 4;
 
 	private ActionBar mActionBar;
 
+	private View root;
 	private ViewPager mViewPager;
 	private ViewsAdapter mViewAdapter;
 	private TitlePageIndicator mPageIndicator;
@@ -118,6 +125,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	private boolean endlessScroll;
 	private boolean soundEffect;
 
+	private ShakeListener mShakeListener;
+	private Vibrator mVibrator;
+
 	public static final String TAG = "HomePage";
 
 	private void log(String message) {
@@ -132,6 +142,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 		init();
 		setContentView(R.layout.home);
+		
+		root=findViewById(R.id.root);
 
 		setActionBar();
 		setListViews();
@@ -149,6 +161,8 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				R.string.option_play_sound_effect, true);
 		ImageLoader.getInstance();
 		initSoundManager();
+		mShakeListener = new ShakeListener(this,this);
+		mVibrator=(Vibrator) getSystemService(VIBRATOR_SERVICE);
 	}
 
 	private void initSoundManager() {
@@ -452,7 +466,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 		super.onResume();
 		if (App.DEBUG)
 			log("onResume");
-
+		mShakeListener.onResume();
 		for (int i = 0; i < lists.length; i++) {
 			if (lists[i] != null && states[i] != null) {
 				lists[i].onRestoreInstanceState(states[i]);
@@ -463,6 +477,7 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 
 	@Override
 	protected void onPause() {
+		mShakeListener.onPause();
 		super.onPause();
 		if (App.DEBUG)
 			log("onPause");
@@ -728,6 +743,9 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 	}
 
 	private void startRefresh(int page) {
+		if (App.DEBUG) {
+			Log.d(TAG, "onShake page=" + page);
+		}
 		if (views[page] != null) {
 			doRefresh(page);
 			views[page].setRefreshing();
@@ -749,6 +767,14 @@ public class HomePage extends BaseActivity implements OnPageChangeListener,
 				Utils.goStatusPage(this, s);
 			}
 		}
+	}
+
+	@Override
+	public void onShake() {
+		if (App.DEBUG) {
+			Log.d(TAG, "onShake()");
+		}
+		startRefresh(mCurrentPage);
 	}
 
 }
