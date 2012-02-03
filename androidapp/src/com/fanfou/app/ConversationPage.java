@@ -45,7 +45,6 @@ public class ConversationPage extends BaseActivity implements
 	protected ActionBar mActionBar;
 	private PullToRefreshListView mPullToRefreshListView;
 	private ListView mList;
-	protected ViewGroup mEmptyView;
 
 	protected ConversationAdapter mStatusAdapter;
 
@@ -83,9 +82,6 @@ public class ConversationPage extends BaseActivity implements
 
 		setActionBar();
 
-		mEmptyView = (ViewGroup) findViewById(R.id.empty);
-		mEmptyView.setVisibility(View.GONE);
-
 		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.list);
 		mPullToRefreshListView.setOnRefreshListener(this);
 		mList=mPullToRefreshListView.getRefreshableView();
@@ -101,7 +97,7 @@ public class ConversationPage extends BaseActivity implements
 		list.setDivider(getResources().getDrawable(R.drawable.separator));
 
 		list.setOnItemClickListener(this);
-		list.setOnItemClickListener(this);
+		list.setOnItemLongClickListener(this);
 	}
 
 	protected boolean parseIntent() {
@@ -176,6 +172,7 @@ public class ConversationPage extends BaseActivity implements
 				mThread.addAll(result);
 			}
 			mPullToRefreshListView.onRefreshComplete();
+			mPullToRefreshListView.setPullToRefreshEnabled(false);
 		}
 
 	}
