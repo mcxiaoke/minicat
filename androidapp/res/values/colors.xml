@@ -17,7 +17,7 @@
 
     <!-- <drawable name="background">@color/background_color</drawable> -->
 
-    <color name="background_color">#ffefefef</color>
+    <color name="background">#ffefefef</color>
 <!--     <color name="self_color">#220d82bd</color> -->
     <color name="self_color">#2222cfcf</color>
     <color name="mentioned_color">#22aa8822</color>

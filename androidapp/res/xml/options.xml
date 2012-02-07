@@ -91,11 +91,6 @@
     <PreferenceScreen android:title="使用偏好" >
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="@string/option_refresh_on_shake"
-            android:summary="摇晃手机刷新时间线"
-            android:title="摇晃刷新" />
-        <CheckBoxPreference
-            android:defaultValue="false"
             android:key="@string/option_refresh_on_open"
             android:summary="客户端启动时刷新时间线"
             android:title="启动时刷新" />
@@ -109,11 +104,6 @@
             android:key="@string/option_reply_to_all_default"
             android:summary="默认回复所有人"
             android:title="全部回复" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/option_play_sound_effect"
-            android:summary="时间线有新消息时播放音效"
-            android:title="音效反馈" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/option_force_portrait"

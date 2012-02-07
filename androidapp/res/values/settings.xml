@@ -18,7 +18,6 @@
     <string name="option_color_highlight_self">color_highlight_self</string>
     <string name="option_version">app_version</string>
     <string name="option_refresh_on_open">refresh_on_open</string>
-    <string name="option_refresh_on_shake">refresh_on_shake</string>
     <string name="option_refresh_after_send">refresh_after_send</string>
     <string name="option_reply_to_all_default">reply_to_all_default</string>
     <string name="option_send_on_enter">send_on_enter</string>
@@ -32,7 +31,6 @@
     <string name="option_cleanpic">cleanpic</string>
     <string name="option_cleandb">cleandb</string>
     <string name="option_force_portrait">force_portrait</string>
-    <string name="option_play_sound_effect">play_sound_effect</string>
     <string name="option_old_version_code">old_version_code</string>
     <string name="option_notification">notification</string>
     <string name="option_notification_interval">notification_interval</string>

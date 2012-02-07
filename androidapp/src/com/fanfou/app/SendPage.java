@@ -144,7 +144,6 @@ public class SendPage extends BaseActivity {
 	private void setAutoComplete() {
 		mSelectAutoComplete = (MultiAutoCompleteTextView) findViewById(R.id.send_select_edit);
 		mSelectAutoComplete.setTokenizer(new SpaceTokenizer());
-		mSelectAutoComplete.setBackgroundColor(R.color.background_color);
 		final String[] projection = new String[] { BaseColumns._ID,
 				BasicColumns.ID, UserInfo.SCREEN_NAME, BasicColumns.TYPE,
 				BasicColumns.OWNER_ID };

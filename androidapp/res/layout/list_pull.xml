@@ -3,7 +3,6 @@
     android:id="@+id/root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/background_color"
     android:orientation="vertical" >
 
     <com.fanfou.app.ui.ActionBar
@@ -16,7 +15,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:cacheColorHint="#00000000"
-        android:divider="@drawable/separator"
         android:listSelector="@drawable/list_selector"
         ptr:mode="both"
         android:scrollbarThumbVertical="@drawable/scrollbar_vertical_thumb"/>
