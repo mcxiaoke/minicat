@@ -1,6 +1,7 @@
 package com.fanfou.app.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.text.TextPaint;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
+import com.fanfou.app.hd.UIProfile;
 import com.fanfou.app.service.Constants;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.DateTimeHelper;
@@ -162,7 +164,10 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 				@Override
 				public void onClick(View v) {
 					if (s != null) {
-						ActionManager.doProfile(mContext, s);
+						Intent intent=new Intent(mContext, UIProfile.class);
+						intent.putExtra(Constants.EXTRA_ID, s.userId);
+						mContext.startActivity(intent);
+//						ActionManager.doProfile(mContext, s);
 					}
 				}
 			});

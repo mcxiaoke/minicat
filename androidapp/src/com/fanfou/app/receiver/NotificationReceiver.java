@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.fanfou.app.App;
-import com.fanfou.app.UIHome;
+import com.fanfou.app.hd.UIHome;
 import com.fanfou.app.R;
 import com.fanfou.app.SendPage;
 import com.fanfou.app.StatusPage;

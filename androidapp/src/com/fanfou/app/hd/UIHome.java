@@ -1,4 +1,4 @@
-package com.fanfou.app;
+package com.fanfou.app.hd;
 
 import java.util.HashMap;
 
@@ -24,10 +24,14 @@ import com.astuetz.viewpager.extensions.FixedTabsView;
 import com.astuetz.viewpager.extensions.SwipeyTabButton;
 import com.astuetz.viewpager.extensions.SwipeyTabsView;
 import com.astuetz.viewpager.extensions.TabsAdapter;
+import com.fanfou.app.App;
 import com.fanfou.app.App.ApnType;
+import com.fanfou.app.R;
+import com.fanfou.app.SearchPage;
+import com.fanfou.app.SettingsPage;
 import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.dialog.ConfirmDialog;
-import com.fanfou.app.hd.AbstractUI;
+import com.fanfou.app.hd.UIBase;
 import com.fanfou.app.hd.ui.ConversationListFragment;
 import com.fanfou.app.hd.ui.HomeTimelineFragment;
 import com.fanfou.app.hd.ui.MentionTimelineFragment;
@@ -81,7 +85,7 @@ import com.fanfou.app.util.Utils;
  * @version 8.1 2012.02.07
  * 
  */
-public class UIHome extends AbstractUI {
+public class UIHome extends UIBase {
 
 	public static final String TAG = UIHome.class.getSimpleName();
 //	public static final String[] PAGE_TITLES = new String[] { "我的消息", "随便看看",
@@ -116,17 +120,17 @@ public class UIHome extends AbstractUI {
 		super.onCreate(savedInstanceState);
 		if (App.DEBUG)
 			log("onCreate()");
-		init();
-		setLayout();
 	}
 
-	private void init() {
+	@Override
+	protected void initialize() {
 		ImageLoader.getInstance();
 	}
 
-	private void setLayout() {
+	@Override
+	protected void setLayout() {
 
-		setContentView(R.layout.home);
+		setContentView(R.layout.ui_home);
 
 		mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		mActionBar.setTitle("测试版");
@@ -416,7 +420,7 @@ public class UIHome extends AbstractUI {
 					R.layout.tab_swipey, null);
 			if (position < NUMS_OF_PAGE)
 //				tab.setText(PAGE_TITLES[position]);
-			tab.setText(sTitles.get(Page.values()[position % NUMS_OF_PAGE]));
+			tab.setText(sTitles.get(Page.values()[position]));
 			return tab;
 		}
 

@@ -33,7 +33,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.fanfou.app.UIHome;
+import com.fanfou.app.hd.UIHome;
 import com.fanfou.app.R;
 
 /**

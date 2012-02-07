@@ -66,7 +66,7 @@
             android:label="@string/app_name"
             android:theme="@style/Theme" />
         <activity
-            android:name=".UIHome"
+            android:name=".hd.UIHome"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:launchMode="singleTask"
@@ -75,6 +75,14 @@
                 android:name="android.app.default_searchable"
                 android:value=".SearchResultsPage" />
         </activity>
+        
+                <activity
+            android:name=".hd.UIProfile"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name"
+            android:theme="@style/Theme" >
+        </activity>
+        
         <activity
             android:name=".SearchPage"
             android:configChanges="keyboardHidden|orientation"

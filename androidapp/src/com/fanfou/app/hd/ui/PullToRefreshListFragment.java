@@ -1,20 +1,18 @@
 package com.fanfou.app.hd.ui;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.BaseAdapter;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 
@@ -35,6 +33,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 public abstract class PullToRefreshListFragment extends AbstractFragment
 		implements OnRefreshListener, OnItemClickListener,
 		OnItemLongClickListener {
+	
+	private boolean busy;
 
 	protected static final String TAG = PullToRefreshListFragment.class
 			.getSimpleName();
@@ -100,6 +100,10 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 		mCursor = createCursor();
 		mAdapter = createAdapter();
 		mListView.setAdapter(mAdapter);
+		
+		if(mAdapter.isEmpty()){
+			startRefresh();
+		}
 	}
 
 	@Override
@@ -108,6 +112,12 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 			Log.d(TAG, "onRefresh()");
 		}
 		doFetch(!mPullToRefreshView.hasPullFromTop());
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view,
+			int position, long id) {
+		return true;
 	}
 
 	protected void doRefresh() {
@@ -146,6 +156,7 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 		mListView.setSelection(0);
 	}
 
+	@Override
 	public void updateUI() {
 		if (mCursor != null) {
 			mCursor.requery();
@@ -156,8 +167,11 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 		if (App.DEBUG) {
 			Log.d(TAG, "startRefresh()");
 		}
-		doRefresh();
-		mPullToRefreshView.setRefreshing();
+		if(!busy){
+			busy=true;
+			doRefresh();
+			mPullToRefreshView.setRefreshing();
+		}
 	}
 
 	private void onSuccess(Bundle data) {
@@ -236,6 +250,7 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 	@Override
 	public void onResume() {
 		super.onResume();
+			
 		if (mParcelable != null && mListView!=null) {
 			mListView.onRestoreInstanceState(mParcelable);
 			mParcelable = null;

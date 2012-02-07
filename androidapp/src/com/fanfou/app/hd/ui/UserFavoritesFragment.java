@@ -7,26 +7,25 @@ import android.util.Log;
 
 import com.fanfou.app.App;
 import com.fanfou.app.db.Contents.StatusInfo;
-import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.service.Constants;
 import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.Utils;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.07
  * 
  */
-public class UserTimelineFragment extends BaseTimlineFragment {
-	private static final String TAG = UserTimelineFragment.class
+public class UserFavoritesFragment extends BaseTimlineFragment {
+	private static final String TAG = UserFavoritesFragment.class
 			.getSimpleName();
 	private String userId;
+	private int page=1;
 
-	public static UserTimelineFragment newInstance(String userId) {
+	public static UserFavoritesFragment newInstance(String userId) {
 		Bundle args = new Bundle();
 		args.putString(Constants.EXTRA_ID, userId);
-		UserTimelineFragment fragment = new UserTimelineFragment();
+		UserFavoritesFragment fragment = new UserFavoritesFragment();
 		fragment.setArguments(args);
 		if (App.DEBUG) {
 			Log.d(TAG, "newInstance() "+fragment);
@@ -51,13 +50,8 @@ public class UserTimelineFragment extends BaseTimlineFragment {
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-	}
-
-	@Override
 	protected int getType() {
-		return Constants.TYPE_STATUSES_USER_TIMELINE;
+		return Constants.TYPE_FAVORITES_LIST;
 	}
 
 	@Override
@@ -65,11 +59,11 @@ public class UserTimelineFragment extends BaseTimlineFragment {
 		if (App.DEBUG) {
 			Log.d(TAG, "createCursor() userId="+userId);
 		}
-		String where = StatusInfo.TYPE + " =? AND " + StatusInfo.USER_ID
+		String where = StatusInfo.TYPE + " =? AND " + StatusInfo.OWNER_ID
 				+ " =? ";
 		String[] whereArgs = new String[] { String.valueOf(getType()), userId};
 		return getActivity().managedQuery(StatusInfo.CONTENT_URI, StatusInfo.COLUMNS, where,
-				whereArgs, FanFouProvider.ORDERBY_DATE_DESC);
+				whereArgs, null);
 	}
 
 	@Override
@@ -77,16 +71,13 @@ public class UserTimelineFragment extends BaseTimlineFragment {
 		if (App.DEBUG) {
 			Log.d(TAG, "doFetch() doGetMore=" + doGetMore);
 		}
-		final ResultHandler handler = new ResultHandler(this);
-		final Cursor cursor = getCursor();
-		String sinceId = null;
-		String maxId = null;
 		if (doGetMore) {
-			maxId = Utils.getMaxId(cursor);
+			page++;
 		} else {
-			sinceId = Utils.getSinceId(cursor);
+			page = 1;
 		}
-		FanFouService.doFetchUserTimeline(getActivity(), new Messenger(handler), userId, sinceId, maxId);
+		final ResultHandler handler = new ResultHandler(this);
+		FanFouService.doFetchFavorites(getActivity(), new Messenger(handler), page, userId);
 	}
 
 }

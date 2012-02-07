@@ -34,9 +34,9 @@ public class HomeTimelineFragment extends BaseTimlineFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if (getAdapter().isEmpty()) {
-			startRefresh();
-		}
+//		if (getAdapter().isEmpty()) {
+//			startRefresh();
+//		}
 	}
 
 	@Override

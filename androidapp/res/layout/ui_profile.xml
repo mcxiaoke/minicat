@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.fanfou.app"
+    android:id="@+id/root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    <com.fanfou.app.ui.ActionBar
+        android:id="@id/actionbar"
+        style="@style/ActionBar" />
+
+    <com.astuetz.viewpager.extensions.FixedTabsView
+        android:id="@+id/viewindicator"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#3B3B3B" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/viewindicator" />
+
+</LinearLayout>

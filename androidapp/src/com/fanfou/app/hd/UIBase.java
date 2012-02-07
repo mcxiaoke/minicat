@@ -38,15 +38,16 @@ import com.fanfou.app.util.Utils;
  * @version 2.7 2011.12.07
  * @version 2.8 2012.02.01
  * @version 3.0 2012.02.06
+ * @version 3.1 2012.02.07
  * 
  */
-public abstract class AbstractUI extends FragmentActivity implements OnClickListener,SwipeListener {
+public abstract class UIBase extends FragmentActivity implements OnClickListener,SwipeListener {
 
 	public static final int STATE_INIT = 0;
 	public static final int STATE_NORMAL = 1;
 	public static final int STATE_EMPTY = 2;
 
-	protected AbstractUI mContext;
+	protected UIBase mContext;
 	protected LayoutInflater mInflater;
 	protected boolean isActive = false;
 
@@ -62,15 +63,16 @@ public abstract class AbstractUI extends FragmentActivity implements OnClickList
 
 		this.mContext = this;
 		this.mInflater = LayoutInflater.from(this);
-
-		initialize();
-		initReceiver();
-	}
-
-	private void initialize() {
-		mDisplayMetrics = new DisplayMetrics();
+		this.mDisplayMetrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
+		initReceiver();
+		initialize();
+		setLayout();
 	}
+
+	protected abstract void initialize();
+	
+	protected abstract void setLayout();
 
 	private void initReceiver() {
 		this.mBroadcastReceiver = new MyBroadcastReceiver();

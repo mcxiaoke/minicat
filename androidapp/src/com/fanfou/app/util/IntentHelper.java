@@ -9,7 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.fanfou.app.App;
-import com.fanfou.app.UIHome;
+import com.fanfou.app.hd.UIHome;
 import com.fanfou.app.LoginPage;
 import com.fanfou.app.R;
 import com.fanfou.app.service.Constants;

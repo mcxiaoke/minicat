@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import com.fanfou.app.UIHome;
+import com.fanfou.app.hd.UIHome;
 import com.fanfou.app.MyProfilePage;
 import com.fanfou.app.R;
 import com.fanfou.app.SearchPage;

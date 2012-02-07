@@ -29,11 +29,16 @@ public class ViewPagerTabButton extends Button {
 	@SuppressWarnings("unused")
 	private static final String TAG = "com.astuetz.viewpager.extensions";
 	
-	private int mLineColor = 0xFF6F8FC7;
-	private int mLineColorSelected = 0xFF6F8FC7;
+//	private int mLineColor = 0xFF6F8FC7;
+	
+//	private int mLineColorSelected = 0xFF6F8FC7;
+	
+	private int mLineColor = 0x00000000;
+	
+	private int mLineColorSelected = 0xFF96AA39;
 	
 	private int mLineHeight = 2;
-	private int mLineHeightSelected = 6;
+	private int mLineHeightSelected = 4;
 	
 	public ViewPagerTabButton(Context context) {
 		this(context, null);
