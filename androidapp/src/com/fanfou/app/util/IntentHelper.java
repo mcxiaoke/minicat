@@ -9,7 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.fanfou.app.App;
-import com.fanfou.app.HomePage;
+import com.fanfou.app.UIHome;
 import com.fanfou.app.LoginPage;
 import com.fanfou.app.R;
 import com.fanfou.app.service.Constants;
@@ -18,7 +18,7 @@ public final class IntentHelper {
 	private static final String TAG = IntentHelper.class.getSimpleName();
 
 	public static void goHomePage(Context context, final int page) {
-		Intent intent = new Intent(context, HomePage.class);
+		Intent intent = new Intent(context, UIHome.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.putExtra(Constants.EXTRA_PAGE, page);
 		context.startActivity(intent);

@@ -105,11 +105,6 @@
             android:summary="发消息成功后刷新时间线"
             android:title="发消息后刷新" />
         <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/option_page_scroll_endless"
-            android:summary="页面切换使用循环滚动"
-            android:title="循环滚动" />
-        <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/option_reply_to_all_default"
             android:summary="默认回复所有人"

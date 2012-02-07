@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import com.fanfou.app.HomePage;
+import com.fanfou.app.UIHome;
 import com.fanfou.app.MyProfilePage;
 import com.fanfou.app.R;
 import com.fanfou.app.SearchPage;
@@ -48,19 +48,19 @@ public class WidgetSmall extends AppWidgetProvider {
 	}
 
 	private PendingIntent getMentionPendingIntent(Context context) {
-		Intent intent = new Intent(context, HomePage.class);
+		Intent intent = new Intent(context, UIHome.class);
 		intent.putExtra(Constants.EXTRA_PAGE, 1);
 		return getPendingIntent(context, intent);
 	}
 
 	private PendingIntent getMessagePendingIntent(Context context) {
-		Intent intent = new Intent(context, HomePage.class);
+		Intent intent = new Intent(context, UIHome.class);
 		intent.putExtra(Constants.EXTRA_PAGE, 2);
 		return getPendingIntent(context, intent);
 	}
 
 	private PendingIntent getPublicPendingIntent(Context context) {
-		Intent intent = new Intent(context, HomePage.class);
+		Intent intent = new Intent(context, UIHome.class);
 		intent.putExtra(Constants.EXTRA_PAGE, 3);
 		return getPendingIntent(context, intent);
 	}

@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.fanfou.app.App;
-import com.fanfou.app.HomePage;
+import com.fanfou.app.UIHome;
 import com.fanfou.app.R;
 import com.fanfou.app.SendPage;
 import com.fanfou.app.StatusPage;
@@ -100,7 +100,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		}
 		String title = "饭否消息";
 		String message = "收到" + count + "条来自好友的消息";
-		Intent intent = new Intent(context, HomePage.class);
+		Intent intent = new Intent(context, UIHome.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
 		intent.putExtra(Constants.EXTRA_PAGE, 0);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
@@ -131,7 +131,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		}
 		String title = "饭否消息";
 		String message = "收到" + count + "条提到你的消息";
-		Intent intent = new Intent(context, HomePage.class);
+		Intent intent = new Intent(context, UIHome.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
 		intent.putExtra(Constants.EXTRA_PAGE, 1);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
@@ -164,7 +164,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		}
 		String title = "饭否私信";
 		String message = "收到" + count + "条发给你的私信";
-		Intent intent = new Intent(context, HomePage.class);
+		Intent intent = new Intent(context, UIHome.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
 		intent.putExtra(Constants.EXTRA_PAGE, 2);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,

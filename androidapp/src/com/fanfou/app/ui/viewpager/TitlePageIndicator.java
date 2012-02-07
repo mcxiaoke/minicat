@@ -33,7 +33,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.fanfou.app.HomePage;
+import com.fanfou.app.UIHome;
 import com.fanfou.app.R;
 
 /**
@@ -598,14 +598,14 @@ public class TitlePageIndicator extends View implements PageIndicator {
 	@Override
 	public void onPageScrolled(int position, float positionOffset,
 			int positionOffsetPixels) {
-		mCurrentPage = position % HomePage.NUMS_OF_PAGE;
+		mCurrentPage = position % UIHome.NUMS_OF_PAGE;
 		mCurrentOffset = positionOffsetPixels;
 		invalidate();
 	}
 
 	@Override
 	public void onPageSelected(int position) {
-		mCurrentPage = position % HomePage.NUMS_OF_PAGE;
+		mCurrentPage = position % UIHome.NUMS_OF_PAGE;
 		invalidate();
 	}
 
@@ -675,7 +675,7 @@ public class TitlePageIndicator extends View implements PageIndicator {
 
 	@Override
 	public int getPageCount() {
-		return HomePage.NUMS_OF_PAGE;
+		return UIHome.NUMS_OF_PAGE;
 	}
 
 	@Override

@@ -19,7 +19,6 @@
         android:divider="@drawable/separator"
         android:listSelector="@drawable/list_selector"
         ptr:mode="both"
-        android:scrollbarThumbVertical="@drawable/scrollbar_vertical_thumb"
-        android:scrollbarTrackVertical="@drawable/scrollbar_vertical_track" />
+        android:scrollbarThumbVertical="@drawable/scrollbar_vertical_thumb"/>
 
 </LinearLayout>

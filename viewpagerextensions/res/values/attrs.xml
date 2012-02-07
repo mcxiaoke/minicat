@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+            
+    <declare-styleable name="ViewPagerExtensions">
+        
+        <attr format="integer" name="fadeOutDelay" />
+        <attr format="integer" name="fadeOutDuration" />
+        
+        <attr format="color" name="textColorSelected" />
+        
+        <attr format="color" name="lineColor" />
+        <attr format="color" name="lineColorSelected" />
+        
+        <attr format="dimension" name="lineHeight" />
+        <attr format="dimension" name="lineHeightSelected" />
+        
+        <attr format="color" name="dividerColor" />
+        <attr format="dimension" name="dividerMarginTop" />
+        <attr format="dimension" name="dividerMarginBottom" />
+        
+        <attr format="reference" name="dividerDrawable" />
+        
+    </declare-styleable>
+    
+</resources>

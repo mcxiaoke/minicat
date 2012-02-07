@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2007 The Android Open Source Project
+<!--
+     Copyright (C) 2007 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,8 +15,14 @@
      limitations under the License.
 -->
 
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <gradient android:startColor="#ff1386bf" android:endColor="#ff47a3d1"
-            android:angle="0"/>
-    <corners android:radius="2dp" />
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <!-- #ff47a3d1 -->
+
+    <gradient
+        android:angle="0"
+        android:endColor="#00ffffff"
+        android:centerColor="#ff1386bf"
+        android:startColor="#00ffffff" />
+<corners android:radius="2dp" />
 </shape>

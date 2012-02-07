@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 Patrik Åkerfeldt
+<!--
+     Copyright (C) 2011 Patrik Åkerfeldt
      Copyright (C) 2011 Jake Wharton
 
      Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,14 +17,16 @@
 -->
 
 <resources>
-    <declare-styleable name="ViewPagerIndicator">
-        <!-- Style of the circle indicator. -->
-        <attr name="circlePageIndicatorStyle" format="reference"/>
-        <!-- Style of the title indicator. -->
-        <attr name="titlePageIndicatorStyle" format="reference"/>
-    </declare-styleable>
 
+    <declare-styleable name="ViewPagerIndicator">
+
+        <!-- Style of the circle indicator. -->
+        <attr name="circlePageIndicatorStyle" format="reference" />
+        <!-- Style of the title indicator. -->
+        <attr name="titlePageIndicatorStyle" format="reference" />
+    </declare-styleable>
     <declare-styleable name="CirclePageIndicator">
+
         <!-- Whether or not the indicators should be centered. -->
         <attr name="centered" format="boolean" />
         <!-- Color of the filled circle that represents the current page. -->
@@ -37,8 +40,8 @@
         <!-- Width of the stroke used to draw the circles. -->
         <attr name="strokeWidth" format="dimension" />
     </declare-styleable>
-
     <declare-styleable name="TitlePageIndicator">
+
         <!-- Screen edge padding. -->
         <attr name="clipPadding" format="dimension" />
         <!-- Color of the footer line and indicator. -->
@@ -68,4 +71,21 @@
         <!-- Padding between titles when bumping into each other. -->
         <attr name="titlePadding" format="dimension" />
     </declare-styleable>
+    
+<!--     
+    <declare-styleable name="ViewPagerTabs">
+        <attr name="backgroundColor" format="color" />
+        <attr name="backgroundColorPressed" format="color" />
+        <attr name="txtColor" format="color" />
+        <attr name="textColorCenter" format="color" />
+        <attr name="lineColorCenter" format="color" />
+        <attr name="lineHeight" format="dimension" />
+        <attr name="tabPaddingLeft" format="dimension" />
+        <attr name="tabPaddingTop" format="dimension" />
+        <attr name="tabPaddingRight" format="dimension" />
+        <attr name="tabPaddingBottom" format="dimension" />
+        <attr name="txtSize" format="dimension" />
+        <attr name="outsideOffset" format="dimension" />
+    </declare-styleable> -->
+
 </resources>
