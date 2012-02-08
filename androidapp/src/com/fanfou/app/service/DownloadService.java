@@ -32,7 +32,6 @@ import com.fanfou.app.App;
 import com.fanfou.app.NewVersionPage;
 import com.fanfou.app.R;
 import com.fanfou.app.http.NetClient;
-import com.fanfou.app.update.VersionInfo;
 import com.fanfou.app.util.DateTimeHelper;
 import com.fanfou.app.util.IOHelper;
 import com.fanfou.app.util.OptionHelper;

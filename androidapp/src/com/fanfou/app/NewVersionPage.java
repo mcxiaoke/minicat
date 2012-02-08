@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.fanfou.app.service.Constants;
 import com.fanfou.app.service.DownloadService;
+import com.fanfou.app.service.VersionInfo;
 import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.update.VersionInfo;
 import com.fanfou.app.util.Utils;
 
 /**

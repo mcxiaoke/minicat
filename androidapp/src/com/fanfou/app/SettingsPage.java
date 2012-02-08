@@ -19,7 +19,7 @@ import com.fanfou.app.preferences.SeekBarPreference;
 import com.fanfou.app.preferences.colorpicker.ColorPickerPreference;
 import com.fanfou.app.service.DownloadService;
 import com.fanfou.app.service.NotificationService;
-import com.fanfou.app.update.VersionInfo;
+import com.fanfou.app.service.VersionInfo;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.Utils;
 
