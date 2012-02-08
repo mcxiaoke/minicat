@@ -55,7 +55,7 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 	}
 
 	@Override
-	protected Cursor createCursor() {
+	protected Cursor onCreateCursor() {
 		if (App.DEBUG) {
 			Log.d(TAG, "createCursor() userId="+userId);
 		}

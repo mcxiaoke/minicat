@@ -2,10 +2,15 @@ package com.fanfou.app.hd.ui;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +18,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.CursorAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.Status;
+import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.service.Constants;
 import com.fanfou.app.ui.UIManager;
 import com.fanfou.app.util.Utils;
@@ -28,13 +34,14 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.06
+ * @version 1.1 2012.02.08
  * 
  */
 public abstract class PullToRefreshListFragment extends AbstractFragment
 		implements OnRefreshListener, OnItemClickListener,
-		OnItemLongClickListener {
-	
-	private boolean busy;
+		OnItemLongClickListener, LoaderCallbacks<Cursor> {
+
+	private static final int LOADER_ID = 1;
 
 	protected static final String TAG = PullToRefreshListFragment.class
 			.getSimpleName();
@@ -46,6 +53,8 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 
 	private CursorAdapter mAdapter;
 	private Cursor mCursor;
+
+	private boolean busy;
 
 	public PullToRefreshListFragment() {
 		super();
@@ -96,15 +105,20 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 		if (savedInstanceState != null) {
 			mParcelable = savedInstanceState.getParcelable("state");
 		}
-
-		mCursor = createCursor();
-		mAdapter = createAdapter();
+		mAdapter = onCreateAdapter();
 		mListView.setAdapter(mAdapter);
-		
-		if(mAdapter.isEmpty()){
-			startRefresh();
-		}
+		getLoaderManager().initLoader(LOADER_ID, null, this);
 	}
+	
+	protected abstract CursorAdapter onCreateAdapter();
+
+	protected abstract Cursor onCreateCursor();
+
+	protected abstract void doFetch(boolean doGetMore);
+
+	protected abstract void showToast(int count);
+
+	protected abstract int getType();
 
 	@Override
 	public void onRefresh() {
@@ -134,10 +148,6 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 		doFetch(true);
 	}
 
-	protected abstract CursorAdapter createAdapter();
-
-	protected abstract Cursor createCursor();
-
 	public Cursor getCursor() {
 		return mCursor;
 	}
@@ -145,12 +155,24 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 	public CursorAdapter getAdapter() {
 		return mAdapter;
 	}
-
-	protected abstract void doFetch(boolean doGetMore);
-
-	protected abstract void showToast(int count);
-
-	protected abstract int getType();
+	
+	public ListView getListView(){
+		return mListView;
+	}
+	
+    public void setSelection(int position) {
+        mListView.setSelection(position);
+    }
+    
+    public void setEmptyView(View emptyView) {
+    	mListView.setEmptyView(emptyView);
+    }
+    
+    public void setEmptyText(CharSequence text){
+    	final TextView tv=new TextView(getActivity());
+    	tv.setText(text);
+    	mListView.setEmptyView(tv);
+    }
 
 	public void goTop() {
 		mListView.setSelection(0);
@@ -167,8 +189,8 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 		if (App.DEBUG) {
 			Log.d(TAG, "startRefresh()");
 		}
-		if(!busy){
-			busy=true;
+		if (!busy) {
+			busy = true;
 			doRefresh();
 			mPullToRefreshView.setRefreshing();
 		}
@@ -189,9 +211,6 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 		if (count > 0 && mCursor != null) {
 			mCursor.requery();
 			showToast(count);
-			// if (soundEffect) {
-			// SoundManager.playSound(1, 0);
-			// }
 		}
 	}
 
@@ -241,7 +260,7 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if(mListView!=null){
+		if (mListView != null) {
 			mParcelable = mListView.onSaveInstanceState();
 			outState.putParcelable("state", mParcelable);
 		}
@@ -250,8 +269,8 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 	@Override
 	public void onResume() {
 		super.onResume();
-			
-		if (mParcelable != null && mListView!=null) {
+
+		if (mParcelable != null && mListView != null) {
 			mListView.onRestoreInstanceState(mParcelable);
 			mParcelable = null;
 		}
@@ -298,6 +317,26 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 		if (App.DEBUG) {
 			Log.d(TAG, "onDetach()");
 		}
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
+		getAdapter().swapCursor(newCursor);
+		if (App.DEBUG) {
+			Log.d(TAG, "onLoadFinished() adapter="+mAdapter.getCount()+" class="+this.getClass().getSimpleName());
+		}
+		if (mAdapter.isEmpty()) {
+			startRefresh();
+		}
+
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+		if (App.DEBUG) {
+			Log.d(TAG, "onLoaderReset()");
+		}
+		getAdapter().swapCursor(null);
 	}
 
 	/**

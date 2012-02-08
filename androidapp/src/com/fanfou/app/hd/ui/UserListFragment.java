@@ -1,26 +1,28 @@
 package com.fanfou.app.hd.ui;
 
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+
 import com.fanfou.app.App;
 import com.fanfou.app.adapter.UserCursorAdapter;
 import com.fanfou.app.api.User;
-import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.service.Constants;
 import com.fanfou.app.service.FanFouService;
 import com.fanfou.app.ui.ActionManager;
 import com.fanfou.app.util.StringHelper;
 
-import android.database.Cursor;
-import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.CursorAdapter;
-
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.07
+ * @version 1.1 2012.02.08
  * 
  */
 public abstract class UserListFragment extends PullToRefreshListFragment {
@@ -58,12 +60,12 @@ public abstract class UserListFragment extends PullToRefreshListFragment {
 	}
 
 	@Override
-	protected CursorAdapter createAdapter() {
+	protected CursorAdapter onCreateAdapter() {
 		return new UserCursorAdapter(getActivity(), getCursor());
 	}
 
 	@Override
-	protected Cursor createCursor() {
+	protected Cursor onCreateCursor() {
 		String where = UserInfo.TYPE + "=? AND " + UserInfo.OWNER_ID + "=?";
 		String[] whereArgs = new String[] { String.valueOf(getType()), userId };
 		return getActivity().managedQuery(UserInfo.CONTENT_URI,
@@ -88,6 +90,18 @@ public abstract class UserListFragment extends PullToRefreshListFragment {
 
 	@Override
 	protected void showToast(int count) {
+	}
+	
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		Uri uri = UserInfo.CONTENT_URI;
+		String where = UserInfo.TYPE + "=? AND " + UserInfo.OWNER_ID + "=?";
+		String[] whereArgs = new String[] { String.valueOf(getType()), userId };
+		CursorLoader loader=new CursorLoader(getActivity(), uri, null, where, whereArgs, null);
+		if(App.DEBUG){
+			Log.d(TAG, "onCreateLoader() uri=["+uri+"] where=["+where+"] whereArgs=["+whereArgs+"]");
+		}
+		return loader;
 	}
 
 }

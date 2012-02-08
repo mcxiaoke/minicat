@@ -1,37 +1,23 @@
-
-
-
-
-
-
-
-
-
-
-
-
 package com.fanfou.app.hd.ui;
+
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 
 import com.fanfou.app.App;
 import com.fanfou.app.adapter.StatusCursorAdapter;
 import com.fanfou.app.api.Status;
-import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.StatusInfo;
-import com.fanfou.app.service.Constants;
-import com.fanfou.app.service.FanFouService;
+import com.fanfou.app.db.FanFouProvider;
 import com.fanfou.app.util.Utils;
-
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Messenger;
-import android.widget.CursorAdapter;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 
 /**
  * @author mcxiaoke
@@ -39,7 +25,7 @@ import android.widget.AdapterView;
  * @version 1.1 2012.02.07
  * 
  */
-public abstract class BaseTimlineFragment extends PullToRefreshListFragment {
+public abstract class BaseTimlineFragment extends PullToRefreshListFragment{
 	private static final String TAG = BaseTimlineFragment.class.getSimpleName();
 
 	@Override
@@ -64,7 +50,7 @@ public abstract class BaseTimlineFragment extends PullToRefreshListFragment {
 	}
 
 	@Override
-	protected CursorAdapter createAdapter() {
+	protected CursorAdapter onCreateAdapter() {
 		if (App.DEBUG) {
 			Log.d(TAG, "createAdapter() id="+this+"activity ="+getActivity());
 		}
@@ -72,7 +58,7 @@ public abstract class BaseTimlineFragment extends PullToRefreshListFragment {
 	}
 
 	@Override
-	protected Cursor createCursor() {
+	protected Cursor onCreateCursor() {
 		if (App.DEBUG) {
 			Log.d(TAG, "createCursor() id="+this+"activity ="+getActivity());
 		}
@@ -89,6 +75,16 @@ public abstract class BaseTimlineFragment extends PullToRefreshListFragment {
 		if(context!=null){
 			Utils.notify(context, count + "条新消息");
 		}
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		Uri uri = StatusInfo.CONTENT_URI;
+		String selection = BasicColumns.TYPE + "=?";
+		String[] selectionArgs = new String[] { String.valueOf(getType()) };
+		String sortOrder=FanFouProvider.ORDERBY_DATE_DESC;
+		CursorLoader loader=new CursorLoader(getActivity(), uri, null, selection, selectionArgs, sortOrder);
+		return loader;
 	}
 
 }

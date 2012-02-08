@@ -4,10 +4,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Messenger;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CursorAdapter;
 
 import com.fanfou.app.App;
 import com.fanfou.app.adapter.MessageCursorAdapter;
@@ -19,6 +21,7 @@ import com.fanfou.app.util.Utils;
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.06
+ * @version 1.1 2012.02.08
  * 
  */
 public class ConversationListFragment extends PullToRefreshListFragment {
@@ -55,7 +58,7 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 	}
 
 	@Override
-	protected CursorAdapter createAdapter() {
+	protected CursorAdapter onCreateAdapter() {
 		if (App.DEBUG) {
 			Log.d(TAG, "createAdapter()");
 		}
@@ -63,7 +66,7 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 	}
 
 	@Override
-	protected Cursor createCursor() {
+	protected Cursor onCreateCursor() {
 		if (App.DEBUG) {
 			Log.d(TAG, "createCursor()");
 		}
@@ -87,6 +90,13 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 	@Override
 	protected int getType() {
 		return Constants.TYPE_DIRECT_MESSAGES_CONVERSTATION_LIST;
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		Uri uri = Uri.withAppendedPath(DirectMessageInfo.CONTENT_URI, "list");
+		CursorLoader loader=new CursorLoader(getActivity(), uri, null, null, null, null);
+		return loader;
 	}
 
 }

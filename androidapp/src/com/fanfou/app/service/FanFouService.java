@@ -818,20 +818,20 @@ public class FanFouService extends IntentService {
 				}
 				ContentResolver cr = getContentResolver();
 				if (page < 2 && ownerId != null) {
-					String where = BasicColumns.OWNER_ID + " =? ";
-					String[] whereArgs = new String[] { ownerId };
+					String where = UserInfo.TYPE + "=? AND " + UserInfo.OWNER_ID + "=?";
+					String[] whereArgs = new String[] { String.valueOf(type), ownerId };
 					int deletedNums = cr.delete(UserInfo.CONTENT_URI, where,
 							whereArgs);
 					if (App.DEBUG) {
 						log("fetchFriendsOrFollowers delete old rows "
-								+ deletedNums);
+								+ deletedNums+" ownerId="+ownerId);
 					}
 				}
 				int nums = cr.bulkInsert(UserInfo.CONTENT_URI,
 						Parser.toContentValuesArray(users));
 				if (App.DEBUG) {
 					log("fetchFriendsOrFollowers refresh ,insert rows, num="
-							+ nums);
+							+ nums+" ownerId="+ownerId);
 				}
 				sendIntMessage(nums);
 			} else {

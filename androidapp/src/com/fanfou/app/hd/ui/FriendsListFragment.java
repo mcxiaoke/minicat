@@ -9,6 +9,7 @@ import com.fanfou.app.service.Constants;
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.07
+ * @version 1.1 2012.02.08
  *
  */
 public class FriendsListFragment extends UserListFragment {
