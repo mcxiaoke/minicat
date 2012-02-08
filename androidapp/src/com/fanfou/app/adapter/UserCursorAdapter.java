@@ -3,11 +3,14 @@ package com.fanfou.app.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.TextPaint;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.fanfou.app.App;
 import com.fanfou.app.R;
 import com.fanfou.app.api.User;
 import com.fanfou.app.ui.ActionManager;
@@ -22,7 +25,7 @@ import com.fanfou.app.util.DateTimeHelper;
  * 
  */
 public class UserCursorAdapter extends BaseCursorAdapter {
-	private static final String tag = UserCursorAdapter.class.getSimpleName();
+	private static final String TAG = UserCursorAdapter.class.getSimpleName();
 
 	public UserCursorAdapter(Context context, Cursor c) {
 		super(context, c, false);

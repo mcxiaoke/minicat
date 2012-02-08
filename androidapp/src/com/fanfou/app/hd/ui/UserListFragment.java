@@ -9,10 +9,12 @@ import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.FilterQueryProvider;
 
 import com.fanfou.app.App;
 import com.fanfou.app.adapter.UserCursorAdapter;
 import com.fanfou.app.api.User;
+import com.fanfou.app.db.Contents.BasicColumns;
 import com.fanfou.app.db.Contents.UserInfo;
 import com.fanfou.app.service.Constants;
 import com.fanfou.app.service.FanFouService;
@@ -25,11 +27,24 @@ import com.fanfou.app.util.StringHelper;
  * @version 1.1 2012.02.08
  * 
  */
-public abstract class UserListFragment extends PullToRefreshListFragment {
+public abstract class UserListFragment extends PullToRefreshListFragment implements FilterQueryProvider{
+
 	private static final String TAG = UserListFragment.class.getSimpleName();
 
 	private int page = 1;
 	private String userId;
+	
+	private OnInitCompleteListener mListener;
+	
+	public void setOnInitCompleteListener(OnInitCompleteListener listener){
+		this.mListener=listener;
+	}
+	
+	private void onInitComplete(){
+		if(mListener!=null){
+			mListener.onInitComplete(null);
+		}
+	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
@@ -37,8 +52,9 @@ public abstract class UserListFragment extends PullToRefreshListFragment {
 		final Cursor c = (Cursor) parent.getItemAtPosition(position);
 		final User u = User.parse(c);
 		if (u != null) {
-			if (App.DEBUG)
+			if (App.DEBUG){		
 				Log.d(TAG, "userId=" + u.id + " username=" + u.screenName);
+			}
 			ActionManager.doProfile(getActivity(), u);
 		}
 	}
@@ -102,6 +118,27 @@ public abstract class UserListFragment extends PullToRefreshListFragment {
 			Log.d(TAG, "onCreateLoader() uri=["+uri+"] where=["+where+"] whereArgs=["+whereArgs+"]");
 		}
 		return loader;
+	}
+	
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
+		super.onLoadFinished(loader, newCursor);
+		getAdapter().setFilterQueryProvider(this);
+		onInitComplete();
+	}
+
+	@Override
+	public Cursor runQuery(CharSequence constraint) {
+		if(App.DEBUG){
+			Log.d(TAG, "runQuery() constraint="+constraint);
+		}
+		String where = UserInfo.TYPE + " = " + getType() + " AND "
+				+ UserInfo.OWNER_ID + " = '" + userId + "' AND ("
+				+ UserInfo.SCREEN_NAME + " like '%" + constraint + "%' OR "
+				+ UserInfo.ID + " like '%" + constraint + "%' )";
+		;
+		return getActivity().managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
+				null, null);
 	}
 
 }

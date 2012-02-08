@@ -15,12 +15,12 @@ import com.fanfou.app.ProfilePage;
 import com.fanfou.app.R;
 import com.fanfou.app.SendPage;
 import com.fanfou.app.UserFavoritesPage;
-import com.fanfou.app.UserListPage;
 import com.fanfou.app.UserTimelinePage;
 import com.fanfou.app.WritePage;
 import com.fanfou.app.api.DirectMessage;
 import com.fanfou.app.api.Status;
 import com.fanfou.app.api.User;
+import com.fanfou.app.hd.UIUserList;
 import com.fanfou.app.service.Constants;
 import com.fanfou.app.util.OptionHelper;
 import com.fanfou.app.util.StatusHelper;
@@ -38,6 +38,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 2.3 2011.11.21
  * @version 2.4 2011.12.08
  * @version 3.0 2011.12.19
+ * @version 3.1 2012.02.08
  * 
  */
 public final class ActionManager {
@@ -59,14 +60,14 @@ public final class ActionManager {
 	}
 
 	public static void doShowFriends(Context context, final User user) {
-		Intent intent = new Intent(context, UserListPage.class);
+		Intent intent = new Intent(context, UIUserList.class);
 		intent.putExtra(Constants.EXTRA_DATA, user);
 		intent.putExtra(Constants.EXTRA_TYPE, Constants.TYPE_USERS_FRIENDS);
 		context.startActivity(intent);
 	}
 
 	public static void doShowFollowers(Context context, final User user) {
-		Intent intent = new Intent(context, UserListPage.class);
+		Intent intent = new Intent(context, UIUserList.class);
 		intent.putExtra(Constants.EXTRA_DATA, user);
 		intent.putExtra(Constants.EXTRA_TYPE,
 				Constants.TYPE_USERS_FOLLOWERS);

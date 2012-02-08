@@ -85,7 +85,7 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 		if (App.DEBUG) {
 			Log.d(TAG, "onCreateView()");
 		}
-		View v = inflater.inflate(R.layout.list_only, container, false);
+		View v = inflater.inflate(R.layout.fm_list, container, false);
 		mPullToRefreshView = (PullToRefreshListView) v;
 		mPullToRefreshView.setOnRefreshListener(this);
 		mListView = (ListView) mPullToRefreshView.getRefreshableView();
