@@ -5,13 +5,11 @@ import java.util.HashMap;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.BaseAdapter;
 
-import com.astuetz.viewpager.extensions.FixedTabsView;
 import com.astuetz.viewpager.extensions.SwipeyTabButton;
 import com.astuetz.viewpager.extensions.SwipeyTabsView;
 import com.astuetz.viewpager.extensions.TabsAdapter;
@@ -31,7 +28,6 @@ import com.fanfou.app.SearchPage;
 import com.fanfou.app.SettingsPage;
 import com.fanfou.app.cache.ImageLoader;
 import com.fanfou.app.dialog.ConfirmDialog;
-import com.fanfou.app.hd.UIBase;
 import com.fanfou.app.hd.ui.ConversationListFragment;
 import com.fanfou.app.hd.ui.HomeTimelineFragment;
 import com.fanfou.app.hd.ui.MentionTimelineFragment;
@@ -42,14 +38,8 @@ import com.fanfou.app.service.Constants;
 import com.fanfou.app.service.NotificationService;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
-import com.fanfou.app.ui.viewpager.TitlePageIndicator;
-import com.fanfou.app.ui.viewpager.TitleProvider;
-import com.fanfou.app.ui.viewpager.ViewPagerTabs;
 import com.fanfou.app.util.IntentHelper;
 import com.fanfou.app.util.OptionHelper;
-import com.fanfou.app.util.ShakeListener;
-import com.fanfou.app.util.ShakeListener.OnShakeListener;
-import com.fanfou.app.util.SoundManager;
 import com.fanfou.app.util.Utils;
 
 /**
@@ -83,6 +73,7 @@ import com.fanfou.app.util.Utils;
  * @version 7.1 2012.01.31
  * @version 8.0 2012.02.06
  * @version 8.1 2012.02.07
+ * @version 8.2 2012.02.08
  * 
  */
 public class UIHome extends UIBase {
@@ -364,8 +355,7 @@ public class UIHome extends UIBase {
 		mPagesAdapter.getItem(page).startRefresh();
 	}
 
-	private static class PagesAdapter extends FragmentPagerAdapter implements
-			TitleProvider {
+	private static class PagesAdapter extends FragmentPagerAdapter{
 
 		private final PullToRefreshListFragment[] fragments = new PullToRefreshListFragment[NUMS_OF_PAGE];
 
@@ -395,12 +385,6 @@ public class UIHome extends UIBase {
 
 		public void updateUI(int position) {
 			getItem(position).updateUI();
-		}
-
-		@Override
-		public String getTitle(int position) {
-			return sTitles.get(Page.values()[position % NUMS_OF_PAGE]);
-//			return PAGE_TITLES[position % NUMS_OF_PAGE];
 		}
 
 	}

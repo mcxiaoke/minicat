@@ -20,20 +20,17 @@ import com.fanfou.app.R;
 import com.fanfou.app.api.User;
 import com.fanfou.app.cache.CacheManager;
 import com.fanfou.app.hd.ui.AbstractFragment;
-import com.fanfou.app.hd.ui.FollowersListFragment;
 import com.fanfou.app.hd.ui.FriendsListFragment;
 import com.fanfou.app.hd.ui.ProfileContentFragment;
-import com.fanfou.app.hd.ui.PullToRefreshListFragment;
-import com.fanfou.app.hd.ui.UserFavoritesFragment;
 import com.fanfou.app.hd.ui.UserTimelineFragment;
 import com.fanfou.app.service.Constants;
 import com.fanfou.app.ui.ActionBar;
 import com.fanfou.app.ui.ActionManager;
-import com.fanfou.app.ui.viewpager.TitleProvider;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.07
+ * @version 1.1 2012.02.08
  * 
  */
 public class UIProfile extends UIBase {
@@ -130,8 +127,7 @@ public class UIProfile extends UIBase {
 		super.onPause();
 	}
 
-	private static class PagesAdapter extends FragmentPagerAdapter implements
-			TitleProvider {
+	private static class PagesAdapter extends FragmentPagerAdapter{
 
 		private final AbstractFragment[] fragments = new AbstractFragment[NUMS_OF_PAGE];
 		private String userId;
@@ -163,12 +159,6 @@ public class UIProfile extends UIBase {
 
 		public void updateUI(int position) {
 			getItem(position).updateUI();
-		}
-
-		@Override
-		public String getTitle(int position) {
-			return sTitles.get(Page.values()[position % NUMS_OF_PAGE]);
-			// return PAGE_TITLES[position % NUMS_OF_PAGE];
 		}
 
 	}
