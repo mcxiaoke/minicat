@@ -137,7 +137,7 @@ public class App extends Application {
 		} catch (NameNotFoundException e) {
 			pi = new PackageInfo();
 			pi.versionName = "1.0";
-			pi.versionCode = 20110901;
+			pi.versionCode = 1;
 		}
 		appVersionCode = pi.versionCode;
 		appVersionName = pi.versionName;
@@ -147,15 +147,20 @@ public class App extends Application {
 		int oldVersionCode = OptionHelper.readInt(this,
 				R.string.option_old_version_code, 0);
 		if (oldVersionCode < appVersionCode) {
-			OptionHelper.saveInt(this, R.string.option_old_version_code,
-					appVersionCode);
-			AlarmHelper.cleanAlarmFlags(this);
+			clearAndUpdatePreferences();
 		}
 		if (DEBUG) {
 			Log.d("App", "versionCheck old=" + oldVersionCode + " current="
 					+ appVersionCode);
 		}
-		AlarmHelper.checkScheduledTasks(this);
+		AlarmHelper.setAlarmsIfNot(this);
+	}
+	
+	private void clearAndUpdatePreferences(){
+		OptionHelper.clearSettings(this);
+		OptionHelper.saveInt(this, R.string.option_old_version_code,
+				appVersionCode);
+		OptionHelper.updateAccountInfo(this, sUserId, sUserScreenName, sToken);
 	}
 
 	public static void updateAccountInfo(Context context, final User u,

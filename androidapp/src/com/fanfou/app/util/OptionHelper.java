@@ -1,7 +1,9 @@
 ﻿package com.fanfou.app.util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
 
 import com.fanfou.app.App;
 import com.fanfou.app.R;
@@ -43,7 +45,8 @@ public final class OptionHelper {
 		sp.commit();
 	}
 
-	public final static void saveBoolean(Context context, int resId, boolean value) {
+	public final static void saveBoolean(Context context, int resId,
+			boolean value) {
 		Editor sp = App.getPreferences().edit();
 		sp.putBoolean(context.getString(resId), value);
 		sp.commit();
@@ -76,8 +79,8 @@ public final class OptionHelper {
 	}
 
 	public final static int parseInt(Context context, int resId) {
-		String res = App.getPreferences().getString(
-				context.getString(resId), "-1");
+		String res = App.getPreferences().getString(context.getString(resId),
+				"-1");
 		return Integer.parseInt(res);
 	}
 
@@ -86,9 +89,10 @@ public final class OptionHelper {
 		return Integer.parseInt(res);
 	}
 
-	public final static int parseInt(Context context, int resId, String defaultValue) {
-		String res = App.getPreferences().getString(
-				context.getString(resId), defaultValue);
+	public final static int parseInt(Context context, int resId,
+			String defaultValue) {
+		String res = App.getPreferences().getString(context.getString(resId),
+				defaultValue);
 		return Integer.parseInt(res);
 	}
 
@@ -98,15 +102,17 @@ public final class OptionHelper {
 		return res;
 	}
 
-	public final static boolean readBoolean(Context context, int resId, boolean defValue) {
-		boolean res = App.getPreferences().getBoolean(
-				context.getString(resId), defValue);
+	public final static boolean readBoolean(Context context, int resId,
+			boolean defValue) {
+		boolean res = App.getPreferences().getBoolean(context.getString(resId),
+				defValue);
 		return res;
 	}
 
-	public final static String readString(Context context, int resId, String defValue) {
-		String res = App.getPreferences().getString(
-				context.getString(resId), defValue);
+	public final static String readString(Context context, int resId,
+			String defValue) {
+		String res = App.getPreferences().getString(context.getString(resId),
+				defValue);
 		return res;
 	}
 
@@ -128,7 +134,15 @@ public final class OptionHelper {
 		sp.commit();
 	}
 
-	public final static void updateAccountInfo(Context context, final User u,
+	public final static void clearSettings(Context context) {
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(context);
+		Editor editor = sp.edit();
+		editor.clear();
+		editor.commit();
+	}
+
+	public synchronized final static void updateAccountInfo(Context context, final User u,
 			final OAuthToken otoken) {
 		Editor editor = App.getPreferences().edit();
 		editor.putString(context.getString(R.string.option_userid), u.id);
@@ -138,13 +152,23 @@ public final class OptionHelper {
 				u.profileImageUrl);
 		editor.putString(context.getString(R.string.option_oauth_token),
 				otoken.getToken());
-		editor.putString(
-				context.getString(R.string.option_oauth_token_secret),
+		editor.putString(context.getString(R.string.option_oauth_token_secret),
 				otoken.getTokenSecret());
 		editor.commit();
 	}
 
-	public final static void removeAccountInfo(Context context) {
+	public synchronized final static void updateAccountInfo(Context context, String userId,
+			String username, final OAuthToken otoken) {
+		Editor editor = App.getPreferences().edit();
+		editor.putString(context.getString(R.string.option_userid), userId);
+		editor.putString(context.getString(R.string.option_username), username);
+		editor.putString(context.getString(R.string.option_oauth_token), otoken.getToken());
+		editor.putString(context.getString(R.string.option_oauth_token_secret),
+				otoken.getTokenSecret());
+		editor.commit();
+	}
+
+	public synchronized final static void removeAccountInfo(Context context) {
 		Editor editor = App.getPreferences().edit();
 		editor.remove(context.getString(R.string.option_userid));
 		editor.remove(context.getString(R.string.option_username));
