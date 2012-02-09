@@ -1,7 +1,5 @@
 package com.fanfou.app.hd;
 
-import java.util.HashMap;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -21,26 +19,22 @@ import android.widget.BaseAdapter;
 import com.astuetz.viewpager.extensions.SwipeyTabButton;
 import com.astuetz.viewpager.extensions.SwipeyTabsView;
 import com.astuetz.viewpager.extensions.TabsAdapter;
-import com.fanfou.app.App;
-import com.fanfou.app.App.ApnType;
-import com.fanfou.app.R;
-import com.fanfou.app.SearchPage;
-import com.fanfou.app.SettingsPage;
-import com.fanfou.app.cache.ImageLoader;
-import com.fanfou.app.dialog.ConfirmDialog;
+import com.fanfou.app.hd.App.ApnType;
+import com.fanfou.app.hd.cache.ImageLoader;
+import com.fanfou.app.hd.dialog.ConfirmDialog;
+import com.fanfou.app.hd.service.Constants;
+import com.fanfou.app.hd.service.NotificationService;
 import com.fanfou.app.hd.ui.ConversationListFragment;
 import com.fanfou.app.hd.ui.HomeTimelineFragment;
 import com.fanfou.app.hd.ui.MentionTimelineFragment;
 import com.fanfou.app.hd.ui.PublicTimelineFragment;
 import com.fanfou.app.hd.ui.PullToRefreshListFragment;
 import com.fanfou.app.hd.ui.UserTimelineFragment;
-import com.fanfou.app.service.Constants;
-import com.fanfou.app.service.NotificationService;
-import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.ActionManager;
-import com.fanfou.app.util.IntentHelper;
-import com.fanfou.app.util.OptionHelper;
-import com.fanfou.app.util.Utils;
+import com.fanfou.app.hd.ui.widget.ActionBar;
+import com.fanfou.app.hd.ui.widget.ActionManager;
+import com.fanfou.app.hd.util.IntentHelper;
+import com.fanfou.app.hd.util.OptionHelper;
+import com.fanfou.app.hd.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -74,28 +68,22 @@ import com.fanfou.app.util.Utils;
  * @version 8.0 2012.02.06
  * @version 8.1 2012.02.07
  * @version 8.2 2012.02.08
+ * @version 8.3 2012.02.09
  * 
  */
-public class UIHome extends UIBase {
+public class UIHome extends CommonUIBase {
 
 	public static final String TAG = UIHome.class.getSimpleName();
-//	public static final String[] PAGE_TITLES = new String[] { "我的消息", "随便看看",
-//			"我的主页", "提到我的", "我的私信" };
+	public static final String[] PAGE_TITLES = new String[] { "我的消息", "随便看看",
+			"我的主页", "提到我的", "我的私信" };
 
-	private static enum Page {
-		ME, PUBLIC, HOME, MENTION, DM
-	};
+	public static final int ME = 0;
+	public static final int PUBLIC = 1;
+	public static final int HOME = 2;
+	public static final int MENTION = 3;
+	public static final int DM = 4;
 
-	public static final int NUMS_OF_PAGE = Page.values().length;
-	private static final HashMap<Page, String> sTitles = new HashMap<UIHome.Page, String>(NUMS_OF_PAGE);
-
-	static {
-		sTitles.put(Page.ME, "我的消息");
-		sTitles.put(Page.PUBLIC, "随便看看");
-		sTitles.put(Page.HOME, "我的主页");
-		sTitles.put(Page.MENTION, "提到我的");
-		sTitles.put(Page.DM, "我的私信");
-	}
+	public static final int NUMS_OF_PAGE = 5;
 
 	private ActionBar mActionBar;
 	private ViewPager mViewPager;
@@ -130,7 +118,7 @@ public class UIHome extends UIBase {
 		mPagesAdapter = new PagesAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);
 		mViewPager.setAdapter(mPagesAdapter);
-		mViewPager.setCurrentItem(Page.HOME.ordinal());
+		mViewPager.setCurrentItem(HOME);
 
 		mTabsView = (SwipeyTabsView) findViewById(R.id.viewindicator);
 		mTabsView.setAdapter(new PageTabsAdapter(this));
@@ -153,7 +141,7 @@ public class UIHome extends UIBase {
 		}
 
 		int curPage = mViewPager.getCurrentItem();
-		if (curPage == Page.HOME.ordinal()) {
+		if (curPage == HOME) {
 			boolean needRefresh = OptionHelper.readBoolean(this,
 					R.string.option_refresh_after_send, false);
 			if (needRefresh) {
@@ -177,20 +165,20 @@ public class UIHome extends UIBase {
 			switch (type) {
 			case NotificationService.NOTIFICATION_TYPE_HOME:
 				if (count > 0) {
-					mPagesAdapter.updateUI(Page.HOME.ordinal());
+					mPagesAdapter.updateUI(HOME);
 					Utils.notify(this, count + "条新消息");
 				}
 				break;
 			case NotificationService.NOTIFICATION_TYPE_MENTION:
 				if (count > 0) {
-					mPagesAdapter.updateUI(Page.MENTION.ordinal());
+					mPagesAdapter.updateUI(MENTION);
 					Utils.notify(this, count + "条新消息");
 				}
 
 				break;
 			case NotificationService.NOTIFICATION_TYPE_DM:
 				if (count > 0) {
-					mPagesAdapter.updateUI(Page.DM.ordinal());
+					mPagesAdapter.updateUI(DM);
 					Utils.notify(this, count + "条新私信");
 				}
 				break;
@@ -251,8 +239,7 @@ public class UIHome extends UIBase {
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		setIntent(intent);
-		int page = getIntent().getIntExtra(Constants.EXTRA_PAGE,
-				Page.HOME.ordinal());
+		int page = getIntent().getIntExtra(Constants.EXTRA_PAGE, HOME);
 		mViewPager.setCurrentItem(page);
 		if (App.DEBUG) {
 			log("onNewIntent page=" + page);
@@ -355,27 +342,22 @@ public class UIHome extends UIBase {
 		mPagesAdapter.getItem(page).startRefresh();
 	}
 
-	private static class PagesAdapter extends FragmentPagerAdapter{
+	private static class PagesAdapter extends FragmentPagerAdapter {
 
 		private final PullToRefreshListFragment[] fragments = new PullToRefreshListFragment[NUMS_OF_PAGE];
 
 		public PagesAdapter(FragmentManager fm) {
 			super(fm);
-			fragments[Page.ME.ordinal()] = UserTimelineFragment
-					.newInstance(null);
-			fragments[Page.PUBLIC.ordinal()] = PublicTimelineFragment
-					.newInstance(0);
-			fragments[Page.HOME.ordinal()] = HomeTimelineFragment
-					.newInstance(0);
-			fragments[Page.MENTION.ordinal()] = MentionTimelineFragment
-					.newInstance(0);
-			fragments[Page.DM.ordinal()] = ConversationListFragment
-					.newInstance(0);
+			fragments[ME] = UserTimelineFragment.newInstance(null);
+			fragments[PUBLIC] = PublicTimelineFragment.newInstance(0);
+			fragments[HOME] = HomeTimelineFragment.newInstance(0);
+			fragments[MENTION] = MentionTimelineFragment.newInstance(0);
+			fragments[DM] = ConversationListFragment.newInstance(0);
 		}
 
 		@Override
 		public PullToRefreshListFragment getItem(int position) {
-			return fragments[position % NUMS_OF_PAGE];
+			return fragments[position];
 		}
 
 		@Override
@@ -402,9 +384,9 @@ public class UIHome extends UIBase {
 			LayoutInflater inflater = mContext.getLayoutInflater();
 			SwipeyTabButton tab = (SwipeyTabButton) inflater.inflate(
 					R.layout.tab_swipey, null);
-			if (position < NUMS_OF_PAGE)
-//				tab.setText(PAGE_TITLES[position]);
-			tab.setText(sTitles.get(Page.values()[position]));
+			if (position < NUMS_OF_PAGE) {
+				tab.setText(PAGE_TITLES[position]);
+			}
 			return tab;
 		}
 

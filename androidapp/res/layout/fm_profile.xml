@@ -11,7 +11,7 @@
         android:orientation="vertical" >
 
         <RelativeLayout
-            android:id="@id/user_headview"
+            android:id="@+id/user_headview"
             style="@style/Box"
             android:layout_margin="4dp" >
 
@@ -26,7 +26,7 @@
                 android:layout_toRightOf="@id/user_head" />
 
             <TextView
-                android:id="@id/user_relationship"
+                android:id="@+id/user_relationship"
                 style="@style/Text.MetaBig"
                 android:layout_alignLeft="@id/user_name"
                 android:layout_below="@id/user_name"
@@ -35,7 +35,7 @@
                 android:visibility="invisible" />
 
             <ImageView
-                android:id="@id/user_protected"
+                android:id="@+id/user_protected"
                 style="@style/Icon.Mini"
                 android:layout_alignBottom="@id/user_name"
                 android:layout_toRightOf="@id/user_name"
@@ -44,37 +44,37 @@
         </RelativeLayout>
 
         <LinearLayout
-            android:id="@id/user_actionview"
+            android:id="@+id/user_actionview"
             style="@style/Box.Horizontal"
             android:layout_margin="4dp"
             android:background="@drawable/text_white_bg"
             android:padding="6dp" >
 
             <ImageView
-                android:id="@id/user_action_follow"
+                android:id="@+id/user_action_follow"
                 style="@style/Icon.Action"
                 android:layout_weight="1"
                 android:src="@drawable/btn_follow" />
 
             <ImageView
-                android:id="@id/user_action_message"
+                android:id="@+id/user_action_message"
                 style="@style/Icon.Action"
                 android:layout_weight="1"
                 android:src="@drawable/btn_dm" />
 
             <ImageView
-                android:id="@id/user_action_reply"
+                android:id="@+id/user_action_reply"
                 style="@style/Icon.Action"
                 android:layout_weight="1"
                 android:src="@drawable/btn_reply" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@id/user_statuses_view"
+            android:id="@+id/user_statuses_view"
             style="@style/Profile.Item" >
 
             <TextView
-                android:id="@id/user_statuses_title"
+                android:id="@+id/user_statuses_title"
                 style="@style/Text.Large" />
 
             <View
@@ -83,16 +83,16 @@
                 android:layout_weight="1" />
 
             <TextView
-                android:id="@id/user_statuses"
+                android:id="@+id/user_statuses"
                 style="@style/Text.Small" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@id/user_favorites_view"
+            android:id="@+id/user_favorites_view"
             style="@style/Profile.Item" >
 
             <TextView
-                android:id="@id/user_favorites_title"
+                android:id="@+id/user_favorites_title"
                 style="@style/Text.Large" />
 
             <View
@@ -101,16 +101,16 @@
                 android:layout_weight="1" />
 
             <TextView
-                android:id="@id/user_favorites"
+                android:id="@+id/user_favorites"
                 style="@style/Text.Small" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@id/user_friends_view"
+            android:id="@+id/user_friends_view"
             style="@style/Profile.Item" >
 
             <TextView
-                android:id="@id/user_friends_title"
+                android:id="@+id/user_friends_title"
                 style="@style/Text.Large" />
 
             <View
@@ -119,16 +119,16 @@
                 android:layout_weight="1" />
 
             <TextView
-                android:id="@id/user_friends"
+                android:id="@+id/user_friends"
                 style="@style/Text.Small" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@id/user_followers_view"
+            android:id="@+id/user_followers_view"
             style="@style/Profile.Item" >
 
             <TextView
-                android:id="@id/user_followers_title"
+                android:id="@+id/user_followers_title"
                 style="@style/Text.Large"
                 android:text="关注 " />
 
@@ -138,12 +138,12 @@
                 android:layout_weight="1" />
 
             <TextView
-                android:id="@id/user_followers"
+                android:id="@+id/user_followers"
                 style="@style/Text.Small" />
         </LinearLayout>
 
         <TextView
-            android:id="@id/user_description"
+            android:id="@+id/user_description"
             style="@style/Text.Medium"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -153,7 +153,7 @@
             android:padding="6dp" />
 
         <TextView
-            android:id="@id/user_extrainfo"
+            android:id="@+id/user_extrainfo"
             style="@style/Text.Medium"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

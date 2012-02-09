@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="vertical" android:id="@+id/root">
 
-	<com.fanfou.app.ui.ActionBar android:id="@id/actionbar"
+	<com.fanfou.app.hd.ui.widget.ActionBar android:id="@id/actionbar"
 		style="@style/ActionBar" />
 
 	<ViewStub android:id="@+id/stub" android:layout_width="fill_parent"

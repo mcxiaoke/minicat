@@ -59,7 +59,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.fanfou.app.App;
+import com.fanfou.app.hd.App;
 
 /**
  * Use this class to initialize the crash reporting feature using

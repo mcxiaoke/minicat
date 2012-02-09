@@ -1,19 +1,24 @@
 package com.fanfou.app.hd.ui;
 
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Messenger;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 
-import com.fanfou.app.App;
-import com.fanfou.app.db.Contents.StatusInfo;
-import com.fanfou.app.service.Constants;
-import com.fanfou.app.service.FanFouService;
-import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.db.FanFouProvider;
+import com.fanfou.app.hd.db.Contents.StatusInfo;
+import com.fanfou.app.hd.service.Constants;
+import com.fanfou.app.hd.service.FanFouService;
+import com.fanfou.app.hd.util.StringHelper;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.07
+ * @version 1.1 2012.02.09
  * 
  */
 public class UserFavoritesFragment extends BaseTimlineFragment {
@@ -55,18 +60,6 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 	}
 
 	@Override
-	protected Cursor onCreateCursor() {
-		if (App.DEBUG) {
-			Log.d(TAG, "createCursor() userId="+userId);
-		}
-		String where = StatusInfo.TYPE + " =? AND " + StatusInfo.OWNER_ID
-				+ " =? ";
-		String[] whereArgs = new String[] { String.valueOf(getType()), userId};
-		return getActivity().managedQuery(StatusInfo.CONTENT_URI, StatusInfo.COLUMNS, where,
-				whereArgs, null);
-	}
-
-	@Override
 	protected void doFetch(boolean doGetMore) {
 		if (App.DEBUG) {
 			Log.d(TAG, "doFetch() doGetMore=" + doGetMore);
@@ -78,6 +71,16 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 		}
 		final ResultHandler handler = new ResultHandler(this);
 		FanFouService.doFetchFavorites(getActivity(), new Messenger(handler), page, userId);
+	}
+	
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		Uri uri = StatusInfo.CONTENT_URI;
+		String selection = StatusInfo.TYPE + " =? AND " + StatusInfo.OWNER_ID
+				+ " =? ";
+		String[] selectionArgs = new String[] { String.valueOf(getType()), userId};
+		CursorLoader loader=new CursorLoader(getActivity(), uri, null, selection, selectionArgs, null);
+		return loader;
 	}
 
 }

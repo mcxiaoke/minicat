@@ -15,29 +15,27 @@ import android.view.View;
 import com.astuetz.viewpager.extensions.FixedTabsView;
 import com.astuetz.viewpager.extensions.TabsAdapter;
 import com.astuetz.viewpager.extensions.ViewPagerTabButton;
-import com.fanfou.app.App;
-import com.fanfou.app.R;
-import com.fanfou.app.api.User;
-import com.fanfou.app.cache.CacheManager;
+import com.fanfou.app.hd.api.User;
+import com.fanfou.app.hd.cache.CacheManager;
+import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.ui.AbstractFragment;
-import com.fanfou.app.hd.ui.FriendsListFragment;
 import com.fanfou.app.hd.ui.ProfileContentFragment;
+import com.fanfou.app.hd.ui.UserFavoritesFragment;
 import com.fanfou.app.hd.ui.UserTimelineFragment;
-import com.fanfou.app.service.Constants;
-import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.ActionManager;
+import com.fanfou.app.hd.ui.widget.ActionBar;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.07
  * @version 1.1 2012.02.08
+ * @version 1.2 2012.02.09
  * 
  */
-public class UIProfile extends UIBase {
+public class UIProfile extends CommonUIBase {
 
 	public static final String TAG = UIProfile.class.getSimpleName();
 
-	private static enum Page {FRIENDS,PROFILE ,TIMELINE 
+	public static enum Page {FAVORITES,PROFILE, TIMELINE
 	};
 
 	public static final int NUMS_OF_PAGE = Page.values().length;
@@ -45,11 +43,11 @@ public class UIProfile extends UIBase {
 			NUMS_OF_PAGE);
 
 	static {
-//		sTitles.put(Page.FAVORITES, "收藏列表");
-		sTitles.put(Page.FRIENDS, "好友");
+//		sTitles.put(Page.FOLLOWERS, "关注者");
+//		sTitles.put(Page.FRIENDS, "好友");
+		sTitles.put(Page.FAVORITES, "收藏");
 		sTitles.put(Page.PROFILE, "简介");
 		sTitles.put(Page.TIMELINE, "消息");
-//		sTitles.put(Page.FOLLOWERS, "关注者列表");
 	}
 
 	private ActionBar mActionBar;
@@ -63,6 +61,18 @@ public class UIProfile extends UIBase {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		setIntent(intent);
+//		int page = getIntent().getIntExtra(Constants.EXTRA_PAGE,
+//				Page.PROFILE.ordinal());
+//		mViewPager.setCurrentItem(page);
+//		if (App.DEBUG) {
+//			Log.d(TAG, "onNewIntent page=" + page);
+//		}
 	}
 
 	@Override
@@ -91,11 +101,6 @@ public class UIProfile extends UIBase {
 
 		if (user != null) {
 			userId = user.id;
-		}
-
-		if (App.getUserId().equals(userId)) {
-			ActionManager.doMyProfile(this);
-			finish();
 		}
 	}
 
@@ -127,7 +132,7 @@ public class UIProfile extends UIBase {
 		super.onPause();
 	}
 
-	private static class PagesAdapter extends FragmentPagerAdapter{
+	private static class PagesAdapter extends FragmentPagerAdapter {
 
 		private final AbstractFragment[] fragments = new AbstractFragment[NUMS_OF_PAGE];
 		private String userId;
@@ -135,21 +140,17 @@ public class UIProfile extends UIBase {
 		public PagesAdapter(FragmentManager fm, String uid) {
 			super(fm);
 			this.userId = uid;
-//			fragments[Page.FAVORITES.ordinal()] = UserFavoritesFragment
-//					.newInstance(userId);
-			fragments[Page.FRIENDS.ordinal()] = FriendsListFragment
+			fragments[Page.FAVORITES.ordinal()] = UserFavoritesFragment
 					.newInstance(userId);
 			fragments[Page.PROFILE.ordinal()] = ProfileContentFragment
 					.newInstance(userId);
 			fragments[Page.TIMELINE.ordinal()] = UserTimelineFragment
 					.newInstance(userId);
-//			fragments[Page.FOLLOWERS.ordinal()] = FollowersListFragment
-//					.newInstance(userId);
 		}
 
 		@Override
 		public AbstractFragment getItem(int position) {
-			return fragments[position % NUMS_OF_PAGE];
+			return fragments[position];
 		}
 
 		@Override

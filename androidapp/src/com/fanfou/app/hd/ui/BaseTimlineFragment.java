@@ -11,18 +11,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.fanfou.app.App;
-import com.fanfou.app.adapter.StatusCursorAdapter;
-import com.fanfou.app.api.Status;
-import com.fanfou.app.db.Contents.BasicColumns;
-import com.fanfou.app.db.Contents.StatusInfo;
-import com.fanfou.app.db.FanFouProvider;
-import com.fanfou.app.util.Utils;
+import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.adapter.StatusCursorAdapter;
+import com.fanfou.app.hd.api.Status;
+import com.fanfou.app.hd.db.FanFouProvider;
+import com.fanfou.app.hd.db.Contents.BasicColumns;
+import com.fanfou.app.hd.db.Contents.StatusInfo;
+import com.fanfou.app.hd.util.Utils;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.06
  * @version 1.1 2012.02.07
+ * @version 1.2 2012.02.09
  * 
  */
 public abstract class BaseTimlineFragment extends PullToRefreshListFragment{
@@ -55,18 +56,6 @@ public abstract class BaseTimlineFragment extends PullToRefreshListFragment{
 			Log.d(TAG, "createAdapter() id="+this+"activity ="+getActivity());
 		}
 		return new StatusCursorAdapter(true, getActivity(), getCursor());
-	}
-
-	@Override
-	protected Cursor onCreateCursor() {
-		if (App.DEBUG) {
-			Log.d(TAG, "createCursor() id="+this+"activity ="+getActivity());
-		}
-		String where = BasicColumns.TYPE + "=?";
-		String[] whereArgs = new String[] { String.valueOf(getType()) };
-		Uri uri = StatusInfo.CONTENT_URI;
-		return getActivity().managedQuery(uri, StatusInfo.COLUMNS, where,
-				whereArgs, FanFouProvider.ORDERBY_DATE_DESC);
 	}
 
 	@Override

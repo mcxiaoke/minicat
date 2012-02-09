@@ -2,10 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/root">
 
-	<com.fanfou.app.ui.ActionBar android:id="@id/actionbar"
+	<com.fanfou.app.hd.ui.widget.ActionBar android:id="@id/actionbar"
 		style="@style/ActionBar" android:layout_alignParentTop="true" />
 
-	<RelativeLayout android:id="@id/status_top"
+	<RelativeLayout android:id="@+id/status_top"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:layout_below="@id/actionbar" android:background="@drawable/status_header"
 		android:clickable="true">
@@ -17,83 +17,83 @@
 			android:layout_marginLeft="10dp" android:layout_toRightOf="@id/user_head"
 			android:ellipsize="marquee" android:text="screen name" />
 
-		<ImageView android:id="@id/status_action_user"
+		<ImageView android:id="@+id/status_action_user"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:layout_alignParentRight="true" android:src="@drawable/i_goto" />
 	</RelativeLayout>
 
-	<ScrollView android:id="@id/status_content"
+	<ScrollView android:id="@+id/status_content"
 		android:layout_width="fill_parent" android:layout_height="fill_parent"
-		android:layout_above="@id/status_line" android:layout_below="@id/status_top"
+		android:layout_above="@+id/status_line" android:layout_below="@+id/status_top"
 		android:padding="5dp" android:scrollbars="none">
 
 		<RelativeLayout android:layout_width="fill_parent"
 			android:layout_height="wrap_content">
 
-			<TextView android:id="@id/status_text" style="@style/Text.Content"
+			<TextView android:id="@+id/status_text" style="@style/Text.Content"
 				android:layout_alignParentTop="true" android:textColorLink="@color/profile_relation_blue"/>
 
-			<RelativeLayout android:id="@id/status_info"
+			<RelativeLayout android:id="@+id/status_info"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:layout_below="@id/status_text">
+				android:layout_below="@+id/status_text">
 
-				<TextView android:id="@id/status_date" style="@style/Text.MetaBig"
+				<TextView android:id="@+id/status_date" style="@style/Text.MetaBig"
 					android:layout_alignParentLeft="true" android:textColor="@color/soft_white" />
 
-				<TextView android:id="@id/status_source" style="@style/Text.MetaBig"
+				<TextView android:id="@+id/status_source" style="@style/Text.MetaBig"
 					android:layout_alignParentRight="true" android:textColor="@color/soft_white" />
 			</RelativeLayout>
 
 			<LinearLayout android:layout_width="fill_parent"
-				android:layout_height="fill_parent" android:layout_below="@id/status_thread"
+				android:layout_height="fill_parent" android:layout_below="@+id/status_thread"
 				android:layout_marginTop="15dp" android:gravity="center"
-				android:orientation="vertical" android:id="@id/status_photo_area">
+				android:orientation="vertical" android:id="@+id/status_photo_area">
 
 				<!-- <ProgressBar android:id="@id/empty_progress" android:layout_width="20dp" -->
 				<!-- android:layout_margin="10dp" android:layout_height="20dp" android:visibility="gone" 
 					/> -->
 
-				<ImageView android:id="@id/status_photo"
+				<ImageView android:id="@+id/status_photo"
 					android:layout_width="wrap_content" android:layout_height="wrap_content"
 					android:scaleType="centerInside" android:src="@drawable/photo_loading" />
 			</LinearLayout>
 
-			<TextView android:id="@id/status_thread"
-				android:layout_below="@id/status_info" android:layout_width="wrap_content"
+			<TextView android:id="@+id/status_thread"
+				android:layout_below="@+id/status_info" android:layout_width="wrap_content"
 				android:layout_height="wrap_content" android:textSize="@dimen/text_size_medium"
 				android:layout_alignParentRight="true" android:text="查看对话"
 				style="@style/StatusThread" />
 			
 			<TextView android:id="@+id/status_conversation"  android:layout_width="fill_parent"
 				android:layout_height="wrap_content" android:textSize="@dimen/text_size_medium"
-				 android:layout_below="@id/status_thread" android:background="@color/sky_blue"/>
+				 android:layout_below="@+id/status_thread" android:background="@color/sky_blue"/>
 
 		</RelativeLayout>
 
 	</ScrollView>
 
-	<ImageView android:id="@id/status_line" android:layout_width="fill_parent"
-		android:layout_height="2dp" android:layout_above="@id/status_actions"
+	<ImageView android:id="@+id/status_line" android:layout_width="fill_parent"
+		android:layout_height="2dp" android:layout_above="@+id/status_actions"
 		android:background="@drawable/separator" />
 
-	<LinearLayout android:id="@id/status_actions"
+	<LinearLayout android:id="@+id/status_actions"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true" android:layout_margin="4dp"
 		android:orientation="horizontal">
 
-		<ImageView android:id="@id/status_action_reply"
+		<ImageView android:id="@+id/status_action_reply"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:layout_weight="1" android:src="@drawable/i_bar2_reply" />
 
-		<ImageView android:id="@id/status_action_retweet"
+		<ImageView android:id="@+id/status_action_retweet"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:layout_weight="1" android:src="@drawable/i_bar2_retweet" />
 
-		<ImageView android:id="@id/status_action_favorite"
+		<ImageView android:id="@+id/status_action_favorite"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:layout_weight="1" android:src="@drawable/i_bar2_favorite" />
 
-		<ImageView android:id="@id/status_action_share"
+		<ImageView android:id="@+id/status_action_share"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:layout_weight="1" android:src="@drawable/i_bar2_share" />
 	</LinearLayout>

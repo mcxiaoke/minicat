@@ -5,10 +5,10 @@ import android.os.Bundle;
 import android.os.Messenger;
 import android.util.Log;
 
-import com.fanfou.app.App;
-import com.fanfou.app.service.Constants;
-import com.fanfou.app.service.FanFouService;
-import com.fanfou.app.util.Utils;
+import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.service.Constants;
+import com.fanfou.app.hd.service.FanFouService;
+import com.fanfou.app.hd.util.Utils;
 
 /**
  * @author mcxiaoke

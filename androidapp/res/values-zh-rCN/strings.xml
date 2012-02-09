@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">饭否</string>
+    <string name="app_name">饭否 HD</string>
     <string name="app_share_name">分享到饭否</string>
     <string name="app_photoviewer_name">饭否图片查看器</string>
     <string name="search_hint">搜索饭否网站消息</string>

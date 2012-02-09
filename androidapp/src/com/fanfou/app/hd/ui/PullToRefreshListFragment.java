@@ -21,13 +21,13 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.fanfou.app.App;
-import com.fanfou.app.R;
-import com.fanfou.app.api.Status;
-import com.fanfou.app.db.Contents.UserInfo;
-import com.fanfou.app.service.Constants;
-import com.fanfou.app.ui.UIManager;
-import com.fanfou.app.util.Utils;
+import com.fanfou.app.hd.R;
+import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.api.Status;
+import com.fanfou.app.hd.db.Contents.UserInfo;
+import com.fanfou.app.hd.service.Constants;
+import com.fanfou.app.hd.ui.widget.UIManager;
+import com.fanfou.app.hd.util.Utils;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
@@ -35,6 +35,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @author mcxiaoke
  * @version 1.0 2012.02.06
  * @version 1.1 2012.02.08
+ * @version 1.2 2012.02.09
  * 
  */
 public abstract class PullToRefreshListFragment extends AbstractFragment
@@ -111,8 +112,6 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 	}
 	
 	protected abstract CursorAdapter onCreateAdapter();
-
-	protected abstract Cursor onCreateCursor();
 
 	protected abstract void doFetch(boolean doGetMore);
 
@@ -321,7 +320,8 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
-		getAdapter().swapCursor(newCursor);
+		mCursor=newCursor;
+		getAdapter().swapCursor(mCursor);
 		if (App.DEBUG) {
 			Log.d(TAG, "onLoadFinished() adapter="+mAdapter.getCount()+" class="+this.getClass().getSimpleName());
 		}
@@ -351,7 +351,6 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 
 		@Override
 		public void handleMessage(Message msg) {
-			mFragment.onRefreshComplete();
 			Bundle data = msg.getData();
 			switch (msg.what) {
 			case Constants.RESULT_SUCCESS:
@@ -363,6 +362,7 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 			default:
 				break;
 			}
+			mFragment.onRefreshComplete();
 		}
 
 	}

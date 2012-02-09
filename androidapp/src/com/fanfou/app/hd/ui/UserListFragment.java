@@ -11,20 +11,21 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FilterQueryProvider;
 
-import com.fanfou.app.App;
-import com.fanfou.app.adapter.UserCursorAdapter;
-import com.fanfou.app.api.User;
-import com.fanfou.app.db.Contents.BasicColumns;
-import com.fanfou.app.db.Contents.UserInfo;
-import com.fanfou.app.service.Constants;
-import com.fanfou.app.service.FanFouService;
-import com.fanfou.app.ui.ActionManager;
-import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.adapter.UserCursorAdapter;
+import com.fanfou.app.hd.api.User;
+import com.fanfou.app.hd.db.Contents.BasicColumns;
+import com.fanfou.app.hd.db.Contents.UserInfo;
+import com.fanfou.app.hd.service.Constants;
+import com.fanfou.app.hd.service.FanFouService;
+import com.fanfou.app.hd.ui.widget.ActionManager;
+import com.fanfou.app.hd.util.StringHelper;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.07
  * @version 1.1 2012.02.08
+ * @version 1.2 2012.02.09
  * 
  */
 public abstract class UserListFragment extends PullToRefreshListFragment implements FilterQueryProvider{
@@ -78,14 +79,6 @@ public abstract class UserListFragment extends PullToRefreshListFragment impleme
 	@Override
 	protected CursorAdapter onCreateAdapter() {
 		return new UserCursorAdapter(getActivity(), getCursor());
-	}
-
-	@Override
-	protected Cursor onCreateCursor() {
-		String where = UserInfo.TYPE + "=? AND " + UserInfo.OWNER_ID + "=?";
-		String[] whereArgs = new String[] { String.valueOf(getType()), userId };
-		return getActivity().managedQuery(UserInfo.CONTENT_URI,
-				UserInfo.COLUMNS, where, whereArgs, null);
 	}
 
 	@Override

@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <com.fanfou.app.ui.ActionBar
+    <com.fanfou.app.hd.ui.widget.ActionBar
         android:id="@id/actionbar"
         style="@style/ActionBar" />
 
@@ -22,7 +22,7 @@
         android:textSize="@dimen/text_size_medium" android:visibility="gone"/>
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
-        xmlns:ptr="http://schemas.android.com/apk/res/com.fanfou.app"
+        xmlns:ptr="http://schemas.android.com/apk/res/com.fanfou.app.hd"
         android:id="@id/list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

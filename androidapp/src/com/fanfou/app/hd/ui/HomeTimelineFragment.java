@@ -8,10 +8,10 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 
-import com.fanfou.app.App;
-import com.fanfou.app.service.Constants;
-import com.fanfou.app.service.FanFouService;
-import com.fanfou.app.util.Utils;
+import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.service.Constants;
+import com.fanfou.app.hd.service.FanFouService;
+import com.fanfou.app.hd.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -48,9 +48,7 @@ public class HomeTimelineFragment extends BaseTimlineFragment {
 
 	@Override
 	protected void doFetch(boolean doGetMore) {
-		if (App.DEBUG) {
-			Log.d(TAG, "doFetch() doGetMore=" + doGetMore+" id="+this+"activity ="+getActivity());
-		}
+
 		final ResultHandler handler = new ResultHandler(this);
 		final Cursor cursor = getCursor();
 		String sinceId = null;
@@ -60,9 +58,10 @@ public class HomeTimelineFragment extends BaseTimlineFragment {
 		} else {
 			sinceId = Utils.getSinceId(cursor);
 		}
-		Context context=getActivity();
-		Log.d(TAG, "context="+context);
-		FanFouService.doFetchHomeTimeline(context,
+		if (App.DEBUG) {
+			Log.d(TAG, "doFetch() doGetMore=" + doGetMore+" maxId="+maxId+" sinceId="+sinceId);
+		}
+		FanFouService.doFetchHomeTimeline(getActivity(),
 				new Messenger(handler), sinceId, maxId);
 	}
 

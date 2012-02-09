@@ -3,23 +3,23 @@
 	android:layout_width="fill_parent" android:layout_height="@dimen/actionbar_height"
 	android:background="@drawable/actionbar_bg">
 
-	<ImageView android:id="@id/actionbar_left"
+	<ImageView android:id="@+id/actionbar_left"
 		android:layout_marginLeft="3dp" android:layout_centerVertical="true"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:layout_alignParentLeft="true" />
 
-	<com.fanfou.app.ui.widget.ScrollingTextView
-		android:id="@id/actionbar_title" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:layout_toRightOf="@id/actionbar_left"
+	<com.fanfou.app.hd.ui.widget.ScrollingTextView
+		android:id="@+id/actionbar_title" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_toRightOf="@+id/actionbar_left"
 		android:paddingLeft="4dp" android:paddingRight="4dp"
 		android:textColor="@color/solid_white" android:layout_centerVertical="true"
 		android:textSize="@dimen/text_size_medium" />
 
-	<ImageView android:id="@id/actionbar_refresh"
+	<ImageView android:id="@+id/actionbar_refresh"
 		android:layout_centerVertical="true" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:layout_toLeftOf="@id/actionbar_right" />
+		android:layout_height="wrap_content" android:layout_toLeftOf="@+id/actionbar_right" />
 
-	<ImageView android:id="@id/actionbar_right"
+	<ImageView android:id="@+id/actionbar_right"
 		android:layout_centerVertical="true" android:layout_alignParentRight="true"
 		android:layout_width="wrap_content" android:layout_height="wrap_content" />
 

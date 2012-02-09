@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.fanfou.app"
-    android:versionCode="20120208"
+    package="com.fanfou.app.hd"
+    android:versionCode="1"
     android:versionName="2.0-alpha-20120208" >
 
     <uses-sdk
@@ -13,7 +13,6 @@
         android:largeScreens="true"
         android:normalScreens="true"
         android:resizeable="true"
-        android:smallScreens="true"
         android:xlargeScreens="true" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -30,7 +29,7 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
         <activity
-            android:name=".SplashPage"
+            android:name=".UIStart"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:theme="@style/Theme" >
@@ -66,7 +65,7 @@
             android:label="@string/app_name"
             android:theme="@style/Theme" />
         <activity
-            android:name=".hd.UIHome"
+            android:name=".UIHome"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:launchMode="singleTask"
@@ -76,13 +75,26 @@
                 android:value=".SearchResultsPage" />
         </activity>
         <activity
-            android:name=".hd.UIProfile"
+            android:name=".UIProfile"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme" >
+        </activity>
+        <activity
+            android:name=".UIUserList"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:theme="@style/Theme" >
         </activity>
         <activity
-            android:name=".hd.UIUserList"
+            android:name=".UIFavorites"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name"
+            android:theme="@style/Theme" >
+        </activity>
+        <activity
+            android:name=".UITimeline"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:theme="@style/Theme" >
@@ -264,7 +276,7 @@
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name" />
         <activity
-            android:name=".SearchResultsPage"
+            android:name=".SearchResultsPagetsPage"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:launchMode="singleTop"
@@ -289,7 +301,7 @@
 
         <provider
             android:name=".db.FanFouProvider"
-            android:authorities="com.fanfou.app.provider" />
+            android:authorities="com.fanfou.app.hd.provider" />
 
         <service
             android:name=".service.PostStatusService"
@@ -320,7 +332,7 @@
         </receiver>
         <receiver android:name=".receiver.NotificationReceiver" >
             <intent-filter>
-                <action android:name="com.fanfou.app.action.NOTIFICATION" />
+                <action android:name="com.fanfou.app.hd.action.NOTIFICATION" />
             </intent-filter>
         </receiver>
         <receiver android:name=".receiver.NetworkReceiver" >
@@ -341,7 +353,7 @@
                 android:resource="@xml/widget_small" />
         </receiver>
         <receiver
-            android:name=".widget.WidgetTiny"
+            android:name=".widget.WidgetTinyinyinydget.WidgetTiny"
             android:icon="@drawable/icon"
             android:label="饭否（1X2）" >
             <intent-filter>

@@ -3,7 +3,7 @@
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 
-	<com.fanfou.app.ui.imagezoom.ImageViewTouch
+	<com.fanfou.app.hd.ui.imagezoom.ImageViewTouch
 		android:id="@+id/photoview_pic" android:scaleType="fitCenter"
 		android:layout_width="fill_parent" android:layout_height="fill_parent"
 		android:layout_centerInParent="true" />

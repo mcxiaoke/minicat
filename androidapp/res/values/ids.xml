@@ -2,12 +2,6 @@
 <resources>
 
 	<item type="id" name="actionbar" />
-	<item type="id" name="actionbar_title" />
-	<item type="id" name="actionbar_left" />
-	<item type="id" name="actionbar_right" />
-	<item type="id" name="actionbar_refresh" />
-	<item type="id" name="actionbar_progress" />
-	<item type="id" name="actionbar_actions" />
 
 	<item type="id" name="buttons" />
 	<item type="id" name="button_cancel" />
@@ -71,82 +65,11 @@
 	<item type="id" name="write_picture_remove" />
 	<item type="id" name="write_extra_words" />
 
-	<item type="id" name="status_top" />
-	<item type="id" name="status_content" />
-	<item type="id" name="status_text" />
-	<item type="id" name="status_source" />
-	<item type="id" name="status_date" />
-	<item type="id" name="status_photo" />
-	<item type="id" name="status_photo_area" />
-	<item type="id" name="status_info" />
-
-	<item type="id" name="status_thread" />
-	<item type="id" name="status_thread_text" />
-
-	<item type="id" name="status_line" />
-
-	<item type="id" name="status_actions" />
-	<item type="id" name="status_action_user" />
-	<item type="id" name="status_action_favorite" />
-	<item type="id" name="status_action_reply" />
-	<item type="id" name="status_action_retweet" />
-	<item type="id" name="status_action_share" />
-	<item type="id" name="status_action_copy" />
-	<item type="id" name="status_action_delete" />
-
-	<item type="id" name="userpage" />
-	<item type="id" name="userpage_tabs" />
-	<item type="id" name="userpage_tab_profile" />
-	<item type="id" name="userpage_tab_timeline" />
-	<item type="id" name="userpage_tab_favorites" />
-	<item type="id" name="userpage_tab_friends" />
-	<item type="id" name="userpage_container" />
-
 	<item type="id" name="user_profile" />
 	<item type="id" name="user_empty" />
-	<item type="id" name="user_headview" />
 	<item type="id" name="user_head" />
 	<item type="id" name="user_name" />
 	<item type="id" name="user_id" />
-	<item type="id" name="user_gender" />
-	<item type="id" name="user_description" />
-	<item type="id" name="user_relationship" />
-	<item type="id" name="user_protected" />
-
-	<item type="id" name="user_birthday_view" />
-	<item type="id" name="user_birthday_title" />
-	<item type="id" name="user_birthday" />
-	<item type="id" name="user_location_view" />
-	<item type="id" name="user_location_title" />
-	<item type="id" name="user_location" />
-	<item type="id" name="user_site_view" />
-	<item type="id" name="user_site_title" />
-	<item type="id" name="user_site" />
-	<item type="id" name="user_created_at_view" />
-	<item type="id" name="user_created_at_title" />
-	<item type="id" name="user_created_at" />
-
-	<item type="id" name="user_statuses_view" />
-	<item type="id" name="user_favorites_view" />
-	<item type="id" name="user_friends_view" />
-	<item type="id" name="user_followers_view" />
-
-	<item type="id" name="user_statuses_title" />
-	<item type="id" name="user_favorites_title" />
-	<item type="id" name="user_friends_title" />
-	<item type="id" name="user_followers_title" />
-
-	<item type="id" name="user_statuses" />
-	<item type="id" name="user_favorites" />
-	<item type="id" name="user_friends" />
-	<item type="id" name="user_followers" />
-
-	<item type="id" name="user_actionview" />
-	<item type="id" name="user_action_reply" />
-	<item type="id" name="user_action_message" />
-	<item type="id" name="user_action_follow" />
-
-	<item type="id" name="user_extrainfo" />
 
 	<item type="id" name="choose_input" />
 
@@ -168,10 +91,6 @@
 	<item type="id" name="about_contact" />
 	<item type="id" name="about_contact_text" />
 	<item type="id" name="about_copyright" />
-
-	<item type="id" name="download_notification" />
-	<item type="id" name="download_notification_text" />
-	<item type="id" name="download_notification_progress" />
 
 	<item type="id" name="title" />
 	<item type="id" name="text" />

@@ -3,8 +3,8 @@ package com.fanfou.app.hd.ui;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.fanfou.app.App;
-import com.fanfou.app.service.Constants;
+import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.service.Constants;
 
 /**
  * @author mcxiaoke

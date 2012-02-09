@@ -16,19 +16,19 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.fanfou.app.App;
-import com.fanfou.app.R;
-import com.fanfou.app.api.User;
-import com.fanfou.app.cache.CacheManager;
-import com.fanfou.app.cache.IImageLoader;
-import com.fanfou.app.dialog.ConfirmDialog;
-import com.fanfou.app.service.Constants;
-import com.fanfou.app.service.FanFouService;
-import com.fanfou.app.ui.ActionManager;
-import com.fanfou.app.util.DateTimeHelper;
-import com.fanfou.app.util.OptionHelper;
-import com.fanfou.app.util.StringHelper;
-import com.fanfou.app.util.Utils;
+import com.fanfou.app.hd.R;
+import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.api.User;
+import com.fanfou.app.hd.cache.CacheManager;
+import com.fanfou.app.hd.cache.IImageLoader;
+import com.fanfou.app.hd.dialog.ConfirmDialog;
+import com.fanfou.app.hd.service.Constants;
+import com.fanfou.app.hd.service.FanFouService;
+import com.fanfou.app.hd.ui.widget.ActionManager;
+import com.fanfou.app.hd.util.DateTimeHelper;
+import com.fanfou.app.hd.util.OptionHelper;
+import com.fanfou.app.hd.util.StringHelper;
+import com.fanfou.app.hd.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -384,10 +384,6 @@ public class ProfileContentFragment extends AbstractFragment implements
 				ActionManager.doShowFollowers(getActivity(), user);
 			}
 			break;
-		case R.id.user_location_view:
-			break;
-		case R.id.user_site_view:
-			break;
 		default:
 			break;
 		}
@@ -443,11 +439,7 @@ public class ProfileContentFragment extends AbstractFragment implements
 					fragment.updateUI();
 				} else if (type == Constants.TYPE_FRIENDSHIPS_EXISTS) {
 					return;
-				} else if (type == Constants.TYPE_FRIENDSHIPS_CREATE
-						|| type == Constants.TYPE_FRIENDSHIPS_DESTROY) {
-					fragment.updateFollowState(result.following);
 				}
-
 				String errorMessage = bundle.getString(Constants.EXTRA_ERROR);
 				Utils.notify(fragment.getActivity(), errorMessage);
 				break;

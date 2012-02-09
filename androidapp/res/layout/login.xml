@@ -10,7 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
-        <com.fanfou.app.ui.ActionBar
+        <com.fanfou.app.hd.ui.widget.ActionBar
             android:id="@id/actionbar"
             style="@style/ActionBar"
             android:layout_alignParentTop="true" />

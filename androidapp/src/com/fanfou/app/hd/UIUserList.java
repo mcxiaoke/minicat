@@ -8,20 +8,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Filter;
-
-import com.fanfou.app.App;
-import com.fanfou.app.App.ApnType;
-import com.fanfou.app.R;
-import com.fanfou.app.api.User;
+import com.fanfou.app.hd.R;
+import com.fanfou.app.hd.App.ApnType;
+import com.fanfou.app.hd.api.User;
+import com.fanfou.app.hd.service.Constants;
+import com.fanfou.app.hd.ui.widget.ActionBar;
 import com.fanfou.app.hd.ui.FollowersListFragment;
 import com.fanfou.app.hd.ui.FriendsListFragment;
 import com.fanfou.app.hd.ui.OnInitCompleteListener;
+import com.fanfou.app.hd.ui.widget.TextChangeListener;
 import com.fanfou.app.hd.ui.UserListFragment;
-import com.fanfou.app.service.Constants;
-import com.fanfou.app.ui.ActionBar;
-import com.fanfou.app.ui.TextChangeListener;
-import com.fanfou.app.util.Assert;
-import com.fanfou.app.util.StringHelper;
+import com.fanfou.app.hd.util.Assert;
+import com.fanfou.app.hd.util.StringHelper;
 
 /**
  * @author mcxiaoke
@@ -39,7 +37,7 @@ import com.fanfou.app.util.StringHelper;
  * @version 4.0 2012.02.08
  * 
  */
-public class UIUserList extends UIBase implements OnInitCompleteListener {
+public class UIUserList extends CommonUIBase implements OnInitCompleteListener {
 	private static final String TAG = UIUserList.class.getSimpleName();
 
 	private UserListFragment mFragment;
@@ -78,7 +76,7 @@ public class UIUserList extends UIBase implements OnInitCompleteListener {
 
 	@Override
 	protected void setLayout() {
-		setContentView(R.layout.ui_list_users);
+		setContentView(R.layout.ui_users);
 		setActionBar();
 		mEditText = (EditText) findViewById(R.id.choose_input);
 		mEditText.addTextChangedListener(new MyTextWatcher(this));
@@ -122,7 +120,7 @@ public class UIUserList extends UIBase implements OnInitCompleteListener {
 
 		FragmentTransaction transaction = getSupportFragmentManager()
 				.beginTransaction();
-		transaction.replace(R.id.container, mFragment);
+		transaction.add(R.id.container, mFragment);
 		transaction.commit();
 	}
 

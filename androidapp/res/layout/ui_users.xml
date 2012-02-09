@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <com.fanfou.app.hd.ui.widget.ActionBar
+        android:id="@id/actionbar"
+        style="@style/ActionBar" />
+
+    <EditText
+        android:id="@id/choose_input"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:background="@drawable/input_bg"
+        android:gravity="center_vertical"
+        android:hint="输入文字搜索用户"
+        android:padding="10dp"
+        android:singleLine="true"
+        android:textSize="@dimen/text_size_medium"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </FrameLayout>
+
+</LinearLayout>

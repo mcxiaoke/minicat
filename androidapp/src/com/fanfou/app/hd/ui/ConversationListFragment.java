@@ -11,17 +11,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.fanfou.app.App;
-import com.fanfou.app.adapter.MessageCursorAdapter;
-import com.fanfou.app.db.Contents.DirectMessageInfo;
-import com.fanfou.app.service.Constants;
-import com.fanfou.app.service.FanFouService;
-import com.fanfou.app.util.Utils;
+import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.adapter.MessageCursorAdapter;
+import com.fanfou.app.hd.db.Contents.DirectMessageInfo;
+import com.fanfou.app.hd.service.Constants;
+import com.fanfou.app.hd.service.FanFouService;
+import com.fanfou.app.hd.util.Utils;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.06
  * @version 1.1 2012.02.08
+ * @version 1.2 2012.02.09
  * 
  */
 public class ConversationListFragment extends PullToRefreshListFragment {
@@ -63,16 +64,6 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 			Log.d(TAG, "createAdapter()");
 		}
 		return new MessageCursorAdapter(getActivity(), getCursor());
-	}
-
-	@Override
-	protected Cursor onCreateCursor() {
-		if (App.DEBUG) {
-			Log.d(TAG, "createCursor()");
-		}
-		Uri uri = Uri.withAppendedPath(DirectMessageInfo.CONTENT_URI, "list");
-		return getActivity().managedQuery(uri, DirectMessageInfo.COLUMNS, null,
-				null, null);
 	}
 
 	@Override
