@@ -41,7 +41,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 2.1 2012.02.01
  * 
  */
-public class SearchResultsPage extends BaseActivity implements
+public class SearchResultsPage extends UIBaseSupport implements
 		OnRefreshListener, OnItemClickListener, OnItemLongClickListener {
 	private static final String TAG = SearchResultsPage.class.getSimpleName();
 	private PullToRefreshListView mPullToRefreshListView;
@@ -63,9 +63,6 @@ public class SearchResultsPage extends BaseActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		initialize();
-		setLayout();
-		search();
 	}
 
 	@Override
@@ -74,12 +71,14 @@ public class SearchResultsPage extends BaseActivity implements
 		search();
 	}
 
+	@Override
 	protected void initialize() {
 		mStatuses = new ArrayList<Status>();
 		api = FanFouApi.newInstance();
 	}
 
-	private void setLayout() {
+	@Override
+	protected void setLayout() {
 		setContentView(R.layout.list_pull);
 		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.list);
 		mPullToRefreshListView.setOnRefreshListener(this);
@@ -88,6 +87,8 @@ public class SearchResultsPage extends BaseActivity implements
 		mList.setOnItemLongClickListener(this);
 		mStatusAdapter = new SearchResultsAdapter(this, mStatuses);
 		mList.setAdapter(mStatusAdapter);
+		
+		search();
 	}
 
 	protected void search() {

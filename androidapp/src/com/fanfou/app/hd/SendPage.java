@@ -49,7 +49,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.4 2011.11.18
  * 
  */
-public class SendPage extends BaseActivity {
+public class SendPage extends UIBaseSupport {
 
 	private static final String TAG = SendPage.class.getSimpleName();
 	private String mUserId;
@@ -74,9 +74,6 @@ public class SendPage extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		parseIntent();
-		setLayout();
-		checkUserId();
 	}
 
 	@Override
@@ -101,8 +98,14 @@ public class SendPage extends BaseActivity {
 			IntentHelper.logIntent(TAG, intent);
 		}
 	}
+	
+	@Override
+	protected void initialize(){
+		parseIntent();
+	}
 
-	private void setLayout() {
+	@Override
+	protected void setLayout() {
 		setContentView(R.layout.send);
 		mEditText = (EditText) findViewById(R.id.msgchat_input);
 		mEditText.addTextChangedListener(new TextChangeListener() {
@@ -119,6 +122,8 @@ public class SendPage extends BaseActivity {
 
 		mListView = (ListView) findViewById(R.id.list);
 		mViewStub = (ViewStub) findViewById(R.id.stub);
+		
+		checkUserId();
 
 	}
 

@@ -47,7 +47,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 2.7 2011.12.02
  * @version 2.8 2011.12.23
  */
-public class UserChoosePage extends BaseActivity implements
+public class UserChoosePage extends UIBaseSupport implements
 		FilterQueryProvider, OnItemClickListener {
 	protected ListView mListView;
 	protected EditText mEditText;
@@ -78,11 +78,10 @@ public class UserChoosePage extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		if (App.DEBUG)
 			log("onCreate");
-		initialize();
-		setLayout();
-		initCheckState();
+
 	}
 
+	@Override
 	protected void initialize() {
 		mUserNames = new ArrayList<String>();
 		initCursorAdapter();
@@ -93,8 +92,7 @@ public class UserChoosePage extends BaseActivity implements
 		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
 				+ "=?";
 		String[] whereArgs = new String[] {
-				String.valueOf(Constants.TYPE_USERS_FRIENDS),
-				App.getUserId() };
+				String.valueOf(Constants.TYPE_USERS_FRIENDS), App.getUserId() };
 		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				whereArgs, null);
 
@@ -107,12 +105,13 @@ public class UserChoosePage extends BaseActivity implements
 			showContent();
 		} else {
 			doRefresh();
-			Handler handler=new Handler();
+			Handler handler = new Handler();
 			handler.postDelayed(new Runnable() {
-				
+
 				@Override
 				public void run() {
-					WakefulIntentService.sendWakefulWork(mContext, AutoCompleteService.class);
+					WakefulIntentService.sendWakefulWork(mContext,
+							AutoCompleteService.class);
 				}
 			}, 30000);
 			showProgress();
@@ -135,7 +134,8 @@ public class UserChoosePage extends BaseActivity implements
 		mListView.setVisibility(View.VISIBLE);
 	}
 
-	private void setLayout() {
+	@Override
+	protected void setLayout() {
 		setContentView(R.layout.user_choose);
 
 		mViewStub = (ViewStub) findViewById(R.id.stub);
@@ -146,6 +146,8 @@ public class UserChoosePage extends BaseActivity implements
 		mEditText.addTextChangedListener(new MyTextWatcher());
 
 		setListView();
+
+		initCheckState();
 	}
 
 	private void setListView() {
@@ -266,7 +268,7 @@ public class UserChoosePage extends BaseActivity implements
 	}
 
 	protected class ResultHandler extends Handler {
-		
+
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -281,7 +283,8 @@ public class UserChoosePage extends BaseActivity implements
 				break;
 			case Constants.RESULT_ERROR:
 				int code = msg.getData().getInt(Constants.EXTRA_CODE);
-				String errorMessage = msg.getData().getString(Constants.EXTRA_ERROR);
+				String errorMessage = msg.getData().getString(
+						Constants.EXTRA_ERROR);
 				Utils.notify(mContext, errorMessage);
 				if (!isInitialized) {
 					showContent();
@@ -296,11 +299,10 @@ public class UserChoosePage extends BaseActivity implements
 
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
-		String where = BasicColumns.TYPE + " = "
-				+ Constants.TYPE_USERS_FRIENDS + " AND "
-				+ BasicColumns.OWNER_ID + " = '" + App.getUserId() + "' AND ("
-				+ UserInfo.SCREEN_NAME + " like '%" + constraint + "%' OR "
-				+ BasicColumns.ID + " like '%" + constraint + "%' )";
+		String where = BasicColumns.TYPE + " = " + Constants.TYPE_USERS_FRIENDS
+				+ " AND " + BasicColumns.OWNER_ID + " = '" + App.getUserId()
+				+ "' AND (" + UserInfo.SCREEN_NAME + " like '%" + constraint
+				+ "%' OR " + BasicColumns.ID + " like '%" + constraint + "%' )";
 		;
 		return managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
 				null, null);

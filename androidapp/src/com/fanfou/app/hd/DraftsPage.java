@@ -29,7 +29,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.2 2011.11.11
  * 
  */
-public class DraftsPage extends BaseActivity implements OnItemClickListener {
+public class DraftsPage extends UIBaseSupport implements OnItemClickListener {
 	private ListView mListView;
 
 	private Cursor mCursor;
@@ -38,10 +38,10 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setLayout();
 	}
 
-	private void setLayout() {
+	@Override
+	protected void setLayout() {
 		setContentView(R.layout.list_drafts);
 		setListView();
 
@@ -54,27 +54,6 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 		mListView = (ListView) findViewById(R.id.list);
 		mListView.setAdapter(mAdapter);
 		mListView.setOnItemClickListener(this);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		MenuItem clear = menu.add(0, MENU_ID_CLEAR, MENU_ID_CLEAR, "清空草稿");
-		clear.setIcon(R.drawable.ic_menu_clear);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		switch (id) {
-		case MENU_ID_CLEAR:
-			onMenuClearClick();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-
 	}
 
 	@Override
@@ -133,6 +112,10 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 		startActivity(intent);
 		finish();
 
+	}
+
+	@Override
+	protected void initialize() {
 	}
 
 }

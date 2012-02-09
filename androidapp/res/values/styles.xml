@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="android:style/Theme.Light">
+    <style name="Theme" parent="android:style/Theme.Light">
         <item name="android:windowTitleSize">@dimen/actionbar_compat_height</item>
         <item name="android:windowTitleBackgroundStyle">@style/ActionBarCompat</item>
         <item name="android:windowContentOverlay">@drawable/actionbar_shadow</item>
@@ -46,14 +46,6 @@
     <style name="ActionBarCompatItem" parent="style/ActionBarCompatItemBase"></style>
 
     <style name="ActionBarCompatHomeItem" parent="style/ActionBarCompatItemBase"></style>
-
-    <style name="Theme" parent="@android:style/Theme.Light">
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
-
-    <style name="Theme2" parent="@android:style/Theme.Light">
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
 
     <style name="ThemeBlack" parent="@android:style/Theme.NoTitleBar">
         <item name="android:windowContentOverlay">@null</item>

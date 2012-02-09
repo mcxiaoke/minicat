@@ -39,8 +39,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 3.7 2012.02.09
  * 
  */
-public class ConversationPage extends BaseActivity implements
-		OnRefreshListener,OnItemClickListener, OnItemLongClickListener {
+public class ConversationPage extends UIBaseSupport implements
+		OnRefreshListener, OnItemClickListener, OnItemLongClickListener {
 
 	private PullToRefreshListView mPullToRefreshListView;
 	private ListView mList;
@@ -61,31 +61,27 @@ public class ConversationPage extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		log("onCreate");
-		if (parseIntent()) {
-			initialize();
-			setLayout();
-			doFetchThreads();
-		} else {
-			finish();
-		}
-
+		doFetchThreads();
 	}
 
+	@Override
 	protected void initialize() {
+		parseIntent();
 		mThread = new ArrayList<Status>();
 		mStatusAdapter = new ConversationAdapter(this, mThread);
 	}
 
-	private void setLayout() {
+	@Override
+	protected void setLayout() {
 		setContentView(R.layout.list_pull);
 
 		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.list);
 		mPullToRefreshListView.setOnRefreshListener(this);
-		mList=mPullToRefreshListView.getRefreshableView();
+		mList = mPullToRefreshListView.getRefreshableView();
 		mList.setAdapter(mStatusAdapter);
 		configListView(mList);
 	}
-	
+
 	private void configListView(final ListView list) {
 		list.setHorizontalScrollBarEnabled(false);
 		list.setVerticalScrollBarEnabled(false);
@@ -138,7 +134,8 @@ public class ConversationPage extends BaseActivity implements
 			AsyncTask<Void, com.fanfou.app.hd.api.Status, List<Status>> {
 
 		@Override
-		protected List<com.fanfou.app.hd.api.Status> doInBackground(Void... params) {
+		protected List<com.fanfou.app.hd.api.Status> doInBackground(
+				Void... params) {
 			Api api = FanFouApi.newInstance();
 			String id = mStatus.id;
 			try {
@@ -176,8 +173,7 @@ public class ConversationPage extends BaseActivity implements
 
 	@Override
 	public void onRefresh() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 }

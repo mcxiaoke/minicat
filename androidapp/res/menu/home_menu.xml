@@ -5,7 +5,8 @@
         android:id="@+id/menu_profile"
         android:icon="@drawable/ic_menu_profile"
         android:orderInCategory="0"
-        android:title="我的空间">
+        android:title="我的空间" 
+        android:showAsAction="always">
     </item>
     <item
         android:id="@+id/menu_option"
@@ -17,7 +18,7 @@
         android:id="@+id/menu_search"
         android:icon="@drawable/ic_menu_search"
         android:orderInCategory="2"
-        android:title="热词搜索">
+        android:title="热词搜索" android:showAsAction="always">
     </item>
     <item
         android:id="@+id/menu_about"

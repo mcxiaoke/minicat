@@ -45,7 +45,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.8 2012.02.01
  * 
  */
-public class EditProfilePage extends BaseActivity {
+public class EditProfilePage extends UIBaseSupport {
 
 	private static final String TAG = EditProfilePage.class.getSimpleName();
 
@@ -81,17 +81,20 @@ public class EditProfilePage extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		parseIntent();
-		mLoader = App.getImageLoader();
-		setLayout();
-		updateUI();
 	}
 
 	private void parseIntent() {
 		user = (User) getIntent().getParcelableExtra(Constants.EXTRA_DATA);
 	}
+	
+	@Override
+	protected void initialize() {
+		parseIntent();
+		mLoader = App.getImageLoader();
+	}
 
-	private void setLayout() {
+	@Override
+	protected void setLayout() {
 		setContentView(R.layout.edit_profile);
 
 		mButtonOK = (Button) findViewById(R.id.button_ok);
@@ -122,6 +125,8 @@ public class EditProfilePage extends BaseActivity {
 		setFakedBold(mLocationLabel);
 
 		setTextChangeListener();
+		
+		updateUI();
 
 	}
 
@@ -493,5 +498,7 @@ public class EditProfilePage extends BaseActivity {
 		}
 
 	}
+
+
 
 }

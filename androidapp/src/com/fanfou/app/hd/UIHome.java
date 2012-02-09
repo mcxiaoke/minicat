@@ -249,7 +249,7 @@ public class UIHome extends UIBaseSupport {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu_test, menu);
+		inflater.inflate(R.menu.home_menu, menu);
 		return true;
 	}
 

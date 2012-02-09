@@ -59,7 +59,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 4.8 2012.02.01
  * 
  */
-public class WritePage extends BaseActivity {
+public class WritePage extends UIBaseSupport {
 
 	private static final String TAG = WritePage.class.getSimpleName();
 	private static final int REQUEST_PHOTO_CAPTURE = 0;
@@ -111,12 +111,12 @@ public class WritePage extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		initialize();
-		setLayout();
-		parseIntent();
+
 	}
 
-	private void initialize() {
+	@Override
+	protected void initialize() {
+		parseIntent();
 		enableLocation = OptionHelper.readBoolean(mContext,
 				R.string.option_location_enable, true);
 		mLocationManager = (LocationManager) this
@@ -341,7 +341,8 @@ public class WritePage extends BaseActivity {
 				cursor));
 	}
 
-	private void setLayout() {
+	@Override
+	protected void setLayout() {
 
 		setContentView(R.layout.write);
 		setAutoComplete();

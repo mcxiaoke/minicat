@@ -35,7 +35,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
  */
 
 // select direct message target
-public class UserSelectPage extends BaseActivity implements
+public class UserSelectPage extends UIBaseSupport implements
 		OnItemClickListener, OnRefreshListener, FilterQueryProvider {
 
 	private static final String TAG = UserSelectPage.class.getSimpleName();
@@ -61,11 +61,10 @@ public class UserSelectPage extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		if (App.DEBUG)
 			log("onCreate");
-		initialize();
-		setLayout();
-		initCheckState();
+
 	}
 
+	@Override
 	protected void initialize() {
 		initCursor();
 	}
@@ -89,7 +88,8 @@ public class UserSelectPage extends BaseActivity implements
 		}
 	}
 
-	private void setLayout() {
+	@Override
+	protected void setLayout() {
 		setContentView(R.layout.list_users);
 
 		mEditText = (EditText) findViewById(R.id.choose_input);
@@ -105,6 +105,8 @@ public class UserSelectPage extends BaseActivity implements
 		mCursorAdapter.setFilterQueryProvider(this);
 
 		mList.setAdapter(mCursorAdapter);
+
+		initCheckState();
 	}
 
 	private class MyTextWatcher extends TextChangeListener {

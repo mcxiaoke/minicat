@@ -30,7 +30,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 3.2 2011.11.22
  * 
  */
-public class PhotoViewPage extends BaseActivity {
+public class PhotoViewPage extends UIBaseSupport {
 
 	private static final String TAG = PhotoViewPage.class.getSimpleName();
 	private String mPhotoPath;
@@ -41,8 +41,17 @@ public class PhotoViewPage extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.photoview);
+	}
+	
+	@Override
+	protected void initialize(){
 		parseIntent(getIntent());
+	}
+	
+	@Override
+	protected void setLayout(){
+		setContentView(R.layout.photoview);
+		
 
 		if (TextUtils.isEmpty(mPhotoPath)) {
 			finish();
@@ -85,26 +94,6 @@ public class PhotoViewPage extends BaseActivity {
 			}
 		}
 
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		MenuItem option = menu.add(0, MENU_ID_SAVE, MENU_ID_SAVE, "保存图片");
-		option.setIcon(R.drawable.ic_menu_save);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id=item.getItemId();
-		switch (id) {
-		case MENU_ID_SAVE:
-			doSave();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}	
 	}
 
 	@Override

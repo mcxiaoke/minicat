@@ -52,7 +52,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 3.1 2012.02.01
  * 
  */
-public class StatusPage extends BaseActivity {
+public class StatusPage extends UIBaseSupport {
 
 	private static final int PHOTO_LOADING = -1;
 	private static final int PHOTO_ICON = 0;
@@ -114,14 +114,6 @@ public class StatusPage extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mLoader = App.getImageLoader();
-		// mDetector=new GestureDetector(new SwipeGestureListener(this));
-
-		setContentView(R.layout.status);
-		setLayout();
-		parseIntent();
-		updateUI();
-
 	}
 
 	@Override
@@ -153,7 +145,18 @@ public class StatusPage extends BaseActivity {
 		isMe = status.userId.equals(App.getUserId());
 	}
 
-	private void setLayout() {
+	@Override
+	protected void initialize() {
+		mLoader = App.getImageLoader();
+		// mDetector=new GestureDetector(new SwipeGestureListener(this));
+
+		parseIntent();
+	}
+
+	@Override
+	protected void setLayout() {
+
+		setContentView(R.layout.status);
 
 		mScrollView = (ScrollView) findViewById(R.id.status_content);
 
@@ -185,6 +188,8 @@ public class StatusPage extends BaseActivity {
 		vThread.setOnClickListener(this);
 
 		registerForContextMenu(tContent);
+
+		updateUI();
 	}
 
 	private void updateUI() {

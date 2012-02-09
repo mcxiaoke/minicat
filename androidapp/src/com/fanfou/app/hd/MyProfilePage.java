@@ -37,9 +37,9 @@ import com.fanfou.app.hd.util.Utils;
  * @version 2.1 2012.02.02
  * 
  */
-public class MyProfilePage extends BaseActivity {
-	
-	private static final String TAG=MyProfilePage.class.getSimpleName();
+public class MyProfilePage extends UIBaseSupport {
+
+	private static final String TAG = MyProfilePage.class.getSimpleName();
 
 	private ScrollView mScrollView;
 	private View mEmptyView;
@@ -74,10 +74,6 @@ public class MyProfilePage extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		parseIntent();
-		initialize();
-		setLayout();
-		initCheckState();
 	}
 
 	private void parseIntent() {
@@ -85,11 +81,14 @@ public class MyProfilePage extends BaseActivity {
 		user = CacheManager.getUser(this, userId);
 	}
 
-	private void initialize() {
+	@Override
+	protected void initialize() {
+		parseIntent();
 		mLoader = App.getImageLoader();
 	}
 
-	private void setLayout() {
+	@Override
+	protected void setLayout() {
 		setContentView(R.layout.myprofile);
 
 		mEmptyView = findViewById(R.id.empty);
@@ -121,6 +120,8 @@ public class MyProfilePage extends BaseActivity {
 		mFavoritesView.setOnClickListener(this);
 		mFriendsView.setOnClickListener(this);
 		mFollowersView.setOnClickListener(this);
+
+		initCheckState();
 	}
 
 	protected void initCheckState() {
@@ -246,8 +247,8 @@ public class MyProfilePage extends BaseActivity {
 
 	@Override
 	public void onClick(View v) {
-		if(App.DEBUG){
-			Log.d(TAG, "onClick id="+v.getId());
+		if (App.DEBUG) {
+			Log.d(TAG, "onClick id=" + v.getId());
 		}
 		switch (v.getId()) {
 		case R.id.user_statuses_view:

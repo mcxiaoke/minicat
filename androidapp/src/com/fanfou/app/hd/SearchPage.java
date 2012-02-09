@@ -28,7 +28,7 @@ import com.fanfou.app.hd.api.Search;
  * @version 2.0 2011.10.21
  * 
  */
-public class SearchPage extends BaseActivity implements OnItemClickListener {
+public class SearchPage extends UIBaseSupport implements OnItemClickListener {
 
 	private ListView mListView;
 	private View mEmptyView;
@@ -38,13 +38,15 @@ public class SearchPage extends BaseActivity implements OnItemClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		parseIntent();
-		setLayout();
-		// onSearchRequested();
-		fetchHotwords();
 	}
 
-	private void setLayout() {
+	@Override
+	protected void initialize() {
+		parseIntent();
+	}
+
+	@Override
+	protected void setLayout() {
 		setContentView(R.layout.search);
 		mEmptyView = findViewById(R.id.empty);
 		TextView tv = (TextView) findViewById(R.id.empty_text);
@@ -52,6 +54,9 @@ public class SearchPage extends BaseActivity implements OnItemClickListener {
 
 		mListView = (ListView) findViewById(R.id.list);
 		mListView.setOnItemClickListener(this);
+
+		// onSearchRequested();
+		fetchHotwords();
 	}
 
 	private void parseIntent() {
