@@ -37,7 +37,7 @@ import com.fanfou.app.hd.util.StringHelper;
  * @version 4.0 2012.02.08
  * 
  */
-public class UIUserList extends CommonUIBase implements OnInitCompleteListener {
+public class UIUserList extends UIBase implements OnInitCompleteListener {
 	private static final String TAG = UIUserList.class.getSimpleName();
 
 	private UserListFragment mFragment;

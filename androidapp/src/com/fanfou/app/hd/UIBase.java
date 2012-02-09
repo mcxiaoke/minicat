@@ -39,13 +39,13 @@ import com.fanfou.app.hd.util.Utils;
  * @version 3.1 2012.02.07
  * 
  */
-abstract class CommonUIBase extends FragmentActivity implements OnClickListener,SwipeListener {
+abstract class UIBase extends FragmentActivity implements OnClickListener,SwipeListener {
 
 	public static final int STATE_INIT = 0;
 	public static final int STATE_NORMAL = 1;
 	public static final int STATE_EMPTY = 2;
 
-	protected CommonUIBase mContext;
+	protected UIBase mContext;
 	protected LayoutInflater mInflater;
 	protected boolean isActive = false;
 

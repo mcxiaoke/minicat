@@ -71,7 +71,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 8.3 2012.02.09
  * 
  */
-public class UIHome extends CommonUIActionBarSupport {
+public class UIHome extends UIBaseSupport {
 
 	public static final String TAG = UIHome.class.getSimpleName();
 	public static final String[] PAGE_TITLES = new String[] { "我的消息", "随便看看",

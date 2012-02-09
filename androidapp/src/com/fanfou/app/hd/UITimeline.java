@@ -9,7 +9,7 @@ import com.fanfou.app.hd.ui.UserTimelineFragment;
  * @version 1.0 2012.02.08
  *
  */
-public class UITimeline extends CommonUITimeline {
+public class UITimeline extends UIBaseTimeline {
 
 	@Override
 	protected int getType() {

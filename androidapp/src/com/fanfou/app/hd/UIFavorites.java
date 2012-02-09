@@ -10,7 +10,7 @@ import com.fanfou.app.hd.ui.UserTimelineFragment;
  * @version 1.0 2012.02.08
  *
  */
-public class UIFavorites extends CommonUITimeline {
+public class UIFavorites extends UIBaseTimeline {
 
 	@Override
 	protected int getType() {

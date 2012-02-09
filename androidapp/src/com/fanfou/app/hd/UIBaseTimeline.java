@@ -36,9 +36,9 @@ import com.fanfou.app.hd.util.StringHelper;
  * @version 5.0 2012.02.08
  * 
  */
-abstract class CommonUITimeline extends CommonUIBase implements SwipeListener {
+abstract class UIBaseTimeline extends UIBase implements SwipeListener {
 
-	private static final String TAG = CommonUITimeline.class.getSimpleName();
+	private static final String TAG = UIBaseTimeline.class.getSimpleName();
 	
 	private BaseTimlineFragment mFragment;
 

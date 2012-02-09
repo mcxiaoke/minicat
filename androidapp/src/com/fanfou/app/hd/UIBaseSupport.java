@@ -39,14 +39,14 @@ import com.fanfou.app.hd.util.Utils;
  * @version 3.1 2012.02.07
  * 
  */
-abstract class CommonUIActionBarSupport extends FragmentActivity implements
+abstract class UIBaseSupport extends FragmentActivity implements
 		OnClickListener, SwipeListener {
 
 	public static final int STATE_INIT = 0;
 	public static final int STATE_NORMAL = 1;
 	public static final int STATE_EMPTY = 2;
 
-	protected CommonUIActionBarSupport mContext;
+	protected UIBaseSupport mContext;
 	protected LayoutInflater mInflater;
 	protected boolean isActive = false;
 

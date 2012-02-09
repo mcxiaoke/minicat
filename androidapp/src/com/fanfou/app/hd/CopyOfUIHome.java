@@ -71,7 +71,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 8.3 2012.02.09
  * 
  */
-public class CopyOfUIHome extends CommonUIBase {
+public class CopyOfUIHome extends UIBase {
 
 	public static final String TAG = CopyOfUIHome.class.getSimpleName();
 	public static final String[] PAGE_TITLES = new String[] { "我的消息", "随便看看",

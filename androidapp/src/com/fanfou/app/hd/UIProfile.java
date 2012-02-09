@@ -31,7 +31,7 @@ import com.fanfou.app.hd.ui.widget.ActionBar;
  * @version 1.2 2012.02.09
  * 
  */
-public class UIProfile extends CommonUIBase {
+public class UIProfile extends UIBase {
 
 	public static final String TAG = UIProfile.class.getSimpleName();
 
