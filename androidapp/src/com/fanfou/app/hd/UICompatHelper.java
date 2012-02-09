@@ -16,12 +16,18 @@
 
 package com.fanfou.app.hd;
 
+import com.fanfou.app.hd.ui.actionbarcompat.ActionBarHelper;
+
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.actionbar.ActionBarHelper;
 import android.view.Menu;
 import android.view.MenuInflater;
 
+/**
+ * @author mcxiaoke
+ * @version 1.0 2012.02.09
+ *
+ */
 public class UICompatHelper
 {
 	

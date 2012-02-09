@@ -24,5 +24,9 @@
     <color name="name_color">#ff333333</color>
     <color name="content_color">#ff333333</color>
     <color name="metainfo_color">#ff999999</color>
+    
+    
+    
+    <color name="actionbar_title_color">#224894</color>
 
 </resources>

@@ -1,102 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<item type="id" name="actionbar" />
-
-	<item type="id" name="buttons" />
-	<item type="id" name="button_cancel" />
-	<item type="id" name="button_ok" />
-	<item type="id" name="button_save" />
-	<item type="id" name="button_discard" />
-
-	<item type="id" name="item_user" />
-	<item type="id" name="item_user_id" />
-	<item type="id" name="item_user_name" />
-	<item type="id" name="item_user_flag" />
-	<item type="id" name="item_user_head" />
-	<item type="id" name="item_user_text" />
-	<item type="id" name="item_user_date" />
-	<item type="id" name="item_user_gender" />
-	<item type="id" name="item_user_location" />
-
-	<item type="id" name="item_status" />
-	<item type="id" name="item_status_head" />
-	<item type="id" name="item_status_text" />
-	<item type="id" name="item_status_user" />
-	<item type="id" name="item_status_meta" />
-	<item type="id" name="item_status_icon_photo" />
-	<item type="id" name="item_status_icon_loc" />
-	<item type="id" name="item_status_icon_reply" />
-	<item type="id" name="item_status_icon_fav" />
-
-	<item type="id" name="item_message" />
-	<item type="id" name="item_message_head" />
-	<item type="id" name="item_message_text" />
-	<item type="id" name="item_message_user" />
-	<item type="id" name="item_message_date" />
-	<item type="id" name="item_message_source" />
-
-
-	<item type="id" name="list" />
-	<item type="id" name="list_header" />
-	<item type="id" name="list_header_text" />
-	<item type="id" name="list_header_progress" />
-	<item type="id" name="list_footer" />
-	<item type="id" name="list_footer_text" />
-	<item type="id" name="list_footer_progress" />
-
-	<item type="id" name="write_title" />
-	<item type="id" name="write_info" />
-	<item type="id" name="write_text" />
-
-	<item type="id" name="write_actions" />
-	<item type="id" name="write_action_back" />
-	<item type="id" name="write_action_at" />
-	<item type="id" name="write_action_draft" />
-	<item type="id" name="write_action_location" />
-	<item type="id" name="write_action_gallery" />
-	<item type="id" name="write_action_camera" />
-
-	<item type="id" name="write_origin" />
-
-	<item type="id" name="write_extras" />
-	<item type="id" name="write_picture" />
-	<item type="id" name="write_picture_prieview" />
-	<item type="id" name="write_picture_remove" />
-	<item type="id" name="write_extra_words" />
-
-	<item type="id" name="user_profile" />
-	<item type="id" name="user_empty" />
-	<item type="id" name="user_head" />
-	<item type="id" name="user_name" />
-	<item type="id" name="user_id" />
-
-	<item type="id" name="choose_input" />
-
-	<item type="id" name="search" />
-	<item type="id" name="search_input" />
-	<item type="id" name="search_button" />
-
-	<item type="id" name="empty" />
-	<item type="id" name="empty_text" />
-	<item type="id" name="empty_progress" />
-
-	<item type="id" name="about" />
-	<item type="id" name="about_icon" />
-	<item type="id" name="about_title" />
-	<item type="id" name="about_version" />
-	<item type="id" name="about_intro" />
-	<item type="id" name="about_support" />
-	<item type="id" name="about_support_text" />
-	<item type="id" name="about_contact" />
-	<item type="id" name="about_contact_text" />
-	<item type="id" name="about_copyright" />
-
-	<item type="id" name="title" />
-	<item type="id" name="text" />
-	<item type="id" name="date" />
-	<item type="id" name="button1" />
-	<item type="id" name="button2" />
-	<item type="id" name="mini_icon" />
+    <item name="actionbar" type="id"/>
+    <item name="buttons" type="id"/>
+    <item name="button_cancel" type="id"/>
+    <item name="button_ok" type="id"/>
+    <item name="button_save" type="id"/>
+    <item name="button_discard" type="id"/>
+    <item name="item_user" type="id"/>
+    <item name="item_user_id" type="id"/>
+    <item name="item_user_name" type="id"/>
+    <item name="item_user_flag" type="id"/>
+    <item name="item_user_head" type="id"/>
+    <item name="item_user_text" type="id"/>
+    <item name="item_user_date" type="id"/>
+    <item name="item_user_gender" type="id"/>
+    <item name="item_user_location" type="id"/>
+    <item name="item_status" type="id"/>
+    <item name="item_status_head" type="id"/>
+    <item name="item_status_text" type="id"/>
+    <item name="item_status_user" type="id"/>
+    <item name="item_status_meta" type="id"/>
+    <item name="item_status_icon_photo" type="id"/>
+    <item name="item_status_icon_loc" type="id"/>
+    <item name="item_status_icon_reply" type="id"/>
+    <item name="item_status_icon_fav" type="id"/>
+    <item name="item_message" type="id"/>
+    <item name="item_message_head" type="id"/>
+    <item name="item_message_text" type="id"/>
+    <item name="item_message_user" type="id"/>
+    <item name="item_message_date" type="id"/>
+    <item name="item_message_source" type="id"/>
+    <item name="list" type="id"/>
+    <item name="list_header" type="id"/>
+    <item name="list_header_text" type="id"/>
+    <item name="list_header_progress" type="id"/>
+    <item name="list_footer" type="id"/>
+    <item name="list_footer_text" type="id"/>
+    <item name="list_footer_progress" type="id"/>
+    <item name="write_title" type="id"/>
+    <item name="write_info" type="id"/>
+    <item name="write_text" type="id"/>
+    <item name="write_actions" type="id"/>
+    <item name="write_action_back" type="id"/>
+    <item name="write_action_at" type="id"/>
+    <item name="write_action_draft" type="id"/>
+    <item name="write_action_location" type="id"/>
+    <item name="write_action_gallery" type="id"/>
+    <item name="write_action_camera" type="id"/>
+    <item name="write_origin" type="id"/>
+    <item name="write_extras" type="id"/>
+    <item name="write_picture" type="id"/>
+    <item name="write_picture_prieview" type="id"/>
+    <item name="write_picture_remove" type="id"/>
+    <item name="write_extra_words" type="id"/>
+    <item name="user_profile" type="id"/>
+    <item name="user_empty" type="id"/>
+    <item name="user_head" type="id"/>
+    <item name="user_name" type="id"/>
+    <item name="user_id" type="id"/>
+    <item name="choose_input" type="id"/>
+    <item name="search" type="id"/>
+    <item name="search_input" type="id"/>
+    <item name="search_button" type="id"/>
+    <item name="empty" type="id"/>
+    <item name="empty_text" type="id"/>
+    <item name="empty_progress" type="id"/>
+    <item name="about" type="id"/>
+    <item name="about_icon" type="id"/>
+    <item name="about_title" type="id"/>
+    <item name="about_version" type="id"/>
+    <item name="about_intro" type="id"/>
+    <item name="about_support" type="id"/>
+    <item name="about_support_text" type="id"/>
+    <item name="about_contact" type="id"/>
+    <item name="about_contact_text" type="id"/>
+    <item name="about_copyright" type="id"/>
+    <item name="title" type="id"/>
+    <item name="text" type="id"/>
+    <item name="date" type="id"/>
+    <item name="button1" type="id"/>
+    <item name="button2" type="id"/>
+    <item name="mini_icon" type="id"/>
+    
+    
+    
+    <item name="actionbar_compat" type="id"/>
+    <item name="actionbar_compat_title" type="id"/>
+    <item name="actionbar_compat_item_refresh_progress" type="id"/>
+    <item name="actionbar_compat_item_refresh" type="id"/>
+    <item name="menu_refresh" type="id"/>
 
 </resources>

@@ -39,13 +39,14 @@ import com.fanfou.app.hd.util.Utils;
  * @version 3.1 2012.02.07
  * 
  */
-abstract class CommonUIBase extends FragmentActivity implements OnClickListener,SwipeListener {
+abstract class CommonUIActionBarSupport extends FragmentActivity implements
+		OnClickListener, SwipeListener {
 
 	public static final int STATE_INIT = 0;
 	public static final int STATE_NORMAL = 1;
 	public static final int STATE_EMPTY = 2;
 
-	protected CommonUIBase mContext;
+	protected CommonUIActionBarSupport mContext;
 	protected LayoutInflater mInflater;
 	protected boolean isActive = false;
 
@@ -53,13 +54,14 @@ abstract class CommonUIBase extends FragmentActivity implements OnClickListener,
 
 	private BroadcastReceiver mBroadcastReceiver;
 	private IntentFilter mIntentFilter;
-	
-//	private final UICompatHelper mUiCompatHelper=UICompatHelper.newInstance(this);
+
+	private final UICompatHelper mUiCompatHelper = UICompatHelper
+			.newInstance(this);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		this.mUiCompatHelper.onCreate(savedInstanceState);
+		this.mUiCompatHelper.onCreate(savedInstanceState);
 		Utils.initScreenConfig(this);
 
 		this.mContext = this;
@@ -70,30 +72,30 @@ abstract class CommonUIBase extends FragmentActivity implements OnClickListener,
 		initialize();
 		setLayout();
 	}
-	
+
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-//		this.mUiCompatHelper.onPostCreate(savedInstanceState);
+		this.mUiCompatHelper.onPostCreate(savedInstanceState);
 	}
 
-//	@Override
-//	public MenuInflater getMenuInflater() {
-//		return this.mUiCompatHelper.getMenuInflater(super.getMenuInflater());
-//	}
+	@Override
+	public MenuInflater getMenuInflater() {
+		return this.mUiCompatHelper.getMenuInflater(super.getMenuInflater());
+	}
 
 	@Override
 	protected void onTitleChanged(CharSequence title, int color) {
-//		this.mUiCompatHelper.onTitleChanged(title, color);
+		this.mUiCompatHelper.onTitleChanged(title, color);
 		super.onTitleChanged(title, color);
 	}
 
-//	protected UICompatHelper getUICompatHelper(){
-//		return mUiCompatHelper;
-//	}
+	protected UICompatHelper getUICompatHelper() {
+		return mUiCompatHelper;
+	}
 
 	protected abstract void initialize();
-	
+
 	protected abstract void setLayout();
 
 	private void initReceiver() {
@@ -194,23 +196,23 @@ abstract class CommonUIBase extends FragmentActivity implements OnClickListener,
 
 	protected static final int MENU_ID_HOME = 0;
 	protected static final int MENU_ID_SAVE = 1;
-	protected static final int MENU_ID_CLEAR=2;
+	protected static final int MENU_ID_CLEAR = 2;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		MenuItem home = menu.add(0, MENU_ID_HOME, MENU_ID_HOME, "返回首页");
-		home.setIcon(R.drawable.ic_menu_home);
-		return true;
-//        boolean retValue = false;
-//        retValue |= this.mUiCompatHelper.onCreateOptionsMenu ( menu );
-//        retValue |= super.onCreateOptionsMenu ( menu );
-//        return retValue;
+		// super.onCreateOptionsMenu(menu);
+		// MenuItem home = menu.add(0, MENU_ID_HOME, MENU_ID_HOME, "返回首页");
+		// home.setIcon(R.drawable.ic_menu_home);
+		// return true;
+		boolean retValue = false;
+		retValue |= this.mUiCompatHelper.onCreateOptionsMenu(menu);
+		retValue |= super.onCreateOptionsMenu(menu);
+		return retValue;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId()==MENU_ID_HOME){
+		if (item.getItemId() == MENU_ID_HOME) {
 			onMenuHomeClick();
 			return true;
 		}
@@ -225,11 +227,12 @@ abstract class CommonUIBase extends FragmentActivity implements OnClickListener,
 		IntentHelper.goHomePage(this, -1);
 		finish();
 	}
-	
-	protected void setActionBarSwipe(final ActionBar actionBar){
-		final GestureDetector detector=new GestureDetector(new SwipeGestureListener(this));
+
+	protected void setActionBarSwipe(final ActionBar actionBar) {
+		final GestureDetector detector = new GestureDetector(
+				new SwipeGestureListener(this));
 		actionBar.setOnTouchListener(new View.OnTouchListener() {
-			
+
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				detector.onTouchEvent(event);

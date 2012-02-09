@@ -71,9 +71,9 @@ import com.fanfou.app.hd.util.Utils;
  * @version 8.3 2012.02.09
  * 
  */
-public class UIHome extends CommonUIActionBarSupport {
+public class CopyOfUIHome extends CommonUIBase {
 
-	public static final String TAG = UIHome.class.getSimpleName();
+	public static final String TAG = CopyOfUIHome.class.getSimpleName();
 	public static final String[] PAGE_TITLES = new String[] { "我的消息", "随便看看",
 			"我的主页", "提到我的", "我的私信" };
 
@@ -85,7 +85,7 @@ public class UIHome extends CommonUIActionBarSupport {
 
 	public static final int NUMS_OF_PAGE = 5;
 
-//	private ActionBar mActionBar;
+	private ActionBar mActionBar;
 	private ViewPager mViewPager;
 	private PagesAdapter mPagesAdapter;
 	private SwipeyTabsView mTabsView;
@@ -111,10 +111,9 @@ public class UIHome extends CommonUIActionBarSupport {
 
 		setContentView(R.layout.ui_home);
 
-//		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-//		mActionBar.setTitle("测试版");
-//		mActionBar.setRightAction(new ActionBar.WriteAction(this, null));
-//		mActionBar.setVisibility(View.GONE);
+		mActionBar = (ActionBar) findViewById(R.id.actionbar);
+		mActionBar.setTitle("测试版");
+		mActionBar.setRightAction(new ActionBar.WriteAction(this, null));
 
 		mPagesAdapter = new PagesAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -250,7 +249,7 @@ public class UIHome extends CommonUIActionBarSupport {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu_test, menu);
+		inflater.inflate(R.menu.home_menu, menu);
 		return true;
 	}
 

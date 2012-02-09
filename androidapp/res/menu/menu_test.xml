@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_profile"
+        android:icon="@drawable/ic_menu_profile"
+        android:orderInCategory="0"
+        android:title="我的空间" android:showAsAction="always">
+    </item>
+    <item
+        android:id="@+id/menu_option"
+        android:icon="@drawable/ic_menu_option"
+        android:orderInCategory="1"
+        android:title="功能设置">
+    </item>
+    <item
+        android:id="@+id/menu_search"
+        android:icon="@drawable/ic_menu_search"
+        android:orderInCategory="2"
+        android:title="热词搜索" android:showAsAction="always">
+    </item>
+    <item
+        android:id="@+id/menu_about"
+        android:icon="@drawable/ic_menu_about"
+        android:orderInCategory="3"
+        android:title="关于饭否">
+    </item>
+    <item
+        android:id="@+id/menu_feedback"
+        android:icon="@drawable/ic_menu_feedback"
+        android:orderInCategory="4"
+        android:title="意见反馈">
+    </item>
+    <item
+        android:id="@+id/menu_logout"
+        android:icon="@drawable/ic_menu_logout"
+        android:orderInCategory="5"
+        android:title="注销登录">
+    </item>
+
+</menu>
