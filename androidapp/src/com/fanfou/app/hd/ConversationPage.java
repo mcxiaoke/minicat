@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -21,7 +20,6 @@ import com.fanfou.app.hd.api.ApiException;
 import com.fanfou.app.hd.api.FanFouApi;
 import com.fanfou.app.hd.api.Status;
 import com.fanfou.app.hd.service.Constants;
-import com.fanfou.app.hd.ui.widget.ActionBar;
 import com.fanfou.app.hd.ui.widget.UIManager;
 import com.fanfou.app.hd.util.StringHelper;
 import com.fanfou.app.hd.util.Utils;
@@ -38,12 +36,12 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 3.0 2011.11.18
  * @version 3.5 2012.01.31
  * @version 3.6 2012.02.01
+ * @version 3.7 2012.02.09
  * 
  */
 public class ConversationPage extends BaseActivity implements
 		OnRefreshListener,OnItemClickListener, OnItemLongClickListener {
 
-	protected ActionBar mActionBar;
 	private PullToRefreshListView mPullToRefreshListView;
 	private ListView mList;
 
@@ -81,8 +79,6 @@ public class ConversationPage extends BaseActivity implements
 	private void setLayout() {
 		setContentView(R.layout.list_pull);
 
-		setActionBar();
-
 		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.list);
 		mPullToRefreshListView.setOnRefreshListener(this);
 		mList=mPullToRefreshListView.getRefreshableView();
@@ -105,15 +101,6 @@ public class ConversationPage extends BaseActivity implements
 		Intent intent = getIntent();
 		mStatus = (Status) intent.getParcelableExtra(Constants.EXTRA_DATA);
 		return mStatus != null;
-	}
-
-	/**
-	 * 初始化和设置ActionBar
-	 */
-	private void setActionBar() {
-		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setTitle("对话");
-		setActionBarSwipe(mActionBar);
 	}
 
 	private void doFetchThreads() {

@@ -2,13 +2,11 @@ package com.fanfou.app.hd.ui;
 
 import android.app.Activity;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
@@ -24,7 +22,6 @@ import android.widget.TextView;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.api.Status;
-import com.fanfou.app.hd.db.Contents.UserInfo;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.ui.widget.UIManager;
 import com.fanfou.app.hd.util.Utils;
@@ -89,7 +86,7 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 		View v = inflater.inflate(R.layout.fm_list, container, false);
 		mPullToRefreshView = (PullToRefreshListView) v;
 		mPullToRefreshView.setOnRefreshListener(this);
-		mListView = (ListView) mPullToRefreshView.getRefreshableView();
+		mListView = mPullToRefreshView.getRefreshableView();
 		mListView.setOnItemClickListener(this);
 		mListView.setOnItemLongClickListener(this);
 

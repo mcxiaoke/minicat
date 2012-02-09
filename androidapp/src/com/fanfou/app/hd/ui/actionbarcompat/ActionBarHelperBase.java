@@ -160,7 +160,8 @@ class ActionBarHelperBase extends ActionBarHelper
         /**
          * Returns a {@link android.view.MenuInflater} that can read action bar metadata on pre-Honeycomb devices.
          */
-        public MenuInflater getMenuInflater ( MenuInflater superMenuInflater )
+        @Override
+		public MenuInflater getMenuInflater ( MenuInflater superMenuInflater )
         {
                 return new WrappedMenuInflater ( mActivity, superMenuInflater );
         }
@@ -207,7 +208,8 @@ class ActionBarHelperBase extends ActionBarHelper
                 actionButton.setContentDescription ( item.getTitle () );
                 actionButton.setOnClickListener ( new View.OnClickListener ()
                 {
-                        public void onClick ( View view )
+                        @Override
+						public void onClick ( View view )
                         {
                                 mActivity.onMenuItemSelected ( Window.FEATURE_OPTIONS_PANEL, item );
                         }

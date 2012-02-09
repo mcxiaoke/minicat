@@ -8,17 +8,11 @@ import android.text.Spannable;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.ui.widget.ActionBar;
-import com.fanfou.app.hd.ui.widget.GestureManager.SwipeGestureListener;
 import com.fanfou.app.hd.ui.widget.GestureManager.SwipeListener;
 import com.fanfou.app.hd.util.Linkify;
 import com.fanfou.app.hd.util.Utils;
@@ -34,8 +28,6 @@ public class AboutPage extends Activity implements OnClickListener,
 		SwipeListener {
 	public static final String COPYRIGHT = "\u00a9";
 	public static final String REGISTERED = "\u00ae";
-
-	private ActionBar mActionBar;
 
 	private ImageView mLogo;
 
@@ -57,9 +49,6 @@ public class AboutPage extends Activity implements OnClickListener,
 
 	private void setLayout() {
 		setContentView(R.layout.about);
-
-		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		setActionBarSwipe(mActionBar);
 
 		mLogo = (ImageView) findViewById(R.id.about_icon);
 		mLogo.setOnClickListener(this);
@@ -91,19 +80,6 @@ public class AboutPage extends Activity implements OnClickListener,
 		mContactText.setText(R.string.contact_text);
 		mCopyright.setText("\u00a9 2007-2011 fanfou.com");
 
-	}
-
-	private void setActionBarSwipe(final ActionBar actionBar) {
-		final GestureDetector detector = new GestureDetector(
-				new SwipeGestureListener(this));
-		actionBar.setOnTouchListener(new View.OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				detector.onTouchEvent(event);
-				return true;
-			}
-		});
 	}
 
 	private void linkifySupport(final TextView textView) {

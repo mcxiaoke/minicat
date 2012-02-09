@@ -12,8 +12,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -28,10 +26,7 @@ import com.fanfou.app.hd.cache.ImageLoader;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.FanFouService;
-import com.fanfou.app.hd.ui.widget.ActionBar;
 import com.fanfou.app.hd.ui.widget.ActionManager;
-import com.fanfou.app.hd.ui.widget.GestureManager.SwipeGestureListener;
-import com.fanfou.app.hd.ui.widget.GestureManager.SwipeListener;
 import com.fanfou.app.hd.util.DateTimeHelper;
 import com.fanfou.app.hd.util.IOHelper;
 import com.fanfou.app.hd.util.OptionHelper;
@@ -65,8 +60,6 @@ public class StatusPage extends BaseActivity {
 	private static final int PHOTO_LARGE = 2;
 
 	private int mPhotoState = PHOTO_ICON;
-
-	private ActionBar mActionBar;
 
 	private ScrollView mScrollView;
 
@@ -125,8 +118,6 @@ public class StatusPage extends BaseActivity {
 		// mDetector=new GestureDetector(new SwipeGestureListener(this));
 
 		setContentView(R.layout.status);
-
-		setActionBar();
 		setLayout();
 		parseIntent();
 		updateUI();
@@ -160,16 +151,6 @@ public class StatusPage extends BaseActivity {
 			statusId = status.id;
 		}
 		isMe = status.userId.equals(App.getUserId());
-	}
-
-	/**
-	 * 初始化和设置ActionBar
-	 */
-	private void setActionBar() {
-		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setTitle("消息");
-		mActionBar.setRightAction(new ActionBar.WriteAction(this, status));
-		setActionBarSwipe(mActionBar);
 	}
 
 	private void setLayout() {
@@ -208,8 +189,6 @@ public class StatusPage extends BaseActivity {
 
 	private void updateUI() {
 		if (status != null) {
-
-			mActionBar.setTitle(status.userScreenName);
 
 			boolean textMode = OptionHelper.readBoolean(mContext,
 					R.string.option_text_mode, false);

@@ -5,10 +5,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <com.fanfou.app.hd.ui.widget.ActionBar
-        android:id="@id/actionbar"
-        style="@style/ActionBar" />
-
     <EditText
         android:id="@id/choose_input"
         android:layout_width="fill_parent"

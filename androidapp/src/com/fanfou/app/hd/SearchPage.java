@@ -21,7 +21,6 @@ import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
 import com.fanfou.app.hd.api.FanFouApi;
 import com.fanfou.app.hd.api.Search;
-import com.fanfou.app.hd.ui.widget.ActionBar;
 
 /**
  * @author mcxiaoke
@@ -30,7 +29,6 @@ import com.fanfou.app.hd.ui.widget.ActionBar;
  * 
  */
 public class SearchPage extends BaseActivity implements OnItemClickListener {
-	private ActionBar mActionBar;
 
 	private ListView mListView;
 	private View mEmptyView;
@@ -46,17 +44,8 @@ public class SearchPage extends BaseActivity implements OnItemClickListener {
 		fetchHotwords();
 	}
 
-	private void setActionBar() {
-		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setTitle("搜索");
-		mActionBar.setRightAction(new ActionBar.SearchAction(this));
-		setActionBarSwipe(mActionBar);
-	}
-
 	private void setLayout() {
 		setContentView(R.layout.search);
-
-		setActionBar();
 		mEmptyView = findViewById(R.id.empty);
 		TextView tv = (TextView) findViewById(R.id.empty_text);
 		tv.setText("热词载入中...");

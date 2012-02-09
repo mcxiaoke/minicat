@@ -10,16 +10,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
-        <com.fanfou.app.hd.ui.widget.ActionBar
-            android:id="@id/actionbar"
-            style="@style/ActionBar"
-            android:layout_alignParentTop="true" />
-
         <ImageView
             android:id="@+id/register_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/actionbar"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:src="@drawable/register_logo" />

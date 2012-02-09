@@ -13,6 +13,7 @@ import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -28,9 +29,8 @@ import com.fanfou.app.hd.db.Contents.UserInfo;
 import com.fanfou.app.hd.service.AutoCompleteService;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.FanFouService;
-import com.fanfou.app.hd.ui.widget.ActionBar;
+import com.fanfou.app.hd.service.WakefulIntentService;
 import com.fanfou.app.hd.ui.widget.TextChangeListener;
-import com.fanfou.app.hd.ui.widget.ActionBar.AbstractAction;
 import com.fanfou.app.hd.util.StringHelper;
 import com.fanfou.app.hd.util.Utils;
 
@@ -49,8 +49,6 @@ import com.fanfou.app.hd.util.Utils;
  */
 public class UserChoosePage extends BaseActivity implements
 		FilterQueryProvider, OnItemClickListener {
-
-	protected ActionBar mActionBar;
 	protected ListView mListView;
 	protected EditText mEditText;
 	protected ViewGroup mEmptyView;
@@ -114,7 +112,7 @@ public class UserChoosePage extends BaseActivity implements
 				
 				@Override
 				public void run() {
-					AutoCompleteService.sendWakefulWork(mContext, AutoCompleteService.class);
+					WakefulIntentService.sendWakefulWork(mContext, AutoCompleteService.class);
 				}
 			}, 30000);
 			showProgress();
@@ -140,8 +138,6 @@ public class UserChoosePage extends BaseActivity implements
 	private void setLayout() {
 		setContentView(R.layout.user_choose);
 
-		setActionBar();
-
 		mViewStub = (ViewStub) findViewById(R.id.stub);
 
 		mEmptyView = (ViewGroup) findViewById(R.id.empty);
@@ -163,7 +159,7 @@ public class UserChoosePage extends BaseActivity implements
 
 		mListView.setOnItemClickListener(this);
 		mListView.setItemsCanFocus(false);
-		mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 		mListView.setAdapter(mCursorAdapter);
 	}
 
@@ -179,29 +175,6 @@ public class UserChoosePage extends BaseActivity implements
 		cancelButton = (Button) findViewById(R.id.button_cancel);
 		cancelButton.setText(android.R.string.cancel);
 		cancelButton.setOnClickListener(this);
-	}
-
-	/**
-	 * 初始化和设置ActionBar
-	 */
-	private void setActionBar() {
-		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setTitle("我关注的人");
-		mActionBar.setRightAction(new ConfirmAction());
-		setActionBarSwipe(mActionBar);
-	}
-
-	private class ConfirmAction extends AbstractAction {
-
-		public ConfirmAction() {
-			super(R.drawable.ic_ok);
-		}
-
-		@Override
-		public void performAction(View view) {
-			doAddUserNames();
-		}
-
 	}
 
 	protected void doRefresh() {

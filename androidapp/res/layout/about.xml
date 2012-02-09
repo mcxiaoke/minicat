@@ -1,37 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:orientation="vertical" android:id="@+id/root">
-	
-	<com.fanfou.app.hd.ui.widget.ActionBar android:id="@id/actionbar"
-		style="@style/ActionBar" />
+    android:id="@+id/root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-	<ScrollView android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:scrollbars="none">
-		<LinearLayout android:orientation="vertical"
-			android:gravity="center_horizontal" android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:padding="10dp">
-			
-			<ImageView android:id="@id/about_icon" style="@style/Icon.Action" android:src="@drawable/about_logo" />
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="none" >
 
-			<TextView android:id="@id/about_title" style="@style/About.Title" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="10dp" >
 
-			<TextView android:id="@id/about_version" style="@style/About.ItemText.Center" />
+            <ImageView
+                android:id="@id/about_icon"
+                style="@style/Icon.Action"
+                android:src="@drawable/about_logo" />
 
-			<TextView android:id="@id/about_intro" style="@style/About.ItemText" />
+            <TextView
+                android:id="@id/about_title"
+                style="@style/About.Title" />
 
-			<TextView android:id="@id/about_support" style="@style/About.ItemName" />
+            <TextView
+                android:id="@id/about_version"
+                style="@style/About.ItemText.Center" />
 
-			<TextView android:id="@id/about_support_text" style="@style/About.ItemText" />
+            <TextView
+                android:id="@id/about_intro"
+                style="@style/About.ItemText" />
 
-			<TextView android:id="@id/about_contact" style="@style/About.ItemName" />
+            <TextView
+                android:id="@id/about_support"
+                style="@style/About.ItemName" />
 
-			<TextView android:id="@id/about_contact_text" style="@style/About.ItemText" android:autoLink="web|email" />
+            <TextView
+                android:id="@id/about_support_text"
+                style="@style/About.ItemText" />
 
-			<TextView android:id="@id/about_copyright" style="@style/About.Copyright" android:layout_marginTop="20dp"/>
+            <TextView
+                android:id="@id/about_contact"
+                style="@style/About.ItemName" />
 
-		</LinearLayout>
-	</ScrollView>
+            <TextView
+                android:id="@id/about_contact_text"
+                style="@style/About.ItemText"
+                android:autoLink="web|email" />
 
+            <TextView
+                android:id="@id/about_copyright"
+                style="@style/About.Copyright"
+                android:layout_marginTop="20dp" />
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

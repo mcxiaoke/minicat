@@ -12,7 +12,6 @@ import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.api.User;
 import com.fanfou.app.hd.service.Constants;
-import com.fanfou.app.hd.ui.widget.ActionBar;
 import com.fanfou.app.hd.ui.FollowersListFragment;
 import com.fanfou.app.hd.ui.FriendsListFragment;
 import com.fanfou.app.hd.ui.OnInitCompleteListener;
@@ -37,14 +36,12 @@ import com.fanfou.app.hd.util.StringHelper;
  * @version 4.0 2012.02.08
  * 
  */
-public class UIUserList extends UIBase implements OnInitCompleteListener {
+public class UIUserList extends UIBaseSupport implements OnInitCompleteListener {
 	private static final String TAG = UIUserList.class.getSimpleName();
 
 	private UserListFragment mFragment;
 	private CursorAdapter mAdapter;
 	private Filter mFilter;
-
-	private ActionBar mActionBar;
 
 	private EditText mEditText;
 
@@ -77,7 +74,6 @@ public class UIUserList extends UIBase implements OnInitCompleteListener {
 	@Override
 	protected void setLayout() {
 		setContentView(R.layout.ui_users);
-		setActionBar();
 		mEditText = (EditText) findViewById(R.id.choose_input);
 		mEditText.addTextChangedListener(new MyTextWatcher(this));
 		setFragment();
@@ -138,21 +134,6 @@ public class UIUserList extends UIBase implements OnInitCompleteListener {
 				Log.d(TAG, "onTextChanged() text=" + s);
 			}
 			mUiUserList.filter(s.toString().trim());
-		}
-	}
-
-	/**
-	 * 初始化和设置ActionBar
-	 */
-	private void setActionBar() {
-		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		setActionBarSwipe(mActionBar);
-		if (user != null) {
-			if (type == Constants.TYPE_USERS_FRIENDS) {
-				mActionBar.setTitle(user.screenName + "关注的人");
-			} else if (type == Constants.TYPE_USERS_FOLLOWERS) {
-				mActionBar.setTitle("关注" + user.screenName + "的人");
-			}
 		}
 	}
 

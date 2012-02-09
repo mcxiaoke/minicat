@@ -19,8 +19,6 @@ import com.fanfou.app.hd.db.Contents.DraftInfo;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.QueueService;
-import com.fanfou.app.hd.ui.widget.ActionBar;
-import com.fanfou.app.hd.ui.widget.ActionBar.AbstractAction;
 import com.fanfou.app.hd.util.StringHelper;
 import com.fanfou.app.hd.util.Utils;
 
@@ -32,7 +30,6 @@ import com.fanfou.app.hd.util.Utils;
  * 
  */
 public class DraftsPage extends BaseActivity implements OnItemClickListener {
-	private ActionBar mActionBar;
 	private ListView mListView;
 
 	private Cursor mCursor;
@@ -46,25 +43,13 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 
 	private void setLayout() {
 		setContentView(R.layout.list_drafts);
-		setActionBar();
 		setListView();
 
-	}
-
-	private void setActionBar() {
-		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setTitle("草稿箱");
-		mActionBar.setRightAction(new SendAllAction());
-		setActionBarSwipe(mActionBar);
 	}
 
 	private void setListView() {
 		mCursor = managedQuery(DraftInfo.CONTENT_URI, DraftInfo.COLUMNS, null,
 				null, null);
-		if (mCursor.getCount() == 0) {
-			mActionBar.setRightActionEnabled(false);
-		}
-
 		mAdapter = new DraftsCursorAdaper(this, mCursor);
 		mListView = (ListView) findViewById(R.id.list);
 		mListView.setAdapter(mAdapter);
@@ -102,19 +87,6 @@ public class DraftsPage extends BaseActivity implements OnItemClickListener {
 		mCursor.requery();
 		Utils.notify(this, "草稿箱已清空");
 		finish();
-	}
-
-	private class SendAllAction extends AbstractAction {
-
-		public SendAllAction() {
-			super(R.drawable.ic_sendall);
-		}
-
-		@Override
-		public void performAction(View view) {
-			doSendAll();
-		}
-
 	}
 
 	private void startTaskQueueService() {

@@ -8,7 +8,6 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
@@ -22,7 +21,6 @@ import com.fanfou.app.hd.db.Contents.BasicColumns;
 import com.fanfou.app.hd.db.Contents.UserInfo;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.FanFouService;
-import com.fanfou.app.hd.ui.widget.ActionBar;
 import com.fanfou.app.hd.ui.widget.TextChangeListener;
 import com.fanfou.app.hd.util.Utils;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -42,7 +40,6 @@ public class UserSelectPage extends BaseActivity implements
 
 	private static final String TAG = UserSelectPage.class.getSimpleName();
 
-	protected ActionBar mActionBar;
 	private PullToRefreshListView mPullToRefreshListView;
 	private ListView mList;
 
@@ -95,8 +92,6 @@ public class UserSelectPage extends BaseActivity implements
 	private void setLayout() {
 		setContentView(R.layout.list_users);
 
-		setActionBar();
-
 		mEditText = (EditText) findViewById(R.id.choose_input);
 		mEditText.addTextChangedListener(new MyTextWatcher());
 
@@ -118,15 +113,6 @@ public class UserSelectPage extends BaseActivity implements
 				int count) {
 			mCursorAdapter.getFilter().filter(s.toString());
 		}
-	}
-
-	/**
-	 * 初始化和设置ActionBar
-	 */
-	private void setActionBar() {
-		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setTitle("我关注的人");
-		setActionBarSwipe(mActionBar);
 	}
 
 	protected void doRefresh() {

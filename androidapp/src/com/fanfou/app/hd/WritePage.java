@@ -1,8 +1,6 @@
 package com.fanfou.app.hd;
 
 import java.io.File;
-import java.io.IOException;
-
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -32,10 +30,8 @@ import com.fanfou.app.hd.db.Contents.UserInfo;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.PostStatusService;
-import com.fanfou.app.hd.ui.widget.ActionBar;
 import com.fanfou.app.hd.ui.widget.ActionManager;
 import com.fanfou.app.hd.ui.widget.TextChangeListener;
-import com.fanfou.app.hd.ui.widget.ActionBar.AbstractAction;
 import com.fanfou.app.hd.ui.widget.MyAutoCompleteTextView;
 import com.fanfou.app.hd.util.IOHelper;
 import com.fanfou.app.hd.util.ImageHelper;
@@ -65,17 +61,16 @@ import com.fanfou.app.hd.util.Utils;
  */
 public class WritePage extends BaseActivity {
 
-	private static final String tag = WritePage.class.getSimpleName();
+	private static final String TAG = WritePage.class.getSimpleName();
 	private static final int REQUEST_PHOTO_CAPTURE = 0;
 	private static final int REQUEST_PHOTO_LIBRARY = 1;
 	private static final int REQUEST_LOCATION_ADD = 2;
 	private static final int REQUEST_USERNAME_ADD = 3;
 
 	private void log(String message) {
-		Log.d(tag, message);
+		Log.d(TAG, message);
 	}
 
-	private ActionBar mActionBar;
 	private MyAutoCompleteTextView mAutoCompleteTextView;
 
 	private View mPictureView;
@@ -316,30 +311,6 @@ public class WritePage extends BaseActivity {
 		}
 	}
 
-	/**
-	 * 初始化和设置ActionBar
-	 */
-	private void setActionBar() {
-		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setTitle("写消息");
-		mActionBar.setRightAction(new SendAction());
-		setActionBarSwipe(mActionBar);
-
-	}
-
-	private class SendAction extends AbstractAction {
-
-		public SendAction() {
-			super(R.drawable.ic_send);
-		}
-
-		@Override
-		public void performAction(View view) {
-			doSend();
-		}
-
-	}
-
 	private void setAutoComplete() {
 		mAutoCompleteTextView = (MyAutoCompleteTextView) findViewById(R.id.write_text);
 		mAutoCompleteTextView.addTextChangedListener(new TextChangeListener() {
@@ -373,8 +344,6 @@ public class WritePage extends BaseActivity {
 	private void setLayout() {
 
 		setContentView(R.layout.write);
-
-		setActionBar();
 		setAutoComplete();
 
 		mPictureView = findViewById(R.id.write_picture);
@@ -430,16 +399,6 @@ public class WritePage extends BaseActivity {
 			checkSave();
 		}
 
-	}
-
-	@Override
-	public boolean onSwipeLeft() {
-		if (StringHelper.isEmpty(content)) {
-			finish();
-		} else {
-			checkSave();
-		}
-		return true;
 	}
 
 	@Override

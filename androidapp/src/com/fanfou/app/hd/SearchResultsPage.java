@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -24,7 +23,6 @@ import com.fanfou.app.hd.api.ApiException;
 import com.fanfou.app.hd.api.FanFouApi;
 import com.fanfou.app.hd.api.Status;
 import com.fanfou.app.hd.service.Constants;
-import com.fanfou.app.hd.ui.widget.ActionBar;
 import com.fanfou.app.hd.ui.widget.UIManager;
 import com.fanfou.app.hd.util.StringHelper;
 import com.fanfou.app.hd.util.Utils;
@@ -46,8 +44,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 public class SearchResultsPage extends BaseActivity implements
 		OnRefreshListener, OnItemClickListener, OnItemLongClickListener {
 	private static final String TAG = SearchResultsPage.class.getSimpleName();
-
-	protected ActionBar mActionBar;
 	private PullToRefreshListView mPullToRefreshListView;
 	private ListView mList;
 
@@ -85,7 +81,6 @@ public class SearchResultsPage extends BaseActivity implements
 
 	private void setLayout() {
 		setContentView(R.layout.list_pull);
-		setActionBar();
 		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.list);
 		mPullToRefreshListView.setOnRefreshListener(this);
 		mList = mPullToRefreshListView.getRefreshableView();
@@ -119,23 +114,11 @@ public class SearchResultsPage extends BaseActivity implements
 		}
 	}
 
-	/**
-	 * 初始化和设置ActionBar
-	 */
-	private void setActionBar() {
-		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setTitle("搜索结果");
-		mActionBar.setTitleClickListener(this);
-		mActionBar.setRightAction(new ActionBar.SearchAction(this));
-		setActionBarSwipe(mActionBar);
-	}
-
 	private void doSearch(boolean reset) {
 		if (keyword != null) {
 			if (App.DEBUG) {
 				log("doSearch() keyword=" + keyword);
 			}
-			mActionBar.setTitle(keyword);
 			if(reset){
 				maxId=null;
 			}
@@ -249,13 +232,6 @@ public class SearchResultsPage extends BaseActivity implements
 
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.actionbar_title:
-			goTop();
-			break;
-		default:
-			break;
-		}
 	}
 
 	private void goTop() {

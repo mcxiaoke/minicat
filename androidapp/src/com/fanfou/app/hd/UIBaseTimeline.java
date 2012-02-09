@@ -1,23 +1,14 @@
 package com.fanfou.app.hd;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.api.User;
 import com.fanfou.app.hd.service.Constants;
-import com.fanfou.app.hd.ui.widget.ActionBar;
-import com.fanfou.app.hd.ui.widget.ActionManager;
 import com.fanfou.app.hd.ui.BaseTimlineFragment;
-import com.fanfou.app.hd.ui.FollowersListFragment;
-import com.fanfou.app.hd.ui.FriendsListFragment;
-import com.fanfou.app.hd.ui.UserFavoritesFragment;
-import com.fanfou.app.hd.ui.UserTimelineFragment;
-import com.fanfou.app.hd.ui.widget.ActionBar.AbstractAction;
 import com.fanfou.app.hd.ui.widget.GestureManager.SwipeListener;
 import com.fanfou.app.hd.util.StringHelper;
 
@@ -34,15 +25,14 @@ import com.fanfou.app.hd.util.StringHelper;
  * @version 4.0 2012.01.30
  * @version 4.1 2012.01.31
  * @version 5.0 2012.02.08
+ * @version 5.1 2012.02.09
  * 
  */
-abstract class UIBaseTimeline extends UIBase implements SwipeListener {
+abstract class UIBaseTimeline extends UIBaseSupport implements SwipeListener {
 
 	private static final String TAG = UIBaseTimeline.class.getSimpleName();
 	
 	private BaseTimlineFragment mFragment;
-
-	private ActionBar mActionBar;
 
 	private String userId;
 	private String userName;
@@ -66,7 +56,6 @@ abstract class UIBaseTimeline extends UIBase implements SwipeListener {
 	@Override
 	protected void setLayout() {
 		setContentView(R.layout.ui_container);
-		setActionBar();
 		setFragment();
 	}
 	
@@ -80,35 +69,6 @@ abstract class UIBaseTimeline extends UIBase implements SwipeListener {
 				.beginTransaction();
 		transaction.add(R.id.container, mFragment);
 		transaction.commit();
-	}
-
-	/**
-	 * 初始化和设置ActionBar
-	 */
-	private void setActionBar() {
-		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setTitleClickListener(this);
-		mActionBar.setRightAction(new WriteAction(this));
-		if (user != null) {
-			mActionBar.setTitle(user.screenName);
-		}
-		setActionBarSwipe(mActionBar);
-	}
-
-	public class WriteAction extends AbstractAction {
-
-		public WriteAction(Context context) {
-			super(R.drawable.i_write);
-		}
-
-		@Override
-		public void performAction(View view) {
-			String text = null;
-			if (user != null) {
-				text = "@" + user.screenName + " ";
-			}
-			ActionManager.doWrite(mContext, text);
-		}
 	}
 
 	private void parseIntent() {

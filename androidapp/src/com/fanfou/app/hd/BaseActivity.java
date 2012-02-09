@@ -8,19 +8,12 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.ui.widget.ActionBar;
-import com.fanfou.app.hd.ui.widget.ActionBar.OnRefreshClickListener;
-import com.fanfou.app.hd.ui.widget.GestureManager.SwipeGestureListener;
-import com.fanfou.app.hd.ui.widget.GestureManager.SwipeListener;
 import com.fanfou.app.hd.util.IntentHelper;
 import com.fanfou.app.hd.util.Utils;
 
@@ -39,7 +32,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 2.8 2012.02.01
  * 
  */
-public abstract class BaseActivity extends Activity implements OnClickListener,SwipeListener {
+public abstract class BaseActivity extends Activity implements OnClickListener {
 
 	public static final int STATE_INIT = 0;
 	public static final int STATE_NORMAL = 1;
@@ -147,17 +140,6 @@ public abstract class BaseActivity extends Activity implements OnClickListener,S
 		return isActive;
 	}
 
-	@Override
-	public boolean onSwipeLeft() {
-		finish();
-		return false;
-	}
-
-	@Override
-	public boolean onSwipeRight() {
-		return false;
-	}
-
 	protected static final int PAGE_NORMAL = 0;
 	protected static final int PAGE_HOME = 1;
 	protected static final int PAGE_LOGIN = 2;
@@ -204,18 +186,6 @@ public abstract class BaseActivity extends Activity implements OnClickListener,S
 	protected void onMenuHomeClick() {
 		IntentHelper.goHomePage(this, -1);
 		finish();
-	}
-	
-	protected void setActionBarSwipe(final ActionBar actionBar){
-		final GestureDetector detector=new GestureDetector(new SwipeGestureListener(this));
-		actionBar.setOnTouchListener(new View.OnTouchListener() {
-			
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				detector.onTouchEvent(event);
-				return true;
-			}
-		});
 	}
 
 }

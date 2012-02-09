@@ -30,7 +30,6 @@ import com.fanfou.app.hd.ui.MentionTimelineFragment;
 import com.fanfou.app.hd.ui.PublicTimelineFragment;
 import com.fanfou.app.hd.ui.PullToRefreshListFragment;
 import com.fanfou.app.hd.ui.UserTimelineFragment;
-import com.fanfou.app.hd.ui.widget.ActionBar;
 import com.fanfou.app.hd.ui.widget.ActionManager;
 import com.fanfou.app.hd.util.IntentHelper;
 import com.fanfou.app.hd.util.OptionHelper;

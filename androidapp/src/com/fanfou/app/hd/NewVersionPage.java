@@ -14,7 +14,6 @@ import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.DownloadService;
 import com.fanfou.app.hd.service.VersionInfo;
-import com.fanfou.app.hd.ui.widget.ActionBar;
 import com.fanfou.app.hd.util.Utils;
 
 /**
@@ -29,7 +28,6 @@ public class NewVersionPage extends Activity implements View.OnClickListener {
 	private TextView mTextView;
 	private Button mButton1;
 	private Button mButton2;
-	private ActionBar mBar;
 
 	private VersionInfo mVersionInfo;
 
@@ -60,8 +58,6 @@ public class NewVersionPage extends Activity implements View.OnClickListener {
 	private void setLayout() {
 		setContentView(R.layout.newversion);
 
-		setActionBar();
-
 		mTitleView = (TextView) findViewById(R.id.title);
 		TextPaint tp = mTitleView.getPaint();
 		tp.setFakeBoldText(true);
@@ -76,12 +72,6 @@ public class NewVersionPage extends Activity implements View.OnClickListener {
 		mButton2.setText("以后再说");
 		mButton2.setOnClickListener(this);
 
-	}
-
-	private void setActionBar() {
-		mBar = (ActionBar) findViewById(R.id.actionbar);
-		mBar.setLeftAction(new ActionBar.HomeAction(this));
-		// mBar.setTitle("饭否版本升级");
 	}
 
 	private void updateUI() {

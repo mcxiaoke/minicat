@@ -287,7 +287,8 @@ public final class NetHelper {
      * Simple {@link HttpRequestInterceptor} that adds GZIP accept encoding header.
      */
 	private static class GZIPHttpRequestInterceptor implements HttpRequestInterceptor {
-        public void process(final HttpRequest request, final HttpContext context) {
+        @Override
+		public void process(final HttpRequest request, final HttpContext context) {
             // Add header to accept gzip content
             if (!request.containsHeader(HEADER_ACCEPT_ENCODING)) {
                 request.addHeader(HEADER_ACCEPT_ENCODING, ENCODING_GZIP);
@@ -299,7 +300,8 @@ public final class NetHelper {
      * Simple {@link HttpResponseInterceptor} that inflates response if GZIP encoding header.
      */
 	private static class GZIPHttpResponseInterceptor implements HttpResponseInterceptor {
-        public void process(final HttpResponse response, final HttpContext context) {
+        @Override
+		public void process(final HttpResponse response, final HttpContext context) {
             // Inflate any responses compressed with gzip
             final HttpEntity entity = response.getEntity();
             final Header encoding = entity.getContentEncoding();

@@ -10,7 +10,6 @@ import android.util.Log;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.db.FanFouProvider;
-import com.fanfou.app.hd.db.Contents.BasicColumns;
 import com.fanfou.app.hd.db.Contents.StatusInfo;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.FanFouService;

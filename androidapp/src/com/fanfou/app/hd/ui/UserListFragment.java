@@ -14,7 +14,6 @@ import android.widget.FilterQueryProvider;
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.adapter.UserCursorAdapter;
 import com.fanfou.app.hd.api.User;
-import com.fanfou.app.hd.db.Contents.BasicColumns;
 import com.fanfou.app.hd.db.Contents.UserInfo;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.FanFouService;

@@ -5,8 +5,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Vibrator;
-import android.util.Log;
 
 /**
  * @author mcxiaoke
@@ -66,9 +64,11 @@ public class ShakeListener implements SensorEventListener {
 
 	}
 
+	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 	}
 
+	@Override
 	public void onSensorChanged(SensorEvent event) {
 		if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER)
 			return;

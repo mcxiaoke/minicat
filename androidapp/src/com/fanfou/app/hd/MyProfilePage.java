@@ -20,7 +20,6 @@ import com.fanfou.app.hd.cache.CacheManager;
 import com.fanfou.app.hd.cache.IImageLoader;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.FanFouService;
-import com.fanfou.app.hd.ui.widget.ActionBar;
 import com.fanfou.app.hd.ui.widget.ActionManager;
 import com.fanfou.app.hd.util.DateTimeHelper;
 import com.fanfou.app.hd.util.StringHelper;
@@ -44,8 +43,6 @@ public class MyProfilePage extends BaseActivity {
 
 	private ScrollView mScrollView;
 	private View mEmptyView;
-
-	private ActionBar mActionBar;
 
 	private ImageView mHead;
 	private TextView mName;
@@ -95,11 +92,6 @@ public class MyProfilePage extends BaseActivity {
 	private void setLayout() {
 		setContentView(R.layout.myprofile);
 
-		// View root=findViewById(R.id.root);
-		// ThemeHelper.setBackgroundColor(root);
-
-		setActionBar();
-
 		mEmptyView = findViewById(R.id.empty);
 		mScrollView = (ScrollView) findViewById(R.id.user_profile);
 
@@ -129,30 +121,6 @@ public class MyProfilePage extends BaseActivity {
 		mFavoritesView.setOnClickListener(this);
 		mFriendsView.setOnClickListener(this);
 		mFollowersView.setOnClickListener(this);
-	}
-
-	/**
-	 * 初始化和设置ActionBar
-	 */
-	private void setActionBar() {
-		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setTitle("我的空间");
-		mActionBar.setRightAction(new EditProfileAction());
-		setActionBarSwipe(mActionBar);
-	}
-
-	private class EditProfileAction extends ActionBar.AbstractAction {
-		public EditProfileAction() {
-			super(R.drawable.ic_sethead);
-		}
-
-		@Override
-		public void performAction(View view) {
-			if (user != null) {
-				goEditProfilePage(mContext, user);
-			}
-		}
-
 	}
 
 	protected void initCheckState() {

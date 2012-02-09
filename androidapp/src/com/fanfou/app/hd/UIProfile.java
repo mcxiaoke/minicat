@@ -22,7 +22,6 @@ import com.fanfou.app.hd.ui.AbstractFragment;
 import com.fanfou.app.hd.ui.ProfileContentFragment;
 import com.fanfou.app.hd.ui.UserFavoritesFragment;
 import com.fanfou.app.hd.ui.UserTimelineFragment;
-import com.fanfou.app.hd.ui.widget.ActionBar;
 
 /**
  * @author mcxiaoke
@@ -31,7 +30,7 @@ import com.fanfou.app.hd.ui.widget.ActionBar;
  * @version 1.2 2012.02.09
  * 
  */
-public class UIProfile extends UIBase {
+public class UIProfile extends UIBaseSupport {
 
 	public static final String TAG = UIProfile.class.getSimpleName();
 
@@ -50,7 +49,6 @@ public class UIProfile extends UIBase {
 		sTitles.put(Page.TIMELINE, "消息");
 	}
 
-	private ActionBar mActionBar;
 	private ViewPager mViewPager;
 	private PagesAdapter mPagesAdapter;
 	private FixedTabsView mTabsView;
@@ -67,12 +65,6 @@ public class UIProfile extends UIBase {
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		setIntent(intent);
-//		int page = getIntent().getIntExtra(Constants.EXTRA_PAGE,
-//				Page.PROFILE.ordinal());
-//		mViewPager.setCurrentItem(page);
-//		if (App.DEBUG) {
-//			Log.d(TAG, "onNewIntent page=" + page);
-//		}
 	}
 
 	@Override
@@ -107,10 +99,6 @@ public class UIProfile extends UIBase {
 	@Override
 	protected void setLayout() {
 		setContentView(R.layout.ui_profile);
-
-		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setRightAction(new ActionBar.WriteAction(this, null));
-		setActionBarSwipe(mActionBar);
 
 		mPagesAdapter = new PagesAdapter(getSupportFragmentManager(), userId);
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);

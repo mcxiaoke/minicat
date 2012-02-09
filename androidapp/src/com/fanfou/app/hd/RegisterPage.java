@@ -33,7 +33,6 @@ import com.fanfou.app.hd.http.NetResponse;
 import com.fanfou.app.hd.http.Parameter;
 import com.fanfou.app.hd.http.ResponseCode;
 import com.fanfou.app.hd.service.Constants;
-import com.fanfou.app.hd.ui.widget.ActionBar;
 import com.fanfou.app.hd.ui.widget.TextChangeListener;
 import com.fanfou.app.hd.util.DeviceHelper;
 import com.fanfou.app.hd.util.StringHelper;
@@ -65,7 +64,6 @@ public class RegisterPage extends Activity implements OnClickListener {
 	private String mPasswordConfirm;
 	private String mEmail;
 
-	private ActionBar mActionBar;
 	private EditText eNickName;
 	private EditText eEmail;
 	private EditText ePassword;
@@ -98,8 +96,6 @@ public class RegisterPage extends Activity implements OnClickListener {
 	private void setLayout() {
 		setContentView(R.layout.register);
 
-		setActionBar();
-
 		eNickName = (EditText) findViewById(R.id.register_nickname);
 		eEmail = (EditText) findViewById(R.id.register_email);
 		ePassword = (EditText) findViewById(R.id.register_password);
@@ -125,11 +121,6 @@ public class RegisterPage extends Activity implements OnClickListener {
 		cFollowPushed = (CheckBox) findViewById(R.id.register_follow_suggestions);
 		mButtonRegister = (Button) findViewById(R.id.button_register);
 		mButtonRegister.setOnClickListener(this);
-	}
-
-	private void setActionBar() {
-		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		// mActionBar.setTitle("注册饭否帐号");
 	}
 
 	private void setTextChangeListener() {

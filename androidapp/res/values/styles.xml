@@ -18,6 +18,7 @@
     </style>
 
     <style name="ActionBarCompatItemBase">
+
         <!-- layout_width/height must be set in code -->
         <item name="android:scaleType">center</item>
         <item name="android:background">@drawable/actionbar_compat_item</item>
@@ -42,15 +43,11 @@
         <item name="android:textColor">@color/actionbar_title_color</item>
     </style>
 
-    <style name="ActionBarCompatItem" parent="style/ActionBarCompatItemBase">
-    </style>
+    <style name="ActionBarCompatItem" parent="style/ActionBarCompatItemBase"></style>
 
-    <style name="ActionBarCompatHomeItem" parent="style/ActionBarCompatItemBase">
-    </style>
-    
-    
+    <style name="ActionBarCompatHomeItem" parent="style/ActionBarCompatItemBase"></style>
 
-    <style name="Theme" parent="@android:style/Theme.Light.NoTitleBar">
+    <style name="Theme" parent="@android:style/Theme.Light">
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
@@ -389,30 +386,6 @@
 
     <style name="Widget.DropDownItemLight" parent="@android:style/Widget.DropDownItem">
         <item name="android:textColor">@android:color/primary_text_light</item>
-    </style>
-
-    <style name="StyledIndicators" parent="@android:style/Theme.Light">
-        <item name="circlePageIndicatorStyle">@style/CustomCirclePageIndicator</item>
-        <item name="titlePageIndicatorStyle">@style/CustomTitlePageIndicator</item>
-    </style>
-
-    <style name="CustomTitlePageIndicator">
-        <item name="android:background">#FFDDDDDD</item>
-        <item name="footerColor">#FFEE3333</item>
-        <item name="footerLineHeight">2dp</item>
-        <item name="footerIndicatorStyle">none</item>
-        <item name="textColor">#FF999999</item>
-        <item name="selectedColor">#FF000000</item>
-        <item name="selectedBold">false</item>
-    </style>
-
-    <style name="CustomCirclePageIndicator">
-        <item name="android:background">#FFCCCCCC</item>
-        <item name="fillColor">#FF888888</item>
-        <item name="strokeColor">#FF000000</item>
-        <item name="strokeWidth">2dp</item>
-        <item name="radius">10dp</item>
-        <item name="centered">true</item>
     </style>
 
     <style name="OnScreenHintTextAppearance">

@@ -2,12 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/root">
 
-	<com.fanfou.app.hd.ui.widget.ActionBar android:id="@id/actionbar"
-		style="@style/ActionBar" android:layout_alignParentTop="true" />
-
 	<RelativeLayout android:id="@+id/status_top"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:layout_below="@id/actionbar" android:background="@drawable/status_header"
+		android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="@drawable/status_header"
 		android:clickable="true">
 
 		<ImageView android:id="@id/user_head" style="@style/Image.Head"

@@ -50,58 +50,68 @@ public class SimpleMenuItem implements MenuItem
                 mTitle = title;
         }
 
-        public int getItemId ()
+        @Override
+		public int getItemId ()
         {
                 return mId;
         }
 
-        public int getOrder ()
+        @Override
+		public int getOrder ()
         {
                 return mOrder;
         }
 
-        public MenuItem setTitle ( CharSequence title )
+        @Override
+		public MenuItem setTitle ( CharSequence title )
         {
                 mTitle = title;
                 return this;
         }
 
-        public MenuItem setTitle ( int titleRes )
+        @Override
+		public MenuItem setTitle ( int titleRes )
         {
                 return setTitle ( mMenu.getContext ().getString ( titleRes ) );
         }
 
-        public CharSequence getTitle ()
+        @Override
+		public CharSequence getTitle ()
         {
                 return mTitle;
         }
 
-        public MenuItem setTitleCondensed ( CharSequence title )
+        @Override
+		public MenuItem setTitleCondensed ( CharSequence title )
         {
                 mTitleCondensed = title;
                 return this;
         }
 
-        public CharSequence getTitleCondensed ()
+        @Override
+		public CharSequence getTitleCondensed ()
         {
                 return mTitleCondensed != null ? mTitleCondensed : mTitle;
         }
 
-        public MenuItem setIcon ( Drawable icon )
+        @Override
+		public MenuItem setIcon ( Drawable icon )
         {
                 mIconResId = 0;
                 mIconDrawable = icon;
                 return this;
         }
 
-        public MenuItem setIcon ( int iconResId )
+        @Override
+		public MenuItem setIcon ( int iconResId )
         {
                 mIconDrawable = null;
                 mIconResId = iconResId;
                 return this;
         }
 
-        public Drawable getIcon ()
+        @Override
+		public Drawable getIcon ()
         {
                 if ( mIconDrawable != null )
                 {
@@ -116,56 +126,65 @@ public class SimpleMenuItem implements MenuItem
                 return null;
         }
 
-        public MenuItem setEnabled ( boolean enabled )
+        @Override
+		public MenuItem setEnabled ( boolean enabled )
         {
                 mEnabled = enabled;
                 return this;
         }
 
-        public boolean isEnabled ()
+        @Override
+		public boolean isEnabled ()
         {
                 return mEnabled;
         }
 
         // No-op operations. We use no-ops to allow inflation from menu XML.
 
-        public int getGroupId ()
+        @Override
+		public int getGroupId ()
         {
                 // Noop
                 return 0;
         }
 
-        public View getActionView ()
+        @Override
+		public View getActionView ()
         {
                 // Noop
                 return null;
         }
 
-        public MenuItem setActionProvider ( ActionProvider actionProvider )
+        @Override
+		public MenuItem setActionProvider ( ActionProvider actionProvider )
         {
                 // Noop
                 return this;
         }
 
-        public ActionProvider getActionProvider ()
+        @Override
+		public ActionProvider getActionProvider ()
         {
                 // Noop
                 return null;
         }
 
-        public boolean expandActionView ()
+        @Override
+		public boolean expandActionView ()
         {
                 // Noop
                 return false;
         }
 
-        public boolean collapseActionView ()
+        @Override
+		public boolean collapseActionView ()
         {
                 // Noop
                 return false;
         }
 
-        public boolean isActionViewExpanded ()
+        @Override
+		public boolean isActionViewExpanded ()
         {
                 // Noop
                 return false;
@@ -178,126 +197,147 @@ public class SimpleMenuItem implements MenuItem
                 return this;
         }
 
-        public MenuItem setIntent ( Intent intent )
+        @Override
+		public MenuItem setIntent ( Intent intent )
         {
                 // Noop
                 return this;
         }
 
-        public Intent getIntent ()
+        @Override
+		public Intent getIntent ()
         {
                 // Noop
                 return null;
         }
 
-        public MenuItem setShortcut ( char c, char c1 )
+        @Override
+		public MenuItem setShortcut ( char c, char c1 )
         {
                 // Noop
                 return this;
         }
 
-        public MenuItem setNumericShortcut ( char c )
+        @Override
+		public MenuItem setNumericShortcut ( char c )
         {
                 // Noop
                 return this;
         }
 
-        public char getNumericShortcut ()
+        @Override
+		public char getNumericShortcut ()
         {
                 // Noop
                 return 0;
         }
 
-        public MenuItem setAlphabeticShortcut ( char c )
+        @Override
+		public MenuItem setAlphabeticShortcut ( char c )
         {
                 // Noop
                 return this;
         }
 
-        public char getAlphabeticShortcut ()
+        @Override
+		public char getAlphabeticShortcut ()
         {
                 // Noop
                 return 0;
         }
 
-        public MenuItem setCheckable ( boolean b )
+        @Override
+		public MenuItem setCheckable ( boolean b )
         {
                 // Noop
                 return this;
         }
 
-        public boolean isCheckable ()
+        @Override
+		public boolean isCheckable ()
         {
                 // Noop
                 return false;
         }
 
-        public MenuItem setChecked ( boolean b )
+        @Override
+		public MenuItem setChecked ( boolean b )
         {
                 // Noop
                 return this;
         }
 
-        public boolean isChecked ()
+        @Override
+		public boolean isChecked ()
         {
                 // Noop
                 return false;
         }
 
-        public MenuItem setVisible ( boolean b )
+        @Override
+		public MenuItem setVisible ( boolean b )
         {
                 // Noop
                 return this;
         }
 
-        public boolean isVisible ()
+        @Override
+		public boolean isVisible ()
         {
                 // Noop
                 return true;
         }
 
-        public boolean hasSubMenu ()
+        @Override
+		public boolean hasSubMenu ()
         {
                 // Noop
                 return false;
         }
 
-        public SubMenu getSubMenu ()
+        @Override
+		public SubMenu getSubMenu ()
         {
                 // Noop
                 return null;
         }
 
-        public MenuItem setOnMenuItemClickListener ( OnMenuItemClickListener onMenuItemClickListener )
+        @Override
+		public MenuItem setOnMenuItemClickListener ( OnMenuItemClickListener onMenuItemClickListener )
         {
                 // Noop
                 return this;
         }
 
-        public ContextMenu.ContextMenuInfo getMenuInfo ()
+        @Override
+		public ContextMenu.ContextMenuInfo getMenuInfo ()
         {
                 // Noop
                 return null;
         }
 
-        public void setShowAsAction ( int i )
+        @Override
+		public void setShowAsAction ( int i )
         {
                 // Noop
         }
 
-        public MenuItem setShowAsActionFlags ( int i )
+        @Override
+		public MenuItem setShowAsActionFlags ( int i )
         {
                 // Noop
                 return null;
         }
 
-        public MenuItem setActionView ( View view )
+        @Override
+		public MenuItem setActionView ( View view )
         {
                 // Noop
                 return this;
         }
 
-        public MenuItem setActionView ( int i )
+        @Override
+		public MenuItem setActionView ( int i )
         {
                 // Noop
                 return this;

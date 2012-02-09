@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
@@ -33,9 +34,7 @@ import com.fanfou.app.hd.db.Contents.UserInfo;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.FanFouService;
 import com.fanfou.app.hd.service.PostMessageService;
-import com.fanfou.app.hd.ui.widget.ActionBar;
 import com.fanfou.app.hd.ui.widget.TextChangeListener;
-import com.fanfou.app.hd.ui.widget.ActionBar.AbstractAction;
 import com.fanfou.app.hd.util.IOHelper;
 import com.fanfou.app.hd.util.IntentHelper;
 import com.fanfou.app.hd.util.StringHelper;
@@ -65,8 +64,6 @@ public class SendPage extends BaseActivity {
 	private ViewGroup mSelectView;
 	private ImageView mSelectButton;
 	private MultiAutoCompleteTextView mSelectAutoComplete;
-
-	private ActionBar mActionBar;
 
 	private EditText mEditText;
 
@@ -107,8 +104,6 @@ public class SendPage extends BaseActivity {
 
 	private void setLayout() {
 		setContentView(R.layout.send);
-
-		setActionBar();
 		mEditText = (EditText) findViewById(R.id.msgchat_input);
 		mEditText.addTextChangedListener(new TextChangeListener() {
 
@@ -189,13 +184,6 @@ public class SendPage extends BaseActivity {
 
 	}
 
-	private void setActionBar() {
-		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setTitle("写私信");
-		mActionBar.setRightAction(new SendAction());
-		setActionBarSwipe(mActionBar);
-	}
-
 	private void setListView() {
 		initCursor();
 		registerForContextMenu(mListView);
@@ -206,7 +194,7 @@ public class SendPage extends BaseActivity {
 		mListView.setSelector(getResources().getDrawable(
 				R.drawable.list_selector));
 		mListView.setDivider(getResources().getDrawable(R.drawable.separator));
-		mListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+		mListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
 		mListView.setAdapter(mCursorAdapter);
 		mListView.setSelection(mListView.getCount() - 1);
 	}
@@ -316,19 +304,6 @@ public class SendPage extends BaseActivity {
 		// } else {
 		// Utils.notify(this, "只能删除你自己发送的私信");
 		// }
-	}
-
-	private class SendAction extends AbstractAction {
-
-		public SendAction() {
-			super(R.drawable.ic_send);
-		}
-
-		@Override
-		public void performAction(View view) {
-			doSend(true);
-		}
-
 	}
 
 	private void doSend(boolean finish) {

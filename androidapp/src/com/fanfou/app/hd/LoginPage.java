@@ -34,7 +34,6 @@ import com.fanfou.app.hd.db.Contents.DraftInfo;
 import com.fanfou.app.hd.db.Contents.StatusInfo;
 import com.fanfou.app.hd.db.Contents.UserInfo;
 import com.fanfou.app.hd.service.Constants;
-import com.fanfou.app.hd.ui.widget.ActionBar;
 import com.fanfou.app.hd.ui.widget.TextChangeListener;
 import com.fanfou.app.hd.util.AlarmHelper;
 import com.fanfou.app.hd.util.DeviceHelper;
@@ -81,7 +80,6 @@ public final class LoginPage extends Activity implements OnClickListener {
 	private EditText editPassword;
 
 	private Button mButtonSignin;
-	private ActionBar mActionBar;
 
 	private String username;
 	private String password;
@@ -104,11 +102,6 @@ public final class LoginPage extends Activity implements OnClickListener {
 
 	private void setLayout() {
 		setContentView(R.layout.login);
-
-		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		mActionBar.setLeftAction(new LogoAction());
-//		mActionBar.setRightAction(new RegisterAction(this));
-		// mActionBar.setTitle("登录饭否");
 
 		editUsername = (EditText) findViewById(R.id.login_username);
 		editUsername.addTextChangedListener(new TextChangeListener() {
@@ -149,36 +142,6 @@ public final class LoginPage extends Activity implements OnClickListener {
 		mButtonSignin = (Button) findViewById(R.id.button_signin);
 		mButtonSignin.setOnClickListener(this);
 
-	}
-
-//	private static class RegisterAction extends AbstractAction {
-//		Activity mContext;
-//
-//		public RegisterAction(Activity context) {
-//			super(R.drawable.ic_register);
-//			mContext = context;
-//		}
-//
-//		@Override
-//		public void performAction(View view) {
-//			goRegisterPage(mContext);
-//		}
-//	}
-
-//	private static void goRegisterPage(Activity context) {
-//		Intent intent = new Intent(context, RegisterPage.class);
-//		context.startActivityForResult(intent, REQUEST_CODE_REGISTER);
-//	}
-
-	private static class LogoAction extends ActionBar.AbstractAction {
-
-		public LogoAction() {
-			super(R.drawable.i_logo);
-		}
-
-		@Override
-		public void performAction(View view) {
-		}
 	}
 
 	@Override

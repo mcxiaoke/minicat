@@ -1,7 +1,6 @@
 package com.fanfou.app.hd.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.text.TextPaint;
 import android.util.Log;
@@ -12,13 +11,11 @@ import android.widget.TextView;
 
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.UIProfile;
 import com.fanfou.app.hd.api.Status;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.ui.widget.ActionManager;
 import com.fanfou.app.hd.util.DateTimeHelper;
 import com.fanfou.app.hd.util.OptionHelper;
-import com.fanfou.app.hd.util.StringHelper;
 
 /**
  * @author mcxiaoke

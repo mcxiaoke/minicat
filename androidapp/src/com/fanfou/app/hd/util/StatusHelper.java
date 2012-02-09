@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 
 import android.text.Html;
 import android.text.Spannable;
-import android.text.Spanned;
 import android.text.style.URLSpan;
 import android.util.Log;
 import android.widget.TextView;

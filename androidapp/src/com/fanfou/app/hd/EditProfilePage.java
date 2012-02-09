@@ -30,7 +30,6 @@ import com.fanfou.app.hd.api.User;
 import com.fanfou.app.hd.cache.IImageLoader;
 import com.fanfou.app.hd.db.FanFouProvider;
 import com.fanfou.app.hd.service.Constants;
-import com.fanfou.app.hd.ui.widget.ActionBar;
 import com.fanfou.app.hd.ui.widget.TextChangeListener;
 import com.fanfou.app.hd.util.IOHelper;
 import com.fanfou.app.hd.util.ImageHelper;
@@ -53,8 +52,6 @@ public class EditProfilePage extends BaseActivity {
 	private void log(String message) {
 		Log.d(TAG, message);
 	}
-
-	private ActionBar mActionBar;
 
 	private ImageView mHeadView;
 	private ImageView mHeadEdit;
@@ -96,9 +93,6 @@ public class EditProfilePage extends BaseActivity {
 
 	private void setLayout() {
 		setContentView(R.layout.edit_profile);
-
-		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		setActionBarSwipe(mActionBar);
 
 		mButtonOK = (Button) findViewById(R.id.button_ok);
 		mButtonOK.setOnClickListener(this);
@@ -176,7 +170,6 @@ public class EditProfilePage extends BaseActivity {
 	}
 
 	private void updateUI() {
-		mActionBar.setTitle("编辑个人资料");
 		mNameEdit.setText(user.screenName);
 		mDescriptionEdit.setText(user.description);
 		mUrlEdit.setText(user.url);

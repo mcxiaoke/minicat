@@ -5,10 +5,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <com.fanfou.app.hd.ui.widget.ActionBar
-        android:id="@id/actionbar"
-        style="@style/ActionBar" />
-
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="fill_parent"

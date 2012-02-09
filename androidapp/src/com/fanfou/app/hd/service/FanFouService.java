@@ -818,7 +818,7 @@ public class FanFouService extends IntentService {
 				}
 				ContentResolver cr = getContentResolver();
 				if (page < 2 && ownerId != null) {
-					String where = UserInfo.TYPE + "=? AND " + UserInfo.OWNER_ID + "=?";
+					String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID + "=?";
 					String[] whereArgs = new String[] { String.valueOf(type), ownerId };
 					int deletedNums = cr.delete(UserInfo.CONTENT_URI, where,
 							whereArgs);
@@ -1155,7 +1155,7 @@ public class FanFouService extends IntentService {
 						whereArgs = new String[] { String.valueOf(type), id };
 					} else if (type == TYPE_FAVORITES_LIST) {
 						where = BasicColumns.TYPE + " = ? AND "
-								+ StatusInfo.OWNER_ID + " =? ";
+								+ BasicColumns.OWNER_ID + " =? ";
 						whereArgs = new String[] { String.valueOf(type), id };
 					}
 					int delete = cr.delete(StatusInfo.CONTENT_URI, where,

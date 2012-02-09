@@ -57,22 +57,26 @@ public class SimpleMenu implements Menu
                 return mResources;
         }
 
-        public MenuItem add ( CharSequence title )
+        @Override
+		public MenuItem add ( CharSequence title )
         {
                 return addInternal ( 0, 0, title );
         }
 
-        public MenuItem add ( int titleRes )
+        @Override
+		public MenuItem add ( int titleRes )
         {
                 return addInternal ( 0, 0, mResources.getString ( titleRes ) );
         }
 
-        public MenuItem add ( int groupId, int itemId, int order, CharSequence title )
+        @Override
+		public MenuItem add ( int groupId, int itemId, int order, CharSequence title )
         {
                 return addInternal ( itemId, order, title );
         }
 
-        public MenuItem add ( int groupId, int itemId, int order, int titleRes )
+        @Override
+		public MenuItem add ( int groupId, int itemId, int order, int titleRes )
         {
                 return addInternal ( itemId, order, mResources.getString ( titleRes ) );
         }
@@ -117,7 +121,8 @@ public class SimpleMenu implements Menu
                 return -1;
         }
 
-        public void removeItem ( int itemId )
+        @Override
+		public void removeItem ( int itemId )
         {
                 removeItemAtInt ( findItemIndex ( itemId ) );
         }
@@ -131,12 +136,14 @@ public class SimpleMenu implements Menu
                 mItems.remove ( index );
         }
 
-        public void clear ()
+        @Override
+		public void clear ()
         {
                 mItems.clear ();
         }
 
-        public MenuItem findItem ( int id )
+        @Override
+		public MenuItem findItem ( int id )
         {
                 final int size = size ();
                 for ( int i = 0; i < size; i++ )
@@ -151,90 +158,107 @@ public class SimpleMenu implements Menu
                 return null;
         }
 
-        public int size ()
+        @Override
+		public int size ()
         {
                 return mItems.size ();
         }
 
-        public MenuItem getItem ( int index )
+        @Override
+		public MenuItem getItem ( int index )
         {
                 return mItems.get ( index );
         }
 
         // Unsupported operations.
 
-        public SubMenu addSubMenu ( CharSequence charSequence )
+        @Override
+		public SubMenu addSubMenu ( CharSequence charSequence )
         {
                 throw new UnsupportedOperationException ( "This operation is not supported for SimpleMenu" );
         }
 
-        public SubMenu addSubMenu ( int titleRes )
+        @Override
+		public SubMenu addSubMenu ( int titleRes )
         {
                 throw new UnsupportedOperationException ( "This operation is not supported for SimpleMenu" );
         }
 
-        public SubMenu addSubMenu ( int groupId, int itemId, int order, CharSequence title )
+        @Override
+		public SubMenu addSubMenu ( int groupId, int itemId, int order, CharSequence title )
         {
                 throw new UnsupportedOperationException ( "This operation is not supported for SimpleMenu" );
         }
 
-        public SubMenu addSubMenu ( int groupId, int itemId, int order, int titleRes )
+        @Override
+		public SubMenu addSubMenu ( int groupId, int itemId, int order, int titleRes )
         {
                 throw new UnsupportedOperationException ( "This operation is not supported for SimpleMenu" );
         }
 
-        public int addIntentOptions ( int i, int i1, int i2, ComponentName componentName, Intent[] intents,
+        @Override
+		public int addIntentOptions ( int i, int i1, int i2, ComponentName componentName, Intent[] intents,
                 Intent intent, int i3, MenuItem[] menuItems )
         {
                 throw new UnsupportedOperationException ( "This operation is not supported for SimpleMenu" );
         }
 
-        public void removeGroup ( int i )
+        @Override
+		public void removeGroup ( int i )
         {
                 throw new UnsupportedOperationException ( "This operation is not supported for SimpleMenu" );
         }
 
-        public void setGroupCheckable ( int i, boolean b, boolean b1 )
+        @Override
+		public void setGroupCheckable ( int i, boolean b, boolean b1 )
         {
                 throw new UnsupportedOperationException ( "This operation is not supported for SimpleMenu" );
         }
 
-        public void setGroupVisible ( int i, boolean b )
+        @Override
+		public void setGroupVisible ( int i, boolean b )
         {
                 throw new UnsupportedOperationException ( "This operation is not supported for SimpleMenu" );
         }
 
-        public void setGroupEnabled ( int i, boolean b )
+        @Override
+		public void setGroupEnabled ( int i, boolean b )
         {
                 throw new UnsupportedOperationException ( "This operation is not supported for SimpleMenu" );
         }
 
-        public boolean hasVisibleItems ()
+        @Override
+		public boolean hasVisibleItems ()
         {
                 throw new UnsupportedOperationException ( "This operation is not supported for SimpleMenu" );
         }
 
-        public void close ()
+        @Override
+		public void close ()
         {
                 throw new UnsupportedOperationException ( "This operation is not supported for SimpleMenu" );
         }
 
-        public boolean performShortcut ( int i, KeyEvent keyEvent, int i1 )
+        @Override
+		public boolean performShortcut ( int i, KeyEvent keyEvent, int i1 )
         {
                 throw new UnsupportedOperationException ( "This operation is not supported for SimpleMenu" );
         }
 
-        public boolean isShortcutKey ( int i, KeyEvent keyEvent )
+        @Override
+		public boolean isShortcutKey ( int i, KeyEvent keyEvent )
         {
                 throw new UnsupportedOperationException ( "This operation is not supported for SimpleMenu" );
         }
 
-        public boolean performIdentifierAction ( int i, int i1 )
+        @Override
+		public boolean performIdentifierAction ( int i, int i1 )
         {
                 throw new UnsupportedOperationException ( "This operation is not supported for SimpleMenu" );
         }
 
-        public void setQwertyMode ( boolean b )
+        @Override
+		public void setQwertyMode ( boolean b )
         {
                 throw new UnsupportedOperationException ( "This operation is not supported for SimpleMenu" );
         }

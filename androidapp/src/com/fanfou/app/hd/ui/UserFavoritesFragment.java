@@ -9,7 +9,7 @@ import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.db.FanFouProvider;
+import com.fanfou.app.hd.db.Contents.BasicColumns;
 import com.fanfou.app.hd.db.Contents.StatusInfo;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.FanFouService;
@@ -76,7 +76,7 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		Uri uri = StatusInfo.CONTENT_URI;
-		String selection = StatusInfo.TYPE + " =? AND " + StatusInfo.OWNER_ID
+		String selection = BasicColumns.TYPE + " =? AND " + BasicColumns.OWNER_ID
 				+ " =? ";
 		String[] selectionArgs = new String[] { String.valueOf(getType()), userId};
 		CursorLoader loader=new CursorLoader(getActivity(), uri, null, selection, selectionArgs, null);
