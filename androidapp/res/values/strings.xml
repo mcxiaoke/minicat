@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">FanFou HD</string>
-    <string name="app_share_name">Share to FanFou</string>
     <string name="app_photoviewer_name">FanFou Picture Viewer</string>
     <string name="search_hint">Search on fanfou.com</string>
     <string name="consumerKey">consumerKey</string>

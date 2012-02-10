@@ -5,8 +5,7 @@
         android:id="@+id/menu_profile"
         android:icon="@drawable/ic_menu_profile"
         android:orderInCategory="0"
-        android:title="我的空间" 
-        android:showAsAction="always">
+        android:title="我的空间">
     </item>
     <item
         android:id="@+id/menu_option"
@@ -18,7 +17,8 @@
         android:id="@+id/menu_search"
         android:icon="@drawable/ic_menu_search"
         android:orderInCategory="2"
-        android:title="热词搜索" android:showAsAction="always">
+        android:showAsAction="always"
+        android:title="热词搜索">
     </item>
     <item
         android:id="@+id/menu_about"
@@ -27,10 +27,11 @@
         android:title="关于饭否">
     </item>
     <item
-        android:id="@+id/menu_feedback"
+        android:id="@+id/menu_write"
         android:icon="@drawable/ic_menu_feedback"
         android:orderInCategory="4"
-        android:title="意见反馈">
+        android:showAsAction="always"
+        android:title="写消息">
     </item>
     <item
         android:id="@+id/menu_logout"

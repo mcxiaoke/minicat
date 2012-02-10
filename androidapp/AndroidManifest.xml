@@ -26,38 +26,35 @@
     <application
         android:name=".App"
         android:icon="@drawable/icon"
-        android:label="@string/app_name" >
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".UIStart"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
-            android:theme="@style/Theme" >
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".UILogin"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
-            android:theme="@style/Theme" />
+            android:label="@string/app_name" />
         <activity
             android:name=".UIDrafts"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
-            android:theme="@style/Theme" />
+            android:label="@string/app_name" />
         <activity
             android:name=".UIVersionUpdate"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
-            android:theme="@style/Theme" />
+            android:label="@string/app_name" />
         <activity
             android:name=".UIHome"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme" >
+            android:launchMode="singleTask" >
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".UISearchResults" />
@@ -65,32 +62,29 @@
         <activity
             android:name=".UIUserList"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
-            android:theme="@style/Theme" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".UIFavorites"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
-            android:theme="@style/Theme" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".UITimeline"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
-            android:theme="@style/Theme" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".UISearch"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
-            android:theme="@style/Theme" >
+            android:label="@string/app_name" >
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".UISearchResults" />
 
             <intent-filter>
                 <action android:name="com.fanfou.app.action.SEARCH" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -98,13 +92,11 @@
             android:name=".UIEditProfile"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
-            android:theme="@style/Theme"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".UIAbout"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
-            android:theme="@style/Theme" />
+            android:label="@string/app_name" />
         <activity
             android:name=".UIPhoto"
             android:configChanges="keyboardHidden|orientation"
@@ -113,43 +105,37 @@
         <activity
             android:name=".UIStatus"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
-            android:theme="@style/Theme" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".UIUserChoose"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
-            android:theme="@style/Theme"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".UIConversationList"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
-            android:theme="@style/Theme" />
+            android:label="@string/app_name" />
         <activity
             android:name=".UISignup"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
-            android:theme="@style/Theme" />
+            android:label="@string/app_name" />
         <activity
             android:name=".UIMe"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
-            android:theme="@style/Theme" />
-                <activity
+            android:label="@string/app_name" />
+        <activity
             android:name=".UIMyProfile"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
-            android:theme="@style/Theme" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".UIProfile"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
-            android:theme="@style/Theme" >
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data
@@ -161,40 +147,46 @@
             android:name=".UIDMSend"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
-            android:theme="@style/Theme.AutoCompleteTextViewFix"
+            android:theme="@style/AppTheme.AutoCompleteTextViewFix"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".UIUserSelect"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
-            android:theme="@style/Theme" />
+            android:label="@string/app_name" />
         <activity
             android:name=".UIWrite"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_share_name"
+            android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.AutoCompleteTextViewFix"
+            android:theme="@style/AppTheme.AutoCompleteTextViewFix"
             android:windowSoftInputMode="stateVisible|adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="image/*" />
             </intent-filter>
             <intent-filter>
                 <action android:name="com.fanfou.app.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
                 <action android:name="com.fanfou.app.action.GALLERY" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
                 <action android:name="com.fanfou.app.action.CAMERA" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -206,18 +198,20 @@
             android:name=".UISearchResults"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme" >
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="search"
                     android:scheme="fanfou" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />

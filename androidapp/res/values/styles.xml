@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme" parent="android:style/Theme.Light">
-<!--         <item name="android:windowTitleSize">@dimen/actionbar_compat_height</item>
+    <style name="AppTheme" parent="android:style/Theme.Light">
+        <item name="android:windowTitleSize">@dimen/actionbar_compat_height</item>
         <item name="android:windowTitleBackgroundStyle">@style/ActionBarCompat</item>
         <item name="android:windowContentOverlay">@drawable/actionbar_shadow</item>
 
-        for programmatic instantiation
+        <!-- for programmatic instantiation -->
         <item name="actionbarCompatTitleStyle">@style/ActionBarCompatTitle</item>
         <item name="actionbarCompatItemStyle">@style/ActionBarCompatItem</item>
         <item name="actionbarCompatItemHomeStyle">@style/ActionBarCompatHomeItem</item>
-        <item name="actionbarCompatProgressIndicatorStyle">@style/ActionBarCompatProgressIndicator</item> -->
+        <item name="actionbarCompatProgressIndicatorStyle">@style/ActionBarCompatProgressIndicator</item>
     </style>
 
-<!--     <style name="ActionBarCompat">
-        <item name="android:background">#99333333</item>
+    <style name="ActionBarCompat">
+        <item name="android:background">#999</item>
     </style>
 
     <style name="ActionBarCompatItemBase">
 
-        layout_width/height must be set in code
+        <!-- layout_width/height must be set in code -->
         <item name="android:scaleType">center</item>
         <item name="android:background">@drawable/actionbar_compat_item</item>
     </style>
@@ -30,7 +30,7 @@
 
     <style name="ActionBarCompatTitleBase">
         <item name="android:id">@id/actionbar_compat_title</item>
-        layout_width/height/weight must be set in code
+        <!-- layout_width/height/weight must be set in code -->
         <item name="android:gravity">center_vertical</item>
         <item name="android:textSize">18sp</item>
         <item name="android:paddingLeft">6dp</item>
@@ -45,7 +45,7 @@
 
     <style name="ActionBarCompatItem" parent="style/ActionBarCompatItemBase"></style>
 
-    <style name="ActionBarCompatHomeItem" parent="style/ActionBarCompatItemBase"></style> -->
+    <style name="ActionBarCompatHomeItem" parent="style/ActionBarCompatItemBase"></style>
 
     <style name="ThemeBlack" parent="@android:style/Theme.NoTitleBar">
         <item name="android:windowContentOverlay">@null</item>
@@ -57,7 +57,7 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <style name="Theme.AutoCompleteTextViewFix">
+    <style name="AppTheme.AutoCompleteTextViewFix">
         <item name="android:dropDownItemStyle">@style/Widget.DropDownItemLight</item>
         <item name="android:autoCompleteTextViewStyle">@style/Widget.AutoCompleteTextViewLight</item>
     </style>

@@ -85,7 +85,7 @@ public class UIHome extends UIBaseSupport {
 
 	public static final int NUMS_OF_PAGE = 5;
 
-//	private ActionBar mActionBar;
+	// private ActionBar mActionBar;
 	private ViewPager mViewPager;
 	private PagesAdapter mPagesAdapter;
 	private SwipeyTabsView mTabsView;
@@ -111,10 +111,10 @@ public class UIHome extends UIBaseSupport {
 
 		setContentView(R.layout.ui_home);
 
-//		mActionBar = (ActionBar) findViewById(R.id.actionbar);
-//		mActionBar.setTitle("测试版");
-//		mActionBar.setRightAction(new ActionBar.WriteAction(this, null));
-//		mActionBar.setVisibility(View.GONE);
+		// mActionBar = (ActionBar) findViewById(R.id.actionbar);
+		// mActionBar.setTitle("测试版");
+		// mActionBar.setRightAction(new ActionBar.WriteAction(this, null));
+		// mActionBar.setVisibility(View.GONE);
 
 		mPagesAdapter = new PagesAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -127,14 +127,14 @@ public class UIHome extends UIBaseSupport {
 
 	}
 
-//	@Override
-//	protected IntentFilter getIntentFilter() {
-//		IntentFilter filter = new IntentFilter();
-//		filter.addAction(Constants.ACTION_STATUS_SENT);
-//		filter.addAction(Constants.ACTION_DRAFTS_SENT);
-//		filter.addAction(Constants.ACTION_NOTIFICATION);
-//		return filter;
-//	}
+	// @Override
+	// protected IntentFilter getIntentFilter() {
+	// IntentFilter filter = new IntentFilter();
+	// filter.addAction(Constants.ACTION_STATUS_SENT);
+	// filter.addAction(Constants.ACTION_DRAFTS_SENT);
+	// filter.addAction(Constants.ACTION_NOTIFICATION);
+	// return filter;
+	// }
 
 	private void onActionSent() {
 		if (App.DEBUG) {
@@ -151,44 +151,44 @@ public class UIHome extends UIBaseSupport {
 		}
 	}
 
-//	@Override
-//	protected boolean onBroadcastReceived(Intent intent) {
-//		String action = intent.getAction();
-//		if (action.equals(Constants.ACTION_STATUS_SENT)
-//				|| action.equals(Constants.ACTION_DRAFTS_SENT)) {
-//			onActionSent();
-//		} else if (action.equals(Constants.ACTION_NOTIFICATION)) {
-//			if (App.DEBUG) {
-//				log("onBroadcastReceived ACTION_NOTIFICATION");
-//			}
-//			int type = intent.getIntExtra(Constants.EXTRA_TYPE, -1);
-//			int count = intent.getIntExtra(Constants.EXTRA_COUNT, 0);
-//			switch (type) {
-//			case NotificationService.NOTIFICATION_TYPE_HOME:
-//				if (count > 0) {
-//					mPagesAdapter.updateUI(HOME);
-//					Utils.notify(this, count + "条新消息");
-//				}
-//				break;
-//			case NotificationService.NOTIFICATION_TYPE_MENTION:
-//				if (count > 0) {
-//					mPagesAdapter.updateUI(MENTION);
-//					Utils.notify(this, count + "条新消息");
-//				}
-//
-//				break;
-//			case NotificationService.NOTIFICATION_TYPE_DM:
-//				if (count > 0) {
-//					mPagesAdapter.updateUI(DM);
-//					Utils.notify(this, count + "条新私信");
-//				}
-//				break;
-//			default:
-//				break;
-//			}
-//		}
-//		return true;
-//	}
+	// @Override
+	// protected boolean onBroadcastReceived(Intent intent) {
+	// String action = intent.getAction();
+	// if (action.equals(Constants.ACTION_STATUS_SENT)
+	// || action.equals(Constants.ACTION_DRAFTS_SENT)) {
+	// onActionSent();
+	// } else if (action.equals(Constants.ACTION_NOTIFICATION)) {
+	// if (App.DEBUG) {
+	// log("onBroadcastReceived ACTION_NOTIFICATION");
+	// }
+	// int type = intent.getIntExtra(Constants.EXTRA_TYPE, -1);
+	// int count = intent.getIntExtra(Constants.EXTRA_COUNT, 0);
+	// switch (type) {
+	// case NotificationService.NOTIFICATION_TYPE_HOME:
+	// if (count > 0) {
+	// mPagesAdapter.updateUI(HOME);
+	// Utils.notify(this, count + "条新消息");
+	// }
+	// break;
+	// case NotificationService.NOTIFICATION_TYPE_MENTION:
+	// if (count > 0) {
+	// mPagesAdapter.updateUI(MENTION);
+	// Utils.notify(this, count + "条新消息");
+	// }
+	//
+	// break;
+	// case NotificationService.NOTIFICATION_TYPE_DM:
+	// if (count > 0) {
+	// mPagesAdapter.updateUI(DM);
+	// Utils.notify(this, count + "条新私信");
+	// }
+	// break;
+	// default:
+	// break;
+	// }
+	// }
+	// return true;
+	// }
 
 	@Override
 	protected void onResume() {
@@ -246,51 +246,37 @@ public class UIHome extends UIBaseSupport {
 			log("onNewIntent page=" + page);
 		}
 	}
-
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		MenuInflater inflater = getMenuInflater();
-//		inflater.inflate(R.menu.home_menu, menu);
-//		return true;
-//	}
-//
-//	@Override
-//	public boolean onOptionsItemSelected(MenuItem item) {
-//		int id = item.getItemId();
-//		switch (id) {
-//		case R.id.menu_option:
-//			onMenuOptionClick();
-//			return true;
-//		case R.id.menu_profile:
-//			onMenuProfileClick();
-//			return true;
-//		case R.id.menu_search:
-//			onMenuSearchClick();
-//			return true;
-//		case R.id.menu_logout:
-//			onMenuLogoutClick();
-//			return true;
-//		case R.id.menu_about:
-//			onMenuAboutClick();
-//			return true;
-//		case R.id.menu_feedback:
-//			onMenuFeedbackClick();
-//			return true;
-//		default:
-//			return super.onOptionsItemSelected(item);
-//		}
-//	}
-
+	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater=getMenuInflater();
-		inflater.inflate(R.menu.home_menu, menu);
-		return super.onCreateOptionsMenu(menu);
+	protected int getMenuResourceId(){
+		return R.menu.home_menu;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
+		int id = item.getItemId();
+		switch (id) {
+		case R.id.menu_option:
+			onMenuOptionClick();
+			break;
+		case R.id.menu_profile:
+			onMenuProfileClick();
+			break;
+		case R.id.menu_search:
+			onMenuSearchClick();
+			break;
+		case R.id.menu_logout:
+			onMenuLogoutClick();
+			break;
+		case R.id.menu_about:
+			onMenuAboutClick();
+			break;
+		case R.id.menu_write:
+			onMenuWriteClick();
+			break;
+		default:
+			break;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -310,6 +296,10 @@ public class UIHome extends UIBaseSupport {
 
 	private void onMenuAboutClick() {
 		Utils.goAboutPage(this);
+	}
+	
+	protected void onMenuWriteClick() {
+		ActionManager.doWrite(this);
 	}
 
 	private void onMenuFeedbackClick() {
@@ -371,7 +361,7 @@ public class UIHome extends UIBaseSupport {
 
 		@Override
 		public PullToRefreshListFragment getItem(int position) {
-			return fragments[position%NUMS_OF_PAGE];
+			return fragments[position % NUMS_OF_PAGE];
 		}
 
 		@Override
@@ -398,7 +388,7 @@ public class UIHome extends UIBaseSupport {
 			LayoutInflater inflater = mContext.getLayoutInflater();
 			SwipeyTabButton tab = (SwipeyTabButton) inflater.inflate(
 					R.layout.tab_swipey, null);
-				tab.setText(PAGE_TITLES[position%NUMS_OF_PAGE]);
+			tab.setText(PAGE_TITLES[position % NUMS_OF_PAGE]);
 			return tab;
 		}
 

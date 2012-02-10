@@ -40,7 +40,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 3.3 2012.02.10
  * 
  */
-abstract class UIBaseSupport extends FragmentActivity implements
+abstract class UIBaseSupport extends UIActionBarSupport implements
 		OnClickListener {
 
 	public static final int STATE_INIT = 0;
@@ -53,13 +53,9 @@ abstract class UIBaseSupport extends FragmentActivity implements
 
 	protected DisplayMetrics mDisplayMetrics;
 
-	private ActionBarHelper mActionBarHelper = ActionBarHelper
-			.createInstance(this);
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mActionBarHelper.onCreate(savedInstanceState);
 		init();
 		initialize();
 		setLayout();
@@ -68,13 +64,11 @@ abstract class UIBaseSupport extends FragmentActivity implements
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-		mActionBarHelper.onPostCreate(savedInstanceState);
 	}
 
 	@Override
 	protected void onTitleChanged(CharSequence title, int color) {
 		super.onTitleChanged(title, color);
-		mActionBarHelper.onTitleChanged(title, color);
 	}
 
 	private void init() {
@@ -108,26 +102,17 @@ abstract class UIBaseSupport extends FragmentActivity implements
 		}
 
 	}
-
-    @Override
-    public MenuInflater getMenuInflater() {
-        return mActionBarHelper.getMenuInflater(super.getMenuInflater());
-    }
-
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		MenuInflater inflater = getMenuInflater();
-//		inflater.inflate(R.menu.base_menu, menu);
-//		return true;
-//	}
 	
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        boolean retValue = false;
-        retValue |= mActionBarHelper.onCreateOptionsMenu(menu);
-        retValue |= super.onCreateOptionsMenu(menu);
-        return retValue;
-    }
+	protected int getMenuResourceId(){
+		return R.menu.base_menu;
+	}
+
+	@Override
+	public final boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(getMenuResourceId(), menu);
+		return super.onCreateOptionsMenu(menu);
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -135,14 +120,14 @@ abstract class UIBaseSupport extends FragmentActivity implements
 		switch (id) {
 		case R.id.menu_home:
 			onMenuHomeClick();
-			return true;
+			break;
 		case R.id.menu_write:
 			onMenuWriteClick();
 			break;
 		default:
-			return super.onOptionsItemSelected(item);
+			break;
 		}
-		return true;
+		return super.onOptionsItemSelected(item);
 	}
 
 	protected void onMenuHomeClick() {
