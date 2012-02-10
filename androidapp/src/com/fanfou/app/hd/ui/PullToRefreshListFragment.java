@@ -60,14 +60,14 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 			Log.d(TAG, "PullToRefreshListFragment() id=" + this);
 		}
 	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		if (App.DEBUG) {
-			Log.d(TAG, "onAttach()");
-		}
-	}
+//
+//	@Override
+//	public void onAttach(Activity activity) {
+//		super.onAttach(activity);
+//		if (App.DEBUG) {
+//			Log.d(TAG, "onAttach()");
+//		}
+//	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

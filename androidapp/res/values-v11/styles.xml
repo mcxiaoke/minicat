@@ -16,7 +16,7 @@
 
 <resources>
 
-    <style name="AppTheme" parent="android:style/Theme.Holo.Light">
+<!--     <style name="AppTheme" parent="android:style/Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/ActionBar</item>
         <item name="android:windowContentOverlay">@drawable/actionbar_shadow</item>
     </style>
@@ -29,6 +29,6 @@
 
     <style name="ActionBarTitle">
         <item name="android:textColor">@color/actionbar_title_color</item>
-    </style>
+    </style> -->
 
 </resources>

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.fanfou.app.hd.ui.actionbarcompat.ActionBarHelper;
+import com.fanfou.app.hd.ui.widget.ActionManager;
 import com.fanfou.app.hd.ui.widget.GestureManager.SwipeListener;
 import com.fanfou.app.hd.util.IntentHelper;
 import com.fanfou.app.hd.util.Utils;
@@ -37,7 +40,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 3.3 2012.02.10
  * 
  */
-abstract class UIBaseSupport extends UIActionBarSupport implements
+abstract class UIBaseSupport extends FragmentActivity implements
 		OnClickListener {
 
 	public static final int STATE_INIT = 0;
@@ -50,15 +53,28 @@ abstract class UIBaseSupport extends UIActionBarSupport implements
 
 	protected DisplayMetrics mDisplayMetrics;
 
-	// private BroadcastReceiver mBroadcastReceiver;
-	// private IntentFilter mIntentFilter;
+	private ActionBarHelper mActionBarHelper = ActionBarHelper
+			.createInstance(this);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mActionBarHelper.onCreate(savedInstanceState);
 		init();
 		initialize();
 		setLayout();
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		mActionBarHelper.onPostCreate(savedInstanceState);
+	}
+
+	@Override
+	protected void onTitleChanged(CharSequence title, int color) {
+		super.onTitleChanged(title, color);
+		mActionBarHelper.onTitleChanged(title, color);
 	}
 
 	private void init() {
@@ -67,18 +83,11 @@ abstract class UIBaseSupport extends UIActionBarSupport implements
 		this.mDisplayMetrics = new DisplayMetrics();
 		Utils.initScreenConfig(this);
 		getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
-		// initReceiver();
 	}
 
 	protected abstract void initialize();
 
 	protected abstract void setLayout();
-
-	// private void initReceiver() {
-	// this.mBroadcastReceiver = new MyBroadcastReceiver(this);
-	// this.mIntentFilter = getIntentFilter();
-	// mIntentFilter.setPriority(1000);
-	// }
 
 	protected static class MyBroadcastReceiver extends BroadcastReceiver {
 		private UIBaseSupport mUIBase;
@@ -93,66 +102,73 @@ abstract class UIBaseSupport extends UIActionBarSupport implements
 				Log.d("NotificationReceiver", "active, broadcast received: "
 						+ intent.toString());
 			}
-//			if (mUIBase.onBroadcastReceived(intent)) {
-//				abortBroadcast();
-//			}
+			// if (mUIBase.onBroadcastReceived(intent)) {
+			// abortBroadcast();
+			// }
 		}
 
 	}
 
-//	protected IntentFilter getIntentFilter() {
-//		return new IntentFilter();
-//	}
-//
-//	protected boolean onBroadcastReceived(Intent intent) {
-//		return true;
-//	};
+    @Override
+    public MenuInflater getMenuInflater() {
+        return mActionBarHelper.getMenuInflater(super.getMenuInflater());
+    }
 
 //	@Override
-//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//		super.onActivityResult(requestCode, resultCode, data);
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		MenuInflater inflater = getMenuInflater();
+//		inflater.inflate(R.menu.base_menu, menu);
+//		return true;
 //	}
+	
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        boolean retValue = false;
+        retValue |= mActionBarHelper.onCreateOptionsMenu(menu);
+        retValue |= super.onCreateOptionsMenu(menu);
+        return retValue;
+    }
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.base_menu, menu);
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		switch (id) {
+		case R.id.menu_home:
+			onMenuHomeClick();
+			return true;
+		case R.id.menu_write:
+			onMenuWriteClick();
+			break;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 		return true;
 	}
-//
-//	@Override
-//	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-//		return super.onMenuItemSelected(featureId, item);
-//	}
+
+	protected void onMenuHomeClick() {
+		IntentHelper.goHomePage(this, -1);
+		finish();
+	}
+
+	protected void onMenuWriteClick() {
+		ActionManager.doWrite(this);
+	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		App.active = isActive = true;
-		// registerReceiver(mBroadcastReceiver, mIntentFilter);
 	}
 
 	@Override
 	protected void onPause() {
 		App.active = isActive = false;
-		// unregisterReceiver(mBroadcastReceiver);
 		super.onPause();
 	}
 
 	protected boolean isActive() {
 		return isActive;
 	}
-
-//	@Override
-//	public boolean onSwipeLeft() {
-//		finish();
-//		return false;
-//	}
-//
-//	@Override
-//	public boolean onSwipeRight() {
-//		return false;
-//	}
 
 	protected static final int PAGE_NORMAL = 0;
 	protected static final int PAGE_HOME = 1;
@@ -174,11 +190,6 @@ abstract class UIBaseSupport extends UIActionBarSupport implements
 
 	@Override
 	public void onClick(View v) {
-	}
-
-	protected void onMenuHomeClick() {
-		IntentHelper.goHomePage(this, -1);
-		finish();
 	}
 
 }

@@ -247,38 +247,51 @@ public class UIHome extends UIBaseSupport {
 		}
 	}
 
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		MenuInflater inflater = getMenuInflater();
+//		inflater.inflate(R.menu.home_menu, menu);
+//		return true;
+//	}
+//
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		int id = item.getItemId();
+//		switch (id) {
+//		case R.id.menu_option:
+//			onMenuOptionClick();
+//			return true;
+//		case R.id.menu_profile:
+//			onMenuProfileClick();
+//			return true;
+//		case R.id.menu_search:
+//			onMenuSearchClick();
+//			return true;
+//		case R.id.menu_logout:
+//			onMenuLogoutClick();
+//			return true;
+//		case R.id.menu_about:
+//			onMenuAboutClick();
+//			return true;
+//		case R.id.menu_feedback:
+//			onMenuFeedbackClick();
+//			return true;
+//		default:
+//			return super.onOptionsItemSelected(item);
+//		}
+//	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
+		MenuInflater inflater=getMenuInflater();
 		inflater.inflate(R.menu.home_menu, menu);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		switch (id) {
-		case R.id.menu_option:
-			onMenuOptionClick();
-			return true;
-		case R.id.menu_profile:
-			onMenuProfileClick();
-			return true;
-		case R.id.menu_search:
-			onMenuSearchClick();
-			return true;
-		case R.id.menu_logout:
-			onMenuLogoutClick();
-			return true;
-		case R.id.menu_about:
-			onMenuAboutClick();
-			return true;
-		case R.id.menu_feedback:
-			onMenuFeedbackClick();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
+		// TODO Auto-generated method stub
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void onMenuOptionClick() {

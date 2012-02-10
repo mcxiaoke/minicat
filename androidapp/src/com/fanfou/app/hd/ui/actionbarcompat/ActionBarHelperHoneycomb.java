@@ -22,12 +22,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 /**
  * An extension of {@link ActionBarHelper} that provides Android 3.0-specific functionality for Honeycomb tablets. It
  * thus requires API level 11.
+ */
+/**
+ * @author mcxiaoke
+ * @version 1.0 2012.02.10
+ *
  */
 class ActionBarHelperHoneycomb extends ActionBarHelper
 {
@@ -40,13 +46,12 @@ class ActionBarHelperHoneycomb extends ActionBarHelper
         }
 
         @Override
-        public boolean onCreateOptionsMenu ( Menu menu )
-        {
-                this.mOptionsMenu = menu;
-                return super.onCreateOptionsMenu ( menu );
+        public boolean onCreateOptionsMenu(Menu menu) {
+            mOptionsMenu = menu;
+            return super.onCreateOptionsMenu(menu);
         }
 
-        @Override
+		@Override
         public void setRefreshActionItemState ( boolean refreshing )
         {
                 // On Honeycomb, we can set the state of the refresh button by giving it a custom

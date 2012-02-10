@@ -137,6 +137,12 @@
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:theme="@style/Theme" />
+                <activity
+            android:name=".UIMyProfile"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name"
+            android:theme="@style/Theme" >
+        </activity>
         <activity
             android:name=".UIProfile"
             android:configChanges="keyboardHidden|orientation"
