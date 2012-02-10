@@ -34,10 +34,11 @@ import com.fanfou.app.hd.util.Utils;
  * @version 3.0 2012.02.06
  * @version 3.1 2012.02.07
  * @version 3.2 2012.02.09
+ * @version 3.3 2012.02.10
  * 
  */
 abstract class UIBaseSupport extends UIActionBarSupport implements
-		OnClickListener, SwipeListener {
+		OnClickListener {
 
 	public static final int STATE_INIT = 0;
 	public static final int STATE_NORMAL = 1;
@@ -49,34 +50,42 @@ abstract class UIBaseSupport extends UIActionBarSupport implements
 
 	protected DisplayMetrics mDisplayMetrics;
 
-	private BroadcastReceiver mBroadcastReceiver;
-	private IntentFilter mIntentFilter;
+	// private BroadcastReceiver mBroadcastReceiver;
+	// private IntentFilter mIntentFilter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Utils.initScreenConfig(this);
+		init();
+		initialize();
+		setLayout();
+	}
 
+	private void init() {
 		this.mContext = this;
 		this.mInflater = LayoutInflater.from(this);
 		this.mDisplayMetrics = new DisplayMetrics();
+		Utils.initScreenConfig(this);
 		getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
-		initReceiver();
-		initialize();
-		setLayout();
+		// initReceiver();
 	}
 
 	protected abstract void initialize();
 
 	protected abstract void setLayout();
 
-	private void initReceiver() {
-		this.mBroadcastReceiver = new MyBroadcastReceiver();
-		this.mIntentFilter = getIntentFilter();
-		mIntentFilter.setPriority(1000);
-	}
+	// private void initReceiver() {
+	// this.mBroadcastReceiver = new MyBroadcastReceiver(this);
+	// this.mIntentFilter = getIntentFilter();
+	// mIntentFilter.setPriority(1000);
+	// }
 
-	private class MyBroadcastReceiver extends BroadcastReceiver {
+	protected static class MyBroadcastReceiver extends BroadcastReceiver {
+		private UIBaseSupport mUIBase;
+
+		public MyBroadcastReceiver(UIBaseSupport base) {
+			this.mUIBase = base;
+		}
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -84,26 +93,25 @@ abstract class UIBaseSupport extends UIActionBarSupport implements
 				Log.d("NotificationReceiver", "active, broadcast received: "
 						+ intent.toString());
 			}
-			if (onBroadcastReceived(intent)) {
-				abortBroadcast();
-			}
+//			if (mUIBase.onBroadcastReceived(intent)) {
+//				abortBroadcast();
+//			}
 		}
 
 	}
 
-	protected IntentFilter getIntentFilter() {
-		return new IntentFilter();
-	}
+//	protected IntentFilter getIntentFilter() {
+//		return new IntentFilter();
+//	}
+//
+//	protected boolean onBroadcastReceived(Intent intent) {
+//		return true;
+//	};
 
-	protected boolean onBroadcastReceived(Intent intent) {
-		return true;
-	};
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-	
+//	@Override
+//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//		super.onActivityResult(requestCode, resultCode, data);
+//	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -111,23 +119,23 @@ abstract class UIBaseSupport extends UIActionBarSupport implements
 		inflater.inflate(R.menu.base_menu, menu);
 		return true;
 	}
-
-	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		return super.onMenuItemSelected(featureId, item);
-	}
+//
+//	@Override
+//	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+//		return super.onMenuItemSelected(featureId, item);
+//	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		App.active = isActive = true;
-		registerReceiver(mBroadcastReceiver, mIntentFilter);
+		// registerReceiver(mBroadcastReceiver, mIntentFilter);
 	}
 
 	@Override
 	protected void onPause() {
 		App.active = isActive = false;
-		unregisterReceiver(mBroadcastReceiver);
+		// unregisterReceiver(mBroadcastReceiver);
 		super.onPause();
 	}
 
@@ -135,16 +143,16 @@ abstract class UIBaseSupport extends UIActionBarSupport implements
 		return isActive;
 	}
 
-	@Override
-	public boolean onSwipeLeft() {
-		finish();
-		return false;
-	}
-
-	@Override
-	public boolean onSwipeRight() {
-		return false;
-	}
+//	@Override
+//	public boolean onSwipeLeft() {
+//		finish();
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean onSwipeRight() {
+//		return false;
+//	}
 
 	protected static final int PAGE_NORMAL = 0;
 	protected static final int PAGE_HOME = 1;

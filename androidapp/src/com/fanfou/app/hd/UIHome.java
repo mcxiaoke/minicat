@@ -68,6 +68,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 8.1 2012.02.07
  * @version 8.2 2012.02.08
  * @version 8.3 2012.02.09
+ * @version 8.4 2012.02.10
  * 
  */
 public class UIHome extends UIBaseSupport {
@@ -126,14 +127,14 @@ public class UIHome extends UIBaseSupport {
 
 	}
 
-	@Override
-	protected IntentFilter getIntentFilter() {
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(Constants.ACTION_STATUS_SENT);
-		filter.addAction(Constants.ACTION_DRAFTS_SENT);
-		filter.addAction(Constants.ACTION_NOTIFICATION);
-		return filter;
-	}
+//	@Override
+//	protected IntentFilter getIntentFilter() {
+//		IntentFilter filter = new IntentFilter();
+//		filter.addAction(Constants.ACTION_STATUS_SENT);
+//		filter.addAction(Constants.ACTION_DRAFTS_SENT);
+//		filter.addAction(Constants.ACTION_NOTIFICATION);
+//		return filter;
+//	}
 
 	private void onActionSent() {
 		if (App.DEBUG) {
@@ -150,44 +151,44 @@ public class UIHome extends UIBaseSupport {
 		}
 	}
 
-	@Override
-	protected boolean onBroadcastReceived(Intent intent) {
-		String action = intent.getAction();
-		if (action.equals(Constants.ACTION_STATUS_SENT)
-				|| action.equals(Constants.ACTION_DRAFTS_SENT)) {
-			onActionSent();
-		} else if (action.equals(Constants.ACTION_NOTIFICATION)) {
-			if (App.DEBUG) {
-				log("onBroadcastReceived ACTION_NOTIFICATION");
-			}
-			int type = intent.getIntExtra(Constants.EXTRA_TYPE, -1);
-			int count = intent.getIntExtra(Constants.EXTRA_COUNT, 0);
-			switch (type) {
-			case NotificationService.NOTIFICATION_TYPE_HOME:
-				if (count > 0) {
-					mPagesAdapter.updateUI(HOME);
-					Utils.notify(this, count + "条新消息");
-				}
-				break;
-			case NotificationService.NOTIFICATION_TYPE_MENTION:
-				if (count > 0) {
-					mPagesAdapter.updateUI(MENTION);
-					Utils.notify(this, count + "条新消息");
-				}
-
-				break;
-			case NotificationService.NOTIFICATION_TYPE_DM:
-				if (count > 0) {
-					mPagesAdapter.updateUI(DM);
-					Utils.notify(this, count + "条新私信");
-				}
-				break;
-			default:
-				break;
-			}
-		}
-		return true;
-	}
+//	@Override
+//	protected boolean onBroadcastReceived(Intent intent) {
+//		String action = intent.getAction();
+//		if (action.equals(Constants.ACTION_STATUS_SENT)
+//				|| action.equals(Constants.ACTION_DRAFTS_SENT)) {
+//			onActionSent();
+//		} else if (action.equals(Constants.ACTION_NOTIFICATION)) {
+//			if (App.DEBUG) {
+//				log("onBroadcastReceived ACTION_NOTIFICATION");
+//			}
+//			int type = intent.getIntExtra(Constants.EXTRA_TYPE, -1);
+//			int count = intent.getIntExtra(Constants.EXTRA_COUNT, 0);
+//			switch (type) {
+//			case NotificationService.NOTIFICATION_TYPE_HOME:
+//				if (count > 0) {
+//					mPagesAdapter.updateUI(HOME);
+//					Utils.notify(this, count + "条新消息");
+//				}
+//				break;
+//			case NotificationService.NOTIFICATION_TYPE_MENTION:
+//				if (count > 0) {
+//					mPagesAdapter.updateUI(MENTION);
+//					Utils.notify(this, count + "条新消息");
+//				}
+//
+//				break;
+//			case NotificationService.NOTIFICATION_TYPE_DM:
+//				if (count > 0) {
+//					mPagesAdapter.updateUI(DM);
+//					Utils.notify(this, count + "条新私信");
+//				}
+//				break;
+//			default:
+//				break;
+//			}
+//		}
+//		return true;
+//	}
 
 	@Override
 	protected void onResume() {

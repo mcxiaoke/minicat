@@ -47,6 +47,8 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.2 2011.10.26
  * @version 1.3 2011.11.07
  * @version 1.4 2011.11.18
+ * @version 1.5 2012.02.09
+ * @version 1.6 2012.02.10
  * 
  */
 public class SendPage extends UIBaseSupport {
@@ -75,20 +77,20 @@ public class SendPage extends UIBaseSupport {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
+//
+//	@Override
+//	protected IntentFilter getIntentFilter() {
+//		IntentFilter filter= new IntentFilter(Constants.ACTION_MESSAGE_SENT);
+//		filter.setPriority(1000);
+//		return filter;
+//	}
 
-	@Override
-	protected IntentFilter getIntentFilter() {
-		IntentFilter filter= new IntentFilter(Constants.ACTION_MESSAGE_SENT);
-		filter.setPriority(1000);
-		return filter;
-	}
-
-	@Override
-	protected boolean onBroadcastReceived(Intent intent) {
+//	@Override
+//	protected boolean onBroadcastReceived(Intent intent) {
 //		Utils.notify(this, "私信发送成功！");
 //		mListView.setSelection(mCursorAdapter.getCount());
-		return true;
-	}
+//		return true;
+//	}
 
 	private void parseIntent() {
 		Intent intent = getIntent();
