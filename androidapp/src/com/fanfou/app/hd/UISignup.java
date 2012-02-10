@@ -51,13 +51,13 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * @version 1.7 2011.12.14
  * 
  */
-public class RegisterPage extends Activity implements OnClickListener {
+public class UISignup extends Activity implements OnClickListener {
 
-	private static final String TAG = RegisterPage.class.getSimpleName();
+	private static final String TAG = UISignup.class.getSimpleName();
 
 	private GoogleAnalyticsTracker g;
 
-	private RegisterPage mContext;
+	private UISignup mContext;
 
 	private String mNickName;
 	private String mPassword;

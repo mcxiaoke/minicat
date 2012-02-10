@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.LoginPage;
+import com.fanfou.app.hd.UILogin;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
 import com.fanfou.app.hd.api.DirectMessage;
@@ -122,7 +122,7 @@ public class PostMessageService extends BaseIntentService {
 		int id = 12;
 		Notification notification = new Notification(R.drawable.ic_notify_icon,
 				"私信发送成功", System.currentTimeMillis());
-		Intent intent = new Intent(this, LoginPage.class);
+		Intent intent = new Intent(this, UILogin.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				intent, 0);
 		notification.setLatestEventInfo(this, "饭否私信", "私信发送成功", contentIntent);

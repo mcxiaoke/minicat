@@ -24,7 +24,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.2 2011.11.17
  * 
  */
-public class AboutPage extends Activity implements OnClickListener,
+public class UIAbout extends Activity implements OnClickListener,
 		SwipeListener {
 	public static final String COPYRIGHT = "\u00a9";
 	public static final String REGISTERED = "\u00ae";

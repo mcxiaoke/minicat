@@ -51,9 +51,9 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.6 2012.02.10
  * 
  */
-public class SendPage extends UIBaseSupport {
+public class UIDMSend extends UIBaseSupport {
 
-	private static final String TAG = SendPage.class.getSimpleName();
+	private static final String TAG = UIDMSend.class.getSimpleName();
 	private String mUserId;
 	private String mUserName;
 	private String mSelectInput;
@@ -248,7 +248,7 @@ public class SendPage extends UIBaseSupport {
 	private static final int REQUEST_CODE_SELECT_USER = 2001;
 
 	private void startSelectUser() {
-		Intent intent = new Intent(this, UserSelectPage.class);
+		Intent intent = new Intent(this, UIUserSelect.class);
 		startActivityForResult(intent, REQUEST_CODE_SELECT_USER);
 	}
 

@@ -29,7 +29,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.2 2011.11.11
  * 
  */
-public class DraftsPage extends UIBaseSupport implements OnItemClickListener {
+public class UIDrafts extends UIBaseSupport implements OnItemClickListener {
 	private ListView mListView;
 
 	private Cursor mCursor;
@@ -101,7 +101,7 @@ public class DraftsPage extends UIBaseSupport implements OnItemClickListener {
 			return;
 		}
 
-		Intent intent = new Intent(this, WritePage.class);
+		Intent intent = new Intent(this, UIWrite.class);
 		intent.putExtra(Constants.EXTRA_TYPE, draft.type);
 		intent.putExtra(Constants.EXTRA_TEXT, draft.text);
 		intent.putExtra(Constants.EXTRA_ID, draft.id);

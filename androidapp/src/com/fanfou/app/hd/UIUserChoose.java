@@ -47,7 +47,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 2.7 2011.12.02
  * @version 2.8 2011.12.23
  */
-public class UserChoosePage extends UIBaseSupport implements
+public class UIUserChoose extends UIBaseSupport implements
 		FilterQueryProvider, OnItemClickListener {
 	protected ListView mListView;
 	protected EditText mEditText;
@@ -67,7 +67,7 @@ public class UserChoosePage extends UIBaseSupport implements
 
 	private boolean isInitialized = false;
 
-	private static final String tag = UserChoosePage.class.getSimpleName();
+	private static final String tag = UIUserChoose.class.getSimpleName();
 
 	private void log(String message) {
 		Log.d(tag, message);

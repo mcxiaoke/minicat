@@ -35,10 +35,10 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
  */
 
 // select direct message target
-public class UserSelectPage extends UIBaseSupport implements
+public class UIUserSelect extends UIBaseSupport implements
 		OnItemClickListener, OnRefreshListener, FilterQueryProvider {
 
-	private static final String TAG = UserSelectPage.class.getSimpleName();
+	private static final String TAG = UIUserSelect.class.getSimpleName();
 
 	private PullToRefreshListView mPullToRefreshListView;
 	private ListView mList;

@@ -57,13 +57,13 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * @version 3.3 2011.12.14
  * 
  */
-public final class LoginPage extends Activity implements OnClickListener {
+public final class UILogin extends Activity implements OnClickListener {
 
 	private static final int REQUEST_CODE_REGISTER = 0;
 
-	public static final String TAG = LoginPage.class.getSimpleName();
+	public static final String TAG = UILogin.class.getSimpleName();
 
-	private LoginPage mContext;
+	private UILogin mContext;
 	private boolean destroyed;
 
 	private GoogleAnalyticsTracker g;

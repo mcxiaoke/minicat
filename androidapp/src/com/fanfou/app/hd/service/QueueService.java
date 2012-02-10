@@ -12,7 +12,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.WritePage;
+import com.fanfou.app.hd.UIWrite;
 import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
@@ -64,7 +64,7 @@ public class QueueService extends BaseIntentService {
 			Status result = null;
 			File srcFile = new File(d.filePath);
 			if (srcFile == null || !srcFile.exists()) {
-				if (d.type == WritePage.TYPE_REPLY) {
+				if (d.type == UIWrite.TYPE_REPLY) {
 					result = api.statusesCreate(d.text, d.replyTo, null, null,
 							null, Constants.FORMAT, Constants.MODE);
 				} else {

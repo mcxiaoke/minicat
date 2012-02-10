@@ -282,7 +282,7 @@ public class UIHome extends UIBaseSupport {
 	}
 
 	private void onMenuOptionClick() {
-		Intent intent = new Intent(this, SettingsPage.class);
+		Intent intent = new Intent(this, UISetting.class);
 		startActivity(intent);
 	}
 
@@ -291,7 +291,7 @@ public class UIHome extends UIBaseSupport {
 	}
 
 	private void onMenuSearchClick() {
-		Intent intent = new Intent(this, SearchPage.class);
+		Intent intent = new Intent(this, UISearch.class);
 		startActivity(intent);
 	}
 

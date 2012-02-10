@@ -7,8 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import com.fanfou.app.hd.MyProfilePage;
-import com.fanfou.app.hd.SearchPage;
+import com.fanfou.app.hd.UIMyProfile;
+import com.fanfou.app.hd.UISearch;
 import com.fanfou.app.hd.UIHome;
 import com.fanfou.app.hd.UIStart;
 import com.fanfou.app.hd.service.Constants;
@@ -84,12 +84,12 @@ public class WidgetSmall extends AppWidgetProvider {
 	}
 
 	private PendingIntent getMyProfilePendingIntent(Context context) {
-		Intent intent = new Intent(context, MyProfilePage.class);
+		Intent intent = new Intent(context, UIMyProfile.class);
 		return getPendingIntent(context, intent);
 	}
 
 	private PendingIntent getSearchPendingIntent(Context context) {
-		Intent intent = new Intent(context, SearchPage.class);
+		Intent intent = new Intent(context, UISearch.class);
 		return getPendingIntent(context, intent);
 	}
 

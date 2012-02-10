@@ -41,9 +41,9 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 2.1 2012.02.01
  * 
  */
-public class SearchResultsPage extends UIBaseSupport implements
+public class UISearchResults extends UIBaseSupport implements
 		OnRefreshListener, OnItemClickListener, OnItemLongClickListener {
-	private static final String TAG = SearchResultsPage.class.getSimpleName();
+	private static final String TAG = UISearchResults.class.getSimpleName();
 	private PullToRefreshListView mPullToRefreshListView;
 	private ListView mList;
 

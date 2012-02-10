@@ -9,8 +9,8 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.SendPage;
-import com.fanfou.app.hd.StatusPage;
+import com.fanfou.app.hd.UIDMSend;
+import com.fanfou.app.hd.UIStatus;
 import com.fanfou.app.hd.UIHome;
 import com.fanfou.app.hd.api.DirectMessage;
 import com.fanfou.app.hd.api.Status;
@@ -85,7 +85,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		}
 		String title = status.userScreenName;
 		String message = status.simpleText;
-		Intent intent = new Intent(context, StatusPage.class);
+		Intent intent = new Intent(context, UIStatus.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
 		intent.putExtra(Constants.EXTRA_DATA, status);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
@@ -116,7 +116,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		}
 		String title = status.userScreenName + "@你的消息";
 		String message = status.simpleText;
-		Intent intent = new Intent(context, StatusPage.class);
+		Intent intent = new Intent(context, UIStatus.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
 		intent.putExtra(Constants.EXTRA_DATA, status);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
@@ -145,7 +145,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		if (App.DEBUG) {
 			Log.d(TAG, "showDmOneNotification " + dm);
 		}
-		Intent intent = new Intent(context, SendPage.class);
+		Intent intent = new Intent(context, UIDMSend.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
 		intent.putExtra(Constants.EXTRA_ID, dm.senderId);
 		intent.putExtra(Constants.EXTRA_USER_NAME, dm.senderScreenName);

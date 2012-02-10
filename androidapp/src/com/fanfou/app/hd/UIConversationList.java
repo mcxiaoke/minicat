@@ -39,7 +39,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 3.7 2012.02.09
  * 
  */
-public class ConversationPage extends UIBaseSupport implements
+public class UIConversationList extends UIBaseSupport implements
 		OnRefreshListener, OnItemClickListener, OnItemLongClickListener {
 
 	private PullToRefreshListView mPullToRefreshListView;
@@ -51,7 +51,7 @@ public class ConversationPage extends UIBaseSupport implements
 
 	private Status mStatus;
 
-	private static final String tag = ConversationPage.class.getSimpleName();
+	private static final String tag = UIConversationList.class.getSimpleName();
 
 	private void log(String message) {
 		Log.d(tag, message);

@@ -23,7 +23,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 2.5 2011.10.31
  * 
  */
-public class NewVersionPage extends Activity implements View.OnClickListener {
+public class UIVersionUpdate extends Activity implements View.OnClickListener {
 	private TextView mTitleView;
 	private TextView mTextView;
 	private Button mButton1;

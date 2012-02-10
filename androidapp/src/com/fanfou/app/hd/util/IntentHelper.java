@@ -9,7 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.LoginPage;
+import com.fanfou.app.hd.UILogin;
 import com.fanfou.app.hd.UIHome;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.R;
@@ -28,7 +28,7 @@ public final class IntentHelper {
 		AlarmHelper.unsetScheduledTasks(context);
 		App.removeAccountInfo(context);
 		App.getImageLoader().clearQueue();
-		Intent intent = new Intent(context, LoginPage.class);
+		Intent intent = new Intent(context, UILogin.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		context.startActivity(intent);
 	}

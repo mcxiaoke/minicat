@@ -37,9 +37,9 @@ import com.fanfou.app.hd.util.Utils;
  * @version 2.1 2012.02.02
  * 
  */
-public class MyProfilePage extends UIBaseSupport {
+public class UIMyProfile extends UIBaseSupport {
 
-	private static final String TAG = MyProfilePage.class.getSimpleName();
+	private static final String TAG = UIMyProfile.class.getSimpleName();
 
 	private ScrollView mScrollView;
 	private View mEmptyView;
@@ -224,7 +224,7 @@ public class MyProfilePage extends UIBaseSupport {
 	private static final int REQUEST_CODE_UPDATE_PROFILE = 0;
 
 	private static void goEditProfilePage(Activity context, final User user) {
-		Intent intent = new Intent(context, EditProfilePage.class);
+		Intent intent = new Intent(context, UIEditProfile.class);
 		intent.putExtra(Constants.EXTRA_DATA, user);
 		context.startActivityForResult(intent, REQUEST_CODE_UPDATE_PROFILE);
 	}
@@ -313,7 +313,7 @@ public class MyProfilePage extends UIBaseSupport {
 
 	}
 
-	private static final String tag = MyProfilePage.class.getSimpleName();
+	private static final String tag = UIMyProfile.class.getSimpleName();
 
 	private void log(String message) {
 		Log.d(tag, message);

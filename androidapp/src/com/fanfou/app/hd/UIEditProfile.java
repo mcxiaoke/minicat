@@ -45,9 +45,9 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.8 2012.02.01
  * 
  */
-public class EditProfilePage extends UIBaseSupport {
+public class UIEditProfile extends UIBaseSupport {
 
-	private static final String TAG = EditProfilePage.class.getSimpleName();
+	private static final String TAG = UIEditProfile.class.getSimpleName();
 
 	private void log(String message) {
 		Log.d(TAG, message);
@@ -396,12 +396,12 @@ public class EditProfilePage extends UIBaseSupport {
 	private static class UpdateProfileImageTask extends
 			AsyncTask<File, Integer, ResultInfo> {
 
-		private EditProfilePage mEditProfilePage;
+		private UIEditProfile mEditProfilePage;
 		private ProgressDialog pd = null;
 		private Api api;
 		private boolean isCancelled;
 
-		public UpdateProfileImageTask(EditProfilePage context) {
+		public UpdateProfileImageTask(UIEditProfile context) {
 			super();
 			this.mEditProfilePage = context;
 		}

@@ -59,9 +59,9 @@ import com.fanfou.app.hd.util.Utils;
  * @version 4.8 2012.02.01
  * 
  */
-public class WritePage extends UIBaseSupport {
+public class UIWrite extends UIBaseSupport {
 
-	private static final String TAG = WritePage.class.getSimpleName();
+	private static final String TAG = UIWrite.class.getSimpleName();
 	private static final int REQUEST_PHOTO_CAPTURE = 0;
 	private static final int REQUEST_PHOTO_LIBRARY = 1;
 	private static final int REQUEST_LOCATION_ADD = 2;
@@ -508,7 +508,7 @@ public class WritePage extends UIBaseSupport {
 	}
 
 	private void startAddUsername() {
-		Intent intent = new Intent(this, UserChoosePage.class);
+		Intent intent = new Intent(this, UIUserChoose.class);
 		startActivityForResult(intent, REQUEST_USERNAME_ADD);
 	}
 

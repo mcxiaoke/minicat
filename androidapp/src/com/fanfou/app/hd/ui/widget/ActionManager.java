@@ -10,12 +10,12 @@ import android.util.Log;
 
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.DraftsPage;
-import com.fanfou.app.hd.MyProfilePage;
-import com.fanfou.app.hd.SendPage;
+import com.fanfou.app.hd.UIDrafts;
+import com.fanfou.app.hd.UIMyProfile;
+import com.fanfou.app.hd.UIDMSend;
 import com.fanfou.app.hd.UIProfile;
 import com.fanfou.app.hd.UIUserList;
-import com.fanfou.app.hd.WritePage;
+import com.fanfou.app.hd.UIWrite;
 import com.fanfou.app.hd.api.DirectMessage;
 import com.fanfou.app.hd.api.Status;
 import com.fanfou.app.hd.api.User;
@@ -109,12 +109,12 @@ public final class ActionManager {
 	// }
 
 	public static void doShowDrafts(Context context) {
-		Intent intent = new Intent(context, DraftsPage.class);
+		Intent intent = new Intent(context, UIDrafts.class);
 		context.startActivity(intent);
 	}
 
 	public static void doMyProfile(Context context) {
-		Intent intent = new Intent(context, MyProfilePage.class);
+		Intent intent = new Intent(context, UIMyProfile.class);
 		context.startActivity(intent);
 	}
 
@@ -232,10 +232,10 @@ public final class ActionManager {
 				sb.append("@").append(status.userScreenName).append(" ");
 			}
 
-			Intent intent = new Intent(context, WritePage.class);
+			Intent intent = new Intent(context, UIWrite.class);
 			intent.putExtra(Constants.EXTRA_IN_REPLY_TO_ID, status.id);
 			intent.putExtra(Constants.EXTRA_TEXT, sb.toString());
-			intent.putExtra(Constants.EXTRA_TYPE, WritePage.TYPE_REPLY);
+			intent.putExtra(Constants.EXTRA_TYPE, UIWrite.TYPE_REPLY);
 			context.startActivity(intent);
 		} else {
 			doWrite(context, null);
@@ -244,7 +244,7 @@ public final class ActionManager {
 	}
 
 	public static void doWrite(Context context, String text, File file, int type) {
-		Intent intent = new Intent(context, WritePage.class);
+		Intent intent = new Intent(context, UIWrite.class);
 		intent.putExtra(Constants.EXTRA_TYPE, type);
 		intent.putExtra(Constants.EXTRA_TEXT, text);
 		intent.putExtra(Constants.EXTRA_DATA, file);
@@ -256,7 +256,7 @@ public final class ActionManager {
 	}
 
 	public static void doWrite(Context context, String text) {
-		doWrite(context, text, WritePage.TYPE_NORMAL);
+		doWrite(context, text, UIWrite.TYPE_NORMAL);
 	}
 
 	public static void doWrite(Context context) {
@@ -264,7 +264,7 @@ public final class ActionManager {
 	}
 
 	public static void doSend(Context context) {
-		Intent intent = new Intent(context, SendPage.class);
+		Intent intent = new Intent(context, UIDMSend.class);
 		context.startActivity(intent);
 	}
 
@@ -272,8 +272,8 @@ public final class ActionManager {
 		if (status == null || status.isNull()) {
 			throw new NullPointerException("status cannot be null.");
 		}
-		Intent intent = new Intent(context, WritePage.class);
-		intent.putExtra(Constants.EXTRA_TYPE, WritePage.TYPE_REPOST);
+		Intent intent = new Intent(context, UIWrite.class);
+		intent.putExtra(Constants.EXTRA_TYPE, UIWrite.TYPE_REPOST);
 		intent.putExtra(Constants.EXTRA_IN_REPLY_TO_ID, status.id);
 		intent.putExtra(Constants.EXTRA_TEXT, "转@" + status.userScreenName
 				+ " " + status.simpleText);
@@ -281,7 +281,7 @@ public final class ActionManager {
 	}
 
 	public static void doMessage(Context context, final User user) {
-		final Intent intent = new Intent(context, SendPage.class);
+		final Intent intent = new Intent(context, UIDMSend.class);
 		intent.putExtra(Constants.EXTRA_ID, user.id);
 		intent.putExtra(Constants.EXTRA_USER_NAME, user.screenName);
 		context.startActivity(intent);

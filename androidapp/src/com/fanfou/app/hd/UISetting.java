@@ -36,7 +36,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 2.2 2011.12.13
  * 
  */
-public class SettingsPage extends PreferenceActivity implements
+public class UISetting extends PreferenceActivity implements
 		OnPreferenceClickListener, OnSharedPreferenceChangeListener,
 		OnPreferenceChangeListener {
 	public static final String TAG = "OptionsPage";

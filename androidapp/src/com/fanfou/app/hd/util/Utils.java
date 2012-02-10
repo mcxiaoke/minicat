@@ -26,11 +26,11 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
 import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.AboutPage;
+import com.fanfou.app.hd.UIAbout;
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.PhotoViewPage;
-import com.fanfou.app.hd.SendPage;
-import com.fanfou.app.hd.StatusPage;
+import com.fanfou.app.hd.UIPhoto;
+import com.fanfou.app.hd.UIDMSend;
+import com.fanfou.app.hd.UIStatus;
 import com.fanfou.app.hd.api.DirectMessage;
 import com.fanfou.app.hd.api.Status;
 import com.fanfou.app.hd.http.ResponseCode;
@@ -73,7 +73,7 @@ public final class Utils {
 
 	public static void goStatusPage(Context context, String id) {
 		if (!StringHelper.isEmpty(id)) {
-			Intent intent = new Intent(context, StatusPage.class);
+			Intent intent = new Intent(context, UIStatus.class);
 			intent.putExtra(Constants.EXTRA_ID, id);
 			context.startActivity(intent);
 		}
@@ -81,7 +81,7 @@ public final class Utils {
 
 	public static void goStatusPage(Context context, Status s) {
 		if (s != null) {
-			Intent intent = new Intent(context, StatusPage.class);
+			Intent intent = new Intent(context, UIStatus.class);
 			intent.putExtra(Constants.EXTRA_DATA, s);
 			context.startActivity(intent);
 		}
@@ -91,7 +91,7 @@ public final class Utils {
 		if (c != null) {
 			final DirectMessage dm = DirectMessage.parse(c);
 			if (dm != null) {
-				final Intent intent = new Intent(context, SendPage.class);
+				final Intent intent = new Intent(context, UIDMSend.class);
 				intent.putExtra(Constants.EXTRA_ID, dm.senderId);
 				intent.putExtra(Constants.EXTRA_USER_NAME, dm.senderScreenName);
 				context.startActivity(intent);
@@ -100,12 +100,12 @@ public final class Utils {
 	}
 
 	public static void goAboutPage(Context context) {
-		Intent intent = new Intent(context, AboutPage.class);
+		Intent intent = new Intent(context, UIAbout.class);
 		context.startActivity(intent);
 	}
 
 	public static void goPhotoViewPage(Context context, String photoUrl) {
-		Intent intent = new Intent(context, PhotoViewPage.class);
+		Intent intent = new Intent(context, UIPhoto.class);
 		intent.putExtra(Constants.EXTRA_URL, photoUrl);
 		context.startActivity(intent);
 	}

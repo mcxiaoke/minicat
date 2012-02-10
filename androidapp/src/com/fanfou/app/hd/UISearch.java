@@ -28,7 +28,7 @@ import com.fanfou.app.hd.api.Search;
  * @version 2.0 2011.10.21
  * 
  */
-public class SearchPage extends UIBaseSupport implements OnItemClickListener {
+public class UISearch extends UIBaseSupport implements OnItemClickListener {
 
 	private ListView mListView;
 	private View mEmptyView;
@@ -145,7 +145,7 @@ public class SearchPage extends UIBaseSupport implements OnItemClickListener {
 	}
 
 	private void goSearch(Context context, String query) {
-		Intent intent = new Intent(context, SearchResultsPage.class);
+		Intent intent = new Intent(context, UISearchResults.class);
 		intent.setAction(Intent.ACTION_SEARCH);
 		intent.putExtra(SearchManager.QUERY, query);
 		startActivity(intent);

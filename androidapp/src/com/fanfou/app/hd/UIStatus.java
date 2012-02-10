@@ -52,7 +52,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 3.1 2012.02.01
  * 
  */
-public class StatusPage extends UIBaseSupport {
+public class UIStatus extends UIBaseSupport {
 
 	private static final int PHOTO_LOADING = -1;
 	private static final int PHOTO_ICON = 0;
@@ -104,7 +104,7 @@ public class StatusPage extends UIBaseSupport {
 		super.onPause();
 	}
 
-	private static final String TAG = StatusPage.class.getSimpleName();
+	private static final String TAG = UIStatus.class.getSimpleName();
 
 	private void log(String message) {
 		Log.d(TAG, message);
@@ -298,7 +298,7 @@ public class StatusPage extends UIBaseSupport {
 			onClickPhoto();
 			break;
 		case R.id.status_thread:
-			Intent intent = new Intent(mContext, ConversationPage.class);
+			Intent intent = new Intent(mContext, UIConversationList.class);
 			intent.putExtra(Constants.EXTRA_DATA, status);
 			mContext.startActivity(intent);
 			// testAnimation();
@@ -358,7 +358,7 @@ public class StatusPage extends UIBaseSupport {
 			if (App.DEBUG) {
 				Log.d(TAG, "goPhotoViewer() url=" + filePath);
 			}
-			Intent intent = new Intent(mContext, PhotoViewPage.class);
+			Intent intent = new Intent(mContext, UIPhoto.class);
 			intent.putExtra(Constants.EXTRA_URL, filePath);
 			mContext.startActivity(intent);
 			overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_enter);

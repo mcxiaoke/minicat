@@ -30,9 +30,9 @@ import com.fanfou.app.hd.util.Utils;
  * @version 3.2 2011.11.22
  * 
  */
-public class PhotoViewPage extends UIBaseSupport {
+public class UIPhoto extends UIBaseSupport {
 
-	private static final String TAG = PhotoViewPage.class.getSimpleName();
+	private static final String TAG = UIPhoto.class.getSimpleName();
 	private String mPhotoPath;
 	private Bitmap bitmap;
 

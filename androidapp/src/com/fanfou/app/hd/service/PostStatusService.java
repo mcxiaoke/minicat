@@ -12,8 +12,8 @@ import android.util.Log;
 
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.DraftsPage;
-import com.fanfou.app.hd.WritePage;
+import com.fanfou.app.hd.UIDrafts;
+import com.fanfou.app.hd.UIWrite;
 import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
@@ -74,7 +74,7 @@ public class PostStatusService extends BaseIntentService {
 	}
 
 	private void parseIntent(Intent intent) {
-		type = intent.getIntExtra(Constants.EXTRA_TYPE, WritePage.TYPE_NORMAL);
+		type = intent.getIntExtra(Constants.EXTRA_TYPE, UIWrite.TYPE_NORMAL);
 		text = intent.getStringExtra(Constants.EXTRA_TEXT);
 		srcFile = (File) intent.getSerializableExtra(Constants.EXTRA_DATA);
 		relationId = intent.getStringExtra(Constants.EXTRA_IN_REPLY_TO_ID);
@@ -92,7 +92,7 @@ public class PostStatusService extends BaseIntentService {
 		try {
 			Status result = null;
 			if (srcFile == null || !srcFile.exists()) {
-				if (type == WritePage.TYPE_REPLY) {
+				if (type == UIWrite.TYPE_REPLY) {
 					result = api.statusesCreate(text, relationId, null,
 							location, null, Constants.FORMAT, Constants.MODE);
 				} else {
@@ -161,7 +161,7 @@ public class PostStatusService extends BaseIntentService {
 		int id = 1;
 		Notification notification = new Notification(R.drawable.ic_notify_icon,
 				title, System.currentTimeMillis());
-		Intent intent = new Intent(this, DraftsPage.class);
+		Intent intent = new Intent(this, UIDrafts.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		notification.setLatestEventInfo(this, title, message, contentIntent);

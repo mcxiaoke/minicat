@@ -30,7 +30,7 @@ import android.widget.RemoteViews;
 
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.NewVersionPage;
+import com.fanfou.app.hd.UIVersionUpdate;
 import com.fanfou.app.hd.http.NetClient;
 import com.fanfou.app.hd.util.DateTimeHelper;
 import com.fanfou.app.hd.util.IOHelper;
@@ -375,7 +375,7 @@ public class DownloadService extends BaseIntentService {
 
 	public static Intent getNewVersionIntent(Context context,
 			final VersionInfo info) {
-		Intent intent = new Intent(context, NewVersionPage.class);
+		Intent intent = new Intent(context, UIVersionUpdate.class);
 		intent.putExtra(Constants.EXTRA_DATA, info);
 		return intent;
 	}
