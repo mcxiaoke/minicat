@@ -15,6 +15,7 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Selection;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -57,6 +58,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 4.6 2011.12.13
  * @version 4.7 2011.12.26
  * @version 4.8 2012.02.01
+ * @version 5.0 2012.02.13
  * 
  */
 public class UIWrite extends UIBaseSupport {
@@ -112,6 +114,28 @@ public class UIWrite extends UIBaseSupport {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+	}
+
+	@Override
+	protected int getMenuResourceId() {
+		return R.menu.write_menu;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		switch (id) {
+		case R.id.menu_send:
+			onMenuSendClick();
+			break;
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	private void onMenuSendClick(){
+		doSend();
 	}
 
 	@Override
