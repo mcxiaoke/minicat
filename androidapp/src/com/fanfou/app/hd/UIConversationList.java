@@ -38,6 +38,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 3.6 2012.02.01
  * @version 3.7 2012.02.09
  * 
+ * Statuses Conversation List Page
+ * 
  */
 public class UIConversationList extends UIBaseSupport implements
 		OnRefreshListener, OnItemClickListener, OnItemLongClickListener {

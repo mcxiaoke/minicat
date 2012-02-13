@@ -140,7 +140,6 @@ public class UIWrite extends UIBaseSupport {
 
 	@Override
 	protected void initialize() {
-		parseIntent();
 		enableLocation = OptionHelper.readBoolean(mContext,
 				R.string.option_location_enable, true);
 		mLocationManager = (LocationManager) this
@@ -336,7 +335,6 @@ public class UIWrite extends UIBaseSupport {
 	}
 
 	private void setAutoComplete() {
-		mAutoCompleteTextView = (MyAutoCompleteTextView) findViewById(R.id.write_text);
 		mAutoCompleteTextView.addTextChangedListener(new TextChangeListener() {
 
 			@Override
@@ -369,7 +367,8 @@ public class UIWrite extends UIBaseSupport {
 	protected void setLayout() {
 
 		setContentView(R.layout.write);
-		setAutoComplete();
+		
+		mAutoCompleteTextView = (MyAutoCompleteTextView) findViewById(R.id.write_text);
 
 		mPictureView = findViewById(R.id.write_picture);
 		iPicturePrieview = (ImageView) findViewById(R.id.write_picture_prieview);
@@ -393,7 +392,10 @@ public class UIWrite extends UIBaseSupport {
 
 		iLocationIcon.setImageResource(enableLocation ? R.drawable.ic_bar_geoon
 				: R.drawable.ic_bar_geooff);
-
+		
+		setAutoComplete();
+		parseIntent();
+		
 	}
 
 	@Override
