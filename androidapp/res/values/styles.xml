@@ -14,7 +14,7 @@
     </style>
 
     <style name="ActionBarCompat">
-        <item name="android:background">#999</item>
+        <item name="android:background">@drawable/ab_transparent_light_holo</item>
     </style>
 
     <style name="ActionBarCompatItemBase">
@@ -40,7 +40,7 @@
     </style>
 
     <style name="ActionBarCompatTitle" parent="style/ActionBarCompatTitleBase">
-        <item name="android:textColor">@color/actionbar_title_color</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
     <style name="ActionBarCompatItem" parent="style/ActionBarCompatItemBase"></style>
