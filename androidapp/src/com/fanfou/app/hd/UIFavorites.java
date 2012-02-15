@@ -1,8 +1,8 @@
 package com.fanfou.app.hd;
 
+import com.fanfou.app.hd.fragments.BaseTimlineFragment;
+import com.fanfou.app.hd.fragments.UserFavoritesFragment;
 import com.fanfou.app.hd.service.Constants;
-import com.fanfou.app.hd.ui.BaseTimlineFragment;
-import com.fanfou.app.hd.ui.UserFavoritesFragment;
 
 /**
  * @author mcxiaoke

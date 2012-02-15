@@ -11,12 +11,12 @@ import android.widget.Filter;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.api.User;
+import com.fanfou.app.hd.fragments.FollowersListFragment;
+import com.fanfou.app.hd.fragments.FriendsListFragment;
+import com.fanfou.app.hd.fragments.OnInitCompleteListener;
+import com.fanfou.app.hd.fragments.UserListFragment;
+import com.fanfou.app.hd.fragments.widget.TextChangeListener;
 import com.fanfou.app.hd.service.Constants;
-import com.fanfou.app.hd.ui.FollowersListFragment;
-import com.fanfou.app.hd.ui.FriendsListFragment;
-import com.fanfou.app.hd.ui.OnInitCompleteListener;
-import com.fanfou.app.hd.ui.widget.TextChangeListener;
-import com.fanfou.app.hd.ui.UserListFragment;
 import com.fanfou.app.hd.util.Assert;
 import com.fanfou.app.hd.util.StringHelper;
 

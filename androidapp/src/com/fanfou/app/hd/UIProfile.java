@@ -17,11 +17,11 @@ import com.astuetz.viewpager.extensions.TabsAdapter;
 import com.astuetz.viewpager.extensions.ViewPagerTabButton;
 import com.fanfou.app.hd.api.User;
 import com.fanfou.app.hd.cache.CacheManager;
+import com.fanfou.app.hd.fragments.AbstractFragment;
+import com.fanfou.app.hd.fragments.ProfileContentFragment;
+import com.fanfou.app.hd.fragments.UserFavoritesFragment;
+import com.fanfou.app.hd.fragments.UserTimelineFragment;
 import com.fanfou.app.hd.service.Constants;
-import com.fanfou.app.hd.ui.AbstractFragment;
-import com.fanfou.app.hd.ui.ProfileContentFragment;
-import com.fanfou.app.hd.ui.UserFavoritesFragment;
-import com.fanfou.app.hd.ui.UserTimelineFragment;
 
 /**
  * @author mcxiaoke

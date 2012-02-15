@@ -7,9 +7,9 @@ import android.util.Log;
 import android.view.View;
 
 import com.fanfou.app.hd.api.User;
+import com.fanfou.app.hd.fragments.BaseTimlineFragment;
+import com.fanfou.app.hd.fragments.widget.GestureManager.SwipeListener;
 import com.fanfou.app.hd.service.Constants;
-import com.fanfou.app.hd.ui.BaseTimlineFragment;
-import com.fanfou.app.hd.ui.widget.GestureManager.SwipeListener;
 import com.fanfou.app.hd.util.StringHelper;
 
 /**

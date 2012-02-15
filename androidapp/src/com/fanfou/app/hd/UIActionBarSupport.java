@@ -1,6 +1,6 @@
 package com.fanfou.app.hd;
 
-import com.fanfou.app.hd.ui.actionbarcompat.ActionBarHelper;
+import com.fanfou.app.hd.fragments.actionbarcompat.ActionBarHelper;
 
 import android.app.Activity;
 import android.os.Bundle;
