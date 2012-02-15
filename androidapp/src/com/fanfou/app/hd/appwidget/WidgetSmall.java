@@ -1,4 +1,4 @@
-package com.fanfou.app.hd.widget;
+package com.fanfou.app.hd.appwidget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;

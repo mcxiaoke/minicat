@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.api.User;
-import com.fanfou.app.hd.fragments.widget.ActionManager;
+import com.fanfou.app.hd.ui.widget.ActionManager;
 import com.fanfou.app.hd.util.DateTimeHelper;
 
 public class UserArrayAdapter extends BaseArrayAdapter<User> {

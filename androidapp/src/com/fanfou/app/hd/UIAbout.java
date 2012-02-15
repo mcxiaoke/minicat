@@ -13,7 +13,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.fanfou.app.hd.fragments.widget.GestureManager.SwipeListener;
+import com.fanfou.app.hd.ui.widget.GestureManager.SwipeListener;
 import com.fanfou.app.hd.util.Linkify;
 import com.fanfou.app.hd.util.Utils;
 

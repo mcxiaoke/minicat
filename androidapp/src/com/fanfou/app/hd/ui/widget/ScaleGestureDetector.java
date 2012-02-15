@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.fanfou.app.hd.fragments.widget;
+package com.fanfou.app.hd.ui.widget;
 
 import android.content.Context;
 import android.util.DisplayMetrics;

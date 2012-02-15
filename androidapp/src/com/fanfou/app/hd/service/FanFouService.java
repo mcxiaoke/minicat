@@ -106,9 +106,9 @@ import com.fanfou.app.hd.db.Contents.BasicColumns;
 import com.fanfou.app.hd.db.Contents.DirectMessageInfo;
 import com.fanfou.app.hd.db.Contents.StatusInfo;
 import com.fanfou.app.hd.db.Contents.UserInfo;
-import com.fanfou.app.hd.fragments.widget.ActionManager.ResultListener;
-import com.fanfou.app.hd.fragments.widget.UIManager.ActionResultHandler;
 import com.fanfou.app.hd.http.ResponseCode;
+import com.fanfou.app.hd.ui.widget.ActionManager.ResultListener;
+import com.fanfou.app.hd.ui.widget.UIManager.ActionResultHandler;
 import com.fanfou.app.hd.util.StringHelper;
 import com.fanfou.app.hd.util.Utils;
 

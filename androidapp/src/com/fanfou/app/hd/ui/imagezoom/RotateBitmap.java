@@ -1,4 +1,4 @@
-package com.fanfou.app.hd.fragments.imagezoom;
+package com.fanfou.app.hd.ui.imagezoom;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;

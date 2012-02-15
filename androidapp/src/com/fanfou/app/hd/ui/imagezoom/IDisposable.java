@@ -1,4 +1,4 @@
-package com.fanfou.app.hd.fragments.imagezoom;
+package com.fanfou.app.hd.ui.imagezoom;
 
 public interface IDisposable {
 	void dispose();

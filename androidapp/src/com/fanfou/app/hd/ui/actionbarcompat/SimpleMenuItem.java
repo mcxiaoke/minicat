@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.fanfou.app.hd.fragments.actionbarcompat;
+package com.fanfou.app.hd.ui.actionbarcompat;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;

@@ -14,7 +14,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 
-import com.fanfou.app.hd.fragments.widget.ScaleGestureDetector;
+import com.fanfou.app.hd.ui.widget.ScaleGestureDetector;
 
 public class Compatibility {
 	private static final String LOG_TAG = Compatibility.class.getSimpleName();

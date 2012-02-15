@@ -13,8 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.fragments.imagezoom.ImageViewTouch;
 import com.fanfou.app.hd.service.Constants;
+import com.fanfou.app.hd.ui.imagezoom.ImageViewTouch;
 import com.fanfou.app.hd.util.IOHelper;
 import com.fanfou.app.hd.util.ImageHelper;
 import com.fanfou.app.hd.util.Utils;

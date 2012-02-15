@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.fanfou.app.hd.fragments.actionbarcompat;
+package com.fanfou.app.hd.ui.actionbarcompat;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

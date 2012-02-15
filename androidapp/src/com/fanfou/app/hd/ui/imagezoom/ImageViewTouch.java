@@ -1,4 +1,4 @@
-package com.fanfou.app.hd.fragments.imagezoom;
+package com.fanfou.app.hd.ui.imagezoom;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -6,7 +6,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 
-import com.fanfou.app.hd.fragments.widget.ScaleGestureDetector;
+import com.fanfou.app.hd.ui.widget.ScaleGestureDetector;
 
 /**
  * @author mcxiaoke

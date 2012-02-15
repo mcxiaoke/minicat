@@ -1,4 +1,4 @@
-package com.fanfou.app.hd.fragments.widget;
+package com.fanfou.app.hd.ui.widget;
 
 import android.content.Context;
 import android.graphics.Rect;

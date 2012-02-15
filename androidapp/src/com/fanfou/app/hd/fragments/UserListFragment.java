@@ -15,9 +15,9 @@ import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.adapter.UserCursorAdapter;
 import com.fanfou.app.hd.api.User;
 import com.fanfou.app.hd.db.Contents.UserInfo;
-import com.fanfou.app.hd.fragments.widget.ActionManager;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.FanFouService;
+import com.fanfou.app.hd.ui.widget.ActionManager;
 import com.fanfou.app.hd.util.StringHelper;
 
 /**

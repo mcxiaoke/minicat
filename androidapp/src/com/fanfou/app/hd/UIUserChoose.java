@@ -26,11 +26,11 @@ import com.fanfou.app.hd.adapter.UserChooseCursorAdapter;
 import com.fanfou.app.hd.api.User;
 import com.fanfou.app.hd.db.Contents.BasicColumns;
 import com.fanfou.app.hd.db.Contents.UserInfo;
-import com.fanfou.app.hd.fragments.widget.TextChangeListener;
 import com.fanfou.app.hd.service.AutoCompleteService;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.FanFouService;
 import com.fanfou.app.hd.service.WakefulIntentService;
+import com.fanfou.app.hd.ui.widget.TextChangeListener;
 import com.fanfou.app.hd.util.StringHelper;
 import com.fanfou.app.hd.util.Utils;
 

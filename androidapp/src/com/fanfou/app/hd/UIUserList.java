@@ -15,8 +15,8 @@ import com.fanfou.app.hd.fragments.FollowersListFragment;
 import com.fanfou.app.hd.fragments.FriendsListFragment;
 import com.fanfou.app.hd.fragments.OnInitCompleteListener;
 import com.fanfou.app.hd.fragments.UserListFragment;
-import com.fanfou.app.hd.fragments.widget.TextChangeListener;
 import com.fanfou.app.hd.service.Constants;
+import com.fanfou.app.hd.ui.widget.TextChangeListener;
 import com.fanfou.app.hd.util.Assert;
 import com.fanfou.app.hd.util.StringHelper;
 

@@ -15,9 +15,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.fanfou.app.hd.fragments.actionbarcompat.ActionBarHelper;
-import com.fanfou.app.hd.fragments.widget.ActionManager;
-import com.fanfou.app.hd.fragments.widget.GestureManager.SwipeListener;
+import com.fanfou.app.hd.ui.actionbarcompat.ActionBarHelper;
+import com.fanfou.app.hd.ui.widget.ActionManager;
+import com.fanfou.app.hd.ui.widget.GestureManager.SwipeListener;
 import com.fanfou.app.hd.util.IntentHelper;
 import com.fanfou.app.hd.util.Utils;
 

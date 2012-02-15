@@ -259,7 +259,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".widget.WidgetSmall"
+            android:name=".appwidget.WidgetSmall"
             android:icon="@drawable/icon"
             android:label="饭否（1X4）" >
             <intent-filter>
@@ -271,7 +271,7 @@
                 android:resource="@xml/widget_small" />
         </receiver>
         <receiver
-            android:name=".widget.WidgetTinyinyinydget.WidgetTiny"
+            android:name=".appwidget.WidgetTiny"
             android:icon="@drawable/icon"
             android:label="饭否（1X2）" >
             <intent-filter>
