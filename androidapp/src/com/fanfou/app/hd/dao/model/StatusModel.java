@@ -30,8 +30,9 @@ public class StatusModel extends BaseModel<StatusModel> {
 	private String inReplyToUserId;
 	private String inReplyToScreenName;
 
-	private long retweetId;
-	private String retweetText;
+	private String rtStatusId;
+	private String rtUserId;
+	private String rtScreenName;
 
 	private String photoImageUrl;
 	private String photoThumbUrl;
@@ -71,9 +72,10 @@ public class StatusModel extends BaseModel<StatusModel> {
 		inReplyToStatusId = in.readString();
 		inReplyToUserId = in.readString();
 		inReplyToScreenName = in.readString();
-
-		retweetId = in.readLong();
-		retweetText = in.readString();
+		
+		rtStatusId=in.readString();
+		rtUserId=in.readString();
+		rtScreenName=in.readString();
 
 		photoImageUrl = in.readString();
 		photoLargeUrl = in.readString();
@@ -109,8 +111,9 @@ public class StatusModel extends BaseModel<StatusModel> {
 		cv.put(StatusColumns.IN_REPLY_TO_USER_ID, this.inReplyToUserId);
 		cv.put(StatusColumns.IN_REPLY_TO_SCREEN_NAME, this.inReplyToScreenName);
 
-		cv.put(StatusColumns.RETWEET_ID, this.retweetId);
-		cv.put(StatusColumns.RETWEET_TEXT, this.retweetText);
+		cv.put(StatusColumns.RT_STATUS_ID, this.rtStatusId);
+		cv.put(StatusColumns.RT_USER_ID, this.rtUserId);
+		cv.put(StatusColumns.RT_USER_SCREEN_NAME, this.rtScreenName);
 
 		cv.put(StatusColumns.PHOTO_IMAGE_URL, this.photoImageUrl);
 		cv.put(StatusColumns.PHOTO_THUMB_URL, this.photoThumbUrl);
@@ -147,13 +150,14 @@ public class StatusModel extends BaseModel<StatusModel> {
 		dest.writeString(inReplyToUserId);
 		dest.writeString(inReplyToScreenName);
 		
-		dest.writeLong(retweetId);
-		dest.writeString(retweetText);
+		dest.writeString(rtStatusId);
+		dest.writeString(rtUserId);
+		dest.writeString(rtScreenName);
+		
 
 		dest.writeString(photoImageUrl);
 		dest.writeString(photoLargeUrl);
 		dest.writeString(photoThumbUrl);
-
 
 		dest.writeInt(truncated ? 1 : 0);
 		dest.writeInt(favorited ? 1 : 0);

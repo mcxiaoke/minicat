@@ -1,7 +1,5 @@
 package com.fanfou.app.hd.dao.model;
 
-import java.util.SimpleTimeZone;
-
 import android.content.ContentResolver;
 import android.net.Uri;
 
@@ -20,8 +18,9 @@ public interface StatusColumns extends IBaseColumns {
 	public static final String IN_REPLY_TO_USER_ID = "in_reply_to_user_id";
 	public static final String IN_REPLY_TO_SCREEN_NAME = "in_reply_to_screen_name";
 	
-	public static final String RETWEET_ID="retweet_id";
-	public static final String RETWEET_TEXT="retweet_text";
+	public static final String RT_STATUS_ID="rt_status_id";
+	public static final String RT_USER_ID="rt_user_id";
+	public static final String RT_USER_SCREEN_NAME="rt_user_screen_name";
 
 	public static final String PHOTO_IMAGE_URL = "imageurl";
 	public static final String PHOTO_THUMB_URL = "thumburl";
@@ -51,7 +50,7 @@ public interface StatusColumns extends IBaseColumns {
 			+ TABLE_NAME + " ( " 
 			+ _ID + " integer primary key autoincrement, " 
 			
-			+ IDSTR + " text not null, " 
+			+ ID + " text not null, " 
 			+ ACCOUNT + "text not null, "
 			+ OWNER + " text not null, " 
 			+ NOTE + " text, "
@@ -59,7 +58,7 @@ public interface StatusColumns extends IBaseColumns {
 			+ TYPE + " integer not null, " 
 			+ FLAG + " integer not null, "
 			
-			+ ID + " integer not null, "
+			+ RAWID + " integer not null, "
 			+ TIME + " integer not null, "
 			
 			+ TEXT + " text not null, " 
@@ -76,8 +75,9 @@ public interface StatusColumns extends IBaseColumns {
 			+ IN_REPLY_TO_USER_ID + " text, "
 			+ IN_REPLY_TO_SCREEN_NAME + " text, " 
 			
-			+ RETWEET_ID + " text, "
-			+ RETWEET_TEXT + " text, "
+			+ RT_STATUS_ID + " text, "
+			+ RT_USER_ID + " text, "
+			+ RT_USER_SCREEN_NAME + " text, "
 			
 			+ PHOTO_IMAGE_URL + " text, "
 			+ PHOTO_THUMB_URL + " text, "
@@ -96,7 +96,7 @@ public interface StatusColumns extends IBaseColumns {
 			+ "unique ( " 
 			+ ACCOUNT + "," 
 			+ TYPE + "," 
-			+ IDSTR + "," 
+			+ ID
 			+ " ) on conflict ignore );";
 	
 }

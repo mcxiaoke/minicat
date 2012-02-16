@@ -13,7 +13,7 @@ import android.os.Parcelable;
  */
 abstract class BaseModel<T> implements Model, Parcelable {
 
-	protected String idstr;// id in string format
+	protected String id;// id in string format
 	protected String account; // related account id/userid
 	protected String owner; // owner id of the item
 	protected String note; // note of the item, reserved
@@ -21,13 +21,13 @@ abstract class BaseModel<T> implements Model, Parcelable {
 	protected int type; // type of the item
 	protected int flag; // flag of the item, reserved
 
-	protected long id; // raw id in number format
+	protected long rawid; // raw id in number format
 	protected long time; // created at of the item
 	
 	public BaseModel(){}
 
 	protected void readBase(Parcel in) {
-		idstr = in.readString();
+		id = in.readString();
 		owner = in.readString();
 		account = in.readString();
 		note = in.readString();
@@ -35,12 +35,12 @@ abstract class BaseModel<T> implements Model, Parcelable {
 		type = in.readInt();
 		flag = in.readInt();
 
-		id = in.readLong();
+		rawid = in.readLong();
 		time = in.readLong();
 	}
 
 	protected void writeBase(Parcel dest, int flags) {
-		dest.writeString(idstr);
+		dest.writeString(id);
 		dest.writeString(owner);
 		dest.writeString(account);
 		dest.writeString(note);
@@ -48,7 +48,7 @@ abstract class BaseModel<T> implements Model, Parcelable {
 		dest.writeInt(type);
 		dest.writeInt(flag);
 
-		dest.writeLong(id);
+		dest.writeLong(rawid);
 		dest.writeLong(time);
 	}
 
@@ -63,7 +63,7 @@ abstract class BaseModel<T> implements Model, Parcelable {
 		cv.put(IBaseColumns.TYPE, type);
 		cv.put(IBaseColumns.FLAG, flag);
 
-		cv.put(IBaseColumns.ID, id);
+		cv.put(IBaseColumns.RAWID, rawid);
 		cv.put(IBaseColumns.TIME, time);
 
 		return cv;
@@ -71,19 +71,11 @@ abstract class BaseModel<T> implements Model, Parcelable {
 
 	public abstract ContentValues values();
 
-	public String getIdstr() {
-		return idstr;
-	}
-
-	public void setIdstr(String idstr) {
-		this.idstr = idstr;
-	}
-
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -101,6 +93,14 @@ abstract class BaseModel<T> implements Model, Parcelable {
 
 	public void setOwner(String owner) {
 		this.owner = owner;
+	}
+
+	public long getRawid() {
+		return rawid;
+	}
+
+	public void setRawid(long rawid) {
+		this.rawid = rawid;
 	}
 
 	public long getTime() {

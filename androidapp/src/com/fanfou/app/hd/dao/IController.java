@@ -1,5 +1,10 @@
 package com.fanfou.app.hd.dao;
 
-public interface IController<T> {
+/**
+ * @author mcxiaoke
+ * @version 2012.02.16
+ *
+ */
+public interface IController extends IUserController,IStatusController,IRecordController,IDirectMessagesController{
 
 }

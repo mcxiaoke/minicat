@@ -46,7 +46,7 @@ public interface UserColumns extends IBaseColumns {
 			+ TABLE_NAME + " ( " 
 			+ _ID + " integer primary key autoincrement, " 
 			
-			+ IDSTR + " text not null, " 
+			+ ID + " text not null, " 
 			+ ACCOUNT + "text not null, "
 			+ OWNER + " text not null, " 
 			+ NOTE + " text, "
@@ -54,7 +54,7 @@ public interface UserColumns extends IBaseColumns {
 			+ TYPE + " integer not null, " 
 			+ FLAG + " integer not null, " 
 			
-			+ ID + " integer not null, "
+			+ RAWID + " integer not null, "
 			+ TIME + " integer not null, "
 			
 			+ NAME + " text not null, " 
@@ -83,7 +83,7 @@ public interface UserColumns extends IBaseColumns {
 			+ "unique ( " 
 			+ ACCOUNT + "," 
 			+ TYPE + "," 
-			+ IDSTR + "," 
+			+ ID
 			+ " ) on conflict ignore );";
 	
 	
