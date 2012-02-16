@@ -51,6 +51,7 @@ public class Status implements Storable<Status> {
 	}
 
 	public String id;
+	public long rawId;
 	public String ownerId;
 	public Date createdAt;
 
@@ -89,6 +90,7 @@ public class Status implements Storable<Status> {
 
 	public Status(Parcel in) {
 		id=in.readString();
+		rawId=in.readLong();
 		ownerId=in.readString();
 		createdAt=new Date(in.readLong());
 		type=in.readInt();
@@ -187,6 +189,7 @@ public class Status implements Storable<Status> {
 		Status s = new Status();
 
 		s.id = Parser.parseString(c, BasicColumns.ID);
+		s.rawId=Parser.parseLong(c, BasicColumns.RAWID);
 		s.ownerId = Parser.parseString(c, BasicColumns.OWNER_ID);
 		s.createdAt = Parser.parseDate(c, BasicColumns.CREATED_AT);
 
@@ -265,6 +268,10 @@ public class Status implements Storable<Status> {
 			Status s = new Status();
 
 			s.id = o.getString(BasicColumns.ID);
+			s.rawId=o.getLong(BasicColumns.RAWID);
+			if(App.DEBUG){
+				Log.d(TAG, "id="+s.id+" rawid="+s.rawId+" ownerId="+s.ownerId);
+			}
 			s.ownerId = App.getUserId();
 			s.createdAt = Parser.date(o.getString(BasicColumns.CREATED_AT));
 
@@ -324,6 +331,7 @@ public class Status implements Storable<Status> {
 		ContentValues cv = new ContentValues();
 
 		cv.put(BasicColumns.ID, this.id);
+		cv.put(BasicColumns.RAWID, rawId);
 		cv.put(BasicColumns.OWNER_ID, this.ownerId);
 		cv.put(BasicColumns.CREATED_AT, this.createdAt.getTime());
 
@@ -406,6 +414,7 @@ public class Status implements Storable<Status> {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(id);
+		dest.writeLong(rawId);
 		dest.writeString(ownerId);
 		dest.writeLong(createdAt.getTime());
 		dest.writeInt(type);		

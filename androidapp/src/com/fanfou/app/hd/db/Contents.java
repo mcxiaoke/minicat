@@ -18,6 +18,7 @@ import android.provider.BaseColumns;
  * @version 5.6 2011.11.07
  * @version 6.0 2011.11.10
  * @version 6.1 2011.11.11
+ * @version 6.2 2012.02.15
  * 
  */
 public final class Contents {
@@ -26,6 +27,7 @@ public final class Contents {
 
 	public static interface BasicColumns extends BaseColumns {
 		public static final String ID = "id";
+		public static final String RAWID="rawid";
 		public static final String OWNER_ID = "owner_id";
 		public static final String CREATED_AT = "created_at";
 		public static final String TYPE = "type";
@@ -55,15 +57,17 @@ public final class Contents {
 		public static final String STATUSES_COUNT = "statuses_count";
 		public static final String FOLLOWING = "following";
 
-		public static final String COLUMNS[] = { _ID, ID, OWNER_ID,
+		public static final String COLUMNS[] = { _ID, ID, RAWID,OWNER_ID,
 				SCREEN_NAME, LOCATION, GENDER, BIRTHDAY, DESCRIPTION,
 				PROFILE_IMAGE_URL, URL, PROTECTED, FOLLOWERS_COUNT,
 				FRIENDS_COUNT, FAVORITES_COUNT, STATUSES_COUNT, FOLLOWING,
 				CREATED_AT, TYPE, };
 
 		public static final String CREATE_TABLE = "create table " + TABLE_NAME
-				+ " ( " + _ID + " integer primary key autoincrement, " + ID
-				+ " text not null, " + OWNER_ID + " text , " + SCREEN_NAME
+				+ " ( " + _ID + " integer primary key autoincrement, " 
+				+ ID + " text not null, " 
+				+ RAWID + " integer not null, "
+				+OWNER_ID + " text , " + SCREEN_NAME
 				+ " text not null, " + LOCATION + " text not null, " + GENDER
 				+ " text not null, " + BIRTHDAY + " text not null, "
 				+ DESCRIPTION + " text not null, " + PROFILE_IMAGE_URL
@@ -87,6 +91,8 @@ public final class Contents {
 				+ "/vnd.fanfou.status";
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/vnd.fanfou.status";
+		
+
 
 		public static final String TEXT = "text";
 		public static final String SIMPLE_TEXT = "simple_text";
@@ -112,10 +118,11 @@ public final class Contents {
 		public static final String IS_THREAD = "is_thread";
 		public static final String HAS_PHOTO = "has_photo";
 		public static final String SPECIAL = "special";
+		public static final String IS_REPOST="is_repost";
 
 		public static final String COLUMNS[] = { _ID,
 
-		ID, OWNER_ID, CREATED_AT,
+		ID, RAWID, OWNER_ID, CREATED_AT,
 
 		TEXT, SIMPLE_TEXT, SOURCE,
 
@@ -127,15 +134,17 @@ public final class Contents {
 
 		TRUNCATED, FAVORITED, IS_SELF,
 
-		IS_READ, IS_THREAD, HAS_PHOTO, SPECIAL,
+		IS_READ, IS_THREAD, HAS_PHOTO, SPECIAL,IS_REPOST,
 
 		TYPE, };
 
 		static final String STATUS_SQL = " (" + _ID
 				+ " integer primary key autoincrement, "
 
-				+ ID + " text not null, " + OWNER_ID + " text, " + CREATED_AT
-				+ " integer not null, "
+				+ ID + " text not null, " 
+				+ RAWID + " integer not null, "
+				+ OWNER_ID + " text, " 
+				+ CREATED_AT+ " integer not null, "
 
 				+ TEXT + " text not null, " + SIMPLE_TEXT + " text not null, "
 				+ SOURCE + " text not null, "
@@ -156,6 +165,7 @@ public final class Contents {
 				+ IS_READ + " boolean not null, " + IS_THREAD
 				+ " boolean not null, " + HAS_PHOTO + " boolean not null, "
 				+ SPECIAL + " boolean not null, "
+				+ IS_REPOST + " boolean not null, "
 
 				+ TYPE + " integer not null, "
 
@@ -188,7 +198,7 @@ public final class Contents {
 		public static final String THREAD_USER_NAME = "thread_user_name";
 		public static final String IS_READ = "is_read";
 
-		public static final String COLUMNS[] = { _ID, ID, OWNER_ID, TEXT,
+		public static final String COLUMNS[] = { _ID, ID, RAWID, OWNER_ID, TEXT,
 				CREATED_AT, SENDER_ID, SENDER_SCREEN_NAME, RECIPIENT_ID,
 				RECIPIENT_SCREEN_NAME, SENDER_PROFILE_IMAGE_URL,
 				RECIPIENT_PROFILE_IMAGE_URL, TYPE,
@@ -198,9 +208,11 @@ public final class Contents {
 		};
 
 		public static final String CREATE_TABLE = "create table " + TABLE_NAME
-				+ " (" + _ID + " integer primary key autoincrement, " + ID
-				+ " text not null, " + OWNER_ID + " text , " + TEXT
-				+ " text not null, " + CREATED_AT + " integer not null, "
+				+ " (" + _ID + " integer primary key autoincrement, " 
+				+ ID+ " text not null, " 
+				+ RAWID + " integer not null, "
+				+ OWNER_ID + " text , " 
+				+ TEXT+ " text not null, " + CREATED_AT + " integer not null, "
 				+ SENDER_ID + " text not null, " + SENDER_SCREEN_NAME
 				+ " text not null, " + RECIPIENT_ID + " text not null, "
 				+ RECIPIENT_SCREEN_NAME + " text not null, "

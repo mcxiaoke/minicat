@@ -13,62 +13,31 @@ import com.fanfou.app.hd.db.Contents.DraftInfo;
  * @version 1.0 2011.12.21
  * 
  */
-public class RecordModel extends AbstractModel<RecordModel> {
+public class RecordModel extends BaseModel<RecordModel> {
+	public static final int TYPE_NONE = 0;
+	public static final int ID_NONE = 0;
+
+	public String text;
+	public String reply;
+	public String file;
 
 	public RecordModel() {
 
 	}
 
 	public RecordModel(Parcel in) {
-		id = in.readInt();
-		type = in.readInt();
-		createdAt = new Date(in.readLong());
-		ownerId = in.readString();
+		readBase(in);
 		text = in.readString();
-		replyTo = in.readString();
-		filePath = in.readString();
+		reply = in.readString();
+		file = in.readString();
 	}
 
-	@Override
-	public String toString() {
-		return "id=" + id + " text= " + text + " filepath=" + filePath;
-	}
 
-	public static final int TYPE_NONE = 0;
-	public static final int ID_NONE = 0;
-
-	public static final String TAG = RecordModel.class.getSimpleName();
-
-	public int id;
-	public String ownerId;
-	public String text;
-	public Date createdAt;
-	public int type;
-	public String replyTo;
-	public String filePath;
-	
-
-	@Override
-	public void put() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public RecordModel get(String key) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public ContentValues values() {
-		ContentValues cv = new ContentValues();
-		cv.put(DraftInfo.OWNER_ID, ownerId);
-		cv.put(DraftInfo.TEXT, text);
-		cv.put(DraftInfo.CREATED_AT, new Date().getTime());
-		cv.put(DraftInfo.TYPE, type);
-		cv.put(DraftInfo.REPLY_TO, replyTo);
-		cv.put(DraftInfo.FILE_PATH, filePath);
+		ContentValues cv = convert();
+		cv.put(RecordColumns.TEXT, text);
+		cv.put(RecordColumns.REPLY, reply);
+		cv.put(RecordColumns.FILE, file);
 		return cv;
 	}
 
@@ -79,13 +48,10 @@ public class RecordModel extends AbstractModel<RecordModel> {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(id);
-		dest.writeInt(type);
-		dest.writeLong(createdAt.getTime());
-		dest.writeString(ownerId);
+		writeBase(dest, flags);
 		dest.writeString(text);
-		dest.writeString(replyTo);
-		dest.writeString(filePath);
+		dest.writeString(reply);
+		dest.writeString(file);
 	}
 
 	public static final Parcelable.Creator<RecordModel> CREATOR = new Parcelable.Creator<RecordModel>() {
@@ -100,5 +66,10 @@ public class RecordModel extends AbstractModel<RecordModel> {
 			return new RecordModel[size];
 		}
 	};
+	
+	@Override
+	public String toString() {
+		return "id=" + id + " text= " + text + " filepath=" + file;
+	}
 
 }

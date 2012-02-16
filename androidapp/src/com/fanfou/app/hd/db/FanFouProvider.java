@@ -43,6 +43,7 @@ import com.fanfou.app.hd.util.StringHelper;
  * @version 3.8 2011.11.21
  * @version 3.9 2011.11.23
  * @version 4.0 2011.12.19
+ * @version 4.1 2012.02.15
  * 
  */
 public class FanFouProvider extends ContentProvider {
@@ -447,6 +448,7 @@ public class FanFouProvider extends ContentProvider {
 		InsertHelper ih = new InsertHelper(db, UserInfo.TABLE_NAME);
 
 		int id = ih.getColumnIndex(BasicColumns.ID);
+		int rawId=ih.getColumnIndex(BasicColumns.RAWID);
 		int ownerId = ih.getColumnIndex(BasicColumns.OWNER_ID);
 
 		int screenName = ih.getColumnIndex(UserInfo.SCREEN_NAME);
@@ -475,6 +477,7 @@ public class FanFouProvider extends ContentProvider {
 				ih.prepareForInsert();
 
 				ih.bind(id, value.getAsString(BasicColumns.ID));
+				ih.bind(rawId, value.getAsLong(BasicColumns.RAWID));
 				ih.bind(ownerId, value.getAsString(BasicColumns.OWNER_ID));
 
 				ih.bind(screenName, value.getAsString(UserInfo.SCREEN_NAME));
@@ -527,6 +530,7 @@ public class FanFouProvider extends ContentProvider {
 		InsertHelper ih = new InsertHelper(db, StatusInfo.TABLE_NAME);
 
 		int id = ih.getColumnIndex(BasicColumns.ID);
+		int rawId=ih.getColumnIndex(BasicColumns.RAWID);
 		int ownerId = ih.getColumnIndex(BasicColumns.OWNER_ID);
 		int createdAt = ih.getColumnIndex(BasicColumns.CREATED_AT);
 
@@ -566,6 +570,7 @@ public class FanFouProvider extends ContentProvider {
 				ih.prepareForInsert();
 
 				ih.bind(id, value.getAsString(BasicColumns.ID));
+				ih.bind(rawId, value.getAsLong(BasicColumns.RAWID));
 				ih.bind(ownerId, value.getAsString(BasicColumns.OWNER_ID));
 				ih.bind(createdAt, value.getAsLong(BasicColumns.CREATED_AT));
 

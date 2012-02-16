@@ -39,6 +39,7 @@ import com.fanfou.app.hd.util.DateTimeHelper;
  * @version 1.6 2011.11.23
  * @version 1.7 2011.12.01
  * @version 1.8 2011.12.16
+ * @version 1.9 2012.02.15
  * 
  */
 public final class Parser implements ResponseCode {
@@ -46,6 +47,7 @@ public final class Parser implements ResponseCode {
 	public static final String TAG = "Parser";
 
 	public static final String ID = "id";
+	public static final String RAWID="rawid";
 	public static final String NAME = "name";
 	public static final String SCREEN_NAME = "screen_name";
 	public static final String LOCATION = "location";

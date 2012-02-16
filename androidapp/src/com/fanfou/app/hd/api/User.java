@@ -42,6 +42,7 @@ public class User implements Storable<User> {
 
 	public Date createdAt;
 	public String id;
+	public long rawId;
 	public String ownerId;
 
 	public String screenName;
@@ -68,6 +69,7 @@ public class User implements Storable<User> {
 
 	public User(Parcel in) {
 		id = in.readString();
+		rawId=in.readLong();
 		ownerId = in.readString();
 		createdAt = new Date(in.readLong());
 		type = in.readInt();
@@ -127,6 +129,7 @@ public class User implements Storable<User> {
 		User user = new User();
 		user.createdAt = Parser.parseDate(c, BasicColumns.CREATED_AT);
 		user.id = Parser.parseString(c, BasicColumns.ID);
+		user.rawId=0;
 		user.ownerId = Parser.parseString(c, BasicColumns.OWNER_ID);
 		user.screenName = Parser.parseString(c, UserInfo.SCREEN_NAME);
 		user.location = Parser.parseString(c, UserInfo.LOCATION);
@@ -157,6 +160,7 @@ public class User implements Storable<User> {
 		try {
 			User user = new User();
 			user.id = o.getString(BasicColumns.ID);
+			user.rawId=0;
 			user.screenName = o.getString(UserInfo.SCREEN_NAME);
 			user.location = o.getString(UserInfo.LOCATION);
 			user.gender = o.getString(UserInfo.GENDER);
@@ -211,6 +215,7 @@ public class User implements Storable<User> {
 		ContentValues cv = new ContentValues();
 
 		cv.put(BasicColumns.ID, u.id);
+		cv.put(BasicColumns.RAWID, rawId);
 		cv.put(BasicColumns.OWNER_ID, u.ownerId);
 
 		cv.put(UserInfo.SCREEN_NAME, u.screenName);
@@ -278,6 +283,7 @@ public class User implements Storable<User> {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(id);
+		dest.writeLong(rawId);
 		dest.writeString(ownerId);
 		dest.writeLong(createdAt.getTime());
 		dest.writeInt(type);
