@@ -1,7 +1,5 @@
 package com.fanfou.app.hd.dao.model;
 
-import java.util.Date;
-
 import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -26,8 +24,7 @@ public class DirectMessageModel extends BaseModel<DirectMessageModel> {
 	private String recipientScreenName;
 	private String recipientProfileImageUrl;
 
-	private String threadUserId;
-	private String threadUserName;
+	private String conversationId;
 
 	private boolean read;
 
@@ -50,8 +47,7 @@ public class DirectMessageModel extends BaseModel<DirectMessageModel> {
 		recipientScreenName = in.readString();
 		recipientProfileImageUrl = in.readString();
 
-		threadUserId = in.readString();
-		threadUserName = in.readString();
+		conversationId = in.readString();
 
 		read = in.readInt() == 0 ? false : true;
 	}
@@ -73,8 +69,7 @@ public class DirectMessageModel extends BaseModel<DirectMessageModel> {
 		cv.put(DirectMessageColumns.RECIPIENT_PROFILE_IMAGE_URL,
 				this.recipientProfileImageUrl);
 
-		cv.put(DirectMessageColumns.THREAD_USER_ID, this.threadUserId);
-		cv.put(DirectMessageColumns.THREAD_USER_NAME, this.threadUserName);
+		cv.put(DirectMessageColumns.CONVERSATION_ID, this.conversationId);
 
 		cv.put(DirectMessageColumns.READ, this.read);
 
@@ -94,8 +89,7 @@ public class DirectMessageModel extends BaseModel<DirectMessageModel> {
 		dest.writeString(recipientScreenName);
 		dest.writeString(recipientProfileImageUrl);
 
-		dest.writeString(threadUserId);
-		dest.writeString(threadUserName);
+		dest.writeString(conversationId);
 
 		dest.writeInt(read ? 1 : 0);
 

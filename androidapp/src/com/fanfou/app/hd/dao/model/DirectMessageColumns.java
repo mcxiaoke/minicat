@@ -14,8 +14,7 @@ public interface DirectMessageColumns extends IBaseColumns {
 	public static final String RECIPIENT_SCREEN_NAME = "recipient_screen_name";
 	public static final String RECIPIENT_PROFILE_IMAGE_URL = "recipient_profile_image_url";
 
-	public static final String THREAD_USER_ID = "thread_user_id";
-	public static final String THREAD_USER_NAME = "thread_user_name";
+	public static final String CONVERSATION_ID = "conversation_id";
 	
 	public static final String READ = "read";
 	
@@ -24,7 +23,6 @@ public interface DirectMessageColumns extends IBaseColumns {
 	public static final String TABLE_NAME = "dm";
 	public static final Uri CONTENT_URI = Uri.parse("content://"
 			+ AUTHORITY + "/" + TABLE_NAME);
-	public static final String URI_PATH = TABLE_NAME;
 	public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
 			+ "/vnd.mcxiaoke.dm";
 	public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
@@ -56,8 +54,7 @@ public interface DirectMessageColumns extends IBaseColumns {
 			+ RECIPIENT_SCREEN_NAME + " text not null, "
 			+ RECIPIENT_PROFILE_IMAGE_URL + " text not null, " 
 			
-			+ THREAD_USER_ID + " text not null, "
-			+ THREAD_USER_NAME + " text not null, " 
+			+ CONVERSATION_ID + " text not null, "
 			+ READ + " boolean not null, "
 			
 			+ "unique ( " 

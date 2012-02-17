@@ -14,7 +14,6 @@ public interface RecordColumns extends IBaseColumns {
 	public static final String TABLE_NAME = "record";
 	public static final Uri CONTENT_URI = Uri.parse("content://"
 			+ AUTHORITY + "/" + TABLE_NAME);
-	public static final String URI_PATH = TABLE_NAME;
 	public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
 			+ "/vnd.mcxiaoke.record";
 	public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
