@@ -3,6 +3,11 @@ package com.fanfou.app.hd.dao.model;
 import android.content.ContentResolver;
 import android.net.Uri;
 
+/**
+ * @author mcxiaoke
+ * @version 1.0 2012.02.16
+ *
+ */
 public interface DirectMessageColumns extends IBaseColumns {
 	public static final String TEXT = "text";
 	

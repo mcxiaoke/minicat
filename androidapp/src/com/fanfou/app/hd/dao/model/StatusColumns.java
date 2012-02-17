@@ -3,6 +3,11 @@ package com.fanfou.app.hd.dao.model;
 import android.content.ContentResolver;
 import android.net.Uri;
 
+/**
+ * @author mcxiaoke
+ * @version 1.0 2012.02.16
+ *
+ */
 public interface StatusColumns extends IBaseColumns {
 	public static final String TEXT = "text";
 	public static final String SIMPLE_TEXT = "simple_text";
@@ -10,8 +15,8 @@ public interface StatusColumns extends IBaseColumns {
 	public static final String GEO="geo";
 	public static final String MEDIA="media";
 
+	public static final String USER_RAWID = "user_rawid";
 	public static final String USER_ID = "user_id";
-	public static final String USER_IDSTR = "user_idstr";
 	public static final String USER_SCREEN_NAME = "user_screen_name";
 	
 	public static final String IN_REPLY_TO_STATUS_ID = "in_reply_to_status_id";
@@ -66,8 +71,8 @@ public interface StatusColumns extends IBaseColumns {
 			+ GEO + " text, " 
 			+ MEDIA+ " text, "
 			
-			+ USER_ID + " integer not null, "
-			+ USER_IDSTR + " text not null, "
+			+ USER_RAWID + " integer not null, "
+			+ USER_ID + " text not null, "
 			+ USER_SCREEN_NAME + " text not null, " 
 			
 			+ IN_REPLY_TO_STATUS_ID + " text, " 

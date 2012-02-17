@@ -4,6 +4,11 @@ import com.fanfou.app.hd.service.Constants;
 
 import android.provider.BaseColumns;
 
+/**
+ * @author mcxiaoke
+ * @version 1.0 2012.02.16
+ *
+ */
 public interface IBaseColumns extends BaseColumns{
 	public static final String AUTHORITY = Constants.PACKAGE_NAME+".provider";
 	

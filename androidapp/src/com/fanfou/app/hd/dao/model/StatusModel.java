@@ -10,20 +10,21 @@ import android.os.Parcelable;
  * @author mcxiaoke
  * @version 1.0 2011.12.21
  * @version 1.1 2012.02.15
+ * @version 1.2 2012.02.17
  * 
  */
 public class StatusModel extends BaseModel<StatusModel> {
 
 	public static final String TAG = StatusModel.class.getSimpleName();
 
-	private String text;
-	private String simpleText;
-	private String source;
-	private String geo;
-	private String media;
+	private String text; // html format text
+	private String simpleText; // plain text
+	private String source; // source
+	private String geo; // geo location info
+	private String media;// photo url or video url
 
-	private long userId;
-	private String userIdstr;
+	private long userRawid; // user id
+	private String userId; //
 	private String userScreenName;
 
 	private String inReplyToStatusId;
@@ -65,8 +66,8 @@ public class StatusModel extends BaseModel<StatusModel> {
 		geo = in.readString();
 		media = in.readString();
 
-		userId = in.readLong();
-		userIdstr = in.readString();
+		userRawid = in.readLong();
+		userId = in.readString();
 		userScreenName = in.readString();
 
 		inReplyToStatusId = in.readString();
@@ -103,8 +104,8 @@ public class StatusModel extends BaseModel<StatusModel> {
 		cv.put(StatusColumns.GEO, this.geo);
 		cv.put(StatusColumns.MEDIA, this.media);
 
+		cv.put(StatusColumns.USER_RAWID, this.userRawid);
 		cv.put(StatusColumns.USER_ID, this.userId);
-		cv.put(StatusColumns.USER_IDSTR, this.userIdstr);
 		cv.put(StatusColumns.USER_SCREEN_NAME, this.userScreenName);
 
 		cv.put(StatusColumns.IN_REPLY_TO_STATUS_ID, this.inReplyToStatusId);
@@ -142,8 +143,8 @@ public class StatusModel extends BaseModel<StatusModel> {
 		dest.writeString(geo);
 		dest.writeString(media);
 
-		dest.writeLong(userId);
-		dest.writeString(userIdstr);
+		dest.writeLong(userRawid);
+		dest.writeString(userId);
 		dest.writeString(userScreenName);
 
 		dest.writeString(inReplyToStatusId);
