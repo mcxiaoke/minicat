@@ -245,7 +245,7 @@ public final class UILogin extends Activity implements OnClickListener {
 					R.string.option_userid, null);
 			try {
 				XAuthService xauth = new XAuthService(new FanFouOAuthProvider());
-				OAuthToken token = xauth.requestOAuthAccessToken(username,
+				OAuthToken token = xauth.getOAuthAccessToken(username,
 						password);
 				if (App.DEBUG)
 					log("xauth token=" + token);

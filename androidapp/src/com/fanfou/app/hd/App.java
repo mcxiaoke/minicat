@@ -18,6 +18,7 @@ import android.util.Log;
 
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.api.User;
+import com.fanfou.app.hd.auth.AccessToken;
 import com.fanfou.app.hd.auth.OAuthToken;
 import com.fanfou.app.hd.cache.IImageLoader;
 import com.fanfou.app.hd.cache.ImageLoader;
@@ -122,7 +123,7 @@ public class App extends Application {
 				R.string.option_oauth_token_secret, null);
 		App.verified = !StringHelper.isEmpty(oauthAccessTokenSecret);
 		if (App.verified) {
-			sToken = new OAuthToken(oauthAccessToken, oauthAccessTokenSecret);
+			sToken = new AccessToken(oauthAccessToken, oauthAccessTokenSecret);
 		}
 	}
 

@@ -28,14 +28,18 @@ import com.fanfou.app.hd.util.Base64;
  * @version 2.0 2011.12.01
  * @version 2.1 2011.12.02
  * @version 2.2 2011.12.07
+ * @version 2.3 2012.02.17
  * 
  */
 public final class OAuthHelper {
 	public static final String OAUTH_VERSION1 = "1.0";
+	public static final String OAUTH_CALLBACK="oauth_callback";
+	public static final String OAUTH_VERIFIER="oauth_verifier";
 	public static final String HMAC_SHA1 = "HmacSHA1";
 	public final static String KEY_SUFFIX = "FE0687E249EBF374";
 	public static final Parameter OAUTH_SIGNATURE_METHOD = new Parameter(
 			"oauth_signature_method", "HMAC-SHA1");
+	
 
 	private static final String TAG = OAuthHelper.class.getSimpleName();
 
@@ -76,11 +80,11 @@ public final class OAuthHelper {
 		}
 		parseGetParams(url, signatureBaseParams);
 
-		String encodedUrl = OAuthHelper.encode(
-				OAuthHelper.constructRequestURL(url));
+		String encodedUrl = OAuthHelper.encode(OAuthHelper
+				.constructRequestURL(url));
 
-		String encodedParams = OAuthHelper.encode(
-				OAuthHelper.alignParams(signatureBaseParams));
+		String encodedParams = OAuthHelper.encode(OAuthHelper
+				.alignParams(signatureBaseParams));
 
 		StringBuffer base = new StringBuffer(method).append("&")
 				.append(encodedUrl).append("&").append(encodedParams);
@@ -200,32 +204,29 @@ public final class OAuthHelper {
 		}
 		return buf.toString();
 	}
+	
+    public static String constructRequestURL(String url) {
+        int index = url.indexOf("?");
+        if (-1 != index) {
+            url = url.substring(0, index);
+        }
+        int slashIndex = url.indexOf("/", 8);
+        String baseURL = url.substring(0, slashIndex).toLowerCase();
+        int colonIndex = baseURL.indexOf(":", 8);
+        if (-1 != colonIndex) {
+            // url contains port number
+            if (baseURL.startsWith("http://") && baseURL.endsWith(":80")) {
+                // http default port 80 MUST be excluded
+                baseURL = baseURL.substring(0, colonIndex);
+            } else if (baseURL.startsWith("https://") && baseURL.endsWith(":443")) {
+                // http default port 443 MUST be excluded
+                baseURL = baseURL.substring(0, colonIndex);
+            }
+        }
+        url = baseURL + url.substring(slashIndex);
 
-	private static String constructRequestURL(String url) {
-		int index = url.indexOf("?");
-		if (-1 != index) {
-			url = url.substring(0, index);
-		}
-		int slashIndex = url.indexOf("/", 8);
-
-		String baseURL = url.substring(0, slashIndex).toLowerCase();
-
-		// int colonIndex = baseURL.indexOf(":", 8);
-		// if (-1 != colonIndex) {
-		// if (baseURL.startsWith("http://") && baseURL.endsWith(":80")) {
-		// baseURL = baseURL.substring(0, colonIndex);
-		// } else if (baseURL.startsWith("https://")
-		// && baseURL.endsWith(":443")) {
-		// baseURL = baseURL.substring(0, colonIndex);
-		// }
-		// }
-
-		url = baseURL + url.substring(slashIndex);
-		if (App.DEBUG) {
-			Log.d(TAG, "constructRequestURL result=" + url);
-		}
-		return url;
-	}
+        return url;
+    }
 
 	static String encode(String value) {
 		String encoded = null;

@@ -24,6 +24,7 @@ import com.fanfou.app.hd.http.NetResponse;
  * @version 4.2 2011.12.05
  * @version 4.3 2011.12.07
  * @version 4.4 2011.12.12
+ * @version 4.5 2012.02.17
  * 
  */
 public class XAuthService {
@@ -39,7 +40,7 @@ public class XAuthService {
 		mOAuthProvider = provider;
 	}
 
-	public OAuthToken requestOAuthAccessToken(String username, String password)
+	public OAuthToken getOAuthAccessToken(String username, String password)
 			throws OAuthTokenException, IOException {
 		String authorization = OAuthHelper.buildXAuthHeader(username, password,
 				HttpGet.METHOD_NAME, mOAuthProvider.getAccessTokenURL(),
@@ -56,9 +57,8 @@ public class XAuthService {
 					+ " response=" + content);
 		}
 		if (res.statusCode == 200) {
-			return OAuthToken.from(content);
+			return new AccessToken(content);
 		}
-		// throw new OAuthTokenException(Parser.error(content));
 		throw new OAuthTokenException("登录失败，帐号或密码错误");
 	}
 }

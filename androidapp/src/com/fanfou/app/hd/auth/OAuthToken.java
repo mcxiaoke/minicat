@@ -1,61 +1,58 @@
 package com.fanfou.app.hd.auth;
 
-import java.io.IOException;
+import javax.crypto.spec.SecretKeySpec;
+
 import java.io.Serializable;
 
-public class OAuthToken implements Serializable {
+public abstract class OAuthToken implements Serializable {
 
-	private static final long serialVersionUID = 3891133932519746686L;
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 2385887178385032767L;
+
 	private String token;
 	private String tokenSecret;
 
-	public OAuthToken() {
-	}
+	private transient SecretKeySpec secretKeySpec;
+	String[] responseStr = null;
 
 	public OAuthToken(String token, String tokenSecret) {
 		this.token = token;
 		this.tokenSecret = tokenSecret;
 	}
 
-	public static OAuthToken from(String response) throws IOException {
-		return parse(response);
-	}
-
-	private static OAuthToken parse(String response) {
-		OAuthToken token = null;
-		try {
-			String[] strs = response.split("&");
-			token = new OAuthToken();
-			for (String str : strs) {
-				if (str.startsWith("oauth_token=")) {
-					token.setToken(str.split("=")[1].trim());
-				} else if (str.startsWith("oauth_token_secret=")) {
-					token.setTokenSecret(str.split("=")[1].trim());
-				}
-			}
-		} catch (Exception e) {
-		}
-		return token;
+	public OAuthToken(String content) {
+		responseStr = content.split("&");
+		tokenSecret = getParameter("oauth_token_secret");
+		token = getParameter("oauth_token");
 	}
 
 	public String getToken() {
 		return token;
 	}
 
-	public void setToken(String token) {
-		this.token = token;
-	}
-
 	public String getTokenSecret() {
 		return tokenSecret;
 	}
 
-	public void setTokenSecret(String tokenSecret) {
-		this.tokenSecret = tokenSecret;
+	void setSecretKeySpec(SecretKeySpec secretKeySpec) {
+		this.secretKeySpec = secretKeySpec;
 	}
 
-	public boolean isNull() {
-		return token == null || tokenSecret == null;
+	SecretKeySpec getSecretKeySpec() {
+		return secretKeySpec;
+	}
+
+	public String getParameter(String parameter) {
+		String value = null;
+		for (String str : responseStr) {
+			if (str.startsWith(parameter + '=')) {
+				value = str.split("=")[1].trim();
+				break;
+			}
+		}
+		return value;
 	}
 
 	@Override
@@ -67,6 +64,9 @@ public class OAuthToken implements Serializable {
 
 		OAuthToken that = (OAuthToken) o;
 
+		if (secretKeySpec != null ? !secretKeySpec.equals(that.secretKeySpec)
+				: that.secretKeySpec != null)
+			return false;
 		if (!token.equals(that.token))
 			return false;
 		if (!tokenSecret.equals(that.tokenSecret))
@@ -79,12 +79,14 @@ public class OAuthToken implements Serializable {
 	public int hashCode() {
 		int result = token.hashCode();
 		result = 31 * result + tokenSecret.hashCode();
+		result = 31 * result
+				+ (secretKeySpec != null ? secretKeySpec.hashCode() : 0);
 		return result;
 	}
 
 	@Override
 	public String toString() {
 		return "OAuthToken{" + "token='" + token + '\'' + ", tokenSecret='"
-				+ tokenSecret + '}';
+				+ tokenSecret + '\'' + ", secretKeySpec=" + secretKeySpec + '}';
 	}
 }
