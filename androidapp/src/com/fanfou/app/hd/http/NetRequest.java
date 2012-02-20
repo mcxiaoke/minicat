@@ -3,6 +3,7 @@ package com.fanfou.app.hd.http;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -26,6 +27,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 2.0 2011.12.01
  * @version 2.1 2011.12.02
  * @version 2.2 2011.12.05
+ * @version 2.3 2012.02.20
  * 
  */
 public final class NetRequest {
@@ -93,16 +95,13 @@ public final class NetRequest {
 		private String url;
 
 		public Builder() {
-			this.post = false;
+			post = false;
 			params = new ArrayList<Parameter>();
 			headers = new ArrayList<Header>();
 		}
 
 		public Builder url(String url) {
-			if (TextUtils.isEmpty(url)) {
-				throw new IllegalArgumentException(
-						"Builder.url() request url must not be empty or null.");
-			}
+			assert(url!=null&&url.length()>0);
 			this.url = url;
 			return this;
 		}
@@ -223,8 +222,36 @@ public final class NetRequest {
 			return this;
 		}
 
+		public Builder withNameValuePair(List<NameValuePair> params) {
+			for (NameValuePair pair : params) {
+				this.params.add(new Parameter(pair));
+			}
+			return this;
+		}
+		
+		public Builder withNameValuePair(NameValuePair[] params) {
+			for (NameValuePair pair : params) {
+				this.param(pair);
+			}
+			return this;
+		}
+
 		public Builder params(List<Parameter> params) {
 			this.params.addAll(params);
+			return this;
+		}
+
+		public Builder params(Parameter[] params) {
+			for (Parameter param : params) {
+				this.param(param);
+			}
+			return this;
+		}
+
+		public Builder params(Map<String, String> map) {
+			for (String key : map.keySet()) {
+				params.add(new Parameter(key, map.get(key)));
+			}
 			return this;
 		}
 

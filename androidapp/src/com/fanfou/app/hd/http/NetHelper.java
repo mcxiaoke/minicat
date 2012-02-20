@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
@@ -17,6 +18,7 @@ import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.HttpVersion;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -87,7 +89,7 @@ public final class NetHelper {
 		return entity;
 	}
 
-	public static HttpEntity encodeForPost(List<Parameter> params) {
+	public static HttpEntity encodeForPost(List<? extends NameValuePair> params) {
 		if (Utils.isEmpty(params)) {
 			return null;
 		}
@@ -97,17 +99,43 @@ public final class NetHelper {
 		}
 		return null;
 	}
+	
+	public static HttpEntity encodeForPost(NameValuePair[] params) {
+		if (params==null||params.length<1) {
+			return null;
+		}
+		try {
+			List<NameValuePair> values=Arrays.asList(params);
+			return new UrlEncodedFormEntity(values, HTTP.UTF_8);
+		} catch (UnsupportedEncodingException e) {
+		}
+		return null;
+	}
 
-	public static String encodeForGet(List<Parameter> params) {
+	public static String encodeForGet(List<? extends NameValuePair> params) {
 		if (Utils.isEmpty(params)) {
 			return "";
 		}
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < params.size(); i++) {
-			Parameter p = params.get(i);
-			if (p.isFile()) {
-				throw new IllegalArgumentException("GET参数不能包含文件");
+			NameValuePair p = params.get(i);
+			if (i > 0) {
+				sb.append("&");
 			}
+			sb.append(encode(p.getName())).append("=")
+					.append(encode(p.getValue()));
+		}
+
+		return sb.toString();
+	}
+	
+	public static String encodeForGet(NameValuePair[] params) {
+		if (params==null||params.length<1) {
+			return "";
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < params.length;i++) {
+			NameValuePair p = params[i];
 			if (i > 0) {
 				sb.append("&");
 			}

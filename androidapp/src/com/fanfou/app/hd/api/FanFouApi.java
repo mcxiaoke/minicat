@@ -19,6 +19,7 @@ import com.fanfou.app.hd.auth.FanFouOAuthProvider;
 import com.fanfou.app.hd.auth.OAuthService;
 import com.fanfou.app.hd.auth.OAuthToken;
 import com.fanfou.app.hd.cache.CacheManager;
+import com.fanfou.app.hd.http.HttpClients;
 import com.fanfou.app.hd.http.NetHelper;
 import com.fanfou.app.hd.http.NetRequest;
 import com.fanfou.app.hd.http.NetResponse;
@@ -53,19 +54,25 @@ import com.fanfou.app.hd.util.StringHelper;
  * @version 6.1 2011.12.20
  * @version 6.2 2011.12.23
  * @version 6.3 2011.12.26
+ * @version 7.0 2012.02.20
  * 
  */
 public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	private static final String TAG = FanFouApi.class.getSimpleName();
+	
+	public static final FanFouOAuthProvider PROVIDER=new FanFouOAuthProvider();
+
+	private HttpClients mHttpClients;
 
 	private void log(String message) {
 		Log.d(TAG, message);
 	}
 
 	private FanFouApi() {
+		mHttpClients=App.getHttpClients();
 	}
-
-	public static FanFouApi newInstance() {
+	
+	public static FanFouApi newInstance(){
 		return new FanFouApi();
 	}
 
@@ -77,14 +84,9 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 	 * @throws ApiException
 	 */
 	private NetResponse fetch(final NetRequest request) throws ApiException {
-		final FanFouOAuthProvider provider=new FanFouOAuthProvider();
-		final OAuthToken token=App.getOAuthToken();
-		final OAuthService service=new OAuthService(provider,token);
-		final OAuthClient client = new OAuthClient(service,request);
 		try {
-			HttpResponse response = client.exec();
-			NetResponse res = new NetResponse(response);
-			int statusCode = response.getStatusLine().getStatusCode();
+			NetResponse res=mHttpClients.execute(request, true);
+			int statusCode=res.statusCode;
 			if (App.DEBUG) {
 				log("fetch() url=" + request.url + " post=" + request.post
 						+ " statusCode=" + statusCode);
@@ -979,44 +981,44 @@ public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
 
 }
 
-class OAuthClient {
-	private static final String TAG = OAuthClient.class.getSimpleName();
-	private final OAuthService mOAuthService;
-	private final HttpClient mClient;
-	private final NetRequest mNetRequest;
-
-	public OAuthClient(OAuthService oauth,NetRequest nr) {
-		this.mOAuthService = oauth;
-		this.mNetRequest=nr;
-		this.mClient = NetHelper.newSingleHttpClient();
-	}
-
-	public HttpResponse exec() throws IOException {
-		if (TextUtils.isEmpty(mNetRequest.url)) {
-			throw new IllegalArgumentException(
-					"request url must not be empty or null.");
-		}
-		mOAuthService.signRequest(mNetRequest.request, mNetRequest.getParams());
-		NetHelper.setProxy(mClient);
-		if (App.DEBUG) {
-			Log.d(TAG, "[Request] " + mNetRequest.request.getRequestLine().toString());
-		}
-		HttpResponse response = mClient.execute(mNetRequest.request);
-		if (App.DEBUG) {
-			Log.d(TAG, "[Response] " + response.getStatusLine().toString());
-		}
-		return response;
-	}
-
-	public void abort() {
-		if (mNetRequest != null) {
-			mNetRequest.request.abort();
-			close();
-		}
-	}
-
-	private void close() {
-		mClient.getConnectionManager().shutdown();
-	}
-
-}
+//class OAuthClient {
+//	private static final String TAG = OAuthClient.class.getSimpleName();
+//	private final OAuthService mOAuthService;
+//	private final HttpClient mClient;
+//	private final NetRequest mNetRequest;
+//
+//	public OAuthClient(OAuthService oauth,NetRequest nr) {
+//		this.mOAuthService = oauth;
+//		this.mNetRequest=nr;
+//		this.mClient = NetHelper.newSingleHttpClient();
+//	}
+//
+//	public HttpResponse exec() throws IOException {
+//		if (TextUtils.isEmpty(mNetRequest.url)) {
+//			throw new IllegalArgumentException(
+//					"request url must not be empty or null.");
+//		}
+//		mOAuthService.authorize(mNetRequest.request, mNetRequest.getParams());
+//		NetHelper.setProxy(mClient);
+//		if (App.DEBUG) {
+//			Log.d(TAG, "[Request] " + mNetRequest.request.getRequestLine().toString());
+//		}
+//		HttpResponse response = mClient.execute(mNetRequest.request);
+//		if (App.DEBUG) {
+//			Log.d(TAG, "[Response] " + response.getStatusLine().toString());
+//		}
+//		return response;
+//	}
+//
+//	public void abort() {
+//		if (mNetRequest != null) {
+//			mNetRequest.request.abort();
+//			close();
+//		}
+//	}
+//
+//	private void close() {
+//		mClient.getConnectionManager().shutdown();
+//	}
+//
+//}

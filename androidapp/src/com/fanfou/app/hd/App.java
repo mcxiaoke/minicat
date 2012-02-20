@@ -17,11 +17,14 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.fanfou.app.hd.R;
+import com.fanfou.app.hd.api.FanFouApi;
 import com.fanfou.app.hd.api.User;
 import com.fanfou.app.hd.auth.AccessToken;
+import com.fanfou.app.hd.auth.OAuthService;
 import com.fanfou.app.hd.auth.OAuthToken;
 import com.fanfou.app.hd.cache.IImageLoader;
 import com.fanfou.app.hd.cache.ImageLoader;
+import com.fanfou.app.hd.http.HttpClients;
 import com.fanfou.app.hd.util.AlarmHelper;
 import com.fanfou.app.hd.util.DateTimeHelper;
 import com.fanfou.app.hd.util.NetworkHelper;
@@ -46,6 +49,7 @@ import com.fanfou.app.hd.util.StringHelper;
  * @version 5.7 2011.12.05
  * @version 6.0 2011.12.06
  * @version 6.1 2011.12.26
+ * @version 6.2 2012.02.20
  * 
  */
 
@@ -72,19 +76,22 @@ public class App extends Application {
 	private static OAuthToken sToken;
 	private static ApnType sApnType;
 	private static IImageLoader sLoader;
+	
+	private static HttpClients sHttpClients;
+	private static OAuthService sOAuthService;
 
 	@Override
 	public void onCreate() {
-
 		super.onCreate();
-		init();
-		initAppInfo();
+		initialize();
 		initPreferences();
+		initOAuth();
+		initAppInfo();
 		versionCheck();
 		ACRA.init(this);
 	}
 
-	private void init() {
+	private void initialize() {
 		// if (DEBUG) {
 		// StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 		// .detectAll().penaltyLog().build());
@@ -126,6 +133,12 @@ public class App extends Application {
 			sToken = new AccessToken(oauthAccessToken, oauthAccessTokenSecret);
 		}
 	}
+	
+	private void initOAuth(){
+		App.sOAuthService=new OAuthService(FanFouApi.PROVIDER, sToken);
+		App.sHttpClients=new HttpClients();
+		App.sHttpClients.setoAuthService(sOAuthService);
+	}
 
 	private void initAppInfo() {
 		if (DEBUG) {
@@ -166,7 +179,7 @@ public class App extends Application {
 		}
 		sUserId = u.id;
 		sUserScreenName = u.screenName;
-		setOAuthToken(otoken);
+		setAccessToken(otoken);
 		OptionHelper.updateAccountInfo(context, u, otoken);
 
 	}
@@ -184,13 +197,13 @@ public class App extends Application {
 		if (DEBUG) {
 			Log.d("App", "removeAccountInfo");
 		}
-		setOAuthToken(null);
+		setAccessToken(null);
 		sUserId = null;
 		sUserScreenName = null;
 		OptionHelper.removeAccountInfo(context);
 	}
 
-	public synchronized static void setOAuthToken(final OAuthToken otoken) {
+	public synchronized static void setAccessToken(final OAuthToken otoken) {
 		if (otoken == null) {
 			verified = false;
 			sToken = null;
@@ -198,6 +211,7 @@ public class App extends Application {
 			verified = true;
 			sToken = otoken;
 		}
+		sOAuthService.setAccessToken(sToken);
 	}
 
 	public static App getApp() {
@@ -220,10 +234,6 @@ public class App extends Application {
 		return sApnType;
 	}
 
-	public static void setToken(OAuthToken sToken) {
-		App.sToken = sToken;
-	}
-
 	public static void setApnType(ApnType sApnType) {
 		App.sApnType = sApnType;
 	}
@@ -237,6 +247,10 @@ public class App extends Application {
 			sLoader = ImageLoader.getInstance();
 		}
 		return sLoader;
+	}
+	
+	public static HttpClients getHttpClients(){
+		return sHttpClients;
 	}
 
 	public static enum ApnType {

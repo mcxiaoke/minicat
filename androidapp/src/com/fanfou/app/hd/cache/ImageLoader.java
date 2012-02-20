@@ -9,6 +9,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -16,7 +17,8 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.http.NetClient;
+import com.fanfou.app.hd.http.HttpClients;
+import com.fanfou.app.hd.http.NetResponse;
 import com.fanfou.app.hd.util.ImageHelper;
 
 /**
@@ -51,7 +53,7 @@ public class ImageLoader implements IImageLoader {
 	private final Map<String, ImageView> mViewsMap;
 	private final ImageCache mCache;
 	private final Handler mHandler;
-	private final NetClient mClient;
+	private final HttpClients mClient;
 	private final Thread mDaemon;
 
 	private static final class ImageLoaderHolder {
@@ -69,7 +71,7 @@ public class ImageLoader implements IImageLoader {
 		// NameCountThreadFactory());
 		this.mCache = ImageCache.getInstance();
 		this.mViewsMap = new HashMap<String, ImageView>();
-		this.mClient = new NetClient();
+		this.mClient = App.getHttpClients();
 		this.mHandler = new InnerHandler();
 		this.mDaemon = new Daemon();
 		this.mDaemon.start();
@@ -117,7 +119,8 @@ public class ImageLoader implements IImageLoader {
 		Bitmap bitmap = mCache.get(url);
 		if (bitmap == null) {
 			try {
-				bitmap = mClient.getBitmap(url);
+				NetResponse res=mClient.get(url, false);
+				bitmap=BitmapFactory.decodeStream(res.getInputStream());
 			} catch (Exception e) {
 				Log.e(TAG, "download error:" + e.getMessage());
 			}
@@ -261,62 +264,6 @@ public class ImageLoader implements IImageLoader {
 				return 1;
 			} else {
 				return 0;
-			}
-		}
-	}
-
-	@SuppressWarnings("unused")
-	private static final class Worker implements Runnable {
-		private String url;
-		private final Handler handler;
-		private final ImageCache cache;
-		private final NetClient conn;
-
-		public Worker(final Task pair, final ImageCache cache,
-				final NetClient conn) {
-			this.url = pair.url;
-			this.handler = pair.handler;
-			this.cache = cache;
-			this.conn = conn;
-		}
-
-		@Override
-		public void run() {
-			download();
-		}
-
-		private void download() {
-			Bitmap bitmap = cache.get(url);
-			if (bitmap == null) {
-				try {
-					bitmap = conn.getBitmap(url);
-				} catch (IOException e) {
-					Log.e(TAG, "download error:" + e.getMessage());
-				}
-				if (bitmap != null) {
-					cache.put(url, bitmap);
-					if (App.DEBUG) {
-						Log.d(TAG, "download put bitmap to cache ");
-					}
-				}
-			}
-			if (handler != null) {
-				final Message message = handler.obtainMessage();
-				if (bitmap != null) {
-					message.what = MESSAGE_FINISH;
-					message.obj = bitmap;
-				} else {
-					message.what = MESSAGE_ERROR;
-				}
-				if (App.DEBUG) {
-					Log.d(TAG, "download send message bitmap= " + bitmap);
-				}
-				message.getData().putString(EXTRA_URL, url);
-				handler.sendMessage(message);
-			} else {
-				if (App.DEBUG) {
-					Log.d(TAG, "download handle is null, bitmap= " + bitmap);
-				}
 			}
 		}
 	}

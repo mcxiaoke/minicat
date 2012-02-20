@@ -9,9 +9,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -31,7 +28,7 @@ import android.widget.RemoteViews;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.UIVersionUpdate;
-import com.fanfou.app.hd.http.NetClient;
+import com.fanfou.app.hd.http.NetResponse;
 import com.fanfou.app.hd.util.DateTimeHelper;
 import com.fanfou.app.hd.util.IOHelper;
 import com.fanfou.app.hd.util.OptionHelper;
@@ -51,6 +48,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 2.7 2012.01.05
  * @version 2.8 2012.01.16
  * @version 2.9 2012.02.03
+ * @version 3.0 2012.02.20
  * 
  */
 public class DownloadService extends BaseIntentService {
@@ -175,15 +173,17 @@ public class DownloadService extends BaseIntentService {
 		showProgress();
 		InputStream is = null;
 		BufferedOutputStream bos = null;
-		NetClient client = new NetClient();
 
 		final long UPDATE_TIME = 2000;
 		long lastTime = 0;
 		try {
-			HttpResponse response = client.get(url);
-			int statusCode = response.getStatusLine().getStatusCode();
+//			HttpResponse response = client.get(url);
+			NetResponse res=App.getHttpClients().get(url, false);
+//			int statusCode = response.getStatusLine().getStatusCode();
+			int statusCode=res.statusCode;
 			if (statusCode == 200) {
-				HttpEntity entity = response.getEntity();
+//				HttpEntity entity = response.getEntity();
+				HttpEntity entity=res.entity;
 				long total = entity.getContentLength();
 				long download = 0;
 				is = entity.getContent();
@@ -302,16 +302,21 @@ public class DownloadService extends BaseIntentService {
 	}
 
 	public static VersionInfo fetchVersionInfo() {
-		NetClient client = new NetClient();
+//		NetClient client = new NetClient();
 		try {
-			HttpResponse response = client.get(UPDATE_VERSION_FILE);
-			int statusCode = response.getStatusLine().getStatusCode();
+//			HttpResponse response = client.get(UPDATE_VERSION_FILE);
+			
+			
+			NetResponse res=App.getHttpClients().get(UPDATE_VERSION_FILE, false);
+//			int statusCode = response.getStatusLine().getStatusCode();
+			int statusCode=res.statusCode;
 			if (App.DEBUG) {
 				Log.d(TAG, "statusCode=" + statusCode);
 			}
 			if (statusCode == 200) {
-				String content = EntityUtils.toString(response.getEntity(),
-						HTTP.UTF_8);
+//				String content = EntityUtils.toString(response.getEntity(),
+//						HTTP.UTF_8);
+				String content=res.getContent();
 				if (App.DEBUG) {
 					Log.d(TAG, "response=" + content);
 				}

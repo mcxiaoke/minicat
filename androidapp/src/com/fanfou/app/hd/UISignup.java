@@ -28,7 +28,6 @@ import com.fanfou.app.hd.api.FanFouApiConfig;
 import com.fanfou.app.hd.api.ResultInfo;
 import com.fanfou.app.hd.api.User;
 import com.fanfou.app.hd.dialog.AlertInfoDialog;
-import com.fanfou.app.hd.http.NetClient;
 import com.fanfou.app.hd.http.NetResponse;
 import com.fanfou.app.hd.http.Parameter;
 import com.fanfou.app.hd.http.ResponseCode;
@@ -332,10 +331,15 @@ public class UISignup extends Activity implements OnClickListener {
 				}
 			}
 
-			NetClient client = new NetClient();
-			HttpResponse response = client.post(FanFouApiConfig.URL_REGISTER,
-					params);
-			NetResponse res = new NetResponse(response);
+//			NetClient client = new NetClient();
+			
+			
+			NetResponse res=App.getHttpClients().post(FanFouApiConfig.URL_REGISTER, params, false);
+			
+			
+//			HttpResponse response = client.post(FanFouApiConfig.URL_REGISTER,
+//					params);
+//			NetResponse res = new NetResponse(response);
 			if (App.DEBUG) {
 				Log.d("RegisterTask", "Response: " + res.getContent());
 			}

@@ -311,7 +311,7 @@ public class UIHome extends UIBaseSupport {
 
 			@Override
 			public void onButton1Click() {
-				App.setOAuthToken(null);
+				App.setAccessToken(null);
 				IntentHelper.goLoginPage(mContext);
 				finish();
 			}

@@ -27,8 +27,8 @@ import com.fanfou.app.hd.api.FanFouApi;
 import com.fanfou.app.hd.api.ResultInfo;
 import com.fanfou.app.hd.api.User;
 import com.fanfou.app.hd.auth.FanFouOAuthProvider;
+import com.fanfou.app.hd.auth.OAuthService;
 import com.fanfou.app.hd.auth.OAuthToken;
-import com.fanfou.app.hd.auth.XAuthService;
 import com.fanfou.app.hd.db.Contents.DirectMessageInfo;
 import com.fanfou.app.hd.db.Contents.DraftInfo;
 import com.fanfou.app.hd.db.Contents.StatusInfo;
@@ -55,6 +55,7 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * @version 3.1 2011.12.06
  * @version 3.2 2011.12.13
  * @version 3.3 2011.12.14
+ * @version 3.4 2012.02.20
  * 
  */
 public final class UILogin extends Activity implements OnClickListener {
@@ -244,7 +245,7 @@ public final class UILogin extends Activity implements OnClickListener {
 			String savedUserId = OptionHelper.readString(mContext,
 					R.string.option_userid, null);
 			try {
-				XAuthService xauth = new XAuthService(new FanFouOAuthProvider());
+				OAuthService xauth = new OAuthService(new FanFouOAuthProvider());
 				OAuthToken token = xauth.getOAuthAccessToken(username,
 						password);
 				if (App.DEBUG)
@@ -260,7 +261,7 @@ public final class UILogin extends Activity implements OnClickListener {
 
 				if (token != null) {
 					publishProgress(1);
-					App.setOAuthToken(token);
+					App.setAccessToken(token);
 					User u = FanFouApi.newInstance().verifyAccount(Constants.MODE);
 
 					if (isCancelled) {

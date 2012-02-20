@@ -5,11 +5,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.CharArrayBuffer;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,41 +25,49 @@ import com.fanfou.app.hd.util.IOHelper;
  * @version 2.0 2011.09.05
  * @version 3.0 2011.11.10
  * @version 3.1 2011.12.05
+ * @version 3.2 2012.02.20
  * 
  */
-public class NetResponse implements ResponseInterface, ResponseCode {
+public class NetResponse implements ResponseCode {
 	private static final String TAG = NetResponse.class.getSimpleName();
 
 	private static final int BUFFER_SIZE = 8196;
 
-	// private HttpResponse response;
-	private HttpEntity entity;
+//	private HttpResponse response;
 	private String content;
 	private boolean used;
-	public final StatusLine statusLine;
 	public final int statusCode;
-
-	// public final Header[] headers;
+	public final StatusLine statusLine;
+	public final HttpEntity entity;
+	public final Header[] headers;
 
 	public NetResponse(HttpResponse response) {
 		// this.response = response;
-		this.entity = response.getEntity();
 		this.statusLine = response.getStatusLine();
 		this.statusCode = statusLine.getStatusCode();
-		// this.headers = response.getAllHeaders();
+		this.headers=response.getAllHeaders();
+		this.entity = response.getEntity();
 	}
 
-	@Override
 	public final String getContent() throws IOException {
 		if (content == null) {
-			// content = EntityUtils.toString(entity, HTTP.UTF_8);
-			content = entityToString(entity);
+			if (used) {
+				throw new IllegalStateException("stream is used");
+			}
+			content = EntityUtils.toString(entity, HTTP.UTF_8);
 			used = true;
 		}
-//		if (App.DEBUG) {
-//			Log.d(TAG, "getContent() [" + content + "]");
-//		}
 		return content;
+	}
+
+	public final InputStream getInputStream() throws IOException {
+		if (used) {
+			throw new IllegalStateException("stream is used");
+		}
+		InputStream is = entity.getContent();
+		used = true;
+		return is;
+
 	}
 
 	public final JSONObject getJSONObject() throws ApiException {
