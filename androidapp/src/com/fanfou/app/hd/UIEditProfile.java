@@ -21,14 +21,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
-import com.fanfou.app.hd.api.FanFouApi;
 import com.fanfou.app.hd.api.ResultInfo;
-import com.fanfou.app.hd.api.User;
 import com.fanfou.app.hd.cache.IImageLoader;
-import com.fanfou.app.hd.db.FanFouProvider;
+import com.fanfou.app.hd.controller.DataController;
+import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.ui.widget.TextChangeListener;
 import com.fanfou.app.hd.util.IOHelper;
@@ -43,6 +41,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.6 2011.11.09
  * @version 1.7 2011.11.18
  * @version 1.8 2012.02.01
+ * @version 2.0 2012.02.21
  * 
  */
 public class UIEditProfile extends UIBaseSupport {
@@ -74,7 +73,7 @@ public class UIEditProfile extends UIBaseSupport {
 	private String mUrl;
 	private String mLocation;
 
-	private User user;
+	private UserModel user;
 
 	private IImageLoader mLoader;
 
@@ -84,9 +83,9 @@ public class UIEditProfile extends UIBaseSupport {
 	}
 
 	private void parseIntent() {
-		user = (User) getIntent().getParcelableExtra(Constants.EXTRA_DATA);
+		user = (UserModel) getIntent().getParcelableExtra("data");
 	}
-	
+
 	@Override
 	protected void initialize() {
 		parseIntent();
@@ -125,7 +124,7 @@ public class UIEditProfile extends UIBaseSupport {
 		setFakedBold(mLocationLabel);
 
 		setTextChangeListener();
-		
+
 		updateUI();
 
 	}
@@ -175,10 +174,10 @@ public class UIEditProfile extends UIBaseSupport {
 	}
 
 	private void updateUI() {
-		mNameEdit.setText(user.screenName);
-		mDescriptionEdit.setText(user.description);
-		mUrlEdit.setText(user.url);
-		mLocationEdit.setText(user.location);
+		mNameEdit.setText(user.getScreenName());
+		mDescriptionEdit.setText(user.getDescription());
+		mUrlEdit.setText(user.getUrl());
+		mLocationEdit.setText(user.getLocation());
 
 		updateProfileImagePreview();
 
@@ -186,12 +185,12 @@ public class UIEditProfile extends UIBaseSupport {
 
 	private void updateProfileImagePreview() {
 		if (App.DEBUG) {
-			log("updateProfileImagePreview() url=" + user.profileImageUrl);
+			log("updateProfileImagePreview() url=" + user.getProfileImageUrl());
 		}
 		mHeadView.setImageResource(R.drawable.default_head);
 		mHeadView.invalidate();
-		mHeadView.setTag(user.profileImageUrl);
-		mLoader.displayImage(user.profileImageUrl, mHeadView,
+		mHeadView.setTag(user.getProfileImageUrl());
+		mLoader.displayImage(user.getProfileImageUrl(), mHeadView,
 				R.drawable.default_head);
 
 	}
@@ -242,17 +241,17 @@ public class UIEditProfile extends UIBaseSupport {
 	private void doUpdateProfile() {
 		HashMap<String, String> map = new HashMap<String, String>();
 		if (!StringHelper.isEmpty(mDescription)
-				&& !mDescription.equals(user.description)) {
+				&& !mDescription.equals(user.getDescription())) {
 			map.put("description", mDescription);
 		}
-		if (!StringHelper.isEmpty(mName) && !mName.equals(user.screenName)) {
+		if (!StringHelper.isEmpty(mName) && !mName.equals(user.getScreenName())) {
 			map.put("name", mName);
 		}
-		if (!StringHelper.isEmpty(mUrl) && !mUrl.equals(user.url)) {
+		if (!StringHelper.isEmpty(mUrl) && !mUrl.equals(user.getUrl())) {
 			map.put("url", mUrl);
 		}
 		if (!StringHelper.isEmpty(mLocation)
-				&& !mLocation.equals(user.location)) {
+				&& !mLocation.equals(user.getLocation())) {
 			map.put("location", mLocation);
 		}
 		if (map.size() > 0) {
@@ -307,7 +306,7 @@ public class UIEditProfile extends UIBaseSupport {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			api = FanFouApi.newInstance();
+			api = App.getApi();
 			pd = new ProgressDialog(mContext);
 			pd.setMessage("正在更新个人资料...");
 			pd.setIndeterminate(true);
@@ -323,10 +322,10 @@ public class UIEditProfile extends UIBaseSupport {
 		}
 
 		private void onSuccess(ResultInfo result) {
-			User user = (User) result.content;
+			UserModel user = (UserModel) result.content;
 			if (user != null) {
 				Intent intent = new Intent();
-				intent.putExtra(Constants.EXTRA_DATA, user);
+				intent.putExtra("data", user);
 				mContext.setResult(RESULT_OK, intent);
 				mContext.finish();
 			}
@@ -366,15 +365,18 @@ public class UIEditProfile extends UIBaseSupport {
 			String location = map.get("location");
 			String url = map.get("url");
 			try {
-				User user = api.updateProfile(description, name, location, url,
-						Constants.MODE);
+				UserModel user = api.updateProfile(url, location, description,
+						name);
 				if (isCancelled) {
 					return new ResultInfo(ResultInfo.CODE_CANCELED, "用户取消");
 				}
-				if (user == null || user.isNull()) {
+				if (user == null) {
 					return new ResultInfo(ResultInfo.CODE_FAILED, "更新个人资料失败");
 				} else {
-					FanFouProvider.updateUserInfo(mContext, user);
+					// DataProvider.updateUserInfo(mContext, user);
+					// TODO
+
+					DataController.update(mContext, user, user.values());
 
 					return new ResultInfo(ResultInfo.CODE_SUCCESS, "更新个人资料成功",
 							user);
@@ -414,7 +416,7 @@ public class UIEditProfile extends UIBaseSupport {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			api = FanFouApi.newInstance();
+			api = App.getApi();
 			pd = new ProgressDialog(mEditProfilePage);
 			pd.setMessage("正在更新头像...");
 			pd.setIndeterminate(true);
@@ -430,11 +432,12 @@ public class UIEditProfile extends UIBaseSupport {
 		}
 
 		private void onSuccess(ResultInfo result) {
-			User user = (User) result.content;
+			UserModel user = (UserModel) result.content;
 			if (user != null) {
-				FanFouProvider.updateUserInfo(mEditProfilePage, user);
+				// FanFouProvider.updateUserInfo(mEditProfilePage, user);
+				// TODO
 				Intent intent = new Intent();
-				intent.putExtra(Constants.EXTRA_DATA, user);
+				intent.putExtra("data", user);
 				mEditProfilePage.setResult(RESULT_OK, intent);
 				mEditProfilePage.user = user;
 				mEditProfilePage.updateProfileImagePreview();
@@ -474,17 +477,17 @@ public class UIEditProfile extends UIBaseSupport {
 			try {
 				File file = ImageHelper.prepareProfileImage(mEditProfilePage,
 						srcFile);
-				User user = api.updateProfileImage(file, Constants.MODE);
+				UserModel user = api.updateProfileImage(file);
 				if (isCancelled) {
 					return new ResultInfo(ResultInfo.CODE_CANCELED, "用户取消");
 				}
-				if (user == null || user.isNull()) {
+				if (user == null) {
 					return new ResultInfo(ResultInfo.CODE_FAILED, "更新个人头像失败");
 				} else {
-
-					FanFouProvider.updateUserInfo(mEditProfilePage, user);
-					FanFouProvider.updateStatusProfileImageUrl(
-							mEditProfilePage, user);
+					// TODO
+					// FanFouProvider.updateUserInfo(mEditProfilePage, user);
+					// FanFouProvider.updateStatusProfileImageUrl(
+					// mEditProfilePage, user);
 
 					return new ResultInfo(ResultInfo.CODE_SUCCESS, "更新个人头像成功",
 							user);
@@ -498,7 +501,5 @@ public class UIEditProfile extends UIBaseSupport {
 		}
 
 	}
-
-
 
 }

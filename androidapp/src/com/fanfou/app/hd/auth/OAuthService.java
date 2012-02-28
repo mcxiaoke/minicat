@@ -14,7 +14,6 @@ import java.util.Random;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -23,11 +22,12 @@ import org.apache.http.message.BasicHeader;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.auth.exception.OAuthTokenException;
+import com.fanfou.app.hd.auth.exception.AuthException;
 import com.fanfou.app.hd.http.NetHelper;
-import com.fanfou.app.hd.http.NetRequest;
-import com.fanfou.app.hd.http.NetResponse;
+import com.fanfou.app.hd.http.RestRequest;
+import com.fanfou.app.hd.http.RestResponse;
 import com.fanfou.app.hd.http.Parameter;
+import com.fanfou.app.hd.http.RestClient;
 import com.fanfou.app.hd.util.Base64;
 
 /**
@@ -40,34 +40,41 @@ import com.fanfou.app.hd.util.Base64;
  * @version 4.1 2011.12.07
  * @version 5.0 2012.02.17
  * @version 6.0 2012.02.20
+ * @version 6.1 2012.02.23
  * 
  */
 public class OAuthService {
 	private static final String TAG = OAuthService.class.getSimpleName();
 
 	private final OAuthProvider mOAuthProvider;
-	private OAuthToken mAccessToken;
+	private AccessToken mAccessToken;
 
 	public OAuthService(OAuthProvider provider) {
 		mOAuthProvider = provider;
 	}
 
-	public OAuthService(OAuthProvider provider, OAuthToken token) {
+	public OAuthService(OAuthProvider provider, AccessToken token) {
 		this.mOAuthProvider = provider;
 		this.mAccessToken = token;
 	}
 
-	public void setAccessToken(OAuthToken token) {
+	public void setAccessToken(AccessToken token) {
 		this.mAccessToken = token;
+		if (App.DEBUG) {
+			Log.d(TAG, "setAccessToken() AccessToken:  " + token);
+		}
 	}
 
 	public void authorize(HttpUriRequest request, List<Parameter> params) {
 		String authorization = buildOAuthHeader(request.getMethod(), request
 				.getURI().toString(), params, mOAuthProvider, mAccessToken);
 		request.addHeader(new BasicHeader("Authorization", authorization));
+		if (App.DEBUG) {
+			Log.d(TAG, "authorize() Authorization:  " + authorization);
+		}
 	}
 
-	public RequestToken getOAuthRequestToken() throws OAuthTokenException,
+	public RequestToken getOAuthRequestToken() throws AuthException,
 			IOException {
 		// 163 callback=null
 		// TODO
@@ -75,12 +82,12 @@ public class OAuthService {
 		String url = mOAuthProvider.getRequestTokenURL();
 		String authorization = buildOAuthHeader(HttpGet.METHOD_NAME, url, null,
 				mOAuthProvider, null);
-		NetRequest nr = NetRequest.newBuilder().url(url)
+		RestRequest nr = RestRequest.newBuilder().url(url)
 				.header("Authorization", authorization).build();
-//		NetClient client = new NetClient();
-//		HttpResponse response = client.exec(nr);
-		NetResponse res = App.getHttpClients().execute(nr, false);
-		
+		// NetClient client = new NetClient();
+		// HttpResponse response = client.exec(nr);
+		RestResponse res = new RestClient().execute(nr, false);
+
 		String content = res.getContent();
 		if (App.DEBUG) {
 			Log.d(TAG, "getOAuthRequestToken() code=" + res.statusCode
@@ -89,25 +96,24 @@ public class OAuthService {
 		if (res.statusCode == 200) {
 			return new RequestToken(content);
 		}
-		throw new OAuthTokenException("登录失败，帐号或密码错误");
+		throw new AuthException("登录失败，帐号或密码错误");
 	}
 
 	public RequestToken getOAuthRequestToken(String callback)
-			throws OAuthTokenException, IOException {
+			throws AuthException, IOException {
 		// TODO
 		// FIXME
 		String url = mOAuthProvider.getRequestTokenURL();
 		String authorization = buildOAuthHeader(HttpGet.METHOD_NAME, url, null,
 				mOAuthProvider, null);
-		NetRequest nr = NetRequest.newBuilder().url(url)
+		RestRequest nr = RestRequest.newBuilder().url(url)
 				.param(OAUTH_CALLBACK, callback)
 				.header("Authorization", authorization).build();
-//		NetClient client = new NetClient();
-//		HttpResponse response = client.exec(nr);
-//		NetResponse res = new NetResponse(response);
-		
-		
-		NetResponse res = App.getHttpClients().execute(nr, false);
+		// NetClient client = new NetClient();
+		// HttpResponse response = client.exec(nr);
+		// NetResponse res = new NetResponse(response);
+
+		RestResponse res = new RestClient().execute(nr, false);
 		String content = res.getContent();
 		if (App.DEBUG) {
 			Log.d(TAG, "getOAuthRequestToken() code=" + res.statusCode
@@ -116,22 +122,22 @@ public class OAuthService {
 		if (res.statusCode == 200) {
 			return new RequestToken(content);
 		}
-		throw new OAuthTokenException("登录失败，帐号或密码错误");
+		throw new AuthException("登录失败，帐号或密码错误");
 	}
 
 	public AccessToken getOAuthAccessToken(RequestToken requestToken)
-			throws OAuthTokenException, IOException {
+			throws AuthException, IOException {
 		// TODO
 		// FIXME
 		String url = mOAuthProvider.getAccessTokenURL();
 		String authorization = buildOAuthHeader(HttpPost.METHOD_NAME, url,
 				null, mOAuthProvider, null);
-		NetRequest nr = NetRequest.newBuilder().url(url).post()
+		RestRequest nr = RestRequest.newBuilder().url(url).post()
 				.header("Authorization", authorization).build();
-//		NetClient client = new NetClient();
-//		HttpResponse response = client.exec(nr);
-//		NetResponse res = new NetResponse(response);
-		NetResponse res = App.getHttpClients().execute(nr, false);
+		// NetClient client = new NetClient();
+		// HttpResponse response = client.exec(nr);
+		// NetResponse res = new NetResponse(response);
+		RestResponse res = new RestClient().execute(nr, false);
 		String content = res.getContent();
 		if (App.DEBUG) {
 			Log.d(TAG, "getOAuthRequestToken() code=" + res.statusCode
@@ -140,25 +146,24 @@ public class OAuthService {
 		if (res.statusCode == 200) {
 			return new AccessToken(content);
 		}
-		throw new OAuthTokenException("登录失败，帐号或密码错误");
+		throw new AuthException("登录失败，帐号或密码错误");
 	}
 
 	public AccessToken getOAuthAccessToken(RequestToken requestToken,
-			String verifier) throws OAuthTokenException, IOException {
+			String verifier) throws AuthException, IOException {
 		// TODO
 		// FIXME
 		String url = mOAuthProvider.getAccessTokenURL();
 		String authorization = buildOAuthHeader(HttpPost.METHOD_NAME, url,
 				null, mOAuthProvider, null);
-		NetRequest nr = NetRequest.newBuilder().url(url).post()
+		RestRequest nr = RestRequest.newBuilder().url(url).post()
 				.param(OAUTH_VERIFIER, verifier)
 				.header("Authorization", authorization).build();
-//		NetClient client = new NetClient();
-//		HttpResponse response = client.exec(nr);
-//		NetResponse res = new NetResponse(response);
-		
-		
-		NetResponse res = App.getHttpClients().execute(nr, false);
+		// NetClient client = new NetClient();
+		// HttpResponse response = client.exec(nr);
+		// NetResponse res = new NetResponse(response);
+
+		RestResponse res = new RestClient().execute(nr, false);
 		String content = res.getContent();
 		if (App.DEBUG) {
 			Log.d(TAG, "getOAuthRequestToken() code=" + res.statusCode
@@ -167,31 +172,31 @@ public class OAuthService {
 		if (res.statusCode == 200) {
 			return new AccessToken(content);
 		}
-		throw new OAuthTokenException("登录失败，帐号或密码错误");
+		throw new AuthException("登录失败，帐号或密码错误");
 	}
 
-	public OAuthToken getOAuthAccessToken(String username, String password)
-			throws OAuthTokenException, IOException {
+	public AccessToken getOAuthAccessToken(String username, String password)
+			throws AuthException, IOException {
 		String authorization = buildXAuthHeader(username, password,
 				mOAuthProvider, false);
-		NetRequest nr = NetRequest.newBuilder()
+		RestRequest nr = RestRequest.newBuilder()
 				.url(mOAuthProvider.getAccessTokenURL())
 				.header("Authorization", authorization).build();
-//		NetClient client = new NetClient();
-//		HttpResponse response = client.exec(nr);
-//		NetResponse res = new NetResponse(response);
-		
-		NetResponse res = App.getHttpClients().execute(nr, false);
-		
+		// NetClient client = new NetClient();
+		// HttpResponse response = client.exec(nr);
+		// NetResponse res = new NetResponse(response);
+
+		RestResponse res = new RestClient().execute(nr, false);
+
 		String content = res.getContent();
 		if (App.DEBUG) {
-			Log.d(TAG, "requestOAuthAccessToken() code=" + res.statusCode
+			Log.d(TAG, "getOAuthAccessToken() code=" + res.statusCode
 					+ " response=" + content);
 		}
 		if (res.statusCode == 200) {
 			return new AccessToken(content);
 		}
-		throw new OAuthTokenException("登录失败，帐号或密码错误");
+		throw new AuthException("登录失败，帐号或密码错误");
 	}
 
 	public static final String OAUTH_VERSION1 = "1.0";
@@ -213,7 +218,7 @@ public class OAuthService {
 	}
 
 	static String buildOAuthHeader(String method, String url,
-			List<Parameter> params, OAuthProvider provider, OAuthToken otoken) {
+			List<Parameter> params, OAuthProvider provider, AccessToken otoken) {
 		if (params == null) {
 			params = new ArrayList<Parameter>();
 		}

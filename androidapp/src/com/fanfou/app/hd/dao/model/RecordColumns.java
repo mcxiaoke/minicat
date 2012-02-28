@@ -29,7 +29,7 @@ public interface RecordColumns extends IBaseColumns {
 			+ _ID + " integer primary key autoincrement, " 
 			
 			+ ID + " text not null, " 
-			+ ACCOUNT + "text not null, "
+			+ ACCOUNT + " text not null, "
 			+ OWNER + " text not null, " 
 			+ NOTE + " text, "
 			
@@ -41,10 +41,8 @@ public interface RecordColumns extends IBaseColumns {
 			
 			+ TEXT + " text not null, " 
 			
-			+ TEXT + " text not null, " 
 			+ REPLY + " text, " 
 			+ FILE + " text, " 
-			+ NOTE + " text, "
 			
 			+ "unique ( " 
 			+ ACCOUNT + "," 

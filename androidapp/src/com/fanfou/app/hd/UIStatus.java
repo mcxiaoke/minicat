@@ -17,17 +17,13 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App.ApnType;
-import com.fanfou.app.hd.api.Status;
-import com.fanfou.app.hd.cache.CacheManager;
 import com.fanfou.app.hd.cache.IImageLoader;
 import com.fanfou.app.hd.cache.ImageLoader;
+import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.FanFouService;
-import com.fanfou.app.hd.ui.widget.ActionManager;
-import com.fanfou.app.hd.util.DateTimeHelper;
 import com.fanfou.app.hd.util.IOHelper;
 import com.fanfou.app.hd.util.OptionHelper;
 import com.fanfou.app.hd.util.StatusHelper;
@@ -66,7 +62,7 @@ public class UIStatus extends UIBaseSupport {
 	private IImageLoader mLoader;
 
 	private String statusId;
-	private Status status;
+	private StatusModel status;
 
 	private View vUser;
 
@@ -134,15 +130,15 @@ public class UIStatus extends UIBaseSupport {
 
 	private void parseIntent() {
 		Intent intent = getIntent();
-		statusId = intent.getStringExtra(Constants.EXTRA_ID);
-		status = (Status) intent.getParcelableExtra(Constants.EXTRA_DATA);
+		statusId = intent.getStringExtra("id");
+		status = (StatusModel) intent.getParcelableExtra("data");
 
 		if (status == null && statusId != null) {
-			status = CacheManager.getStatus(this, statusId);
+//			status = CacheManager.getStatus(this, statusId);
 		} else {
-			statusId = status.id;
+			statusId = status.getId();
 		}
-		isMe = status.userId.equals(App.getUserId());
+		isMe = status.getUserId().equals(App.getAccount());
 	}
 
 	@Override
@@ -200,18 +196,18 @@ public class UIStatus extends UIBaseSupport {
 			if (textMode) {
 				iUserHead.setVisibility(View.GONE);
 			} else {
-				iUserHead.setTag(status.userProfileImageUrl);
-				mLoader.displayImage(status.userProfileImageUrl, iUserHead,
-						R.drawable.default_head);
+//				iUserHead.setTag(status.userProfileImageUrl);
+//				mLoader.displayImage(status.userProfileImageUrl, iUserHead,
+//						R.drawable.default_head);
 			}
 
-			tUserName.setText(status.userScreenName);
+			tUserName.setText(status.getUserScreenName());
 
-			StatusHelper.setStatus(tContent, status.text);
+			StatusHelper.setStatus(tContent, status.getText());
 			checkPhoto(textMode, status);
 
-			tDate.setText(DateTimeHelper.getInterval(status.createdAt));
-			tSource.setText("通过" + status.source);
+//			tDate.setText(DateTimeHelper.getInterval(status.getTime()));
+			tSource.setText("通过" + status.getSource());
 
 			if (isMe) {
 				bReply.setImageResource(R.drawable.i_bar2_delete);
@@ -219,9 +215,9 @@ public class UIStatus extends UIBaseSupport {
 				bReply.setImageResource(R.drawable.i_bar2_reply);
 			}
 
-			updateFavoriteButton(status.favorited);
+			updateFavoriteButton(status.isFavorited());
 
-			if (status.isThread) {
+			if (status.isThread()) {
 				vThread.setVisibility(View.VISIBLE);
 			} else {
 				vThread.setVisibility(View.GONE);
@@ -229,8 +225,8 @@ public class UIStatus extends UIBaseSupport {
 		}
 	}
 
-	private void checkPhoto(boolean textMode, Status s) {
-		if (!s.hasPhoto) {
+	private void checkPhoto(boolean textMode, StatusModel s) {
+		if (!s.isPhoto()) {
 			iPhoto.setVisibility(View.GONE);
 			return;
 		}
@@ -240,8 +236,8 @@ public class UIStatus extends UIBaseSupport {
 		iPhoto.setOnClickListener(this);
 
 		// 先检查本地是否有大图缓存
-		Bitmap bitmap = mLoader.getImage(s.photoLargeUrl, null);
-		mPhotoUrl = s.photoLargeUrl;
+		Bitmap bitmap = mLoader.getImage(s.getPhotoLargeUrl(), null);
+		mPhotoUrl = s.getPhotoLargeUrl();
 		if (bitmap != null) {
 			iPhoto.setImageBitmap(bitmap);
 			mPhotoState = PHOTO_LARGE;
@@ -249,8 +245,8 @@ public class UIStatus extends UIBaseSupport {
 		}
 
 		// 再检查本地是否有缩略图缓存
-		bitmap = mLoader.getImage(s.photoImageUrl, null);
-		mPhotoUrl = s.photoImageUrl;
+		bitmap = mLoader.getImage(s.getPhotoImageUrl(), null);
+		mPhotoUrl = s.getPhotoImageUrl();
 		if (bitmap != null) {
 			iPhoto.setImageBitmap(bitmap);
 			mPhotoState = PHOTO_SMALL;
@@ -277,20 +273,20 @@ public class UIStatus extends UIBaseSupport {
 			if (isMe) {
 				doDelete();
 			} else {
-				ActionManager.doReply(this, status);
+//				ActionManager.doReply(this, status);
 			}
 			break;
 		case R.id.status_action_retweet:
-			ActionManager.doRetweet(this, status);
+//			ActionManager.doRetweet(this, status);
 			break;
 		case R.id.status_action_favorite:
 			doFavorite();
 			break;
 		case R.id.status_action_share:
-			ActionManager.doShare(this, status);
+//			ActionManager.doShare(this, status);
 			break;
 		case R.id.status_top:
-			ActionManager.doProfile(this, status);
+//			ActionManager.doProfile(this, status);
 			break;
 		// case R.id.status_text:
 		// break;
@@ -298,8 +294,8 @@ public class UIStatus extends UIBaseSupport {
 			onClickPhoto();
 			break;
 		case R.id.status_thread:
-			Intent intent = new Intent(mContext, UIConversationList.class);
-			intent.putExtra(Constants.EXTRA_DATA, status);
+			Intent intent = new Intent(mContext, UIThread.class);
+			intent.putExtra("data", status);
 			mContext.startActivity(intent);
 			// testAnimation();
 			break;
@@ -311,7 +307,7 @@ public class UIStatus extends UIBaseSupport {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
-		doCopy(status.simpleText);
+		doCopy(status.getSimpleText());
 	}
 
 	private String getPhotoPath(String key) {
@@ -359,7 +355,7 @@ public class UIStatus extends UIBaseSupport {
 				Log.d(TAG, "goPhotoViewer() url=" + filePath);
 			}
 			Intent intent = new Intent(mContext, UIPhoto.class);
-			intent.putExtra(Constants.EXTRA_URL, filePath);
+			intent.putExtra("url", filePath);
 			mContext.startActivity(intent);
 			overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_enter);
 		}
@@ -433,9 +429,9 @@ public class UIStatus extends UIBaseSupport {
 		// };
 
 		if (type == PHOTO_LARGE) {
-			mPhotoUrl = status.photoLargeUrl;
+			mPhotoUrl = status.getPhotoLargeUrl();
 		} else if (type == PHOTO_SMALL) {
-			mPhotoUrl = status.photoThumbUrl;
+			mPhotoUrl = status.getPhotoThumbUrl();
 		}
 
 		if (App.DEBUG) {
@@ -461,7 +457,7 @@ public class UIStatus extends UIBaseSupport {
 		dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
 			@Override
 			public void onButton1Click() {
-				FanFouService.doStatusDelete(mContext, status.id, true);
+//				FanFouService.doStatusDelete(mContext, status.getId(), true);
 			}
 		});
 		dialog.show();
@@ -469,28 +465,28 @@ public class UIStatus extends UIBaseSupport {
 	}
 
 	private void doFavorite() {
-		ActionManager.ResultListener li = new ActionManager.ResultListener() {
-
-			@Override
-			public void onActionSuccess(int type, String message) {
-				if (App.DEBUG)
-					log("type="
-							+ (type == Constants.TYPE_FAVORITES_CREATE ? "收藏"
-									: "取消收藏") + " message=" + message);
-				if (type == Constants.TYPE_FAVORITES_CREATE) {
-					status.favorited = true;
-				} else {
-					status.favorited = false;
-				}
-				updateFavoriteButton(status.favorited);
-			}
-
-			@Override
-			public void onActionFailed(int type, String message) {
-			}
-		};
-		updateFavoriteButton(!status.favorited);
-		FanFouService.doFavorite(this, status, li);
+//		ActionManager.ResultListener li = new ActionManager.ResultListener() {
+//
+//			@Override
+//			public void onActionSuccess(int type, String message) {
+//				if (App.DEBUG)
+//					log("type="
+//							+ (type == Constants.TYPE_FAVORITES_CREATE ? "收藏"
+//									: "取消收藏") + " message=" + message);
+//				if (type == Constants.TYPE_FAVORITES_CREATE) {
+//					status.setFavorited(true);
+//				} else {
+//					status.setFavorited(false);
+//				}
+//				updateFavoriteButton(status.isFavorited());
+//			}
+//
+//			@Override
+//			public void onActionFailed(int type, String message) {
+//			}
+//		};
+		updateFavoriteButton(!status.isFavorited());
+//		FanFouService.doFavorite(this, status, li);
 	}
 
 	private void doCopy(String content) {

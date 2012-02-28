@@ -2,17 +2,18 @@ package com.fanfou.app.hd.fragments;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Messenger;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.service.Constants;
+import com.fanfou.app.hd.api.Paging;
+import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.service.FanFouService;
 import com.fanfou.app.hd.util.Utils;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.06
+ * @version 1.1 2012.02.24
  * 
  */
 public class HomeTimelineFragment extends BaseTimlineFragment {
@@ -21,7 +22,7 @@ public class HomeTimelineFragment extends BaseTimlineFragment {
 
 	public static HomeTimelineFragment newInstance(int type) {
 		Bundle args = new Bundle();
-		args.putInt(Constants.EXTRA_TYPE, type);
+		args.putInt("type", type);
 		HomeTimelineFragment fragment = new HomeTimelineFragment();
 		fragment.setArguments(args);
 		if (App.DEBUG) {
@@ -40,7 +41,7 @@ public class HomeTimelineFragment extends BaseTimlineFragment {
 
 	@Override
 	protected int getType() {
-		return Constants.TYPE_STATUSES_HOME_TIMELINE;
+		return StatusModel.TYPE_HOME;
 	}
 
 	@Override
@@ -48,18 +49,16 @@ public class HomeTimelineFragment extends BaseTimlineFragment {
 
 		final ResultHandler handler = new ResultHandler(this);
 		final Cursor cursor = getCursor();
-		String sinceId = null;
-		String maxId = null;
+		Paging p=new Paging();
 		if (doGetMore) {
-			maxId = Utils.getMaxId(cursor);
+			p.maxId = Utils.getMaxId(cursor);
 		} else {
-			sinceId = Utils.getSinceId(cursor);
+			p.sinceId = Utils.getSinceId(cursor);
 		}
 		if (App.DEBUG) {
-			Log.d(TAG, "doFetch() doGetMore=" + doGetMore+" maxId="+maxId+" sinceId="+sinceId);
+			Log.d(TAG, "doFetch() doGetMore=" + doGetMore+" Paging="+p);
 		}
-		FanFouService.doFetchHomeTimeline(getActivity(),
-				new Messenger(handler), sinceId, maxId);
+		FanFouService.getTimeline(getActivity(), StatusModel.TYPE_HOME, handler, p);
 	}
 
 }

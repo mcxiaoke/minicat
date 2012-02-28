@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="option_userid">userid</string>
-    <string name="option_username">screen_name</string>
-    <string name="option_profile_image">profile_image</string>
-    <string name="option_oauth_token">oauth_token</string>
-    <string name="option_oauth_token_secret">oauth_token_secret</string>
     <string name="option_location_enable">location_enable</string>
-    <string name="option_verified">verified</string>
     <string name="option_set_auto_complete">set_auto_complete</string>
     <string name="option_set_auto_clean">set_auto_clean</string>
     <string name="option_set_notification">set_notification</string>

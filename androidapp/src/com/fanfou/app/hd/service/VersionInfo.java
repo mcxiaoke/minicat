@@ -53,9 +53,6 @@ public final class VersionInfo implements Parcelable {
 			info.forceUpdate = o.getBoolean("forceUpdate");
 			return info;
 		} catch (JSONException e) {
-			if (App.DEBUG) {
-				e.printStackTrace();
-			}
 			return null;
 		}
 	}

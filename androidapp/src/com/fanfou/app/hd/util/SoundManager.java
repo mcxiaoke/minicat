@@ -8,8 +8,8 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.util.Log;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.R;
 
 /**
  * @author mcxiaoke

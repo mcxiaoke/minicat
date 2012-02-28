@@ -13,11 +13,10 @@ import android.widget.FilterQueryProvider;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.adapter.UserCursorAdapter;
-import com.fanfou.app.hd.api.User;
-import com.fanfou.app.hd.db.Contents.UserInfo;
-import com.fanfou.app.hd.service.Constants;
+import com.fanfou.app.hd.api.Paging;
+import com.fanfou.app.hd.dao.model.UserColumns;
+import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.service.FanFouService;
-import com.fanfou.app.hd.ui.widget.ActionManager;
 import com.fanfou.app.hd.util.StringHelper;
 
 /**
@@ -25,13 +24,15 @@ import com.fanfou.app.hd.util.StringHelper;
  * @version 1.0 2012.02.07
  * @version 1.1 2012.02.08
  * @version 1.2 2012.02.09
+ * @version 1.3 2012.02.22
+ * @version 1.4 2012.02.24
  * 
  */
 public abstract class UserListFragment extends PullToRefreshListFragment implements FilterQueryProvider{
 
 	private static final String TAG = UserListFragment.class.getSimpleName();
 
-	private int page = 1;
+	private int page;
 	private String userId;
 	
 	private OnInitCompleteListener mListener;
@@ -50,12 +51,12 @@ public abstract class UserListFragment extends PullToRefreshListFragment impleme
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		final Cursor c = (Cursor) parent.getItemAtPosition(position);
-		final User u = User.parse(c);
+		final UserModel u =UserModel.from(c);
 		if (u != null) {
 			if (App.DEBUG){		
-				Log.d(TAG, "userId=" + u.id + " username=" + u.screenName);
+				Log.d(TAG, "userId=" + u.getId() + " username=" + u.getScreenName());
 			}
-			ActionManager.doProfile(getActivity(), u);
+//			ActionManager.doProfile(getActivity(), u);
 		}
 	}
 
@@ -64,10 +65,10 @@ public abstract class UserListFragment extends PullToRefreshListFragment impleme
 		super.onCreate(savedInstanceState);
 		Bundle data=getArguments();
 		if(data!=null){
-			userId=data.getString(Constants.EXTRA_ID);
+			userId=data.getString("id");
 		}
 		if(StringHelper.isEmpty(userId)){
-			userId=App.getUserId();
+			userId=App.getAccount();
 		}
 		
 		if (App.DEBUG) {
@@ -82,18 +83,17 @@ public abstract class UserListFragment extends PullToRefreshListFragment impleme
 
 	@Override
 	protected void doFetch(boolean doGetMore) {
+		Paging p=new Paging();
+		
 		if (doGetMore) {
 			page++;
 		} else {
 			page = 1;
 		}
+		p.page=page;
+		
 		final ResultHandler handler = new ResultHandler(this);
-		if (getType() == Constants.TYPE_USERS_FRIENDS) {
-			FanFouService.doFetchFriends(getActivity(), handler, page, userId);
-		} else {
-			FanFouService
-					.doFetchFollowers(getActivity(), handler, page, userId);
-		}
+		FanFouService.getUsers(getActivity(), userId, getType(), p, handler);
 	}
 
 	@Override
@@ -102,8 +102,8 @@ public abstract class UserListFragment extends PullToRefreshListFragment impleme
 	
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		Uri uri = UserInfo.CONTENT_URI;
-		String where = UserInfo.TYPE + "=? AND " + UserInfo.OWNER_ID + "=?";
+		Uri uri = UserColumns.CONTENT_URI;
+		String where = UserColumns.TYPE + "=? AND " + UserColumns.OWNER + "=?";
 		String[] whereArgs = new String[] { String.valueOf(getType()), userId };
 		CursorLoader loader=new CursorLoader(getActivity(), uri, null, where, whereArgs, null);
 		if(App.DEBUG){
@@ -124,12 +124,12 @@ public abstract class UserListFragment extends PullToRefreshListFragment impleme
 		if(App.DEBUG){
 			Log.d(TAG, "runQuery() constraint="+constraint);
 		}
-		String where = UserInfo.TYPE + " = " + getType() + " AND "
-				+ UserInfo.OWNER_ID + " = '" + userId + "' AND ("
-				+ UserInfo.SCREEN_NAME + " like '%" + constraint + "%' OR "
-				+ UserInfo.ID + " like '%" + constraint + "%' )";
+		String where = UserColumns.TYPE + " = " + getType() + " AND "
+				+ UserColumns.OWNER + " = '" + userId + "' AND ("
+				+ UserColumns.SCREEN_NAME + " like '%" + constraint + "%' OR "
+				+ UserColumns.ID + " like '%" + constraint + "%' )";
 		;
-		return getActivity().managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
+		return getActivity().managedQuery(UserColumns.CONTENT_URI, null, where,
 				null, null);
 	}
 

@@ -13,10 +13,9 @@ import android.widget.AdapterView;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.adapter.StatusCursorAdapter;
-import com.fanfou.app.hd.api.Status;
-import com.fanfou.app.hd.db.FanFouProvider;
-import com.fanfou.app.hd.db.Contents.BasicColumns;
-import com.fanfou.app.hd.db.Contents.StatusInfo;
+import com.fanfou.app.hd.dao.DataProvider;
+import com.fanfou.app.hd.dao.model.StatusColumns;
+import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.util.Utils;
 
 /**
@@ -24,6 +23,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.0 2012.02.06
  * @version 1.1 2012.02.07
  * @version 1.2 2012.02.09
+ * @version 1.3 2012.02.22
  * 
  */
 public abstract class BaseTimlineFragment extends PullToRefreshListFragment{
@@ -32,10 +32,10 @@ public abstract class BaseTimlineFragment extends PullToRefreshListFragment{
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		final Cursor c = (Cursor) parent.getItemAtPosition(position);
-		if (c != null) {
-			final Status s = Status.parse(c);
-			if (s != null && !s.isNull()) {
+		final Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+		if (cursor != null) {
+			final StatusModel s=StatusModel.from(cursor);
+			if (s != null) {
 				Utils.goStatusPage(getActivity(), s);
 			}
 		}
@@ -68,10 +68,10 @@ public abstract class BaseTimlineFragment extends PullToRefreshListFragment{
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		Uri uri = StatusInfo.CONTENT_URI;
-		String selection = BasicColumns.TYPE + "=?";
+		Uri uri = StatusColumns.CONTENT_URI;
+		String selection = StatusColumns.TYPE + "=?";
 		String[] selectionArgs = new String[] { String.valueOf(getType()) };
-		String sortOrder=FanFouProvider.ORDERBY_DATE_DESC;
+		String sortOrder=DataProvider.ORDERBY_TIME_DESC;
 		CursorLoader loader=new CursorLoader(getActivity(), uri, null, selection, selectionArgs, sortOrder);
 		return loader;
 	}

@@ -1,16 +1,16 @@
 package com.fanfou.app.hd.fragments;
 
 import android.os.Bundle;
-import android.os.Messenger;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.service.Constants;
+import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.service.FanFouService;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.06
+ * @version 1.1 2012.02.24
  * 
  */
 public class PublicTimelineFragment extends BaseTimlineFragment {
@@ -19,7 +19,7 @@ public class PublicTimelineFragment extends BaseTimlineFragment {
 
 	public static PublicTimelineFragment newInstance(int type) {
 		Bundle args = new Bundle();
-		args.putInt(Constants.EXTRA_TYPE, type);
+		args.putInt("type", type);
 		PublicTimelineFragment fragment = new PublicTimelineFragment();
 		fragment.setArguments(args);
 		if (App.DEBUG) {
@@ -30,7 +30,7 @@ public class PublicTimelineFragment extends BaseTimlineFragment {
 
 	@Override
 	protected int getType() {
-		return Constants.TYPE_STATUSES_PUBLIC_TIMELINE;
+		return StatusModel.TYPE_PUBLIC;
 	}
 
 	@Override
@@ -39,8 +39,7 @@ public class PublicTimelineFragment extends BaseTimlineFragment {
 			Log.d(TAG, "doFetch() doGetMore=" + doGetMore);
 		}
 		final ResultHandler handler = new ResultHandler(this);
-		FanFouService.doFetchPublicTimeline(getActivity(), new Messenger(
-				handler));
+		FanFouService.getPublicTimeline(getActivity(), handler);
 	}
 
 }

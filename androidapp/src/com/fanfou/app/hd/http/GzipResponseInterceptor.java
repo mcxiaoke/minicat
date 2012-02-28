@@ -16,7 +16,7 @@ import org.apache.http.protocol.HttpContext;
  * @version 2.0 2011.11.03
  * 
  */
-class GzipResponseInterceptor implements HttpResponseInterceptor {
+public class GzipResponseInterceptor implements HttpResponseInterceptor {
 	private static final String ENCODING_GZIP = "gzip";
 
 	@Override

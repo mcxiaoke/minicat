@@ -15,19 +15,18 @@ import android.view.View;
 import com.astuetz.viewpager.extensions.FixedTabsView;
 import com.astuetz.viewpager.extensions.TabsAdapter;
 import com.astuetz.viewpager.extensions.ViewPagerTabButton;
-import com.fanfou.app.hd.api.User;
-import com.fanfou.app.hd.cache.CacheManager;
+import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.fragments.AbstractFragment;
 import com.fanfou.app.hd.fragments.ProfileContentFragment;
 import com.fanfou.app.hd.fragments.UserFavoritesFragment;
 import com.fanfou.app.hd.fragments.UserTimelineFragment;
-import com.fanfou.app.hd.service.Constants;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.07
  * @version 1.1 2012.02.08
  * @version 1.2 2012.02.09
+ * @version 1.3 2012.02.22
  * 
  */
 public class UIProfile extends UIBaseSupport {
@@ -53,7 +52,7 @@ public class UIProfile extends UIBaseSupport {
 	private PagesAdapter mPagesAdapter;
 	private FixedTabsView mTabsView;
 
-	private User user;
+	private UserModel user;
 	private String userId;
 
 	@Override
@@ -76,10 +75,10 @@ public class UIProfile extends UIBaseSupport {
 		Intent intent = getIntent();
 		String action = intent.getAction();
 		if (action == null) {
-			userId = intent.getStringExtra(Constants.EXTRA_ID);
-			user = (User) intent.getParcelableExtra(Constants.EXTRA_DATA);
+			userId = intent.getStringExtra("id");
+			user = (UserModel) intent.getParcelableExtra("data");
 			if (user != null) {
-				userId = user.id;
+				userId = user.getId();
 			}
 		} else if (action.equals(Intent.ACTION_VIEW)) {
 			Uri data = intent.getData();
@@ -88,11 +87,11 @@ public class UIProfile extends UIBaseSupport {
 			}
 		}
 		if (user == null && userId != null) {
-			user = CacheManager.getUser(this, userId);
+//			user = CacheManager.getUser(this, userId);
 		}
 
 		if (user != null) {
-			userId = user.id;
+			userId = user.getId();
 		}
 	}
 

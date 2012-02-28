@@ -7,13 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.UILogin;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
-import com.fanfou.app.hd.api.DirectMessage;
-import com.fanfou.app.hd.api.FanFouApi;
+import com.fanfou.app.hd.controller.DataController;
+import com.fanfou.app.hd.dao.model.DirectMessageModel;
 import com.fanfou.app.hd.util.IOHelper;
 
 /**
@@ -23,13 +23,14 @@ import com.fanfou.app.hd.util.IOHelper;
  * @version 2.0 2011.11.18
  * @version 2.1 2011.11.21
  * @version 2.2 2011.12.13
+ * @version 2.3 2012.02.22
+ * @version 2.4 2012.02.24
  * 
  */
 public class PostMessageService extends BaseIntentService {
 
 	private static final String TAG = PostMessageService.class.getSimpleName();
 	private NotificationManager nm;
-	private Intent mIntent;
 
 	public void log(String message) {
 		Log.i(TAG, message);
@@ -37,7 +38,8 @@ public class PostMessageService extends BaseIntentService {
 
 	private String content;
 	private String userId;
-	private String userName;
+	private String screenName;
+	private String reply;
 
 	public PostMessageService() {
 		super("UpdateService");
@@ -49,20 +51,19 @@ public class PostMessageService extends BaseIntentService {
 		if (intent == null) {
 			return;
 		}
-		log("intent=" + intent);
-		this.mIntent = intent;
 		parseIntent(intent);
 		this.nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		doSend();
 	}
 
 	private void parseIntent(Intent intent) {
-		userId = intent.getStringExtra(Constants.EXTRA_ID);
-		userName = intent.getStringExtra(Constants.EXTRA_USER_NAME);
-		content = intent.getStringExtra(Constants.EXTRA_TEXT);
+		userId = intent.getStringExtra("id");
+		screenName = intent.getStringExtra("screen_name");
+		content = intent.getStringExtra("text");
+		reply = intent.getStringExtra("reply");
 		if (App.DEBUG) {
 			log("parseIntent userId=" + userId);
-			log("parseIntent userName=" + userName);
+			log("parseIntent userName=" + screenName);
 			log("parseIntent content=" + content);
 		}
 	}
@@ -70,17 +71,17 @@ public class PostMessageService extends BaseIntentService {
 	private boolean doSend() {
 		showSendingNotification();
 		boolean res = true;
-		Api api = FanFouApi.newInstance();
+		Api api = App.getApi();
 		try {
-			DirectMessage result = api.directMessagesCreate(userId, content,
-					null, Constants.MODE);
+			DirectMessageModel result = api.createDirectmessage(userId,
+					content, reply);
 			nm.cancel(10);
-			if (result == null || result.isNull()) {
+			if (result == null) {
 				IOHelper.copyToClipBoard(this, content);
 				showFailedNotification("私信未发送，内容已保存到剪贴板", "未知原因");
 				res = false;
 			} else {
-				IOHelper.storeDirectMessage(this, result);
+				DataController.store(this, result);
 				res = true;
 				sendSuccessBroadcast();
 			}

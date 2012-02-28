@@ -3,9 +3,7 @@ package com.fanfou.app.hd;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,9 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.fanfou.app.hd.ui.actionbarcompat.ActionBarHelper;
-import com.fanfou.app.hd.ui.widget.ActionManager;
-import com.fanfou.app.hd.ui.widget.GestureManager.SwipeListener;
+import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.util.IntentHelper;
 import com.fanfou.app.hd.util.Utils;
 
@@ -75,8 +71,8 @@ abstract class UIBaseSupport extends UIActionBarSupport implements
 		this.mContext = this;
 		this.mInflater = LayoutInflater.from(this);
 		this.mDisplayMetrics = new DisplayMetrics();
-		Utils.initScreenConfig(this);
 		getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
+		Utils.initScreenConfig(this);
 	}
 
 	protected abstract void initialize();
@@ -131,23 +127,23 @@ abstract class UIBaseSupport extends UIActionBarSupport implements
 	}
 
 	protected void onMenuHomeClick() {
-		IntentHelper.goHomePage(this, -1);
+		UIController.goUIHome(mContext);
 		finish();
 	}
 
 	protected void onMenuWriteClick() {
-		ActionManager.doWrite(this);
+//		ActionManager.doWrite(this);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		App.active = isActive = true;
+//		App.active = isActive = true;
 	}
 
 	@Override
 	protected void onPause() {
-		App.active = isActive = false;
+//		App.active = isActive = false;
 		super.onPause();
 	}
 

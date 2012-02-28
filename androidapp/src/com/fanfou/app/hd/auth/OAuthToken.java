@@ -1,10 +1,10 @@
 package com.fanfou.app.hd.auth;
 
-import javax.crypto.spec.SecretKeySpec;
-
 import java.io.Serializable;
 
-public abstract class OAuthToken implements Serializable {
+import javax.crypto.spec.SecretKeySpec;
+
+abstract class OAuthToken implements Serializable {
 
 	/**
 	 *

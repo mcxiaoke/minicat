@@ -21,11 +21,9 @@ import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.adapter.UserChooseCursorAdapter;
-import com.fanfou.app.hd.api.User;
-import com.fanfou.app.hd.db.Contents.BasicColumns;
-import com.fanfou.app.hd.db.Contents.UserInfo;
+import com.fanfou.app.hd.dao.model.UserColumns;
+import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.service.AutoCompleteService;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.FanFouService;
@@ -46,6 +44,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 2.6 2011.11.25
  * @version 2.7 2011.12.02
  * @version 2.8 2011.12.23
+ * @version 3.0 2012.02.22
  */
 public class UIUserChoose extends UIBaseSupport implements
 		FilterQueryProvider, OnItemClickListener {
@@ -89,11 +88,11 @@ public class UIUserChoose extends UIBaseSupport implements
 	}
 
 	protected void initCursorAdapter() {
-		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
+		String where = UserColumns.TYPE + "=? AND " + UserColumns.OWNER
 				+ "=?";
 		String[] whereArgs = new String[] {
-				String.valueOf(Constants.TYPE_USERS_FRIENDS), App.getUserId() };
-		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
+				String.valueOf(UserModel.TYPE_FRIENDS), App.getAccount() };
+		mCursor = managedQuery(UserColumns.CONTENT_URI, null, where,
 				whereArgs, null);
 
 		mCursorAdapter = new UserChooseCursorAdapter(mContext, mCursor);
@@ -190,8 +189,8 @@ public class UIUserChoose extends UIBaseSupport implements
 	}
 
 	protected void doRetrieve(boolean isGetMore) {
-		FanFouService.doFetchFriends(this, new ResultHandler(), page,
-				App.getUserId());
+//		FanFouService.doFetchFriends(this, new ResultHandler(), page,
+//				App.getAccount());
 	}
 
 	protected void updateUI() {
@@ -244,7 +243,7 @@ public class UIUserChoose extends UIBaseSupport implements
 				log("User Names: " + sb.toString());
 			}
 			Intent intent = new Intent();
-			intent.putExtra(Constants.EXTRA_TEXT, sb.toString());
+			intent.putExtra("text", sb.toString());
 			setResult(RESULT_OK, intent);
 		}
 		finish();
@@ -276,15 +275,14 @@ public class UIUserChoose extends UIBaseSupport implements
 				if (!isInitialized) {
 					showContent();
 				}
-				int count = msg.getData().getInt(Constants.EXTRA_COUNT);
+				int count = msg.getData().getInt("count");
 				if (count > 0) {
 					updateUI();
 				}
 				break;
 			case Constants.RESULT_ERROR:
-				int code = msg.getData().getInt(Constants.EXTRA_CODE);
-				String errorMessage = msg.getData().getString(
-						Constants.EXTRA_ERROR);
+				int code = msg.getData().getInt("error_code");
+				String errorMessage = msg.getData().getString("error_message");
 				Utils.notify(mContext, errorMessage);
 				if (!isInitialized) {
 					showContent();
@@ -299,12 +297,12 @@ public class UIUserChoose extends UIBaseSupport implements
 
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
-		String where = BasicColumns.TYPE + " = " + Constants.TYPE_USERS_FRIENDS
-				+ " AND " + BasicColumns.OWNER_ID + " = '" + App.getUserId()
-				+ "' AND (" + UserInfo.SCREEN_NAME + " like '%" + constraint
-				+ "%' OR " + BasicColumns.ID + " like '%" + constraint + "%' )";
+		String where = UserColumns.TYPE + " = " + UserModel.TYPE_FRIENDS
+				+ " AND " + UserColumns.OWNER + " = '" + App.getAccount()
+				+ "' AND (" + UserColumns.SCREEN_NAME + " like '%" + constraint
+				+ "%' OR " + UserColumns.ID + " like '%" + constraint + "%' )";
 		;
-		return managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
+		return managedQuery(UserColumns.CONTENT_URI, null, where,
 				null, null);
 	}
 
@@ -324,9 +322,9 @@ public class UIUserChoose extends UIBaseSupport implements
 						+ " adapter.size=" + mCursorAdapter.getCount());
 			}
 			if (value) {
-				final Cursor cc = (Cursor) mCursorAdapter.getItem(key);
-				final User uu = User.parse(cc);
-				mUserNames.add(uu.screenName);
+				final Cursor cursor = (Cursor) mCursorAdapter.getItem(key);
+				final UserModel u = UserModel.from(cursor);
+				mUserNames.add(u.getScreenName());
 			}
 		}
 

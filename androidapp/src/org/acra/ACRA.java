@@ -141,9 +141,6 @@ public class ACRA {
 	public static void init(Application app) {
 
 		if (mApplication != null) {
-			if(App.DEBUG){
-				throw new IllegalStateException("ACRA#init called more than once");
-			}
 			return;
 		}
 

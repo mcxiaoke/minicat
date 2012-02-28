@@ -1,9 +1,9 @@
 package com.fanfou.app.hd;
 
+import com.fanfou.app.hd.controller.UIController;
+
 import android.app.Activity;
 import android.os.Bundle;
-
-import com.fanfou.app.hd.util.IntentHelper;
 
 /**
  * @author mcxiaoke
@@ -12,6 +12,7 @@ import com.fanfou.app.hd.util.IntentHelper;
  * @version 1.2 2011.11.03
  * @version 1.3 2011.11.11
  * @version 1.4 2011.12.05
+ * @version 1.5 2012.02.27
  * 
  */
 public class UIStart extends Activity {
@@ -24,10 +25,10 @@ public class UIStart extends Activity {
 	}
 
 	private void checkLogin() {
-		if (App.verified) {
-			IntentHelper.goHomePage(this, 0);
+		if (App.isVerified()) {
+			UIController.goUIHome(this);
 		} else {
-			IntentHelper.goLoginPage(this);
+			UIController.goUILogin(this);
 		}
 		finish();
 	}

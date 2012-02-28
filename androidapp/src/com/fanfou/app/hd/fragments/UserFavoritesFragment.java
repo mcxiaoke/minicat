@@ -3,15 +3,14 @@ package com.fanfou.app.hd.fragments;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Messenger;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.db.Contents.BasicColumns;
-import com.fanfou.app.hd.db.Contents.StatusInfo;
-import com.fanfou.app.hd.service.Constants;
+import com.fanfou.app.hd.api.Paging;
+import com.fanfou.app.hd.dao.model.StatusColumns;
+import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.service.FanFouService;
 import com.fanfou.app.hd.util.StringHelper;
 
@@ -19,17 +18,18 @@ import com.fanfou.app.hd.util.StringHelper;
  * @author mcxiaoke
  * @version 1.0 2012.02.07
  * @version 1.1 2012.02.09
+ * @version 1.2 2012.02.24
  * 
  */
 public class UserFavoritesFragment extends BaseTimlineFragment {
 	private static final String TAG = UserFavoritesFragment.class
 			.getSimpleName();
 	private String userId;
-	private int page=1;
+	private int page;
 
 	public static UserFavoritesFragment newInstance(String userId) {
 		Bundle args = new Bundle();
-		args.putString(Constants.EXTRA_ID, userId);
+		args.putString("id", userId);
 		UserFavoritesFragment fragment = new UserFavoritesFragment();
 		fragment.setArguments(args);
 		if (App.DEBUG) {
@@ -43,10 +43,10 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 		super.onCreate(savedInstanceState);
 		Bundle data=getArguments();
 		if(data!=null){
-			userId=data.getString(Constants.EXTRA_ID);
+			userId=data.getString("id");
 		}
 		if(StringHelper.isEmpty(userId)){
-			userId=App.getUserId();
+			userId=App.getAccount();
 		}
 		
 		if (App.DEBUG) {
@@ -56,7 +56,7 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 
 	@Override
 	protected int getType() {
-		return Constants.TYPE_FAVORITES_LIST;
+		return StatusModel.TYPE_FAVORITES;
 	}
 
 	@Override
@@ -64,19 +64,30 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 		if (App.DEBUG) {
 			Log.d(TAG, "doFetch() doGetMore=" + doGetMore);
 		}
+		final ResultHandler handler = new ResultHandler(this);
+		Paging p=new Paging();
+		
 		if (doGetMore) {
 			page++;
 		} else {
 			page = 1;
 		}
-		final ResultHandler handler = new ResultHandler(this);
-		FanFouService.doFetchFavorites(getActivity(), new Messenger(handler), page, userId);
+		
+		p.page=page;
+		
+		if (App.DEBUG) {
+			Log.d(TAG, "doFetch() doGetMore=" + doGetMore+" Paging="+p);
+		}
+		FanFouService.getTimeline(getActivity(), StatusModel.TYPE_FAVORITES, handler, p);
+		
+		
+		
 	}
 	
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		Uri uri = StatusInfo.CONTENT_URI;
-		String selection = BasicColumns.TYPE + " =? AND " + BasicColumns.OWNER_ID
+		Uri uri = StatusColumns.CONTENT_URI;
+		String selection = StatusColumns.TYPE + " =? AND " + StatusColumns.OWNER
 				+ " =? ";
 		String[] selectionArgs = new String[] { String.valueOf(getType()), userId};
 		CursorLoader loader=new CursorLoader(getActivity(), uri, null, selection, selectionArgs, null);

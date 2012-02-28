@@ -1,6 +1,7 @@
 package com.fanfou.app.hd.dao.model;
 
 import android.content.ContentValues;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -11,7 +12,8 @@ import android.os.Parcelable;
  * @version 2.0 2012.02.16
  * 
  */
-abstract class BaseModel<T> implements Model, Parcelable {
+public abstract class BaseModel implements Model, Parcelable {
+	public static final int TYPE_NONE = 0;
 
 	protected String id;// id in string format
 	protected String account; // related account id/userid
@@ -134,5 +136,8 @@ abstract class BaseModel<T> implements Model, Parcelable {
 	public void setNote(String note) {
 		this.note = note;
 	}
+	
+	public abstract Uri getContentUri();
+	public abstract String getTable();
 
 }

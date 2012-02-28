@@ -1,5 +1,6 @@
 package com.fanfou.app.hd;
 
+import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.fragments.BaseTimlineFragment;
 import com.fanfou.app.hd.fragments.UserFavoritesFragment;
 import com.fanfou.app.hd.service.Constants;
@@ -13,7 +14,7 @@ public class UIFavorites extends UIBaseTimeline {
 
 	@Override
 	protected int getType() {
-		return Constants.TYPE_FAVORITES_LIST;
+		return StatusModel.TYPE_FAVORITES;
 	}
 
 	@Override

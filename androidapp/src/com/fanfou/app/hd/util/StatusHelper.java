@@ -2,7 +2,6 @@ package com.fanfou.app.hd.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +13,7 @@ import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.api.Status;
+import com.fanfou.app.hd.dao.model.StatusModel;
 
 /**
  * @author mcxiaoke
@@ -23,6 +22,7 @@ import com.fanfou.app.hd.api.Status;
  * @version 1.6 2011.11.17
  * @version 1.7 2011.11.21
  * @version 1.8 2012.02.01
+ * @version 1.9 2012.02.24
  * 
  */
 public class StatusHelper {
@@ -101,24 +101,6 @@ public class StatusHelper {
 		return Html.fromHtml(text).toString();
 	}
 
-	private HashMap<String, String> extractNames(final String text) {
-		HashMap<String, String> names = new HashMap<String, String>();
-		// 处理HTML格式返回的用户链接
-		Matcher m = PATTERN_USERLINK.matcher(text);
-		while (m.find()) {
-			names.put(m.group(2), m.group(1));
-			if (App.DEBUG) {
-				Log.d(TAG, "extractNames() screenName=" + m.group(2)
-						+ " userId=" + m.group(1));
-			}
-		}
-		return names;
-	}
-
-	public static String getSimpifiedText(String text) {
-		return Html.fromHtml(text).toString();
-	}
-
 	public static void setStatus(final TextView textView, final String text) {
 		String processedText = preprocessText(text);
 		textView.setText(processedText, BufferType.SPANNABLE);
@@ -151,25 +133,10 @@ public class StatusHelper {
 	private static final Pattern namePattern = Pattern.compile("@(.*?)\\s");
 	private static final int MAX_NAME_LENGTH = 12;
 
-	private static HashSet<String> getMentionedNames(String text) {
-
-		HashSet<String> names = new HashSet<String>();
-		Matcher m = namePattern.matcher(text);
-		while (m.find()) {
-			String name = m.group(1);
-			if (name.length() <= MAX_NAME_LENGTH + 1) {
-				names.add(m.group(1));
-			}
-		}
-		String name = App.getUserName();
-		names.remove(name);
-		return names;
-	}
-
-	public static ArrayList<String> getMentions(final Status status) {
-		String text = status.simpleText;
+	public static ArrayList<String> getMentions(final StatusModel status) {
+		String text = status.getSimpleText();
 		ArrayList<String> names = new ArrayList<String>();
-		names.add(status.userScreenName);
+		names.add(status.getUserScreenName());
 		Matcher m = namePattern.matcher(text);
 		while (m.find()) {
 			String name = m.group(1);
@@ -177,7 +144,7 @@ public class StatusHelper {
 				names.add(m.group(1));
 			}
 		}
-		String name = App.getUserName();
+		String name = App.getScreenName();
 		names.remove(name);
 		return names;
 	}

@@ -10,7 +10,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.DownloadService;
 import com.fanfou.app.hd.service.VersionInfo;
@@ -52,7 +51,7 @@ public class UIVersionUpdate extends Activity implements View.OnClickListener {
 	}
 
 	private void parseIntent(Intent intent) {
-		mVersionInfo = intent.getParcelableExtra(Constants.EXTRA_DATA);
+		mVersionInfo = intent.getParcelableExtra("data");
 	}
 
 	private void setLayout() {

@@ -5,17 +5,14 @@ import java.io.File;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.adapter.DraftsCursorAdaper;
-import com.fanfou.app.hd.api.Draft;
-import com.fanfou.app.hd.db.Contents.DraftInfo;
+import com.fanfou.app.hd.adapter.RecordCursorAdaper;
+import com.fanfou.app.hd.dao.model.RecordColumns;
+import com.fanfou.app.hd.dao.model.RecordModel;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.QueueService;
@@ -27,13 +24,14 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.0 2011.10.27
  * @version 1.1 2011.10.28
  * @version 1.2 2011.11.11
+ * @version 2.0 2012.02.21
  * 
  */
 public class UIDrafts extends UIBaseSupport implements OnItemClickListener {
 	private ListView mListView;
 
 	private Cursor mCursor;
-	private DraftsCursorAdaper mAdapter;
+	private RecordCursorAdaper mAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +46,9 @@ public class UIDrafts extends UIBaseSupport implements OnItemClickListener {
 	}
 
 	private void setListView() {
-		mCursor = managedQuery(DraftInfo.CONTENT_URI, DraftInfo.COLUMNS, null,
+		mCursor = managedQuery(RecordColumns.CONTENT_URI, null, null,
 				null, null);
-		mAdapter = new DraftsCursorAdaper(this, mCursor);
+		mAdapter = new RecordCursorAdaper(this, mCursor);
 		mListView = (ListView) findViewById(R.id.list);
 		mListView.setAdapter(mAdapter);
 		mListView.setOnItemClickListener(this);
@@ -62,7 +60,7 @@ public class UIDrafts extends UIBaseSupport implements OnItemClickListener {
 	}
 
 	private void onMenuClearClick() {
-		getContentResolver().delete(DraftInfo.CONTENT_URI, null, null);
+		getContentResolver().delete(RecordColumns.CONTENT_URI, null, null);
 		mCursor.requery();
 		Utils.notify(this, "草稿箱已清空");
 		finish();
@@ -89,25 +87,25 @@ public class UIDrafts extends UIBaseSupport implements OnItemClickListener {
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		final Cursor c = (Cursor) parent.getItemAtPosition(position);
-		if (c != null) {
-			final Draft draft = Draft.parse(c);
-			goWritePage(draft);
+		final Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+		if (cursor != null) {
+			final RecordModel record = RecordModel.from(cursor);
+			goWritePage(record);
 		}
 	}
 
-	private void goWritePage(final Draft draft) {
-		if (draft == null) {
+	private void goWritePage(final RecordModel record) {
+		if (record == null) {
 			return;
 		}
 
 		Intent intent = new Intent(this, UIWrite.class);
-		intent.putExtra(Constants.EXTRA_TYPE, draft.type);
-		intent.putExtra(Constants.EXTRA_TEXT, draft.text);
-		intent.putExtra(Constants.EXTRA_ID, draft.id);
-		intent.putExtra(Constants.EXTRA_IN_REPLY_TO_ID, draft.replyTo);
-		if (!StringHelper.isEmpty(draft.filePath)) {
-			intent.putExtra(Constants.EXTRA_DATA, new File(draft.filePath));
+		intent.putExtra("type", record.getType());
+		intent.putExtra("text", record.getText());
+		intent.putExtra("id", record.getId());
+		intent.putExtra("reply", record.getReply());
+		if (!StringHelper.isEmpty(record.getFile())) {
+			intent.putExtra("data", new File(record.getFile()));
 		}
 		startActivity(intent);
 		finish();

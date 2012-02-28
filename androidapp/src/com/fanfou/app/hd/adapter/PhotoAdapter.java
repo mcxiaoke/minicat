@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.api.Photo;
 import com.fanfou.app.hd.cache.IImageLoader;
 

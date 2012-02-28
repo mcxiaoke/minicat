@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,14 +11,13 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.UIWrite;
 import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
-import com.fanfou.app.hd.api.Draft;
-import com.fanfou.app.hd.api.FanFouApi;
-import com.fanfou.app.hd.api.Status;
-import com.fanfou.app.hd.db.Contents.DraftInfo;
+import com.fanfou.app.hd.controller.DataController;
+import com.fanfou.app.hd.dao.model.RecordColumns;
+import com.fanfou.app.hd.dao.model.RecordModel;
+import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.util.ImageHelper;
 
 /**
@@ -32,15 +30,16 @@ import com.fanfou.app.hd.util.ImageHelper;
  * @version 3.2 2011.11.28
  * @version 3.3 2011.12.05
  * @version 3.4 2011.12.13
- * @version 3.4 2011.12.26
+ * @version 3.5 2011.12.26
+ * @version 4.0 2012.02.22
  * 
  */
 public class QueueService extends BaseIntentService {
 	public QueueService() {
 		super("TaskQueueService");
 	}
-	
-	public static void start(Context context){
+
+	public static void start(Context context) {
 		context.startService(new Intent(context, QueueService.class));
 	}
 
@@ -50,52 +49,39 @@ public class QueueService extends BaseIntentService {
 		Log.d(TAG, message);
 	}
 
-	private void deleteDraft(final int id) {
-		if (id > -1) {
-			Uri uri = ContentUris.withAppendedId(DraftInfo.CONTENT_URI, id);
-			getContentResolver().delete(uri, null, null);
-		}
+	private boolean deleteRecord(String id) {
+		return DataController.delete(this, RecordColumns.CONTENT_URI, id)>0;
 	}
 
-	private boolean doSend(final Draft d) {
+	private boolean doSend(final RecordModel rm) {
 		boolean res = false;
 		try {
-			Api api = FanFouApi.newInstance();
-			Status result = null;
-			File srcFile = new File(d.filePath);
+			Api api = App.getApi();
+			StatusModel result = null;
+			File srcFile = new File(rm.getFile());
 			if (srcFile == null || !srcFile.exists()) {
-				if (d.type == UIWrite.TYPE_REPLY) {
-					result = api.statusesCreate(d.text, d.replyTo, null, null,
-							null, Constants.FORMAT, Constants.MODE);
-				} else {
-					result = api
-							.statusesCreate(d.text, null, null, null,
-									d.replyTo, Constants.FORMAT,
-									Constants.MODE);
-				}
+				result = api.updateStatus(rm.text, rm.reply, null, null);
 			} else {
 				int quality;
 				ApnType apnType = App.getApnType();
 				if (apnType == ApnType.WIFI) {
 					quality = ImageHelper.IMAGE_QUALITY_HIGH;
-				} else if (apnType == ApnType.HSDPA) {
-					quality = ImageHelper.IMAGE_QUALITY_MEDIUM;
 				} else {
-					quality = ImageHelper.IMAGE_QUALITY_LOW;
+					quality = ImageHelper.IMAGE_QUALITY_MEDIUM;
 				}
 				File photo = ImageHelper.prepareUploadFile(this, srcFile,
 						quality);
 				if (photo != null && photo.length() > 0) {
 					if (App.DEBUG)
 						log("photo file=" + srcFile.getName() + " size="
-								+ photo.length() / 1024 + " quality=" + quality+" apnType="+apnType);
-					result = api.photosUpload(photo, d.text, null, null,
-							Constants.FORMAT, Constants.MODE);
+								+ photo.length() / 1024 + " quality=" + quality
+								+ " apnType=" + apnType);
+					result = api.uploadPhoto(photo, rm.text, null);
 					photo.delete();
 				}
 			}
-			if (result != null && !result.isNull()) {
-				// IOHelper.storeStatus(this, result);
+			if (result != null) {
+				DataController.store(this, result);
 				res = true;
 			}
 		} catch (ApiException e) {
@@ -114,15 +100,15 @@ public class QueueService extends BaseIntentService {
 	}
 
 	private void sendQueue() {
-		BlockingQueue<Draft> queue = new LinkedBlockingQueue<Draft>();
+		BlockingQueue<RecordModel> queue = new LinkedBlockingQueue<RecordModel>();
 		boolean running = true;
-		Cursor cursor = getContentResolver().query(DraftInfo.CONTENT_URI,
-				DraftInfo.COLUMNS, null, null, null);
+		Cursor cursor = getContentResolver().query(RecordColumns.CONTENT_URI,
+				null, null, null, null);
 		if (cursor != null && cursor.moveToFirst()) {
 			while (!cursor.isAfterLast()) {
-				final Draft d = Draft.parse(cursor);
-				if (d != null) {
-					queue.add(d);
+				final RecordModel rm = RecordModel.from(cursor);
+				if (rm != null) {
+					queue.add(rm);
 				}
 				cursor.moveToNext();
 			}
@@ -130,19 +116,11 @@ public class QueueService extends BaseIntentService {
 
 		int nums = 0;
 		while (running) {
-			final Draft d = queue.poll();
-			if (d != null) {
-				if (App.DEBUG) {
-					log("Start sending draft: text=" + d.text + " file="
-							+ d.filePath);
-				}
-				if (doSend(d)) {
-					deleteDraft(d.id);
+			final RecordModel rm = queue.poll();
+			if (rm != null) {
+				if (doSend(rm)) {
+					deleteRecord(rm.getId());
 					nums++;
-					if (App.DEBUG) {
-						log("Send draft successful: id=" + d.id + " text="
-								+ d.text + " filepath=" + d.filePath);
-					}
 				}
 			} else {
 				running = false;

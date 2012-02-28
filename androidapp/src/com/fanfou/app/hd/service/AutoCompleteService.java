@@ -9,13 +9,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.api.Api;
-import com.fanfou.app.hd.api.FanFouApi;
-import com.fanfou.app.hd.api.Parser;
-import com.fanfou.app.hd.api.User;
-import com.fanfou.app.hd.db.Contents.UserInfo;
+import com.fanfou.app.hd.api.Paging;
+import com.fanfou.app.hd.controller.DataController;
+import com.fanfou.app.hd.dao.model.UserColumns;
+import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.util.DateTimeHelper;
 import com.fanfou.app.hd.util.OptionHelper;
 
@@ -31,6 +31,8 @@ import com.fanfou.app.hd.util.OptionHelper;
  * @version 2.5 2011.12.29
  * @version 2.6 2011.12.30
  * @version 2.7 2012.01.16
+ * @version 2.8 2012.02.23
+ * @version 2.9 2012.02.24
  * 
  */
 public class AutoCompleteService extends WakefulIntentService {
@@ -77,7 +79,8 @@ public class AutoCompleteService extends WakefulIntentService {
 			Log.d(TAG, "setIfNot flag=" + set);
 		}
 		if (!set) {
-			OptionHelper.saveBoolean(context,R.string.option_set_auto_complete, true);
+			OptionHelper.saveBoolean(context,
+					R.string.option_set_auto_complete, true);
 			set(context);
 		}
 	}
@@ -95,20 +98,18 @@ public class AutoCompleteService extends WakefulIntentService {
 	}
 
 	private void doFetchAutoComplete() {
-		if (!App.verified) {
+		if (App.isDisconnected() || !App.isVerified()) {
 			return;
 		}
-		if (App.noConnection) {
-			return;
-		}
-		Api api =FanFouApi.newInstance();
-		int page = 1;
+		Api api = App.getApi();
+		Paging p = new Paging();
+		p.count = FanFouService.MAX_USERS_COUNT;
+		p.page = 1;
 		boolean more = true;
 		while (more) {
-			List<User> result = null;
+			List<UserModel> result = null;
 			try {
-				result = api.usersFriends(null, Constants.MAX_USERS_COUNT,
-						page, Constants.MODE);
+				result = api.getFriends(App.getAccount(), p);
 			} catch (Exception e) {
 				if (App.DEBUG) {
 					Log.e(TAG, e.toString());
@@ -116,21 +117,20 @@ public class AutoCompleteService extends WakefulIntentService {
 			}
 			if (result != null && result.size() > 0) {
 				int size = result.size();
-
 				int insertedNums = getContentResolver().bulkInsert(
-						UserInfo.CONTENT_URI,
-						Parser.toContentValuesArray(result));
+						UserColumns.CONTENT_URI,
+						DataController.toContentValues(result));
 				if (App.DEBUG) {
-					log("doFetchAutoComplete page==" + page + " size=" + size
+					log("doFetchAutoComplete page==" + p.page + " size=" + size
 							+ " insert rows=" + insertedNums);
 				}
-				if (size < Constants.MAX_USERS_COUNT || page >= 20) {
+				if (size < FanFouService.MAX_USERS_COUNT || p.page >= 20) {
 					more = false;
 				}
 			} else {
 				more = false;
 			}
-			page++;
+			p.page++;
 		}
 	}
 

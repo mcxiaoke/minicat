@@ -10,7 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.api.Search;
+import com.fanfou.app.hd.dao.model.Search;
 
 public class SearchAdapter extends BaseAdapter {
 

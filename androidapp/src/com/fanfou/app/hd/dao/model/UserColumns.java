@@ -46,8 +46,8 @@ public interface UserColumns extends IBaseColumns {
 			+ _ID + " integer primary key autoincrement, " 
 			
 			+ ID + " text not null, " 
-			+ ACCOUNT + "text not null, "
-			+ OWNER + " text not null, " 
+			+ ACCOUNT + " text not null, "
+			+ OWNER + " text, " 
 			+ NOTE + " text, "
 			
 			+ TYPE + " integer not null, " 

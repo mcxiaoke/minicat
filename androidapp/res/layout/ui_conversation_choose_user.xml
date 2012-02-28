@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rect_bg"
+    android:orientation="horizontal"
+    android:padding="4dp" >
+
+    <TextView
+        android:id="@+id/recipient_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="收件人" />
+
+    <ImageButton 
+        android:id="@+id/recipient_choose"
+        style="@style/Icon.Action"
+        android:src="@drawable/ic_adduser" />
+
+    <TextView
+        android:id="@+id/recipient_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:layout_weight="1"
+        android:background="#99999999"
+        android:gravity="top|left"
+        android:hint="收件人姓名和ID"
+        android:padding="10dp"
+        android:singleLine="true" />
+
+</LinearLayout>

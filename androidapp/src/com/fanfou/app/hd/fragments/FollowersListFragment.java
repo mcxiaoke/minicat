@@ -4,12 +4,13 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.service.Constants;
+import com.fanfou.app.hd.dao.model.UserModel;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.07
  * @version 1.1 2012.02.08
+ * @version 1.2 2012.02.24
  *
  */
 public class FollowersListFragment extends UserListFragment {
@@ -17,7 +18,7 @@ public class FollowersListFragment extends UserListFragment {
 	
 	public static FollowersListFragment newInstance(String userId) {
 		Bundle args = new Bundle();
-		args.putString(Constants.EXTRA_ID, userId);
+		args.putString("id", userId);
 		FollowersListFragment fragment = new FollowersListFragment();
 		fragment.setArguments(args);
 		if (App.DEBUG) {
@@ -28,7 +29,7 @@ public class FollowersListFragment extends UserListFragment {
 
 	@Override
 	protected int getType() {
-		return Constants.TYPE_USERS_FOLLOWERS;
+		return UserModel.TYPE_FOLLOWERS;
 	}
 
 }

@@ -47,6 +47,17 @@ public final class DeviceHelper {
 		return uuid;
 	}
 
+	public static String getUserAgent() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("FanFou HD for Android ").append(App.versionName)
+				.append(" Build").append(App.versionCode);
+		builder.append(Build.MODEL).append(" ").append(Build.VERSION.RELEASE)
+				.append(" (").append(Build.DEVICE).append(",")
+				.append(Build.BRAND).append(",").append(Build.MANUFACTURER)
+				.append(") ");
+		return builder.toString();
+	}
+
 	public static HashMap<String, String> getDeviceInfo(Context context) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		PackageManager pm = context.getPackageManager();

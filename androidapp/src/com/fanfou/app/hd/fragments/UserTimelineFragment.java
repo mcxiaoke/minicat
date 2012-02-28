@@ -9,8 +9,10 @@ import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.db.FanFouProvider;
-import com.fanfou.app.hd.db.Contents.StatusInfo;
+import com.fanfou.app.hd.api.Paging;
+import com.fanfou.app.hd.dao.DataProvider;
+import com.fanfou.app.hd.dao.model.StatusColumns;
+import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.FanFouService;
 import com.fanfou.app.hd.util.StringHelper;
@@ -29,11 +31,11 @@ public class UserTimelineFragment extends BaseTimlineFragment {
 
 	public static UserTimelineFragment newInstance(String userId) {
 		Bundle args = new Bundle();
-		args.putString(Constants.EXTRA_ID, userId);
+		args.putString("id", userId);
 		UserTimelineFragment fragment = new UserTimelineFragment();
 		fragment.setArguments(args);
 		if (App.DEBUG) {
-			Log.d(TAG, "newInstance() "+fragment);
+			Log.d(TAG, "newInstance() " + fragment);
 		}
 		return fragment;
 	}
@@ -41,16 +43,16 @@ public class UserTimelineFragment extends BaseTimlineFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Bundle data=getArguments();
-		if(data!=null){
-			userId=data.getString(Constants.EXTRA_ID);
+		Bundle data = getArguments();
+		if (data != null) {
+			userId = data.getString("id");
 		}
-		if(StringHelper.isEmpty(userId)){
-			userId=App.getUserId();
+		if (StringHelper.isEmpty(userId)) {
+			userId = App.getAccount();
 		}
-		
+
 		if (App.DEBUG) {
-			Log.d(TAG, "onCreate() userId="+userId);
+			Log.d(TAG, "onCreate() userId=" + userId);
 		}
 	}
 
@@ -61,7 +63,7 @@ public class UserTimelineFragment extends BaseTimlineFragment {
 
 	@Override
 	protected int getType() {
-		return Constants.TYPE_STATUSES_USER_TIMELINE;
+		return StatusModel.TYPE_USER;
 	}
 
 	@Override
@@ -71,24 +73,26 @@ public class UserTimelineFragment extends BaseTimlineFragment {
 		}
 		final ResultHandler handler = new ResultHandler(this);
 		final Cursor cursor = getCursor();
-		String sinceId = null;
-		String maxId = null;
+
+		Paging p = new Paging();
 		if (doGetMore) {
-			maxId = Utils.getMaxId(cursor);
+			p.maxId = Utils.getMaxId(cursor);
 		} else {
-			sinceId = Utils.getSinceId(cursor);
+			p.sinceId = Utils.getSinceId(cursor);
 		}
-		FanFouService.doFetchUserTimeline(getActivity(), new Messenger(handler), userId, sinceId, maxId);
+		FanFouService.getTimeline(getActivity(), getType(), handler, userId, p);
 	}
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		Uri uri = StatusInfo.CONTENT_URI;
-		String selection = StatusInfo.TYPE + " =? AND " + StatusInfo.USER_ID
-				+ " =? ";
-		String[] selectionArgs = new String[] { String.valueOf(getType()), userId};
-		String sortOrder=FanFouProvider.ORDERBY_DATE_DESC;
-		CursorLoader loader=new CursorLoader(getActivity(), uri, null, selection, selectionArgs, sortOrder);
+		Uri uri = StatusColumns.CONTENT_URI;
+		String selection = StatusColumns.TYPE + " =? AND "
+				+ StatusColumns.USER_ID + " =? ";
+		String[] selectionArgs = new String[] { String.valueOf(getType()),
+				userId };
+		String sortOrder = DataProvider.ORDERBY_TIME_DESC;
+		CursorLoader loader = new CursorLoader(getActivity(), uri, null,
+				selection, selectionArgs, sortOrder);
 		return loader;
 	}
 

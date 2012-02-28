@@ -1,14 +1,10 @@
 package com.fanfou.app.hd;
 
-import java.io.IOException;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Selection;
 import android.text.TextUtils;
@@ -22,26 +18,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.api.FanFouApi;
+import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ResultInfo;
-import com.fanfou.app.hd.api.User;
-import com.fanfou.app.hd.auth.FanFouOAuthProvider;
-import com.fanfou.app.hd.auth.OAuthService;
-import com.fanfou.app.hd.auth.OAuthToken;
-import com.fanfou.app.hd.db.Contents.DirectMessageInfo;
-import com.fanfou.app.hd.db.Contents.DraftInfo;
-import com.fanfou.app.hd.db.Contents.StatusInfo;
-import com.fanfou.app.hd.db.Contents.UserInfo;
-import com.fanfou.app.hd.service.Constants;
+import com.fanfou.app.hd.auth.AccessToken;
+import com.fanfou.app.hd.controller.UIController;
+import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.ui.widget.TextChangeListener;
-import com.fanfou.app.hd.util.AlarmHelper;
-import com.fanfou.app.hd.util.DeviceHelper;
-import com.fanfou.app.hd.util.IntentHelper;
-import com.fanfou.app.hd.util.OptionHelper;
-import com.fanfou.app.hd.util.StringHelper;
 import com.fanfou.app.hd.util.Utils;
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 /**
  * @author mcxiaoke
@@ -56,19 +39,18 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * @version 3.2 2011.12.13
  * @version 3.3 2011.12.14
  * @version 3.4 2012.02.20
+ * @version 3.5 2012.02.22
+ * @version 4.0 2012.02.27
  * 
  */
 public final class UILogin extends Activity implements OnClickListener {
 
 	private static final int REQUEST_CODE_REGISTER = 0;
 
+	private static final boolean DEBUG = App.DEBUG;
 	public static final String TAG = UILogin.class.getSimpleName();
 
 	private UILogin mContext;
-	private boolean destroyed;
-
-	private GoogleAnalyticsTracker g;
-	private int page;
 
 	public void log(String message) {
 		Log.i(TAG, message);
@@ -76,6 +58,8 @@ public final class UILogin extends Activity implements OnClickListener {
 
 	private static final String USERNAME = "username";
 	private static final String PASSWORD = "password";
+
+	private static final int DIALOG_PROGRESS = 1;
 
 	private EditText editUsername;
 	private EditText editPassword;
@@ -85,6 +69,8 @@ public final class UILogin extends Activity implements OnClickListener {
 	private String username;
 	private String password;
 
+	// private ProgressDialog dialog;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -92,17 +78,35 @@ public final class UILogin extends Activity implements OnClickListener {
 		setLayout();
 	}
 
+	// @Override
+	// protected Dialog onCreateDialog(int id) {
+	// switch (id) {
+	// case DIALOG_PROGRESS:
+	// dialog = new ProgressDialog(mContext);
+	// dialog.setMessage("正在登录中...");
+	// dialog.setIndeterminate(true);
+	// break;
+	// default:
+	// dialog = null;
+	// break;
+	// }
+	// return dialog;
+	// }
+
 	private void init() {
+		if (DEBUG) {
+			Log.d(TAG, "init()");
+		}
 		mContext = this;
 		Utils.initScreenConfig(this);
-		g = GoogleAnalyticsTracker.getInstance();
-		g.startNewSession(getString(R.string.config_google_analytics_code),
-				this);
-		g.trackPageView("LoginPage");
 	}
 
 	private void setLayout() {
 		setContentView(R.layout.login);
+
+		if (DEBUG) {
+			Log.d(TAG, "setLayout()");
+		}
 
 		editUsername = (EditText) findViewById(R.id.login_username);
 		editUsername.addTextChangedListener(new TextChangeListener() {
@@ -137,9 +141,6 @@ public final class UILogin extends Activity implements OnClickListener {
 			}
 		});
 
-		// mButtonRegister = (Button) findViewById(R.id.button_register);
-		// mButtonRegister.setOnClickListener(this);
-
 		mButtonSignin = (Button) findViewById(R.id.button_signin);
 		mButtonSignin.setOnClickListener(this);
 
@@ -148,9 +149,6 @@ public final class UILogin extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		// case R.id.button_register:
-		// goRegisterPage(mContext);
-		// break;
 		case R.id.button_signin:
 			doLogin();
 			break;
@@ -160,12 +158,13 @@ public final class UILogin extends Activity implements OnClickListener {
 	}
 
 	private void doLogin() {
+		if (DEBUG) {
+			Log.d(TAG, "doLogin()");
+		}
 		if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
 			Utils.notify(mContext, "密码和帐号不能为空");
 		} else {
 			Utils.hideKeyboard(this, editPassword);
-			g.setCustomVar(1, "username", username);
-			g.trackEvent("Action", "onClick", "Login", 1);
 			new LoginTask().execute();
 		}
 	}
@@ -175,21 +174,8 @@ public final class UILogin extends Activity implements OnClickListener {
 		if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_REGISTER) {
 			editUsername.setText(data.getStringExtra("email"));
 			editPassword.setText(data.getStringExtra("password"));
-			page = data.getIntExtra(Constants.EXTRA_PAGE, 0);
 			new LoginTask().execute();
 		}
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		App.active = true;
-	}
-
-	@Override
-	protected void onPause() {
-		App.active = false;
-		super.onPause();
 	}
 
 	@Override
@@ -210,25 +196,6 @@ public final class UILogin extends Activity implements OnClickListener {
 		state.putString(PASSWORD, password);
 	}
 
-	private void clearData() {
-		if (App.DEBUG)
-			log("clearDB()");
-		ContentResolver cr = getContentResolver();
-		cr.delete(StatusInfo.CONTENT_URI, null, null);
-		cr.delete(UserInfo.CONTENT_URI, null, null);
-		cr.delete(DirectMessageInfo.CONTENT_URI, null, null);
-		cr.delete(DraftInfo.CONTENT_URI, null, null);
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		destroyed = true;
-		if (g != null) {
-			g.stopSession();
-		}
-	}
-
 	private class LoginTask extends AsyncTask<Void, Integer, ResultInfo> {
 
 		static final int LOGIN_IO_ERROR = 0; // 网络错误
@@ -236,55 +203,44 @@ public final class UILogin extends Activity implements OnClickListener {
 		static final int LOGIN_AUTH_SUCCESS = 2; // 首次验证成功
 		static final int LOGIN_CANCELLED_BY_USER = 3;
 
-		private ProgressDialog progressDialog;
-		private boolean isCancelled;
+		private boolean isCancelled = false;
+		private ProgressDialog dialog;
 
 		@Override
 		protected ResultInfo doInBackground(Void... params) {
-
-			String savedUserId = OptionHelper.readString(mContext,
-					R.string.option_userid, null);
 			try {
-				OAuthService xauth = new OAuthService(new FanFouOAuthProvider());
-				OAuthToken token = xauth.getOAuthAccessToken(username,
-						password);
+
+				if (DEBUG) {
+					Log.d(TAG, "LoginTask.doInBackground()");
+				}
+				final Api api = App.getApi();
+				AccessToken token = api.getOAuthAccessToken(username, password);
 				if (App.DEBUG)
 					log("xauth token=" + token);
 
-				if (isCancelled) {
-					if (App.DEBUG) {
-						log("login cancelled after xauth process.");
-					}
-					return new ResultInfo(LOGIN_CANCELLED_BY_USER,
-							"user cancel login process.");
-				}
-
 				if (token != null) {
-					publishProgress(1);
-					App.setAccessToken(token);
-					User u = FanFouApi.newInstance().verifyAccount(Constants.MODE);
-
 					if (isCancelled) {
-						if (App.DEBUG) {
-							log("login cancelled after verifyAccount process.");
-						}
 						return new ResultInfo(LOGIN_CANCELLED_BY_USER,
 								"user cancel login process.");
 					}
 
-					if (u != null && !u.isNull()) {
-						App.updateAccountInfo(mContext,u, token);
-						if (App.DEBUG)
-							log("xauth successful! ");
+					publishProgress(1);
+					App.updateAccessToken(mContext, token);
+					
+					final UserModel u = api.verifyCredentials();
 
-						if (StringHelper.isEmpty(savedUserId)
-								|| !savedUserId.equals(u.id)) {
-							clearData();
+					if (u != null) {
+						App.updateUserInfo(mContext, u);
+						App.updateLoginInfo(mContext, username, password);
+						if (App.DEBUG) {
+							log("xauth successful! ");
 						}
 						return new ResultInfo(LOGIN_AUTH_SUCCESS);
 					} else {
-						if (App.DEBUG)
+						if (App.DEBUG) {
 							log("xauth failed.");
+						}
+						App.clearAccountInfo(mContext);
 						return new ResultInfo(LOGIN_AUTH_FAILED,
 								"XAuth successful, but verifyAccount failed. ");
 					}
@@ -293,16 +249,11 @@ public final class UILogin extends Activity implements OnClickListener {
 							"username or password is incorrect, XAuth failed.");
 				}
 
-			} catch (IOException e) {
+			} catch (Exception e) {
 				if (App.DEBUG) {
 					e.printStackTrace();
 				}
-				return new ResultInfo(LOGIN_IO_ERROR,
-						getString(R.string.msg_connection_error));
-			}catch (Exception e) {
-				if (App.DEBUG) {
-					e.printStackTrace();
-				}
+				App.clearAccountInfo(mContext);
 				return new ResultInfo(LOGIN_IO_ERROR, e.getMessage());
 			} finally {
 			}
@@ -310,19 +261,18 @@ public final class UILogin extends Activity implements OnClickListener {
 
 		@Override
 		protected void onPreExecute() {
-			progressDialog = new ProgressDialog(mContext);
-			progressDialog.setMessage("正在进行登录认证...");
-			progressDialog.setIndeterminate(true);
-			progressDialog
-					.setOnCancelListener(new DialogInterface.OnCancelListener() {
+			dialog = new ProgressDialog(mContext);
+			dialog.setMessage("正在登录...");
+			dialog.setIndeterminate(true);
+			dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
-						@Override
-						public void onCancel(DialogInterface dialog) {
-							isCancelled = true;
-							cancel(true);
-						}
-					});
-			progressDialog.show();
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					isCancelled = true;
+					cancel(true);
+				}
+			});
+			dialog.show();
 		}
 
 		@Override
@@ -330,15 +280,15 @@ public final class UILogin extends Activity implements OnClickListener {
 			if (values.length > 0) {
 				int value = values[0];
 				if (value == 1) {
-					progressDialog.setMessage("正在验证帐号信息...");
+					dialog.setMessage("正在验证帐号...");
 				}
 			}
 		}
 
 		@Override
 		protected void onPostExecute(ResultInfo result) {
-			if (progressDialog != null && !destroyed) {
-				progressDialog.dismiss();
+			if (dialog != null) {
+				dialog.dismiss();
 			}
 			switch (result.code) {
 			case LOGIN_IO_ERROR:
@@ -348,22 +298,19 @@ public final class UILogin extends Activity implements OnClickListener {
 			case LOGIN_CANCELLED_BY_USER:
 				break;
 			case LOGIN_AUTH_SUCCESS:
-				if (g != null) {
-					g.setCustomVar(2, "username", username);
-					g.setCustomVar(2, "api", Build.VERSION.SDK);
-					g.setCustomVar(2, "device", Build.MODEL);
-					g.setCustomVar(2, "uuid", DeviceHelper.uuid(mContext));
-					g.dispatch();
-				}
-				AlarmHelper.setScheduledTasks(mContext);
-				IntentHelper.goHomePage(mContext, page);
-				finish();
+				onLoginComplete();
 				break;
 			default:
 				break;
 			}
 		}
 
+	}
+
+	private void onLoginComplete() {
+		// AlarmHelper.setScheduledTasks(mContext);
+		UIController.goUIHome(mContext);
+		finish();
 	}
 
 }

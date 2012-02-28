@@ -65,7 +65,7 @@ public class UIAbout extends Activity implements OnClickListener,
 		mTitle.setText("饭否Android客户端");
 		TextPaint t1 = mTitle.getPaint();
 		t1.setFakeBoldText(true);
-		String version = App.appVersionName + "(Build" + App.appVersionCode
+		String version = App.versionName + "(Build" + App.versionCode
 				+ ")";
 		mVersion.setText("版本：" + version);
 		mIntroduction.setText(R.string.introduction_text);

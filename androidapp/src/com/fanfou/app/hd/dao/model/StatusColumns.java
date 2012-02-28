@@ -6,6 +6,7 @@ import android.net.Uri;
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.16
+ * @version 1.1 2012.02.22
  *
  */
 public interface StatusColumns extends IBaseColumns {
@@ -18,6 +19,7 @@ public interface StatusColumns extends IBaseColumns {
 	public static final String USER_RAWID = "user_rawid";
 	public static final String USER_ID = "user_id";
 	public static final String USER_SCREEN_NAME = "user_screen_name";
+	public static final String USER_PROFILE_IMAGE_URL="user_profile_image_url";
 	
 	public static final String IN_REPLY_TO_STATUS_ID = "in_reply_to_status_id";
 	public static final String IN_REPLY_TO_USER_ID = "in_reply_to_user_id";
@@ -55,8 +57,8 @@ public interface StatusColumns extends IBaseColumns {
 			+ _ID + " integer primary key autoincrement, " 
 			
 			+ ID + " text not null, " 
-			+ ACCOUNT + "text not null, "
-			+ OWNER + " text not null, " 
+			+ ACCOUNT + " text not null, "
+			+ OWNER + " text, " 
 			+ NOTE + " text, "
 			
 			+ TYPE + " integer not null, " 
@@ -74,6 +76,7 @@ public interface StatusColumns extends IBaseColumns {
 			+ USER_RAWID + " integer not null, "
 			+ USER_ID + " text not null, "
 			+ USER_SCREEN_NAME + " text not null, " 
+			+ USER_PROFILE_IMAGE_URL + " text not null, "
 			
 			+ IN_REPLY_TO_STATUS_ID + " text, " 
 			+ IN_REPLY_TO_USER_ID + " text, "

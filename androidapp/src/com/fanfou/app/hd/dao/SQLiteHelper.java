@@ -1,13 +1,13 @@
 package com.fanfou.app.hd.dao;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
 import com.fanfou.app.hd.dao.model.DirectMessageColumns;
 import com.fanfou.app.hd.dao.model.RecordColumns;
 import com.fanfou.app.hd.dao.model.StatusColumns;
 import com.fanfou.app.hd.dao.model.UserColumns;
-
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * @author mcxiaoke
@@ -18,7 +18,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	public static final String TAG = "SQLiteHelper";
 
 	public static final String DATABASE_NAME = "data.db";
-	public static final int DATABASE_VERSION = 15;
+	public static final int DATABASE_VERSION = 1;
 
 	/**
 	 * @param context

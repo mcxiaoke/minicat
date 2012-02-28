@@ -9,20 +9,21 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.UIDMSend;
-import com.fanfou.app.hd.UIStatus;
-import com.fanfou.app.hd.UIHome;
-import com.fanfou.app.hd.api.DirectMessage;
-import com.fanfou.app.hd.api.Status;
-import com.fanfou.app.hd.service.Constants;
-import com.fanfou.app.hd.service.NotificationService;
-import com.fanfou.app.hd.util.AlarmHelper;
 import com.fanfou.app.hd.R;
+import com.fanfou.app.hd.UIConversation;
+import com.fanfou.app.hd.UIHome;
+import com.fanfou.app.hd.UIStatus;
+import com.fanfou.app.hd.dao.model.BaseModel;
+import com.fanfou.app.hd.dao.model.DirectMessageModel;
+import com.fanfou.app.hd.dao.model.StatusModel;
+import com.fanfou.app.hd.util.AlarmHelper;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.09.21
  * @version 1.1 2011.11.03
+ * @version 1.2 2012.02.22
+ * @version 1.3 2012.02.24
  * 
  */
 public class NotificationReceiver extends BroadcastReceiver {
@@ -34,16 +35,16 @@ public class NotificationReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		int type = intent.getIntExtra(Constants.EXTRA_TYPE, -1);
-		int count = intent.getIntExtra(Constants.EXTRA_COUNT, 1);
+		int type = intent.getIntExtra("type", BaseModel.TYPE_NONE);
+		int count = intent.getIntExtra("count", 1);
 		if (App.DEBUG) {
 			Log.d(TAG, "broadcast received type=" + type + " count=" + count);
 		}
 		switch (type) {
-		case NotificationService.NOTIFICATION_TYPE_HOME:
+		case StatusModel.TYPE_HOME:
 			if (count == 1) {
-				Status status = (Status) intent
-						.getParcelableExtra(Constants.EXTRA_DATA);
+				final StatusModel status = (StatusModel) intent
+						.getParcelableExtra("data");
 				if (status != null) {
 					showHomeOneNotification(context, status);
 				}
@@ -51,10 +52,10 @@ public class NotificationReceiver extends BroadcastReceiver {
 				showHomeMoreNotification(context, count);
 			}
 			break;
-		case NotificationService.NOTIFICATION_TYPE_MENTION:
+		case StatusModel.TYPE_MENTIONS:
 			if (count == 1) {
-				Status status = (Status) intent
-						.getParcelableExtra(Constants.EXTRA_DATA);
+				final StatusModel status = (StatusModel) intent
+						.getParcelableExtra("data");
 				if (status != null) {
 					showMentionOneNotification(context, status);
 				}
@@ -62,10 +63,10 @@ public class NotificationReceiver extends BroadcastReceiver {
 				showMentionMoreNotification(context, count);
 			}
 			break;
-		case NotificationService.NOTIFICATION_TYPE_DM:
+		case DirectMessageModel.TYPE_INBOX:
 			if (count == 1) {
-				final DirectMessage dm = (DirectMessage) intent
-						.getParcelableExtra(Constants.EXTRA_DATA);
+				final DirectMessageModel dm = (DirectMessageModel) intent
+						.getParcelableExtra("data");
 				if (dm != null) {
 					showDmOneNotification(context, dm);
 				}
@@ -79,15 +80,15 @@ public class NotificationReceiver extends BroadcastReceiver {
 	}
 
 	private static void showHomeOneNotification(Context context,
-			final Status status) {
+			final StatusModel status) {
 		if (App.DEBUG) {
 			Log.d(TAG, "showHomeOneNotification " + status);
 		}
-		String title = status.userScreenName;
-		String message = status.simpleText;
+		String title = status.getUserScreenName();
+		String message = status.getSimpleText();
 		Intent intent = new Intent(context, UIStatus.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
-		intent.putExtra(Constants.EXTRA_DATA, status);
+		intent.putExtra("data", status);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		showNotification(NOTIFICATION_ID_HOME, context, contentIntent, title,
@@ -102,7 +103,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		String message = "收到" + count + "条来自好友的消息";
 		Intent intent = new Intent(context, UIHome.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
-		intent.putExtra(Constants.EXTRA_PAGE, 0);
+		// intent.putExtra("page", 0);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
 				intent, 0);
 		showNotification(NOTIFICATION_ID_HOME, context, contentIntent, title,
@@ -110,15 +111,15 @@ public class NotificationReceiver extends BroadcastReceiver {
 	}
 
 	private static void showMentionOneNotification(Context context,
-			final Status status) {
+			final StatusModel status) {
 		if (App.DEBUG) {
 			Log.i(TAG, "showMentionOneNotification " + status);
 		}
-		String title = status.userScreenName + "@你的消息";
-		String message = status.simpleText;
+		String title = status.getUserScreenName() + "@你的消息";
+		String message = status.getSimpleText();
 		Intent intent = new Intent(context, UIStatus.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
-		intent.putExtra(Constants.EXTRA_DATA, status);
+		intent.putExtra("data", status);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		showNotification(NOTIFICATION_ID_MENTION, context, contentIntent,
@@ -133,7 +134,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		String message = "收到" + count + "条提到你的消息";
 		Intent intent = new Intent(context, UIHome.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
-		intent.putExtra(Constants.EXTRA_PAGE, 1);
+		// intent.putExtra("page", 1);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
 				intent, 0);
 		showNotification(NOTIFICATION_ID_MENTION, context, contentIntent,
@@ -141,19 +142,20 @@ public class NotificationReceiver extends BroadcastReceiver {
 	}
 
 	private static void showDmOneNotification(Context context,
-			final DirectMessage dm) {
+			final DirectMessageModel dm) {
 		if (App.DEBUG) {
 			Log.d(TAG, "showDmOneNotification " + dm);
 		}
-		Intent intent = new Intent(context, UIDMSend.class);
+		Intent intent = new Intent(context, UIConversation.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
-		intent.putExtra(Constants.EXTRA_ID, dm.senderId);
-		intent.putExtra(Constants.EXTRA_USER_NAME, dm.senderScreenName);
+		intent.putExtra("id", dm.getSenderId());
+		intent.putExtra("screen_name", dm.getSenderScreenName());
+		intent.putExtra("profile_image_url", dm.getSenderProfileImageUrl());
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-		String title = "收到" + dm.senderScreenName + "的私信";
-		String message = dm.senderScreenName + ":" + dm.text;
+		String title = "收到" + dm.getSenderScreenName() + "的私信";
+		String message = dm.getSenderScreenName() + ":" + dm.getText();
 		showNotification(NOTIFICATION_ID_DM, context, contentIntent, title,
 				message, R.drawable.ic_notify_dm);
 	}
@@ -166,7 +168,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		String message = "收到" + count + "条发给你的私信";
 		Intent intent = new Intent(context, UIHome.class);
 		intent.setAction("DUMY_ACTION " + System.currentTimeMillis());
-		intent.putExtra(Constants.EXTRA_PAGE, 2);
+		// intent.putExtra("page", 2);
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
 				intent, 0);
 		showNotification(NOTIFICATION_ID_DM, context, contentIntent, title,

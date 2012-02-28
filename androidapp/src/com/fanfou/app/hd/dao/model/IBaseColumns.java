@@ -10,6 +10,7 @@ import android.provider.BaseColumns;
  *
  */
 public interface IBaseColumns extends BaseColumns{
+	public static final int TYPE_NONE=0;
 	public static final String AUTHORITY = Constants.PACKAGE_NAME+".provider";
 	
 	public static final String RAWID = "rawid";// rawid in number format

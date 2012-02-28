@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 
-import com.fanfou.app.hd.api.User;
+import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.fragments.BaseTimlineFragment;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.ui.widget.GestureManager.SwipeListener;
@@ -36,7 +36,7 @@ abstract class UIBaseTimeline extends UIBaseSupport implements SwipeListener {
 
 	private String userId;
 	private String userName;
-	private User user;
+	private UserModel user;
 	
 	protected abstract int getType();
 	
@@ -73,16 +73,16 @@ abstract class UIBaseTimeline extends UIBaseSupport implements SwipeListener {
 
 	private void parseIntent() {
 		Intent intent = getIntent();
-		user = (User) intent.getParcelableExtra(Constants.EXTRA_DATA);
+		user = (UserModel) intent.getParcelableExtra("data");
 		if (user == null) {
-			userId = intent.getStringExtra(Constants.EXTRA_ID);
+			userId = intent.getStringExtra("id");
 		} else {
-			userId = user.id;
-			userName = user.screenName;
+			userId = user.getId();
+			userName = user.getScreenName();
 		}
 		
 		if(StringHelper.isEmpty(userId)){
-			userId=App.getUserId();
+			userId=App.getAccount();
 		}
 	}
 

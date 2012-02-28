@@ -15,7 +15,6 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.util.Log;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.preferences.SeekBarPreference;
 import com.fanfou.app.hd.preferences.colorpicker.ColorPickerPreference;
 import com.fanfou.app.hd.service.DownloadService;
@@ -34,6 +33,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 2.0 2011.12.02
  * @version 2.1 2011.12.05
  * @version 2.2 2011.12.13
+ * @version 2.3 2012.02.28
  * 
  */
 public class UISetting extends PreferenceActivity implements
@@ -57,14 +57,12 @@ public class UISetting extends PreferenceActivity implements
 	protected void onPause() {
 		getPreferenceScreen().getSharedPreferences()
 				.unregisterOnSharedPreferenceChangeListener(this);
-		App.active = false;
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		App.active = true;
 		getPreferenceScreen().getSharedPreferences()
 				.registerOnSharedPreferenceChangeListener(this);
 	}
@@ -109,10 +107,10 @@ public class UISetting extends PreferenceActivity implements
 		if (App.DEBUG) {
 			Log.d(TAG, "checkUpdate");
 		}
-		if (App.noConnection) {
-			Utils.notify(this, "无网络连接，请稍后重试");
-			return;
-		}
+//		if (App.noConnection) {
+//			Utils.notify(this, "无网络连接，请稍后重试");
+//			return;
+//		}
 		new CheckTask(this).execute();
 	}
 
@@ -197,14 +195,7 @@ public class UISetting extends PreferenceActivity implements
 		@Override
 		protected void onPostExecute(VersionInfo info) {
 			pd.dismiss();
-			if (App.DEBUG) {
-				if (info != null) {
-					DownloadService.showUpdateConfirmDialog(c, info);
-				}
-				return;
-			}
-			App.getApp();
-			if (info != null && info.versionCode > App.appVersionCode) {
+			if (info != null && info.versionCode > App.versionCode) {
 				DownloadService.showUpdateConfirmDialog(c, info);
 			} else {
 				Utils.notify(c, "你使用的已经是最新版");

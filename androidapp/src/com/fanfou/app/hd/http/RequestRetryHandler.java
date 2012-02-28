@@ -18,7 +18,7 @@ import android.os.SystemClock;
 
 import com.fanfou.app.hd.App;
 
-class RequestRetryHandler implements HttpRequestRetryHandler {
+public class RequestRetryHandler implements HttpRequestRetryHandler {
 	private static final int RETRY_SLEEP_TIME_MILLIS = 1500;
 	private static HashSet<Class<?>> exceptionWhitelist = new HashSet<Class<?>>();
 	private static HashSet<Class<?>> exceptionBlacklist = new HashSet<Class<?>>();

@@ -3,7 +3,6 @@ package com.fanfou.app.hd.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,10 +12,10 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.db.Contents.BasicColumns;
-import com.fanfou.app.hd.db.Contents.UserInfo;
-import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.R;
+import com.fanfou.app.hd.dao.model.UserColumns;
+import com.fanfou.app.hd.dao.model.UserModel;
+import com.fanfou.app.hd.service.Constants;
 
 /**
  * @author mcxiaoke
@@ -43,7 +42,7 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 
 	@Override
 	public CharSequence convertToString(Cursor cursor) {
-		return cursor.getString(cursor.getColumnIndex(UserInfo.SCREEN_NAME));
+		return cursor.getString(cursor.getColumnIndex(UserColumns.SCREEN_NAME));
 	}
 
 	// private static final Pattern PATTERN_SQL=Pattern.compile("[\\W]+");
@@ -59,13 +58,13 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 			// Log.d(TAG, "condition = "+condition);
 		}
 
-		final String[] projection = new String[] { BaseColumns._ID,
-				BasicColumns.ID, UserInfo.SCREEN_NAME, BasicColumns.TYPE,
-				BasicColumns.OWNER_ID };
-		String where = BasicColumns.OWNER_ID + " = '" + App.getUserId() + "' AND "
-				+ BasicColumns.TYPE + " = '" + Constants.TYPE_USERS_FRIENDS
-				+ "' AND " + UserInfo.SCREEN_NAME + " like '%" + constraint
-				+ "%' OR " + BasicColumns.ID + " like '%" + constraint + "%'";
+		final String[] projection = new String[] { UserColumns._ID,
+				UserColumns.ID, UserColumns.SCREEN_NAME, UserColumns.TYPE,
+				UserColumns.OWNER };
+		String where = UserColumns.OWNER + " = '" + App.getAccount() + "' AND "
+				+ UserColumns.TYPE + " = '" + UserModel.TYPE_FRIENDS
+				+ "' AND " + UserColumns.SCREEN_NAME + " like '%" + constraint
+				+ "%' OR " + UserColumns.ID + " like '%" + constraint + "%'";
 		if (App.DEBUG) {
 			Log.d(TAG, "runQueryOnBackgroundThread where=" + where);
 		}
@@ -75,8 +74,8 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 		// return mContext.getContentResolver().query(UserInfo.CONTENT_URI,
 		// projection, where, null, null);
 
-		return mContext.getContentResolver().query(UserInfo.CONTENT_URI, projection, where,
-				null, null);
+		return mContext.getContentResolver().query(UserColumns.CONTENT_URI,
+				projection, where, null, null);
 		// if(oldCursor!=null){
 		// oldCursor.close();
 		// oldCursor = null;
@@ -86,9 +85,9 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		String id = cursor.getString(cursor.getColumnIndex(BasicColumns.ID));
+		String id = cursor.getString(cursor.getColumnIndex(UserColumns.ID));
 		String screenName = cursor.getString(cursor
-				.getColumnIndex(UserInfo.SCREEN_NAME));
+				.getColumnIndex(UserColumns.SCREEN_NAME));
 		TextView tv = (TextView) view.findViewById(R.id.item_user_name);
 		tv.setText("@" + screenName + " (" + id + ")");
 	}

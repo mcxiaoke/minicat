@@ -2,7 +2,6 @@ package com.fanfou.app.hd;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -18,6 +17,7 @@ import com.astuetz.viewpager.extensions.SwipeyTabsView;
 import com.astuetz.viewpager.extensions.TabsAdapter;
 import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.cache.ImageLoader;
+import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
 import com.fanfou.app.hd.fragments.ConversationListFragment;
 import com.fanfou.app.hd.fragments.HomeTimelineFragment;
@@ -25,11 +25,7 @@ import com.fanfou.app.hd.fragments.MentionTimelineFragment;
 import com.fanfou.app.hd.fragments.PublicTimelineFragment;
 import com.fanfou.app.hd.fragments.PullToRefreshListFragment;
 import com.fanfou.app.hd.fragments.UserTimelineFragment;
-import com.fanfou.app.hd.service.Constants;
-import com.fanfou.app.hd.ui.widget.ActionManager;
-import com.fanfou.app.hd.util.IntentHelper;
 import com.fanfou.app.hd.util.OptionHelper;
-import com.fanfou.app.hd.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -65,6 +61,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 8.2 2012.02.08
  * @version 8.3 2012.02.09
  * @version 8.4 2012.02.10
+ * @version 8.5 2012.02.27
  * 
  */
 public class UIHome extends UIBaseSupport {
@@ -236,10 +233,10 @@ public class UIHome extends UIBaseSupport {
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		setIntent(intent);
-		int page = getIntent().getIntExtra(Constants.EXTRA_PAGE, HOME);
-		mViewPager.setCurrentItem(page);
+//		int page = getIntent().getIntExtra(Constants.EXTRA_PAGE, HOME);
+//		mViewPager.setCurrentItem(page);
 		if (App.DEBUG) {
-			log("onNewIntent page=" + page);
+//			log("onNewIntent page=" + page);
 		}
 	}
 	
@@ -282,7 +279,7 @@ public class UIHome extends UIBaseSupport {
 	}
 
 	private void onMenuProfileClick() {
-		ActionManager.doMyProfile(this);
+//		ActionManager.doMyProfile(this);
 	}
 
 	private void onMenuSearchClick() {
@@ -291,17 +288,17 @@ public class UIHome extends UIBaseSupport {
 	}
 
 	private void onMenuAboutClick() {
-		Utils.goAboutPage(this);
+		UIController.goUIAbout(this);
 	}
 	
 	protected void onMenuWriteClick() {
-		ActionManager.doWrite(this);
+//		ActionManager.doWrite(this);
 	}
 
 	private void onMenuFeedbackClick() {
-		ActionManager.doWrite(this, getString(R.string.config_feedback_account)
-				+ " (" + Build.MODEL + "-" + Build.VERSION.RELEASE + " "
-				+ App.appVersionName + ") ");
+//		ActionManager.doWrite(this, getString(R.string.config_feedback_account)
+//				+ " (" + Build.MODEL + "-" + Build.VERSION.RELEASE + " "
+//				+ App.appVersionName + ") ");
 	}
 
 	private void onMenuLogoutClick() {
@@ -311,8 +308,7 @@ public class UIHome extends UIBaseSupport {
 
 			@Override
 			public void onButton1Click() {
-				App.setAccessToken(null);
-				IntentHelper.goLoginPage(mContext);
+				App.doLogin(mContext);
 				finish();
 			}
 		});

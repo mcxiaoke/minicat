@@ -61,7 +61,9 @@ containing a value of this type.
         public static int pull_to_refresh_header=0x7f030000;
     }
     public static final class string {
+        public static int pull_to_refresh_pull_down_label=0x7f050004;
         public static int pull_to_refresh_pull_label=0x7f050000;
+        public static int pull_to_refresh_pull_up_label=0x7f050005;
         public static int pull_to_refresh_refreshing_label=0x7f050002;
         public static int pull_to_refresh_release_label=0x7f050001;
         public static int pull_to_refresh_tap_label=0x7f050003;

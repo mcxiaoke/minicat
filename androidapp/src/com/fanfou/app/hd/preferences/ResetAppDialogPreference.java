@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 
+import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.util.AlarmHelper;
 import com.fanfou.app.hd.util.IOHelper;
 import com.fanfou.app.hd.util.IntentHelper;
@@ -61,7 +62,7 @@ public class ResetAppDialogPreference extends DialogPreference {
 			pd.dismiss();
 			if (result.booleanValue() == true) {
 				Utils.notify(c, "数据和设置已全部重置");
-				IntentHelper.goLoginPage(c);
+				App.doLogin(c);
 				// android.os.Process.killProcess(android.os.Process.myPid());
 			}
 		}
@@ -70,7 +71,8 @@ public class ResetAppDialogPreference extends DialogPreference {
 		protected Boolean doInBackground(Void... params) {
 			AlarmHelper.unsetScheduledTasks(c);
 			OptionHelper.clearSettings();
-			IOHelper.cleanDB(c);
+//			IOHelper.cleanDB(c);
+			//TODO
 			IOHelper.ClearCache(c);
 			return true;
 		}

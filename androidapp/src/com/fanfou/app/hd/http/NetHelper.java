@@ -48,6 +48,7 @@ import android.util.Log;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.App.ApnType;
+import com.fanfou.app.hd.util.DeviceHelper;
 import com.fanfou.app.hd.util.Utils;
 
 /**
@@ -63,8 +64,8 @@ public final class NetHelper {
 	public static final int SOCKET_BUFFER_SIZE = 16 * 1024;
 	public static final int CONNECTION_TIMEOUT_MS = 30000;
 	public static final int SOCKET_TIMEOUT_MS = 30000;
-	public static final int MAX_TOTAL_CONNECTIONS = 20;
-	public static final int MAX_RETRY_TIMES = 3;
+	public static final int TOTAL_CONNECTIONS = 20;
+	public static final int RETRY_COUNT = 3;
 
 	public static MultipartEntity encodeMultipart(List<Parameter> params) {
 		if (Utils.isEmpty(params)) {
@@ -190,30 +191,31 @@ public final class NetHelper {
 		}
 		return containsFile;
 	}
+	
 
-	public final static DefaultHttpClient newSingleHttpClient() {
+
+	private static String userAgent;
+
+	private static String getUserAgent() {
+		if (userAgent == null) {
+			userAgent = DeviceHelper.getUserAgent();
+		}
+		return userAgent;
+	}
+
+	public static DefaultHttpClient getHttpClient() {
 		HttpParams params = new BasicHttpParams();
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 		HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-		HttpConnectionParams
-				.setConnectionTimeout(params, CONNECTION_TIMEOUT_MS);
+		HttpConnectionParams.setConnectionTimeout(params,
+				CONNECTION_TIMEOUT_MS);
 		HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT_MS);
-		HttpConnectionParams.setTcpNoDelay(params, true);
-		HttpProtocolParams.setUserAgent(params,
-				"FanFou for Android(com.fanfou.app)/" + App.appVersionName);
-
-		SchemeRegistry schReg = new SchemeRegistry();
-		schReg.register(new Scheme("http", PlainSocketFactory
-				.getSocketFactory(), 80));
-		schReg.register(new Scheme("https",
-				SSLSocketFactory.getSocketFactory(), 443));
-		SingleClientConnManager manager = new SingleClientConnManager(params,
-				schReg);
-		DefaultHttpClient client = new DefaultHttpClient(manager, params);
+		HttpProtocolParams.setUserAgent(params, getUserAgent());
+		DefaultHttpClient client = new DefaultHttpClient(params);
 		client.addRequestInterceptor(new GzipRequestInterceptor());
 		client.addResponseInterceptor(new GzipResponseInterceptor());
 		client.setHttpRequestRetryHandler(new RequestRetryHandler(
-				MAX_RETRY_TIMES));
+				RETRY_COUNT));
 		return client;
 	}
 
@@ -226,13 +228,12 @@ public final class NetHelper {
 				.setConnectionTimeout(params, CONNECTION_TIMEOUT_MS);
 		HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT_MS);
 		HttpConnectionParams.setSocketBufferSize(params, SOCKET_BUFFER_SIZE);
-		HttpConnectionParams.setTcpNoDelay(params, true);
 		HttpProtocolParams.setUserAgent(params, "FanFou for Android/"
-				+ App.appVersionName);
+				+ App.versionName);
 
 		ConnManagerParams.setMaxConnectionsPerRoute(params,
-				new ConnPerRouteBean(MAX_TOTAL_CONNECTIONS));
-		ConnManagerParams.setMaxTotalConnections(params, MAX_TOTAL_CONNECTIONS);
+				new ConnPerRouteBean(TOTAL_CONNECTIONS));
+		ConnManagerParams.setMaxTotalConnections(params, TOTAL_CONNECTIONS);
 
 		SchemeRegistry schReg = new SchemeRegistry();
 		schReg.register(new Scheme("http", PlainSocketFactory
@@ -245,7 +246,7 @@ public final class NetHelper {
 		client.addRequestInterceptor(new GzipRequestInterceptor());
 		client.addResponseInterceptor(new GzipResponseInterceptor());
 		client.setHttpRequestRetryHandler(new RequestRetryHandler(
-				MAX_RETRY_TIMES));
+				RETRY_COUNT));
 
 		return client;
 	}

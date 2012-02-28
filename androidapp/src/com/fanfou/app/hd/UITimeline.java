@@ -1,5 +1,6 @@
 package com.fanfou.app.hd;
 
+import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.fragments.BaseTimlineFragment;
 import com.fanfou.app.hd.fragments.UserTimelineFragment;
 import com.fanfou.app.hd.service.Constants;
@@ -13,7 +14,7 @@ public class UITimeline extends UIBaseTimeline {
 
 	@Override
 	protected int getType() {
-		return Constants.TYPE_STATUSES_USER_TIMELINE;
+		return StatusModel.TYPE_USER;
 	}
 
 	@Override

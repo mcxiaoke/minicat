@@ -25,10 +25,11 @@ import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.RemoteViews;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.UIVersionUpdate;
-import com.fanfou.app.hd.http.NetResponse;
+import com.fanfou.app.hd.http.RestClient;
+import com.fanfou.app.hd.http.RestResponse;
 import com.fanfou.app.hd.util.DateTimeHelper;
 import com.fanfou.app.hd.util.IOHelper;
 import com.fanfou.app.hd.util.OptionHelper;
@@ -49,6 +50,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 2.8 2012.01.16
  * @version 2.9 2012.02.03
  * @version 3.0 2012.02.20
+ * @version 3.1 2012.02.24
  * 
  */
 public class DownloadService extends BaseIntentService {
@@ -128,7 +130,7 @@ public class DownloadService extends BaseIntentService {
 
 	private final static PendingIntent getPendingIntent(Context context) {
 		Intent intent = new Intent(context, DownloadService.class);
-		intent.putExtra(Constants.EXTRA_TYPE, TYPE_CHECK);
+		intent.putExtra("type", TYPE_CHECK);
 		PendingIntent pi = PendingIntent.getService(context, 0, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		return pi;
@@ -136,19 +138,19 @@ public class DownloadService extends BaseIntentService {
 
 	public static void startDownload(Context context, String url) {
 		Intent intent = new Intent(context, DownloadService.class);
-		intent.putExtra(Constants.EXTRA_TYPE, TYPE_DOWNLOAD);
-		intent.putExtra(Constants.EXTRA_URL, url);
+		intent.putExtra("type", TYPE_DOWNLOAD);
+		intent.putExtra("url", url);
 		context.startService(intent);
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		int type = intent.getIntExtra(Constants.EXTRA_TYPE, TYPE_CHECK);
+		int type = intent.getIntExtra("type", TYPE_CHECK);
 		if (type == TYPE_CHECK) {
 			check();
 		} else if (type == TYPE_DOWNLOAD) {
-			String url = intent.getStringExtra(Constants.EXTRA_URL);
+			String url = intent.getStringExtra("url");
 			log("onHandleIntent TYPE_DOWNLOAD url=" + url);
 			if (!StringHelper.isEmpty(url)) {
 				download(url);
@@ -164,7 +166,9 @@ public class DownloadService extends BaseIntentService {
 				return;
 			}
 		}
-		if (info != null && info.versionCode > App.appVersionCode) {
+		
+		// for debug
+		if (info != null && info.versionCode > App.versionCode) {
 			notifyUpdate(info, this);
 		}
 	}
@@ -177,13 +181,10 @@ public class DownloadService extends BaseIntentService {
 		final long UPDATE_TIME = 2000;
 		long lastTime = 0;
 		try {
-//			HttpResponse response = client.get(url);
-			NetResponse res=App.getHttpClients().get(url, false);
-//			int statusCode = response.getStatusLine().getStatusCode();
-			int statusCode=res.statusCode;
+			RestResponse res = new RestClient().get(url, false);
+			int statusCode = res.statusCode;
 			if (statusCode == 200) {
-//				HttpEntity entity = response.getEntity();
-				HttpEntity entity=res.entity;
+				HttpEntity entity = res.entity;
 				long total = entity.getContentLength();
 				long download = 0;
 				is = entity.getContent();
@@ -202,7 +203,6 @@ public class DownloadService extends BaseIntentService {
 					}
 					if (System.currentTimeMillis() - lastTime >= UPDATE_TIME) {
 						Message message = mHandler.obtainMessage(MSG_PROGRESS);
-//						message.what = MSG_PROGRESS;
 						message.arg1 = progress;
 						mHandler.sendMessage(message);
 						lastTime = System.currentTimeMillis();
@@ -213,7 +213,7 @@ public class DownloadService extends BaseIntentService {
 				if (download >= total) {
 					Message message = new Message();
 					message.what = MSG_SUCCESS;
-					message.getData().putString(Constants.EXTRA_FILENAME,
+					message.getData().putString("filename",
 							file.getAbsolutePath());
 					mHandler.sendMessage(message);
 				}
@@ -250,8 +250,6 @@ public class DownloadService extends BaseIntentService {
 	private static final int MSG_SUCCESS = 1;
 
 	private class DownloadHandler extends Handler {
-//		private static final long UPDATE_TIME = 1500;
-//		private long lastTime = 0;
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -260,17 +258,11 @@ public class DownloadService extends BaseIntentService {
 						+ msg.arg1);
 			}
 			if (MSG_PROGRESS == msg.what) {
-				// long now = System.currentTimeMillis();
-				// if (now - lastTime < UPDATE_TIME) {
-				// return;
-				// }
 				int progress = msg.arg1;
 				updateProgress(progress);
-				// lastTime = System.currentTimeMillis();
 			} else if (MSG_SUCCESS == msg.what) {
 				nm.cancel(NOTIFICATION_PROGRESS_ID);
-				String filePath = msg.getData().getString(
-						Constants.EXTRA_FILENAME);
+				String filePath = msg.getData().getString("filename");
 				Utils.open(DownloadService.this, filePath);
 			}
 		}
@@ -302,21 +294,15 @@ public class DownloadService extends BaseIntentService {
 	}
 
 	public static VersionInfo fetchVersionInfo() {
-//		NetClient client = new NetClient();
 		try {
-//			HttpResponse response = client.get(UPDATE_VERSION_FILE);
-			
-			
-			NetResponse res=App.getHttpClients().get(UPDATE_VERSION_FILE, false);
-//			int statusCode = response.getStatusLine().getStatusCode();
-			int statusCode=res.statusCode;
+			RestResponse res = new RestClient().get(UPDATE_VERSION_FILE,
+					false);
+			int statusCode = res.statusCode;
 			if (App.DEBUG) {
 				Log.d(TAG, "statusCode=" + statusCode);
 			}
 			if (statusCode == 200) {
-//				String content = EntityUtils.toString(response.getEntity(),
-//						HTTP.UTF_8);
-				String content=res.getContent();
+				String content = res.getContent();
 				if (App.DEBUG) {
 					Log.d(TAG, "response=" + content);
 				}
@@ -353,7 +339,7 @@ public class DownloadService extends BaseIntentService {
 
 	public static void showUpdateConfirmDialog(final Context context,
 			final VersionInfo info) {
-		DialogInterface.OnClickListener downListener = new DialogInterface.OnClickListener() {
+		DialogInterface.OnClickListener li = new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -363,10 +349,10 @@ public class DownloadService extends BaseIntentService {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle("发现新版本，是否升级？").setCancelable(true)
 				.setNegativeButton("以后再说", null);
-		builder.setPositiveButton("立即升级", downListener);
+		builder.setPositiveButton("立即升级", li);
 		StringBuffer sb = new StringBuffer();
-		sb.append("安装版本：").append(App.appVersionName).append("(Build")
-				.append(App.appVersionCode).append(")");
+		sb.append("安装版本：").append(App.versionName).append("(Build")
+				.append(App.versionCode).append(")");
 		sb.append("\n最新版本：").append(info.versionName).append("(Build")
 				.append(info.versionCode).append(")");
 		sb.append("\n更新日期：").append(info.releaseDate);
@@ -381,7 +367,7 @@ public class DownloadService extends BaseIntentService {
 	public static Intent getNewVersionIntent(Context context,
 			final VersionInfo info) {
 		Intent intent = new Intent(context, UIVersionUpdate.class);
-		intent.putExtra(Constants.EXTRA_DATA, info);
+		intent.putExtra("data", info);
 		return intent;
 	}
 

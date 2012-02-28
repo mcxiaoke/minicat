@@ -6,8 +6,6 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 
-import com.fanfou.app.hd.util.IOHelper;
-
 public class ClearDataDialogPreference extends DialogPreference {
 
 	public ClearDataDialogPreference(Context context, AttributeSet attrs) {
@@ -58,7 +56,8 @@ public class ClearDataDialogPreference extends DialogPreference {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			IOHelper.cleanDB(c);
+//			IOHelper.cleanDB(c);
+			//TODO
 			return true;
 		}
 	}

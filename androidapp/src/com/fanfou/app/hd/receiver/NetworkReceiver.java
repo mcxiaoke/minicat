@@ -54,7 +54,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 			log("onReceive noConnection =  " + noConnection);
 		}
 
-		App.noConnection = noConnection;
+//		App.noConnection = noConnection;
 		if (noConnection) {
 			return;
 		}
@@ -63,7 +63,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 				.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
 
 		if (info != null && info.isConnectedOrConnecting()) {
-			App.noConnection = false;
+//			App.noConnection = false;
 			if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
 				App.setApnType(ApnType.NET);
 				String apnTypeName = info.getExtraInfo();

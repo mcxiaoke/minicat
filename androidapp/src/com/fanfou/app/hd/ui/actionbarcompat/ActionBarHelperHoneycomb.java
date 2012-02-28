@@ -16,16 +16,14 @@
 
 package com.fanfou.app.hd.ui.actionbarcompat;
 
-import com.fanfou.app.hd.R;
-
 import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.fanfou.app.hd.R;
 
 /**
  * An extension of {@link ActionBarHelper} that provides Android 3.0-specific functionality for

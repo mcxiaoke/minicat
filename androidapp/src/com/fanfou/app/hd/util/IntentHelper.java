@@ -9,29 +9,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.UILogin;
-import com.fanfou.app.hd.UIHome;
-import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.R;
+import com.fanfou.app.hd.UIHome;
+import com.fanfou.app.hd.UILogin;
+import com.fanfou.app.hd.service.Constants;
 
 public final class IntentHelper {
 	private static final String TAG = IntentHelper.class.getSimpleName();
-
-	public static void goHomePage(Context context, final int page) {
-		Intent intent = new Intent(context, UIHome.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		intent.putExtra(Constants.EXTRA_PAGE, page);
-		context.startActivity(intent);
-	}
-
-	public static void goLoginPage(Context context) {
-		AlarmHelper.unsetScheduledTasks(context);
-		App.removeAccountInfo(context);
-		App.getImageLoader().clearQueue();
-		Intent intent = new Intent(context, UILogin.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		context.startActivity(intent);
-	}
 
 	public static Intent getLauncherIntent() {
 		Intent intent = new Intent(Intent.ACTION_MAIN);

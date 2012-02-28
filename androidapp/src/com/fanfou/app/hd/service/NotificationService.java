@@ -11,19 +11,16 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.App.ApnType;
+import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.api.Api;
-import com.fanfou.app.hd.api.ApiException;
-import com.fanfou.app.hd.api.DirectMessage;
-import com.fanfou.app.hd.api.FanFouApi;
-import com.fanfou.app.hd.api.Parser;
-import com.fanfou.app.hd.api.Status;
-import com.fanfou.app.hd.db.FanFouProvider;
-import com.fanfou.app.hd.db.Contents.BasicColumns;
-import com.fanfou.app.hd.db.Contents.DirectMessageInfo;
-import com.fanfou.app.hd.db.Contents.StatusInfo;
+import com.fanfou.app.hd.api.Paging;
+import com.fanfou.app.hd.controller.DataController;
+import com.fanfou.app.hd.dao.DataProvider;
+import com.fanfou.app.hd.dao.model.DirectMessageColumns;
+import com.fanfou.app.hd.dao.model.DirectMessageModel;
+import com.fanfou.app.hd.dao.model.StatusColumns;
+import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.util.DateTimeHelper;
 import com.fanfou.app.hd.util.IntentHelper;
 import com.fanfou.app.hd.util.OptionHelper;
@@ -46,18 +43,13 @@ import com.fanfou.app.hd.util.Utils;
  * @version 3.0 2011.12.27
  * @version 3.1 2011.12.30
  * @version 3.2 2012.01.16
+ * @version 3.9 2012.02.22
+ * @version 4.0 2012.02.24
  * 
  */
 public class NotificationService extends WakefulIntentService {
 	private static final String TAG = NotificationService.class.getSimpleName();
 
-	public static final int NOTIFICATION_TYPE_HOME = Constants.TYPE_STATUSES_HOME_TIMELINE;
-	public static final int NOTIFICATION_TYPE_MENTION = Constants.TYPE_STATUSES_MENTIONS; // @消息
-	public static final int NOTIFICATION_TYPE_DM = Constants.TYPE_DIRECT_MESSAGES_INBOX; // 私信
-
-	private static final int DEFAULT_COUNT = Constants.DEFAULT_TIMELINE_COUNT;
-	private static final int MAX_COUNT = Constants.MAX_TIMELINE_COUNT;
-	private static final int DEFAULT_PAGE = 0;
 	private Api mApi;
 
 	public NotificationService() {
@@ -125,7 +117,7 @@ public class NotificationService extends WakefulIntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		mApi = FanFouApi.newInstance();
+		mApi = App.getApi();
 	}
 
 	@Override
@@ -137,10 +129,8 @@ public class NotificationService extends WakefulIntentService {
 		boolean home = OptionHelper.readBoolean(this,
 				R.string.option_notification_home, false);
 
-		int count = DEFAULT_COUNT;
-		if (App.getApnType() == ApnType.WIFI) {
-			count = MAX_COUNT;
-		}
+		int count = FanFouService.DEFAULT_TIMELINE_COUNT;
+
 		if (dm) {
 			handleDm(count);
 		}
@@ -154,16 +144,12 @@ public class NotificationService extends WakefulIntentService {
 	}
 
 	private void handleDm(int count) {
-		Cursor mc = initCursor(Constants.TYPE_DIRECT_MESSAGES_INBOX);
-		List<DirectMessage> dms = null;
+		Cursor mc = initCursor(DirectMessageModel.TYPE_INBOX);
+		List<DirectMessageModel> dms = null;
+		Paging p = new Paging();
+		p.count = count;
 		try {
-			dms = mApi.directMessagesInbox(count, DEFAULT_PAGE,
-					Utils.getDmSinceId(mc), null, Constants.MODE);
-		} catch (ApiException e) {
-			if (App.DEBUG) {
-				Log.e(TAG,
-						" code=" + e.statusCode + " message=" + e.getMessage());
-			}
+			dms = mApi.getDirectMessagesInbox(p);
 		} catch (Exception e) {
 			if (App.DEBUG) {
 				Log.e(TAG, e.getMessage());
@@ -176,35 +162,24 @@ public class NotificationService extends WakefulIntentService {
 				if (App.DEBUG) {
 					Log.d(TAG, "handleDm() size=" + size);
 				}
+				DataController.store(this, dms);
 				if (size == 1) {
-					DirectMessage dm = dms.get(0);
-					getContentResolver().insert(DirectMessageInfo.CONTENT_URI,
-							dm.toContentValues());
-					notifyDmOne(NOTIFICATION_TYPE_DM, dms.get(0));
+					notifyDmOne(DirectMessageModel.TYPE_INBOX, dms.get(0));
 				} else {
-					getContentResolver().bulkInsert(
-							DirectMessageInfo.CONTENT_URI,
-							Parser.toContentValuesArray(dms));
-					notifyDmList(NOTIFICATION_TYPE_DM, size);
+					notifyDmList(DirectMessageModel.TYPE_INBOX, size);
 				}
-				getContentResolver().notifyChange(
-						DirectMessageInfo.CONTENT_URI, null, false);
 			}
 		}
 
 	}
 
 	private void handleMention(int count) {
-		Cursor mc = initCursor(Constants.TYPE_STATUSES_MENTIONS);
-		List<Status> ss = null;
+		Cursor mc = initCursor(StatusModel.TYPE_MENTIONS);
+		List<StatusModel> ss = null;
 		try {
-			ss = mApi.mentions(count, DEFAULT_PAGE, Utils.getSinceId(mc), null,
-					Constants.FORMAT, Constants.MODE);
-		} catch (ApiException e) {
-			if (App.DEBUG) {
-				Log.e(TAG,
-						" code=" + e.statusCode + " message=" + e.getMessage());
-			}
+			Paging p = new Paging();
+			p.count = count;
+			ss = mApi.getMentions(p);
 		} catch (Exception e) {
 			if (App.DEBUG) {
 				Log.e(TAG, e.getMessage());
@@ -212,39 +187,36 @@ public class NotificationService extends WakefulIntentService {
 		}
 		mc.close();
 		if (ss != null) {
-			int size = ss.size();
-			if (size > 0) {
-				if (App.DEBUG) {
-					Log.d(TAG, "handleMention() size=" + size);
-				}
-				if (size == 1) {
-					Status s = ss.get(0);
-					getContentResolver().insert(StatusInfo.CONTENT_URI,
-							s.toContentValues());
-					notifyStatusOne(NOTIFICATION_TYPE_MENTION, s);
-				} else {
-					getContentResolver().bulkInsert(StatusInfo.CONTENT_URI,
-							Parser.toContentValuesArray(ss));
-					notifyStatusList(NOTIFICATION_TYPE_MENTION, size);
-				}
-				getContentResolver().notifyChange(StatusInfo.CONTENT_URI, null,
-						false);
-			}
+			notifyStatus(ss, StatusModel.TYPE_MENTIONS);
 		}
 
+	}
+
+	private void notifyStatus(List<StatusModel> ss, int type) {
+		int size = ss.size();
+		if (size > 0) {
+			if (App.DEBUG) {
+				Log.d(TAG, "notifyStatus() size=" + size);
+			}
+			DataController.store(this, ss);
+			if (size == 1) {
+				notifyStatusOne(type, ss.get(0));
+			} else {
+
+				notifyStatusList(type, size);
+			}
+
+		}
 	}
 
 	private void handleHome(int count) {
-		Cursor mc = initCursor(Constants.TYPE_STATUSES_HOME_TIMELINE);
-		List<Status> ss = null;
+		Cursor mc = initCursor(StatusModel.TYPE_HOME);
+		List<StatusModel> ss = null;
 		try {
-			ss = mApi.homeTimeline(count, DEFAULT_PAGE, Utils.getSinceId(mc),
-					null, Constants.FORMAT, Constants.MODE);
-		} catch (ApiException e) {
-			if (App.DEBUG) {
-				Log.e(TAG,
-						" code=" + e.statusCode + " message=" + e.getMessage());
-			}
+			Paging p = new Paging();
+			p.count = count;
+			p.sinceId = Utils.getSinceId(mc);
+			ss = mApi.getHomeTimeline(p);
 		} catch (Exception e) {
 			if (App.DEBUG) {
 				Log.e(TAG, e.getMessage());
@@ -252,29 +224,12 @@ public class NotificationService extends WakefulIntentService {
 		}
 		mc.close();
 		if (ss != null) {
-			int size = ss.size();
-			if (size > 0) {
-				if (App.DEBUG) {
-					Log.d(TAG, "handleHome() size=" + size);
-				}
-				if (size == 1) {
-					Status s = ss.get(0);
-					getContentResolver().insert(StatusInfo.CONTENT_URI,
-							s.toContentValues());
-					notifyStatusOne(NOTIFICATION_TYPE_HOME, ss.get(0));
-				} else {
-					getContentResolver().bulkInsert(StatusInfo.CONTENT_URI,
-							Parser.toContentValuesArray(ss));
-					notifyStatusList(NOTIFICATION_TYPE_HOME, size);
-				}
-				getContentResolver().notifyChange(StatusInfo.CONTENT_URI, null,
-						false);
-			}
+			notifyStatus(ss, StatusModel.TYPE_HOME);
 		}
 
 	}
 
-	private void notifyStatusOne(int type, Status status) {
+	private void notifyStatusOne(int type, StatusModel status) {
 		sendStatusNotification(type, 1, status);
 	}
 
@@ -282,7 +237,7 @@ public class NotificationService extends WakefulIntentService {
 		sendStatusNotification(type, count, null);
 	}
 
-	private void notifyDmOne(int type, DirectMessage dm) {
+	private void notifyDmOne(int type, DirectMessageModel dm) {
 		sendMessageNotification(type, 1, dm);
 	}
 
@@ -291,43 +246,42 @@ public class NotificationService extends WakefulIntentService {
 	}
 
 	private Cursor initCursor(int type) {
-		String where = BasicColumns.TYPE + " =? ";
+		String where = StatusColumns.TYPE + " =? ";
 		String[] whereArgs = new String[] { String.valueOf(type) };
-		Uri uri = StatusInfo.CONTENT_URI;
-		String[] columns = StatusInfo.COLUMNS;
-		String orderBy = FanFouProvider.ORDERBY_DATE_DESC;
-		if (type == Constants.TYPE_DIRECT_MESSAGES_INBOX) {
-			uri = DirectMessageInfo.CONTENT_URI;
-			columns = DirectMessageInfo.COLUMNS;
+		String orderBy = DataProvider.ORDERBY_TIME_DESC;
+		Uri uri;
+		if (type == DirectMessageModel.TYPE_INBOX) {
+			uri = DirectMessageColumns.CONTENT_URI;
+		} else {
+			uri = StatusColumns.CONTENT_URI;
 		}
-		return getContentResolver().query(uri, columns, where, whereArgs,
-				orderBy);
+		return getContentResolver().query(uri, null, where, whereArgs, orderBy);
 	}
 
-	private void sendStatusNotification(int type, int count, Status status) {
+	private void sendStatusNotification(int type, int count, StatusModel status) {
 		if (App.DEBUG) {
 			Log.d(TAG, "sendStatusNotification type=" + type + " count="
-					+ count + " status=" + (status == null ? "null" : status)
-					+ " active=" + App.active);
+					+ count + " status=" + (status == null ? "null" : status));
 		}
 		Intent intent = new Intent();
-		intent.putExtra(Constants.EXTRA_TYPE, type);
-		intent.putExtra(Constants.EXTRA_COUNT, count);
-		intent.putExtra(Constants.EXTRA_DATA, status);
-		intent.setAction(Constants.ACTION_NOTIFICATION);
+		intent.putExtra("type", type);
+		intent.putExtra("count", count);
+		intent.putExtra("data", status);
+		intent.setAction(App.packageName + ".NotificationService");
 		broadcast(intent);
 	}
 
-	private void sendMessageNotification(int type, int count, DirectMessage dm) {
+	private void sendMessageNotification(int type, int count,
+			DirectMessageModel dm) {
 		if (App.DEBUG) {
 			Log.d(TAG, "sendMessageNotification type=" + type + " count="
 					+ count + " dm=" + dm);
 		}
 		Intent intent = new Intent();
-		intent.putExtra(Constants.EXTRA_TYPE, type);
-		intent.putExtra(Constants.EXTRA_COUNT, count);
-		intent.putExtra(Constants.EXTRA_DATA, dm);
-		intent.setAction(Constants.ACTION_NOTIFICATION);
+		intent.putExtra("type", type);
+		intent.putExtra("count", count);
+		intent.putExtra("data", dm);
+		intent.setAction(App.packageName + ".NotificationService");
 		broadcast(intent);
 	}
 

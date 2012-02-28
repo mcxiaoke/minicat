@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpResponse;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -21,16 +19,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.api.ApiException;
-import com.fanfou.app.hd.api.FanFouApiConfig;
 import com.fanfou.app.hd.api.ResultInfo;
-import com.fanfou.app.hd.api.User;
+import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.dialog.AlertInfoDialog;
-import com.fanfou.app.hd.http.NetResponse;
+import com.fanfou.app.hd.http.RestResponse;
 import com.fanfou.app.hd.http.Parameter;
-import com.fanfou.app.hd.http.ResponseCode;
+import com.fanfou.app.hd.http.RestClient;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.ui.widget.TextChangeListener;
 import com.fanfou.app.hd.util.DeviceHelper;
@@ -48,6 +42,7 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * @version 1.5 2011.11.28
  * @version 1.6 2011.12.07
  * @version 1.7 2011.12.14
+ * @version 2.0 2012.02.21
  * 
  */
 public class UISignup extends Activity implements OnClickListener {
@@ -163,12 +158,10 @@ public class UISignup extends Activity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		App.active = true;
 	}
 
 	@Override
 	protected void onPause() {
-		App.active = false;
 		super.onPause();
 	}
 
@@ -225,12 +218,12 @@ public class UISignup extends Activity implements OnClickListener {
 		@Override
 		protected ResultInfo doInBackground(Void... params) {
 			try {
-				User user = register(mEmail, mNickName, mPassword,
+				UserModel user = register(mEmail, mNickName, mPassword,
 						DeviceHelper.uuid(mContext));
 				if (isCancelled) {
 					return new ResultInfo(REGISTER_CANCELLED);
 				}
-				if (user != null && !user.isNull()) {
+				if (user != null) {
 					return new ResultInfo(REGISTER_SUCCESS, "注册成功", user);
 				} else {
 					return new ResultInfo(REGISTER_FAILED, "注册失败");
@@ -288,12 +281,12 @@ public class UISignup extends Activity implements OnClickListener {
 		}
 
 		private void onRegisterSuccess(ResultInfo result) {
-			final User u = (User) result.content;
+			final UserModel u = (UserModel) result.content;
 			g.setCustomVar(2, "onRegisterSuccessEmail", mEmail);
 			if (g != null) {
 				g.dispatch();
 			}
-			final String message = "你的昵称是[" + u.screenName
+			final String message = "你的昵称是[" + u.getScreenName()
 					+ "]，请稍后通过MENU菜单进入个人空间完善你的个人资料，点击确定直接登录";
 			final AlertInfoDialog dialog = new AlertInfoDialog(mContext,
 					"注册成功", message);
@@ -302,11 +295,11 @@ public class UISignup extends Activity implements OnClickListener {
 				@Override
 				public void onOKClick() {
 					Intent data = new Intent();
-					data.putExtra("userid", u.id);
+					data.putExtra("userid", u.getId());
 					data.putExtra("password", mPassword);
 					data.putExtra("email", mEmail);
 					if (!cFollowPushed.isChecked()) {
-						data.putExtra(Constants.EXTRA_PAGE, 3);
+//						data.putExtra(Constants.EXTRA_PAGE, 3);
 					}
 					setResult(Activity.RESULT_OK, data);
 					finish();
@@ -315,7 +308,7 @@ public class UISignup extends Activity implements OnClickListener {
 			dialog.show();
 		}
 
-		private User register(String email, String nickname, String password,
+		private UserModel register(String email, String nickname, String password,
 				String deviceId) throws IOException {
 			List<Parameter> params = new ArrayList<Parameter>();
 			params.add(new Parameter("email", email));
@@ -331,27 +324,20 @@ public class UISignup extends Activity implements OnClickListener {
 				}
 			}
 
-//			NetClient client = new NetClient();
-			
-			
-			NetResponse res=App.getHttpClients().post(FanFouApiConfig.URL_REGISTER, params, false);
-			
-			
-//			HttpResponse response = client.post(FanFouApiConfig.URL_REGISTER,
-//					params);
-//			NetResponse res = new NetResponse(response);
+			// NetClient client = new NetClient();
+
+			RestResponse res = new RestClient().post("http://api.fanfou.com/register.json",
+					params, false);
+
+			// HttpResponse response = client.post(FanFouApiConfig.URL_REGISTER,
+			// params);
+			// NetResponse res = new NetResponse(response);
 			if (App.DEBUG) {
 				Log.d("RegisterTask", "Response: " + res.getContent());
 			}
-			User result = null;
-			if (res.statusCode == ResponseCode.HTTP_OK) {
-				try {
-					result = User.parse(res);
-				} catch (ApiException e) {
-					if (App.DEBUG) {
-						Log.e(TAG, e.toString());
-					}
-				}
+			UserModel result = null;
+			if (res.statusCode == 200) {
+//				result = FanFouParser.user(res.getContent(), User.TYPE_OTHER);
 			}
 			return result;
 		}

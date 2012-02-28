@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
-import com.fanfou.app.hd.R;
+
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.api.User;
-import com.fanfou.app.hd.auth.OAuthToken;
 
 /**
  * @author mcxiaoke
@@ -16,6 +14,7 @@ import com.fanfou.app.hd.auth.OAuthToken;
  * @version 1.2 2011.10.26
  * @version 2.0 2011.12.06
  * @version 3.0 2011.12.26
+ * @version 4.0 2012.02.24
  * 
  */
 public final class OptionHelper {
@@ -138,52 +137,6 @@ public final class OptionHelper {
 				.getDefaultSharedPreferences(context);
 		Editor editor = sp.edit();
 		editor.clear();
-		editor.commit();
-	}
-
-	public synchronized final static void updateAccountInfo(Context context, final User u,
-			final OAuthToken otoken) {
-		Editor editor = App.getPreferences().edit();
-		editor.putString(context.getString(R.string.option_userid), u.id);
-		editor.putString(context.getString(R.string.option_username),
-				u.screenName);
-		editor.putString(context.getString(R.string.option_profile_image),
-				u.profileImageUrl);
-		editor.putString(context.getString(R.string.option_oauth_token),
-				otoken.getToken());
-		editor.putString(context.getString(R.string.option_oauth_token_secret),
-				otoken.getTokenSecret());
-		editor.commit();
-	}
-
-	public synchronized final static void updateAccountInfo(Context context, String userId,
-			String username, final OAuthToken otoken) {
-		Editor editor = App.getPreferences().edit();
-		editor.putString(context.getString(R.string.option_userid), userId);
-		editor.putString(context.getString(R.string.option_username), username);
-		editor.putString(context.getString(R.string.option_oauth_token), otoken.getToken());
-		editor.putString(context.getString(R.string.option_oauth_token_secret),
-				otoken.getTokenSecret());
-		editor.commit();
-	}
-
-	public synchronized final static void removeAccountInfo(Context context) {
-		Editor editor = App.getPreferences().edit();
-		editor.remove(context.getString(R.string.option_userid));
-		editor.remove(context.getString(R.string.option_username));
-		editor.remove(context.getString(R.string.option_profile_image));
-		editor.remove(context.getString(R.string.option_oauth_token));
-		editor.remove(context.getString(R.string.option_oauth_token_secret));
-		editor.commit();
-	}
-
-	public final static void updateUserInfo(Context context, final User u) {
-		Editor editor = App.getPreferences().edit();
-		editor.putString(context.getString(R.string.option_userid), u.id);
-		editor.putString(context.getString(R.string.option_username),
-				u.screenName);
-		editor.putString(context.getString(R.string.option_profile_image),
-				u.profileImageUrl);
 		editor.commit();
 	}
 

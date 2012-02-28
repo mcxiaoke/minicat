@@ -3,6 +3,7 @@ package com.fanfou.app.hd.preferences;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.util.AttributeSet;
+
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.util.IntentHelper;
 
@@ -16,7 +17,7 @@ public class LogoutDialogPreference extends DialogPreference {
 
 	public LogoutDialogPreference(Activity context, AttributeSet attrs) {
 		super(context, attrs);
-		setSummary("当前登录帐号:" + App.getUserName() + "(" + App.getUserId() + ")");
+		setSummary("当前登录帐号:" + App.getScreenName() + "(" + App.getAccount() + ")");
 	}
 
 	@Override
@@ -28,6 +29,6 @@ public class LogoutDialogPreference extends DialogPreference {
 	}
 
 	private void doLogout() {
-		IntentHelper.goLoginPage(context);
+		App.doLogin(getContext());
 	}
 }

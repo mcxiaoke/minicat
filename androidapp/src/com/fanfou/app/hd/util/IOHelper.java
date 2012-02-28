@@ -14,7 +14,6 @@ import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -22,18 +21,11 @@ import android.os.Environment;
 import android.provider.MediaStore.MediaColumns;
 import android.text.ClipboardManager;
 
-import com.fanfou.app.hd.api.DirectMessage;
-import com.fanfou.app.hd.api.Status;
-import com.fanfou.app.hd.api.User;
-import com.fanfou.app.hd.db.Contents.DirectMessageInfo;
-import com.fanfou.app.hd.db.Contents.DraftInfo;
-import com.fanfou.app.hd.db.Contents.StatusInfo;
-import com.fanfou.app.hd.db.Contents.UserInfo;
-
 /**
  * @author mcxiaoke
  * @version 1.0 2011.05.19
  * @version 1.1 2011.10.11
+ * @version 1.2 2012.02.22
  * 
  */
 public final class IOHelper {
@@ -226,29 +218,6 @@ public final class IOHelper {
 			}
 		} catch (IOException e) {
 		}
-	}
-
-	public static void storeDirectMessage(Context context, DirectMessage dm) {
-		ContentResolver cr = context.getContentResolver();
-		cr.insert(DirectMessageInfo.CONTENT_URI, dm.toContentValues());
-	}
-
-	public static void storeStatus(Context context, Status s) {
-		ContentResolver cr = context.getContentResolver();
-		cr.insert(StatusInfo.CONTENT_URI, s.toContentValues());
-	}
-
-	public static void storeUser(Context context, User u) {
-		ContentResolver cr = context.getContentResolver();
-		cr.insert(UserInfo.CONTENT_URI, u.toContentValues());
-	}
-
-	public static void cleanDB(Context context) {
-		ContentResolver cr = context.getContentResolver();
-		cr.delete(StatusInfo.CONTENT_URI, null, null);
-		cr.delete(UserInfo.CONTENT_URI, null, null);
-		cr.delete(DirectMessageInfo.CONTENT_URI, null, null);
-		cr.delete(DraftInfo.CONTENT_URI, null, null);
 	}
 
 }

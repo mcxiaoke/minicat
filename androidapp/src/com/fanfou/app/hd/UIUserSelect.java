@@ -9,34 +9,33 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.adapter.UserCursorAdapter;
-import com.fanfou.app.hd.api.User;
-import com.fanfou.app.hd.db.Contents.BasicColumns;
-import com.fanfou.app.hd.db.Contents.UserInfo;
+import com.fanfou.app.hd.dao.model.UserColumns;
+import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.FanFouService;
 import com.fanfou.app.hd.ui.widget.TextChangeListener;
 import com.fanfou.app.hd.util.Utils;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2011.11.09
  * @version 1.1 2011.11.21
  * @version 2.0 2012.01.31
+ * @version 2.2 2012.02.22
  * 
  */
 
 // select direct message target
-public class UIUserSelect extends UIBaseSupport implements
-		OnItemClickListener, OnRefreshListener, FilterQueryProvider {
+public class UIUserSelect extends UIBaseSupport implements OnItemClickListener,
+		OnRefreshListener, FilterQueryProvider {
 
 	private static final String TAG = UIUserSelect.class.getSimpleName();
 
@@ -70,12 +69,11 @@ public class UIUserSelect extends UIBaseSupport implements
 	}
 
 	protected void initCursor() {
-		String where = BasicColumns.TYPE + "=? AND " + BasicColumns.OWNER_ID
-				+ "=?";
+		String where = UserColumns.TYPE + "=? AND " + UserColumns.OWNER + "=?";
 		String[] whereArgs = new String[] {
-				String.valueOf(Constants.TYPE_USERS_FRIENDS), App.getUserId() };
-		mCursor = managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
-				whereArgs, null);
+				String.valueOf(UserModel.TYPE_FRIENDS), App.getAccount() };
+		mCursor = managedQuery(UserColumns.CONTENT_URI, null, where, whereArgs,
+				null);
 	}
 
 	protected void initCheckState() {
@@ -128,8 +126,8 @@ public class UIUserSelect extends UIBaseSupport implements
 	}
 
 	protected void doRetrieve(boolean isGetMore) {
-		FanFouService.doFetchFriends(this, new ResultHandler(isGetMore), page,
-				App.getUserId());
+//		FanFouService.doFetchFriends(this, new ResultHandler(isGetMore), page,
+//				App.getAccount());
 	}
 
 	protected void updateUI() {
@@ -189,7 +187,7 @@ public class UIUserSelect extends UIBaseSupport implements
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case Constants.RESULT_SUCCESS:
-				int count = msg.getData().getInt(Constants.EXTRA_COUNT);
+				int count = msg.getData().getInt("count");
 				updateUI();
 				mPullToRefreshListView.onRefreshComplete();
 				if (!initialized) {
@@ -200,9 +198,8 @@ public class UIUserSelect extends UIBaseSupport implements
 				if (!initialized) {
 					mEditText.setVisibility(View.VISIBLE);
 				}
-				String errorMessage = msg.getData().getString(
-						Constants.EXTRA_ERROR);
-				int errorCode = msg.getData().getInt(Constants.EXTRA_CODE);
+				String errorMessage = msg.getData().getString("error_message");
+				int errorCode = msg.getData().getInt("error_code");
 				mPullToRefreshListView.onRefreshComplete();
 				Utils.notify(mContext, errorMessage);
 				Utils.checkAuthorization(mContext, errorCode);
@@ -228,33 +225,32 @@ public class UIUserSelect extends UIBaseSupport implements
 		}
 	}
 
-	private void onSelected(User user) {
+	private void onSelected(UserModel user) {
 		Intent intent = new Intent();
-		intent.putExtra(Constants.EXTRA_ID, user.id);
-		intent.putExtra(Constants.EXTRA_USER_NAME, user.screenName);
+		intent.putExtra("id", user.getId());
+		intent.putExtra("screen_name", user.getScreenName());
 		setResult(RESULT_OK, intent);
 		finish();
 	}
 
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
-		String where = BasicColumns.TYPE + " = " + Constants.TYPE_USERS_FRIENDS
-				+ " AND " + BasicColumns.OWNER_ID + " = '" + App.getUserId()
-				+ "' AND (" + UserInfo.SCREEN_NAME + " like '%" + constraint
-				+ "%' OR " + BasicColumns.ID + " like '%" + constraint + "%' )";
+		String where = UserColumns.TYPE + " = " + UserModel.TYPE_FRIENDS
+				+ " AND " + UserColumns.OWNER + " = '" + App.getAccount()
+				+ "' AND (" + UserColumns.SCREEN_NAME + " like '%" + constraint
+				+ "%' OR " + UserColumns.ID + " like '%" + constraint + "%' )";
 		;
-		return managedQuery(UserInfo.CONTENT_URI, UserInfo.COLUMNS, where,
-				null, null);
+		return managedQuery(UserColumns.CONTENT_URI, null, where, null, null);
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		final Cursor c = (Cursor) parent.getItemAtPosition(position);
-		final User u = User.parse(c);
+		final Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+		final UserModel u = UserModel.from(cursor);
 		if (u != null) {
 			if (App.DEBUG)
-				log("userId=" + u.id + " username=" + u.screenName);
+				log("userId=" + u.getId() + " username=" + u.getScreenName());
 			onSelected(u);
 		}
 	}

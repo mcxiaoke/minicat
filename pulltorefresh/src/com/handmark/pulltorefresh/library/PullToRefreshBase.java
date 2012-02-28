@@ -633,11 +633,14 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 				.getString(R.string.pull_to_refresh_refreshing_label);
 		String releaseLabel = context
 				.getString(R.string.pull_to_refresh_release_label);
+		
+		String pullDownText=context.getString(R.string.pull_to_refresh_pull_down_label);
+		String pullUpText=context.getString(R.string.pull_to_refresh_pull_up_label);
 
 		// Add Loading Views
 		if (mode == MODE_PULL_DOWN_TO_REFRESH || mode == MODE_BOTH) {
 			headerLayout = new LoadingLayout(context,
-					MODE_PULL_DOWN_TO_REFRESH, releaseLabel, pullLabel,
+					MODE_PULL_DOWN_TO_REFRESH, releaseLabel, pullDownText,
 					refreshingLabel);
 			addView(headerLayout, 0, new LinearLayout.LayoutParams(
 					ViewGroup.LayoutParams.FILL_PARENT,
@@ -647,7 +650,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 		}
 		if (mode == MODE_PULL_UP_TO_REFRESH || mode == MODE_BOTH) {
 			footerLayout = new LoadingLayout(context, MODE_PULL_UP_TO_REFRESH,
-					releaseLabel, pullLabel, refreshingLabel);
+					releaseLabel, pullUpText, refreshingLabel);
 			addView(footerLayout, new LinearLayout.LayoutParams(
 					ViewGroup.LayoutParams.FILL_PARENT,
 					ViewGroup.LayoutParams.WRAP_CONTENT));

@@ -1,9 +1,9 @@
 package com.fanfou.app.hd.cache;
 
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -17,8 +17,8 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.http.HttpClients;
-import com.fanfou.app.hd.http.NetResponse;
+import com.fanfou.app.hd.http.RestClient;
+import com.fanfou.app.hd.http.RestResponse;
 import com.fanfou.app.hd.util.ImageHelper;
 
 /**
@@ -34,6 +34,7 @@ import com.fanfou.app.hd.util.ImageHelper;
  * @version 5.0 2011.12.08
  * @version 5.1 2011.12.09
  * @version 5.2 2011.12.13
+ * @version 5.3 2012.02.27
  * 
  */
 public class ImageLoader implements IImageLoader {
@@ -43,17 +44,12 @@ public class ImageLoader implements IImageLoader {
 	public static final int MESSAGE_FINISH = 0;
 	public static final int MESSAGE_ERROR = 1;
 
-	public static final String EXTRA_URL = "extra_url";
-
-	private static final int CORE_POOL_SIZE = 2;
-
-	// private final ExecutorService mExecutorService;
 	private final PriorityBlockingQueue<Task> mTaskQueue = new PriorityBlockingQueue<Task>(
 			60, new TaskComparator());
 	private final Map<String, ImageView> mViewsMap;
 	private final ImageCache mCache;
 	private final Handler mHandler;
-	private final HttpClients mClient;
+	private final RestClient mClient;
 	private final Thread mDaemon;
 
 	private static final class ImageLoaderHolder {
@@ -70,8 +66,9 @@ public class ImageLoader implements IImageLoader {
 		// this.mExecutorService = Executors.newSingleThreadExecutor(new
 		// NameCountThreadFactory());
 		this.mCache = ImageCache.getInstance();
-		this.mViewsMap = new HashMap<String, ImageView>();
-		this.mClient = App.getHttpClients();
+//		this.mViewsMap = new HashMap<String, ImageView>();
+		this.mViewsMap = new WeakHashMap<String, ImageView>();
+		this.mClient = new RestClient();
 		this.mHandler = new InnerHandler();
 		this.mDaemon = new Daemon();
 		this.mDaemon.start();
@@ -119,7 +116,7 @@ public class ImageLoader implements IImageLoader {
 		Bitmap bitmap = mCache.get(url);
 		if (bitmap == null) {
 			try {
-				NetResponse res=mClient.get(url, false);
+				RestResponse res=mClient.get(url, false);
 				bitmap=BitmapFactory.decodeStream(res.getInputStream());
 			} catch (Exception e) {
 				Log.e(TAG, "download error:" + e.getMessage());
@@ -133,7 +130,7 @@ public class ImageLoader implements IImageLoader {
 		}
 		if (handler != null) {
 			final Message message = handler.obtainMessage();
-			message.getData().putString(EXTRA_URL, url);
+			message.getData().putString("url", url);
 			message.what = bitmap == null ? MESSAGE_ERROR : MESSAGE_FINISH;
 			message.obj = bitmap;
 			handler.sendMessage(message);
@@ -166,7 +163,9 @@ public class ImageLoader implements IImageLoader {
 		}
 		Bitmap bitmap = mCache.get(url);
 		if (bitmap == null) {
-			view.setImageResource(iconId);
+			if(iconId>0){
+				view.setImageResource(iconId);
+			}
 			addInnerTask(url, view);
 		} else {
 			view.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap, 6));
@@ -198,7 +197,7 @@ public class ImageLoader implements IImageLoader {
 
 		@Override
 		public void handleMessage(Message msg) {
-			String url = msg.getData().getString(EXTRA_URL);
+			String url = msg.getData().getString("url");
 			final ImageView view = mViewsMap.remove(url);
 			if (App.DEBUG) {
 				Log.d(TAG, "InnerHandler what=" + msg.what + " url=" + url

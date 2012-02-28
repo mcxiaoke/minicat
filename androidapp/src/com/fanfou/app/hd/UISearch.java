@@ -15,12 +15,10 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.adapter.SearchAdapter;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
-import com.fanfou.app.hd.api.FanFouApi;
-import com.fanfou.app.hd.api.Search;
+import com.fanfou.app.hd.dao.model.Search;
 
 /**
  * @author mcxiaoke
@@ -108,14 +106,14 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
 
 		@Override
 		protected Integer doInBackground(Void... params) {
-			Api api = FanFouApi.newInstance();
+			Api api = App.getApi();
 			try {
-				List<Search> savedSearches = api.savedSearchesList();
+				List<Search> savedSearches = api.getSavedSearches();
 				if (savedSearches != null && savedSearches.size() > 0) {
 					mHotwords.addAll(savedSearches);
 				}
 
-				List<Search> trends = api.trends();
+				List<Search> trends = api.getTrends();
 
 				if (trends != null && trends.size() > 0) {
 					mHotwords.addAll(trends);

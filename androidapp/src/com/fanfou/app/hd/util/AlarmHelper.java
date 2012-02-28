@@ -8,8 +8,8 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.service.AutoCompleteService;
 import com.fanfou.app.hd.service.DownloadService;
 import com.fanfou.app.hd.service.NotificationService;

@@ -322,9 +322,6 @@ public class MultiTouchController<T> {
 					if (DEBUG)
 						Log.i("MultiTouch", "Got here 4");
 					int numPointers = Math.min(pointerCount, MAX_TOUCH_POINTS);
-					if (DEBUG && pointerCount > MAX_TOUCH_POINTS)
-						Log.i("MultiTouch",
-								"Got more pointers than MAX_TOUCH_POINTS");
 					for (int ptrIdx = 0; ptrIdx < numPointers; ptrIdx++) {
 						int ptrId = (Integer) m_getPointerId.invoke(event,
 								ptrIdx);

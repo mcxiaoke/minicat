@@ -1,12 +1,12 @@
 package com.fanfou.app.hd;
 
-import com.fanfou.app.hd.ui.actionbarcompat.ActionBarHelper;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
+
+import com.fanfou.app.hd.ui.actionbarcompat.ActionBarHelper;
 
 /**
  * @author mcxiaoke

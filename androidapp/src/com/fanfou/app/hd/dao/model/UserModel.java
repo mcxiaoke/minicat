@@ -1,6 +1,10 @@
 package com.fanfou.app.hd.dao.model;
 
+import com.fanfou.app.hd.controller.DataController;
+
 import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -8,9 +12,15 @@ import android.os.Parcelable;
  * @author mcxiaoke
  * @version 1.0 2011.12.21
  * @version 1.1 2012.02.15
+ * @version 1.2 2012.02.20
  * 
  */
-public class UserModel extends BaseModel<UserModel> {
+public class UserModel extends BaseModel {
+	public static final int TYPE_FRIENDS=201;
+	public static final int TYPE_FOLLOWERS=202;
+	public static final int TYPE_SEARCH=203;
+	public static final int TYPE_BLOCK=204;
+	public static final int TYPE_SPECIAL=205;
 
 	public static final String TAG = UserModel.class.getSimpleName();
 
@@ -65,6 +75,48 @@ public class UserModel extends BaseModel<UserModel> {
 		verified = in.readInt() == 0 ? false : true;
 		followMe = in.readInt() == 0 ? false : true;
 
+	}
+	
+	public static UserModel from(Cursor cursor){
+		if (cursor == null) {
+			return null;
+		}
+		UserModel user = new UserModel();
+		user.id=DataController.parseString(cursor, UserColumns.ID);
+		user.account=DataController.parseString(cursor, UserColumns.ACCOUNT);
+		user.owner=DataController.parseString(cursor, UserColumns.OWNER);
+		user.note=DataController.parseString(cursor, UserColumns.NOTE);
+		
+		user.type=DataController.parseInt(cursor, UserColumns.TYPE);
+		user.flag=DataController.parseInt(cursor, UserColumns.FLAG);
+		
+		user.rawid=DataController.parseLong(cursor, UserColumns.RAWID);
+		user.time=DataController.parseLong(cursor, UserColumns.TIME);
+		
+		user.name=DataController.parseString(cursor, UserColumns.NAME);
+		user.screenName=DataController.parseString(cursor, UserColumns.SCREEN_NAME);
+		user.location=DataController.parseString(cursor, UserColumns.LOCATION);
+		user.gender=DataController.parseString(cursor, UserColumns.GENDER);
+		user.birthday=DataController.parseString(cursor, UserColumns.BIRTHDAY);
+		user.description=DataController.parseString(cursor, UserColumns.DESCRIPTION);
+		
+		user.profileImageUrl=DataController.parseString(cursor, UserColumns.PROFILE_IMAGE_URL);
+		user.profileImageUrlLarge=DataController.parseString(cursor, UserColumns.PROFILE_IMAGE_URL_LARGE);
+		user.url=DataController.parseString(cursor, UserColumns.URL);
+		user.status=DataController.parseString(cursor, UserColumns.STATUS);
+		
+		user.followersCount=DataController.parseInt(cursor, UserColumns.FOLLOWERS_COUNT);
+		user.friendsCount=DataController.parseInt(cursor, UserColumns.FRIENDS_COUNT);
+		user.favouritesCount=DataController.parseInt(cursor, UserColumns.FAVORITES_COUNT);
+		user.statusesCount=DataController.parseInt(cursor, UserColumns.STATUSES_COUNT);
+		
+		user.following=DataController.parseBoolean(cursor, UserColumns.FOLLOWING);
+		user.protect=DataController.parseBoolean(cursor, UserColumns.PROTECTED);
+		user.notifications=DataController.parseBoolean(cursor, UserColumns.NOTIFICATIONS);
+		user.verified=DataController.parseBoolean(cursor, UserColumns.VERIFIED);
+		user.followMe=DataController.parseBoolean(cursor, UserColumns.FOLLOW_ME);
+		
+		return user;
 	}
 
 	@Override
@@ -298,7 +350,27 @@ public class UserModel extends BaseModel<UserModel> {
 
 	@Override
 	public String toString() {
-		return "[User] " + IBaseColumns.ID;
+		return "UserModel [name=" + name + ", screenName=" + screenName
+				+ ", location=" + location + ", gender=" + gender
+				+ ", birthday=" + birthday + ", description=" + description
+				+ ", profileImageUrl=" + profileImageUrl
+				+ ", profileImageUrlLarge=" + profileImageUrlLarge + ", url="
+				+ url + ", status=" + status + ", followersCount="
+				+ followersCount + ", friendsCount=" + friendsCount
+				+ ", favouritesCount=" + favouritesCount + ", statusesCount="
+				+ statusesCount + ", following=" + following + ", protect="
+				+ protect + ", notifications=" + notifications + ", verified="
+				+ verified + ", followMe=" + followMe + "]";
+	}
+
+	@Override
+	public Uri getContentUri() {
+		return UserColumns.CONTENT_URI;
+	}
+
+	@Override
+	public String getTable() {
+		return UserColumns.TABLE_NAME;
 	}
 
 }

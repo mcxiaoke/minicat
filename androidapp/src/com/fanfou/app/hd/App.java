@@ -1,6 +1,8 @@
 package com.fanfou.app.hd;
 
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
 import org.acra.ACRA;
@@ -13,23 +15,25 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.api.FanFouApi;
-import com.fanfou.app.hd.api.User;
+import com.fanfou.app.hd.api.Api;
+import com.fanfou.app.hd.api.ApiFactory;
 import com.fanfou.app.hd.auth.AccessToken;
-import com.fanfou.app.hd.auth.OAuthService;
-import com.fanfou.app.hd.auth.OAuthToken;
 import com.fanfou.app.hd.cache.IImageLoader;
 import com.fanfou.app.hd.cache.ImageLoader;
-import com.fanfou.app.hd.http.HttpClients;
+import com.fanfou.app.hd.config.AccountInfo;
+import com.fanfou.app.hd.config.AccountStore;
+import com.fanfou.app.hd.controller.DataController;
+import com.fanfou.app.hd.controller.UIController;
+import com.fanfou.app.hd.dao.model.BaseModel;
+import com.fanfou.app.hd.dao.model.StatusModel;
+import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.util.AlarmHelper;
 import com.fanfou.app.hd.util.DateTimeHelper;
 import com.fanfou.app.hd.util.NetworkHelper;
-import com.fanfou.app.hd.util.OptionHelper;
-import com.fanfou.app.hd.util.StringHelper;
 
 /**
  * @author mcxiaoke
@@ -50,44 +54,43 @@ import com.fanfou.app.hd.util.StringHelper;
  * @version 6.0 2011.12.06
  * @version 6.1 2011.12.26
  * @version 6.2 2012.02.20
+ * @version 7.0 2012.02.23
+ * @version 7.1 2012.02.24
+ * @version 7.5 2012.02.27
  * 
  */
 
 @ReportsCrashes(formKey = "", formUri = "http://apps.fanfou.com/andstat/cr/", mode = ReportingInteractionMode.SILENT)
 public class App extends Application {
 
+	private static final String TAG = "Application";
+
 	public static final boolean DEBUG = true;
-	public static final boolean TEST = true;
 
-	public static boolean active = false;
-	public static boolean noConnection = false;
-	public static boolean verified;
-	public static boolean mounted;
+	private static Map<String, BaseModel> cache = new WeakHashMap<String, BaseModel>();
 
-	public static int appVersionCode;
-	public static String appVersionName;
+	public static int versionCode;
+	public static String versionName;
+	public static String packageName;
+	public static PackageInfo info;
 
-	private static String sUserId;
-	private static String sUserScreenName;
-
-	private static App sInstance;
+	private static AccountInfo accountInfo;
 
 	private static SharedPreferences sPreferences;
-	private static OAuthToken sToken;
 	private static ApnType sApnType;
-	private static IImageLoader sLoader;
-	
-	private static HttpClients sHttpClients;
-	private static OAuthService sOAuthService;
+	private static IImageLoader imageLoader;
+
+	private static Api api;
+	private static App instance;
+
+	private volatile static boolean disConnected;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		initialize();
-		initPreferences();
-		initOAuth();
 		initAppInfo();
-		versionCheck();
+		initialize();
+		initAccountInfo();
 		ACRA.init(this);
 	}
 
@@ -98,136 +101,154 @@ public class App extends Application {
 		// StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
 		// .detectAll().penaltyLog().build());
 		// }
+		instance = this;
 
-		App.sInstance = this;
-		App.sApnType = NetworkHelper.getApnType(this);
-		App.sPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		sApnType = NetworkHelper.getApnType(this);
+		sPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		PreferenceManager.setDefaultValues(this, R.xml.options, false);
+
+		imageLoader = ImageLoader.getInstance();
 
 		DateTimeHelper.FANFOU_DATE_FORMAT.setTimeZone(TimeZone
 				.getTimeZone("GMT"));
 
+		AlarmHelper.setAlarmsIfNot(this);
+
 		if (DEBUG) {
+			Log.d(TAG, "initialize()");
+
 			Logger.getLogger("org.apache.http.wire").setLevel(
 					java.util.logging.Level.FINE);
-			// Logger.getLogger("org.apache.http.headers")
-			// .setLevel(java.util.logging.Level.FINE);
-
-			// and shell command
-			// adb shell setprop log.tag.org.apache.http VERBOSE
-			// adb shell setprop log.tag.org.apache.http.wire VERBOSE
-			// adb shell setprop log.tag.org.apache.http.headers VERBOSE
 		}
 	}
 
-	private void initPreferences() {
-		PreferenceManager.setDefaultValues(this, R.xml.options, false);
-		sUserId = OptionHelper.readString(this, R.string.option_userid, null);
-		sUserScreenName = OptionHelper.readString(this,
-				R.string.option_username, null);
-		String oauthAccessToken = OptionHelper.readString(this,
-				R.string.option_oauth_token, null);
-		String oauthAccessTokenSecret = OptionHelper.readString(this,
-				R.string.option_oauth_token_secret, null);
-		App.verified = !StringHelper.isEmpty(oauthAccessTokenSecret);
-		if (App.verified) {
-			sToken = new AccessToken(oauthAccessToken, oauthAccessTokenSecret);
+	private void initAccountInfo() {
+		AccountStore store = new AccountStore(this);
+		accountInfo = store.read();
+
+		api = ApiFactory.getDefaultApi();
+		if (accountInfo.isVerified()) {
+			api.setAccessToken(accountInfo.getAccessToken());
+			api.setAccount(accountInfo.getAccount());
 		}
-	}
-	
-	private void initOAuth(){
-		App.sOAuthService=new OAuthService(FanFouApi.PROVIDER, sToken);
-		App.sHttpClients=new HttpClients();
-		App.sHttpClients.setoAuthService(sOAuthService);
+
+		if (DEBUG) {
+			Log.d(TAG, "initAccountInfo() accountInfo: " + accountInfo);
+		}
 	}
 
 	private void initAppInfo() {
-		if (DEBUG) {
-			Log.d("App", "initAppInfo");
-		}
-
 		PackageManager pm = getPackageManager();
-		PackageInfo pi;
 		try {
-			pi = pm.getPackageInfo(getPackageName(), 0);
+			packageName = getPackageName();
+			info = pm.getPackageInfo(packageName, 0);
+			versionCode = info.versionCode;
+			versionName = info.versionName;
+			if (DEBUG) {
+				Log.d(TAG, "initAppInfo() versionCode: " + versionCode
+						+ " versionName: " + versionName);
+			}
 		} catch (NameNotFoundException e) {
-			pi = new PackageInfo();
-			pi.versionName = "1.0";
-			pi.versionCode = 1;
 		}
-		appVersionCode = pi.versionCode;
-		appVersionName = pi.versionName;
+
 	}
 
-	private void versionCheck() {
-		AlarmHelper.setAlarmsIfNot(this);
-	}
+	public static void doLogin(Context context) {
+		// AlarmHelper.unsetScheduledTasks(context);
+		clearAccountInfo(context);
+		DataController.clearDatabase(context);
 
-	private void clearAndUpdatePreferences() {
-		OptionHelper.clearSettings(this);
-		OptionHelper.saveInt(this, R.string.option_old_version_code,
-				appVersionCode);
-		if (verified) {
-			OptionHelper.updateAccountInfo(this, sUserId, sUserScreenName,
-					sToken);
-		}
-	}
-
-	public static void updateAccountInfo(Context context, final User u,
-			final OAuthToken otoken) {
 		if (DEBUG) {
-			Log.d("App", "updateAccountInfo");
+			Log.d(TAG, "doLogin()");
 		}
-		sUserId = u.id;
-		sUserScreenName = u.screenName;
-		setAccessToken(otoken);
-		OptionHelper.updateAccountInfo(context, u, otoken);
-
+		// App.getImageLoader().clearQueue();
+		UIController.goUILogin(context);
 	}
 
-	public void updateUserInfo(final User u) {
+	public static void clearAccountInfo(Context context) {
+		accountInfo.clear();
+		api.setAccessToken(null);
+		api.setAccount(null);
+		AccountStore store = new AccountStore(context);
+		store.clear();
+
 		if (DEBUG) {
-			Log.d("App", "updateAccountInfo u");
+			Log.d(TAG, "clearAccountInfo()");
 		}
-		sUserId = u.id;
-		sUserScreenName = u.screenName;
-		OptionHelper.updateUserInfo(this, u);
 	}
 
-	public static void removeAccountInfo(Context context) {
+	public static void updateLoginInfo(Context context, String loginName,
+			String loginPassword) {
+
+		accountInfo.setLoginInfo(loginName, loginPassword);
+
+		AccountStore store = new AccountStore(context);
+		store.saveLoginInfo(loginName, loginPassword);
 		if (DEBUG) {
-			Log.d("App", "removeAccountInfo");
+			Log.d("App", "loginPassword loginName: " + loginName);
+			Log.d("App", "loginPassword loginPassword: " + loginPassword);
 		}
-		setAccessToken(null);
-		sUserId = null;
-		sUserScreenName = null;
-		OptionHelper.removeAccountInfo(context);
+
 	}
 
-	public synchronized static void setAccessToken(final OAuthToken otoken) {
-		if (otoken == null) {
-			verified = false;
-			sToken = null;
-		} else {
-			verified = true;
-			sToken = otoken;
+	public static void updateUserInfo(Context context, final UserModel u) {
+
+		String account = u.getId();
+		String screenName = u.getScreenName();
+		String profileImage = u.getProfileImageUrl();
+
+		accountInfo.setAccount(account);
+		accountInfo.setScreenName(screenName);
+		accountInfo.setProfileImage(profileImage);
+		api.setAccount(account);
+
+		AccountStore store = new AccountStore(context);
+		store.saveUserInfo(account, screenName, profileImage);
+		if (DEBUG) {
+			Log.d("App", "updateUserInfo UserModel: " + u);
+			Log.d("App", "updateUserInfo accountInfo: " + accountInfo);
 		}
-		sOAuthService.setAccessToken(sToken);
+
 	}
 
-	public static App getApp() {
-		return sInstance;
+	public static void updateAccessToken(Context context, AccessToken token) {
+		accountInfo.setAccessToken(token);
+		api.setAccessToken(token);
+		AccountStore store = new AccountStore(context);
+		store.saveAccessToken(token);
+		if (DEBUG) {
+			Log.d("App", "updateAccessToken AccessToken: " + token);
+			Log.d("App", "updateAccessToken accountInfo: " + accountInfo);
+		}
 	}
 
-	public static String getUserId() {
-		return sUserId;
+	public static void updateAccessToken(Context context, String token,
+			String tokenSecret) {
+		updateAccessToken(context, new AccessToken(token, tokenSecret));
 	}
 
-	public static String getUserName() {
-		return sUserScreenName;
+	public static String getAccount() {
+		return accountInfo.getAccount();
 	}
 
-	public static OAuthToken getOAuthToken() {
-		return sToken;
+	public static void setAccount(String account) {
+		accountInfo.setAccount(account);
+	}
+
+	public static String getScreenName() {
+		return accountInfo.getScreenName();
+	}
+
+	public static void setScreenName(String screenName) {
+		accountInfo.setScreenName(screenName);
+	}
+
+	public static SharedPreferences getPreferences() {
+		return sPreferences;
+	}
+
+	public static void setPreferences(SharedPreferences sPreferences) {
+		App.sPreferences = sPreferences;
 	}
 
 	public static ApnType getApnType() {
@@ -238,19 +259,82 @@ public class App extends Application {
 		App.sApnType = sApnType;
 	}
 
-	public static SharedPreferences getPreferences() {
-		return sPreferences;
+	public static IImageLoader getImageLoader() {
+		return imageLoader;
 	}
 
-	public static IImageLoader getImageLoader() {
-		if (sLoader == null) {
-			sLoader = ImageLoader.getInstance();
-		}
-		return sLoader;
+	public static void setImageLoader(IImageLoader sImageLoader) {
+		App.imageLoader = sImageLoader;
 	}
-	
-	public static HttpClients getHttpClients(){
-		return sHttpClients;
+
+	public static Api getApi() {
+		return api;
+	}
+
+	public static void setApi(Api api) {
+		App.api = api;
+	}
+
+	public static AccessToken getAccessToken() {
+		return accountInfo.getAccessToken();
+	}
+
+	public static boolean isDisconnected() {
+		return disConnected;
+	}
+
+	public static void setDisconnected(boolean state) {
+		disConnected = state;
+	}
+
+	public static App getApp() {
+		return instance;
+	}
+
+	public static AccountInfo getAccountInfo() {
+		return accountInfo;
+	}
+
+	public static boolean isVerified() {
+		return accountInfo.isVerified();
+	}
+
+	public static void cache(UserModel user) {
+		if (user != null) {
+			String key = new StringBuilder().append("#user#")
+					.append(user.getId()).toString();
+			cache.put(key, user);
+		}
+	}
+
+	public static void cache(StatusModel status) {
+		if (status != null) {
+			String key = new StringBuilder().append("#status#")
+					.append(status.getId()).toString();
+			cache.put(key, status);
+		}
+	}
+
+	public static UserModel getUser(String key) {
+		return (UserModel) cache.get(key);
+	}
+
+	public static StatusModel getStatus(String key) {
+		return (StatusModel) cache.get(key);
+	}
+
+	private static String userAgent;
+
+	public static String getUserAgent() {
+		if (userAgent == null) {
+
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append(info.packageName).append(" ").append(info.versionName)
+				.append("(").append(info.versionCode).append("").append("/")
+				.append("Android ").append(Build.MODEL).append(" ");
+
+		return sb.toString();
 	}
 
 	public static enum ApnType {

@@ -8,14 +8,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Filter;
-import com.fanfou.app.hd.R;
+
 import com.fanfou.app.hd.App.ApnType;
-import com.fanfou.app.hd.api.User;
+import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.fragments.FollowersListFragment;
 import com.fanfou.app.hd.fragments.FriendsListFragment;
 import com.fanfou.app.hd.fragments.OnInitCompleteListener;
 import com.fanfou.app.hd.fragments.UserListFragment;
-import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.ui.widget.TextChangeListener;
 import com.fanfou.app.hd.util.Assert;
 import com.fanfou.app.hd.util.StringHelper;
@@ -47,7 +46,7 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 
 	private String userId;
 	private String userName;
-	private User user;
+	private UserModel user;
 	private int type;
 
 	private static final String tag = UIUserList.class.getSimpleName();
@@ -106,7 +105,7 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 		if (App.DEBUG) {
 			Log.d(TAG, "setFragment()");
 		}
-		if (type == Constants.TYPE_USERS_FRIENDS) {
+		if (type == UserModel.TYPE_FRIENDS) {
 			mFragment = FriendsListFragment.newInstance(userId);
 		} else {
 			mFragment = FollowersListFragment.newInstance(userId);
@@ -139,14 +138,13 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 
 	private boolean parseIntent() {
 		Intent intent = getIntent();
-		type = intent.getIntExtra(Constants.EXTRA_TYPE,
-				Constants.TYPE_USERS_FRIENDS);
-		user = (User) intent.getParcelableExtra(Constants.EXTRA_DATA);
+		type = intent.getIntExtra("type",UserModel.TYPE_FRIENDS);
+		user = (UserModel) intent.getParcelableExtra("data");
 		if (user == null) {
-			userId = intent.getStringExtra(Constants.EXTRA_ID);
+			userId = intent.getStringExtra("id");
 		} else {
-			userId = user.id;
-			userName = user.screenName;
+			userId = user.getId();
+			userName = user.getScreenName();
 		}
 		return !StringHelper.isEmpty(userId);
 	}

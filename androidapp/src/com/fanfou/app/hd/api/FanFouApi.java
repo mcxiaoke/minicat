@@ -1,1024 +1,1094 @@
+/**
+ * 
+ */
 package com.fanfou.app.hd.api;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.List;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.auth.FanFouOAuthProvider;
+import com.fanfou.app.hd.auth.AccessToken;
+import com.fanfou.app.hd.auth.OAuthProvider;
 import com.fanfou.app.hd.auth.OAuthService;
-import com.fanfou.app.hd.auth.OAuthToken;
-import com.fanfou.app.hd.cache.CacheManager;
-import com.fanfou.app.hd.http.HttpClients;
+import com.fanfou.app.hd.auth.RequestToken;
+import com.fanfou.app.hd.auth.exception.AuthException;
+import com.fanfou.app.hd.dao.model.DirectMessageModel;
+import com.fanfou.app.hd.dao.model.Notifications;
+import com.fanfou.app.hd.dao.model.RateLimitStatus;
+import com.fanfou.app.hd.dao.model.Search;
+import com.fanfou.app.hd.dao.model.StatusModel;
+import com.fanfou.app.hd.dao.model.UserModel;
+import com.fanfou.app.hd.http.GzipRequestInterceptor;
+import com.fanfou.app.hd.http.GzipResponseInterceptor;
 import com.fanfou.app.hd.http.NetHelper;
-import com.fanfou.app.hd.http.NetRequest;
-import com.fanfou.app.hd.http.NetResponse;
-import com.fanfou.app.hd.http.ResponseCode;
-import com.fanfou.app.hd.service.Constants;
-import com.fanfou.app.hd.util.StringHelper;
+import com.fanfou.app.hd.http.RestRequest;
+import com.fanfou.app.hd.http.RestResponse;
+import com.fanfou.app.hd.http.RequestRetryHandler;
+import com.fanfou.app.hd.util.DeviceHelper;
 
 /**
  * @author mcxiaoke
- * @version 1.0 2011.05.15
- * @version 1.1 2011.05.17
- * @version 1.2 2011.10.28
- * @version 1.3 2011.11.04
- * @version 1.4 2011.11.07
- * @version 2.0 2011.11.07
- * @version 2.1 2011.11.09
- * @version 2.2 2011.11.11
- * @version 3.0 2011.11.18
- * @version 4.0 2011.11.21
- * @version 4.1 2011.11.22
- * @version 4.2 2011.11.23
- * @version 4.3 2011.11.28
- * @version 4.4 2011.11.29
- * @version 4.5 2011.11.30
- * @version 4.6 2011.12.01
- * @version 4.7 2011.12.02
- * @version 4.8 2011.12.05
- * @version 4.9 2011.12.06
- * @version 5.0 2011.12.12
- * @version 5.1 2011.12.13
- * @version 6.0 2011.12.16
- * @version 6.1 2011.12.20
- * @version 6.2 2011.12.23
- * @version 6.3 2011.12.26
- * @version 7.0 2012.02.20
+ * @version 1.0 2012-2-23 上午10:22:32
+ * @version 1.1 2012.02.24
+ * @version 1.5 2012.02.27
  * 
  */
-public class FanFouApi implements Api, FanFouApiConfig, ResponseCode {
-	private static final String TAG = FanFouApi.class.getSimpleName();
-	
-	public static final FanFouOAuthProvider PROVIDER=new FanFouOAuthProvider();
+class FanFouApi implements Api {
+	private static final String TAG = "API";
+	private static final String API_HOST = "http://api.fanfou.com";
 
-	private HttpClients mHttpClients;
+	private static final boolean DEBUG = App.DEBUG;
+	private OAuthService mOAuthService;
+	private OAuthProvider mOAuthProvider;
+	private AccessToken mAccessToken;
+	private ApiParser mParser;
+	private String account;
+
+	public FanFouApi() {
+		initialize(null);
+	}
+
+	public FanFouApi(AccessToken token) {
+		initialize(token);
+	}
+
+	private void initialize(AccessToken token) {
+		this.mOAuthProvider = new FanFouOAuthProvider();
+		this.mOAuthService = new OAuthService(mOAuthProvider, mAccessToken);
+		this.mParser = new FanFouParser();
+	}
 
 	private void log(String message) {
 		Log.d(TAG, message);
 	}
 
-	private FanFouApi() {
-		mHttpClients=App.getHttpClients();
-	}
-	
-	public static FanFouApi newInstance(){
-		return new FanFouApi();
+	private String makeUrl(String url) {
+		return new StringBuilder().append(API_HOST).append(url).append(".json")
+				.toString();
 	}
 
-	/**
-	 * exec http request
-	 * 
-	 * @param request
-	 * @return response object
-	 * @throws ApiException
-	 */
-	private NetResponse fetch(final NetRequest request) throws ApiException {
-		try {
-			NetResponse res=mHttpClients.execute(request, true);
-			int statusCode=res.statusCode;
-			if (App.DEBUG) {
-				log("fetch() url=" + request.url + " post=" + request.post
-						+ " statusCode=" + statusCode);
-			}
-			if (statusCode == HTTP_OK) {
-				return res;
-			} else if (statusCode == HTTP_UNAUTHORIZED) {
-				throw new ApiException(statusCode, "验证信息失效，请重新登录");
-			} else {
-				throw new ApiException(statusCode, Parser.error(res
-						.getContent()));
-			}
-		} catch (IOException e) {
-			if (App.DEBUG) {
-				Log.e(TAG, e.toString());
-			}
-			throw new ApiException(ERROR_IO_EXCEPTION, e.getMessage(),
-					e.getCause());
+	private UserModel fetchUser(String url, String id, int type, boolean post)
+			throws ApiException {
+		RestRequest.Builder builder = RestRequest.newBuilder();
+		builder.url(makeUrl(url)).post(post).mode("lite");
+		return mParser.user(fetch(builder.build()), type, account);
+	}
+
+	private List<UserModel> fetchUsers(String url, Paging paging, int type)
+			throws ApiException {
+		return fetchUsers(url, null, paging, type);
+	}
+
+	private List<UserModel> fetchUsers(String url, String userId,
+			Paging paging, int type) throws ApiException {
+		RestRequest.Builder builder = RestRequest.newBuilder();
+		builder.url(makeUrl(url)).id(userId).mode("lite").format("html");
+		if (paging != null) {
+			builder.paging(paging);
 		}
+		return mParser.users(fetch(builder.build()), type, userId);
 	}
 
-	/**
-	 * fetch statuses --get
-	 * 
-	 * @param url
-	 *            api url
-	 * @param count
-	 *            optional
-	 * @param page
-	 *            optional
-	 * @param userId
-	 *            optional
-	 * @param sinceId
-	 *            optional
-	 * @param maxId
-	 *            optional
-	 * @param isHtml
-	 *            optional
-	 * @return statuses list
-	 * @throws ApiException
-	 */
-	ArrayList<Status> fetchStatuses(String url, int count, int page,
-			String userId, String sinceId, String maxId, String format,
-			String mode, int type) throws ApiException {
-		NetRequest.Builder builder = new NetRequest.Builder();
-		builder.url(url).count(count).page(page).id(userId).sinceId(sinceId)
-				.maxId(maxId).format(format).mode(mode);
-		NetRequest request = builder.build();
-		NetResponse response = fetch(request);
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("fetchStatuses()---statusCode=" + statusCode + " url="
-					+ request.url);
+	private List<StatusModel> fetchTimeline(String url, Paging paging,
+			int type, String owner) throws ApiException {
+		RestRequest.Builder builder = RestRequest.newBuilder();
+		builder.url(makeUrl(url)).mode("lite").format("html");
+		if (paging != null) {
+			builder.paging(paging);
 		}
-		return Status.parseStatuses(response, type);
-
+		String response = fetch(builder.build());
+		return mParser.timeline(response, type, owner);
 	}
 
-	/**
-	 * action for only id param --get
-	 * 
-	 * @param url
-	 *            api url
-	 * @param id
-	 *            userid or status id or dm id
-	 * @return string for id
-	 * @throws ApiException
-	 */
-	private NetResponse doGetIdAction(String url, String id, String format,
-			String mode) throws ApiException {
-		if (App.DEBUG)
-			log("doGetIdAction() ---url=" + url + " id=" + id);
-		return doSingleIdAction(url, id, format, mode, false);
+	private List<StatusModel> fetchTimeline(String url, Paging paging,
+			String id, int type, String owner) throws ApiException {
+		RestRequest.Builder builder = RestRequest.newBuilder();
+		builder.url(makeUrl(url)).id(id).mode("lite").format("html");
+		if (paging != null) {
+			builder.paging(paging);
+		}
+		String response = fetch(builder.build());
+		return mParser.timeline(response, type, owner);
 	}
 
-	/**
-	 * action for only id param --post
-	 * 
-	 * @param url
-	 * @param id
-	 * @return
-	 * @throws ApiException
-	 */
-	private NetResponse doPostIdAction(String url, String id, String format,
-			String mode) throws ApiException {
-		if (App.DEBUG)
-			log("doPostIdAction() ---url=" + url + " id=" + id);
-		return doSingleIdAction(url, id, format, mode, true);
+	private StatusModel fetchStatus(String url, String id, int type,
+			boolean post) throws ApiException {
+		RestRequest.Builder builder = RestRequest.newBuilder();
+		builder.url(makeUrl(url)).post(post).id(id).mode("lite").format("html");
+		return mParser.status(fetch(builder.build()), type, account);
 	}
 
-	/**
-	 * action for only id param --get/post
-	 * 
-	 * @param url
-	 * @param id
-	 * @param isPost
-	 * @return
-	 * @throws ApiException
-	 */
-	private NetResponse doSingleIdAction(String url, String id, String format,
-			String mode, boolean isPost) throws ApiException {
-		NetRequest.Builder builder = new NetRequest.Builder();
-		builder.url(url).id(id).post(isPost).format(format).mode(mode);
+	private String fetchDirectMessages(String url, Paging paging, int type)
+			throws ApiException {
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl(url)).paging(paging).mode("lite");
 		return fetch(builder.build());
 	}
 
 	@Override
-	public User verifyAccount(String mode) throws ApiException {
-		NetResponse response = fetch(new NetRequest.Builder()
-				.url(URL_VERIFY_CREDENTIALS).mode(mode).build());
-		return User.parse(response);
+	public void setParser(ApiParser parser) {
+		assert (parser != null);
+		this.mParser = parser;
+		this.mParser.setAccount(account);
 	}
 
 	@Override
-	public ArrayList<Status> pubicTimeline(int count, String format, String mode)
-			throws ApiException {
-		ArrayList<Status> ss = fetchStatuses(URL_TIMELINE_PUBLIC, count, 0,
-				null, null, null, format, mode,
-				Constants.TYPE_STATUSES_PUBLIC_TIMELINE);
-		return ss;
+	public String getAccount() {
+		return account;
 	}
 
 	@Override
-	public ArrayList<Status> homeTimeline(int count, int page, String sinceId,
-			String maxId, String format, String mode) throws ApiException {
-		ArrayList<Status> ss = fetchStatuses(URL_TIMELINE_HOME, count, page,
-				null, sinceId, maxId, format, mode,
-				Constants.TYPE_STATUSES_HOME_TIMELINE);
-		return ss;
+	public void setAccount(String account) {
+		this.account = account;
+		if (mParser != null) {
+			this.mParser.setAccount(account);
+		}
 	}
 
 	@Override
-	public ArrayList<Status> userTimeline(int count, int page, String userId,
-			String sinceId, String maxId, String format, String mode)
-			throws ApiException {
-		if (TextUtils.isEmpty(userId)) {
-			throw new NullPointerException(
-					"userTimeline() userId must not be empty or null.");
-		}
-		ArrayList<Status> ss = fetchStatuses(URL_TIMELINE_USER, count, page,
-				userId, sinceId, maxId, format, mode,
-				Constants.TYPE_STATUSES_USER_TIMELINE);
-		return ss;
+	public synchronized void setAccessToken(AccessToken token) {
+		this.mAccessToken = token;
+		this.mOAuthService.setAccessToken(token);
 	}
 
 	@Override
-	public ArrayList<Status> mentions(int count, int page, String sinceId,
-			String maxId, String format, String mode) throws ApiException {
-		ArrayList<Status> ss = fetchStatuses(URL_TIMELINE_MENTIONS, count,
-				page, null, sinceId, maxId, format, mode,
-				Constants.TYPE_STATUSES_MENTIONS);
-		return ss;
+	public AccessToken getAccessToken() {
+		return mAccessToken;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see http://fanfou.com/oauth/request_token
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/Oauth
+	 */
 	@Override
-	public ArrayList<Status> contextTimeline(String id, String format,
-			String mode) throws ApiException {
-		NetRequest.Builder builder = new NetRequest.Builder();
-		builder.url(URL_TIMELINE_CONTEXT).id(id).format("html").mode("lite");
-		NetResponse response = fetch(builder.build());
-		ArrayList<Status> ss = Status.parseStatuses(response,
-				Constants.TYPE_STATUSES_CONTEXT_TIMELINE);
-		return ss;
-	}
-
-	@Override
-	public ArrayList<Status> replies(int count, int page, String userId,
-			String sinceId, String maxId, String format, String mode)
-			throws ApiException {
-		ArrayList<Status> ss = fetchStatuses(URL_TIMELINE_REPLIES, count, page,
-				userId, sinceId, maxId, format, mode,
-				Constants.TYPE_STATUSES_MENTIONS);
-		return ss;
-	}
-
-	@Override
-	public ArrayList<Status> favorites(int count, int page, String userId,
-			String format, String mode) throws ApiException {
-		ArrayList<Status> ss = fetchStatuses(URL_FAVORITES_LIST, count, page,
-				userId, null, null, format, mode, Constants.TYPE_FAVORITES_LIST);
-
-		if (userId != null && ss != null) {
-			for (Status status : ss) {
-				status.ownerId = userId;
-			}
-		}
-		return ss;
-	}
-
-	@Override
-	public Status favoritesCreate(String statusId, String format, String mode)
-			throws ApiException {
-		if (TextUtils.isEmpty(statusId)) {
-			throw new NullPointerException(
-					"favoritesCreate() statusId must not be empty or null.");
-		}
-		String url = String.format(URL_FAVORITES_CREATE, statusId);
-		NetResponse response = doPostIdAction(url, null, format, mode);
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("favoritesCreate()---statusCode=" + statusCode + " url=" + url);
-		}
-		Status s = Status.parse(response);
-		return s;
-	}
-
-	@Override
-	public Status favoritesDelete(String statusId, String format, String mode)
-			throws ApiException {
-		if (TextUtils.isEmpty(statusId)) {
-			throw new NullPointerException(
-					"favoritesDelete() statusId must not be empty or null.");
-		}
-		String url = String.format(URL_FAVORITES_DESTROY, statusId);
-		NetResponse response = doPostIdAction(url, null, format, mode);
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("favoritesDelete()---statusCode=" + statusCode + " url=" + url);
-		}
-
-		Status s = Status.parse(response);
-		return s;
-	}
-
-	@Override
-	public Status statusesShow(String statusId, String format, String mode)
-			throws ApiException {
-		if (StringHelper.isEmpty(statusId)) {
-			throw new IllegalArgumentException("消息ID不能为空");
-		}
-		if (App.DEBUG)
-			log("statusShow()---statusId=" + statusId);
-
-		String url = String.format(URL_STATUS_SHOW, statusId);
-
-		NetResponse response = doGetIdAction(url, statusId, format, mode);
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("statusShow()---statusCode=" + statusCode);
-		}
-		Status s = Status.parse(response);
-		if (s != null) {
-			CacheManager.put(s);
-		}
-		return s;
-	}
-
-	@Override
-	public Status statusesCreate(String status, String inReplyToStatusId,
-			String source, String location, String repostStatusId,
-			String format, String mode) throws ApiException {
-		if (StringHelper.isEmpty(status)) {
-			throw new IllegalArgumentException("消息内容不能为空");
-		}
-		if (App.DEBUG)
-			log("statusUpdate() ---[status=(" + status + ") replyToStatusId="
-					+ inReplyToStatusId + " source=" + source + " location="
-					+ location + " repostStatusId=" + repostStatusId + " ]");
-
-		NetRequest.Builder builder = new NetRequest.Builder();
-		builder.url(URL_STATUS_UPDATE).post();
-		builder.status(status).location(location);
-		builder.format(format).mode(mode);
-		builder.param("in_reply_to_status_id", inReplyToStatusId);
-		builder.param("repost_status_id", repostStatusId);
-		builder.param("source", source);
-		NetResponse response = fetch(builder.build());
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("statusUpdate()---statusCode=" + statusCode);
-		}
-		Status s = Status
-				.parse(response, Constants.TYPE_STATUSES_HOME_TIMELINE);
-		if (App.DEBUG) {
-			log("statusesCreate " + s);
-		}
-		return s;
-	}
-
-	@Override
-	public Status statusesDelete(String statusId, String format, String mode)
-			throws ApiException {
-		String url = String.format(URL_STATUS_DESTROY, statusId);
-		NetResponse response = doPostIdAction(url, null, format, mode);
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("statusDelete()---statusCode=" + statusCode + " url=" + url);
-		}
-		return Status.parse(response);
-	}
-
-	@Override
-	public Status photosUpload(File photo, String status, String source,
-			String location, String format, String mode) throws ApiException {
-		if (photo == null) {
-			throw new IllegalArgumentException("文件不能为空");
-		}
-		if (App.DEBUG)
-			log("upload()---photo=" + photo.getAbsolutePath() + " status="
-					+ status + " source=" + source + " location=" + location);
-		;
-
-		NetRequest.Builder builder = new NetRequest.Builder();
-		builder.url(URL_PHOTO_UPLOAD).post();
-		builder.status(status).location(location);
-		builder.param("photo", photo);
-		builder.param("source", source);
-		builder.format(format).mode(mode);
-		NetResponse response = fetch(builder.build());
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("photoUpload()---statusCode=" + statusCode);
-		}
-		return Status.parse(response, Constants.TYPE_STATUSES_HOME_TIMELINE);
-	}
-
-	@Override
-	public ArrayList<Status> search(String keyword, String sinceId,
-			String maxId, int count, String format, String mode)
-			throws ApiException {
-		if (StringHelper.isEmpty(keyword)) {
-			throw new IllegalArgumentException("搜索词不能为空");
-		}
-
-		NetRequest.Builder builder = new NetRequest.Builder();
-		builder.url(URL_SEARCH);
-		builder.param("q", keyword);
-		builder.maxId(maxId).sinceId(sinceId);
-		builder.format("html").mode("lite");
-		builder.count(count);
-		NetResponse response = fetch(builder.build());
-
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("search()---statusCode=" + statusCode);
-		}
-		return Status.parseStatuses(response,
-				Constants.TYPE_SEARCH_PUBLIC_TIMELINE);
-
-	}
-
-	@Override
-	public ArrayList<User> searchUsers(String keyword, int count, int page,
-			String mode) throws ApiException {
-		if (StringHelper.isEmpty(keyword)) {
-			if (App.DEBUG)
-				throw new IllegalArgumentException("搜索词不能为空");
-			return null;
-		}
-
-		NetRequest.Builder builder = new NetRequest.Builder();
-		builder.url(URL_SEARCH_USERS);
-		builder.param("q", keyword);
-		builder.count(count).page(page);
-		builder.format("html").mode("lite");
-		builder.count(count);
-		NetResponse response = fetch(builder.build());
-
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("search()---statusCode=" + statusCode);
-		}
-		return User.parseUsers(response);
-
-	}
-
-	@Override
-	public ArrayList<Search> trends() throws ApiException {
-		NetResponse response = fetch(new NetRequest.Builder().url(
-				URL_TRENDS_LIST).build());
-
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("trends()---statusCode=" + statusCode);
-		}
-		// handlerResponseError(response);
-		return Parser.trends(response);
-
-	}
-
-	@Override
-	public ArrayList<Search> savedSearchesList() throws ApiException {
-		NetResponse response = fetch(new NetRequest.Builder().url(
-				URL_SAVED_SEARCHES_LIST).build());
-
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("savedSearchesList()---statusCode=" + statusCode);
-		}
-
-		// handlerResponseError(response);
-		return Parser.savedSearches(response);
-
-	}
-
-	@Override
-	public Search savedSearchesShow(int id) throws ApiException {
-		NetRequest.Builder builder = new NetRequest.Builder();
-		NetResponse response = fetch(builder.url(URL_SAVED_SEARCHES_SHOW)
-				.param("id", id).build());
-
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("savedSearchShow()---statusCode=" + statusCode);
-		}
-
-		// handlerResponseError(response);
-		return Parser.savedSearch(response);
-
-	}
-
-	@Override
-	public Search savedSearchesCreate(String query) throws ApiException {
-		if (StringHelper.isEmpty(query)) {
-			if (App.DEBUG)
-				throw new IllegalArgumentException("搜索词不能为空");
-			return null;
-		}
-		NetRequest.Builder builder = new NetRequest.Builder();
-		builder.url(URL_SAVED_SEARCHES_CREATE).post();
-		builder.param("query", query);
-
-		NetResponse response = fetch(builder.build());
-
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("savedSearchCreate()---statusCode=" + statusCode);
-		}
-		// handlerResponseError(response);
-		return Parser.savedSearch(response);
-	}
-
-	@Override
-	public Search savedSearchesDelete(int id) throws ApiException {
-		NetRequest.Builder builder = new NetRequest.Builder();
-		builder.url(URL_SAVED_SEARCHES_DESTROY).post().id(String.valueOf(id));
-		NetResponse response = fetch(builder.build());
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("savedSearchDelete()---statusCode=" + statusCode);
-		}
-
-		// handlerResponseError(response);
-		return Parser.savedSearch(response);
-	}
-
-	private ArrayList<User> fetchUsers(String url, String userId, int count,
-			int page) throws ApiException {
-		NetRequest.Builder builder = new NetRequest.Builder();
-		builder.url(url).id(userId).count(count).page(page)
-				.param("mode", "noprofile");
-		NetResponse response = fetch(builder.build());
-
-		return User.parseUsers(response);
-	}
-
-	@Override
-	public ArrayList<User> usersFriends(String userId, int count, int page,
-			String mode) throws ApiException {
-		ArrayList<User> users = fetchUsers(URL_USERS_FRIENDS, userId, count,
-				page);
-		if (users != null && users.size() > 0) {
-			for (User user : users) {
-				user.type = Constants.TYPE_USERS_FRIENDS;
-				user.ownerId = (userId == null ? App.getUserId() : userId);
-			}
-		}
-		return users;
-	}
-
-	@Override
-	public List<User> usersFollowers(String userId, int count, int page,
-			String mode) throws ApiException {
-		List<User> users = fetchUsers(URL_USERS_FOLLOWERS, userId, count, page);
-		if (users != null && users.size() > 0) {
-			for (User user : users) {
-				user.type = Constants.TYPE_USERS_FOLLOWERS;
-				user.ownerId = (userId == null ? App.getUserId() : userId);
-			}
-		}
-		return users;
-	}
-
-	@Override
-	public User userShow(String userId, String mode) throws ApiException {
-		NetResponse response = doGetIdAction(URL_USER_SHOW, userId, null, mode);
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("userShow()---statusCode=" + statusCode);
-		}
-
-		// handlerResponseError(response);
-		User u = User.parse(response);
-		if (u != null) {
-			u.ownerId = App.getUserId();
-			CacheManager.put(u);
-		}
-		return u;
-	}
-
-	@Override
-	public User friendshipsCreate(String userId, String mode)
-			throws ApiException {
-		if (TextUtils.isEmpty(userId)) {
-			throw new NullPointerException(
-					"friendshipsCreate() userId must not be empty or null.");
-		}
-		String url;
+	public RequestToken getOAuthRequestToken() throws ApiException {
 		try {
-			// hack for oauth chinese charactar encode
-			url = String.format(URL_FRIENDSHIPS_CREATE,
-					URLEncoder.encode(userId, HTTP.UTF_8));
-		} catch (UnsupportedEncodingException e) {
-			url = String.format(URL_FRIENDSHIPS_CREATE, userId);
-		}
-
-		NetResponse response = doPostIdAction(url, null, null, mode);
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("friendshipsCreate()---statusCode=" + statusCode + " url="
-					+ url);
-		}
-		User u = User.parse(response);
-		if (u != null) {
-			u.ownerId = App.getUserId();
-			CacheManager.put(u);
-		}
-		return u;
-	}
-
-	@Override
-	public User friendshipsDelete(String userId, String mode)
-			throws ApiException {
-		if (TextUtils.isEmpty(userId)) {
-			throw new NullPointerException(
-					"friendshipsDelete() userId must not be empty or null.");
-		}
-		// String url=String.format(URL_FRIENDSHIPS_DESTROY, userId);
-		String url;
-		try {
-			url = String.format(URL_FRIENDSHIPS_DESTROY,
-					URLEncoder.encode(userId, HTTP.UTF_8));
-		} catch (UnsupportedEncodingException e) {
-			url = String.format(URL_FRIENDSHIPS_DESTROY, userId);
-		}
-
-		NetResponse response = doPostIdAction(url, null, null, mode);
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("friendshipsDelete()---statusCode=" + statusCode + " url="
-					+ url);
-		}
-		User u = User.parse(response);
-		if (u != null) {
-			u.ownerId = App.getUserId();
-			CacheManager.put(u);
-		}
-		return u;
-	}
-
-	@Override
-	public User blocksCreate(String userId, String mode) throws ApiException {
-		// String url=String.format(URL_BLOCKS_CREATE, userId);
-		if (TextUtils.isEmpty(userId)) {
-			throw new NullPointerException(
-					"blocksCreate() userId must not be empty or null.");
-		}
-		String url;
-		try {
-			url = String.format(URL_BLOCKS_CREATE,
-					URLEncoder.encode(userId, HTTP.UTF_8));
-		} catch (UnsupportedEncodingException e) {
-			url = String.format(URL_BLOCKS_CREATE, userId);
-		}
-
-		NetResponse response = doPostIdAction(url, null, null, mode);
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("userBlock()---statusCode=" + statusCode + " url=" + url);
-		}
-
-		// handlerResponseError(response);
-		User u = User.parse(response);
-		if (u != null) {
-			u.ownerId = App.getUserId();
-		}
-		return u;
-	}
-
-	@Override
-	public User blocksDelete(String userId, String mode) throws ApiException {
-		// String url=String.format(URL_BLOCKS_DESTROY, userId);
-		if (TextUtils.isEmpty(userId)) {
-			throw new NullPointerException(
-					"blocksDelete() userId must not be empty or null.");
-		}
-		String url;
-		try {
-			url = String.format(URL_BLOCKS_DESTROY,
-					URLEncoder.encode(userId, HTTP.UTF_8));
-		} catch (UnsupportedEncodingException e) {
-			url = String.format(URL_BLOCKS_DESTROY, userId);
-		}
-
-		NetResponse response = doPostIdAction(url, null, null, mode);
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("userUnblock()---statusCode=" + statusCode + " url=" + url);
-		}
-
-		// handlerResponseError(response);
-		User u = User.parse(response);
-		if (u != null) {
-			u.ownerId = App.getUserId();
-		}
-		return u;
-	}
-
-	@Override
-	public boolean friendshipsExists(String userA, String userB)
-			throws ApiException {
-		if (StringHelper.isEmpty(userA) || StringHelper.isEmpty(userB)) {
-			throw new IllegalArgumentException(
-					"friendshipsExists() usera and userb must not be empty or null.");
-		}
-		NetRequest.Builder builder = new NetRequest.Builder();
-		builder.url(URL_FRIENDSHIS_EXISTS);
-		builder.param("user_a", userA);
-		builder.param("user_b", userB);
-		NetResponse response = fetch(builder.build());
-
-		int statusCode = response.statusCode;
-		if (App.DEBUG)
-			log("isFriends()---statusCode=" + statusCode);
-		try {
-			String content = response.getContent();
-			if (App.DEBUG)
-				log("isFriends()---response=" + content);
-			return content.contains("true");
+			return mOAuthService.getOAuthRequestToken();
 		} catch (IOException e) {
-			if (App.DEBUG) {
-				e.printStackTrace();
-			}
-			return false;
+			throw new ApiException(ApiException.IO_ERROR, e.getMessage(), e);
+		} catch (AuthException e) {
+			throw new ApiException(ApiException.AUTH_ERROR, e.getMessage(), e);
 		}
 	}
 
-	// 最大2000
-	private ArrayList<String> ids(String url, String userId, int count, int page)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see m.fanfou.com/oauth/authorize
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/Oauth
+	 */
+	@Override
+	public RequestToken getOAuthRequestToken(String callback)
 			throws ApiException {
-		NetRequest.Builder builder = new NetRequest.Builder();
-		builder.url(url);
-		builder.id(userId);
-		builder.count(count);
-		builder.page(page);
-		NetResponse response = fetch(builder.build());
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("ids()---statusCode=" + statusCode);
+		try {
+			return mOAuthService.getOAuthRequestToken(callback);
+		} catch (IOException e) {
+			throw new ApiException(ApiException.IO_ERROR, e.getMessage(), e);
+		} catch (AuthException e) {
+			throw new ApiException(ApiException.AUTH_ERROR, e.getMessage(), e);
 		}
-
-		// handlerResponseError(response);
-		return Parser.ids(response);
-
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see http://fanfou.com/oauth/access_token
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/Oauth
+	 */
 	@Override
-	public ArrayList<String> friendsIDs(String userId, int count, int page)
+	public AccessToken getOAuthAccessToken(RequestToken requestToken)
 			throws ApiException {
-		return ids(URL_USERS_FRIENDS_IDS, userId, count, page);
+		try {
+			return mOAuthService.getOAuthAccessToken(requestToken);
+		} catch (IOException e) {
+			throw new ApiException(ApiException.IO_ERROR, e.getMessage(), e);
+		} catch (AuthException e) {
+			throw new ApiException(ApiException.AUTH_ERROR, e.getMessage(), e);
+		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see http://fanfou.com/oauth/access_token
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/Oauth
+	 */
 	@Override
-	public ArrayList<String> followersIDs(String userId, int count, int page)
+	public AccessToken getOAuthAccessToken(RequestToken requestToken,
+			String verifier) throws ApiException {
+		try {
+			return mOAuthService.getOAuthAccessToken(requestToken, verifier);
+		} catch (IOException e) {
+			throw new ApiException(ApiException.IO_ERROR, e.getMessage(), e);
+		} catch (AuthException e) {
+			throw new ApiException(ApiException.AUTH_ERROR, e.getMessage(), e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see http://fanfou.com/oauth/access_token
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/Xauth
+	 */
+	@Override
+	public AccessToken getOAuthAccessToken(String username, String password)
 			throws ApiException {
-		return ids(URL_USERS_FOLLOWERS_IDS, userId, count, page);
-	}
-
-	private ArrayList<DirectMessage> messages(String url, int count, int page,
-			String sinceId, String maxId, String mode, int type)
-			throws ApiException {
-		NetRequest.Builder builder = new NetRequest.Builder();
-		builder.url(url).count(count).page(page).maxId(maxId).sinceId(sinceId)
-				.mode(mode);
-
-		// count<=0,count>60时返回60条
-		// count>=0&&count<=60时返回count条
-		// int c=count;
-		// if(c<1||c>ApiConfig.MAX_COUNT){
-		// c=ApiConfig.MAX_COUNT;
-		// }
-		// builder.count(c);
-
-		NetResponse response = fetch(builder.build());
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("messages()---statusCode=" + statusCode);
+		try {
+			return mOAuthService.getOAuthAccessToken(username, password);
+		} catch (IOException e) {
+			throw new ApiException(ApiException.IO_ERROR, e.getMessage(), e);
+		} catch (AuthException e) {
+			throw new ApiException(ApiException.AUTH_ERROR, e.getMessage(), e);
 		}
-		return DirectMessage.parseMessges(response, type);
 	}
 
+	/*
+	 * GET/POST /account/verify_credentials
+	 * 
+	 * @see
+	 * https://github.com/FanfouAPI/FanFouAPIDoc/wiki/account.verify-credentials
+	 */
 	@Override
-	public ArrayList<DirectMessage> directMessagesInbox(int count, int page,
-			String sinceId, String maxId, String mode) throws ApiException {
-		ArrayList<DirectMessage> dms = messages(URL_DIRECT_MESSAGES_INBOX,
-				count, page, sinceId, maxId, mode,
-				Constants.TYPE_DIRECT_MESSAGES_INBOX);
-		// TODO new dm api, need type set to type_user
-		if (dms != null && dms.size() > 0) {
-			for (DirectMessage dm : dms) {
-				dm.threadUserId = dm.senderId;
-				dm.threadUserName = dm.senderScreenName;
-			}
-		}
-		return dms;
+	public UserModel verifyCredentials() throws ApiException {
+		return fetchUser("/account/verify_credentials", null,
+				UserModel.TYPE_NONE, false);
 	}
 
+	/*
+	 * POST /account/update_profile
+	 * 
+	 * @see
+	 * https://github.com/FanfouAPI/FanFouAPIDoc/wiki/account.update-profile
+	 */
 	@Override
-	public ArrayList<DirectMessage> directMessagesOutbox(int count, int page,
-			String sinceId, String maxId, String mode) throws ApiException {
-		ArrayList<DirectMessage> dms = messages(URL_DIRECT_MESSAGES_OUTBOX,
-				count, page, sinceId, maxId, mode,
-				Constants.TYPE_DIRECT_MESSAGES_OUTBOX);
-		// TODO new dm api, need type set to type_user
-		if (dms != null && dms.size() > 0) {
-			for (DirectMessage dm : dms) {
-				dm.threadUserId = dm.recipientId;
-				dm.threadUserName = dm.recipientScreenName;
-			}
-		}
-		return dms;
-	}
-
-	@Override
-	public ArrayList<DirectMessage> directMessagesConversationList(int count,
-			int page, String mode) throws ApiException {
-		NetRequest.Builder builder = NetRequest.newBuilder();
-		builder.url(URL_DIRECT_MESSAGES_CONVERSATION).count(count).page(page)
-				.mode(mode);
-		NetResponse response = fetch(builder.build());
-		return DirectMessage.parseConversationList(response);
-	}
-
-	@Override
-	public ArrayList<DirectMessage> directMessagesConversation(String userId,
-			String maxId, int count, String mode) throws ApiException {
-		if (TextUtils.isEmpty(userId)) {
-			throw new NullPointerException(
-					"directMessagesConversation() userId must not be empty or null.");
-		}
-		NetRequest.Builder builder = NetRequest.newBuilder();
-		builder.url(URL_DIRECT_MESSAGES_CONVERSATION).id(userId).count(count)
-				.maxId(maxId).mode(mode);
-		NetResponse response = fetch(builder.build());
-		List<DirectMessage> dms = DirectMessage.parseConversationUser(response);
-		if (dms != null && dms.size() > 0) {
-			for (DirectMessage dm : dms) {
-				dm.threadUserId = userId;
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public DirectMessage directMessagesCreate(String userId, String text,
-			String inReplyToId, String mode) throws ApiException {
-		if (StringHelper.isEmpty(userId) || StringHelper.isEmpty(text)) {
-			if (App.DEBUG)
-				throw new IllegalArgumentException("收信人ID和私信内容都不能为空");
-			return null;
-		}
-		NetRequest.Builder builder = new NetRequest.Builder();
-		builder.url(URL_DIRECT_MESSAGES_NEW);
-		builder.post();
-		builder.param("user", userId);
-		builder.param("text", text);
-		builder.param("in_reply_to_id", inReplyToId);
-		NetResponse response = fetch(builder.build());
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("DirectMessagesCreate()---statusCode=" + statusCode);
-		}
-
-		DirectMessage dm = DirectMessage.parse(response,
-				Constants.TYPE_DIRECT_MESSAGES_OUTBOX);
-		if (dm != null && !dm.isNull()) {
-			dm.threadUserId = dm.recipientId;
-			dm.threadUserName = dm.recipientScreenName;
-			return dm;
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public DirectMessage directMessagesDelete(String directMessageId,
-			String mode) throws ApiException {
-		if (TextUtils.isEmpty(directMessageId)) {
-			throw new NullPointerException(
-					"directMessagesDelete() directMessageId must not be empty or null.");
-		}
-		String url = String
-				.format(URL_DIRECT_MESSAGES_DESTROY, directMessageId);
-		NetResponse response = doPostIdAction(url, null, null, mode);
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("DirectMessagesDelete()---statusCode=" + statusCode + " url="
-					+ url);
-		}
-		return DirectMessage.parse(response, Constants.TYPE_NONE);
-	}
-
-	@Override
-	public ArrayList<Status> photosTimeline(int count, int page, String userId,
-			String sinceId, String maxId, String format, String mode)
-			throws ApiException {
-		ArrayList<Status> ss = fetchStatuses(URL_PHOTO_USER_TIMELINE, count,
-				page, userId, sinceId, maxId, format, mode,
-				Constants.TYPE_STATUSES_USER_TIMELINE);
-		if (App.DEBUG) {
-			log("photosTimeline()");
-		}
-		return ss;
-	}
-
-	@Override
-	public User updateProfile(String description, String name, String location,
-			String url, String mode) throws ApiException {
-		NetRequest.Builder builder = new NetRequest.Builder();
-		builder.url(URL_ACCOUNT_UPDATE_PROFILE).post();
+	public UserModel updateProfile(String url, String location,
+			String description, String name) throws ApiException {
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/account/update_profile")).post().mode("lite");
 		builder.param("description", description);
 		builder.param("name", name);
 		builder.param("location", location);
 		builder.param("url", url);
-		NetResponse response = fetch(builder.build());
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("updateProfile()---statusCode=" + statusCode);
-		}
-		return User.parse(response);
+		return mParser.user(fetch(builder.build()), UserModel.TYPE_NONE,
+				account);
 	}
 
+	/*
+	 * POST /account/update_profile_image
+	 * 
+	 * @see
+	 * https://github.com/FanfouAPI/FanFouAPIDoc/wiki/account.update-profile
+	 * -image
+	 */
 	@Override
-	public User updateProfileImage(File image, String mode) throws ApiException {
-		NetRequest.Builder builder = new NetRequest.Builder();
-		builder.url(URL_ACCOUNT_UPDATE_PROFILE_IMAGE).post();
+	public UserModel updateProfileImage(File image) throws ApiException {
+		checkNotNull(image);
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/account/update_profile_image")).post();
 		builder.param("image", image);
-		NetResponse response = fetch(builder.build());
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("updateProfileImage()---statusCode=" + statusCode);
-		}
-		return User.parse(response);
+		return mParser.user(fetch(builder.build()), UserModel.TYPE_NONE,
+				account);
 	}
 
+	/*
+	 * GET /account/rate_limit_status
+	 * 
+	 * @see
+	 * https://github.com/FanfouAPI/FanFouAPIDoc/wiki/account.rate-limit-status
+	 */
 	@Override
-	public User blocksExists(String userId, String mode) throws ApiException {
-		NetResponse response = doPostIdAction(URL_BLOCKS_EXISTS, userId, null,
-				mode);
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("userIsBlocked()---statusCode=" + statusCode);
-		}
-		return User.parse(response);
+	public RateLimitStatus getRateLimitStatus() throws ApiException {
+		return null;
 	}
 
+	/*
+	 * GET /account/notification
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/account.notification
+	 */
 	@Override
-	public ArrayList<User> blocksBlocking(int count, int page, String mode)
+	public Notifications getNotifications() throws ApiException {
+		return null;
+	}
+
+	/*
+	 * GET /blocks/ids
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/blocks.ids
+	 */
+	@Override
+	public List<String> blockIDs() throws ApiException {
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/blocks/ids"));
+		String response = fetch(builder.build());
+		return mParser.strings(response);
+	}
+
+	/*
+	 * GET /blocks/blocking
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/blocks.blocking
+	 */
+	@Override
+	public List<UserModel> blockUsers(Paging paging) throws ApiException {
+		return fetchUsers("/blocks/blocking", paging, UserModel.TYPE_BLOCK);
+	}
+
+	/*
+	 * GET /blocks/exists
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/blocks.exists
+	 */
+	@Override
+	public UserModel isBlocked(String id) throws ApiException {
+		checkNotEmpty(id);
+		return fetchUser("/blocks/exists", id, UserModel.TYPE_NONE, false);
+	}
+
+	/*
+	 * POST /blocks/create
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/blocks.create
+	 */
+	@Override
+	public UserModel block(String id) throws ApiException {
+		checkNotEmpty(id);
+		return fetchUser("/blocks/create", id, UserModel.TYPE_BLOCK, true);
+	}
+
+	/*
+	 * POST /blocks/destroy
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/blocks.destroy
+	 */
+	@Override
+	public UserModel unblock(String id) throws ApiException {
+		checkNotEmpty(id);
+		return fetchUser("/blocks/destroy", id, UserModel.TYPE_NONE, true);
+	}
+
+	/*
+	 * GET /direct_messages/inbox
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/direct-messages.inbox
+	 */
+	@Override
+	public List<DirectMessageModel> getDirectMessagesInbox(Paging paging)
 			throws ApiException {
-		NetRequest.Builder builder = new NetRequest.Builder();
-		builder.url(URL_BLOCKS_USERS);
-		builder.count(count).page(page);
-		NetResponse response = fetch(builder.build());
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("userBlockedList()---statusCode=" + statusCode);
-		}
-		return User.parseUsers(response);
+		String response = fetchDirectMessages("/direct_messages/inbox", paging,
+				DirectMessageModel.TYPE_INBOX);
+		return mParser.directMessagesInBox(response);
 	}
 
+	/*
+	 * GET /direct_messages/sent
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/direct-messages.sent
+	 */
 	@Override
-	public ArrayList<String> blocksIDs() throws ApiException {
-		NetRequest.Builder builder = new NetRequest.Builder();
-		builder.url(URL_BLOCKS_IDS);
-		NetResponse response = fetch(builder.build());
-		int statusCode = response.statusCode;
-		if (App.DEBUG) {
-			log("userBlockedIDs()---statusCode=" + statusCode);
+	public List<DirectMessageModel> getDirectMessagesOutbox(Paging paging)
+			throws ApiException {
+		String response = fetchDirectMessages("/direct_messages/sent", paging,
+				DirectMessageModel.TYPE_OUTBOX);
+		return mParser.directMessagesOutBox(response);
+	}
+
+	/*
+	 * GET /direct_messages/conversation_list
+	 * 
+	 * @see
+	 * https://github.com/FanfouAPI/FanFouAPIDoc/wiki/direct-messages.conversation
+	 * -list
+	 */
+	@Override
+	public List<DirectMessageModel> getConversationList(Paging paging)
+			throws ApiException {
+		String response = fetchDirectMessages(
+				"/direct_messages/conversation_list", paging,
+				DirectMessageModel.TYPE_CONVERSATION_LIST);
+		return mParser.directMessagesConversationList(response);
+
+	}
+
+	/*
+	 * GET /direct_messages/conversation
+	 * 
+	 * @see
+	 * https://github.com/FanfouAPI/FanFouAPIDoc/wiki/direct-messages.conversation
+	 */
+	@Override
+	public List<DirectMessageModel> getConversation(String id, Paging paging)
+			throws ApiException {
+		checkNotEmpty(id);
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/direct_messages/conversation")).id(id)
+				.paging(paging).mode("lite");
+		String response = fetch(builder.build());
+		return mParser.directMessageConversation(response, id);
+	}
+
+	/*
+	 * POST /direct_messages/destroy
+	 * 
+	 * @see
+	 * https://github.com/FanfouAPI/FanFouAPIDoc/wiki/direct-messages.destroy
+	 */
+	@Override
+	public DirectMessageModel deleteDirectMessage(String id)
+			throws ApiException {
+		checkNotEmpty(id);
+		// String url = String
+		// .format("/direct_messages/destroy/%s", id);
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/direct_messages/destroy")).post().mode("lite");
+		String response = fetch(builder.build());
+		return mParser.directMessage(response, DirectMessageModel.TYPE_OUTBOX);
+	}
+
+	/*
+	 * POST /direct_messages/new
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/direct-messages.new
+	 */
+	@Override
+	public DirectMessageModel createDirectmessage(String id, String text,
+			String replyId) throws ApiException {
+		checkNotEmpty(id);
+		checkNotEmpty(text);
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/direct_messages/new")).post();
+		builder.param("user", id);
+		builder.param("text", text);
+		builder.param("in_reply_to_id", replyId);
+		String response = fetch(builder.build());
+		return mParser.directMessage(response, DirectMessageModel.TYPE_OUTBOX);
+	}
+
+	/*
+	 * GET /friends/ids
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/friends.ids
+	 */
+	@Override
+	public List<String> getFriendsIDs(String id, Paging paging)
+			throws ApiException {
+		checkNotEmpty(id);
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/friends/ids")).id(id).paging(paging);
+		return mParser.strings(fetch(builder.build()));
+	}
+
+	/*
+	 * GET /followers/ids
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/followers.ids
+	 */
+	@Override
+	public List<String> getFollowersIDs(String id, Paging paging)
+			throws ApiException {
+		checkNotEmpty(id);
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/followers/ids")).id(id).paging(paging);
+		return mParser.strings(fetch(builder.build()));
+	}
+
+	/*
+	 * GET /users/friends
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/users.friends
+	 */
+	@Override
+	public List<UserModel> getFriends(String id, Paging paging)
+			throws ApiException {
+		return fetchUsers("/users/friends", id, paging, UserModel.TYPE_FRIENDS);
+	}
+
+	/*
+	 * GET /users/followers
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/users.followers
+	 */
+	@Override
+	public List<UserModel> getFollowers(String id, Paging paging)
+			throws ApiException {
+		return fetchUsers("/users/followers", id, paging,
+				UserModel.TYPE_FOLLOWERS);
+	}
+
+	/*
+	 * POST /friendships/create
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/friendships.create
+	 */
+	@Override
+	public UserModel follow(String id) throws ApiException {
+		checkNotEmpty(id);
+		return fetchUser("/friendships/create", id, UserModel.TYPE_FRIENDS,
+				true);
+	}
+
+	/*
+	 * POST /friendships/destroy
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/friendships.destroy
+	 */
+	@Override
+	public UserModel unfollow(String id) throws ApiException {
+		checkNotEmpty(id);
+		return fetchUser("/friendships/destroy", id, UserModel.TYPE_NONE, true);
+	}
+
+	/*
+	 * GET /friendships/requests
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/friendships.requests
+	 */
+	@Override
+	public List<String> friendshipsRequests(Paging paging) throws ApiException {
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/blocks/ids")).paging(paging);
+		String response = fetch(builder.build());
+		return mParser.strings(response);
+	}
+
+	/*
+	 * POST /friendships/accept
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/friendships.accept
+	 */
+	@Override
+	public UserModel acceptFriendshipsRequest(String id) throws ApiException {
+		checkNotEmpty(id);
+		return fetchUser("/friendships/accept", id, UserModel.TYPE_NONE, true);
+	}
+
+	/*
+	 * POST /friendships/deny
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/friendships.deny
+	 */
+	@Override
+	public UserModel denyFriendshipsRequest(String id) throws ApiException {
+		checkNotEmpty(id);
+		return fetchUser("/friendships/deny", id, UserModel.TYPE_NONE, true);
+	}
+
+	/*
+	 * GET /friendships/exists
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/friendships.exists
+	 */
+	@Override
+	public boolean isFriends(String userA, String userB) throws ApiException {
+		checkNotEmpty(userA);
+		checkNotEmpty(userB);
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/friendships/exists"));
+		builder.param("user_a", userA);
+		builder.param("user_b", userB);
+		String response = fetch(builder.build());
+		return response.contains("true");
+	}
+
+	/*
+	 * GET /friendships/show
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/friendships.show
+	 */
+	@Override
+	public BitSet friendshipsShow(String source, String target)
+			throws ApiException {
+		checkNotEmpty(source);
+		checkNotEmpty(target);
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/friendships/exists"));
+		builder.param("source_id", source);
+		builder.param("target_id", target);
+		String response = fetch(builder.build());
+		return FanFouParser.parseFriendship(response);
+	}
+
+	/*
+	 * GET /photos/user_timeline
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/photos.user-timeline
+	 */
+	@Override
+	public List<StatusModel> getPhotosTimeline(String id, Paging paging)
+			throws ApiException {
+		checkNotEmpty(id);
+		return fetchTimeline("/photos/user_timeline", paging, id,
+				StatusModel.TYPE_PHOTO, account);
+	}
+
+	/*
+	 * POST /photos/upload
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/photos.upload
+	 */
+	@Override
+	public StatusModel uploadPhoto(File photo, String status, String location)
+			throws ApiException {
+		checkNotNull(photo);
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/photos/upload")).post();
+		builder.status(status).location(location);
+		builder.param("photo", photo);
+		builder.format("html").mode("lite");
+		String response = fetch(builder.build());
+		return mParser.status(response, StatusModel.TYPE_HOME, account);
+	}
+
+	/*
+	 * GET /saved_searches/list
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/saved-searches.list
+	 */
+	@Override
+	public List<Search> getSavedSearches() throws ApiException {
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/saved_searches/list"));
+		String response = fetch(builder.build());
+		return mParser.savedSearches(response);
+	}
+
+	/*
+	 * GET /saved_searches/show
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/saved-searches.show
+	 */
+	@Override
+	public Search showSavedSearch(String id) throws ApiException {
+		checkNotEmpty(id);
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/saved_searches/show")).id(id);
+		String response = fetch(builder.build());
+		return mParser.savedSearch(response);
+	}
+
+	/*
+	 * POST /saved_searches/create
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/saved-searches.create
+	 */
+	@Override
+	public Search createSavedSearch(String query) throws ApiException {
+		checkNotEmpty(query);
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/saved_searches/create")).param("query", query)
+				.post();
+		String response = fetch(builder.build());
+		return mParser.savedSearch(response);
+	}
+
+	/*
+	 * POST /saved_searches/destroy
+	 * 
+	 * @see
+	 * https://github.com/FanfouAPI/FanFouAPIDoc/wiki/saved-searches.destroy
+	 */
+	@Override
+	public Search deleteSavedSearch(String id) throws ApiException {
+		checkNotEmpty(id);
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/saved_searches/destroy")).id(id).post();
+		String response = fetch(builder.build());
+		return mParser.savedSearch(response);
+	}
+
+	/*
+	 * GET /trends/list
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/trends.list
+	 */
+	@Override
+	public List<Search> getTrends() throws ApiException {
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/trends/list"));
+		String response = fetch(builder.build());
+		return mParser.trends(response);
+	}
+
+	/*
+	 * GET /search/public_timeline
+	 * 
+	 * @see
+	 * https://github.com/FanfouAPI/FanFouAPIDoc/wiki/search.public-timeline
+	 */
+	@Override
+	public List<StatusModel> search(String query, Paging paging)
+			throws ApiException {
+		checkNotEmpty(query);
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/search/public_timeline")).param("q", query);
+		if (paging != null) {
+			builder.paging(paging);
 		}
-		return Parser.ids(response);
+		builder.mode("lite").format("html");
+		String response = fetch(builder.build());
+		return mParser.timeline(response, StatusModel.TYPE_SEARCH, account);
+	}
+
+	/*
+	 * GET /search/user_timeline
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/search.user-timeline
+	 */
+	@Override
+	public List<StatusModel> searchUserTimeline(String query, String id,
+			Paging paging) throws ApiException {
+		checkNotEmpty(query);
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/search/user_timeline")).id(id).param("q", query);
+		if (paging != null) {
+			builder.paging(paging);
+		}
+		builder.mode("lite").format("html");
+		String response = fetch(builder.build());
+		return mParser.timeline(response, StatusModel.TYPE_SEARCH, account);
+	}
+
+	/*
+	 * GET /search/users
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/search.users
+	 */
+	@Override
+	public List<UserModel> searchUsers(String query, Paging paging)
+			throws ApiException {
+		checkNotEmpty(query);
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/search/users")).param("q", query);
+		if (paging != null) {
+			builder.paging(paging);
+		}
+		builder.mode("lite").format("html");
+		String response = fetch(builder.build());
+		return mParser.users(response, UserModel.TYPE_SEARCH, account);
+	}
+
+	/*
+	 * GET /statuses/show
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/statuses.show
+	 */
+	@Override
+	public StatusModel showStatus(String id) throws ApiException {
+		checkNotEmpty(id);
+		return fetchStatus("/statuses/show", id, StatusModel.TYPE_NONE, false);
+	}
+
+	/*
+	 * POST /statuses/destroy
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/statuses.destroy
+	 */
+	@Override
+	public StatusModel deleteStatus(String id) throws ApiException {
+		checkNotEmpty(id);
+		return fetchStatus("/statuses/destroy", id, StatusModel.TYPE_NONE, true);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.fanfou.app.hd.api.rest.StatusMethods#retweetStatus(java.lang.String,
+	 * boolean)
+	 */
+	@Override
+	public StatusModel retweetStatus(String id) throws ApiException {
+		return null;
+	}
+
+	/*
+	 * POST /statuses/update
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/statuses.update
+	 */
+	@Override
+	public StatusModel updateStatus(String status, String replyId,
+			String repostId, String location) throws ApiException {
+		checkNotEmpty(status);
+		RestRequest.Builder builder = new RestRequest.Builder();
+		builder.url(makeUrl("/statuses/update")).post();
+		builder.status(status).location(location);
+		builder.format("html").mode("lite");
+		builder.param("in_reply_to_status_id", replyId);
+		builder.param("repost_status_id", repostId);
+		builder.param("location", location);
+		String response = fetch(builder.build());
+		return mParser.status(response, StatusModel.TYPE_HOME, account);
+	}
+
+	/*
+	 * GET /statuses/home_timeline
+	 * 
+	 * @see
+	 * https://github.com/FanfouAPI/FanFouAPIDoc/wiki/statuses.home-timeline
+	 */
+	@Override
+	public List<StatusModel> getHomeTimeline(Paging paging) throws ApiException {
+		return fetchTimeline("/statuses/home_timeline", paging,
+				StatusModel.TYPE_HOME, account);
+	}
+
+	/*
+	 * GET /statuses/mentions
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/statuses.mentions
+	 */
+	@Override
+	public List<StatusModel> getMentions(Paging paging) throws ApiException {
+		return fetchTimeline("/statuses/mentions", paging,
+				StatusModel.TYPE_MENTIONS, account);
+	}
+
+	/*
+	 * GET /statuses/public_timeline
+	 * 
+	 * @see
+	 * https://github.com/FanfouAPI/FanFouAPIDoc/wiki/statuses.public-timeline
+	 */
+	@Override
+	public List<StatusModel> getPublicTimeline() throws ApiException {
+		return fetchTimeline("/statuses/public_timeline", null,
+				StatusModel.TYPE_PUBLIC, account);
+	}
+
+	/*
+	 * GET /statuses/user_timeline
+	 * 
+	 * @see
+	 * https://github.com/FanfouAPI/FanFouAPIDoc/wiki/statuses.user-timeline
+	 */
+	@Override
+	public List<StatusModel> getUserTimeline(String userId, Paging paging)
+			throws ApiException {
+		checkNotEmpty(userId);
+		return fetchTimeline("/statuses/user_timeline", paging, userId,
+				StatusModel.TYPE_USER, userId);
+	}
+
+	/*
+	 * GET /statuses/context_timeline
+	 * 
+	 * @see
+	 * https://github.com/FanfouAPI/FanFouAPIDoc/wiki/statuses.context-timeline
+	 */
+	@Override
+	public List<StatusModel> getContextTimeline(String contextId)
+			throws ApiException {
+		checkNotEmpty(contextId);
+		return fetchTimeline("/statuses/context_timeline", null, contextId,
+				StatusModel.TYPE_USER, account);
+	}
+
+	/*
+	 * GET /users/recommendation
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/users.recommendation
+	 */
+	@Override
+	public List<UserModel> getUserRecommendation(Paging paging)
+			throws ApiException {
+		return fetchUsers("/users/recommendation", paging, UserModel.TYPE_NONE);
+	}
+
+	/*
+	 * POST /users/cancel_recommendation
+	 * 
+	 * @see
+	 * https://github.com/FanfouAPI/FanFouAPIDoc/wiki/users.cancel-recommendation
+	 */
+	@Override
+	public UserModel ignoreUserRecommendation(String id) throws ApiException {
+		checkNotEmpty(id);
+		return fetchUser("/users/cancel_recommendation", id,
+				UserModel.TYPE_NONE, false);
+	}
+
+	/*
+	 * GET /users/tagged
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/users.tagged
+	 */
+	@Override
+	public List<UserModel> getUsersByTag(String tag, Paging paging)
+			throws ApiException {
+		checkNotEmpty(tag);
+		RestRequest.Builder builder = RestRequest.newBuilder();
+		builder.url(makeUrl("/users/tagged")).param("tag", tag).mode("lite")
+				.format("html");
+		if (paging != null) {
+			builder.paging(paging);
+		}
+		return mParser.users(fetch(builder.build()), UserModel.TYPE_NONE,
+				account);
+	}
+
+	/*
+	 * GET /users/tag_list
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/users.tag-list
+	 */
+	@Override
+	public List<String> getUserTags(String id) throws ApiException {
+		checkNotEmpty(id);
+		RestRequest.Builder builder = RestRequest.newBuilder();
+		builder.url(makeUrl("/users/tag_list")).id(id);
+		String response = fetch(builder.build());
+		return mParser.strings(response);
+	}
+
+	public static void checkNotEmpty(String text) {
+		if (text == null || text.length() == 0) {
+			throw new IllegalArgumentException(
+					"Parameter must not be null or empty string.");
+		}
+	}
+
+	public static void checkNotNull(Object obj) {
+		if (obj == null) {
+			throw new IllegalArgumentException("Parameter must not be null.");
+		}
+	}
+
+	/*
+	 * GET /users/show
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/users.show
+	 */
+	@Override
+	public UserModel showUser(String id) throws ApiException {
+		return fetchUser("/users/show", id, UserModel.TYPE_NONE, false);
+	}
+
+	/*
+	 * GET /favorites
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/favorites
+	 */
+	@Override
+	public List<StatusModel> getFavorites(String id, Paging paging)
+			throws ApiException {
+		checkNotEmpty(id);
+		return fetchTimeline("/favorites", paging, StatusModel.TYPE_FAVORITES,
+				id);
+	}
+
+	/*
+	 * POST /favorites/create
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/favorites.create
+	 */
+	@Override
+	public StatusModel favorite(String id) throws ApiException {
+		checkNotEmpty(id);
+		return fetchStatus("/favorites/create", id, StatusModel.TYPE_FAVORITES,
+				true);
+	}
+
+	/*
+	 * POST /favorites/destroy
+	 * 
+	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/favorites.destroy
+	 */
+	@Override
+	public StatusModel unfavorite(String id) throws ApiException {
+		checkNotEmpty(id);
+		return fetchStatus("/favorites/destroy", id, StatusModel.TYPE_NONE,
+				true);
+	}
+
+	/*******************************************************************************
+	 ******************************************************************************* 
+	 ******************************************************************************* 
+	 ******************************************************************************* 
+	 * 
+	 * Http Client for internal use.
+	 * 
+	 */
+
+	/**
+	 * @param request
+	 * @return
+	 * @throws ApiException
+	 */
+	private String fetch(final RestRequest nr) throws ApiException {
+		try {
+
+			if (mOAuthService != null) {
+				mOAuthService.authorize(nr.request, nr.getParams());
+			}
+			HttpResponse response = execute(nr.request);
+			RestResponse res = new RestResponse(response);
+
+			int statusCode = res.statusCode;
+			if (DEBUG) {
+				log("fetch() url=" + nr.url + " post=" + nr.post
+						+ " statusCode=" + statusCode);
+			}
+			if (statusCode == 200) {
+				return res.getContent();
+			}
+			throw new ApiException(statusCode, FanFouParser.error(res
+					.getContent()));
+		} catch (IOException e) {
+			if (DEBUG) {
+				Log.e(TAG, e.toString());
+			}
+			throw new ApiException(ApiException.IO_ERROR, e.getMessage(),
+					e.getCause());
+		}
+	}
+
+	private HttpResponse execute(HttpUriRequest request) throws IOException {
+		final HttpClient client = NetHelper.getHttpClient();
+		if (App.DEBUG) {
+			Log.d(TAG, "[Request] " + request.getRequestLine().toString()
+					+ " --" + System.currentTimeMillis());
+			Header[] headers = request.getAllHeaders();
+			for (Header header : headers) {
+				Log.d(TAG, "[Request Header] " + header.getName() + ":"
+						+ header.getValue());
+			}
+		}
+		HttpResponse response = client.execute(request);
+		if (App.DEBUG) {
+			Log.d(TAG, "[Response] " + response.getStatusLine().toString()
+					+ " --" + System.currentTimeMillis());
+			Header[] headers = response.getAllHeaders();
+			for (Header header : headers) {
+				Log.d(TAG, "[Response Header] " + header.getName() + ":"
+						+ header.getValue());
+			}
+		}
+		return response;
 	}
 
 }
-
-//class OAuthClient {
-//	private static final String TAG = OAuthClient.class.getSimpleName();
-//	private final OAuthService mOAuthService;
-//	private final HttpClient mClient;
-//	private final NetRequest mNetRequest;
-//
-//	public OAuthClient(OAuthService oauth,NetRequest nr) {
-//		this.mOAuthService = oauth;
-//		this.mNetRequest=nr;
-//		this.mClient = NetHelper.newSingleHttpClient();
-//	}
-//
-//	public HttpResponse exec() throws IOException {
-//		if (TextUtils.isEmpty(mNetRequest.url)) {
-//			throw new IllegalArgumentException(
-//					"request url must not be empty or null.");
-//		}
-//		mOAuthService.authorize(mNetRequest.request, mNetRequest.getParams());
-//		NetHelper.setProxy(mClient);
-//		if (App.DEBUG) {
-//			Log.d(TAG, "[Request] " + mNetRequest.request.getRequestLine().toString());
-//		}
-//		HttpResponse response = mClient.execute(mNetRequest.request);
-//		if (App.DEBUG) {
-//			Log.d(TAG, "[Response] " + response.getStatusLine().toString());
-//		}
-//		return response;
-//	}
-//
-//	public void abort() {
-//		if (mNetRequest != null) {
-//			mNetRequest.request.abort();
-//			close();
-//		}
-//	}
-//
-//	private void close() {
-//		mClient.getConnectionManager().shutdown();
-//	}
-//
-//}

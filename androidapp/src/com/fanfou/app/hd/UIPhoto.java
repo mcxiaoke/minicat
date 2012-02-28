@@ -9,10 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.ui.imagezoom.ImageViewTouch;
 import com.fanfou.app.hd.util.IOHelper;
@@ -84,7 +81,7 @@ public class UIPhoto extends UIBaseSupport {
 	private void parseIntent(Intent intent) {
 		String action = intent.getAction();
 		if (action == null) {
-			mPhotoPath = intent.getStringExtra(Constants.EXTRA_URL);
+			mPhotoPath = intent.getStringExtra("url");
 		} else if (action.equals(Intent.ACTION_VIEW)) {
 			Uri uri = intent.getData();
 			if (uri.getScheme().equals("content")) {

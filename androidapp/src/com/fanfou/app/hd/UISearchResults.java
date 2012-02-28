@@ -20,13 +20,13 @@ import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.adapter.SearchResultsAdapter;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
-import com.fanfou.app.hd.api.FanFouApi;
-import com.fanfou.app.hd.api.Status;
+import com.fanfou.app.hd.api.Paging;
+import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.service.Constants;
+import com.fanfou.app.hd.service.FanFouService;
 import com.fanfou.app.hd.ui.widget.UIManager;
 import com.fanfou.app.hd.util.StringHelper;
 import com.fanfou.app.hd.util.Utils;
-import com.fanfou.app.hd.R;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
@@ -49,7 +49,7 @@ public class UISearchResults extends UIBaseSupport implements
 
 	protected SearchResultsAdapter mStatusAdapter;
 
-	private List<Status> mStatuses;
+	private List<StatusModel> mStatuses;
 
 	protected String keyword;
 	protected String maxId;
@@ -73,8 +73,8 @@ public class UISearchResults extends UIBaseSupport implements
 
 	@Override
 	protected void initialize() {
-		mStatuses = new ArrayList<Status>();
-		api = FanFouApi.newInstance();
+		mStatuses = new ArrayList<StatusModel>();
+		api = App.getApi();
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class UISearchResults extends UIBaseSupport implements
 		mList.setOnItemLongClickListener(this);
 		mStatusAdapter = new SearchResultsAdapter(this, mStatuses);
 		mList.setAdapter(mStatusAdapter);
-		
+
 		search();
 	}
 
@@ -120,8 +120,8 @@ public class UISearchResults extends UIBaseSupport implements
 			if (App.DEBUG) {
 				log("doSearch() keyword=" + keyword);
 			}
-			if(reset){
-				maxId=null;
+			if (reset) {
+				maxId = null;
 			}
 			new SearchTask().execute();
 			mPullToRefreshListView.setRefreshing();
@@ -166,24 +166,24 @@ public class UISearchResults extends UIBaseSupport implements
 		super.onPause();
 	}
 
-	private class SearchTask extends AsyncTask<Void, Void, List<Status>> {
+	private class SearchTask extends AsyncTask<Void, Void, List<StatusModel>> {
 
 		@Override
 		protected void onPreExecute() {
-			if(maxId==null){
+			if (maxId == null) {
 				mStatuses.clear();
 				mStatusAdapter.notifyDataSetChanged();
 			}
 		}
 
 		@Override
-		protected void onPostExecute(List<com.fanfou.app.hd.api.Status> result) {
+		protected void onPostExecute(List<StatusModel> result) {
 			mPullToRefreshListView.onRefreshComplete();
 			if (result != null && result.size() > 0) {
 
 				int size = result.size();
 				log("result size=" + size);
-				maxId = result.get(size - 1).id;
+				maxId = result.get(size - 1).getId();
 				log("maxId=" + maxId);
 
 				mStatuses.addAll(result);
@@ -193,24 +193,25 @@ public class UISearchResults extends UIBaseSupport implements
 		}
 
 		@Override
-		protected List<com.fanfou.app.hd.api.Status> doInBackground(Void... params) {
+		protected List<StatusModel> doInBackground(Void... params) {
 			if (StringHelper.isEmpty(keyword)) {
 				return null;
 			}
-			List<com.fanfou.app.hd.api.Status> result = null;
+			List<StatusModel> result = null;
 
-			int count = Constants.DEFAULT_TIMELINE_COUNT;
+			Paging p = new Paging();
+
+			p.count = FanFouService.DEFAULT_TIMELINE_COUNT;
 			if (App.getApnType() == ApnType.WIFI) {
-				count = Constants.MAX_TIMELINE_COUNT;
+				p.count = FanFouService.MAX_TIMELINE_COUNT;
 			}
+
 			try {
-				result = api.search(keyword, null, maxId, count,
-						Constants.FORMAT, Constants.MODE);
+				result = api.search(keyword, p);
 			} catch (ApiException e) {
 				if (App.DEBUG)
 					e.printStackTrace();
 			}
-
 			return result;
 		}
 
@@ -219,13 +220,13 @@ public class UISearchResults extends UIBaseSupport implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		final Status s = (Status) parent.getItemAtPosition(position);
+		final StatusModel s = (StatusModel) parent.getItemAtPosition(position);
 		showPopup(view, s);
 		return true;
 	}
 
-	private void showPopup(final View view, final Status s) {
-		if (s == null || s.isNull()) {
+	private void showPopup(final View view, final StatusModel s) {
+		if (s == null) {
 			return;
 		}
 		UIManager.showPopup(this, view, s, mStatusAdapter, mStatuses);
@@ -254,7 +255,7 @@ public class UISearchResults extends UIBaseSupport implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		final Status s = (Status) parent.getItemAtPosition(position);
+		final StatusModel s = (StatusModel) parent.getItemAtPosition(position);
 		if (s != null) {
 			Utils.goStatusPage(mContext, s);
 		}

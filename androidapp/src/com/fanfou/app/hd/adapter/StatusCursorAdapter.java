@@ -2,19 +2,14 @@ package com.fanfou.app.hd.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.text.TextPaint;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.api.Status;
-import com.fanfou.app.hd.service.Constants;
-import com.fanfou.app.hd.ui.widget.ActionManager;
-import com.fanfou.app.hd.util.DateTimeHelper;
+import com.fanfou.app.hd.R;
+import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.util.OptionHelper;
 
 /**
@@ -23,10 +18,11 @@ import com.fanfou.app.hd.util.OptionHelper;
  * @version 1.5 2011.10.24
  * @version 1.6 2011.12.06
  * @version 1.7 2012.02.03
+ * @version 2.0 2012.02.22
+ * @version 2.1 2012.02.27
  * 
  */
 public class StatusCursorAdapter extends BaseCursorAdapter {
-
 	private static final int NONE = 0;
 	private static final int MENTION = 1;
 	private static final int SELF = 2;
@@ -77,20 +73,20 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 
 	@Override
 	public int getItemViewType(int position) {
-		final Cursor c = (Cursor) getItem(position);
-		if (c == null) {
+		final Cursor cursor = (Cursor) getItem(position);
+		if (cursor == null) {
 			return NONE;
 		}
-		final Status s = Status.parse(c);
-		if (s == null || s.isNull()) {
+		final StatusModel s = StatusModel.from(cursor);
+		if (s == null) {
 			return NONE;
 		}
-		if (s.type == Constants.TYPE_STATUSES_MENTIONS
-				|| s.simpleText.contains("@" + App.getUserName())) {
+		if (s.getType() == StatusModel.TYPE_MENTIONS
+				|| s.getSimpleText().contains("@" + App.getScreenName())) {
 			return MENTION;
 		}
 
-		return s.self ? SELF : NONE;
+		return s.isSelf() ? SELF : NONE;
 	}
 
 	@Override
@@ -110,21 +106,11 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 		}
 	}
 
-	private void setTextStyle(ViewHolder holder) {
-		int fontSize = getFontSize();
-		holder.contentText.setTextSize(fontSize);
-		holder.nameText.setTextSize(fontSize);
-		holder.metaText.setTextSize(fontSize - 4);
-		TextPaint tp = holder.nameText.getPaint();
-		tp.setFakeBoldText(true);
-	}
-
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		View view = mInflater.inflate(getLayoutId(), null);
-		ViewHolder holder = new ViewHolder(view);
-		setHeadImage(mContext, holder.headIcon);
-		setTextStyle(holder);
+		StatusViewHolder holder = new StatusViewHolder(view);
+		UIHelper.setStatusTextStyle(holder, getFontSize());
 		view.setTag(holder);
 		return view;
 	}
@@ -132,10 +118,29 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 	@Override
 	public void bindView(View view, Context context, final Cursor cursor) {
 		View row = view;
-		final ViewHolder holder = (ViewHolder) row.getTag();
+		final StatusViewHolder holder = (StatusViewHolder) row.getTag();
 
-		final Status s = Status.parse(cursor);
+		final StatusModel s = StatusModel.from(cursor);
 
+		String headUrl = s.getUserProfileImageUrl();
+		if (busy) {
+			Bitmap bitmap = mLoader.getImage(headUrl, null);
+			if (bitmap != null) {
+				holder.headIcon.setImageBitmap(bitmap);
+			}
+		} else {
+			holder.headIcon.setTag(headUrl);
+			mLoader.displayImage(headUrl, holder.headIcon,
+					R.drawable.default_head);
+		}
+
+		setColor(cursor, row);
+		UIHelper.setStatusMetaInfo(holder, s);
+		holder.contentText.setText(s.getSimpleText());
+
+	}
+
+	private void setColor(final Cursor cursor, View row) {
 		if (colored) {
 			int itemType = getItemViewType(cursor.getPosition());
 			switch (itemType) {
@@ -150,62 +155,6 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 			default:
 				break;
 			}
-		}
-
-		if (!isTextMode()) {
-			holder.headIcon.setTag(s.userProfileImageUrl);
-			mLoader.displayImage(s.userProfileImageUrl, holder.headIcon,
-					R.drawable.default_head);
-			holder.headIcon.setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					if (s != null) {
-						ActionManager.doProfile(mContext, s);
-					}
-				}
-			});
-		}
-
-		if (s.isThread) {
-			holder.replyIcon.setVisibility(View.VISIBLE);
-		} else {
-			holder.replyIcon.setVisibility(View.GONE);
-		}
-
-		if (s.hasPhoto) {
-			holder.photoIcon.setVisibility(View.VISIBLE);
-		} else {
-			holder.photoIcon.setVisibility(View.GONE);
-		}
-
-		holder.nameText.setText(s.userScreenName);
-		holder.contentText.setText(s.simpleText);
-		holder.metaText.setText(DateTimeHelper.getInterval(s.createdAt) + " 通过"
-				+ s.source);
-
-	}
-
-	private static class ViewHolder {
-		ImageView headIcon = null;
-		ImageView replyIcon = null;
-		ImageView photoIcon = null;
-		TextView nameText = null;
-		TextView metaText = null;
-		TextView contentText = null;
-
-		ViewHolder(View base) {
-			this.headIcon = (ImageView) base
-					.findViewById(R.id.item_status_head);
-			this.replyIcon = (ImageView) base
-					.findViewById(R.id.item_status_icon_reply);
-			this.photoIcon = (ImageView) base
-					.findViewById(R.id.item_status_icon_photo);
-			this.contentText = (TextView) base
-					.findViewById(R.id.item_status_text);
-			this.metaText = (TextView) base.findViewById(R.id.item_status_meta);
-			this.nameText = (TextView) base.findViewById(R.id.item_status_user);
-
 		}
 	}
 

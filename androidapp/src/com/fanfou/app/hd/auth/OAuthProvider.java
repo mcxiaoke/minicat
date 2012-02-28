@@ -16,5 +16,7 @@ public interface OAuthProvider {
 	String getConsumerKey();
 
 	String getConsumerSercret();
+	
+	String getApiHostURL();
 
 }

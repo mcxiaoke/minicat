@@ -19,9 +19,10 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.api.Status;
+import com.fanfou.app.hd.R;
+import com.fanfou.app.hd.adapter.BaseCursorAdapter;
+import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.ui.widget.UIManager;
 import com.fanfou.app.hd.util.Utils;
@@ -33,6 +34,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 1.0 2012.02.06
  * @version 1.1 2012.02.08
  * @version 1.2 2012.02.09
+ * @version 1.3 2012.02.22
+ * @version 1.4 2012.02.24
  * 
  */
 public abstract class PullToRefreshListFragment extends AbstractFragment
@@ -49,7 +52,7 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 
 	private Parcelable mParcelable;
 
-	private CursorAdapter mAdapter;
+	private BaseCursorAdapter mAdapter;
 	private Cursor mCursor;
 
 	private boolean busy;
@@ -60,14 +63,15 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 			Log.d(TAG, "PullToRefreshListFragment() id=" + this);
 		}
 	}
-//
-//	@Override
-//	public void onAttach(Activity activity) {
-//		super.onAttach(activity);
-//		if (App.DEBUG) {
-//			Log.d(TAG, "onAttach()");
-//		}
-//	}
+
+	//
+	// @Override
+	// public void onAttach(Activity activity) {
+	// super.onAttach(activity);
+	// if (App.DEBUG) {
+	// Log.d(TAG, "onAttach()");
+	// }
+	// }
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -103,11 +107,12 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 		if (savedInstanceState != null) {
 			mParcelable = savedInstanceState.getParcelable("state");
 		}
-		mAdapter = onCreateAdapter();
+		mAdapter = (BaseCursorAdapter) onCreateAdapter();
 		mListView.setAdapter(mAdapter);
+		mListView.setOnScrollListener(mAdapter);
 		getLoaderManager().initLoader(LOADER_ID, null, this);
 	}
-	
+
 	protected abstract CursorAdapter onCreateAdapter();
 
 	protected abstract void doFetch(boolean doGetMore);
@@ -151,24 +156,24 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 	public CursorAdapter getAdapter() {
 		return mAdapter;
 	}
-	
-	public ListView getListView(){
+
+	public ListView getListView() {
 		return mListView;
 	}
-	
-    public void setSelection(int position) {
-        mListView.setSelection(position);
-    }
-    
-    public void setEmptyView(View emptyView) {
-    	mListView.setEmptyView(emptyView);
-    }
-    
-    public void setEmptyText(CharSequence text){
-    	final TextView tv=new TextView(getActivity());
-    	tv.setText(text);
-    	mListView.setEmptyView(tv);
-    }
+
+	public void setSelection(int position) {
+		mListView.setSelection(position);
+	}
+
+	public void setEmptyView(View emptyView) {
+		mListView.setEmptyView(emptyView);
+	}
+
+	public void setEmptyText(CharSequence text) {
+		final TextView tv = new TextView(getActivity());
+		tv.setText(text);
+		mListView.setEmptyView(tv);
+	}
 
 	public void goTop() {
 		mListView.setSelection(0);
@@ -196,7 +201,7 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 		if (App.DEBUG) {
 			Log.d(TAG, "onSuccess(data)");
 		}
-		int count = data.getInt(Constants.EXTRA_COUNT);
+		int count = data.getInt("count");
 		onSuccess(count);
 	}
 
@@ -214,8 +219,8 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 		if (App.DEBUG) {
 			Log.d(TAG, "onSuccess()");
 		}
-		String errorMessage = data.getString(Constants.EXTRA_ERROR);
-		int errorCode = data.getInt(Constants.EXTRA_CODE);
+		String errorMessage = data.getString("error_message");
+		int errorCode = data.getInt("error_code");
 		Utils.notify(getActivity(), errorMessage);
 		Utils.checkAuthorization(getActivity(), errorCode);
 	}
@@ -229,7 +234,7 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 	protected static void showPopup(Activity context, final View view,
 			final Cursor c) {
 		if (c != null) {
-			final Status s = Status.parse(c);
+			final StatusModel s = StatusModel.from(c);
 			if (s == null) {
 				return;
 			}
@@ -317,10 +322,11 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
-		mCursor=newCursor;
+		mCursor = newCursor;
 		getAdapter().swapCursor(mCursor);
 		if (App.DEBUG) {
-			Log.d(TAG, "onLoadFinished() adapter="+mAdapter.getCount()+" class="+this.getClass().getSimpleName());
+			Log.d(TAG, "onLoadFinished() adapter=" + mAdapter.getCount()
+					+ " class=" + this.getClass().getSimpleName());
 		}
 		if (mAdapter.isEmpty()) {
 			startRefresh();

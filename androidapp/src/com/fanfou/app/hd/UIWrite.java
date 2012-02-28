@@ -1,6 +1,7 @@
 package com.fanfou.app.hd;
 
 import java.io.File;
+
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +11,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Selection;
@@ -21,17 +21,15 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.adapter.AtTokenizer;
 import com.fanfou.app.hd.adapter.AutoCompleteCursorAdapter;
-import com.fanfou.app.hd.api.Draft;
-import com.fanfou.app.hd.db.Contents.BasicColumns;
-import com.fanfou.app.hd.db.Contents.DraftInfo;
-import com.fanfou.app.hd.db.Contents.UserInfo;
+import com.fanfou.app.hd.dao.model.RecordColumns;
+import com.fanfou.app.hd.dao.model.RecordModel;
+import com.fanfou.app.hd.dao.model.UserColumns;
+import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.PostStatusService;
-import com.fanfou.app.hd.ui.widget.ActionManager;
 import com.fanfou.app.hd.ui.widget.MyAutoCompleteTextView;
 import com.fanfou.app.hd.ui.widget.TextChangeListener;
 import com.fanfou.app.hd.util.IOHelper;
@@ -59,6 +57,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 4.7 2011.12.26
  * @version 4.8 2012.02.01
  * @version 5.0 2012.02.13
+ * @version 5.5 2012.02.22
  * 
  */
 public class UIWrite extends UIBaseSupport {
@@ -279,13 +278,13 @@ public class UIWrite extends UIBaseSupport {
 		if (intent != null) {
 			String action = intent.getAction();
 			if (action == null) {
-				type = intent.getIntExtra(Constants.EXTRA_TYPE, TYPE_NORMAL);
-				text = intent.getStringExtra(Constants.EXTRA_TEXT);
+				type = intent.getIntExtra("type", TYPE_NORMAL);
+				text = intent.getStringExtra("text");
 				inReplyToStatusId = intent
-						.getStringExtra(Constants.EXTRA_IN_REPLY_TO_ID);
+						.getStringExtra("reply");
 				File file = (File) intent
-						.getSerializableExtra(Constants.EXTRA_DATA);
-				int draftId = intent.getIntExtra(Constants.EXTRA_ID, -1);
+						.getSerializableExtra("data");
+				int draftId = intent.getIntExtra("record_id", -1);
 				parsePhoto(file);
 				updateUI();
 				deleteDraft(draftId);
@@ -329,7 +328,7 @@ public class UIWrite extends UIBaseSupport {
 	private void deleteDraft(int id) {
 		if (id >= 0) {
 			getContentResolver().delete(
-					ContentUris.withAppendedId(DraftInfo.CONTENT_URI, id),
+					ContentUris.withAppendedId(RecordColumns.CONTENT_URI, id),
 					null, null);
 		}
 	}
@@ -348,16 +347,16 @@ public class UIWrite extends UIBaseSupport {
 
 		mAutoCompleteTextView.setTokenizer(new AtTokenizer());
 		mAutoCompleteTextView.setBackgroundResource(R.drawable.input_bg);
-		final String[] projection = new String[] { BaseColumns._ID,
-				BasicColumns.ID, UserInfo.SCREEN_NAME, BasicColumns.TYPE,
-				BasicColumns.OWNER_ID };
-		String where = BasicColumns.OWNER_ID + " = '" + App.getUserId()
-				+ "' AND " + BasicColumns.TYPE + " = '"
-				+ Constants.TYPE_USERS_FRIENDS + "'";
+		final String[] projection = new String[] { UserColumns._ID,
+				UserColumns.ID, UserColumns.SCREEN_NAME, UserColumns.TYPE,
+				UserColumns.OWNER };
+		String where = UserColumns.OWNER + " = '" + App.getAccount()
+				+ "' AND " + UserColumns.TYPE + " = '"
+				+ UserModel.TYPE_FRIENDS + "'";
 		// Cursor cursor = managedQuery(UserInfo.CONTENT_URI, projection, where,
 		// null,
 		// null);
-		Cursor cursor = getContentResolver().query(UserInfo.CONTENT_URI,
+		Cursor cursor = getContentResolver().query(UserColumns.CONTENT_URI,
 				projection, where, null, null);
 		mAutoCompleteTextView.setAdapter(new AutoCompleteCursorAdapter(this,
 				cursor));
@@ -436,7 +435,7 @@ public class UIWrite extends UIBaseSupport {
 			startAddUsername();
 			break;
 		case R.id.write_action_draft:
-			ActionManager.doShowDrafts(this);
+//			ActionManager.doShowDrafts(this);
 			break;
 		case R.id.write_action_location:
 			switchLocation();
@@ -479,12 +478,12 @@ public class UIWrite extends UIBaseSupport {
 	}
 
 	private void doSaveDrafts() {
-		Draft d = new Draft();
-		d.type = type;
-		d.text = content;
-		d.filePath = photo == null ? "" : photo.toString();
-		d.replyTo = inReplyToStatusId;
-		getContentResolver().insert(DraftInfo.CONTENT_URI, d.toContentValues());
+		RecordModel rm = new RecordModel();
+		rm.setType(type);
+		rm.setText(content);
+		rm.setFile(photo == null ? "" : photo.toString());
+		rm.setReply(inReplyToStatusId);
+		getContentResolver().insert(RecordColumns.CONTENT_URI, rm.values());
 	}
 
 	private void removePicture() {
@@ -539,7 +538,7 @@ public class UIWrite extends UIBaseSupport {
 	}
 
 	private void insertNames(Intent intent) {
-		String names = intent.getStringExtra(Constants.EXTRA_TEXT);
+		String names = intent.getStringExtra("text");
 		if (App.DEBUG) {
 			log("doAddUserNames: " + names);
 		}
@@ -563,11 +562,11 @@ public class UIWrite extends UIBaseSupport {
 
 	private void startSendService() {
 		Intent i = new Intent(mContext, PostStatusService.class);
-		i.putExtra(Constants.EXTRA_TYPE, type);
-		i.putExtra(Constants.EXTRA_TEXT, content);
-		i.putExtra(Constants.EXTRA_DATA, photo);
-		i.putExtra(Constants.EXTRA_LOCATION, mLocationString);
-		i.putExtra(Constants.EXTRA_IN_REPLY_TO_ID, inReplyToStatusId);
+		i.putExtra("type", type);
+		i.putExtra("text", content);
+		i.putExtra("data", photo);
+		i.putExtra("location", mLocationString);
+		i.putExtra("reply", inReplyToStatusId);
 		if (App.DEBUG) {
 			log("intent=" + i);
 		}

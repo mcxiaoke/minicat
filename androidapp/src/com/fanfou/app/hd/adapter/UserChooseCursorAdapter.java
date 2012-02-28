@@ -5,15 +5,13 @@ import java.util.HashMap;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.text.TextPaint;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.api.User;
+import com.fanfou.app.hd.dao.model.UserModel;
 
 /**
  * @author mcxiaoke
@@ -21,11 +19,11 @@ import com.fanfou.app.hd.api.User;
  * @version 1.1 2011.10.24
  * @version 1.5 2011.10.25
  * @version 1.6 2011.11.09
+ * @version 2.0 2012.02.22
+ * @version 2.1 2012.02.27
  * 
  */
 public class UserChooseCursorAdapter extends BaseCursorAdapter {
-	private static final String tag = UserChooseCursorAdapter.class
-			.getSimpleName();
 
 	private ArrayList<Boolean> mStates;
 	private HashMap<Integer, Boolean> mStateMap;
@@ -59,7 +57,7 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter {
 		return R.layout.list_item_chooseuser;
 	}
 
-	private void setTextStyle(ViewHolder holder) {
+	private void setTextStyle(UserCheckBoxViewHolder holder) {
 		int fontSize = getFontSize();
 		holder.nameText.setTextSize(fontSize);
 		TextPaint tp = holder.nameText.getPaint();
@@ -69,9 +67,8 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter {
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		View view = mInflater.inflate(getLayoutId(), null);
-		ViewHolder holder = new ViewHolder(view);
-		setHeadImage(mContext, holder.headIcon);
-		// setTextStyle(holder);
+		UserCheckBoxViewHolder holder = new UserCheckBoxViewHolder(view);
+		setTextStyle(holder);
 		view.setTag(holder);
 		return view;
 	}
@@ -79,58 +76,36 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter {
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		View row = view;
-		final User u = User.parse(cursor);
 
-		final ViewHolder holder = (ViewHolder) row.getTag();
+		final UserCheckBoxViewHolder holder = (UserCheckBoxViewHolder) row
+				.getTag();
 
-		if (!isTextMode()) {
-			holder.headIcon.setTag(u.profileImageUrl);
-			mLoader.displayImage(u.profileImageUrl, holder.headIcon,
+		final UserModel u = UserModel.from(cursor);
+
+		String headUrl = u.getProfileImageUrl();
+		if (busy) {
+			Bitmap bitmap = mLoader.getImage(headUrl, null);
+			if (bitmap != null) {
+				holder.headIcon.setImageBitmap(bitmap);
+			}
+		} else {
+			holder.headIcon.setTag(headUrl);
+			mLoader.displayImage(headUrl, holder.headIcon,
 					R.drawable.default_head);
 		}
 
-		if (u.protect) {
-			holder.lockIcon.setVisibility(View.VISIBLE);
-		} else {
-			holder.lockIcon.setVisibility(View.GONE);
-		}
-		holder.nameText.setText(u.screenName);
-		holder.idText.setText("(" + u.id + ")");
-		holder.genderText.setText(u.gender);
-		holder.locationText.setText(u.location);
+		UIHelper.showOrHide(holder.lockIcon, u.isProtect());
+
+		holder.nameText.setText(u.getScreenName());
+		holder.idText.setText("(" + u.getId() + ")");
+		holder.genderText.setText(u.getGender());
+		holder.locationText.setText(u.getLocation());
 
 		Boolean b = mStateMap.get(cursor.getPosition());
 		if (b == null || b == Boolean.FALSE) {
 			holder.checkBox.setChecked(false);
 		} else {
 			holder.checkBox.setChecked(true);
-		}
-	}
-
-	public void setChecked(int position) {
-	}
-
-	private static class ViewHolder {
-
-		final ImageView headIcon;
-		final ImageView lockIcon;
-		final TextView nameText;
-		final TextView idText;
-		final TextView genderText;
-		final TextView locationText;
-		final CheckBox checkBox;
-
-		ViewHolder(View base) {
-			this.headIcon = (ImageView) base.findViewById(R.id.item_user_head);
-			this.lockIcon = (ImageView) base.findViewById(R.id.item_user_flag);
-			this.nameText = (TextView) base.findViewById(R.id.item_user_name);
-			this.genderText = (TextView) base
-					.findViewById(R.id.item_user_gender);
-			this.locationText = (TextView) base
-					.findViewById(R.id.item_user_location);
-			this.idText = (TextView) base.findViewById(R.id.item_user_id);
-			this.checkBox = (CheckBox) base
-					.findViewById(R.id.item_user_checkbox);
 		}
 	}
 

@@ -1,10 +1,7 @@
 package com.fanfou.app.hd.fragments;
 
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Messenger;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
@@ -12,9 +9,11 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.adapter.MessageCursorAdapter;
-import com.fanfou.app.hd.db.Contents.DirectMessageInfo;
-import com.fanfou.app.hd.service.Constants;
+import com.fanfou.app.hd.adapter.ConversationListCursorAdapter;
+import com.fanfou.app.hd.api.Paging;
+import com.fanfou.app.hd.controller.DataController;
+import com.fanfou.app.hd.controller.UIController;
+import com.fanfou.app.hd.dao.model.DirectMessageModel;
 import com.fanfou.app.hd.service.FanFouService;
 import com.fanfou.app.hd.util.Utils;
 
@@ -23,6 +22,8 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.0 2012.02.06
  * @version 1.1 2012.02.08
  * @version 1.2 2012.02.09
+ * @version 1.3 2012.02.24
+ * @version 1.4 2012.02.28
  * 
  */
 public class ConversationListFragment extends PullToRefreshListFragment {
@@ -31,7 +32,7 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 
 	public static ConversationListFragment newInstance(int type) {
 		Bundle args = new Bundle();
-		args.putInt(Constants.EXTRA_TYPE, type);
+		args.putInt("type", type);
 		ConversationListFragment fragment = new ConversationListFragment();
 		fragment.setArguments(args);
 		if (App.DEBUG) {
@@ -43,9 +44,15 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		final Cursor c = (Cursor) parent.getItemAtPosition(position);
-		if (c != null) {
-			Utils.goMessageChatPage(getActivity(), c);
+		final Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+		if (cursor != null) {
+			final DirectMessageModel dm=DirectMessageModel.from(cursor);
+			if(App.DEBUG){
+				Log.d(TAG, "cursor="+cursor+" dm="+dm);
+			}
+			if(dm!=null){
+				UIController.goUIConversation(getActivity(), dm);
+			}
 		}
 
 	}
@@ -63,7 +70,7 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 		if (App.DEBUG) {
 			Log.d(TAG, "createAdapter()");
 		}
-		return new MessageCursorAdapter(getActivity(), getCursor());
+		return new ConversationListCursorAdapter(getActivity(), getCursor());
 	}
 
 	@Override
@@ -74,20 +81,27 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 	@Override
 	protected void doFetch(boolean doGetMore) {
 		final ResultHandler handler = new ResultHandler(this);
-		FanFouService.doFetchDirectMessagesConversationList(getActivity(),
-				new Messenger(handler), doGetMore);
+		final Cursor cursor=getCursor();
+		Paging p=new Paging();
+		if(doGetMore){
+			p.maxId=Utils.getMaxId(cursor);
+		}else{
+			p.sinceId=Utils.getSinceId(cursor);
+		}
+		FanFouService.getConversationList(getActivity(), handler, p);
 	}
 
 	@Override
 	protected int getType() {
-		return Constants.TYPE_DIRECT_MESSAGES_CONVERSTATION_LIST;
+		return DirectMessageModel.TYPE_CONVERSATION_LIST;
 	}
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		Uri uri = Uri.withAppendedPath(DirectMessageInfo.CONTENT_URI, "list");
-		CursorLoader loader=new CursorLoader(getActivity(), uri, null, null, null, null);
-		return loader;
+//		Uri uri=DataController.buildConversationListUri();
+//		CursorLoader loader=new CursorLoader(getActivity(), uri, null, null, null, null);
+//		return loader;
+		return DataController.getConversationListLoader(getActivity());
 	}
 
 }

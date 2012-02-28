@@ -16,15 +16,13 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.api.User;
-import com.fanfou.app.hd.cache.CacheManager;
+import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.cache.IImageLoader;
+import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.FanFouService;
-import com.fanfou.app.hd.ui.widget.ActionManager;
 import com.fanfou.app.hd.util.DateTimeHelper;
 import com.fanfou.app.hd.util.OptionHelper;
 import com.fanfou.app.hd.util.StringHelper;
@@ -33,20 +31,22 @@ import com.fanfou.app.hd.util.Utils;
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.07
+ * @version 1.1 2012.02.22
+ * @version 1.2 2012.02.24
  * 
  */
 public class ProfileContentFragment extends AbstractFragment implements
 		OnClickListener {
 	private static final String TAG = ProfileContentFragment.class
 			.getSimpleName();
-	
+
 	public static ProfileContentFragment newInstance(String userId) {
 		Bundle args = new Bundle();
-		args.putString(Constants.EXTRA_ID, userId);
+		args.putString("id", userId);
 		ProfileContentFragment fragment = new ProfileContentFragment();
 		fragment.setArguments(args);
 		if (App.DEBUG) {
-			Log.d(TAG, "newInstance() "+fragment);
+			Log.d(TAG, "newInstance() " + fragment);
 		}
 		return fragment;
 	}
@@ -85,7 +85,7 @@ public class ProfileContentFragment extends AbstractFragment implements
 
 	private String userId;
 
-	private User user;
+	private UserModel user;
 
 	private IImageLoader mLoader;
 
@@ -120,25 +120,22 @@ public class ProfileContentFragment extends AbstractFragment implements
 	}
 
 	private void parseArguments(Bundle data) {
-		String action = data.getString(Constants.EXTRA_TYPE);
+		String action = data.getString("type");
 		if (action == null) {
-			userId = data.getString(Constants.EXTRA_ID);
-			user = (User) data.getParcelable(Constants.EXTRA_DATA);
+			userId = data.getString("id");
+			user = (UserModel) data.getParcelable("data");
 			if (user != null) {
-				userId = user.id;
+				userId = user.getId();
 			}
 		} else if (action.equals(Intent.ACTION_VIEW)) {
-			Uri uri = data.getParcelable(Constants.EXTRA_DATA);
+			Uri uri = data.getParcelable("data");
 			if (uri != null) {
 				userId = uri.getLastPathSegment();
 			}
 		}
-		if (user == null && userId != null) {
-			user = CacheManager.getUser(getActivity(), userId);
-		}
 
 		if (user != null) {
-			userId = user.id;
+			userId = user.getId();
 		}
 		//
 		// if (App.getUserId().equals(userId)) {
@@ -200,7 +197,7 @@ public class ProfileContentFragment extends AbstractFragment implements
 		mScrollView.setVisibility(View.GONE);
 	}
 
-	private void updateUI(final User user) {
+	private void updateUI(final UserModel user) {
 		this.user = user;
 		updateUI();
 	}
@@ -212,28 +209,28 @@ public class ProfileContentFragment extends AbstractFragment implements
 			return;
 		}
 
-		noPermission = !user.following && user.protect;
+		noPermission = !user.isFollowing() && user.isProtect();
 
 		if (App.DEBUG)
-			Log.d(TAG, "updateUI user.name=" + user.screenName);
+			Log.d(TAG, "updateUI user.name=" + user.getScreenName());
 
 		boolean textMode = OptionHelper.readBoolean(getActivity(),
 				R.string.option_text_mode, false);
 		if (textMode) {
 			mHead.setVisibility(View.GONE);
 		} else {
-			mHead.setTag(user.profileImageUrl);
-			mLoader.displayImage(user.profileImageUrl, mHead,
+			mHead.setTag(user.getProfileImageUrl());
+			mLoader.displayImage(user.getProfileImageUrl(), mHead,
 					R.drawable.default_head);
 		}
 
-		mName.setText(user.screenName);
+		mName.setText(user.getScreenName());
 
 		String prefix;
 
-		if (user.gender.equals("男")) {
+		if (user.getGender().equals("男")) {
 			prefix = "他";
-		} else if (user.gender.equals("女")) {
+		} else if (user.getGender().equals("女")) {
 			prefix = "她";
 		} else {
 			prefix = "TA";
@@ -244,24 +241,24 @@ public class ProfileContentFragment extends AbstractFragment implements
 		mFriendsTitle.setText(prefix + "关注的人");
 		mFollowersTitle.setText("关注" + prefix + "的人");
 
-		mStatusesInfo.setText("" + user.statusesCount);
-		mFavoritesInfo.setText("" + user.favouritesCount);
-		mFriendsInfo.setText("" + user.friendsCount);
-		mFollowersInfo.setText("" + user.followersCount);
+		mStatusesInfo.setText("" + user.getStatusesCount());
+		mFavoritesInfo.setText("" + user.getFavouritesCount());
+		mFriendsInfo.setText("" + user.getFriendsCount());
+		mFollowersInfo.setText("" + user.getFollowersCount());
 		if (App.DEBUG)
-			Log.d(TAG, "updateUI user.description=" + user.description);
+			Log.d(TAG, "updateUI user.description=" + user.getDescription());
 
-		if (StringHelper.isEmpty(user.description)) {
+		if (StringHelper.isEmpty(user.getDescription())) {
 			mDescription.setText("这家伙什么也没留下");
 			mDescription.setGravity(Gravity.CENTER);
 		} else {
-			mDescription.setText(user.description);
+			mDescription.setText(user.getDescription());
 		}
 
-		mProtected.setVisibility(user.protect ? View.VISIBLE : View.GONE);
+		mProtected.setVisibility(user.isProtect() ? View.VISIBLE : View.GONE);
 
 		setExtraInfo(user);
-		updateFollowState(user.following);
+		updateFollowState(user.isFollowing());
 
 		if (!noPermission) {
 			doFetchRelationshipInfo();
@@ -270,7 +267,7 @@ public class ProfileContentFragment extends AbstractFragment implements
 		mScrollView.setVisibility(View.VISIBLE);
 	}
 
-	private void setExtraInfo(User u) {
+	private void setExtraInfo(UserModel u) {
 		if (u == null) {
 			mExtraInfo.setVisibility(View.GONE);
 			return;
@@ -278,30 +275,30 @@ public class ProfileContentFragment extends AbstractFragment implements
 
 		StringBuffer sb = new StringBuffer();
 
-		if (!StringHelper.isEmpty(user.gender)) {
-			sb.append("性别：").append(user.gender).append("\n");
+		if (!StringHelper.isEmpty(user.getGender())) {
+			sb.append("性别：").append(user.getGender()).append("\n");
 		}
-		if (!StringHelper.isEmpty(user.birthday)) {
-			sb.append("生日：").append(user.birthday).append("\n");
+		if (!StringHelper.isEmpty(user.getBirthday())) {
+			sb.append("生日：").append(user.getBirthday()).append("\n");
 		}
-		if (!StringHelper.isEmpty(user.location)) {
-			sb.append("位置：").append(user.location).append("\n");
+		if (!StringHelper.isEmpty(user.getLocation())) {
+			sb.append("位置：").append(user.getLocation()).append("\n");
 		}
 
-		if (!StringHelper.isEmpty(user.url)) {
-			sb.append("网站：").append(user.url).append("\n");
+		if (!StringHelper.isEmpty(user.getUrl())) {
+			sb.append("网站：").append(user.getUrl()).append("\n");
 		}
 
 		sb.append("注册时间：")
-				.append(DateTimeHelper.formatDateOnly(user.createdAt));
+				.append(DateTimeHelper.formatDateOnly(user.getTime()));
 
 		mExtraInfo.setText(sb.toString());
 
 	}
 
 	private void doFetchRelationshipInfo() {
-		FanFouService.doFriendshipsExists(getActivity(), user.id,
-				App.getUserId(), new ResultHandler(this));
+		FanFouService.doFriendshipsExists(getActivity(), user.getId(),
+				App.getAccount(), new ResultHandler(this));
 	}
 
 	private void updateFollowState(boolean following) {
@@ -315,13 +312,13 @@ public class ProfileContentFragment extends AbstractFragment implements
 	}
 
 	private void doFollow() {
-		if (user == null || user.isNull()) {
+		if (user == null) {
 			return;
 		}
 
-		if (user.following) {
+		if (user.isFollowing()) {
 			final ConfirmDialog dialog = new ConfirmDialog(getActivity(),
-					"取消关注", "要取消关注" + user.screenName + "吗？");
+					"取消关注", "要取消关注" + user.getScreenName() + "吗？");
 			dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
 
 				@Override
@@ -351,37 +348,38 @@ public class ProfileContentFragment extends AbstractFragment implements
 
 	@Override
 	public void onClick(View v) {
-		if (user == null || user.isNull()) {
+		if (user == null) {
 			return;
 		}
 		switch (v.getId()) {
 		case R.id.user_action_reply:
-			ActionManager.doWrite(getActivity(), "@" + user.screenName + " ");
+//			ActionManager.doWrite(getActivity(), "@" + user.getScreenName()
+//					+ " ");
 			break;
 		case R.id.user_action_message:
-			ActionManager.doMessage(getActivity(), user);
+//			ActionManager.doMessage(getActivity(), user);
 			break;
 		case R.id.user_action_follow:
 			doFollow();
 			break;
 		case R.id.user_statuses_view:
 			if (hasPermission()) {
-				ActionManager.doShowTimeline(getActivity(), user);
+//				ActionManager.doShowTimeline(getActivity(), user);
 			}
 			break;
 		case R.id.user_favorites_view:
 			if (hasPermission()) {
-				ActionManager.doShowFavorites(getActivity(), user);
+//				ActionManager.doShowFavorites(getActivity(), user);
 			}
 			break;
 		case R.id.user_friends_view:
 			if (hasPermission()) {
-				ActionManager.doShowFriends(getActivity(), user);
+//				ActionManager.doShowFriends(getActivity(), user);
 			}
 			break;
 		case R.id.user_followers_view:
 			if (hasPermission()) {
-				ActionManager.doShowFollowers(getActivity(), user);
+//				ActionManager.doShowFollowers(getActivity(), user);
 			}
 			break;
 		default:
@@ -400,7 +398,7 @@ public class ProfileContentFragment extends AbstractFragment implements
 		public void handleMessage(Message msg) {
 			int type = msg.arg1;
 			Bundle bundle = msg.getData();
-			User result = (User) bundle.getParcelable(Constants.EXTRA_DATA);
+			UserModel result = (UserModel) bundle.getParcelable("data");
 			switch (msg.what) {
 			case Constants.RESULT_SUCCESS:
 				if (bundle != null) {
@@ -411,36 +409,35 @@ public class ProfileContentFragment extends AbstractFragment implements
 						fragment.updateUI(result);
 					}
 
-					if (type == Constants.TYPE_USERS_SHOW) {
+					if (type == FanFouService.USER_SHOW) {
 						if (App.DEBUG)
-							Log.d(TAG, "show result=" + result.id);
+							Log.d(TAG, "show result=" + result.getId());
 						fragment.updateUI();
 
-					} else if (type == Constants.TYPE_FRIENDSHIPS_EXISTS) {
-						boolean follow = bundle
-								.getBoolean(Constants.EXTRA_BOOLEAN);
+					} else if (type == FanFouService.FRIENDSHIPS_EXISTS) {
+						boolean follow = bundle.getBoolean("boolean");
 						if (App.DEBUG)
 							Log.d(TAG, "user relationship result=" + follow);
 						fragment.updateRelationshipState(follow);
-					} else if (type == Constants.TYPE_FRIENDSHIPS_CREATE
-							|| type == Constants.TYPE_FRIENDSHIPS_DESTROY) {
+					} else if (type == FanFouService.USER_FOLLOW
+							|| type == FanFouService.USER_UNFOLLOW) {
 						if (App.DEBUG)
-							Log.d(TAG, "user.following=" + result.following);
-						fragment.updateFollowState(result.following);
+							Log.d(TAG, "user.following=" + result.isFollowing());
+						fragment.updateFollowState(result.isFollowing());
 						Utils.notify(fragment.getActivity(),
-								result.following ? "关注成功" : "取消关注成功");
+								result.isFollowing() ? "关注成功" : "取消关注成功");
 					}
 				}
 				break;
 			case Constants.RESULT_ERROR:
-				if (type == Constants.TYPE_USERS_SHOW) {
+				if (type == FanFouService.USER_SHOW) {
 					if (App.DEBUG)
-						Log.d(TAG, "show result=" + result.id);
+						Log.d(TAG, "show result=" + result.getId());
 					fragment.updateUI();
-				} else if (type == Constants.TYPE_FRIENDSHIPS_EXISTS) {
+				} else if (type == FanFouService.FRIENDSHIPS_EXISTS) {
 					return;
 				}
-				String errorMessage = bundle.getString(Constants.EXTRA_ERROR);
+				String errorMessage = bundle.getString("error_message");
 				Utils.notify(fragment.getActivity(), errorMessage);
 				break;
 			default:

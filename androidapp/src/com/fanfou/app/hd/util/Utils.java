@@ -25,15 +25,18 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
+import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.UIAbout;
-import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.UIConversation;
 import com.fanfou.app.hd.UIPhoto;
-import com.fanfou.app.hd.UIDMSend;
 import com.fanfou.app.hd.UIStatus;
-import com.fanfou.app.hd.api.DirectMessage;
-import com.fanfou.app.hd.api.Status;
-import com.fanfou.app.hd.http.ResponseCode;
+import com.fanfou.app.hd.controller.DataController;
+import com.fanfou.app.hd.dao.model.BaseModel;
+import com.fanfou.app.hd.dao.model.DirectMessageColumns;
+import com.fanfou.app.hd.dao.model.DirectMessageModel;
+import com.fanfou.app.hd.dao.model.IBaseColumns;
+import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.service.Constants;
 
 /**
@@ -46,6 +49,7 @@ import com.fanfou.app.hd.service.Constants;
  * @version 3.0 2011.09.28
  * @version 3.5 2011.10.28
  * @version 3.6 2011.12.26
+ * @version 3.7 2012.02.22
  * 
  */
 public final class Utils {
@@ -74,39 +78,22 @@ public final class Utils {
 	public static void goStatusPage(Context context, String id) {
 		if (!StringHelper.isEmpty(id)) {
 			Intent intent = new Intent(context, UIStatus.class);
-			intent.putExtra(Constants.EXTRA_ID, id);
+			intent.putExtra("id", id);
 			context.startActivity(intent);
 		}
 	}
 
-	public static void goStatusPage(Context context, Status s) {
+	public static void goStatusPage(Context context, StatusModel s) {
 		if (s != null) {
 			Intent intent = new Intent(context, UIStatus.class);
-			intent.putExtra(Constants.EXTRA_DATA, s);
+			intent.putExtra("data", s);
 			context.startActivity(intent);
 		}
-	}
-
-	public static void goMessageChatPage(Context context, Cursor c) {
-		if (c != null) {
-			final DirectMessage dm = DirectMessage.parse(c);
-			if (dm != null) {
-				final Intent intent = new Intent(context, UIDMSend.class);
-				intent.putExtra(Constants.EXTRA_ID, dm.senderId);
-				intent.putExtra(Constants.EXTRA_USER_NAME, dm.senderScreenName);
-				context.startActivity(intent);
-			}
-		}
-	}
-
-	public static void goAboutPage(Context context) {
-		Intent intent = new Intent(context, UIAbout.class);
-		context.startActivity(intent);
 	}
 
 	public static void goPhotoViewPage(Context context, String photoUrl) {
 		Intent intent = new Intent(context, UIPhoto.class);
-		intent.putExtra(Constants.EXTRA_URL, photoUrl);
+		intent.putExtra("url", photoUrl);
 		context.startActivity(intent);
 	}
 
@@ -121,80 +108,43 @@ public final class Utils {
 
 	public static String getDmSinceId(Cursor c) {
 		if (c != null && c.moveToFirst()) {
-			final DirectMessage first = DirectMessage.parse(c);
-			if (first != null) {
+			final DirectMessageModel dm = DirectMessageModel.from(c);
+			if (dm != null) {
 				if (App.DEBUG) {
-					Log.d(TAG, "getDmSinceId() id=" + first.id);
+					Log.d(TAG, "getDmSinceId() id=" + dm.getId());
 				}
-				return first.id;
+				return dm.getId();
 			}
 		}
 		return null;
 	}
 
-	public static String getDmMaxId(Cursor c) {
-		if (c != null && c.moveToLast()) {
-			final DirectMessage last = DirectMessage.parse(c);
-			if (last != null) {
-				if (App.DEBUG) {
-					Log.d(TAG, "getDmMaxId() id=" + last.id);
-				}
-				return last.id;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * 获取SinceId
-	 * 
-	 * @param c
-	 * @return
-	 */
-	public static String getSinceId(Cursor c) {
-		if (c != null && c.moveToFirst()) {
-			Status first = Status.parse(c);
-			if (first != null) {
-				if (App.DEBUG) {
-					Log.d(TAG, "getSinceId() id=" + first.id);
-				}
-				return first.id;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * 获取MaxId
-	 * 
-	 * @param c
-	 * @return
-	 */
 	public static String getMaxId(Cursor c) {
 		if (c != null && c.moveToLast()) {
-			Status first = Status.parse(c);
-			if (first != null) {
-				if (App.DEBUG) {
-					Log.d(TAG, "getMaxId() id=" + first.id);
-				}
-				return first.id;
-			}
+			return DataController.parseString(c, IBaseColumns.ID);
+		}
+		return null;
+	}
+
+	public static String getSinceId(Cursor c) {
+		if (c != null && c.moveToFirst()) {
+			return DataController.parseString(c, IBaseColumns.ID);
 		}
 		return null;
 	}
 
 	public static void notify(Context context, CharSequence text) {
-		if (TextUtils.isEmpty(text)||context==null) {
+		if (TextUtils.isEmpty(text) || context == null) {
 			return;
 		}
 		Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
 	}
 
 	public static void notify(Context context, int resId) {
-		if (App.active) {
-			Toast.makeText(context, context.getText(resId), Toast.LENGTH_SHORT)
-					.show();
-		}
+		// if (App.active) {
+		Toast.makeText(context, context.getText(resId), Toast.LENGTH_SHORT)
+				.show();
+		// }
 	}
 
 	public static void open(Context context, final String fileName) {
@@ -301,8 +251,8 @@ public final class Utils {
 	}
 
 	public static void checkAuthorization(Activity context, int statusCode) {
-		if (statusCode == ResponseCode.HTTP_UNAUTHORIZED) {
-			IntentHelper.goLoginPage(context);
+		if (statusCode == 401) {
+			App.doLogin(context);
 			context.finish();
 		}
 	}

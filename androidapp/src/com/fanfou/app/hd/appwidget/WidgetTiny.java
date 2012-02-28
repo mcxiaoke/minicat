@@ -7,12 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
+import com.fanfou.app.hd.R;
+import com.fanfou.app.hd.UIHome;
 import com.fanfou.app.hd.UIMyProfile;
 import com.fanfou.app.hd.UISearch;
-import com.fanfou.app.hd.UIHome;
 import com.fanfou.app.hd.UIStart;
 import com.fanfou.app.hd.service.Constants;
-import com.fanfou.app.hd.R;
 
 /**
  * @author mcxiaoke
@@ -47,19 +47,19 @@ public class WidgetTiny extends AppWidgetProvider {
 
 	private PendingIntent getMentionPendingIntent(Context context) {
 		Intent intent = new Intent(context, UIHome.class);
-		intent.putExtra(Constants.EXTRA_PAGE, 1);
+//		intent.putExtra(Constants.EXTRA_PAGE, 1);
 		return getPendingIntent(context, intent);
 	}
 
 	private PendingIntent getMessagePendingIntent(Context context) {
 		Intent intent = new Intent(context, UIHome.class);
-		intent.putExtra(Constants.EXTRA_PAGE, 2);
+//		intent.putExtra(Constants.EXTRA_PAGE, 2);
 		return getPendingIntent(context, intent);
 	}
 
 	private PendingIntent getPublicPendingIntent(Context context) {
 		Intent intent = new Intent(context, UIHome.class);
-		intent.putExtra(Constants.EXTRA_PAGE, 3);
+//		intent.putExtra(Constants.EXTRA_PAGE, 3);
 		return getPendingIntent(context, intent);
 	}
 

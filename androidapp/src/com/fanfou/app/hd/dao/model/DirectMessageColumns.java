@@ -6,6 +6,7 @@ import android.net.Uri;
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.16
+ * @version 1.1 2012.02.27
  *
  */
 public interface DirectMessageColumns extends IBaseColumns {
@@ -22,6 +23,7 @@ public interface DirectMessageColumns extends IBaseColumns {
 	public static final String CONVERSATION_ID = "conversation_id";
 	
 	public static final String READ = "read";
+	public static final String INCOMING = "incoming";
 	
 	
 	
@@ -39,8 +41,8 @@ public interface DirectMessageColumns extends IBaseColumns {
 			+ _ID + " integer primary key autoincrement, " 
 			
 			+ ID + " text not null, " 
-			+ ACCOUNT + "text not null, "
-			+ OWNER + " text not null, " 
+			+ ACCOUNT + " text not null, "
+			+ OWNER + " text, " 
 			+ NOTE + " text, "
 			
 			+ TYPE + " integer not null, " 
@@ -60,7 +62,9 @@ public interface DirectMessageColumns extends IBaseColumns {
 			+ RECIPIENT_PROFILE_IMAGE_URL + " text not null, " 
 			
 			+ CONVERSATION_ID + " text not null, "
+			
 			+ READ + " boolean not null, "
+			+ INCOMING + " boolean not null, "
 			
 			+ "unique ( " 
 			+ ACCOUNT + "," 

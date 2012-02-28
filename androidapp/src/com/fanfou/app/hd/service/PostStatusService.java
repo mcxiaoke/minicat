@@ -10,17 +10,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.App.ApnType;
+import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.UIDrafts;
 import com.fanfou.app.hd.UIWrite;
-import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
-import com.fanfou.app.hd.api.Draft;
-import com.fanfou.app.hd.api.FanFouApi;
-import com.fanfou.app.hd.api.Status;
-import com.fanfou.app.hd.db.Contents.DraftInfo;
+import com.fanfou.app.hd.dao.model.RecordColumns;
+import com.fanfou.app.hd.dao.model.RecordModel;
+import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.util.ImageHelper;
 import com.fanfou.app.hd.util.StringHelper;
 
@@ -36,6 +35,8 @@ import com.fanfou.app.hd.util.StringHelper;
  * @version 3.2 2011.12.05
  * @version 3.3 2011.12.13
  * @version 3.4 2011.12.26
+ * @version 3.9 2012.02.20
+ * @version 4.0 2012.02.24
  * 
  */
 public class PostStatusService extends BaseIntentService {
@@ -74,11 +75,11 @@ public class PostStatusService extends BaseIntentService {
 	}
 
 	private void parseIntent(Intent intent) {
-		type = intent.getIntExtra(Constants.EXTRA_TYPE, UIWrite.TYPE_NORMAL);
-		text = intent.getStringExtra(Constants.EXTRA_TEXT);
-		srcFile = (File) intent.getSerializableExtra(Constants.EXTRA_DATA);
-		relationId = intent.getStringExtra(Constants.EXTRA_IN_REPLY_TO_ID);
-		location = intent.getStringExtra(Constants.EXTRA_LOCATION);
+		type = intent.getIntExtra("type", UIWrite.TYPE_NORMAL);
+		text = intent.getStringExtra("text");
+		srcFile = (File) intent.getSerializableExtra("data");
+		relationId = intent.getStringExtra("id");
+		location = intent.getStringExtra("location");
 		if (App.DEBUG) {
 			log("location="
 					+ (StringHelper.isEmpty(location) ? "null" : location));
@@ -88,16 +89,14 @@ public class PostStatusService extends BaseIntentService {
 	private boolean doSend() {
 		showSendingNotification();
 		boolean res = false;
-		Api api = FanFouApi.newInstance();
+		Api api = App.getApi();
 		try {
-			Status result = null;
+			StatusModel result = null;
 			if (srcFile == null || !srcFile.exists()) {
 				if (type == UIWrite.TYPE_REPLY) {
-					result = api.statusesCreate(text, relationId, null,
-							location, null, Constants.FORMAT, Constants.MODE);
+					result = api.updateStatus(text, relationId, null, location);
 				} else {
-					result = api.statusesCreate(text, null, null, location,
-							relationId, Constants.FORMAT, Constants.MODE);
+					result = api.updateStatus(text, null, relationId, location);
 				}
 			} else {
 				int quality;
@@ -115,14 +114,13 @@ public class PostStatusService extends BaseIntentService {
 					if (App.DEBUG)
 						log("photo file=" + srcFile.getName() + " size="
 								+ photo.length() / 1024 + " quality=" + quality+" apnType="+apnType);
-					result = api.photosUpload(photo, text, null, location,
-							Constants.FORMAT, Constants.MODE);
+					result = api.uploadPhoto(photo, text, location);
 					photo.delete();
 				}
 
 			}
 			nm.cancel(0);
-			if (result != null && !result.isNull()) {
+			if (result != null) {
 				res = true;
 			}
 		} catch (ApiException e) {
@@ -157,7 +155,7 @@ public class PostStatusService extends BaseIntentService {
 	}
 
 	private int showFailedNotification(String title, String message) {
-		doSaveDrafts();
+		doSaveRecords();
 		int id = 1;
 		Notification notification = new Notification(R.drawable.ic_notify_icon,
 				title, System.currentTimeMillis());
@@ -170,18 +168,13 @@ public class PostStatusService extends BaseIntentService {
 		return id;
 	}
 
-	private void doSaveDrafts() {
-		Draft d = new Draft();
-		d.text = text;
-		d.filePath = srcFile == null ? "" : srcFile.getPath();
-		d.replyTo = relationId;
-		d.type = type;
-		Uri resultUri = getContentResolver().insert(DraftInfo.CONTENT_URI,
-				d.toContentValues());
-		if (App.DEBUG) {
-			log("doSaveDrafts resultUri=" + resultUri + " type=" + d.type
-					+ " text=" + d.text + " filepath=" + d.filePath);
-		}
+	private void doSaveRecords() {
+		RecordModel rm=new RecordModel();
+		rm.setText(text);
+		rm.setFile(srcFile == null ? "" : srcFile.getPath());
+		rm.setReply(relationId);
+		rm.setType(type);
+		Uri resultUri = getContentResolver().insert(RecordColumns.CONTENT_URI,rm.values());
 	}
 
 	private void sendSuccessBroadcast() {

@@ -13,6 +13,7 @@ import java.util.TimeZone;
  * @version 1.5 2011.10.25
  * @version 1.6 2011.10.26
  * @version 1.7 2011.11.21
+ * @version 2.0 2012.02.21
  * 
  */
 public class DateTimeHelper {
@@ -28,7 +29,7 @@ public class DateTimeHelper {
 
 	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(
 			SIMPLE_DATE_FORMAT_STRING, Locale.US);
-	
+
 	private static final SimpleDateFormat FILENAME_DATE_FORMAT = new SimpleDateFormat(
 			FILENAME_DATE_FORMAT_STRING, Locale.US);
 
@@ -56,7 +57,12 @@ public class DateTimeHelper {
 		if (date == null) {
 			return "";
 		}
-		long seconds = (System.currentTimeMillis() - date.getTime()) / 1000;
+		long time = date.getTime();
+		return getInterval(time);
+	}
+
+	public static String getInterval(long time) {
+		long seconds = (System.currentTimeMillis() - time) / 1000;
 		if (seconds < 3) {
 			return "刚刚";
 		} else if (seconds < MIN) {
@@ -65,10 +71,8 @@ public class DateTimeHelper {
 			return seconds / MIN + "分钟前";
 		} else if (seconds < DAY) {
 			return seconds / HOUR + "小时前";
-		} else if (seconds < WEEK) {
-			return seconds / DAY + "天前";
 		} else {
-			return formatDate(date);
+			return formatDate(time);
 		}
 	}
 
@@ -109,7 +113,7 @@ public class DateTimeHelper {
 	public static String formatDate(Date date) {
 		return formatDate(date, SIMPLE_DATE_FORMAT);
 	}
-	
+
 	public static String formatDateFileName(Date date) {
 		return formatDate(date, FILENAME_DATE_FORMAT);
 	}
@@ -120,6 +124,30 @@ public class DateTimeHelper {
 
 	public static String formatDateOnly(Date date) {
 		return formatDate(date, DATE_ONLY_FORMAT);
+	}
+
+	public static String formatDate(long time) {
+		return formatDate(time, SIMPLE_DATE_FORMAT);
+	}
+
+	public static String formatDateFileName(long time) {
+		return formatDate(time, FILENAME_DATE_FORMAT);
+	}
+
+	public static String formatTimeOnly(long time) {
+		return formatDate(time, TIME_ONLY_FORMAT);
+	}
+
+	public static String formatDateOnly(long time) {
+		return formatDate(time, DATE_ONLY_FORMAT);
+	}
+
+	public static String formatDate(long time, SimpleDateFormat format) {
+		Date date = new Date(time);
+		if (format == null) {
+			return SIMPLE_DATE_FORMAT.format(date);
+		}
+		return format.format(date);
 	}
 
 	public static String formatDate(Date date, SimpleDateFormat format) {

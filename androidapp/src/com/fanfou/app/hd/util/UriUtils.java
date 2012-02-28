@@ -205,7 +205,6 @@ public abstract class UriUtils {
 	public static String encodeUri(String uri, String encoding)
 			throws UnsupportedEncodingException {
 		Assert.notNull(uri, "'uri' must not be null");
-		Assert.hasLength(encoding, "'encoding' must not be empty");
 		Matcher m = URI_PATTERN.matcher(uri);
 		if (m.matches()) {
 			String scheme = m.group(2);
@@ -247,7 +246,6 @@ public abstract class UriUtils {
 	public static String encodeHttpUrl(String httpUrl, String encoding)
 			throws UnsupportedEncodingException {
 		Assert.notNull(httpUrl, "'httpUrl' must not be null");
-		Assert.hasLength(encoding, "'encoding' must not be empty");
 		Matcher m = HTTP_URL_PATTERN.matcher(httpUrl);
 		if (m.matches()) {
 			String scheme = m.group(1);
@@ -299,8 +297,6 @@ public abstract class UriUtils {
 			String userinfo, String host, String port, String path,
 			String query, String fragment, String encoding)
 			throws UnsupportedEncodingException {
-
-		Assert.hasLength(encoding, "'encoding' must not be empty");
 		StringBuilder sb = new StringBuilder();
 
 		if (scheme != null) {
@@ -486,7 +482,6 @@ public abstract class UriUtils {
 			BitSet notEncoded) throws UnsupportedEncodingException {
 
 		Assert.notNull(source, "'source' must not be null");
-		Assert.hasLength(encoding, "'encoding' must not be empty");
 
 		byte[] bytes = encode(source.getBytes(encoding), notEncoded);
 		return new String(bytes, "US-ASCII");
@@ -542,7 +537,6 @@ public abstract class UriUtils {
 	public static String decode(String source, String encoding)
 			throws UnsupportedEncodingException {
 		Assert.notNull(source, "'source' must not be null");
-		Assert.hasLength(encoding, "'encoding' must not be empty");
 		int length = source.length();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream(length);
 		boolean changed = false;

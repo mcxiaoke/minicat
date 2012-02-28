@@ -27,9 +27,6 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
-import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.App.ApnType;
-
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -38,6 +35,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.App.ApnType;
 
 /**
  * @author mcxiaoke
@@ -175,7 +175,7 @@ public final class NetworkHelper {
 				Log.d("App", "NetworkInfo: " + info);
 			}
 			if (info != null && info.isConnectedOrConnecting()) {
-				App.noConnection = false;
+//				App.noConnection = false;
 				if (info.getType() == ConnectivityManager.TYPE_WIFI) {
 					type = ApnType.WIFI;
 				} else if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
@@ -189,7 +189,7 @@ public final class NetworkHelper {
 					}
 				}
 			} else {
-				App.noConnection = true;
+//				App.noConnection = true;
 			}
 		} catch (Exception e) {
 			if (App.DEBUG) {

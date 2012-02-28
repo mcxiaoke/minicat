@@ -9,9 +9,13 @@ package com.fanfou.app.hd.api;
  * @version 1.1 2011.05.05
  * @version 1.2 2011.05.06
  * @version 1.3 2011.05.18
+ * @version 1.4 2012.02.21
  * 
  */
 public class ApiException extends Exception {
+	public static final int IO_ERROR=-1001;
+	public static final int DATA_ERROR=-1002;
+	public static final int AUTH_ERROR=-1003;
 
 	private static final long serialVersionUID = 6673077544941712048L;
 	public final int statusCode;

@@ -16,14 +16,14 @@
 
 package com.fanfou.app.hd.util;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 /**
  * Helper singleton class for the Google Analytics tracking library.
