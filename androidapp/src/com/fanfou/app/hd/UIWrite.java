@@ -23,10 +23,10 @@ import android.widget.TextView;
 
 import com.fanfou.app.hd.adapter.AtTokenizer;
 import com.fanfou.app.hd.adapter.AutoCompleteCursorAdapter;
+import com.fanfou.app.hd.controller.DataController;
 import com.fanfou.app.hd.dao.model.RecordColumns;
 import com.fanfou.app.hd.dao.model.RecordModel;
 import com.fanfou.app.hd.dao.model.UserColumns;
-import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.PostStatusService;
@@ -58,6 +58,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 4.8 2012.02.01
  * @version 5.0 2012.02.13
  * @version 5.5 2012.02.22
+ * @version 5.6 2012.02.28
  * 
  */
 public class UIWrite extends UIBaseSupport {
@@ -132,8 +133,8 @@ public class UIWrite extends UIBaseSupport {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	private void onMenuSendClick(){
+
+	private void onMenuSendClick() {
 		doSend();
 	}
 
@@ -280,10 +281,8 @@ public class UIWrite extends UIBaseSupport {
 			if (action == null) {
 				type = intent.getIntExtra("type", TYPE_NORMAL);
 				text = intent.getStringExtra("text");
-				inReplyToStatusId = intent
-						.getStringExtra("reply");
-				File file = (File) intent
-						.getSerializableExtra("data");
+				inReplyToStatusId = intent.getStringExtra("reply");
+				File file = (File) intent.getSerializableExtra("data");
 				int draftId = intent.getIntExtra("record_id", -1);
 				parsePhoto(file);
 				updateUI();
@@ -350,14 +349,10 @@ public class UIWrite extends UIBaseSupport {
 		final String[] projection = new String[] { UserColumns._ID,
 				UserColumns.ID, UserColumns.SCREEN_NAME, UserColumns.TYPE,
 				UserColumns.OWNER };
-		String where = UserColumns.OWNER + " = '" + App.getAccount()
-				+ "' AND " + UserColumns.TYPE + " = '"
-				+ UserModel.TYPE_FRIENDS + "'";
-		// Cursor cursor = managedQuery(UserInfo.CONTENT_URI, projection, where,
-		// null,
-		// null);
-		Cursor cursor = getContentResolver().query(UserColumns.CONTENT_URI,
-				projection, where, null, null);
+
+		Cursor cursor = DataController.getFriendsCursor(this, projection,
+				App.getAccount(), null);
+
 		mAutoCompleteTextView.setAdapter(new AutoCompleteCursorAdapter(this,
 				cursor));
 	}
@@ -366,7 +361,7 @@ public class UIWrite extends UIBaseSupport {
 	protected void setLayout() {
 
 		setContentView(R.layout.write);
-		
+
 		mAutoCompleteTextView = (MyAutoCompleteTextView) findViewById(R.id.write_text);
 
 		mPictureView = findViewById(R.id.write_picture);
@@ -391,10 +386,10 @@ public class UIWrite extends UIBaseSupport {
 
 		iLocationIcon.setImageResource(enableLocation ? R.drawable.ic_bar_geoon
 				: R.drawable.ic_bar_geooff);
-		
+
 		setAutoComplete();
 		parseIntent();
-		
+
 	}
 
 	@Override
@@ -435,7 +430,7 @@ public class UIWrite extends UIBaseSupport {
 			startAddUsername();
 			break;
 		case R.id.write_action_draft:
-//			ActionManager.doShowDrafts(this);
+			// ActionManager.doShowDrafts(this);
 			break;
 		case R.id.write_action_location:
 			switchLocation();
@@ -465,7 +460,7 @@ public class UIWrite extends UIBaseSupport {
 
 			@Override
 			public void onButton1Click() {
-				doSaveDrafts();
+				doSaveRecord();
 				finish();
 			}
 
@@ -477,7 +472,7 @@ public class UIWrite extends UIBaseSupport {
 		dialog.show();
 	}
 
-	private void doSaveDrafts() {
+	private void doSaveRecord() {
 		RecordModel rm = new RecordModel();
 		rm.setType(type);
 		rm.setText(content);
@@ -566,7 +561,7 @@ public class UIWrite extends UIBaseSupport {
 		i.putExtra("text", content);
 		i.putExtra("data", photo);
 		i.putExtra("location", mLocationString);
-		i.putExtra("reply", inReplyToStatusId);
+		i.putExtra("id", inReplyToStatusId);
 		if (App.DEBUG) {
 			log("intent=" + i);
 		}

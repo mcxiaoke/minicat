@@ -62,6 +62,7 @@ import com.fanfou.app.hd.util.OptionHelper;
  * @version 8.3 2012.02.09
  * @version 8.4 2012.02.10
  * @version 8.5 2012.02.27
+ * @version 8.6 2012.02.28
  * 
  */
 public class UIHome extends UIBaseSupport {
@@ -292,7 +293,7 @@ public class UIHome extends UIBaseSupport {
 	}
 	
 	protected void onMenuWriteClick() {
-//		ActionManager.doWrite(this);
+		UIController.goUIWrite(mContext);
 	}
 
 	private void onMenuFeedbackClick() {

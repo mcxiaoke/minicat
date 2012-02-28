@@ -176,5 +176,14 @@ public class DataController {
 		String orderBy = DataProvider.ORDERBY_TIME;
 		return activity.managedQuery(uri, null, null, null, orderBy);
 	}
+	
+	public static Cursor getFriendsCursor(Context context, String[] columns, String id, String orderBy){
+		Uri uri=buildFriendsUri(id);
+		return context.getContentResolver().query(uri, columns, null, null, orderBy);
+	}
+	
+	public static Cursor getFriendsCursor(Context context, String id, String orderBy){
+		return getFriendsCursor(context, null, id, orderBy);
+	}
 
 }

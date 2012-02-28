@@ -3,6 +3,7 @@ package com.fanfou.app.hd.dao;
 import java.util.List;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -44,6 +45,7 @@ import com.fanfou.app.hd.util.StringHelper;
  * @version 5.1 2012.02.17
  * @version 6.0 2012.02.21
  * @version 6.1 2012.02.24
+ * @version 6.2 2012.02.28
  * 
  */
 public class DataProvider extends ContentProvider implements IBaseColumns {
@@ -393,12 +395,15 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 			SQLiteDatabase db = dbHelper.getWritableDatabase();
 			String table = uri.getPathSegments().get(0);
 			long rowId = db.insert(table, null, values);
-			if (App.DEBUG) {
-				log("insert() uri=" + uri.toString() + " id="
-						+ values.getAsString(ID) + " rowId=" + rowId);
+			if(rowId>0){
+				getContext().getContentResolver().notifyChange(uri, null);
+				Uri resultUri= ContentUris.withAppendedId(uri, rowId);
+				if (App.DEBUG) {
+					log("insert() resultUri=" + resultUri + " id="
+							+ values.getAsString(ID) + " rowId=" + rowId);
+				}
 			}
-			getContext().getContentResolver().notifyChange(uri, null);
-			return uri;
+			return null;
 			// break;
 		case USERS_SEARCH:
 		case USERS_FRIENDS:
@@ -411,6 +416,28 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 		default:
 			throw new IllegalArgumentException("insert() Unknown URI " + uri);
 		}
+	}
+
+	@Override
+	public int bulkInsert(Uri uri, ContentValues[] values) {
+		int numInserted=0;
+		String table=uri.getPathSegments().get(0);
+		SQLiteDatabase db=dbHelper.getWritableDatabase();
+		db.beginTransaction();
+		try {
+			for (ContentValues value : values) {
+				long id=db.insert(table, null, value);
+				if(id>0){
+					++numInserted;
+				}
+			}
+			db.setTransactionSuccessful();
+			getContext().getContentResolver().notifyChange(uri, null);
+//			numInserted=values.length;
+		}finally{
+			db.endTransaction();
+		}
+		return numInserted;
 	}
 
 	private int deleteByCondition(String table, String where, String[] whereArgs) {

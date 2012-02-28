@@ -9,6 +9,7 @@ import com.fanfou.app.hd.UIAbout;
 import com.fanfou.app.hd.UIConversation;
 import com.fanfou.app.hd.UIHome;
 import com.fanfou.app.hd.UILogin;
+import com.fanfou.app.hd.UIWrite;
 import com.fanfou.app.hd.dao.model.DirectMessageModel;
 
 /**
@@ -51,6 +52,11 @@ public class UIController {
 			intent.putExtra("profile_image_url",
 					dm.getRecipientProfileImageUrl());
 		}
+		context.startActivity(intent);
+	}
+	
+	public static void goUIWrite(Context context){
+		Intent intent = new Intent(context, UIWrite.class);
 		context.startActivity(intent);
 	}
 

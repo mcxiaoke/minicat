@@ -53,6 +53,8 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 			Bitmap bitmap = mLoader.getImage(headUrl, null);
 			if (bitmap != null) {
 				holder.headIcon.setImageBitmap(bitmap);
+			}else{
+				holder.headIcon.setImageResource(R.drawable.default_head);
 			}
 		} else {
 			holder.headIcon.setTag(headUrl);
