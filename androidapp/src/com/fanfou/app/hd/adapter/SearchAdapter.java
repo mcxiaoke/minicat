@@ -56,7 +56,7 @@ public class SearchAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-	static class ViewHolder {
+	private static class ViewHolder {
 		TextView name;
 
 		public ViewHolder(View base) {

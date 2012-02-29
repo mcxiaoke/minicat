@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -36,11 +35,11 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 1.2 2012.02.09
  * @version 1.3 2012.02.22
  * @version 1.4 2012.02.24
+ * @version 1.5 2012.02.28
  * 
  */
-public abstract class PullToRefreshListFragment extends AbstractFragment
-		implements OnRefreshListener, OnItemClickListener,
-		OnItemLongClickListener, LoaderCallbacks<Cursor> {
+public abstract class PullToRefreshListFragment extends AbstractListFragment
+		implements OnRefreshListener, OnItemLongClickListener, LoaderCallbacks<Cursor> {
 
 	private static final int LOADER_ID = 1;
 
@@ -87,7 +86,7 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 		if (App.DEBUG) {
 			Log.d(TAG, "onCreateView()");
 		}
-		View v = inflater.inflate(R.layout.fm_list, container, false);
+		View v = inflater.inflate(R.layout.fm_pull_list, container, false);
 		mPullToRefreshView = (PullToRefreshListView) v;
 		mPullToRefreshView.setOnRefreshListener(this);
 		mListView = mPullToRefreshView.getRefreshableView();
@@ -153,10 +152,12 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 		return mCursor;
 	}
 
+	@Override
 	public CursorAdapter getAdapter() {
 		return mAdapter;
 	}
 
+	@Override
 	public ListView getListView() {
 		return mListView;
 	}
@@ -186,6 +187,7 @@ public abstract class PullToRefreshListFragment extends AbstractFragment
 		}
 	}
 
+	@Override
 	public void startRefresh() {
 		if (App.DEBUG) {
 			Log.d(TAG, "startRefresh()");

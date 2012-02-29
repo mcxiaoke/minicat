@@ -16,8 +16,8 @@
 
 <resources>
 
-    <style name="ActionBarTitle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/actionbar_title_color</item>
+    <style name="Theme.Light" parent="android:style/Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
     </style>
 
 </resources>

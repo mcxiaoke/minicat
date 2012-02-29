@@ -19,6 +19,9 @@ import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.cache.ImageLoader;
 import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
+import com.fanfou.app.hd.fragments.AbstractFragment;
+import com.fanfou.app.hd.fragments.AbstractListFragment;
+import com.fanfou.app.hd.fragments.ColumnsFragment;
 import com.fanfou.app.hd.fragments.ConversationListFragment;
 import com.fanfou.app.hd.fragments.HomeTimelineFragment;
 import com.fanfou.app.hd.fragments.MentionTimelineFragment;
@@ -68,14 +71,8 @@ import com.fanfou.app.hd.util.OptionHelper;
 public class UIHome extends UIBaseSupport {
 
 	public static final String TAG = UIHome.class.getSimpleName();
-	public static final String[] PAGE_TITLES = new String[] { "我的消息", "随便看看",
-			"我的主页", "提到我的", "我的私信" };
-
-	public static final int ME = 0;
-	public static final int PUBLIC = 1;
-	public static final int HOME = 2;
-	public static final int MENTION = 3;
-	public static final int DM = 4;
+	public static final String[] PAGE_TITLES = new String[] { "栏目", "公共",
+			"主页", "提及", "私信" };
 
 	public static final int NUMS_OF_PAGE = 5;
 
@@ -113,7 +110,7 @@ public class UIHome extends UIBaseSupport {
 		mPagesAdapter = new PagesAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);
 		mViewPager.setAdapter(mPagesAdapter);
-		mViewPager.setCurrentItem(HOME);
+		mViewPager.setCurrentItem(2);
 
 		mTabsView = (SwipeyTabsView) findViewById(R.id.viewindicator);
 		mTabsView.setAdapter(new PageTabsAdapter(this));
@@ -130,20 +127,20 @@ public class UIHome extends UIBaseSupport {
 	// return filter;
 	// }
 
-	private void onActionSent() {
-		if (App.DEBUG) {
-			log("onBroadcastReceived ACTION_STATUS_SENT");
-		}
-
-		int curPage = mViewPager.getCurrentItem();
-		if (curPage == HOME) {
-			boolean needRefresh = OptionHelper.readBoolean(this,
-					R.string.option_refresh_after_send, false);
-			if (needRefresh) {
-				startRefresh(curPage);
-			}
-		}
-	}
+	// private void onActionSent() {
+	// if (App.DEBUG) {
+	// log("onBroadcastReceived ACTION_STATUS_SENT");
+	// }
+	//
+	// int curPage = mViewPager.getCurrentItem();
+	// if (curPage == HOME) {
+	// boolean needRefresh = OptionHelper.readBoolean(this,
+	// R.string.option_refresh_after_send, false);
+	// if (needRefresh) {
+	// startRefresh(curPage);
+	// }
+	// }
+	// }
 
 	// @Override
 	// protected boolean onBroadcastReceived(Intent intent) {
@@ -234,15 +231,15 @@ public class UIHome extends UIBaseSupport {
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		setIntent(intent);
-//		int page = getIntent().getIntExtra(Constants.EXTRA_PAGE, HOME);
-//		mViewPager.setCurrentItem(page);
+		// int page = getIntent().getIntExtra(Constants.EXTRA_PAGE, HOME);
+		// mViewPager.setCurrentItem(page);
 		if (App.DEBUG) {
-//			log("onNewIntent page=" + page);
+			// log("onNewIntent page=" + page);
 		}
 	}
-	
+
 	@Override
-	protected int getMenuResourceId(){
+	protected int getMenuResourceId() {
 		return R.menu.home_menu;
 	}
 
@@ -280,7 +277,7 @@ public class UIHome extends UIBaseSupport {
 	}
 
 	private void onMenuProfileClick() {
-//		ActionManager.doMyProfile(this);
+		// ActionManager.doMyProfile(this);
 	}
 
 	private void onMenuSearchClick() {
@@ -291,15 +288,16 @@ public class UIHome extends UIBaseSupport {
 	private void onMenuAboutClick() {
 		UIController.goUIAbout(this);
 	}
-	
+
 	protected void onMenuWriteClick() {
 		UIController.goUIWrite(mContext);
 	}
 
 	private void onMenuFeedbackClick() {
-//		ActionManager.doWrite(this, getString(R.string.config_feedback_account)
-//				+ " (" + Build.MODEL + "-" + Build.VERSION.RELEASE + " "
-//				+ App.appVersionName + ") ");
+		// ActionManager.doWrite(this,
+		// getString(R.string.config_feedback_account)
+		// + " (" + Build.MODEL + "-" + Build.VERSION.RELEASE + " "
+		// + App.appVersionName + ") ");
 	}
 
 	private void onMenuLogoutClick() {
@@ -324,7 +322,7 @@ public class UIHome extends UIBaseSupport {
 		if (App.DEBUG) {
 			Log.d(TAG, "checkRefresh page=" + page);
 		}
-		PullToRefreshListFragment fragment = mPagesAdapter.getItem(page);
+		AbstractListFragment fragment = mPagesAdapter.getItem(page);
 		BaseAdapter adapter = fragment.getAdapter();
 		if (App.DEBUG) {
 			Log.e(TAG, "fragment=" + fragment);
@@ -341,19 +339,19 @@ public class UIHome extends UIBaseSupport {
 
 	private static class PagesAdapter extends FragmentPagerAdapter {
 
-		private final PullToRefreshListFragment[] fragments = new PullToRefreshListFragment[NUMS_OF_PAGE];
+		private final AbstractListFragment[] fragments = new AbstractListFragment[NUMS_OF_PAGE];
 
 		public PagesAdapter(FragmentManager fm) {
 			super(fm);
-			fragments[ME] = UserTimelineFragment.newInstance(null);
-			fragments[PUBLIC] = PublicTimelineFragment.newInstance(0);
-			fragments[HOME] = HomeTimelineFragment.newInstance(0);
-			fragments[MENTION] = MentionTimelineFragment.newInstance(0);
-			fragments[DM] = ConversationListFragment.newInstance(0);
+			fragments[0] = ColumnsFragment.newInstance();
+			fragments[1] = PublicTimelineFragment.newInstance(0);
+			fragments[2] = HomeTimelineFragment.newInstance(0);
+			fragments[3] = MentionTimelineFragment.newInstance(0);
+			fragments[4] = ConversationListFragment.newInstance(0);
 		}
 
 		@Override
-		public PullToRefreshListFragment getItem(int position) {
+		public AbstractListFragment getItem(int position) {
 			return fragments[position % NUMS_OF_PAGE];
 		}
 

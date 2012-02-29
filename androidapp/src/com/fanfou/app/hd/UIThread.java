@@ -36,6 +36,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 3.7 2012.02.09
  * @version 3.8 2012.02.22
  * @version 3.9 2012.02.24
+ * @version 4.0 2012.02.28
  * 
  * Statuses Conversation List Page
  * 
@@ -84,12 +85,6 @@ public class UIThread extends UIBaseSupport implements
 	}
 
 	private void configListView(final ListView list) {
-		list.setHorizontalScrollBarEnabled(false);
-		list.setVerticalScrollBarEnabled(false);
-		list.setCacheColorHint(0);
-		list.setSelector(getResources().getDrawable(R.drawable.list_selector));
-		list.setDivider(getResources().getDrawable(R.drawable.separator));
-
 		list.setOnItemClickListener(this);
 		list.setOnItemLongClickListener(this);
 	}
