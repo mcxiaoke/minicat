@@ -307,42 +307,4 @@
         <item name="android:layout_margin">4dp</item>
     </style>
 
-    <style name="List">
-        <item name="android:fadingEdge">none</item>
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">fill_parent</item>
-        <item name="android:listSelector">@color/transparent</item>
-        <item name="android:drawSelectorOnTop">false</item>
-        <item name="android:cacheColorHint">@android:color/white</item>
-        <item name="android:dividerHeight">1.0px</item>
-    </style>
-
-    <style name="Widget.AutoCompleteTextViewLight" parent="@android:style/Widget.AutoCompleteTextView">
-        <item name="android:textColor">@android:color/primary_text_light</item>
-    </style>
-
-    <style name="Widget.DropDownItemLight" parent="@android:style/Widget.DropDownItem">
-        <item name="android:textColor">@android:color/primary_text_light</item>
-    </style>
-
-    <style name="OnScreenHintTextAppearance">
-        <item name="android:textColor">@android:color/primary_text_dark</item>
-        <item name="android:textColorHighlight">#FFFF9200</item>
-        <item name="android:textColorHint">#808080</item>
-        <item name="android:textColorLink">#5C5CFF</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">normal</item>
-    </style>
-
-    <style name="OnScreenHintTextAppearance.Small">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@android:color/secondary_text_dark</item>
-    </style>
-
-    <style name="Animation_OnScreenHint">
-        <item name="android:windowEnterAnimation">@anim/on_screen_hint_enter</item>
-        <item name="android:windowExitAnimation">@anim/on_screen_hint_exit</item>
-    </style>
-
 </resources>

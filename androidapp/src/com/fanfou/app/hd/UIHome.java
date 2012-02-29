@@ -250,18 +250,18 @@ public class UIHome extends UIBaseSupport {
 		case R.id.menu_option:
 			onMenuOptionClick();
 			break;
-		case R.id.menu_profile:
-			onMenuProfileClick();
-			break;
+//		case R.id.menu_profile:
+//			onMenuProfileClick();
+//			break;
 		case R.id.menu_search:
 			onMenuSearchClick();
 			break;
 		case R.id.menu_logout:
 			onMenuLogoutClick();
 			break;
-		case R.id.menu_about:
-			onMenuAboutClick();
-			break;
+//		case R.id.menu_about:
+//			onMenuAboutClick();
+//			break;
 		case R.id.menu_write:
 			onMenuWriteClick();
 			break;

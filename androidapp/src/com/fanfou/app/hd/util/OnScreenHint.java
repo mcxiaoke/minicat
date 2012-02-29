@@ -73,7 +73,7 @@ public class OnScreenHint {
 		mParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
 				| WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
 		mParams.format = PixelFormat.TRANSLUCENT;
-		mParams.windowAnimations = R.style.Animation_OnScreenHint;
+//		mParams.windowAnimations = R.style.Animation_OnScreenHint;
 		mParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_PANEL;
 		mParams.setTitle("OnScreenHint");
 	}
@@ -111,11 +111,11 @@ public class OnScreenHint {
 
 		LayoutInflater inflate = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View v = inflate.inflate(R.layout.on_screen_hint, null);
-		TextView tv = (TextView) v.findViewById(R.id.message);
-		tv.setText(text);
+//		View v = inflate.inflate(R.layout.on_screen_hint, null);
+//		TextView tv = (TextView) v.findViewById(R.id.message);
+//		tv.setText(text);
 
-		result.mNextView = v;
+//		result.mNextView = v;
 
 		return result;
 	}
@@ -132,12 +132,12 @@ public class OnScreenHint {
 			throw new RuntimeException("This OnScreenHint was not "
 					+ "created with OnScreenHint.makeText()");
 		}
-		TextView tv = (TextView) mNextView.findViewById(R.id.message);
-		if (tv == null) {
-			throw new RuntimeException("This OnScreenHint was not "
-					+ "created with OnScreenHint.makeText()");
-		}
-		tv.setText(s);
+//		TextView tv = (TextView) mNextView.findViewById(R.id.message);
+//		if (tv == null) {
+//			throw new RuntimeException("This OnScreenHint was not "
+//					+ "created with OnScreenHint.makeText()");
+//		}
+//		tv.setText(s);
 	}
 
 	private synchronized void handleShow() {

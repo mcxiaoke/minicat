@@ -2,8 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:scrollbars="none" >
+    android:layout_height="fill_parent" >
 
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -19,7 +18,7 @@
             android:src="@drawable/login_logo" />
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/login_logo"
             android:gravity="center_horizontal"
@@ -35,8 +34,9 @@
                 android:id="@+id/login_password"
                 style="@style/EditText.Login"
                 android:hint="@string/login_password_hint"
+                android:imeOptions="actionSend"
                 android:inputType="textPassword"
-                android:password="true" android:imeOptions="actionSend"/>
+                android:password="true" />
 
             <Button
                 android:id="@+id/button_signin"

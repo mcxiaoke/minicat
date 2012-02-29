@@ -155,7 +155,7 @@ public class UIUserChoose extends UIBaseSupport implements
 		mListView.setHorizontalScrollBarEnabled(false);
 		mListView.setVerticalScrollBarEnabled(false);
 		mListView.setSelector(getResources().getDrawable(
-				R.drawable.list_selector));
+				R.drawable.list_selector_holo_light));
 		mListView.setDivider(getResources().getDrawable(R.drawable.separator));
 
 		mListView.setOnItemClickListener(this);

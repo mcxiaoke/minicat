@@ -18,12 +18,12 @@
 
     <style name="Theme.Light" parent="android:style/Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
-        <!-- <item name="android:windowContentOverlay">@drawable/actionbar_shadow</item> -->
     </style>
 
     <style name="ActionBarStyle" parent="android:style/Widget.Holo.Light.ActionBar">
-        <!-- <item name="android:titleTextStyle">@style/ActionBarTitleStyle</item> -->
+        <item name="android:titleTextStyle">@style/ActionBarTitleStyle</item>
         <item name="android:icon">@drawable/ic_home</item>
+        <item name="android:background">@color/actionbar_background_color</item>
     </style>
 
     <style name="ActionBarTitleStyle">

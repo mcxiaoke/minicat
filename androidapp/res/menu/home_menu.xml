@@ -2,42 +2,31 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/menu_profile"
-        android:icon="@drawable/ic_menu_profile"
-        android:orderInCategory="0"
-        android:title="我的空间">
-    </item>
-    <item
-        android:id="@+id/menu_option"
-        android:icon="@drawable/ic_menu_option"
-        android:orderInCategory="1"
-        android:title="功能设置">
-    </item>
-    <item
         android:id="@+id/menu_search"
         android:icon="@drawable/ic_menu_search"
-        android:orderInCategory="2"
-        android:showAsAction="always"
-        android:title="热词搜索">
-    </item>
-    <item
-        android:id="@+id/menu_about"
-        android:icon="@drawable/ic_menu_about"
-        android:orderInCategory="3"
-        android:title="关于饭否">
+        android:orderInCategory="0"
+        android:title="搜索">
     </item>
     <item
         android:id="@+id/menu_write"
         android:icon="@drawable/ic_menu_feedback"
-        android:orderInCategory="4"
+        android:orderInCategory="1"
         android:showAsAction="always"
         android:title="写消息">
     </item>
+    
+        <item
+        android:id="@+id/menu_option"
+        android:icon="@drawable/ic_menu_option"
+        android:orderInCategory="2"
+        android:title="设置">
+    </item>
+    
     <item
         android:id="@+id/menu_logout"
         android:icon="@drawable/ic_menu_logout"
-        android:orderInCategory="5"
-        android:title="注销登录">
+        android:orderInCategory="3"
+        android:title="注销">
     </item>
 
 </menu>

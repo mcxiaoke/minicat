@@ -16,12 +16,7 @@
 
 <resources>
 
-    <declare-styleable name="AppTheme">
-        <attr name="actionbarCompatTitleStyle" format="reference" />
-        <attr name="actionbarCompatItemStyle" format="reference" />
-        <attr name="actionbarCompatItemHomeStyle" format="reference" />
-        <attr name="actionbarCompatProgressIndicatorStyle" format="reference" />
-    </declare-styleable>
+
 
     <declare-styleable name="BezelImageView">
         <attr name="maskDrawable" format="reference" />

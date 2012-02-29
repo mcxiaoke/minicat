@@ -15,16 +15,14 @@
         android:hint="输入文字搜索用户"
         android:padding="10dp"
         android:singleLine="true"
-        android:textSize="@dimen/text_size_medium" android:visibility="gone"/>
+        android:textSize="@dimen/text_size_medium"
+        android:visibility="gone" />
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         xmlns:ptr="http://schemas.android.com/apk/res/com.fanfou.app.hd"
         android:id="@id/list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:cacheColorHint="#00000000"
-        android:listSelector="@drawable/list_selector"
-        ptr:mode="both"
-        android:scrollbarThumbVertical="@drawable/scrollbar_vertical_thumb" />
+        ptr:mode="both" />
 
 </LinearLayout>
