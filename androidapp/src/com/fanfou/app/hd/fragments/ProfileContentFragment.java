@@ -120,28 +120,7 @@ public class ProfileContentFragment extends AbstractFragment implements
 	}
 
 	private void parseArguments(Bundle data) {
-		String action = data.getString("type");
-		if (action == null) {
-			userId = data.getString("id");
-			user = (UserModel) data.getParcelable("data");
-			if (user != null) {
-				userId = user.getId();
-			}
-		} else if (action.equals(Intent.ACTION_VIEW)) {
-			Uri uri = data.getParcelable("data");
-			if (uri != null) {
-				userId = uri.getLastPathSegment();
-			}
-		}
-
-		if (user != null) {
-			userId = user.getId();
-		}
-		//
-		// if (App.getUserId().equals(userId)) {
-		// ActionManager.doMyProfile(getActivity());
-		// }
-
+		userId = data.getString("id");
 	}
 
 	private void setLayout() {

@@ -86,9 +86,6 @@ public class UIProfile extends UIBaseSupport {
 				userId = data.getLastPathSegment();
 			}
 		}
-		if (user == null && userId != null) {
-//			user = CacheManager.getUser(this, userId);
-		}
 
 		if (user != null) {
 			userId = user.getId();

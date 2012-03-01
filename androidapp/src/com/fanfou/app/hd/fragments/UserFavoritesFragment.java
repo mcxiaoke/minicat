@@ -45,8 +45,9 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 		if(data!=null){
 			userId=data.getString("id");
 		}
-		if(StringHelper.isEmpty(userId)){
-			userId=App.getAccount();
+		
+		if (StringHelper.isEmpty(userId)) {
+			userId = App.getAccount();
 		}
 		
 		if (App.DEBUG) {
@@ -78,7 +79,7 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 		if (App.DEBUG) {
 			Log.d(TAG, "doFetch() doGetMore=" + doGetMore+" Paging="+p);
 		}
-		FanFouService.getTimeline(getActivity(), StatusModel.TYPE_FAVORITES, handler, p);
+		FanFouService.getTimeline(getActivity(), StatusModel.TYPE_FAVORITES, handler, userId,p);
 		
 		
 		

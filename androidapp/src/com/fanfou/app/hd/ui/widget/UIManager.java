@@ -16,7 +16,6 @@ import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.UIConversation;
 import com.fanfou.app.hd.UIDrafts;
-import com.fanfou.app.hd.UIMyProfile;
 import com.fanfou.app.hd.UIProfile;
 import com.fanfou.app.hd.UIWrite;
 import com.fanfou.app.hd.dao.model.StatusModel;
@@ -270,11 +269,6 @@ public final class UIManager {
 
 	public static void doShowDrafts(Context context) {
 		Intent intent = new Intent(context, UIDrafts.class);
-		context.startActivity(intent);
-	}
-
-	public static void doMyProfile(Context context) {
-		Intent intent = new Intent(context, UIMyProfile.class);
 		context.startActivity(intent);
 	}
 

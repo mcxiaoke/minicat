@@ -104,7 +104,7 @@ public class UIHome extends UIBaseSupport {
 
 		// mActionBar = (ActionBar) findViewById(R.id.actionbar);
 		// mActionBar.setTitle("测试版");
-		// mActionBar.setRightAction(new ActionBar.WriteAction(this, null));
+		// mActionBar.setRightActimaon(new ActionBar.WriteAction(this, null));
 		// mActionBar.setVisibility(View.GONE);
 
 		mPagesAdapter = new PagesAdapter(getSupportFragmentManager());

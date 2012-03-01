@@ -9,7 +9,7 @@ import android.widget.RemoteViews;
 
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.UIHome;
-import com.fanfou.app.hd.UIMyProfile;
+import com.fanfou.app.hd.UIProfile;
 import com.fanfou.app.hd.UISearch;
 import com.fanfou.app.hd.UIStart;
 import com.fanfou.app.hd.service.Constants;
@@ -82,7 +82,7 @@ public class WidgetTiny extends AppWidgetProvider {
 	}
 
 	private PendingIntent getMyProfilePendingIntent(Context context) {
-		Intent intent = new Intent(context, UIMyProfile.class);
+		Intent intent = new Intent(context, UIProfile.class);
 		return getPendingIntent(context, intent);
 	}
 

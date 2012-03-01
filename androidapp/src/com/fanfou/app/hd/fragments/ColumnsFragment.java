@@ -6,7 +6,16 @@ package com.fanfou.app.hd.fragments;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
+import com.fanfou.app.hd.UIAbout;
+import com.fanfou.app.hd.UIConversation;
+import com.fanfou.app.hd.UIDrafts;
+import com.fanfou.app.hd.UIEditProfile;
+import com.fanfou.app.hd.UIProfile;
+import com.fanfou.app.hd.UISearch;
+import com.fanfou.app.hd.UISetting;
+import com.fanfou.app.hd.UIUserList;
 
 import android.content.Context;
 import android.content.Intent;
@@ -58,15 +67,34 @@ public class ColumnsFragment extends AbstractListFragment {
 	}
 
 	private void fillColumns() {
-		ActionColumn myProfile = new ActionColumn("我的空间", null);
-		ActionColumn myFriends = new ActionColumn("我的好友", null);
-		ActionColumn editProfile = new ActionColumn("编辑资料", null);
+		Intent profile=new Intent(getActivity(), UIProfile.class);
+		profile.putExtra("id", App.getAccount());
+		ActionColumn myProfile = new ActionColumn("我的空间", profile);
+		
+		Intent friends=new Intent(getActivity(), UIUserList.class);
+		friends.putExtra("id", App.getAccount());
+		ActionColumn myFriends = new ActionColumn("我的好友", friends);
+		
+		Intent edit=new Intent(getActivity(), UIEditProfile.class);
+		ActionColumn editProfile = new ActionColumn("编辑资料", edit);
+		
+//		Intent conver=new Intent(getActivity(), UIConversationList.class);
 		ActionColumn conversation = new ActionColumn("我的私信", null);
-		ActionColumn trends = new ActionColumn("热词和搜索", null);
-		ActionColumn setting = new ActionColumn("程序设置", null);
-		ActionColumn records = new ActionColumn("我的草稿箱", null);
+		
+		Intent search=new Intent(getActivity(), UISearch.class);
+		ActionColumn trends = new ActionColumn("热词和搜索", search);
+		
+		Intent option=new Intent(getActivity(), UISetting.class);
+		ActionColumn setting = new ActionColumn("程序设置", option);
+
+		Intent record=new Intent(getActivity(), UIDrafts.class);
+		ActionColumn records = new ActionColumn("我的草稿箱", record);
+		
+		
 		ActionColumn digest = new ActionColumn("饭否语录", null);
-		ActionColumn about = new ActionColumn("关于饭否", null);
+		
+		Intent ab=new Intent(getActivity(), UIAbout.class);
+		ActionColumn about = new ActionColumn("关于饭否", ab);
 
 		mColumns.add(myProfile);
 		mColumns.add(myFriends);
@@ -182,6 +210,10 @@ public class ColumnsFragment extends AbstractListFragment {
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		// TODO Auto-generated method stub
+		final ActionColumn action=(ActionColumn) parent.getItemAtPosition(position);
+		if(action!=null&&action.intent!=null){
+			getActivity().startActivity(action.intent);
+		}
 
 	}
 
