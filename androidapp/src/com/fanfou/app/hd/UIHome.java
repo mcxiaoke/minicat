@@ -71,10 +71,10 @@ import com.fanfou.app.hd.util.OptionHelper;
 public class UIHome extends UIBaseSupport {
 
 	public static final String TAG = UIHome.class.getSimpleName();
-	public static final String[] PAGE_TITLES = new String[] { "栏目", "公共",
-			"主页", "提及", "私信" };
+	public static final String[] PAGE_TITLES = new String[] { "栏目", "主页", "提及",
+			"随便看看" };
 
-	public static final int NUMS_OF_PAGE = 5;
+	public static final int NUMS_OF_PAGE = PAGE_TITLES.length;
 
 	// private ActionBar mActionBar;
 	private ViewPager mViewPager;
@@ -110,7 +110,7 @@ public class UIHome extends UIBaseSupport {
 		mPagesAdapter = new PagesAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);
 		mViewPager.setAdapter(mPagesAdapter);
-		mViewPager.setCurrentItem(2);
+		mViewPager.setCurrentItem(1);
 
 		mTabsView = (SwipeyTabsView) findViewById(R.id.viewindicator);
 		mTabsView.setAdapter(new PageTabsAdapter(this));
@@ -250,18 +250,18 @@ public class UIHome extends UIBaseSupport {
 		case R.id.menu_option:
 			onMenuOptionClick();
 			break;
-//		case R.id.menu_profile:
-//			onMenuProfileClick();
-//			break;
+		// case R.id.menu_profile:
+		// onMenuProfileClick();
+		// break;
 		case R.id.menu_search:
 			onMenuSearchClick();
 			break;
 		case R.id.menu_logout:
 			onMenuLogoutClick();
 			break;
-//		case R.id.menu_about:
-//			onMenuAboutClick();
-//			break;
+		// case R.id.menu_about:
+		// onMenuAboutClick();
+		// break;
 		case R.id.menu_write:
 			onMenuWriteClick();
 			break;
@@ -344,10 +344,9 @@ public class UIHome extends UIBaseSupport {
 		public PagesAdapter(FragmentManager fm) {
 			super(fm);
 			fragments[0] = ColumnsFragment.newInstance();
-			fragments[1] = PublicTimelineFragment.newInstance(0);
-			fragments[2] = HomeTimelineFragment.newInstance(0);
-			fragments[3] = MentionTimelineFragment.newInstance(0);
-			fragments[4] = ConversationListFragment.newInstance(0);
+			fragments[1] = HomeTimelineFragment.newInstance(0);
+			fragments[2] = MentionTimelineFragment.newInstance(0);
+			fragments[3] = PublicTimelineFragment.newInstance(0);
 		}
 
 		@Override

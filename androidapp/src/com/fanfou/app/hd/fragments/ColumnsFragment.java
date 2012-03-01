@@ -11,6 +11,7 @@ import com.fanfou.app.hd.R;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,9 +58,26 @@ public class ColumnsFragment extends AbstractListFragment {
 	}
 
 	private void fillColumns() {
-		for (int i = 0; i < 15; i++) {
-			mColumns.add(new ActionColumn("Column " + i, null));
-		}
+		ActionColumn myProfile = new ActionColumn("我的空间", null);
+		ActionColumn myFriends = new ActionColumn("我的好友", null);
+		ActionColumn editProfile = new ActionColumn("编辑资料", null);
+		ActionColumn conversation = new ActionColumn("我的私信", null);
+		ActionColumn trends = new ActionColumn("热词和搜索", null);
+		ActionColumn setting = new ActionColumn("程序设置", null);
+		ActionColumn records = new ActionColumn("我的草稿箱", null);
+		ActionColumn digest = new ActionColumn("饭否语录", null);
+		ActionColumn about = new ActionColumn("关于饭否", null);
+
+		mColumns.add(myProfile);
+		mColumns.add(myFriends);
+		mColumns.add(editProfile);
+		mColumns.add(conversation);
+		mColumns.add(trends);
+		mColumns.add(setting);
+		mColumns.add(records);
+		mColumns.add(digest);
+		mColumns.add(about);
+
 	}
 
 	private static class ActionColumn {
@@ -132,6 +150,11 @@ public class ColumnsFragment extends AbstractListFragment {
 			}
 		}
 
+	}
+	
+	private static void setBold(TextView view){
+		TextPaint tp=view.getPaint();
+		tp.setFakeBoldText(true);
 	}
 
 	@Override
