@@ -41,12 +41,17 @@ public class RecordCursorAdaper extends BaseCursorAdapter {
 		if (App.DEBUG) {
 			Log.d(TAG, "bindView filePath=" + record.getFile());
 		}
-		holder.icon.setVisibility(StringHelper.isEmpty(record.getFile()) ? View.GONE
-				: View.VISIBLE);
+		holder.icon
+				.setVisibility(StringHelper.isEmpty(record.getFile()) ? View.GONE
+						: View.VISIBLE);
 	}
 
 	public RecordCursorAdaper(Context context, Cursor c) {
 		super(context, c);
+	}
+
+	public RecordCursorAdaper(Context context, Cursor c, boolean autoRequery) {
+		super(context, c, autoRequery);
 	}
 
 	@Override

@@ -127,7 +127,7 @@ abstract class UIBaseSupport extends UIActionBarSupport implements
 	}
 
 	protected void onMenuHomeClick() {
-		UIController.goUIHome(mContext);
+		UIController.showHome(mContext);
 		finish();
 	}
 

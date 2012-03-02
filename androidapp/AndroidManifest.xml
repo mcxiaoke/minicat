@@ -43,7 +43,7 @@
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name" />
         <activity
-            android:name=".UIDrafts"
+            android:name=".UIRecords"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name" />
         <activity

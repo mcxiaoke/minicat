@@ -309,7 +309,7 @@ public final class UILogin extends Activity implements OnClickListener {
 
 	private void onLoginComplete() {
 		// AlarmHelper.setScheduledTasks(mContext);
-		UIController.goUIHome(mContext);
+		UIController.showHome(mContext);
 		finish();
 	}
 

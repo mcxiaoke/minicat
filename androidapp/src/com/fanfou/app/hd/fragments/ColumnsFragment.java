@@ -10,7 +10,7 @@ import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.UIAbout;
 import com.fanfou.app.hd.UIConversation;
-import com.fanfou.app.hd.UIDrafts;
+import com.fanfou.app.hd.UIRecords;
 import com.fanfou.app.hd.UIEditProfile;
 import com.fanfou.app.hd.UIProfile;
 import com.fanfou.app.hd.UISearch;
@@ -87,7 +87,7 @@ public class ColumnsFragment extends AbstractListFragment {
 		Intent option=new Intent(getActivity(), UISetting.class);
 		ActionColumn setting = new ActionColumn("程序设置", option);
 
-		Intent record=new Intent(getActivity(), UIDrafts.class);
+		Intent record=new Intent(getActivity(), UIRecords.class);
 		ActionColumn records = new ActionColumn("我的草稿箱", record);
 		
 		

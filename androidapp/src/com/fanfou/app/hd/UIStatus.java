@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.cache.IImageLoader;
 import com.fanfou.app.hd.cache.ImageLoader;
+import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
 import com.fanfou.app.hd.service.Constants;
@@ -46,6 +47,9 @@ import com.fanfou.app.hd.util.Utils;
  * @version 2.9 2011.12.08
  * @version 3.0 2011.12.21
  * @version 3.1 2012.02.01
+ * @version 4.0 2012.02.22
+ * @version 4.1 2012.03.01
+ * @version 4.2 2012.03.02
  * 
  */
 public class UIStatus extends UIBaseSupport {
@@ -134,7 +138,7 @@ public class UIStatus extends UIBaseSupport {
 		status = (StatusModel) intent.getParcelableExtra("data");
 
 		if (status == null && statusId != null) {
-//			status = CacheManager.getStatus(this, statusId);
+			// status = CacheManager.getStatus(this, statusId);
 		} else {
 			statusId = status.getId();
 		}
@@ -152,7 +156,7 @@ public class UIStatus extends UIBaseSupport {
 	@Override
 	protected void setLayout() {
 
-		setContentView(R.layout.status);
+		setContentView(R.layout.ui_status);
 
 		mScrollView = (ScrollView) findViewById(R.id.status_content);
 
@@ -190,23 +194,16 @@ public class UIStatus extends UIBaseSupport {
 
 	private void updateUI() {
 		if (status != null) {
-
-			boolean textMode = OptionHelper.readBoolean(mContext,
-					R.string.option_text_mode, false);
-			if (textMode) {
-				iUserHead.setVisibility(View.GONE);
-			} else {
-//				iUserHead.setTag(status.userProfileImageUrl);
-//				mLoader.displayImage(status.userProfileImageUrl, iUserHead,
-//						R.drawable.default_head);
-			}
+			String headUrl = status.getUserProfileImageUrl();
+			iUserHead.setTag(headUrl);
+			mLoader.displayImage(headUrl, iUserHead, R.drawable.default_head);
 
 			tUserName.setText(status.getUserScreenName());
 
 			StatusHelper.setStatus(tContent, status.getText());
-			checkPhoto(textMode, status);
+			checkPhoto(status);
 
-//			tDate.setText(DateTimeHelper.getInterval(status.getTime()));
+			// tDate.setText(DateTimeHelper.getInterval(status.getTime()));
 			tSource.setText("通过" + status.getSource());
 
 			if (isMe) {
@@ -225,7 +222,7 @@ public class UIStatus extends UIBaseSupport {
 		}
 	}
 
-	private void checkPhoto(boolean textMode, StatusModel s) {
+	private void checkPhoto(StatusModel s) {
 		if (!s.isPhoto()) {
 			iPhoto.setVisibility(View.GONE);
 			return;
@@ -254,14 +251,11 @@ public class UIStatus extends UIBaseSupport {
 		}
 
 		// 是否需要显示图片
-		if (textMode) {
-			iPhoto.setImageResource(R.drawable.photo_icon);
+
+		if (App.getApnType() == ApnType.WIFI) {
+			loadPhoto(PHOTO_LARGE);
 		} else {
-			if (App.getApnType() == ApnType.WIFI) {
-				loadPhoto(PHOTO_LARGE);
-			} else {
-				iPhoto.setImageResource(R.drawable.photo_icon);
-			}
+			iPhoto.setImageResource(R.drawable.photo_icon);
 		}
 	}
 
@@ -273,23 +267,21 @@ public class UIStatus extends UIBaseSupport {
 			if (isMe) {
 				doDelete();
 			} else {
-//				ActionManager.doReply(this, status);
+				UIController.doReply(mContext, status);
 			}
 			break;
 		case R.id.status_action_retweet:
-//			ActionManager.doRetweet(this, status);
+			UIController.doRetweet(mContext, status);
 			break;
 		case R.id.status_action_favorite:
 			doFavorite();
 			break;
 		case R.id.status_action_share:
-//			ActionManager.doShare(this, status);
+			UIController.doShare(mContext, status);
 			break;
 		case R.id.status_top:
-//			ActionManager.doProfile(this, status);
+			UIController.showProfile(mContext, status.getId());
 			break;
-		// case R.id.status_text:
-		// break;
 		case R.id.status_photo:
 			onClickPhoto();
 			break;
@@ -297,7 +289,6 @@ public class UIStatus extends UIBaseSupport {
 			Intent intent = new Intent(mContext, UIThread.class);
 			intent.putExtra("data", status);
 			mContext.startActivity(intent);
-			// testAnimation();
 			break;
 		default:
 			break;
@@ -400,33 +391,6 @@ public class UIStatus extends UIBaseSupport {
 				}
 			}
 		};
-		// final ImageLoaderCallback callback = new ImageLoaderCallback() {
-		//
-		// @Override
-		// public void onFinish(String key, Bitmap bitmap) {
-		// if (App.DEBUG) {
-		// Log.d(TAG, "callback onfinish bitmap=" + bitmap);
-		// }
-		// if (bitmap != null) {
-		// iPhoto.setImageBitmap(bitmap);
-		// mPhotoState = type;
-		// } else {
-		// iPhoto.setImageResource(R.drawable.photo_icon);
-		// mPhotoState = PHOTO_ICON;
-		// }
-		// }
-		//
-		// @Override
-		// public void onError(String url, String message) {
-		// iPhoto.setImageResource(R.drawable.photo_icon);
-		// mPhotoState = PHOTO_ICON;
-		// }
-		//
-		// @Override
-		// public String toString(){
-		// return "ImageLoaderCallback:"+this.hashCode();
-		// }
-		// };
 
 		if (type == PHOTO_LARGE) {
 			mPhotoUrl = status.getPhotoLargeUrl();
@@ -452,12 +416,32 @@ public class UIStatus extends UIBaseSupport {
 	}
 
 	private void doDelete() {
+		final Handler handler = new Handler() {
+
+			@Override
+			public void handleMessage(Message msg) {
+				int what = msg.what;
+				switch (what) {
+				case FanFouService.RESULT_SUCCESS:
+					finish();
+					break;
+				case FanFouService.RESULT_ERROR:
+					int code = msg.getData().getInt("error_code");
+					String message = msg.getData().getString("error_message");
+					Utils.notify(mContext, message);
+					break;
+				default:
+					break;
+				}
+			}
+
+		};
 		final ConfirmDialog dialog = new ConfirmDialog(this, "删除消息",
 				"要删除这条消息吗？");
 		dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
 			@Override
 			public void onButton1Click() {
-//				FanFouService.doStatusDelete(mContext, status.getId(), true);
+				FanFouService.deleteStatus(mContext, status.getId(), handler);
 			}
 		});
 		dialog.show();
@@ -465,28 +449,31 @@ public class UIStatus extends UIBaseSupport {
 	}
 
 	private void doFavorite() {
-//		ActionManager.ResultListener li = new ActionManager.ResultListener() {
-//
-//			@Override
-//			public void onActionSuccess(int type, String message) {
-//				if (App.DEBUG)
-//					log("type="
-//							+ (type == Constants.TYPE_FAVORITES_CREATE ? "收藏"
-//									: "取消收藏") + " message=" + message);
-//				if (type == Constants.TYPE_FAVORITES_CREATE) {
-//					status.setFavorited(true);
-//				} else {
-//					status.setFavorited(false);
-//				}
-//				updateFavoriteButton(status.isFavorited());
-//			}
-//
-//			@Override
-//			public void onActionFailed(int type, String message) {
-//			}
-//		};
+
+		final Handler handler = new Handler() {
+
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case FanFouService.RESULT_SUCCESS:
+					boolean favorited = msg.getData().getBoolean("boolean");
+					status.setFavorited(favorited);
+					updateFavoriteButton(status.isFavorited());
+					Utils.notify(mContext, favorited ? "收藏成功" : "取消收藏成功");
+					break;
+				case FanFouService.RESULT_ERROR:
+					break;
+				default:
+					break;
+				}
+			}
+		};
 		updateFavoriteButton(!status.isFavorited());
-//		FanFouService.doFavorite(this, status, li);
+		if (status.isFavorited()) {
+			FanFouService.unfavorite(mContext, status.getId(), handler);
+		} else {
+			FanFouService.favorite(mContext, status.getId(), handler);
+		}
 	}
 
 	private void doCopy(String content) {

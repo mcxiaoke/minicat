@@ -21,10 +21,9 @@ import com.fanfou.app.hd.adapter.SearchResultsAdapter;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
 import com.fanfou.app.hd.api.Paging;
+import com.fanfou.app.hd.controller.PopupController;
 import com.fanfou.app.hd.dao.model.StatusModel;
-import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.FanFouService;
-import com.fanfou.app.hd.ui.widget.UIManager;
 import com.fanfou.app.hd.util.StringHelper;
 import com.fanfou.app.hd.util.Utils;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
@@ -39,6 +38,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 1.7 2011.11.25
  * @version 2.0 2012.01.31
  * @version 2.1 2012.02.01
+ * @version 2.2 2012.03.02
  * 
  */
 public class UISearchResults extends UIBaseSupport implements
@@ -229,7 +229,7 @@ public class UISearchResults extends UIBaseSupport implements
 		if (s == null) {
 			return;
 		}
-		UIManager.showPopup(this, view, s, mStatusAdapter, mStatuses);
+		PopupController.showPopup(view, s, mStatusAdapter);
 	}
 
 	@Override

@@ -21,9 +21,9 @@ import android.widget.TextView;
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.adapter.BaseCursorAdapter;
+import com.fanfou.app.hd.controller.PopupController;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.service.Constants;
-import com.fanfou.app.hd.ui.widget.UIManager;
 import com.fanfou.app.hd.util.Utils;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -36,6 +36,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 1.3 2012.02.22
  * @version 1.4 2012.02.24
  * @version 1.5 2012.02.28
+ * @version 1.6 2012.03.02
  * 
  */
 public abstract class PullToRefreshListFragment extends AbstractListFragment
@@ -240,7 +241,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 			if (s == null) {
 				return;
 			}
-			UIManager.showPopup(context, c, view, s);
+			PopupController.showPopup(view, s, c);
 		}
 	}
 

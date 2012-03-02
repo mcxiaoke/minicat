@@ -11,12 +11,15 @@ import android.os.Parcelable;
  * @author mcxiaoke
  * @version 1.0 2011.12.21
  * @version 2.0 2012.02.22
+ * @version 3.0 2012.03.02
  * 
  */
-public class RecordModel extends BaseModel {
+public class RecordModel implements Model{
 	public static final int TYPE_STATUS=401;
 	public static final int TYPE_MESSAGE=402;
 
+	private int id;
+	private int type;
 	public String text;
 	public String reply;
 	public String file;
@@ -26,7 +29,8 @@ public class RecordModel extends BaseModel {
 	}
 
 	public RecordModel(Parcel in) {
-		readBase(in);
+		id=in.readInt();
+		type=in.readInt();
 		text = in.readString();
 		reply = in.readString();
 		file = in.readString();
@@ -39,21 +43,11 @@ public class RecordModel extends BaseModel {
 		
 		RecordModel rm=new RecordModel();
 		
-		rm.id=DataController.parseString(cursor, RecordColumns.ID);
-		rm.account=DataController.parseString(cursor, RecordColumns.ACCOUNT);
-		rm.owner=DataController.parseString(cursor, RecordColumns.OWNER);
-		rm.note=DataController.parseString(cursor, RecordColumns.NOTE);
-		
+		rm.id=DataController.parseInt(cursor, RecordColumns._ID);
 		rm.type=DataController.parseInt(cursor, RecordColumns.TYPE);
-		rm.flag=DataController.parseInt(cursor, RecordColumns.FLAG);
-		
-		rm.rawid=DataController.parseLong(cursor, RecordColumns.RAWID);
-		rm.time=DataController.parseLong(cursor, RecordColumns.TIME);
-		
 		rm.text=DataController.parseString(cursor, RecordColumns.TEXT);
 		rm.reply=DataController.parseString(cursor, RecordColumns.REPLY);
 		rm.file=DataController.parseString(cursor, RecordColumns.FILE);
-		
 		
 		return rm;
 		
@@ -62,7 +56,8 @@ public class RecordModel extends BaseModel {
 
 
 	public ContentValues values() {
-		ContentValues cv = convert();
+		ContentValues cv=new ContentValues();
+		cv.put(RecordColumns.TYPE, type);
 		cv.put(RecordColumns.TEXT, text);
 		cv.put(RecordColumns.REPLY, reply);
 		cv.put(RecordColumns.FILE, file);
@@ -76,7 +71,8 @@ public class RecordModel extends BaseModel {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		writeBase(dest, flags);
+		dest.writeInt(id);
+		dest.writeInt(type);
 		dest.writeString(text);
 		dest.writeString(reply);
 		dest.writeString(file);
@@ -98,6 +94,18 @@ public class RecordModel extends BaseModel {
 	@Override
 	public String toString() {
 		return "id=" + id + " text= " + text + " filepath=" + file;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 
 	public String getText() {

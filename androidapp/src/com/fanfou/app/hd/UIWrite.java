@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.fanfou.app.hd.adapter.AtTokenizer;
 import com.fanfou.app.hd.adapter.AutoCompleteCursorAdapter;
 import com.fanfou.app.hd.controller.DataController;
+import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.dao.model.RecordColumns;
 import com.fanfou.app.hd.dao.model.RecordModel;
 import com.fanfou.app.hd.dao.model.UserColumns;
@@ -281,12 +282,12 @@ public class UIWrite extends UIBaseSupport {
 			if (action == null) {
 				type = intent.getIntExtra("type", TYPE_NORMAL);
 				text = intent.getStringExtra("text");
-				inReplyToStatusId = intent.getStringExtra("reply");
+				inReplyToStatusId = intent.getStringExtra("id");
 				File file = (File) intent.getSerializableExtra("data");
-				int draftId = intent.getIntExtra("record_id", -1);
+				long draftId = intent.getIntExtra("record_id", -1);
 				parsePhoto(file);
 				updateUI();
-				deleteDraft(draftId);
+				deleteRecord(draftId);
 			} else if (action.equals(Intent.ACTION_SEND)
 					|| action.equals(Constants.ACTION_SEND)) {
 				Bundle extras = intent.getExtras();
@@ -324,11 +325,9 @@ public class UIWrite extends UIBaseSupport {
 		}
 	}
 
-	private void deleteDraft(int id) {
-		if (id >= 0) {
-			getContentResolver().delete(
-					ContentUris.withAppendedId(RecordColumns.CONTENT_URI, id),
-					null, null);
+	private void deleteRecord(long id) {
+		if(id>0){
+			DataController.deleteRecord(mContext, id);
 		}
 	}
 
@@ -430,7 +429,7 @@ public class UIWrite extends UIBaseSupport {
 			startAddUsername();
 			break;
 		case R.id.write_action_draft:
-			// ActionManager.doShowDrafts(this);
+			UIController.showRecords(mContext);
 			break;
 		case R.id.write_action_location:
 			switchLocation();

@@ -51,7 +51,7 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 				Log.d(TAG, "cursor="+cursor+" dm="+dm);
 			}
 			if(dm!=null){
-				UIController.goUIConversation(getActivity(), dm);
+				UIController.showConversation(getActivity(), dm);
 			}
 		}
 

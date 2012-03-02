@@ -145,10 +145,10 @@ public class FanFouService extends IntentService {
 			getConversation(id, intent);
 			break;
 		case DM_DELETE:
-			deleteDirectMessage(intent);
+			deleteDirectMessage(id);
 			break;
 		case USER_SHOW:
-			userShow(intent);
+			showUser(id);
 			break;
 		case UserModel.TYPE_FRIENDS:
 		case UserModel.TYPE_FOLLOWERS:
@@ -185,7 +185,7 @@ public class FanFouService extends IntentService {
 			favorite(id);
 			break;
 		case STATUS_UNFAVORITE:
-			favoritesDelete(id);
+			unfavorite(id);
 			break;
 		case StatusModel.TYPE_PHOTO:
 			break;
@@ -195,7 +195,7 @@ public class FanFouService extends IntentService {
 
 	}
 
-	public static void doDirectMessagesDelete(Context context, String id,
+	public static void deleteDirectMessage(Context context, String id,
 			final Handler handler) {
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra("type", DM_DELETE);
@@ -204,8 +204,7 @@ public class FanFouService extends IntentService {
 		context.startService(intent);
 	}
 
-	private void deleteDirectMessage(Intent intent) {
-		String id = intent.getStringExtra("id");
+	private void deleteDirectMessage(String id) {
 		DirectMessageModel dm = null;
 		try {
 			// 删除消息
@@ -266,16 +265,7 @@ public class FanFouService extends IntentService {
 		}
 	}
 
-	public static void doFollow(Context context, final UserModel user,
-			final Handler handler) {
-		if (user.isFollowing()) {
-			doUnFollow(context, user.getId(), handler);
-		} else {
-			doFollow(context, user.getId(), handler);
-		}
-	}
-
-	public static void doFollow(Context context, String userId,
+	public static void follow(Context context, String userId,
 			final Handler handler) {
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra("type", USER_FOLLOW);
@@ -285,7 +275,7 @@ public class FanFouService extends IntentService {
 
 	}
 
-	public static void doUnFollow(Context context, String userId,
+	public static void unFollow(Context context, String userId,
 			final Handler handler) {
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra("type", USER_UNFOLLOW);
@@ -338,16 +328,12 @@ public class FanFouService extends IntentService {
 		}
 	}
 
-	private void userShow(Intent intent) {
-		String id = intent.getStringExtra("id");
+	private void showUser(String id) {
 		try {
 			UserModel u = api.showUser(id);
 			if (u == null) {
 				sendSuccessMessage();
 			} else {
-				// if (!FanFouProvider.updateUserInfo(this, u)) {
-				// FanFouProvider.insertUserInfo(this, u);
-				// }
 				sendParcelableMessage(u);
 
 			}
@@ -361,7 +347,6 @@ public class FanFouService extends IntentService {
 
 	private static void startService(Context context, int type, String id,
 			final Handler handler) {
-
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra("type", type);
 		intent.putExtra("id", id);
@@ -369,13 +354,20 @@ public class FanFouService extends IntentService {
 		context.startService(intent);
 	}
 
-	public static void doFavorite(Context context, String id,
+	public static void favorite(Context context, String id,
 			final Handler handler) {
-		Intent intent = new Intent(context, FanFouService.class);
-		intent.putExtra("type", STATUS_FAVORITE);
-		intent.putExtra("id", id);
-		intent.putExtra("messenger", new Messenger(handler));
-		context.startService(intent);
+		favoriteAction(context, id, handler, true);
+	}
+
+	public static void unfavorite(Context context, String id,
+			final Handler handler) {
+		favoriteAction(context, id, handler, false);
+	}
+
+	private static void favoriteAction(Context context, String id,
+			final Handler handler, boolean favorite) {
+		startService(context, favorite ? STATUS_FAVORITE : STATUS_UNFAVORITE,
+				id, handler);
 	}
 
 	private void favorite(String id) {
@@ -388,8 +380,11 @@ public class FanFouService extends IntentService {
 			} else {
 				ContentValues values = new ContentValues();
 				values.put("favorited", true);
-				int result = DataController.update(this, s, values);
-				sendParcelableMessage(s);
+				DataController.update(this, s, values);
+				Bundle bundle = new Bundle();
+				bundle.putInt("type", type);
+				bundle.putBoolean("boolean", true);
+				sendSuccessMessage(bundle);
 			}
 		} catch (ApiException e) {
 			if (App.DEBUG) {
@@ -402,16 +397,7 @@ public class FanFouService extends IntentService {
 		}
 	}
 
-	public static void doUnfavorite(Context context, String id,
-			final Handler handler) {
-		Intent intent = new Intent(context, FanFouService.class);
-		intent.putExtra("type", STATUS_UNFAVORITE);
-		intent.putExtra("id", id);
-		intent.putExtra("messenger", new Messenger(handler));
-		context.startService(intent);
-	}
-
-	private void favoritesDelete(String id) {
+	private void unfavorite(String id) {
 		Assert.notEmpty(id);
 		// 404 消息不存在
 		// 404 没有通过用户验证
@@ -421,11 +407,14 @@ public class FanFouService extends IntentService {
 			if (s == null) {
 				sendSuccessMessage();
 			} else {
-				ContentResolver cr = getContentResolver();
 				ContentValues values = new ContentValues();
 				values.put("favorited", false);
 				DataController.update(this, s, values);
-				sendParcelableMessage(s);
+
+				Bundle bundle = new Bundle();
+				bundle.putInt("type", type);
+				bundle.putBoolean("boolean", false);
+				sendSuccessMessage(bundle);
 			}
 		} catch (ApiException e) {
 			if (App.DEBUG) {
@@ -438,7 +427,7 @@ public class FanFouService extends IntentService {
 		}
 	}
 
-	public static void doStatusesDelete(Context context, String id,
+	public static void deleteStatus(Context context, String id,
 			final Handler handler) {
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra("type", STATUS_DELETE);
@@ -571,7 +560,7 @@ public class FanFouService extends IntentService {
 	}
 
 	private void getConversation(String id, Intent intent) {
-		
+
 		Paging p = intent.getParcelableExtra("data");
 		Assert.notNull(p);
 		if (App.getApnType() == ApnType.WIFI) {
@@ -579,16 +568,17 @@ public class FanFouService extends IntentService {
 		} else {
 			p.count = DEFAULT_TIMELINE_COUNT;
 		}
-		p.count=5;
-		
+		p.count = 5;
+
 		try {
 			List<DirectMessageModel> messages = api.getConversation(id, p);
 			if (messages != null && messages.size() > 0) {
-				
-				if(App.DEBUG){
-					Log.d(TAG, "getConversation() id="+id+" result="+messages);
+
+				if (App.DEBUG) {
+					Log.d(TAG, "getConversation() id=" + id + " result="
+							+ messages);
 				}
-				
+
 				int nums = DataController.store(this, messages);
 				sendIntMessage(nums);
 			}
@@ -629,9 +619,9 @@ public class FanFouService extends IntentService {
 		getDirectMessages(context, handler, paging,
 				DirectMessageModel.TYPE_CONVERSATION_LIST);
 	}
-	
-	public static void getConversation(Context context,
-			final Handler handler, Paging paging, String userId) {
+
+	public static void getConversation(Context context, final Handler handler,
+			Paging paging, String userId) {
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra("type", DirectMessageModel.TYPE_CONVERSATION);
 		intent.putExtra("messenger", new Messenger(handler));
@@ -672,7 +662,6 @@ public class FanFouService extends IntentService {
 	}
 
 	private void getDirectMessages(Intent intent, boolean in) {
-		// boolean doGetMore = intent.getBooleanExtra("boolean", false);
 		Paging p = intent.getParcelableExtra("data");
 		Assert.notNull(p);
 
@@ -681,15 +670,6 @@ public class FanFouService extends IntentService {
 		} else {
 			p.count = DEFAULT_TIMELINE_COUNT;
 		}
-
-		// Cursor cursor =
-		// in?initInboxMessagesCursor():initOutboxMessagesCursor();
-		// if (doGetMore) {
-		// p.maxId = Utils.getDmMaxId(cursor);
-		// } else {
-		// p.sinceId = Utils.getDmSinceId(cursor);
-		// }
-		// cursor.close();
 
 		try {
 			List<DirectMessageModel> messages = in ? api

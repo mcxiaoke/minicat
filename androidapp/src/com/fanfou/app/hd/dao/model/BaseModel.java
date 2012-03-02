@@ -12,7 +12,7 @@ import android.os.Parcelable;
  * @version 2.0 2012.02.16
  * 
  */
-public abstract class BaseModel implements Model, Parcelable {
+public abstract class BaseModel implements Model {
 	public static final int TYPE_NONE = 0;
 
 	protected String id;// id in string format
@@ -71,7 +71,7 @@ public abstract class BaseModel implements Model, Parcelable {
 		return cv;
 	}
 
-	public abstract ContentValues values();
+
 
 	public String getId() {
 		return id;
@@ -136,8 +136,6 @@ public abstract class BaseModel implements Model, Parcelable {
 	public void setNote(String note) {
 		this.note = note;
 	}
-	
-	public abstract Uri getContentUri();
-	public abstract String getTable();
+
 
 }

@@ -49,8 +49,8 @@ public class QueueService extends BaseIntentService {
 		Log.d(TAG, message);
 	}
 
-	private boolean deleteRecord(String id) {
-		return DataController.delete(this, RecordColumns.CONTENT_URI, id)>0;
+	private boolean deleteRecord(long id) {
+		return DataController.deleteRecord(this, id)>0;
 	}
 
 	private boolean doSend(final RecordModel rm) {

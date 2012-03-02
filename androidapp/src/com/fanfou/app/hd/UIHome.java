@@ -286,11 +286,11 @@ public class UIHome extends UIBaseSupport {
 	}
 
 	private void onMenuAboutClick() {
-		UIController.goUIAbout(this);
+		UIController.showAbout(this);
 	}
 
 	protected void onMenuWriteClick() {
-		UIController.goUIWrite(mContext);
+		UIController.showWrite(mContext);
 	}
 
 	private void onMenuFeedbackClick() {

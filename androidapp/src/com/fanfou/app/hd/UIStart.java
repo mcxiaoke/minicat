@@ -26,9 +26,9 @@ public class UIStart extends Activity {
 
 	private void checkLogin() {
 		if (App.isVerified()) {
-			UIController.goUIHome(this);
+			UIController.showHome(this);
 		} else {
-			UIController.goUILogin(this);
+			UIController.showLogin(this);
 		}
 		finish();
 	}

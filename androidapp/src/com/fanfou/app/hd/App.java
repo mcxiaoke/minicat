@@ -162,7 +162,7 @@ public class App extends Application {
 			Log.d(TAG, "doLogin()");
 		}
 		// App.getImageLoader().clearQueue();
-		UIController.goUILogin(context);
+		UIController.showLogin(context);
 	}
 
 	public static void clearAccountInfo(Context context) {

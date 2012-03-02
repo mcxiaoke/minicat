@@ -16,8 +16,8 @@ import android.widget.ListView;
 import com.fanfou.app.hd.adapter.StatusThreadAdapter;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
+import com.fanfou.app.hd.controller.PopupController;
 import com.fanfou.app.hd.dao.model.StatusModel;
-import com.fanfou.app.hd.ui.widget.UIManager;
 import com.fanfou.app.hd.util.StringHelper;
 import com.fanfou.app.hd.util.Utils;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
@@ -37,6 +37,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 3.8 2012.02.22
  * @version 3.9 2012.02.24
  * @version 4.0 2012.02.28
+ * @version 4.1 2012.03.02
  * 
  * Statuses Conversation List Page
  * 
@@ -120,7 +121,7 @@ public class UIThread extends UIBaseSupport implements
 
 	private void showPopup(final View view, final StatusModel s) {
 		if (s != null) {
-			UIManager.showPopup(mContext, view, s, mStatusAdapter);
+			PopupController.showPopup(view, s, mStatusAdapter);
 		}
 	}
 

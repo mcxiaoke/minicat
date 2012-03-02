@@ -18,7 +18,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	public static final String TAG = "SQLiteHelper";
 
 	public static final String DATABASE_NAME = "data.db";
-	public static final int DATABASE_VERSION = 1;
+	public static final int DATABASE_VERSION = 2;
 
 	/**
 	 * @param context

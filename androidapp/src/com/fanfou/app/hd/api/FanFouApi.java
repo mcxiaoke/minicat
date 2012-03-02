@@ -10,15 +10,8 @@ import java.util.List;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HTTP;
 
 import android.util.Log;
 
@@ -34,19 +27,16 @@ import com.fanfou.app.hd.dao.model.RateLimitStatus;
 import com.fanfou.app.hd.dao.model.Search;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.dao.model.UserModel;
-import com.fanfou.app.hd.http.GzipRequestInterceptor;
-import com.fanfou.app.hd.http.GzipResponseInterceptor;
 import com.fanfou.app.hd.http.NetHelper;
 import com.fanfou.app.hd.http.RestRequest;
 import com.fanfou.app.hd.http.RestResponse;
-import com.fanfou.app.hd.http.RequestRetryHandler;
-import com.fanfou.app.hd.util.DeviceHelper;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2012-2-23 上午10:22:32
  * @version 1.1 2012.02.24
  * @version 1.5 2012.02.27
+ * @version 1.6 2012.03.02
  * 
  */
 class FanFouApi implements Api {
@@ -84,6 +74,13 @@ class FanFouApi implements Api {
 	}
 
 	private UserModel fetchUser(String url, String id, int type, boolean post)
+			throws ApiException {
+		RestRequest.Builder builder = RestRequest.newBuilder();
+		builder.url(makeUrl(url)).id(id).post(post).mode("lite");
+		return mParser.user(fetch(builder.build()), type, account);
+	}
+
+	private UserModel fetchUser(String url, int type, boolean post)
 			throws ApiException {
 		RestRequest.Builder builder = RestRequest.newBuilder();
 		builder.url(makeUrl(url)).post(post).mode("lite");
@@ -127,10 +124,15 @@ class FanFouApi implements Api {
 		return mParser.timeline(response, type, owner);
 	}
 
-	private StatusModel fetchStatus(String url, String id, int type,
-			boolean post) throws ApiException {
+	private StatusModel fetchStatus(String url, int type, boolean post)
+			throws ApiException {
+		if (DEBUG) {
+			Log.d(TAG, "fetchStatus url=" + url + " type=" + type + " post="
+					+ post);
+		}
+
 		RestRequest.Builder builder = RestRequest.newBuilder();
-		builder.url(makeUrl(url)).post(post).id(id).mode("lite").format("html");
+		builder.url(makeUrl(url)).post(post).mode("lite").format("html");
 		return mParser.status(fetch(builder.build()), type, account);
 	}
 
@@ -274,7 +276,7 @@ class FanFouApi implements Api {
 	 */
 	@Override
 	public UserModel verifyCredentials() throws ApiException {
-		return fetchUser("/account/verify_credentials", null,
+		return fetchUser("/account/verify_credentials",
 				UserModel.TYPE_NONE, false);
 	}
 
@@ -377,7 +379,8 @@ class FanFouApi implements Api {
 	@Override
 	public UserModel block(String id) throws ApiException {
 		checkNotEmpty(id);
-		return fetchUser("/blocks/create", id, UserModel.TYPE_BLOCK, true);
+		String url = String.format("/blocks/create/%s", id);
+		return fetchUser(url, UserModel.TYPE_BLOCK, true);
 	}
 
 	/*
@@ -388,7 +391,8 @@ class FanFouApi implements Api {
 	@Override
 	public UserModel unblock(String id) throws ApiException {
 		checkNotEmpty(id);
-		return fetchUser("/blocks/destroy", id, UserModel.TYPE_NONE, true);
+		String url = String.format("/blocks/destroy/%s", id);
+		return fetchUser(url, UserModel.TYPE_BLOCK, true);
 	}
 
 	/*
@@ -547,8 +551,8 @@ class FanFouApi implements Api {
 	@Override
 	public UserModel follow(String id) throws ApiException {
 		checkNotEmpty(id);
-		return fetchUser("/friendships/create", id, UserModel.TYPE_FRIENDS,
-				true);
+		String url = String.format("/friendships/create/%s", id);
+		return fetchUser(url, UserModel.TYPE_BLOCK, true);
 	}
 
 	/*
@@ -559,7 +563,8 @@ class FanFouApi implements Api {
 	@Override
 	public UserModel unfollow(String id) throws ApiException {
 		checkNotEmpty(id);
-		return fetchUser("/friendships/destroy", id, UserModel.TYPE_NONE, true);
+		String url = String.format("//friendships/destroy/%s", id);
+		return fetchUser(url, UserModel.TYPE_BLOCK, true);
 	}
 
 	/*
@@ -799,7 +804,8 @@ class FanFouApi implements Api {
 	@Override
 	public StatusModel showStatus(String id) throws ApiException {
 		checkNotEmpty(id);
-		return fetchStatus("/statuses/show", id, StatusModel.TYPE_NONE, false);
+		String url = String.format("/statuses/show/%s", id);
+		return fetchStatus(url, StatusModel.TYPE_NONE, false);
 	}
 
 	/*
@@ -810,7 +816,8 @@ class FanFouApi implements Api {
 	@Override
 	public StatusModel deleteStatus(String id) throws ApiException {
 		checkNotEmpty(id);
-		return fetchStatus("/statuses/destroy", id, StatusModel.TYPE_NONE, true);
+		String url = String.format("/statuses/destroy/%s", id);
+		return fetchStatus(url, StatusModel.TYPE_NONE, true);
 	}
 
 	/*
@@ -985,7 +992,10 @@ class FanFouApi implements Api {
 	 */
 	@Override
 	public UserModel showUser(String id) throws ApiException {
-		return fetchUser("/users/show", id, UserModel.TYPE_NONE, false);
+		checkNotEmpty(id);
+		String url = String.format("/users/show/%s", id);
+		return fetchUser(url, UserModel.TYPE_BLOCK, false);
+		
 	}
 
 	/*
@@ -1009,8 +1019,8 @@ class FanFouApi implements Api {
 	@Override
 	public StatusModel favorite(String id) throws ApiException {
 		checkNotEmpty(id);
-		return fetchStatus("/favorites/create", id, StatusModel.TYPE_FAVORITES,
-				true);
+		String url = String.format("/favorites/create/%s", id);
+		return fetchStatus(url, StatusModel.TYPE_NONE, true);
 	}
 
 	/*
@@ -1021,8 +1031,8 @@ class FanFouApi implements Api {
 	@Override
 	public StatusModel unfavorite(String id) throws ApiException {
 		checkNotEmpty(id);
-		return fetchStatus("/favorites/destroy", id, StatusModel.TYPE_NONE,
-				true);
+		String url = String.format("/favorites/destroy/%s", id);
+		return fetchStatus(url, StatusModel.TYPE_NONE, true);
 	}
 
 	/*******************************************************************************

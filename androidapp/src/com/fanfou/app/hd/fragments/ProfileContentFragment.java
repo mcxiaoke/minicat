@@ -1,7 +1,5 @@
 package com.fanfou.app.hd.fragments;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,6 +17,7 @@ import android.widget.TextView;
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.cache.IImageLoader;
+import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
 import com.fanfou.app.hd.service.Constants;
@@ -33,6 +32,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.0 2012.02.07
  * @version 1.1 2012.02.22
  * @version 1.2 2012.02.24
+ * @version 1.3 2012.03.02
  * 
  */
 public class ProfileContentFragment extends AbstractFragment implements
@@ -303,7 +303,7 @@ public class ProfileContentFragment extends AbstractFragment implements
 				@Override
 				public void onButton1Click() {
 					updateFollowState(false);
-					FanFouService.doFollow(getActivity(), user,
+					FanFouService.unFollow(getActivity(), user.getId(),
 							new ResultHandler(ProfileContentFragment.this));
 				}
 			});
@@ -311,8 +311,8 @@ public class ProfileContentFragment extends AbstractFragment implements
 			dialog.show();
 		} else {
 			updateFollowState(true);
-			FanFouService
-					.doFollow(getActivity(), user, new ResultHandler(this));
+			FanFouService.follow(getActivity(), user.getId(),
+					new ResultHandler(ProfileContentFragment.this));
 		}
 
 	}
@@ -332,33 +332,33 @@ public class ProfileContentFragment extends AbstractFragment implements
 		}
 		switch (v.getId()) {
 		case R.id.user_action_reply:
-//			ActionManager.doWrite(getActivity(), "@" + user.getScreenName()
-//					+ " ");
+			UIController.showWrite(getActivity(), "@" + user.getScreenName()
+					+ " ");
 			break;
 		case R.id.user_action_message:
-//			ActionManager.doMessage(getActivity(), user);
+			UIController.showConversation(getActivity(), user);
 			break;
 		case R.id.user_action_follow:
 			doFollow();
 			break;
 		case R.id.user_statuses_view:
 			if (hasPermission()) {
-//				ActionManager.doShowTimeline(getActivity(), user);
+				UIController.showTimeline(getActivity(), user.getId());
 			}
 			break;
 		case R.id.user_favorites_view:
 			if (hasPermission()) {
-//				ActionManager.doShowFavorites(getActivity(), user);
+				UIController.showFavorites(getActivity(), user.getId());
 			}
 			break;
 		case R.id.user_friends_view:
 			if (hasPermission()) {
-//				ActionManager.doShowFriends(getActivity(), user);
+				UIController.showFriends(getActivity(), user.getId());
 			}
 			break;
 		case R.id.user_followers_view:
 			if (hasPermission()) {
-//				ActionManager.doShowFollowers(getActivity(), user);
+				UIController.showFollowers(getActivity(), user.getId());
 			}
 			break;
 		default:

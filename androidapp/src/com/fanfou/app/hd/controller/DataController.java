@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -16,6 +17,7 @@ import com.fanfou.app.hd.dao.DataProvider;
 import com.fanfou.app.hd.dao.model.BaseModel;
 import com.fanfou.app.hd.dao.model.DirectMessageColumns;
 import com.fanfou.app.hd.dao.model.DirectMessageModel;
+import com.fanfou.app.hd.dao.model.Model;
 import com.fanfou.app.hd.dao.model.RecordColumns;
 import com.fanfou.app.hd.dao.model.StatusColumns;
 import com.fanfou.app.hd.dao.model.UserColumns;
@@ -113,6 +115,10 @@ public class DataController {
 		cr.delete(DirectMessageColumns.CONTENT_URI, null, null);
 		cr.delete(RecordColumns.CONTENT_URI, null, null);
 	}
+	
+	public static void clear(Context context, Uri uri){
+		context.getContentResolver().delete(uri, null, null);
+	}
 
 	public static int store(Context context, List<? extends BaseModel> models) {
 		if (models == null || models.size() == 0) {
@@ -130,11 +136,11 @@ public class DataController {
 		return result;
 	}
 
-	public static void store(Context context, BaseModel model) {
+	public static Uri store(Context context, Model model) {
 		if (model == null) {
-			return;
+			return null;
 		}
-		context.getContentResolver().insert(model.getContentUri(),
+		return context.getContentResolver().insert(model.getContentUri(),
 				model.values());
 	}
 
@@ -157,6 +163,11 @@ public class DataController {
 			return -1;
 		}
 		Uri uri = withAppendedId(model.getContentUri(), model.getId());
+		return context.getContentResolver().delete(uri, null, null);
+	}
+	
+	public static int deleteRecord(Context context, long id) {
+		Uri uri = ContentUris.withAppendedId(RecordColumns.CONTENT_URI, id);
 		return context.getContentResolver().delete(uri, null, null);
 	}
 

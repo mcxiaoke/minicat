@@ -46,6 +46,7 @@ import com.fanfou.app.hd.util.StringHelper;
  * @version 6.0 2012.02.21
  * @version 6.1 2012.02.24
  * @version 6.2 2012.02.28
+ * @version 6.3 2012.03.02
  * 
  */
 public class DataProvider extends ContentProvider implements IBaseColumns {
@@ -120,7 +121,7 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 				+ "/conversation/*", MESSAGES_CONVERSATION);
 
 		sUriMatcher.addURI(AUTHORITY, RecordColumns.TABLE_NAME, RECORDS);
-		sUriMatcher.addURI(AUTHORITY, RecordColumns.TABLE_NAME + "/*",
+		sUriMatcher.addURI(AUTHORITY, RecordColumns.TABLE_NAME + "/#",
 				RECORD_ID);
 
 	}
@@ -492,7 +493,8 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 	private int deleteRecordById(Uri uri) {
 		String id = uri.getPathSegments().get(1);
 		String table = RecordColumns.TABLE_NAME;
-		return deleteItemById(table, id);
+		String where = RecordColumns._ID + " = "+id;
+		return deleteByCondition(table, where, null);
 	}
 
 	private int deleteDirectMessagesConversation(Uri uri) {

@@ -110,10 +110,22 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 	public void setData(List<StatusModel> data) {
 		mData.clear();
 		mData.addAll(data);
+		notifyDataSetChanged();
 	}
 
 	public void addData(List<StatusModel> data) {
 		mData.addAll(data);
+		notifyDataSetChanged();
+	}
+	
+	public void remove(StatusModel status){
+		mData.remove(status);
+		notifyDataSetChanged();
+	}
+	
+	public void add(StatusModel status){
+		mData.add(status);
+		notifyDataSetChanged();
 	}
 
 	abstract int getLayoutId();

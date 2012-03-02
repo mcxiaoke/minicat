@@ -13,10 +13,11 @@ import android.util.Log;
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.UIDrafts;
+import com.fanfou.app.hd.UIRecords;
 import com.fanfou.app.hd.UIWrite;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
+import com.fanfou.app.hd.controller.DataController;
 import com.fanfou.app.hd.dao.model.RecordColumns;
 import com.fanfou.app.hd.dao.model.RecordModel;
 import com.fanfou.app.hd.dao.model.StatusModel;
@@ -159,7 +160,7 @@ public class PostStatusService extends BaseIntentService {
 		int id = 1;
 		Notification notification = new Notification(R.drawable.ic_notify_icon,
 				title, System.currentTimeMillis());
-		Intent intent = new Intent(this, UIDrafts.class);
+		Intent intent = new Intent(this, UIRecords.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		notification.setLatestEventInfo(this, title, message, contentIntent);
@@ -173,8 +174,7 @@ public class PostStatusService extends BaseIntentService {
 		rm.setText(text);
 		rm.setFile(srcFile == null ? "" : srcFile.getPath());
 		rm.setReply(relationId);
-		rm.setType(type);
-		Uri resultUri = getContentResolver().insert(RecordColumns.CONTENT_URI,rm.values());
+		Uri resultUri = DataController.store(this, rm);
 	}
 
 	private void sendSuccessBroadcast() {

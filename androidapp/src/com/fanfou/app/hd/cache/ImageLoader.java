@@ -1,5 +1,7 @@
 package com.fanfou.app.hd.cache;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +51,7 @@ public class ImageLoader implements IImageLoader {
 	private final Map<String, ImageView> mViewsMap;
 	private final ImageCache mCache;
 	private final Handler mHandler;
-	private final RestClient mClient;
+//	private final RestClient mClient;
 	private final Thread mDaemon;
 
 	private static final class ImageLoaderHolder {
@@ -68,7 +70,7 @@ public class ImageLoader implements IImageLoader {
 		this.mCache = ImageCache.getInstance();
 //		this.mViewsMap = new HashMap<String, ImageView>();
 		this.mViewsMap = new WeakHashMap<String, ImageView>();
-		this.mClient = new RestClient();
+//		this.mClient = new RestClient();
 		this.mHandler = new InnerHandler();
 		this.mDaemon = new Daemon();
 		this.mDaemon.start();
@@ -116,8 +118,8 @@ public class ImageLoader implements IImageLoader {
 		Bitmap bitmap = mCache.get(url);
 		if (bitmap == null) {
 			try {
-				RestResponse res=mClient.get(url, false);
-				bitmap=BitmapFactory.decodeStream(res.getInputStream());
+//				RestResponse res=mClient.get(url, false);
+				bitmap=BitmapFactory.decodeStream(new URL(url).openStream());
 			} catch (Exception e) {
 				Log.e(TAG, "download error:" + e.getMessage());
 			}

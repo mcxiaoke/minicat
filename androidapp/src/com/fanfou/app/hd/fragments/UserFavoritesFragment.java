@@ -73,7 +73,7 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 		} else {
 			page = 1;
 		}
-		
+	
 		p.page=page;
 		
 		if (App.DEBUG) {
