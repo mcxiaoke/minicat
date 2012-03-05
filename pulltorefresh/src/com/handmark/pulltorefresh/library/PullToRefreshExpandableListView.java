@@ -1,12 +1,12 @@
 package com.handmark.pulltorefresh.library;
 
+import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
+
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ExpandableListView;
-
-import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
 
 public class PullToRefreshExpandableListView extends PullToRefreshAdapterViewBase<ExpandableListView> {
 
@@ -35,6 +35,10 @@ public class PullToRefreshExpandableListView extends PullToRefreshAdapterViewBas
 		super(context);
 	}
 
+	public PullToRefreshExpandableListView(Context context, int mode) {
+		super(context, mode);
+	}
+
 	public PullToRefreshExpandableListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
@@ -50,6 +54,6 @@ public class PullToRefreshExpandableListView extends PullToRefreshAdapterViewBas
 
 	@Override
 	public ContextMenuInfo getContextMenuInfo() {
-		return ((InternalExpandableListView)getRefreshableView()).getContextMenuInfo();
+		return ((InternalExpandableListView) getRefreshableView()).getContextMenuInfo();
 	}
 }

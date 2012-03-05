@@ -10,31 +10,30 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-
 import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
 
 public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extends PullToRefreshBase<T> implements
 		OnScrollListener {
 
-	private int lastSavedFirstVisibleItem = -1;
-	private OnScrollListener onScrollListener;
-	private OnLastItemVisibleListener onLastItemVisibleListener;
-	private View emptyView;
-	private FrameLayout refreshableViewHolder;
+	private int mLastSavedFirstVisibleItem = -1;
+	private OnScrollListener mOnScrollListener;
+	private OnLastItemVisibleListener mOnLastItemVisibleListener;
+	private View mEmptyView;
+	private FrameLayout mRefreshableViewHolder;
 
 	public PullToRefreshAdapterViewBase(Context context) {
 		super(context);
-		refreshableView.setOnScrollListener(this);
+		mRefreshableView.setOnScrollListener(this);
 	}
 
 	public PullToRefreshAdapterViewBase(Context context, int mode) {
 		super(context, mode);
-		refreshableView.setOnScrollListener(this);
+		mRefreshableView.setOnScrollListener(this);
 	}
 
 	public PullToRefreshAdapterViewBase(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		refreshableView.setOnScrollListener(this);
+		mRefreshableView.setOnScrollListener(this);
 	}
 
 	abstract public ContextMenuInfo getContextMenuInfo();
@@ -42,25 +41,25 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 	public final void onScroll(final AbsListView view, final int firstVisibleItem, final int visibleItemCount,
 			final int totalItemCount) {
 
-		if (null != onLastItemVisibleListener) {
+		if (null != mOnLastItemVisibleListener) {
 			// detect if last item is visible
 			if (visibleItemCount > 0 && (firstVisibleItem + visibleItemCount == totalItemCount)) {
 				// only process first event
-				if (firstVisibleItem != lastSavedFirstVisibleItem) {
-					lastSavedFirstVisibleItem = firstVisibleItem;
-					onLastItemVisibleListener.onLastItemVisible();
+				if (firstVisibleItem != mLastSavedFirstVisibleItem) {
+					mLastSavedFirstVisibleItem = firstVisibleItem;
+					mOnLastItemVisibleListener.onLastItemVisible();
 				}
 			}
 		}
 
-		if (null != onScrollListener) {
-			onScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+		if (null != mOnScrollListener) {
+			mOnScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
 		}
 	}
 
 	public final void onScrollStateChanged(final AbsListView view, final int scrollState) {
-		if (null != onScrollListener) {
-			onScrollListener.onScrollStateChanged(view, scrollState);
+		if (null != mOnScrollListener) {
+			mOnScrollListener.onScrollStateChanged(view, scrollState);
 		}
 	}
 
@@ -80,40 +79,44 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 	 */
 	public final void setEmptyView(View newEmptyView) {
 		// If we already have an Empty View, remove it
-		if (null != emptyView) {
-			refreshableViewHolder.removeView(emptyView);
+		if (null != mEmptyView) {
+			mRefreshableViewHolder.removeView(mEmptyView);
 		}
 
 		if (null != newEmptyView) {
+			// New view needs to be clickable so that Android recognizes it as a
+			// target for Touch Events
+			newEmptyView.setClickable(true);
+
 			ViewParent newEmptyViewParent = newEmptyView.getParent();
 			if (null != newEmptyViewParent && newEmptyViewParent instanceof ViewGroup) {
 				((ViewGroup) newEmptyViewParent).removeView(newEmptyView);
 			}
 
-			this.refreshableViewHolder.addView(newEmptyView, ViewGroup.LayoutParams.FILL_PARENT,
+			mRefreshableViewHolder.addView(newEmptyView, ViewGroup.LayoutParams.FILL_PARENT,
 					ViewGroup.LayoutParams.FILL_PARENT);
-		}
 
-		if (refreshableView instanceof EmptyViewMethodAccessor) {
-			((EmptyViewMethodAccessor) refreshableView).setEmptyViewInternal(newEmptyView);
-		} else {
-			this.refreshableView.setEmptyView(newEmptyView);
+			if (mRefreshableView instanceof EmptyViewMethodAccessor) {
+				((EmptyViewMethodAccessor) mRefreshableView).setEmptyViewInternal(newEmptyView);
+			} else {
+				mRefreshableView.setEmptyView(newEmptyView);
+			}
 		}
 	}
 
 	public final void setOnLastItemVisibleListener(OnLastItemVisibleListener listener) {
-		onLastItemVisibleListener = listener;
+		mOnLastItemVisibleListener = listener;
 	}
 
 	public final void setOnScrollListener(OnScrollListener listener) {
-		onScrollListener = listener;
+		mOnScrollListener = listener;
 	}
 
 	protected void addRefreshableView(Context context, T refreshableView) {
-		refreshableViewHolder = new FrameLayout(context);
-		refreshableViewHolder.addView(refreshableView, ViewGroup.LayoutParams.FILL_PARENT,
+		mRefreshableViewHolder = new FrameLayout(context);
+		mRefreshableViewHolder.addView(refreshableView, ViewGroup.LayoutParams.FILL_PARENT,
 				ViewGroup.LayoutParams.FILL_PARENT);
-		addView(refreshableViewHolder, new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, 0, 1.0f));
+		addView(mRefreshableViewHolder, new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, 0, 1.0f));
 	};
 
 	protected boolean isReadyForPullDown() {
@@ -125,36 +128,60 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 	}
 
 	private boolean isFirstItemVisible() {
-		if (this.refreshableView.getCount() == 0) {
+		if (mRefreshableView.getCount() == getNumberInternalViews()) {
 			return true;
-		} else if (refreshableView.getFirstVisiblePosition() == 0) {
-			
-			final View firstVisibleChild = refreshableView.getChildAt(0);
-			
+		} else if (mRefreshableView.getFirstVisiblePosition() == 0) {
+
+			final View firstVisibleChild = mRefreshableView.getChildAt(0);
+
 			if (firstVisibleChild != null) {
-				return firstVisibleChild.getTop() >= refreshableView.getTop();
+				return firstVisibleChild.getTop() >= mRefreshableView.getTop();
 			}
 		}
-		
+
 		return false;
 	}
 
 	private boolean isLastItemVisible() {
-		final int count = this.refreshableView.getCount();
-		final int lastVisiblePosition = refreshableView.getLastVisiblePosition();
+		final int count = mRefreshableView.getCount();
+		final int lastVisiblePosition = mRefreshableView.getLastVisiblePosition();
 
-		if (count == 0) {
+		if (count == getNumberInternalViews()) {
 			return true;
-		} else if (lastVisiblePosition == count - 1) {
+		} else if (lastVisiblePosition == (count - 1 - getNumberInternalFooterViews())) {
 
-			final int childIndex = lastVisiblePosition - refreshableView.getFirstVisiblePosition();
-			final View lastVisibleChild = refreshableView.getChildAt(childIndex);
+			final int childIndex = lastVisiblePosition - mRefreshableView.getFirstVisiblePosition();
+			final View lastVisibleChild = mRefreshableView.getChildAt(childIndex);
 
 			if (lastVisibleChild != null) {
-				return lastVisibleChild.getBottom() <= refreshableView.getBottom();
+				return lastVisibleChild.getBottom() <= mRefreshableView.getBottom();
 			}
 		}
-		
+
 		return false;
+	}
+
+	protected int getNumberInternalViews() {
+		return getNumberInternalHeaderViews() + getNumberInternalFooterViews();
+	}
+
+	/**
+	 * Returns the number of Adapter View Header Views. This will always return
+	 * 0 for non-ListView views.
+	 * 
+	 * @return 0 for non-ListView views, possibly 1 for ListView
+	 */
+	protected int getNumberInternalHeaderViews() {
+		return 0;
+	}
+
+	/**
+	 * Returns the number of Adapter View Footer Views. This will always return
+	 * 0 for non-ListView views.
+	 * 
+	 * @return 0 for non-ListView views, possibly 1 for ListView
+	 */
+	protected int getNumberInternalFooterViews() {
+		return 0;
 	}
 }

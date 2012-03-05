@@ -1,12 +1,12 @@
 package com.handmark.pulltorefresh.library;
 
+import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
 import android.widget.GridView;
-
-import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
 
 public class PullToRefreshGridView extends PullToRefreshAdapterViewBase<GridView> {
 
@@ -36,6 +36,10 @@ public class PullToRefreshGridView extends PullToRefreshAdapterViewBase<GridView
 		super(context);
 	}
 
+	public PullToRefreshGridView(Context context, int mode) {
+		super(context, mode);
+	}
+
 	public PullToRefreshGridView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
@@ -51,6 +55,6 @@ public class PullToRefreshGridView extends PullToRefreshAdapterViewBase<GridView
 
 	@Override
 	public ContextMenuInfo getContextMenuInfo() {
-		return ((InternalGridView)getRefreshableView()).getContextMenuInfo();
+		return ((InternalGridView) getRefreshableView()).getContextMenuInfo();
 	}
 }
