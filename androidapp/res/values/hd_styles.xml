@@ -38,7 +38,7 @@
     </style>
 
     <style name="ActionBarCompat">
-        <item name="android:background">@color/actionbar_background_color</item>
+        <item name="android:background">@drawable/action_bar_background</item>
     </style>
 
     <style name="ActionBarCompatItemBase">
