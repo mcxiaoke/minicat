@@ -50,6 +50,15 @@
             android:name=".UIVersionUpdate"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name" />
+                <activity
+            android:name=".UITabHome"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name"
+            android:launchMode="singleTask" >
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".UISearchResults" />
+        </activity>
         <activity
             android:name=".UIHome"
             android:configChanges="keyboardHidden|orientation"
