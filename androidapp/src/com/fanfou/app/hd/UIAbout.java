@@ -43,6 +43,7 @@ public class UIAbout extends Activity implements OnClickListener,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		App.setActiveContext(getClass().getCanonicalName(), this);
 		Utils.initScreenConfig(this);
 		setLayout();
 	}

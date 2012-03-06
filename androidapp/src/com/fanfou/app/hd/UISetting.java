@@ -70,7 +70,7 @@ public class UISetting extends PreferenceActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		App.setActiveContext(getClass().getCanonicalName(), this);
 		Utils.initScreenConfig(this);
 
 		addPreferencesFromResource(R.xml.options);
@@ -107,10 +107,10 @@ public class UISetting extends PreferenceActivity implements
 		if (App.DEBUG) {
 			Log.d(TAG, "checkUpdate");
 		}
-//		if (App.noConnection) {
-//			Utils.notify(this, "无网络连接，请稍后重试");
-//			return;
-//		}
+		// if (App.noConnection) {
+		// Utils.notify(this, "无网络连接，请稍后重试");
+		// return;
+		// }
 		new CheckTask(this).execute();
 	}
 
@@ -145,7 +145,7 @@ public class UISetting extends PreferenceActivity implements
 			NotificationService.set(this, cp.isChecked());
 		} else if (key.equals(getString(R.string.option_notification_interval))) {
 			NotificationService.set(this);
-		}else if (key.equals(getString(R.string.option_force_portrait))) {
+		} else if (key.equals(getString(R.string.option_force_portrait))) {
 			CheckBoxPreference cp = (CheckBoxPreference) p;
 			if (cp.isChecked()) {
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

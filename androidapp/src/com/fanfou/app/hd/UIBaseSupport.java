@@ -68,6 +68,7 @@ abstract class UIBaseSupport extends UIActionBarSupport implements
 	}
 
 	private void init() {
+		App.setActiveContext(getClass().getCanonicalName(), this);
 		this.mContext = this;
 		this.mInflater = LayoutInflater.from(this);
 		this.mDisplayMetrics = new DisplayMetrics();

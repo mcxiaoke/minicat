@@ -1,5 +1,7 @@
 package com.fanfou.app.hd;
 
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.WeakHashMap;
@@ -68,6 +70,7 @@ public class App extends Application {
 	public static final boolean DEBUG = true;
 
 	private static Map<String, BaseModel> cache = new WeakHashMap<String, BaseModel>();
+	private static HashMap<String, WeakReference<Context>> contexts = new HashMap<String, WeakReference<Context>>();
 
 	public static int versionCode;
 	public static String versionName;
@@ -321,6 +324,31 @@ public class App extends Application {
 
 	public static StatusModel getStatus(String key) {
 		return (StatusModel) cache.get(key);
+	}
+
+	public static synchronized void setActiveContext(String className,
+			Context context) {
+		WeakReference<Context> reference = new WeakReference<Context>(context);
+		contexts.put(className, reference);
+	}
+
+	public static synchronized void removeActiveContext(String className) {
+		contexts.remove(className);
+	}
+
+	public static synchronized Context getActiveContext(String className) {
+		WeakReference<Context> reference = contexts.get(className);
+		if (reference == null) {
+			return null;
+		}
+
+		final Context context = reference.get();
+
+		if (context == null) {
+			contexts.remove(className);
+		}
+
+		return context;
 	}
 
 	private static String userAgent;

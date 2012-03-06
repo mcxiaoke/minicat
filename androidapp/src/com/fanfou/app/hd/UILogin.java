@@ -97,6 +97,7 @@ public final class UILogin extends Activity implements OnClickListener {
 		if (DEBUG) {
 			Log.d(TAG, "init()");
 		}
+		App.setActiveContext(getClass().getCanonicalName(), this);
 		mContext = this;
 		Utils.initScreenConfig(this);
 	}
