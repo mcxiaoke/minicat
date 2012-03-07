@@ -12,12 +12,12 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.astuetz.viewpager.extensions.FixedTabsView;
+import com.astuetz.viewpager.extensions.SwipeyTabButton;
+import com.astuetz.viewpager.extensions.SwipeyTabsView;
 import com.astuetz.viewpager.extensions.TabsAdapter;
-import com.astuetz.viewpager.extensions.ViewPagerTabButton;
 import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.fragments.AbstractFragment;
-import com.fanfou.app.hd.fragments.ProfileContentFragment;
+import com.fanfou.app.hd.fragments.ProfileFragment;
 import com.fanfou.app.hd.fragments.UserFavoritesFragment;
 import com.fanfou.app.hd.fragments.UserTimelineFragment;
 
@@ -27,6 +27,7 @@ import com.fanfou.app.hd.fragments.UserTimelineFragment;
  * @version 1.1 2012.02.08
  * @version 1.2 2012.02.09
  * @version 1.3 2012.02.22
+ * @version 2.0 2012.03.06
  * 
  */
 public class UIProfile extends UIBaseSupport {
@@ -50,7 +51,7 @@ public class UIProfile extends UIBaseSupport {
 
 	private ViewPager mViewPager;
 	private PagesAdapter mPagesAdapter;
-	private FixedTabsView mTabsView;
+	private SwipeyTabsView mTabsView;
 
 	private UserModel user;
 	private String userId;
@@ -101,7 +102,7 @@ public class UIProfile extends UIBaseSupport {
 		mViewPager.setAdapter(mPagesAdapter);
 		mViewPager.setCurrentItem(Page.PROFILE.ordinal());
 
-		mTabsView = (FixedTabsView) findViewById(R.id.viewindicator);
+		mTabsView = (SwipeyTabsView) findViewById(R.id.viewindicator);
 		mTabsView.setAdapter(new PageTabsAdapter(this));
 		mTabsView.setViewPager(mViewPager);
 	}
@@ -126,7 +127,7 @@ public class UIProfile extends UIBaseSupport {
 			this.userId = uid;
 			fragments[Page.FAVORITES.ordinal()] = UserFavoritesFragment
 					.newInstance(userId);
-			fragments[Page.PROFILE.ordinal()] = ProfileContentFragment
+			fragments[Page.PROFILE.ordinal()] = ProfileFragment
 					.newInstance(userId);
 			fragments[Page.TIMELINE.ordinal()] = UserTimelineFragment
 					.newInstance(userId);
@@ -158,10 +159,10 @@ public class UIProfile extends UIBaseSupport {
 
 		@Override
 		public View getView(int position) {
-			ViewPagerTabButton tab;
+			SwipeyTabButton tab;
 
 			LayoutInflater inflater = mContext.getLayoutInflater();
-			tab = (ViewPagerTabButton) inflater.inflate(R.layout.tab_fixed,
+			tab = (SwipeyTabButton) inflater.inflate(R.layout.tab_swipey,
 					null);
 
 			if (position < NUMS_OF_PAGE)

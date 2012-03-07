@@ -280,7 +280,7 @@ public class UIStatus extends UIBaseSupport {
 			UIController.doShare(mContext, status);
 			break;
 		case R.id.status_top:
-			UIController.showProfile(mContext, status.getId());
+			UIController.showProfile(mContext, status.getUserId());
 			break;
 		case R.id.status_photo:
 			onClickPhoto();

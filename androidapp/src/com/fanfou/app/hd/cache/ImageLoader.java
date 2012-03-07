@@ -1,9 +1,7 @@
 package com.fanfou.app.hd.cache;
 
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -19,9 +17,6 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.http.RestClient;
-import com.fanfou.app.hd.http.RestResponse;
-import com.fanfou.app.hd.util.ImageHelper;
 
 /**
  * @author mcxiaoke
@@ -170,7 +165,7 @@ public class ImageLoader implements IImageLoader {
 			}
 			addInnerTask(url, view);
 		} else {
-			view.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap, 6));
+			view.setImageBitmap(bitmap);
 		}
 	}
 

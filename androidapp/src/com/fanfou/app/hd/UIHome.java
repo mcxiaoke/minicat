@@ -101,12 +101,6 @@ public class UIHome extends UIBaseSupport {
 	protected void setLayout() {
 
 		setContentView(R.layout.ui_home);
-
-		// mActionBar = (ActionBar) findViewById(R.id.actionbar);
-		// mActionBar.setTitle("测试版");
-		// mActionBar.setRightActimaon(new ActionBar.WriteAction(this, null));
-		// mActionBar.setVisibility(View.GONE);
-
 		mPagesAdapter = new PagesAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);
 		mViewPager.setAdapter(mPagesAdapter);
@@ -117,69 +111,6 @@ public class UIHome extends UIBaseSupport {
 		mTabsView.setViewPager(mViewPager);
 
 	}
-
-	// @Override
-	// protected IntentFilter getIntentFilter() {
-	// IntentFilter filter = new IntentFilter();
-	// filter.addAction(Constants.ACTION_STATUS_SENT);
-	// filter.addAction(Constants.ACTION_DRAFTS_SENT);
-	// filter.addAction(Constants.ACTION_NOTIFICATION);
-	// return filter;
-	// }
-
-	// private void onActionSent() {
-	// if (App.DEBUG) {
-	// log("onBroadcastReceived ACTION_STATUS_SENT");
-	// }
-	//
-	// int curPage = mViewPager.getCurrentItem();
-	// if (curPage == HOME) {
-	// boolean needRefresh = OptionHelper.readBoolean(this,
-	// R.string.option_refresh_after_send, false);
-	// if (needRefresh) {
-	// startRefresh(curPage);
-	// }
-	// }
-	// }
-
-	// @Override
-	// protected boolean onBroadcastReceived(Intent intent) {
-	// String action = intent.getAction();
-	// if (action.equals(Constants.ACTION_STATUS_SENT)
-	// || action.equals(Constants.ACTION_DRAFTS_SENT)) {
-	// onActionSent();
-	// } else if (action.equals(Constants.ACTION_NOTIFICATION)) {
-	// if (App.DEBUG) {
-	// log("onBroadcastReceived ACTION_NOTIFICATION");
-	// }
-	// int type = intent.getIntExtra(Constants.EXTRA_TYPE, -1);
-	// int count = intent.getIntExtra(Constants.EXTRA_COUNT, 0);
-	// switch (type) {
-	// case NotificationService.NOTIFICATION_TYPE_HOME:
-	// if (count > 0) {
-	// mPagesAdapter.updateUI(HOME);
-	// Utils.notify(this, count + "条新消息");
-	// }
-	// break;
-	// case NotificationService.NOTIFICATION_TYPE_MENTION:
-	// if (count > 0) {
-	// mPagesAdapter.updateUI(MENTION);
-	// Utils.notify(this, count + "条新消息");
-	// }
-	//
-	// break;
-	// case NotificationService.NOTIFICATION_TYPE_DM:
-	// if (count > 0) {
-	// mPagesAdapter.updateUI(DM);
-	// Utils.notify(this, count + "条新私信");
-	// }
-	// break;
-	// default:
-	// break;
-	// }
-	// }
-	// return true;
-	// }
 
 	@Override
 	protected void onResume() {

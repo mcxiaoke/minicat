@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    android:background="#3335b5e5"
+    android:orientation="horizontal"
+    android:paddingBottom="10dp" >
+
+    <LinearLayout style="@style/ProfileItemStatisticsBox" >
+
+        <TextView
+            android:id="@+id/statistics_statuses"
+            style="@style/ProfileItemStatisticsText" />
+
+        <TextView
+            style="@style/ProfileItemStatisticsText"
+            android:text="消息" />
+    </LinearLayout>
+
+    <include layout="@layout/divider_vertical" />
+
+    <LinearLayout style="@style/ProfileItemStatisticsBox" >
+
+        <TextView
+            android:id="@+id/statistics_favorites"
+            style="@style/ProfileItemStatisticsText" />
+
+        <TextView
+            style="@style/ProfileItemStatisticsText"
+            android:text="收藏" />
+    </LinearLayout>
+
+    <include layout="@layout/divider_vertical" />
+
+    <LinearLayout style="@style/ProfileItemStatisticsBox" >
+
+        <TextView
+            android:id="@+id/statistics_friends"
+            style="@style/ProfileItemStatisticsText" />
+
+        <TextView
+            style="@style/ProfileItemStatisticsText"
+            android:text="好友" />
+    </LinearLayout>
+
+    <include layout="@layout/divider_vertical" />
+
+    <LinearLayout style="@style/ProfileItemStatisticsBox" >
+
+        <TextView
+            android:id="@+id/statistics_followers"
+            style="@style/ProfileItemStatisticsText" />
+
+        <TextView
+            style="@style/ProfileItemStatisticsText"
+            android:text="关注者" />
+    </LinearLayout>
+
+</LinearLayout>

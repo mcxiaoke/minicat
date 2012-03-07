@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.dao.model.DirectMessageModel;
 import com.fanfou.app.hd.dao.model.Search;
 import com.fanfou.app.hd.dao.model.StatusModel;
@@ -24,6 +25,7 @@ import com.fanfou.app.hd.dao.model.UserModel;
 
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * @author mcxiaoke
@@ -50,7 +52,7 @@ final class FanFouParser implements ApiParser {
 
 	public static final String TAG = FanFouParser.class.getSimpleName();
 
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = App.DEBUG;
 
 	private String account;
 
@@ -243,6 +245,13 @@ final class FanFouParser implements ApiParser {
 		model.setNotifications(o.getBoolean("notifications"));
 		model.setVerified(false);
 		model.setFollowMe(false);
+
+		if (DEBUG) {
+			Log.d(TAG,
+					" user() id=" + model.getId() + "type=" + model.getType()
+							+ " owner=" + model.getOwner() + " account="
+							+ model.getAccount());
+		}
 		return model;
 	}
 
@@ -317,6 +326,14 @@ final class FanFouParser implements ApiParser {
 		}
 
 		model.setRead(false);
+
+		if (DEBUG) {
+			Log.d(TAG,
+					" status() id=" + model.getId() + " userId="
+							+ model.getUserId() + "type=" + model.getType()
+							+ " owner=" + model.getOwner() + " account="
+							+ model.getAccount());
+		}
 
 		return model;
 	}

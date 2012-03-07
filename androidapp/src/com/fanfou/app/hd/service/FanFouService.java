@@ -55,6 +55,7 @@ import com.fanfou.app.hd.util.Assert;
  * @version 7.2 2012.01.31
  * @version 7.5 2012.02.20
  * @version 8.0 2012.02.24
+ * @version 8.1 2012.03.07
  * 
  */
 public class FanFouService extends IntentService {
@@ -289,14 +290,11 @@ public class FanFouService extends IntentService {
 		Assert.notEmpty(id);
 		try {
 			UserModel u = api.follow(id);
-			if (u == null) {
-				sendSuccessMessage();
-			} else {
+			if (u != null) {
 				u.setType(UserModel.TYPE_FRIENDS);
-				getContentResolver()
-						.insert(UserColumns.CONTENT_URI, u.values());
-				sendParcelableMessage(u);
+				DataController.updateUserModel(this, u);
 			}
+			sendSuccessMessage();
 		} catch (ApiException e) {
 			if (App.DEBUG) {
 				e.printStackTrace();
@@ -309,23 +307,21 @@ public class FanFouService extends IntentService {
 		Assert.notEmpty(id);
 		try {
 			UserModel u = api.unfollow(id);
-			if (u == null) {
-				sendSuccessMessage();
-			} else {
-				ContentResolver cr = getContentResolver();
-				cr.delete(UserColumns.CONTENT_URI, UserColumns.ID + "=?",
-						new String[] { id });
-				sendParcelableMessage(u);
-				// 取消关注后要清空该用户名下的消息
-				cr.delete(StatusColumns.CONTENT_URI, StatusColumns.USER_ID
-						+ "=?", new String[] { id });
+			if (u != null) {
+				DataController.delete(this, u);
 			}
+			sendSuccessMessage();
 		} catch (ApiException e) {
 			if (App.DEBUG) {
 				e.printStackTrace();
 			}
 			sendErrorMessage(e);
 		}
+	}
+
+	public static void showUser(Context context, String id,
+			final Handler handler) {
+		startService(context, USER_SHOW, id, handler);
 	}
 
 	private void showUser(String id) {
@@ -483,7 +479,7 @@ public class FanFouService extends IntentService {
 
 	}
 
-	public static void doFriendshipsExists(Context context, String userA,
+	public static void showRelation(Context context, String userA,
 			String userB, final Handler handler) {
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra("type", FRIENDSHIPS_EXISTS);
@@ -710,7 +706,8 @@ public class FanFouService extends IntentService {
 		}
 
 		if (App.DEBUG) {
-			Log.d(TAG, "getTimeline userId=" + id + " paging=" + p);
+			Log.d(TAG, "getTimeline userId=" + id + " paging=" + p + " type="
+					+ type);
 		}
 
 		try {
@@ -740,45 +737,52 @@ public class FanFouService extends IntentService {
 			if (statuses == null || statuses.size() == 0) {
 				sendIntMessage(0);
 				if (App.DEBUG)
-					Log.d(TAG, "getTimeline count=0. userId=" + id);
+					Log.d(TAG, "getTimeline() count=0. userId=" + id+" type="+type);
 				return;
 			} else {
 				int size = statuses.size();
-				if (App.DEBUG) {
-					Log.d(TAG, "getTimeline count=" + size + " userId=" + id);
-				}
-				ContentResolver cr = getContentResolver();
-				if (size >= p.count && p.maxId == null && p.page <= 1) {
-					String where = StatusColumns.TYPE + " = ? ";
-					String[] whereArgs = new String[] { String.valueOf(type) };
-					if (type == StatusModel.TYPE_USER) {
-						where = StatusColumns.TYPE + " = ? AND "
-								+ StatusColumns.USER_ID + " =? ";
-						whereArgs = new String[] { String.valueOf(type), id };
-					} else if (type == StatusModel.TYPE_FAVORITES) {
-						where = StatusColumns.TYPE + " = ? AND "
-								+ StatusColumns.OWNER + " =? ";
-						whereArgs = new String[] { String.valueOf(type), id };
-					}
-					int delete = cr.delete(StatusColumns.CONTENT_URI, where,
-							whereArgs);
-					if (App.DEBUG) {
-						Log.d(TAG, "getTimeline count=" + p.count + " ,remove "
-								+ delete + " old statuses. userId=" + id
-								+ " type=" + type);
-					}
+				if (size == p.count || (p.sinceId == null && p.page <= 1)) {
+					deleteOldStatuses();
 				}
 				int insertedCount = DataController.store(this, statuses);
+				if (App.DEBUG) {
+					Log.d(TAG, "getTimeline() size=" + size + " userId=" + id
+							+ " count=" + p.count + " page=" + p.page
+							+ " type=" + type + " insertedCount="
+							+ insertedCount);
+				}
 				sendIntMessage(insertedCount);
 			}
 		} catch (ApiException e) {
 			if (App.DEBUG) {
-				Log.e(TAG, "fetchTimeline [error]" + e.statusCode + ":"
-						+ e.errorMessage + " userId=" + id);
+				Log.e(TAG, "getTimeline() [error]" + e.statusCode + ":"
+						+ e.errorMessage + " userId=" + id + " type=" + type);
 				e.printStackTrace();
 			}
 			sendErrorMessage(e);
 		}
+	}
+
+	private int deleteOldStatuses() {
+		int numDeleted = 0;
+		if (type == StatusModel.TYPE_USER) {
+			String where = StatusColumns.TYPE + " = ? AND "
+					+ StatusColumns.USER_ID + " =? ";
+			String[] whereArgs = new String[] { String.valueOf(type), id };
+			numDeleted = getContentResolver().delete(StatusColumns.CONTENT_URI,
+					where, whereArgs);
+		} else if (type == StatusModel.TYPE_FAVORITES) {
+			String where = StatusColumns.TYPE + " = ? AND "
+					+ StatusColumns.OWNER + " =? ";
+			String[] whereArgs = new String[] { String.valueOf(type), id };
+			numDeleted = getContentResolver().delete(StatusColumns.CONTENT_URI,
+					where, whereArgs);
+		}
+		if (App.DEBUG) {
+			Log.d(TAG, "deleteOldStatuses numDeleted=" + numDeleted + " type="
+					+ type);
+		}
+		return numDeleted;
 	}
 
 	public static void getTimeline(Context context, int type,
@@ -789,7 +793,7 @@ public class FanFouService extends IntentService {
 		intent.putExtra("messenger", new Messenger(handler));
 		intent.putExtra("data", paging);
 		if (App.DEBUG) {
-			Log.d(TAG, "doFetchTimeline() type=" + type + " paging=" + paging
+			Log.d(TAG, "getTimeline() type=" + type + " paging=" + paging
 					+ " userId=" + userId);
 		}
 		context.startService(intent);

@@ -21,6 +21,7 @@ import com.fanfou.app.hd.dao.model.Model;
 import com.fanfou.app.hd.dao.model.RecordColumns;
 import com.fanfou.app.hd.dao.model.StatusColumns;
 import com.fanfou.app.hd.dao.model.UserColumns;
+import com.fanfou.app.hd.dao.model.UserModel;
 
 /**
  * @author mcxiaoke
@@ -143,6 +144,20 @@ public class DataController {
 		return context.getContentResolver().insert(model.getContentUri(),
 				model.values());
 	}
+	
+	public static int updateUserModel(Context context, final UserModel u){
+		ContentValues values=new ContentValues();
+		values.put(UserColumns.TYPE, u.getType());
+		values.put(UserColumns.FOLLOWING, u.isFollowing());
+		values.put(UserColumns.STATUSES_COUNT, u.getStatusesCount());
+		values.put(UserColumns.FAVORITES_COUNT, u.getFavouritesCount());
+		values.put(UserColumns.FRIENDS_COUNT, u.getFriendsCount());
+		values.put(UserColumns.FOLLOWERS_COUNT, u.getFollowersCount());
+		values.put(UserColumns.DESCRIPTION, u.getDescription());
+		values.put(UserColumns.PROFILE_IMAGE_URL, u.getProfileImageUrl());
+		values.put(UserColumns.PROFILE_IMAGE_URL_LARGE, u.getProfileImageUrlLarge());
+		return DataController.update(context, u, values);
+	}
 
 	public static int update(Context context, BaseModel model,
 			ContentValues values) {
@@ -164,6 +179,11 @@ public class DataController {
 		}
 		Uri uri = withAppendedId(model.getContentUri(), model.getId());
 		return context.getContentResolver().delete(uri, null, null);
+	}
+	
+	public static int deleteStatusByUserId(Context context, String userId){
+		return context.getContentResolver().delete(StatusColumns.CONTENT_URI, StatusColumns.USER_ID
+				+ " =? ", new String[] { userId });
 	}
 	
 	public static int deleteRecord(Context context, long id) {

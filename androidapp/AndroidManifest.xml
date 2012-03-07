@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fanfou.app.hd"
-    android:versionCode="20120228"
-    android:versionName="2.0-alpha2-20120228" >
+    android:versionCode="20120307"
+    android:versionName="2.0-alpha3-20120307" >
 
     <uses-sdk
         android:minSdkVersion="7"

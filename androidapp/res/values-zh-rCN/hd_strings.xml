@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="loading">载入中...</string>
+    <string name="action_follow">添加关注</string>
+    <string name="action_unfollow">取消关注</string>
+    <string name="action_dm">发私信</string>
+    <string name="action_mention">发消息</string>
+
+</resources>

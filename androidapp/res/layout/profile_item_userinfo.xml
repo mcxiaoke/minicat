@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/info_title"
+        style="@style/ProfileItemInfoTitle"
+        android:text="他的资料" />
+
+    <TextView
+        android:id="@+id/info_content"
+        style="@style/ProfileItemInfoText"
+        android:text="他的资料他的资料他的资料他的资料他的资料他的资料他的资料他的资料他的资料他的资料他的资料他的资料" />
+
+    <TextView
+        android:id="@+id/desc_title"
+        style="@style/ProfileItemInfoTitle"
+        android:text="他的自述" />
+
+    <TextView
+        android:id="@+id/desc_content"
+        style="@style/ProfileItemInfoText"
+        android:text="他的自述他的自述他的自述他的自述他的自述他的自述他的自述他的自述他的自述他的自述他的自述他的自述他的自述他的自述" />
+
+</LinearLayout>

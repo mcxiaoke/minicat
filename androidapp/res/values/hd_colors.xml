@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <color name="solid_white">#ffffffff</color>
+    <color name="solid_black">#ff000000</color>
+    <color name="soft_black">#ff333333</color>
+    <color name="soft_white">#ff999999</color>
+    
     <color name="actionbar_background_color">#ff0cc3f5</color>
     <color name="actionbar_title_color">#FFFFFFFF</color>
+    
+    <color name="profile_item_title">#ffcccccc</color>
+
 </resources>

@@ -5,6 +5,8 @@ package com.fanfou.app.hd.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.BitSet;
 import java.util.List;
 
@@ -12,6 +14,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.protocol.HTTP;
 
 import android.util.Log;
 
@@ -276,8 +279,8 @@ class FanFouApi implements Api {
 	 */
 	@Override
 	public UserModel verifyCredentials() throws ApiException {
-		return fetchUser("/account/verify_credentials",
-				UserModel.TYPE_NONE, false);
+		return fetchUser("/account/verify_credentials", UserModel.TYPE_NONE,
+				false);
 	}
 
 	/*
@@ -379,7 +382,7 @@ class FanFouApi implements Api {
 	@Override
 	public UserModel block(String id) throws ApiException {
 		checkNotEmpty(id);
-		String url = String.format("/blocks/create/%s", id);
+		String url = String.format("/blocks/create/%s", utf8Encode(id));
 		return fetchUser(url, UserModel.TYPE_BLOCK, true);
 	}
 
@@ -391,7 +394,7 @@ class FanFouApi implements Api {
 	@Override
 	public UserModel unblock(String id) throws ApiException {
 		checkNotEmpty(id);
-		String url = String.format("/blocks/destroy/%s", id);
+		String url = String.format("/blocks/destroy/%s", utf8Encode(id));
 		return fetchUser(url, UserModel.TYPE_BLOCK, true);
 	}
 
@@ -551,7 +554,7 @@ class FanFouApi implements Api {
 	@Override
 	public UserModel follow(String id) throws ApiException {
 		checkNotEmpty(id);
-		String url = String.format("/friendships/create/%s", id);
+		String url = String.format("/friendships/create/%s", utf8Encode(id));
 		return fetchUser(url, UserModel.TYPE_BLOCK, true);
 	}
 
@@ -563,7 +566,7 @@ class FanFouApi implements Api {
 	@Override
 	public UserModel unfollow(String id) throws ApiException {
 		checkNotEmpty(id);
-		String url = String.format("//friendships/destroy/%s", id);
+		String url = String.format("/friendships/destroy/%s", utf8Encode(id));
 		return fetchUser(url, UserModel.TYPE_BLOCK, true);
 	}
 
@@ -993,9 +996,9 @@ class FanFouApi implements Api {
 	@Override
 	public UserModel showUser(String id) throws ApiException {
 		checkNotEmpty(id);
-		String url = String.format("/users/show/%s", id);
+		String url = String.format("/users/show/%s", utf8Encode(id));
 		return fetchUser(url, UserModel.TYPE_BLOCK, false);
-		
+
 	}
 
 	/*
@@ -1007,8 +1010,8 @@ class FanFouApi implements Api {
 	public List<StatusModel> getFavorites(String id, Paging paging)
 			throws ApiException {
 		checkNotEmpty(id);
-		return fetchTimeline("/favorites", paging, StatusModel.TYPE_FAVORITES,
-				id);
+		return fetchTimeline("/favorites", paging, id,
+				StatusModel.TYPE_FAVORITES, id);
 	}
 
 	/*
@@ -1033,6 +1036,14 @@ class FanFouApi implements Api {
 		checkNotEmpty(id);
 		String url = String.format("/favorites/destroy/%s", id);
 		return fetchStatus(url, StatusModel.TYPE_NONE, true);
+	}
+
+	private String utf8Encode(String text) {
+		try {
+			return URLEncoder.encode(text, HTTP.UTF_8);
+		} catch (UnsupportedEncodingException e) {
+			return text;
+		}
 	}
 
 	/*******************************************************************************

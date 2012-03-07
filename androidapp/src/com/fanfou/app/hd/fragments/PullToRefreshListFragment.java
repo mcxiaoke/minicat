@@ -45,7 +45,8 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
 	private static final int LOADER_ID = 1;
 
-	protected static final String TAG=PullToRefreshListFragment.class.getSimpleName();
+	protected static final String TAG = PullToRefreshListFragment.class
+			.getSimpleName();
 
 	protected PullToRefreshListView mPullToRefreshView;
 	protected ListView mListView;
@@ -54,11 +55,10 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
 	private BaseCursorAdapter mAdapter;
 	private Cursor mCursor;
-	
-	private Handler mHandler=new Handler();
+
+	private Handler mHandler = new Handler();
 
 	private boolean busy;
-
 	public PullToRefreshListFragment() {
 		super();
 		if (App.DEBUG) {
@@ -222,17 +222,10 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 		if (App.DEBUG) {
 			Log.d(TAG, "onSuccess(count)");
 		}
-		mHandler.post(new Runnable() {
-			
-			@Override
-			public void run() {
-				if (count > 0 && mCursor != null) {
-					mCursor.requery();
-					showToast(count);
-				}
-				
-			}
-		});
+		if (count > 0 && mCursor != null) {
+			mCursor.requery();
+			showToast(count);
+		}
 	}
 
 	private void onError(Bundle data) {
@@ -255,10 +248,9 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 			final Cursor c) {
 		if (c != null) {
 			final StatusModel s = StatusModel.from(c);
-			if (s == null) {
-				return;
+			if (s != null) {
+				PopupController.showPopup(view, s, c);
 			}
-			PopupController.showPopup(view, s, c);
 		}
 	}
 
@@ -348,9 +340,9 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 			Log.d(TAG, "onLoadFinished() adapter=" + mAdapter.getCount()
 					+ " class=" + this.getClass().getSimpleName());
 		}
-		if (mAdapter.isEmpty()) {
-			startRefresh();
-		}
+//		if (mAdapter.isEmpty()) {
+//			startRefresh();
+//		}
 
 	}
 
