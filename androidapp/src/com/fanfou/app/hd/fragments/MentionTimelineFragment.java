@@ -3,6 +3,7 @@ package com.fanfou.app.hd.fragments;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Messenger;
+import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
@@ -28,9 +29,22 @@ public class MentionTimelineFragment extends BaseTimlineFragment {
 		MentionTimelineFragment fragment = new MentionTimelineFragment();
 		fragment.setArguments(args);
 		if (App.DEBUG) {
-			Log.d(TAG, "newInstance() "+fragment);
+			Log.d(TAG, "newInstance() " + fragment);
 		}
 		return fragment;
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
+		super.onLoadFinished(loader, newCursor);
+		if (getAdapter().isEmpty()) {
+			startRefresh();
+		}
 	}
 
 	@Override
@@ -45,16 +59,17 @@ public class MentionTimelineFragment extends BaseTimlineFragment {
 		}
 		final ResultHandler handler = new ResultHandler(this);
 		final Cursor cursor = getCursor();
-		Paging p=new Paging();
+		Paging p = new Paging();
 		if (doGetMore) {
 			p.maxId = Utils.getMaxId(cursor);
 		} else {
 			p.sinceId = Utils.getSinceId(cursor);
 		}
 		if (App.DEBUG) {
-			Log.d(TAG, "doFetch() doGetMore=" + doGetMore+" Paging="+p);
+			Log.d(TAG, "doFetch() doGetMore=" + doGetMore + " Paging=" + p);
 		}
-		FanFouService.getTimeline(getActivity(), StatusModel.TYPE_MENTIONS, handler, p);
+		FanFouService.getTimeline(getActivity(), StatusModel.TYPE_MENTIONS,
+				handler, p);
 	}
 
 }

@@ -2,6 +2,7 @@ package com.fanfou.app.hd.fragments;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
@@ -34,9 +35,14 @@ public class HomeTimelineFragment extends BaseTimlineFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-//		if (getAdapter().isEmpty()) {
-//			startRefresh();
-//		}
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
+		super.onLoadFinished(loader, newCursor);
+		if(getAdapter().isEmpty()){
+			startRefresh();
+		}
 	}
 
 	@Override

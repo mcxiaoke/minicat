@@ -20,12 +20,13 @@ import com.fanfou.app.hd.util.Utils;
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.28
+ * @version 1.1 2012.03.07
  * 
  */
 public class ConversationFragment extends PullToRefreshListFragment {
 	private static final String TAG = ConversationFragment.class
 			.getSimpleName();
-	
+
 	private String userId;
 
 	public static ConversationFragment newInstance(String id) {
@@ -34,7 +35,7 @@ public class ConversationFragment extends PullToRefreshListFragment {
 		ConversationFragment fragment = new ConversationFragment();
 		fragment.setArguments(args);
 		if (App.DEBUG) {
-			Log.d(TAG, "newInstance() "+fragment+" id="+id);
+			Log.d(TAG, "newInstance() " + fragment + " id=" + id);
 		}
 		return fragment;
 	}
@@ -42,10 +43,10 @@ public class ConversationFragment extends PullToRefreshListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Bundle args=getArguments();
-		userId=args.getString("id");
+		Bundle args = getArguments();
+		userId = args.getString("id");
 		if (App.DEBUG) {
-			Log.d(TAG, "onCreate() userId="+userId);
+			Log.d(TAG, "onCreate() userId=" + userId);
 		}
 	}
 
@@ -71,7 +72,7 @@ public class ConversationFragment extends PullToRefreshListFragment {
 		if (App.DEBUG) {
 			Log.d(TAG, "createAdapter()");
 		}
-		return new ConversationCursorAdapter(getActivity(), getCursor(),true);
+		return new ConversationCursorAdapter(getActivity(), getCursor(), true);
 	}
 
 	@Override
@@ -82,18 +83,18 @@ public class ConversationFragment extends PullToRefreshListFragment {
 	@Override
 	protected void doFetch(boolean doGetMore) {
 		final ResultHandler handler = new ResultHandler(this);
-		final Cursor cursor=getCursor();
-		Paging p=new Paging();
+		final Cursor cursor = getCursor();
+		Paging p = new Paging();
 		// 对于私信对话界面来说，最上面的为最旧的，最下面的为最新的
-		if(doGetMore){
+		if (doGetMore) {
 			// 底部上拉获取最新的，需要sinceId
-			p.sinceId=Utils.getMaxId(cursor);
-		}else{
+			p.sinceId = Utils.getMaxId(cursor);
+		} else {
 			// 顶部下拉是获取更旧的，需要maxId;
-			p.maxId=Utils.getSinceId(cursor);
-		}	
-		
-		FanFouService.getConversation(getActivity(), handler, p,userId);
+			p.maxId = Utils.getSinceId(cursor);
+		}
+
+		FanFouService.getConversation(getActivity(), handler, p, userId);
 	}
 
 	@Override
@@ -104,9 +105,17 @@ public class ConversationFragment extends PullToRefreshListFragment {
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		if (App.DEBUG) {
-			Log.d(TAG, "onCreateLoader() userId="+userId);
+			Log.d(TAG, "onCreateLoader() userId=" + userId);
 		}
-		return DataController.getConversationLoader(getActivity(),userId);
+		return DataController.getConversationLoader(getActivity(), userId);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
+		super.onLoadFinished(loader, newCursor);
+		if (getAdapter().isEmpty()) {
+			startRefresh();
+		}
 	}
 
 }

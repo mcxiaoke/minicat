@@ -24,6 +24,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.2 2012.02.09
  * @version 1.3 2012.02.24
  * @version 1.4 2012.02.28
+ * @version 1.5 2012.03.07
  * 
  */
 public class ConversationListFragment extends PullToRefreshListFragment {
@@ -102,6 +103,14 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 //		CursorLoader loader=new CursorLoader(getActivity(), uri, null, null, null, null);
 //		return loader;
 		return DataController.getConversationListLoader(getActivity());
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
+		super.onLoadFinished(loader, newCursor);
+		if(getAdapter().isEmpty()){
+			startRefresh();
+		}
 	}
 
 }
