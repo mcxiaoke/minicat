@@ -17,9 +17,7 @@
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <gradient
-        android:angle="90"
-        android:endColor="#ff33b5ff"
-        android:startColor="#ff0099ee" />
+    <solid android:color="@color/actionbar_background" >
+    </solid>
 
 </shape>

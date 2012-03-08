@@ -6,9 +6,16 @@
     <color name="soft_black">#ff333333</color>
     <color name="soft_white">#ff999999</color>
     
-    <color name="actionbar_background_color">#ff0cc3f5</color>
-    <color name="actionbar_title_color">#FFFFFFFF</color>
     
-    <color name="profile_item_title">#ffcccccc</color>
+    <color name="actionbar_title_color">#FFFFFFFF</color>
+    <color name="actionbar_background">#ff2ea5ff</color>
+    <color name="actionbar_background_pressed">#ff1671b9</color>
+    
+    <color name="profile_item_title_background">#ffcccccc</color>
+    
+    <color name="popup_background">#ffcccccc</color>
+    <color name="popup_background_pressed">#ffc2c2c2</color>
+    
+    <color name="divider_blue">#ff2ea5ff</color>
 
 </resources>

@@ -18,6 +18,22 @@
 
     <style name="Theme.Light" parent="android:style/Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
+
+        <!-- listview style -->
+        <item name="android:listViewStyle">@style/ListViewStyle</item>
+
+        <!-- scrollbars style -->
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_vertical_thumb</item>
+        <item name="android:scrollbarSize">@dimen/scrollbarSize</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:scrollbarStyle">insideOverlay</item>
+    </style>
+
+    <style name="ListViewStyle">
+
+        <!-- <item name="android:listSelector">@drawable/list_selector_holo_light</item> -->
+        <item name="android:dividerHeight">@dimen/dividerHeight</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
     </style>
 
     <style name="ActionBarStyle" parent="android:style/Widget.Holo.Light.ActionBar">

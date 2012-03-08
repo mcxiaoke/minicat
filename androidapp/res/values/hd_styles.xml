@@ -14,14 +14,18 @@
 
         <!-- listview style -->
         <item name="android:listViewStyle">@style/ListViewStyle</item>
+
         <!-- scrollbars style -->
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_vertical_thumb</item>
-        <item name="android:scrollbarSize">4dp</item>
+        <item name="android:scrollbarSize">@dimen/scrollbarSize</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:scrollbarStyle">insideOverlay</item>
     </style>
 
     <style name="ListViewStyle">
         <item name="android:listSelector">@drawable/list_selector_holo_light</item>
-        <item name="android:cacheColorHint">#00000000</item>
+        <item name="android:dividerHeight">@dimen/dividerHeight</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
     </style>
 
     <!-- ===========================below add by mcxiaoke====================== -->
@@ -33,7 +37,7 @@
     </style>
 
     <style name="ProfileItemStatisticsText">
-        <item name="android:textColor">@color/actionbar_background_color</item>
+        <item name="android:textColor">@color/actionbar_background</item>
         <item name="android:textSize">16sp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -51,7 +55,7 @@
     </style>
 
     <style name="ProfileItemActionButton">
-        <item name="android:background">@drawable/button_background</item>
+        <item name="android:background">@drawable/button_blue</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_width">match_parent</item>
@@ -63,7 +67,7 @@
     </style>
 
     <style name="ProfileItemInfoTitle">
-        <item name="android:background">@color/profile_item_title</item>
+        <item name="android:background">@color/profile_item_title_background</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/solid_black</item>

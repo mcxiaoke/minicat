@@ -35,10 +35,10 @@ public class SwipeyTabButton extends Button implements SwipeyTab {
 	private Context mContext;
 	
 	private int mTextColorNormal = 0x000000;
-	private int mTextColorCenter = 0xFF35b5e5;
+	private int mTextColorCenter = 0xff2ea5ff;
 	
 	private int mLineColorNormal = 0x000000;
-	private int mLineColorCenter = 0xFF35b5e5;
+	private int mLineColorCenter = 0xFF2ea5ff;
 	
 	private int mLineHeightSelected = 3;
 	
