@@ -134,17 +134,12 @@ public final class Utils {
 	}
 
 	public static void notify(Context context, CharSequence text) {
-		if (TextUtils.isEmpty(text) || context == null) {
-			return;
-		}
 		Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
 	}
 
 	public static void notify(Context context, int resId) {
-		// if (App.active) {
 		Toast.makeText(context, context.getText(resId), Toast.LENGTH_SHORT)
 				.show();
-		// }
 	}
 
 	public static void open(Context context, final String fileName) {

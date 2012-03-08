@@ -7,7 +7,7 @@
     <TextView
         android:id="@+id/info_title"
         style="@style/ProfileItemInfoTitle"
-        android:text="他的资料" />
+        android:text="资料" />
 
     <TextView
         android:id="@+id/info_content"
@@ -17,7 +17,7 @@
     <TextView
         android:id="@+id/desc_title"
         style="@style/ProfileItemInfoTitle"
-        android:text="他的自述" />
+        android:text="自述" />
 
     <TextView
         android:id="@+id/desc_content"

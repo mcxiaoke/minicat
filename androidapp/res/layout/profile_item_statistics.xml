@@ -7,7 +7,9 @@
     android:orientation="horizontal"
     android:paddingBottom="10dp" >
 
-    <LinearLayout style="@style/ProfileItemStatisticsBox" >
+    <LinearLayout
+        android:id="@+id/box_statuses"
+        style="@style/ProfileItemStatisticsBox" >
 
         <TextView
             android:id="@+id/statistics_statuses"
@@ -20,7 +22,9 @@
 
     <include layout="@layout/divider_vertical" />
 
-    <LinearLayout style="@style/ProfileItemStatisticsBox" >
+    <LinearLayout
+        android:id="@+id/box_favorites"
+        style="@style/ProfileItemStatisticsBox" >
 
         <TextView
             android:id="@+id/statistics_favorites"
@@ -33,7 +37,9 @@
 
     <include layout="@layout/divider_vertical" />
 
-    <LinearLayout style="@style/ProfileItemStatisticsBox" >
+    <LinearLayout
+        android:id="@+id/box_friends"
+        style="@style/ProfileItemStatisticsBox" >
 
         <TextView
             android:id="@+id/statistics_friends"
@@ -46,7 +52,9 @@
 
     <include layout="@layout/divider_vertical" />
 
-    <LinearLayout style="@style/ProfileItemStatisticsBox" >
+    <LinearLayout
+        android:id="@+id/box_followers"
+        style="@style/ProfileItemStatisticsBox" >
 
         <TextView
             android:id="@+id/statistics_followers"

@@ -30,6 +30,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.3 2012.03.02
  * @version 2.0 2012.03.06
  * @version 2.1 2012.03.07
+ * @version 2.2 2012.03.08
  * 
  */
 public class ProfileFragment extends AbstractFragment implements
@@ -77,6 +78,11 @@ public class ProfileFragment extends AbstractFragment implements
 	private TextView tvFriends;
 
 	private TextView tvFollowers;
+
+	private View vStatuses;
+	private View vFavorites;
+	private View vFriends;
+	private View vFollowers;
 
 	private TextView infoTitle;
 
@@ -150,6 +156,11 @@ public class ProfileFragment extends AbstractFragment implements
 		tvFriends = (TextView) root.findViewById(R.id.statistics_friends);
 		tvFollowers = (TextView) root.findViewById(R.id.statistics_followers);
 
+		vStatuses = root.findViewById(R.id.box_statuses);
+		vFavorites = root.findViewById(R.id.box_favorites);
+		vFriends = root.findViewById(R.id.box_friends);
+		vFollowers = root.findViewById(R.id.box_followers);
+
 		infoTitle = (TextView) root.findViewById(R.id.info_title);
 		infoContent = (TextView) root.findViewById(R.id.info_content);
 
@@ -195,10 +206,10 @@ public class ProfileFragment extends AbstractFragment implements
 		actionDM.setOnClickListener(this);
 		actionMention.setOnClickListener(this);
 
-		tvStatuses.setOnClickListener(this);
-		tvFavorites.setOnClickListener(this);
-		tvFriends.setOnClickListener(this);
-		tvFollowers.setOnClickListener(this);
+		vStatuses.setOnClickListener(this);
+		vFavorites.setOnClickListener(this);
+		vFriends.setOnClickListener(this);
+		vFollowers.setOnClickListener(this);
 	}
 
 	private void updateUI(final UserModel user) {
@@ -218,7 +229,7 @@ public class ProfileFragment extends AbstractFragment implements
 		}
 
 		showContent();
-
+		updatePermission();
 		updateHeader();
 		updateAction();
 		updateStatistics();
@@ -227,6 +238,14 @@ public class ProfileFragment extends AbstractFragment implements
 
 		showRelation();
 
+	}
+
+	private void updatePermission() {
+		if(user.getId().equals(App.getAccount())){
+			noPermission=false;
+			return;
+		}
+		noPermission = user.isProtect() && !user.isFollowing();
 	}
 
 	private void updateHeader() {
@@ -355,7 +374,7 @@ public class ProfileFragment extends AbstractFragment implements
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
 				case FanFouService.RESULT_SUCCESS:
-					if(App.DEBUG){
+					if (App.DEBUG) {
 						Log.d(TAG, "follow success");
 					}
 					user.setFollowing(true);
@@ -363,7 +382,7 @@ public class ProfileFragment extends AbstractFragment implements
 					Utils.notify(getActivity(), "关注成功");
 					break;
 				case FanFouService.RESULT_ERROR:
-					if(App.DEBUG){
+					if (App.DEBUG) {
 						Log.d(TAG, "follow error");
 					}
 					String errorMessage = msg.getData().getString(
@@ -386,7 +405,7 @@ public class ProfileFragment extends AbstractFragment implements
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
 				case FanFouService.RESULT_SUCCESS:
-					if(App.DEBUG){
+					if (App.DEBUG) {
 						Log.d(TAG, "unfollow success");
 					}
 					user.setFollowing(false);
@@ -394,7 +413,7 @@ public class ProfileFragment extends AbstractFragment implements
 					Utils.notify(getActivity(), "已取消关注");
 					break;
 				case FanFouService.RESULT_ERROR:
-					if(App.DEBUG){
+					if (App.DEBUG) {
 						Log.d(TAG, "unfollow error");
 					}
 					String errorMessage = msg.getData().getString(
@@ -435,6 +454,11 @@ public class ProfileFragment extends AbstractFragment implements
 		if (user == null) {
 			return;
 		}
+		if (App.DEBUG) {
+			Log.d(TAG,
+					"OnClick() view=" + v.getId() + " user.id=" + user.getId()
+							+ " noPermission=" + noPermission);
+		}
 		switch (v.getId()) {
 		case R.id.action_mention:
 			UIController.showWrite(getActivity(), "@" + user.getScreenName()
@@ -446,22 +470,22 @@ public class ProfileFragment extends AbstractFragment implements
 		case R.id.action_follow:
 			doFollow();
 			break;
-		case R.id.statistics_statuses:
+		case R.id.box_statuses:
 			// if (hasPermission()) {
 			// UIController.showTimeline(getActivity(), user.getId());
 			// }
 			break;
-		case R.id.statistics_favorites:
+		case R.id.box_favorites:
 			if (hasPermission()) {
 				UIController.showFavorites(getActivity(), user.getId());
 			}
 			break;
-		case R.id.statistics_friends:
+		case R.id.box_friends:
 			if (hasPermission()) {
 				UIController.showFriends(getActivity(), user.getId());
 			}
 			break;
-		case R.id.statistics_followers:
+		case R.id.box_followers:
 			if (hasPermission()) {
 				UIController.showFollowers(getActivity(), user.getId());
 			}

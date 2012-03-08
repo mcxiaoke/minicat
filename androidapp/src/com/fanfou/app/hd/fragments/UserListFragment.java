@@ -26,6 +26,7 @@ import com.fanfou.app.hd.util.StringHelper;
  * @version 1.2 2012.02.09
  * @version 1.3 2012.02.22
  * @version 1.4 2012.02.24
+ * @version 1.5 2012.03.08
  * 
  */
 public abstract class UserListFragment extends PullToRefreshListFragment implements FilterQueryProvider{
@@ -117,6 +118,9 @@ public abstract class UserListFragment extends PullToRefreshListFragment impleme
 		super.onLoadFinished(loader, newCursor);
 		getAdapter().setFilterQueryProvider(this);
 		onInitComplete();
+		if(getAdapter().isEmpty()){
+			startRefresh();
+		}
 	}
 
 	@Override

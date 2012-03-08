@@ -18,7 +18,6 @@
         <!-- scrollbars style -->
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_vertical_thumb</item>
         <item name="android:scrollbarSize">@dimen/scrollbarSize</item>
-        <item name="android:scrollbars">vertical</item>
         <item name="android:scrollbarStyle">insideOverlay</item>
     </style>
 
