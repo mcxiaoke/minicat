@@ -19,7 +19,7 @@ public class UITimeline extends UIBaseTimeline {
 
 	@Override
 	protected BaseTimlineFragment getFragment(String userId) {
-		return UserTimelineFragment.newInstance(userId);
+		return UserTimelineFragment.newInstance(userId,true);
 	}
 
 }

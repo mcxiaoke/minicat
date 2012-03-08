@@ -37,6 +37,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 1.4 2012.02.24
  * @version 1.5 2012.02.28
  * @version 1.6 2012.03.02
+ * @version 1.7 2012.03.08
  * 
  */
 public abstract class PullToRefreshListFragment extends AbstractListFragment
@@ -45,20 +46,21 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
 	private static final int LOADER_ID = 1;
 
-	protected static final String TAG = PullToRefreshListFragment.class
+	private static final String TAG = PullToRefreshListFragment.class
 			.getSimpleName();
 
-	protected PullToRefreshListView mPullToRefreshView;
-	protected ListView mListView;
+	private PullToRefreshListView mPullToRefreshView;
+	private ListView mListView;
 
 	private Parcelable mParcelable;
 
 	private BaseCursorAdapter mAdapter;
 	private Cursor mCursor;
 
-	private Handler mHandler = new Handler();
+	private boolean refreshOnStart;
 
 	private boolean busy;
+
 	public PullToRefreshListFragment() {
 		super();
 		if (App.DEBUG) {
@@ -80,6 +82,10 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 		if (App.DEBUG) {
 			Log.d(TAG, "onCreate() isVisible=" + isVisible());
 		}
+
+		Bundle args = getArguments();
+		refreshOnStart = args.getBoolean("refresh");
+		parseArguments(args);
 	}
 
 	@Override
@@ -108,6 +114,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 		if (savedInstanceState != null) {
 			mParcelable = savedInstanceState.getParcelable("state");
 		}
+
 		mAdapter = (BaseCursorAdapter) onCreateAdapter();
 		mListView.setAdapter(mAdapter);
 		mListView.setOnScrollListener(mAdapter);
@@ -122,6 +129,8 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 					+ isVisible());
 		}
 	}
+
+	protected abstract void parseArguments(Bundle args);
 
 	protected abstract CursorAdapter onCreateAdapter();
 
@@ -336,14 +345,19 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
 		mCursor = newCursor;
 		getAdapter().swapCursor(mCursor);
+		checkRefresh();
 		if (App.DEBUG) {
 			Log.d(TAG, "onLoadFinished() adapter=" + mAdapter.getCount()
 					+ " class=" + this.getClass().getSimpleName());
 		}
-//		if (mAdapter.isEmpty()) {
-//			startRefresh();
-//		}
 
+	}
+
+	protected void checkRefresh() {
+
+		if (refreshOnStart && mAdapter.isEmpty()) {
+			startRefresh();
+		}
 	}
 
 	@Override

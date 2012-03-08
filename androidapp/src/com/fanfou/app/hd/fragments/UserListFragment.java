@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,7 +18,6 @@ import com.fanfou.app.hd.api.Paging;
 import com.fanfou.app.hd.dao.model.UserColumns;
 import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.service.FanFouService;
-import com.fanfou.app.hd.util.StringHelper;
 
 /**
  * @author mcxiaoke
@@ -29,21 +29,22 @@ import com.fanfou.app.hd.util.StringHelper;
  * @version 1.5 2012.03.08
  * 
  */
-public abstract class UserListFragment extends PullToRefreshListFragment implements FilterQueryProvider{
+public abstract class UserListFragment extends PullToRefreshListFragment
+		implements FilterQueryProvider {
 
 	private static final String TAG = UserListFragment.class.getSimpleName();
 
 	private int page;
 	private String userId;
-	
+
 	private OnInitCompleteListener mListener;
-	
-	public void setOnInitCompleteListener(OnInitCompleteListener listener){
-		this.mListener=listener;
+
+	public void setOnInitCompleteListener(OnInitCompleteListener listener) {
+		this.mListener = listener;
 	}
-	
-	private void onInitComplete(){
-		if(mListener!=null){
+
+	private void onInitComplete() {
+		if (mListener != null) {
 			mListener.onInitComplete(null);
 		}
 	}
@@ -52,28 +53,32 @@ public abstract class UserListFragment extends PullToRefreshListFragment impleme
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		final Cursor c = (Cursor) parent.getItemAtPosition(position);
-		final UserModel u =UserModel.from(c);
+		final UserModel u = UserModel.from(c);
 		if (u != null) {
-			if (App.DEBUG){		
-				Log.d(TAG, "userId=" + u.getId() + " username=" + u.getScreenName());
+			if (App.DEBUG) {
+				Log.d(TAG,
+						"userId=" + u.getId() + " username="
+								+ u.getScreenName());
 			}
-//			ActionManager.doProfile(getActivity(), u);
+			// ActionManager.doProfile(getActivity(), u);
 		}
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Bundle data=getArguments();
-		if(data!=null){
-			userId=data.getString("id");
-		}
-		if(StringHelper.isEmpty(userId)){
-			userId=App.getAccount();
-		}
-		
 		if (App.DEBUG) {
-			Log.d(TAG, "onCreate() userId="+userId);
+			Log.d(TAG, "onCreate() userId=" + userId);
+		}
+	}
+
+	@Override
+	protected void parseArguments(Bundle args) {
+		if (args != null) {
+			userId = args.getString("id");
+		}
+		if (TextUtils.isEmpty(userId)) {
+			userId = App.getAccount();
 		}
 	}
 
@@ -84,15 +89,15 @@ public abstract class UserListFragment extends PullToRefreshListFragment impleme
 
 	@Override
 	protected void doFetch(boolean doGetMore) {
-		Paging p=new Paging();
-		
+		Paging p = new Paging();
+
 		if (doGetMore) {
 			page++;
 		} else {
 			page = 1;
 		}
-		p.page=page;
-		
+		p.page = page;
+
 		final ResultHandler handler = new ResultHandler(this);
 		FanFouService.getUsers(getActivity(), userId, getType(), p, handler);
 	}
@@ -100,33 +105,32 @@ public abstract class UserListFragment extends PullToRefreshListFragment impleme
 	@Override
 	protected void showToast(int count) {
 	}
-	
+
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		Uri uri = UserColumns.CONTENT_URI;
 		String where = UserColumns.TYPE + "=? AND " + UserColumns.OWNER + "=?";
 		String[] whereArgs = new String[] { String.valueOf(getType()), userId };
-		CursorLoader loader=new CursorLoader(getActivity(), uri, null, where, whereArgs, null);
-		if(App.DEBUG){
-			Log.d(TAG, "onCreateLoader() uri=["+uri+"] where=["+where+"] whereArgs=["+whereArgs+"]");
+		CursorLoader loader = new CursorLoader(getActivity(), uri, null, where,
+				whereArgs, null);
+		if (App.DEBUG) {
+			Log.d(TAG, "onCreateLoader() uri=[" + uri + "] where=[" + where
+					+ "] whereArgs=[" + whereArgs + "]");
 		}
 		return loader;
 	}
-	
+
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
 		super.onLoadFinished(loader, newCursor);
 		getAdapter().setFilterQueryProvider(this);
 		onInitComplete();
-		if(getAdapter().isEmpty()){
-			startRefresh();
-		}
 	}
 
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
-		if(App.DEBUG){
-			Log.d(TAG, "runQuery() constraint="+constraint);
+		if (App.DEBUG) {
+			Log.d(TAG, "runQuery() constraint=" + constraint);
 		}
 		String where = UserColumns.TYPE + " = " + getType() + " AND "
 				+ UserColumns.OWNER + " = '" + userId + "' AND ("

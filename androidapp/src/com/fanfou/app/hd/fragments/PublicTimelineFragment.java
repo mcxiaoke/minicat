@@ -11,19 +11,24 @@ import com.fanfou.app.hd.service.FanFouService;
  * @author mcxiaoke
  * @version 1.0 2012.02.06
  * @version 1.1 2012.02.24
+ * @version 1.2 2012.03.08
  * 
  */
 public class PublicTimelineFragment extends BaseTimlineFragment {
 	private static final String TAG = PublicTimelineFragment.class
 			.getSimpleName();
 
-	public static PublicTimelineFragment newInstance(int type) {
+	public static PublicTimelineFragment newInstance() {
+		return newInstance(false);
+	}
+
+	public static PublicTimelineFragment newInstance(boolean refresh) {
 		Bundle args = new Bundle();
-		args.putInt("type", type);
+		args.putBoolean("refresh", refresh);
 		PublicTimelineFragment fragment = new PublicTimelineFragment();
 		fragment.setArguments(args);
 		if (App.DEBUG) {
-			Log.d(TAG, "newInstance() "+fragment);
+			Log.d(TAG, "newInstance() " + fragment);
 		}
 		return fragment;
 	}

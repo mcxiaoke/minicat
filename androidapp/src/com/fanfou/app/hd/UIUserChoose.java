@@ -150,7 +150,7 @@ public class UIUserChoose extends UIBaseSupport implements
 	}
 
 	private void setListView() {
-		mListView = (ListView) findViewById(R.id.list);
+		mListView = (ListView) findViewById(android.R.id.list);
 		mListView.setCacheColorHint(0);
 		mListView.setHorizontalScrollBarEnabled(false);
 		mListView.setVerticalScrollBarEnabled(false);

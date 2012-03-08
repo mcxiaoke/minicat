@@ -19,6 +19,7 @@ import com.fanfou.app.hd.util.StringHelper;
  * @version 1.0 2012.02.07
  * @version 1.1 2012.02.09
  * @version 1.2 2012.02.24
+ * @version 1.3 2012.03.08
  * 
  */
 public class UserFavoritesFragment extends BaseTimlineFragment {
@@ -28,12 +29,18 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 	private int page;
 
 	public static UserFavoritesFragment newInstance(String userId) {
+		return newInstance(userId, false);
+	}
+
+	public static UserFavoritesFragment newInstance(String userId,
+			boolean refresh) {
 		Bundle args = new Bundle();
 		args.putString("id", userId);
+		args.putBoolean("refresh", refresh);
 		UserFavoritesFragment fragment = new UserFavoritesFragment();
 		fragment.setArguments(args);
 		if (App.DEBUG) {
-			Log.d(TAG, "newInstance() "+fragment);
+			Log.d(TAG, "newInstance() " + fragment);
 		}
 		return fragment;
 	}
@@ -41,17 +48,9 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Bundle data=getArguments();
-		if(data!=null){
-			userId=data.getString("id");
-		}
-		
-		if (StringHelper.isEmpty(userId)) {
-			userId = App.getAccount();
-		}
-		
+
 		if (App.DEBUG) {
-			Log.d(TAG, "onCreate() userId="+userId);
+			Log.d(TAG, "onCreate() userId=" + userId);
 		}
 	}
 
@@ -66,33 +65,45 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 			Log.d(TAG, "doFetch() doGetMore=" + doGetMore);
 		}
 		final ResultHandler handler = new ResultHandler(this);
-		Paging p=new Paging();
-		
+		Paging p = new Paging();
+
 		if (doGetMore) {
 			page++;
 		} else {
 			page = 1;
 		}
-	
-		p.page=page;
-		
+
+		p.page = page;
+
 		if (App.DEBUG) {
-			Log.d(TAG, "doFetch() doGetMore=" + doGetMore+" Paging="+p);
+			Log.d(TAG, "doFetch() doGetMore=" + doGetMore + " Paging=" + p);
 		}
-		FanFouService.getTimeline(getActivity(), StatusModel.TYPE_FAVORITES, handler, userId,p);
-		
-		
-		
+		FanFouService.getTimeline(getActivity(), StatusModel.TYPE_FAVORITES,
+				handler, userId, p);
+
 	}
-	
+
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		Uri uri = StatusColumns.CONTENT_URI;
-		String selection = StatusColumns.TYPE + " =? AND " + StatusColumns.OWNER
-				+ " =? ";
-		String[] selectionArgs = new String[] { String.valueOf(getType()), userId};
-		CursorLoader loader=new CursorLoader(getActivity(), uri, null, selection, selectionArgs, null);
+		String selection = StatusColumns.TYPE + " =? AND "
+				+ StatusColumns.OWNER + " =? ";
+		String[] selectionArgs = new String[] { String.valueOf(getType()),
+				userId };
+		CursorLoader loader = new CursorLoader(getActivity(), uri, null,
+				selection, selectionArgs, null);
 		return loader;
+	}
+
+	@Override
+	protected void parseArguments(Bundle args) {
+		if (args != null) {
+			userId = args.getString("id");
+		}
+
+		if (StringHelper.isEmpty(userId)) {
+			userId = App.getAccount();
+		}
 	}
 
 }

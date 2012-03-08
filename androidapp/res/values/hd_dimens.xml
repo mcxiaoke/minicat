@@ -13,7 +13,7 @@
     <dimen name="profile_image_margin">2dp</dimen>
     
     <dimen name="scrollbarSize">3dp</dimen>
-    <dimen name="dividerHeight">2dp</dimen>
+    <dimen name="dividerWidth">1dp</dimen>
     
     <dimen name="text_size_micro">10sp</dimen>
     <dimen name="text_size_tiny">12sp</dimen>

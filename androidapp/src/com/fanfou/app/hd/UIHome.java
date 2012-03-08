@@ -275,9 +275,9 @@ public class UIHome extends UIBaseSupport {
 		public PagesAdapter(FragmentManager fm) {
 			super(fm);
 			fragments[0] = ColumnsFragment.newInstance();
-			fragments[1] = HomeTimelineFragment.newInstance(0);
-			fragments[2] = MentionTimelineFragment.newInstance(0);
-			fragments[3] = PublicTimelineFragment.newInstance(0);
+			fragments[1] = HomeTimelineFragment.newInstance(true);
+			fragments[2] = MentionTimelineFragment.newInstance(true);
+			fragments[3] = PublicTimelineFragment.newInstance();
 		}
 
 		@Override

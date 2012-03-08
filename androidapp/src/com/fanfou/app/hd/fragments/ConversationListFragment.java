@@ -37,7 +37,7 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 		ConversationListFragment fragment = new ConversationListFragment();
 		fragment.setArguments(args);
 		if (App.DEBUG) {
-			Log.d(TAG, "newInstance() "+fragment);
+			Log.d(TAG, "newInstance() " + fragment);
 		}
 		return fragment;
 	}
@@ -47,11 +47,11 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 			long id) {
 		final Cursor cursor = (Cursor) parent.getItemAtPosition(position);
 		if (cursor != null) {
-			final DirectMessageModel dm=DirectMessageModel.from(cursor);
-			if(App.DEBUG){
-				Log.d(TAG, "cursor="+cursor+" dm="+dm);
+			final DirectMessageModel dm = DirectMessageModel.from(cursor);
+			if (App.DEBUG) {
+				Log.d(TAG, "cursor=" + cursor + " dm=" + dm);
 			}
-			if(dm!=null){
+			if (dm != null) {
 				UIController.showConversation(getActivity(), dm);
 			}
 		}
@@ -82,12 +82,12 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 	@Override
 	protected void doFetch(boolean doGetMore) {
 		final ResultHandler handler = new ResultHandler(this);
-		final Cursor cursor=getCursor();
-		Paging p=new Paging();
-		if(doGetMore){
-			p.maxId=Utils.getMaxId(cursor);
-		}else{
-			p.sinceId=Utils.getSinceId(cursor);
+		final Cursor cursor = getCursor();
+		Paging p = new Paging();
+		if (doGetMore) {
+			p.maxId = Utils.getMaxId(cursor);
+		} else {
+			p.sinceId = Utils.getSinceId(cursor);
 		}
 		FanFouService.getConversationList(getActivity(), handler, p);
 	}
@@ -99,18 +99,15 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-//		Uri uri=DataController.buildConversationListUri();
-//		CursorLoader loader=new CursorLoader(getActivity(), uri, null, null, null, null);
-//		return loader;
+		// Uri uri=DataController.buildConversationListUri();
+		// CursorLoader loader=new CursorLoader(getActivity(), uri, null, null,
+		// null, null);
+		// return loader;
 		return DataController.getConversationListLoader(getActivity());
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
-		super.onLoadFinished(loader, newCursor);
-		if(getAdapter().isEmpty()){
-			startRefresh();
-		}
+	protected void parseArguments(Bundle args) {
 	}
 
 }

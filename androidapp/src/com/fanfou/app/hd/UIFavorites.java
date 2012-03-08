@@ -19,7 +19,7 @@ public class UIFavorites extends UIBaseTimeline {
 
 	@Override
 	protected BaseTimlineFragment getFragment(String userId) {
-		return UserFavoritesFragment.newInstance(userId);
+		return UserFavoritesFragment.newInstance(userId,true);
 	}
 
 }

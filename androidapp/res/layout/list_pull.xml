@@ -7,7 +7,7 @@
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         xmlns:ptr="http://schemas.android.com/apk/res/com.fanfou.app.hd"
-        android:id="@id/list"
+        android:id="@+id/pull_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         ptr:mode="both" />

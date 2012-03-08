@@ -85,7 +85,7 @@ public class UIRecords extends UIBaseSupport implements OnItemClickListener {
 		mCursor = managedQuery(RecordColumns.CONTENT_URI, null, null,
 				null, null);
 		mAdapter = new RecordCursorAdaper(this, mCursor,true);
-		mListView = (ListView) findViewById(R.id.list);
+		mListView = (ListView) findViewById(android.R.id.list);
 		mListView.setAdapter(mAdapter);
 		mListView.setOnItemClickListener(this);
 		registerForContextMenu(mListView);

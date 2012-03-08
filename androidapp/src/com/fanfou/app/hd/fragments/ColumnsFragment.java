@@ -6,17 +6,6 @@ package com.fanfou.app.hd.fragments;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.UIAbout;
-import com.fanfou.app.hd.UIConversation;
-import com.fanfou.app.hd.UIRecords;
-import com.fanfou.app.hd.UIEditProfile;
-import com.fanfou.app.hd.UIProfile;
-import com.fanfou.app.hd.UISearch;
-import com.fanfou.app.hd.UISetting;
-import com.fanfou.app.hd.UIUserList;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,6 +17,16 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.R;
+import com.fanfou.app.hd.UIAbout;
+import com.fanfou.app.hd.UIEditProfile;
+import com.fanfou.app.hd.UIProfile;
+import com.fanfou.app.hd.UIRecords;
+import com.fanfou.app.hd.UISearch;
+import com.fanfou.app.hd.UISetting;
+import com.fanfou.app.hd.UIUserList;
 
 /**
  * @author mcxiaoke
@@ -67,33 +66,32 @@ public class ColumnsFragment extends AbstractListFragment {
 	}
 
 	private void fillColumns() {
-		Intent profile=new Intent(getActivity(), UIProfile.class);
+		Intent profile = new Intent(getActivity(), UIProfile.class);
 		profile.putExtra("id", App.getAccount());
 		ActionColumn myProfile = new ActionColumn("我的空间", profile);
-		
-		Intent friends=new Intent(getActivity(), UIUserList.class);
+
+		Intent friends = new Intent(getActivity(), UIUserList.class);
 		friends.putExtra("id", App.getAccount());
 		ActionColumn myFriends = new ActionColumn("我的好友", friends);
-		
-		Intent edit=new Intent(getActivity(), UIEditProfile.class);
+
+		Intent edit = new Intent(getActivity(), UIEditProfile.class);
 		ActionColumn editProfile = new ActionColumn("编辑资料", edit);
-		
-//		Intent conver=new Intent(getActivity(), UIConversationList.class);
+
+		// Intent conver=new Intent(getActivity(), UIConversationList.class);
 		ActionColumn conversation = new ActionColumn("我的私信", null);
-		
-		Intent search=new Intent(getActivity(), UISearch.class);
+
+		Intent search = new Intent(getActivity(), UISearch.class);
 		ActionColumn trends = new ActionColumn("热词和搜索", search);
-		
-		Intent option=new Intent(getActivity(), UISetting.class);
+
+		Intent option = new Intent(getActivity(), UISetting.class);
 		ActionColumn setting = new ActionColumn("程序设置", option);
 
-		Intent record=new Intent(getActivity(), UIRecords.class);
+		Intent record = new Intent(getActivity(), UIRecords.class);
 		ActionColumn records = new ActionColumn("我的草稿箱", record);
-		
-		
+
 		ActionColumn digest = new ActionColumn("饭否语录", null);
-		
-		Intent ab=new Intent(getActivity(), UIAbout.class);
+
+		Intent ab = new Intent(getActivity(), UIAbout.class);
 		ActionColumn about = new ActionColumn("关于饭否", ab);
 
 		mColumns.add(myProfile);
@@ -119,11 +117,6 @@ public class ColumnsFragment extends AbstractListFragment {
 	}
 
 	private static class ColumnsAdapter extends BaseAdapter {
-		// TODO 可以保存列表到数据库，这个列表可以考虑自定义，给一些预定义选项可供用户选择，添加或者删除
-		// TODO 首页活动页面也可以提供给用户自定义，需要考虑一个完善的方案
-		// TODO 这个选择列表和滑动页面属于同一个大的List，可自定义，选择，添加，删除，个数可限定最小为3，最大为7，之类的
-		// TODO 或者可以在这个Columns里面选择一些放入滑动页面，所以还需要加一个标志，标明是否在滑动页面已经显示
-		// TODO 这些等工作做完之后再考虑
 		private Context context;
 		private LayoutInflater inflater;
 		private List<ActionColumn> columns;
@@ -179,9 +172,9 @@ public class ColumnsFragment extends AbstractListFragment {
 		}
 
 	}
-	
-	private static void setBold(TextView view){
-		TextPaint tp=view.getPaint();
+
+	private static void setBold(TextView view) {
+		TextPaint tp = view.getPaint();
 		tp.setFakeBoldText(true);
 	}
 
@@ -210,8 +203,9 @@ public class ColumnsFragment extends AbstractListFragment {
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		// TODO Auto-generated method stub
-		final ActionColumn action=(ActionColumn) parent.getItemAtPosition(position);
-		if(action!=null&&action.intent!=null){
+		final ActionColumn action = (ActionColumn) parent
+				.getItemAtPosition(position);
+		if (action != null && action.intent != null) {
 			getActivity().startActivity(action.intent);
 		}
 

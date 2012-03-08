@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.07
- *
+ * 
  */
 public class StatusContentFragment extends AbstractFragment {
 

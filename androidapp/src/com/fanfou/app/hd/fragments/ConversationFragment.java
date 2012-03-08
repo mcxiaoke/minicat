@@ -21,6 +21,7 @@ import com.fanfou.app.hd.util.Utils;
  * @author mcxiaoke
  * @version 1.0 2012.02.28
  * @version 1.1 2012.03.07
+ * @version 1.2 2012.03.08
  * 
  */
 public class ConversationFragment extends PullToRefreshListFragment {
@@ -30,8 +31,13 @@ public class ConversationFragment extends PullToRefreshListFragment {
 	private String userId;
 
 	public static ConversationFragment newInstance(String id) {
+		return newInstance(id, false);
+	}
+
+	public static ConversationFragment newInstance(String id, boolean refresh) {
 		Bundle args = new Bundle();
 		args.putString("id", id);
+		args.putBoolean("refresh", refresh);
 		ConversationFragment fragment = new ConversationFragment();
 		fragment.setArguments(args);
 		if (App.DEBUG) {
@@ -43,8 +49,6 @@ public class ConversationFragment extends PullToRefreshListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Bundle args = getArguments();
-		userId = args.getString("id");
 		if (App.DEBUG) {
 			Log.d(TAG, "onCreate() userId=" + userId);
 		}
@@ -111,11 +115,8 @@ public class ConversationFragment extends PullToRefreshListFragment {
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
-		super.onLoadFinished(loader, newCursor);
-		if (getAdapter().isEmpty()) {
-			startRefresh();
-		}
+	protected void parseArguments(Bundle args) {
+		userId = args.getString("id");
 	}
 
 }

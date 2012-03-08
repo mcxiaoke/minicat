@@ -241,8 +241,8 @@ public class ProfileFragment extends AbstractFragment implements
 	}
 
 	private void updatePermission() {
-		if(user.getId().equals(App.getAccount())){
-			noPermission=false;
+		if (user.getId().equals(App.getAccount())) {
+			noPermission = false;
 			return;
 		}
 		noPermission = user.isProtect() && !user.isFollowing();

@@ -50,7 +50,7 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
 		TextView tv = (TextView) findViewById(R.id.empty_text);
 		tv.setText("热词载入中...");
 
-		mListView = (ListView) findViewById(R.id.list);
+		mListView = (ListView) findViewById(android.R.id.list);
 		mListView.setOnItemClickListener(this);
 
 		// onSearchRequested();

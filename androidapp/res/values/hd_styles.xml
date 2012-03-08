@@ -23,7 +23,8 @@
 
     <style name="ListViewStyle">
         <item name="android:listSelector">@drawable/list_selector_holo_light</item>
-        <item name="android:dividerHeight">@dimen/dividerHeight</item>
+        <item name="android:divider">@color/list_divider</item>
+        <item name="android:dividerHeight">@dimen/dividerWidth</item>
         <item name="android:cacheColorHint">@android:color/transparent</item>
     </style>
 

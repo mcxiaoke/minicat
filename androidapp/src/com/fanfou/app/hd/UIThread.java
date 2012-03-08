@@ -78,7 +78,7 @@ public class UIThread extends UIBaseSupport implements
 	protected void setLayout() {
 		setContentView(R.layout.list_pull);
 
-		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.list);
+		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_list);
 		mPullToRefreshListView.setOnRefreshListener(this);
 		mList = mPullToRefreshListView.getRefreshableView();
 		mList.setAdapter(mStatusAdapter);

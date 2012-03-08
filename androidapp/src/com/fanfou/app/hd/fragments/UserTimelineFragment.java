@@ -3,7 +3,6 @@ package com.fanfou.app.hd.fragments;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Messenger;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
@@ -13,7 +12,6 @@ import com.fanfou.app.hd.api.Paging;
 import com.fanfou.app.hd.dao.DataProvider;
 import com.fanfou.app.hd.dao.model.StatusColumns;
 import com.fanfou.app.hd.dao.model.StatusModel;
-import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.FanFouService;
 import com.fanfou.app.hd.util.StringHelper;
 import com.fanfou.app.hd.util.Utils;
@@ -22,6 +20,7 @@ import com.fanfou.app.hd.util.Utils;
  * @author mcxiaoke
  * @version 1.0 2012.02.07
  * @version 1.1 2012.02.09
+ * @version 1.2 2012.03.08
  * 
  */
 public class UserTimelineFragment extends BaseTimlineFragment {
@@ -30,8 +29,14 @@ public class UserTimelineFragment extends BaseTimlineFragment {
 	private String userId;
 
 	public static UserTimelineFragment newInstance(String userId) {
+		return newInstance(userId, false);
+	}
+
+	public static UserTimelineFragment newInstance(String userId,
+			boolean refresh) {
 		Bundle args = new Bundle();
 		args.putString("id", userId);
+		args.putBoolean("refresh", refresh);
 		UserTimelineFragment fragment = new UserTimelineFragment();
 		fragment.setArguments(args);
 		if (App.DEBUG) {
@@ -43,16 +48,19 @@ public class UserTimelineFragment extends BaseTimlineFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Bundle data = getArguments();
-		if (data != null) {
-			userId = data.getString("id");
-		}
-		if (StringHelper.isEmpty(userId)) {
-			userId = App.getAccount();
-		}
-
 		if (App.DEBUG) {
 			Log.d(TAG, "onCreate() userId=" + userId);
+		}
+	}
+
+	@Override
+	protected void parseArguments(Bundle args) {
+		if (args != null) {
+			userId = args.getString("id");
+		}
+
+		if (StringHelper.isEmpty(userId)) {
+			userId = App.getAccount();
 		}
 	}
 

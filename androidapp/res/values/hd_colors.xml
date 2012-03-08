@@ -17,5 +17,7 @@
     <color name="popup_background_pressed">#ffc2c2c2</color>
     
     <color name="divider_blue">#ff2ea5ff</color>
+    
+    <color name="list_divider">#99cccccc</color>
 
 </resources>

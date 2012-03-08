@@ -26,15 +26,19 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.3 2012.02.22
  * 
  */
-public abstract class BaseTimlineFragment extends PullToRefreshListFragment{
+public abstract class BaseTimlineFragment extends PullToRefreshListFragment {
 	private static final String TAG = BaseTimlineFragment.class.getSimpleName();
+
+	@Override
+	protected void parseArguments(Bundle args) {
+	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		final Cursor cursor = (Cursor) parent.getItemAtPosition(position);
 		if (cursor != null) {
-			final StatusModel s=StatusModel.from(cursor);
+			final StatusModel s = StatusModel.from(cursor);
 			if (s != null) {
 				Utils.goStatusPage(getActivity(), s);
 			}
@@ -53,15 +57,16 @@ public abstract class BaseTimlineFragment extends PullToRefreshListFragment{
 	@Override
 	protected CursorAdapter onCreateAdapter() {
 		if (App.DEBUG) {
-			Log.d(TAG, "createAdapter() id="+this+"activity ="+getActivity());
+			Log.d(TAG, "createAdapter() id=" + this + "activity ="
+					+ getActivity());
 		}
 		return new StatusCursorAdapter(true, getActivity(), getCursor());
 	}
 
 	@Override
 	protected void showToast(int count) {
-		Context context=getActivity();
-		if(context!=null){
+		Context context = getActivity();
+		if (context != null) {
 			Utils.notify(context, count + "条新消息");
 		}
 	}
@@ -71,8 +76,9 @@ public abstract class BaseTimlineFragment extends PullToRefreshListFragment{
 		Uri uri = StatusColumns.CONTENT_URI;
 		String selection = StatusColumns.TYPE + "=?";
 		String[] selectionArgs = new String[] { String.valueOf(getType()) };
-		String sortOrder=DataProvider.ORDERBY_TIME_DESC;
-		CursorLoader loader=new CursorLoader(getActivity(), uri, null, selection, selectionArgs, sortOrder);
+		String sortOrder = DataProvider.ORDERBY_TIME_DESC;
+		CursorLoader loader = new CursorLoader(getActivity(), uri, null,
+				selection, selectionArgs, sortOrder);
 		return loader;
 	}
 

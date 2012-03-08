@@ -93,7 +93,7 @@ public class UIUserSelect extends UIBaseSupport implements OnItemClickListener,
 		mEditText = (EditText) findViewById(R.id.choose_input);
 		mEditText.addTextChangedListener(new MyTextWatcher());
 
-		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.list);
+		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_list);
 		mPullToRefreshListView.setOnRefreshListener(this);
 
 		mList = mPullToRefreshListView.getRefreshableView();

@@ -30,7 +30,6 @@
     <item name="item_message_user" type="id"/>
     <item name="item_message_date" type="id"/>
     <item name="item_message_source" type="id"/>
-    <item name="list" type="id"/>
     <item name="list_header" type="id"/>
     <item name="list_header_text" type="id"/>
     <item name="list_header_progress" type="id"/>

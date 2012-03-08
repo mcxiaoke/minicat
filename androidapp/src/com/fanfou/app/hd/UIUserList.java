@@ -106,9 +106,9 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 			Log.d(TAG, "setFragment()");
 		}
 		if (type == UserModel.TYPE_FRIENDS) {
-			mFragment = FriendsListFragment.newInstance(userId);
+			mFragment = FriendsListFragment.newInstance(userId,true);
 		} else {
-			mFragment = FollowersListFragment.newInstance(userId);
+			mFragment = FollowersListFragment.newInstance(userId,true);
 		}
 
 		mFragment.setOnInitCompleteListener(this);

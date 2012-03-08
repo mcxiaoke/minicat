@@ -34,7 +34,8 @@ public class UIProfile extends UIBaseSupport {
 
 	public static final String TAG = UIProfile.class.getSimpleName();
 
-	public static enum Page {FAVORITES,PROFILE, TIMELINE
+	public static enum Page {
+		FAVORITES, PROFILE, TIMELINE
 	};
 
 	public static final int NUMS_OF_PAGE = Page.values().length;
@@ -42,8 +43,8 @@ public class UIProfile extends UIBaseSupport {
 			NUMS_OF_PAGE);
 
 	static {
-//		sTitles.put(Page.FOLLOWERS, "关注者");
-//		sTitles.put(Page.FRIENDS, "好友");
+		// sTitles.put(Page.FOLLOWERS, "关注者");
+		// sTitles.put(Page.FRIENDS, "好友");
 		sTitles.put(Page.FAVORITES, "收藏");
 		sTitles.put(Page.PROFILE, "简介");
 		sTitles.put(Page.TIMELINE, "消息");
@@ -162,8 +163,7 @@ public class UIProfile extends UIBaseSupport {
 			SwipeyTabButton tab;
 
 			LayoutInflater inflater = mContext.getLayoutInflater();
-			tab = (SwipeyTabButton) inflater.inflate(R.layout.tab_swipey,
-					null);
+			tab = (SwipeyTabButton) inflater.inflate(R.layout.tab_swipey, null);
 
 			if (position < NUMS_OF_PAGE)
 				tab.setText(sTitles.get(Page.values()[position]));
