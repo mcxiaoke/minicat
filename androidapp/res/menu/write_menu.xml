@@ -9,7 +9,7 @@
     </item>
     <item
         android:id="@+id/menu_send"
-        android:icon="@drawable/ic_menu_logout"
+        android:icon="@drawable/ic_ab_send"
         android:orderInCategory="1"
         android:showAsAction="always"
         android:title="发送">

@@ -9,7 +9,7 @@
     </item>
     <item
         android:id="@+id/menu_write"
-        android:icon="@drawable/ic_menu_feedback"
+        android:icon="@drawable/ic_ab_write"
         android:orderInCategory="1"
         android:showAsAction="always"
         android:title="写消息">
