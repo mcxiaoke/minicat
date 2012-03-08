@@ -60,7 +60,7 @@ public abstract class BaseTimlineFragment extends PullToRefreshListFragment {
 			Log.d(TAG, "createAdapter() id=" + this + "activity ="
 					+ getActivity());
 		}
-		return new StatusCursorAdapter(true, getActivity(), getCursor());
+		return new StatusCursorAdapter(false, getActivity(), getCursor());
 	}
 
 	@Override
