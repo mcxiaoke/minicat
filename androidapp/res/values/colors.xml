@@ -10,19 +10,28 @@
     <color name="link_color">#ff236ed8</color>
     <color name="sky_blue">#ff58caff</color>
     <color name="login_background">#ff5bdeff</color>
-
-    <!-- <drawable name="background">@color/background_color</drawable> -->
-
     <color name="background">#ffefefef</color>
-<!--     <color name="self_color">#220d82bd</color> -->
     <color name="self_color">#2222cfcf</color>
     <color name="mentioned_color">#22aa8822</color>
     <color name="name_color">#ff333333</color>
     <color name="content_color">#ff333333</color>
     <color name="metainfo_color">#ff999999</color>
-    
-    
-    
-    
+
+    <!-- ==added by version 2.0 below=== -->
+
+    <color name="solid_white">#ffffffff</color>
+    <color name="solid_black">#ff000000</color>
+    <color name="soft_black">#ff333333</color>
+    <color name="soft_white">#ff999999</color>
+    <color name="actionbar_title_color">#FFFFFFFF</color>
+    <color name="actionbar_background">#ff2ea5ff</color>
+    <color name="actionbar_background_pressed">#ff1671b9</color>
+    <color name="profile_item_title_background">#ffcccccc</color>
+    <color name="popup_background">#ffcccccc</color>
+    <color name="popup_background_pressed">#ffc2c2c2</color>
+    <color name="divider_blue">#ff2ea5ff</color>
+    <color name="list_divider">#99cccccc</color>
+
+    <!-- Blue light to dark : #33b5e #0099cc #006699 -->
 
 </resources>

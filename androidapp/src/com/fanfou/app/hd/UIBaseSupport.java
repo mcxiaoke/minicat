@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.util.IntentHelper;
 import com.fanfou.app.hd.util.Utils;
@@ -34,9 +36,10 @@ import com.fanfou.app.hd.util.Utils;
  * @version 3.1 2012.02.07
  * @version 3.2 2012.02.09
  * @version 3.3 2012.02.10
+ * @version 3.4 2012.03.09
  * 
  */
-abstract class UIBaseSupport extends UIActionBarSupport implements
+abstract class UIBaseSupport extends SherlockFragmentActivity implements
 		OnClickListener {
 
 	public static final int STATE_INIT = 0;
@@ -99,52 +102,40 @@ abstract class UIBaseSupport extends UIActionBarSupport implements
 		}
 
 	}
-	
-	protected int getMenuResourceId(){
+
+	protected int getMenuResourceId() {
 		return R.menu.base_menu;
 	}
 
 	@Override
-	public final boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(getMenuResourceId(), menu);
+	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		switch (id) {
-		case R.id.menu_home:
+	public boolean onOptionsItemSelected(
+			com.actionbarsherlock.view.MenuItem item) {
+		if (item.getItemId() == android.R.id.home) {
 			onMenuHomeClick();
-			break;
-		case R.id.menu_write:
-			onMenuWriteClick();
-			break;
-		default:
-			break;
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	protected void onMenuHomeClick() {
 		UIController.showHome(mContext);
-		finish();
-	}
-
-	protected void onMenuWriteClick() {
-//		ActionManager.doWrite(this);
+//		finish();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-//		App.active = isActive = true;
+		// App.active = isActive = true;
 	}
 
 	@Override
 	protected void onPause() {
-//		App.active = isActive = false;
+		// App.active = isActive = false;
 		super.onPause();
 	}
 

@@ -8,10 +8,13 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.BaseAdapter;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
 import com.astuetz.viewpager.extensions.SwipeyTabButton;
 import com.astuetz.viewpager.extensions.SwipeyTabsView;
 import com.astuetz.viewpager.extensions.TabsAdapter;
@@ -66,6 +69,7 @@ import com.fanfou.app.hd.util.OptionHelper;
  * @version 8.4 2012.02.10
  * @version 8.5 2012.02.27
  * @version 8.6 2012.02.28
+ * @version 8.7 2012.03.09
  * 
  */
 public class UIHome extends UIBaseSupport {
@@ -88,8 +92,11 @@ public class UIHome extends UIBaseSupport {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (App.DEBUG)
+		if (App.DEBUG) {
 			log("onCreate()");
+		}
+		ActionBar ab = getSupportActionBar();
+
 	}
 
 	@Override
@@ -175,31 +182,33 @@ public class UIHome extends UIBaseSupport {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		switch (id) {
-		case R.id.menu_option:
-			onMenuOptionClick();
-			break;
-		// case R.id.menu_profile:
-		// onMenuProfileClick();
-		// break;
-		case R.id.menu_search:
-			onMenuSearchClick();
-			break;
-		case R.id.menu_logout:
-			onMenuLogoutClick();
-			break;
-		// case R.id.menu_about:
-		// onMenuAboutClick();
-		// break;
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.home_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(
+			com.actionbarsherlock.view.MenuItem item) {
+		// return super.onOptionsItemSelected(item);
+		switch (item.getItemId()) {
 		case R.id.menu_write:
 			onMenuWriteClick();
-			break;
+			return true;
+			// break;
+		case R.id.menu_logout:
+			onMenuLogoutClick();
+			return true;
+		case R.id.menu_option:
+			onMenuOptionClick();
+			return true;
+		case R.id.menu_search:
+			onMenuSearchClick();
+			return true;
 		default:
-			break;
+			return true;
+//			break;
 		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	private void onMenuOptionClick() {

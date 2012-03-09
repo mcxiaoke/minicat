@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.cache.IImageLoader;
 import com.fanfou.app.hd.cache.ImageLoader;
@@ -113,6 +114,10 @@ public class UIStatus extends UIBaseSupport {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		ActionBar ab=getSupportActionBar();
+		ab.setHomeButtonEnabled(true);
+		ab.setDisplayHomeAsUpEnabled(true);
 
 	}
 

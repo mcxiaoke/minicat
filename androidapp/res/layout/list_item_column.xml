@@ -10,6 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:textColor="@color/actionbar_background"
-        android:textSize="20sp" />
+        android:textSize="18sp" />
 
 </RelativeLayout>

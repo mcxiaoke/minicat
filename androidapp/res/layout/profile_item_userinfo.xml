@@ -6,22 +6,22 @@
 
     <TextView
         android:id="@+id/info_title"
-        style="@style/ProfileItemInfoTitle"
+        style="?profileItemInfoTitle"
         android:text="资料" />
 
     <TextView
         android:id="@+id/info_content"
-        style="@style/ProfileItemInfoText"
+        style="?profileItemInfoText"
         android:text="他的资料他的资料他的资料他的资料他的资料他的资料他的资料他的资料他的资料他的资料他的资料他的资料" />
 
     <TextView
         android:id="@+id/desc_title"
-        style="@style/ProfileItemInfoTitle"
+        style="?profileItemInfoTitle"
         android:text="自述" />
 
     <TextView
         android:id="@+id/desc_content"
-        style="@style/ProfileItemInfoText"
+        style="?profileItemInfoText"
         android:text="他的自述他的自述他的自述他的自述他的自述他的自述他的自述他的自述他的自述他的自述他的自述他的自述他的自述他的自述" />
 
 </LinearLayout>

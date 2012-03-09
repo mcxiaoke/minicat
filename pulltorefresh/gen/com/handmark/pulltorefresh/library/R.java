@@ -15,21 +15,6 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
          */
         public static int adapterViewBackground=0x7f010000;
-        /** <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
-or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
-"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
-         */
-        public static int headerBackground=0x7f010001;
-        /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
-"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static int headerTextColor=0x7f010002;
         /** <p>Must be one or more (separated by '|') of the following constant values.</p>
 <table>
 <colgroup align="left" />
@@ -42,6 +27,21 @@ containing a value of this type.
 </table>
          */
         public static int mode=0x7f010003;
+        /** <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+         */
+        public static int pullHeaderBackground=0x7f010001;
+        /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static int pullHeaderTextColor=0x7f010002;
     }
     public static final class drawable {
         public static int pulltorefresh_down_arrow=0x7f020000;
@@ -74,14 +74,14 @@ containing a value of this type.
            <colgroup align="left" />
            <tr><th>Attribute</th><th>Description</th></tr>
            <tr><td><code>{@link #PullToRefresh_adapterViewBackground com.handmark.pulltorefresh.library:adapterViewBackground}</code></td><td></td></tr>
-           <tr><td><code>{@link #PullToRefresh_headerBackground com.handmark.pulltorefresh.library:headerBackground}</code></td><td></td></tr>
-           <tr><td><code>{@link #PullToRefresh_headerTextColor com.handmark.pulltorefresh.library:headerTextColor}</code></td><td></td></tr>
            <tr><td><code>{@link #PullToRefresh_mode com.handmark.pulltorefresh.library:mode}</code></td><td></td></tr>
+           <tr><td><code>{@link #PullToRefresh_pullHeaderBackground com.handmark.pulltorefresh.library:pullHeaderBackground}</code></td><td></td></tr>
+           <tr><td><code>{@link #PullToRefresh_pullHeaderTextColor com.handmark.pulltorefresh.library:pullHeaderTextColor}</code></td><td></td></tr>
            </table>
            @see #PullToRefresh_adapterViewBackground
-           @see #PullToRefresh_headerBackground
-           @see #PullToRefresh_headerTextColor
            @see #PullToRefresh_mode
+           @see #PullToRefresh_pullHeaderBackground
+           @see #PullToRefresh_pullHeaderTextColor
          */
         public static final int[] PullToRefresh = {
             0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003
@@ -98,33 +98,6 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           @attr name android:adapterViewBackground
         */
         public static final int PullToRefresh_adapterViewBackground = 0;
-        /**
-          <p>This symbol is the offset where the {@link com.handmark.pulltorefresh.library.R.attr#headerBackground}
-          attribute's value can be found in the {@link #PullToRefresh} array.
-
-
-          <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
-or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
-"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
-          @attr name android:headerBackground
-        */
-        public static final int PullToRefresh_headerBackground = 1;
-        /**
-          <p>This symbol is the offset where the {@link com.handmark.pulltorefresh.library.R.attr#headerTextColor}
-          attribute's value can be found in the {@link #PullToRefresh} array.
-
-
-          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
-"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          @attr name android:headerTextColor
-        */
-        public static final int PullToRefresh_headerTextColor = 2;
         /**
           <p>This symbol is the offset where the {@link com.handmark.pulltorefresh.library.R.attr#mode}
           attribute's value can be found in the {@link #PullToRefresh} array.
@@ -143,5 +116,32 @@ containing a value of this type.
           @attr name android:mode
         */
         public static final int PullToRefresh_mode = 3;
+        /**
+          <p>This symbol is the offset where the {@link com.handmark.pulltorefresh.library.R.attr#pullHeaderBackground}
+          attribute's value can be found in the {@link #PullToRefresh} array.
+
+
+          <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+          @attr name android:pullHeaderBackground
+        */
+        public static final int PullToRefresh_pullHeaderBackground = 1;
+        /**
+          <p>This symbol is the offset where the {@link com.handmark.pulltorefresh.library.R.attr#pullHeaderTextColor}
+          attribute's value can be found in the {@link #PullToRefresh} array.
+
+
+          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:pullHeaderTextColor
+        */
+        public static final int PullToRefresh_pullHeaderTextColor = 2;
     };
 }

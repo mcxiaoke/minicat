@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fanfou.app.hd"
-    android:versionCode="20120307"
-    android:versionName="2.0-alpha3-20120307" >
+    android:versionCode="20120309"
+    android:versionName="2.0-alpha3-20120309" >
 
     <uses-sdk
         android:minSdkVersion="7"
@@ -27,7 +27,7 @@
         android:name=".App"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Light" >
+        android:theme="@style/AppTheme.Blue" >
         <activity
             android:name=".UIStart"
             android:configChanges="keyboardHidden|orientation"
@@ -50,7 +50,7 @@
             android:name=".UIVersionUpdate"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name" />
-                <activity
+        <activity
             android:name=".UITabHome"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
@@ -165,7 +165,7 @@
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.Light.AutoCompleteTextViewFix"
+            android:theme="@style/AppTheme.Blue.AutoCompleteTextViewFix"
             android:windowSoftInputMode="stateVisible|adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />

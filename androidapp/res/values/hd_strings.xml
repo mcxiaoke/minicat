@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="loading">Loading...</string>
-    <string name="action_follow">Follow</string>
-    <string name="action_unfollow">UnFollow</string>
-    <string name="action_dm">Send</string>
-    <string name="action_mention">Mention</string>
-</resources>

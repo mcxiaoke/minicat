@@ -21,6 +21,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.Menu;
 import com.fanfou.app.hd.adapter.AtTokenizer;
 import com.fanfou.app.hd.adapter.AutoCompleteCursorAdapter;
 import com.fanfou.app.hd.controller.DataController;
@@ -60,6 +61,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 5.0 2012.02.13
  * @version 5.5 2012.02.22
  * @version 5.6 2012.02.28
+ * @version 5.7 2012.03.09
  * 
  */
 public class UIWrite extends UIBaseSupport {
@@ -122,18 +124,18 @@ public class UIWrite extends UIBaseSupport {
 		return R.menu.write_menu;
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		switch (id) {
-		case R.id.menu_send:
-			onMenuSendClick();
-			break;
-		default:
-			break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		int id = item.getItemId();
+//		switch (id) {
+//		case R.id.menu_send:
+//			onMenuSendClick();
+//			break;
+//		default:
+//			break;
+//		}
+//		return super.onOptionsItemSelected(item);
+//	}
 
 	private void onMenuSendClick() {
 		doSend();
@@ -447,6 +449,25 @@ public class UIWrite extends UIBaseSupport {
 			break;
 		}
 
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.write_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(
+			com.actionbarsherlock.view.MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_send:
+			doSend();
+			break;
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void checkSave() {
