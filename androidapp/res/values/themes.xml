@@ -47,7 +47,7 @@
     <!-- ListView Style -->
 
     <style name="Blue.ListView">
-        <item name="android:background">@drawable/test</item>
+        <!-- <item name="android:background">@drawable/test</item> -->
         <item name="android:listSelector">@drawable/list_selector_holo_light</item>
         <item name="android:divider">@color/list_divider</item>
         <item name="android:dividerHeight">@dimen/dividerWidth</item>

@@ -200,7 +200,7 @@
         <activity
             android:name=".UISetting"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name" />
+            android:label="@string/app_name" android:theme="@android:style/Theme"/>
         <activity
             android:name=".UISearchResults"
             android:configChanges="keyboardHidden|orientation"
