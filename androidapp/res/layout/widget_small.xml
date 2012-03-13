@@ -10,7 +10,7 @@
 
 	<ImageView android:id="@+id/widget_write"
 		android:layout_width="0dp" android:layout_height="fill_parent"
-		android:background="@drawable/input_bg" android:layout_weight="1"
+		android:background="@drawable/input_background" android:layout_weight="1"
 		android:layout_marginBottom="1dp" android:layout_marginLeft="3dp" android:layout_marginRight="3dp"/>
 
 	<ImageView android:id="@+id/widget_gallery"

@@ -1,6 +1,6 @@
 package com.fanfou.app.hd;
 
-import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,16 +41,15 @@ import com.fanfou.app.hd.util.Utils;
  * @version 3.4 2012.02.20
  * @version 3.5 2012.02.22
  * @version 4.0 2012.02.27
+ * @version 4.1 2012.03.13
  * 
  */
-public final class UILogin extends Activity implements OnClickListener {
+public final class UILogin extends UIBaseSupport implements OnClickListener {
 
 	private static final int REQUEST_CODE_REGISTER = 0;
 
 	private static final boolean DEBUG = App.DEBUG;
 	public static final String TAG = UILogin.class.getSimpleName();
-
-	private UILogin mContext;
 
 	public void log(String message) {
 		Log.i(TAG, message);
@@ -59,7 +58,7 @@ public final class UILogin extends Activity implements OnClickListener {
 	private static final String USERNAME = "username";
 	private static final String PASSWORD = "password";
 
-	private static final int DIALOG_PROGRESS = 1;
+	private static final int DIALOG_PROGRESS = -99;
 
 	private EditText editUsername;
 	private EditText editPassword;
@@ -69,40 +68,29 @@ public final class UILogin extends Activity implements OnClickListener {
 	private String username;
 	private String password;
 
-	// private ProgressDialog dialog;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		init();
-		setLayout();
+		//TODO when login, clear all alarms and tasks
 	}
 
-	// @Override
-	// protected Dialog onCreateDialog(int id) {
-	// switch (id) {
-	// case DIALOG_PROGRESS:
-	// dialog = new ProgressDialog(mContext);
-	// dialog.setMessage("正在登录中...");
-	// dialog.setIndeterminate(true);
-	// break;
-	// default:
-	// dialog = null;
-	// break;
-	// }
-	// return dialog;
-	// }
-
-	private void init() {
-		if (DEBUG) {
-			Log.d(TAG, "init()");
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
+		case DIALOG_PROGRESS:
+			ProgressDialog dialog = new ProgressDialog(mContext);
+			dialog.setMessage("正在登录中...");
+			dialog.setIndeterminate(true);
+			return dialog;
+//			break;
+		default:
+			return null;
+//			break;
 		}
-		App.setActiveContext(getClass().getCanonicalName(), this);
-		mContext = this;
-		Utils.initScreenConfig(this);
 	}
 
-	private void setLayout() {
+	@Override
+	protected void setLayout() {
 		setContentView(R.layout.login);
 
 		if (DEBUG) {
@@ -197,6 +185,11 @@ public final class UILogin extends Activity implements OnClickListener {
 		state.putString(PASSWORD, password);
 	}
 
+	@Override
+	protected int getMenuResourceId() {
+		return -1;
+	}
+
 	private class LoginTask extends AsyncTask<Void, Integer, ResultInfo> {
 
 		static final int LOGIN_IO_ERROR = 0; // 网络错误
@@ -205,7 +198,7 @@ public final class UILogin extends Activity implements OnClickListener {
 		static final int LOGIN_CANCELLED_BY_USER = 3;
 
 		private boolean isCancelled = false;
-		private ProgressDialog dialog;
+//		private ProgressDialog dialog;
 
 		@Override
 		protected ResultInfo doInBackground(Void... params) {
@@ -227,7 +220,7 @@ public final class UILogin extends Activity implements OnClickListener {
 
 					publishProgress(1);
 					App.updateAccessToken(mContext, token);
-					
+
 					final UserModel u = api.verifyCredentials();
 
 					if (u != null) {
@@ -262,35 +255,37 @@ public final class UILogin extends Activity implements OnClickListener {
 
 		@Override
 		protected void onPreExecute() {
-			dialog = new ProgressDialog(mContext);
-			dialog.setMessage("正在登录...");
-			dialog.setIndeterminate(true);
-			dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					isCancelled = true;
-					cancel(true);
-				}
-			});
-			dialog.show();
+			showDialog(DIALOG_PROGRESS);
+//			dialog = new ProgressDialog(mContext);
+//			dialog.setMessage("正在登录...");
+//			dialog.setIndeterminate(true);
+//			dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//
+//				@Override
+//				public void onCancel(DialogInterface dialog) {
+//					isCancelled = true;
+//					cancel(true);
+//				}
+//			});
+//			dialog.show();
 		}
 
 		@Override
 		protected void onProgressUpdate(Integer... values) {
 			if (values.length > 0) {
 				int value = values[0];
-				if (value == 1) {
-					dialog.setMessage("正在验证帐号...");
-				}
+//				if (value == 1) {
+//					dialog.setMessage("正在验证帐号...");
+//				}
 			}
 		}
 
 		@Override
 		protected void onPostExecute(ResultInfo result) {
-			if (dialog != null) {
-				dialog.dismiss();
-			}
+			dismissDialog(DIALOG_PROGRESS);
+//			if (dialog != null) {
+//				dialog.dismiss();
+//			}
 			switch (result.code) {
 			case LOGIN_IO_ERROR:
 			case LOGIN_AUTH_FAILED:
@@ -312,6 +307,12 @@ public final class UILogin extends Activity implements OnClickListener {
 		// AlarmHelper.setScheduledTasks(mContext);
 		UIController.showHome(mContext);
 		finish();
+	}
+
+	@Override
+	protected void initialize() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

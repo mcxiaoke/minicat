@@ -11,7 +11,7 @@
 			<com.fanfou.app.hd.ui.widget.MyAutoCompleteTextView
 				android:id="@id/write_text" android:layout_width="fill_parent"
 				android:layout_height="0dp" android:layout_margin="2dp"
-				android:layout_weight="1" android:background="@drawable/input_bg"
+				android:layout_weight="1" android:background="@drawable/input_background"
 				android:gravity="top|left" android:maxLines="10"
 				android:minLines="5" android:padding="10dp" android:singleLine="false" />
 

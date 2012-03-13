@@ -109,9 +109,11 @@ abstract class UIBaseSupport extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-		getSupportMenuInflater().inflate(getMenuResourceId(), menu);
+		int id=getMenuResourceId();
+		if(id>0){
+			getSupportMenuInflater().inflate(getMenuResourceId(), menu);
+		}
 		return true;
-//		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override

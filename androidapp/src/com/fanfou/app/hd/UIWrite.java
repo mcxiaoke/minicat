@@ -346,7 +346,7 @@ public class UIWrite extends UIBaseSupport {
 		});
 
 		mAutoCompleteTextView.setTokenizer(new AtTokenizer());
-		mAutoCompleteTextView.setBackgroundResource(R.drawable.input_bg);
+		mAutoCompleteTextView.setBackgroundResource(R.drawable.input_background);
 		final String[] projection = new String[] { UserColumns._ID,
 				UserColumns.ID, UserColumns.SCREEN_NAME, UserColumns.TYPE,
 				UserColumns.OWNER };
