@@ -8,21 +8,27 @@
     <style name="AppTheme.Blue" parent="Theme.Sherlock.Light">
 
         <!-- actionBar style -->
-        <item name="actionBarStyle">@style/Blue.ActionBar</item>
-        <item name="android:actionBarStyle">@style/Blue.ActionBar</item>
+        <item name="actionBarStyle">@style/Blue.ActionBarStyle</item>
+        <item name="android:actionBarStyle">@style/Blue.ActionBarStyle</item>
 
         <!-- listview style -->
-        <item name="android:listViewStyle">@style/Blue.ListView</item>
+        <item name="android:listViewStyle">@style/Blue.ListViewStyle</item>
 
         <!-- scrollbars style -->
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_vertical_thumb</item>
         <item name="android:scrollbarSize">@dimen/scrollbarSize</item>
         <item name="android:scrollbarStyle">insideOverlay</item>
-        <item name="profileItemStatisticsBox">@style/ProfileItemStatisticsBox.Blue</item>
-        <item name="profileItemStatisticsText">@style/ProfileItemStatisticsText.Blue</item>
-        <item name="profileItemActionButton">@style/ProfileItemActionButton.Blue</item>
-        <item name="profileItemInfoTitle">@style/ProfileItemInfoTitle.Blue</item>
-        <item name="profileItemInfoText">@style/ProfileItemInfoText.Blue</item>
+        <item name="primaryTextColor">@color/solid_black</item>
+        <item name="secondaryTextColor">@color/soft_white</item>
+        <item name="primaryTextColorReverse">@color/solid_white</item>
+        <item name="secondaryTextColorReverse">@color/soft_black</item>
+        <item name="highlightTextColor">@color/soft_white</item>
+        <item name="actionButtonBackground">@drawable/button_blue</item>
+        <item name="actionItemBackground">@drawable/selector</item>
+        <item name="actionsBackground">@color/theme</item>
+        <item name="infoTitleBackground">@color/soft_black</item>
+        <item name="statisticsTextColor">@color/theme</item>
+        <item name="statisticsBoxBackground">@drawable/selector</item>
     </style>
 
     <!-- Theme.Blue Style start -->
@@ -31,24 +37,25 @@
 
     <!-- ActionBar Style -->
 
-    <style name="Blue.ActionBar" parent="Widget.Sherlock.Light.ActionBar">
-        <item name="titleTextStyle">@style/Blue.ActionBarTitle</item>
-        <item name="android:titleTextStyle">@style/Blue.ActionBarTitle</item>
+    <style name="Blue.ActionBarStyle" parent="Widget.Sherlock.Light.ActionBar">
+        <item name="titleTextStyle">@style/Blue.ActionBarTitleStyle</item>
+        <item name="android:titleTextStyle">@style/Blue.ActionBarTitleStyle</item>
         <item name="icon">@drawable/ic_home</item>
         <item name="android:icon">@drawable/ic_home</item>
         <item name="background">@drawable/action_bar_background</item>
         <item name="android:background">@drawable/action_bar_background</item>
     </style>
 
-    <style name="Blue.ActionBarTitle">
-        <item name="android:textColor">@color/actionbar_title_color</item>
+    <style name="Blue.ActionBarTitleStyle">
+        <item name="android:textColor">@color/solid_white</item>
     </style>
 
     <!-- ListView Style -->
 
-    <style name="Blue.ListView">
+    <style name="Blue.ListViewStyle">
+
         <!-- <item name="android:background">@drawable/test</item> -->
-        <item name="android:listSelector">@drawable/list_selector_holo_light</item>
+        <item name="android:listSelector">@drawable/selector</item>
         <item name="android:divider">@color/list_divider</item>
         <item name="android:dividerHeight">@dimen/dividerWidth</item>
         <item name="android:cacheColorHint">@android:color/transparent</item>

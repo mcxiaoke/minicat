@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 /**
  * @author mcxiaoke
  * @version 1.0 2012.03.05
+ * @version 1.1 2012.03.13
  *
  * @param <Params>
  * @param <Progress>
@@ -33,7 +34,7 @@ public abstract class BetterAsyncTask<Params, Progress, Result> extends
 			cancel(true);
 			return;
 		}
-		before(context);
+		onPrepare(context);
 	}
 
 	@Override
@@ -45,19 +46,19 @@ public abstract class BetterAsyncTask<Params, Progress, Result> extends
 		}
 
 		if (error == null) {
-			after(context, result);
+			onPost(context, result);
 		} else {
-			error(context, error);
+			onError(context, error);
 		}
 	}
 
-	protected abstract void before(Context context);
+	protected abstract void onPrepare(Context context);
 
-	protected abstract void after(Context context, Result result);
+	protected abstract void onPost(Context context, Result result);
 
-	protected abstract void error(Context context, Exception exception);
+	protected abstract void onError(Context context, Exception exception);
 	
-	protected abstract Result run(Params... params);
+	protected abstract Result run(Params... params) throws Exception;
 
 	@Override
 	protected final Result doInBackground(Params... params) {
@@ -69,7 +70,7 @@ public abstract class BetterAsyncTask<Params, Progress, Result> extends
 		}
 	}
 
-	protected void setFailed(Exception e) {
+	protected void setError(Exception e) {
 		this.error = e;
 	}
 

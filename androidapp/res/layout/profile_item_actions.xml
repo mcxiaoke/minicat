@@ -8,17 +8,17 @@
 
     <TextView
         android:id="@+id/action_follow"
-        style="?profileItemActionButton"
+        style="@style/ProfileActionButtonStyle"
         android:text="@string/action_follow" />
 
     <TextView
         android:id="@+id/action_dm"
-        style="?profileItemActionButton"
+        style="@style/ProfileActionButtonStyle"
         android:text="@string/action_dm" />
 
     <TextView
         android:id="@+id/action_mention"
-        style="?profileItemActionButton"
+        style="@style/ProfileActionButtonStyle"
         android:text="@string/action_mention" />
 
 </LinearLayout>

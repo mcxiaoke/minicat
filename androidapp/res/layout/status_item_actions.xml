@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?actionsBackground"
+    android:orientation="horizontal" >
+
+    <ImageButton
+        android:id="@+id/action_reply"
+        style="@style/StatusActionItemStyle"
+        android:src="@drawable/ic_bar_reply" />
+
+    <ImageButton
+        android:id="@+id/action_retweet"
+        style="@style/StatusActionItemStyle"
+        android:src="@drawable/ic_bar_retweet" />
+
+    <ImageButton
+        android:id="@+id/action_favorite"
+        style="@style/StatusActionItemStyle"
+        android:src="@drawable/ic_bar_favorite" />
+
+    <ImageButton
+        android:id="@+id/action_share"
+        style="@style/StatusActionItemStyle"
+        android:src="@drawable/ic_bar_share" />
+
+</LinearLayout>

@@ -9,14 +9,14 @@
 
     <LinearLayout
         android:id="@+id/box_statuses"
-        style="?profileItemStatisticsBox" >
+        style="@style/ProfileStatisticsBoxStyle" >
 
         <TextView
             android:id="@+id/statistics_statuses"
-            style="?profileItemStatisticsText" />
+            style="@style/ProfileStatisticsTextStyle" />
 
         <TextView
-            style="?profileItemStatisticsText"
+            style="@style/ProfileStatisticsTextStyle"
             android:text="消息" />
     </LinearLayout>
 
@@ -24,14 +24,14 @@
 
     <LinearLayout
         android:id="@+id/box_favorites"
-        style="?profileItemStatisticsBox" >
+        style="@style/ProfileStatisticsBoxStyle" >
 
         <TextView
             android:id="@+id/statistics_favorites"
-            style="?profileItemStatisticsText" />
+            style="@style/ProfileStatisticsTextStyle" />
 
         <TextView
-            style="?profileItemStatisticsText"
+            style="@style/ProfileStatisticsTextStyle"
             android:text="收藏" />
     </LinearLayout>
 
@@ -39,14 +39,14 @@
 
     <LinearLayout
         android:id="@+id/box_friends"
-        style="?profileItemStatisticsBox" >
+        style="@style/ProfileStatisticsBoxStyle" >
 
         <TextView
             android:id="@+id/statistics_friends"
-            style="?profileItemStatisticsText" />
+            style="@style/ProfileStatisticsTextStyle" />
 
         <TextView
-            style="?profileItemStatisticsText"
+            style="@style/ProfileStatisticsTextStyle"
             android:text="好友" />
     </LinearLayout>
 
@@ -54,14 +54,14 @@
 
     <LinearLayout
         android:id="@+id/box_followers"
-        style="?profileItemStatisticsBox" >
+        style="@style/ProfileStatisticsBoxStyle" >
 
         <TextView
             android:id="@+id/statistics_followers"
-            style="?profileItemStatisticsText" />
+            style="@style/ProfileStatisticsTextStyle" />
 
         <TextView
-            style="?profileItemStatisticsText"
+            style="@style/ProfileStatisticsTextStyle"
             android:text="关注者" />
     </LinearLayout>
 

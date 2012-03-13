@@ -457,6 +457,10 @@ public class FanFouService extends IntentService {
 			final Handler handler) {
 		startService(context, USER_SHOW, userId, handler);
 	}
+	
+	public static void showStatus(Context context, String id, final Handler handler){
+		startService(context, STATUS_SHOW, id, handler);
+	}
 
 	private void showStatus(String id) {
 		StatusModel s = null;

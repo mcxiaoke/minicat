@@ -2,8 +2,8 @@ package com.fanfou.app.hd;
 
 import java.io.File;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,21 +13,21 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.cache.IImageLoader;
-import com.fanfou.app.hd.cache.ImageLoader;
+import com.fanfou.app.hd.controller.EmptyViewController;
 import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
-import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.FanFouService;
+import com.fanfou.app.hd.task.BetterAsyncTask;
+import com.fanfou.app.hd.util.DateTimeHelper;
 import com.fanfou.app.hd.util.IOHelper;
-import com.fanfou.app.hd.util.OptionHelper;
 import com.fanfou.app.hd.util.StatusHelper;
 import com.fanfou.app.hd.util.StringHelper;
 import com.fanfou.app.hd.util.Utils;
@@ -51,49 +51,36 @@ import com.fanfou.app.hd.util.Utils;
  * @version 4.0 2012.02.22
  * @version 4.1 2012.03.01
  * @version 4.2 2012.03.02
+ * @version 5.0 2012.03.13
  * 
  */
 public class UIStatus extends UIBaseSupport {
 
-	private static final int PHOTO_LOADING = -1;
-	private static final int PHOTO_ICON = 0;
-	private static final int PHOTO_SMALL = 1;
-	private static final int PHOTO_LARGE = 2;
-
-	private int mPhotoState = PHOTO_ICON;
-
 	private ScrollView mScrollView;
-
-	private IImageLoader mLoader;
 
 	private String statusId;
 	private StatusModel status;
 
-	private View vUser;
+	private View vHeader;
 
-	private ImageView iUserHead;
-	private TextView tUserName;
+	private ImageView headerImage;
+	private TextView headerName;
 
-	private TextView tContent;
-	private ImageView iPhoto;
+	private TextView contentText;
+	private ImageView contentPhoto;
 
-	private TextView tDate;
-	private TextView tSource;
+	private TextView contentMetaInfo;
 
-	private ImageView bReply;
-	private ImageView bRepost;
-	private ImageView bFavorite;
-	private ImageView bShare;
+	private ImageButton imReply;
+	private ImageButton imRepost;
+	private ImageButton imFavorite;
+	private ImageButton imShare;
 
-	private TextView vThread;
+	private View vEmpty;
 
-	private TextView vConversation;
+	private EmptyViewController emptyController;
 
 	private boolean isMe;
-
-	private String mPhotoUrl;
-
-	// private GestureDetector mDetector;
 
 	@Override
 	protected void onResume() {
@@ -114,8 +101,8 @@ public class UIStatus extends UIBaseSupport {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		ActionBar ab=getSupportActionBar();
+
+		ActionBar ab = getSupportActionBar();
 		ab.setHomeButtonEnabled(true);
 		ab.setDisplayHomeAsUpEnabled(true);
 
@@ -129,12 +116,13 @@ public class UIStatus extends UIBaseSupport {
 
 	}
 
-	private void updateFavoriteButton(boolean favorited) {
-		if (favorited) {
-			bFavorite.setImageResource(R.drawable.i_bar2_unfavorite);
-		} else {
-			bFavorite.setImageResource(R.drawable.i_bar2_favorite);
-		}
+	private void updateFavoriteAction(boolean favorited) {
+		imFavorite.setImageLevel(favorited ? 1 : 0);
+	}
+
+	private void updateReplyAction() {
+		imReply.setImageResource(isMe ? R.drawable.ic_bar_delete
+				: R.drawable.ic_bar_reply);
 	}
 
 	private void parseIntent() {
@@ -142,19 +130,15 @@ public class UIStatus extends UIBaseSupport {
 		statusId = intent.getStringExtra("id");
 		status = (StatusModel) intent.getParcelableExtra("data");
 
-		if (status == null && statusId != null) {
-			// status = CacheManager.getStatus(this, statusId);
-		} else {
+		if (status != null) {
 			statusId = status.getId();
+			status = null;
 		}
-		isMe = status.getUserId().equals(App.getAccount());
+
 	}
 
 	@Override
 	protected void initialize() {
-		mLoader = App.getImageLoader();
-		// mDetector=new GestureDetector(new SwipeGestureListener(this));
-
 		parseIntent();
 	}
 
@@ -163,138 +147,162 @@ public class UIStatus extends UIBaseSupport {
 
 		setContentView(R.layout.ui_status);
 
-		mScrollView = (ScrollView) findViewById(R.id.status_content);
+		findViews();
+		setEmptyView();
+		setListeners();
 
-		vUser = findViewById(R.id.status_top);
-		vUser.setOnClickListener(this);
-		iUserHead = (ImageView) findViewById(R.id.user_head);
-		tUserName = (TextView) findViewById(R.id.user_name);
-		TextPaint tp = tUserName.getPaint();
-		tp.setFakeBoldText(true);
-
-		tContent = (TextView) findViewById(R.id.status_text);
-		iPhoto = (ImageView) findViewById(R.id.status_photo);
-		tDate = (TextView) findViewById(R.id.status_date);
-		tSource = (TextView) findViewById(R.id.status_source);
-		vThread = (TextView) findViewById(R.id.status_thread);
-
-		vConversation = (TextView) findViewById(R.id.status_conversation);
-		vConversation.setVisibility(View.GONE);
-
-		bReply = (ImageView) findViewById(R.id.status_action_reply);
-		bRepost = (ImageView) findViewById(R.id.status_action_retweet);
-		bFavorite = (ImageView) findViewById(R.id.status_action_favorite);
-		bShare = (ImageView) findViewById(R.id.status_action_share);
-
-		bReply.setOnClickListener(this);
-		bRepost.setOnClickListener(this);
-		bFavorite.setOnClickListener(this);
-		bShare.setOnClickListener(this);
-		vThread.setOnClickListener(this);
-
-		registerForContextMenu(tContent);
+		//
+		// registerForContextMenu(tContent);
 
 		updateUI();
 	}
 
-	private void updateUI() {
-		if (status != null) {
-			String headUrl = status.getUserProfileImageUrl();
-			iUserHead.setTag(headUrl);
-			mLoader.displayImage(headUrl, iUserHead, R.drawable.default_head);
+	private void findViews() {
+		mScrollView = (ScrollView) findViewById(R.id.scrollview);
+		vEmpty = findViewById(android.R.id.empty);
 
-			tUserName.setText(status.getUserScreenName());
+		vHeader = findViewById(R.id.header);
+		headerImage = (ImageView) findViewById(R.id.header_image);
+		headerName = (TextView) findViewById(R.id.header_name);
+		TextPaint tp = headerName.getPaint();
+		tp.setFakeBoldText(true);
 
-			StatusHelper.setStatus(tContent, status.getText());
-			checkPhoto(status);
+		contentText = (TextView) findViewById(R.id.content_text);
+		contentPhoto = (ImageView) findViewById(R.id.content_photo);
+		contentMetaInfo = (TextView) findViewById(R.id.content_metainfo);
 
-			// tDate.setText(DateTimeHelper.getInterval(status.getTime()));
-			tSource.setText("通过" + status.getSource());
+		imReply = (ImageButton) findViewById(R.id.action_reply);
+		imRepost = (ImageButton) findViewById(R.id.action_retweet);
+		imFavorite = (ImageButton) findViewById(R.id.action_favorite);
+		imShare = (ImageButton) findViewById(R.id.action_share);
+	}
 
-			if (isMe) {
-				bReply.setImageResource(R.drawable.i_bar2_delete);
-			} else {
-				bReply.setImageResource(R.drawable.i_bar2_reply);
-			}
-
-			updateFavoriteButton(status.isFavorited());
-
-			if (status.isThread()) {
-				vThread.setVisibility(View.VISIBLE);
-			} else {
-				vThread.setVisibility(View.GONE);
-			}
+	private void setEmptyView() {
+		emptyController = new EmptyViewController(vEmpty);
+		if (status == null) {
+			fetchStatus();
+			showProgress();
+		} else {
+			showContent();
 		}
 	}
 
-	private void checkPhoto(StatusModel s) {
-		if (!s.isPhoto()) {
-			iPhoto.setVisibility(View.GONE);
+	private void showEmptyView(String text) {
+		mScrollView.setVisibility(View.GONE);
+		emptyController.showEmpty(text);
+	}
+
+	private void showProgress() {
+		mScrollView.setVisibility(View.GONE);
+		emptyController.showProgress();
+		if (App.DEBUG) {
+			Log.d(TAG, "showProgress");
+		}
+	}
+
+	private void showContent() {
+		emptyController.hideProgress();
+		mScrollView.setVisibility(View.VISIBLE);
+		if (App.DEBUG) {
+			Log.d(TAG, "showContent");
+		}
+	}
+
+	private void setListeners() {
+		vHeader.setOnClickListener(this);
+
+		imReply.setOnClickListener(this);
+		imRepost.setOnClickListener(this);
+		imFavorite.setOnClickListener(this);
+		imShare.setOnClickListener(this);
+	}
+
+	private void updateUI(StatusModel model) {
+		if (model != null) {
+			status = model;
+		}
+		updateUI();
+	}
+
+	private void updateUI() {
+		if (status == null) {
 			return;
 		}
 
-		mPhotoState = PHOTO_ICON;
-		iPhoto.setVisibility(View.VISIBLE);
-		iPhoto.setOnClickListener(this);
+		isMe = status.getUserId().equals(App.getAccount());
 
-		// 先检查本地是否有大图缓存
-		Bitmap bitmap = mLoader.getImage(s.getPhotoLargeUrl(), null);
-		mPhotoUrl = s.getPhotoLargeUrl();
-		if (bitmap != null) {
-			iPhoto.setImageBitmap(bitmap);
-			mPhotoState = PHOTO_LARGE;
+		showContent();
+		updateHeader();
+		updateContent();
+		updateActions();
+		updatePhoto();
+	}
+
+	private void updateHeader() {
+		headerName.setText(status.getUserScreenName());
+		String headerImageUrl = status.getUserProfileImageUrl();
+		headerImage.setTag(headerImageUrl);
+		App.getImageLoader().displayImage(headerImageUrl, headerImage,
+				R.drawable.default_head);
+
+	}
+
+	private void updateContent() {
+		StatusHelper.setStatus(contentText, status.getText());
+		StringBuilder sb = new StringBuilder();
+		sb.append(DateTimeHelper.formatDate(status.getTime())).append(" 通过")
+				.append(status.getSource());
+		contentMetaInfo.setText(sb.toString());
+	}
+
+	private void updateActions() {
+		updateReplyAction();
+		updateFavoriteAction(status.isFavorited());
+	}
+
+	private void updatePhoto() {
+		if (!status.isPhoto()) {
+			contentPhoto.setVisibility(View.GONE);
 			return;
 		}
 
-		// 再检查本地是否有缩略图缓存
-		bitmap = mLoader.getImage(s.getPhotoImageUrl(), null);
-		mPhotoUrl = s.getPhotoImageUrl();
-		if (bitmap != null) {
-			iPhoto.setImageBitmap(bitmap);
-			mPhotoState = PHOTO_SMALL;
-			return;
-		}
-
-		// 是否需要显示图片
-
-		if (App.getApnType() == ApnType.WIFI) {
-			loadPhoto(PHOTO_LARGE);
-		} else {
-			iPhoto.setImageResource(R.drawable.photo_icon);
-		}
+		contentPhoto.setVisibility(View.VISIBLE);
+		String photoUrl = status.getPhotoImageUrl();
+		contentPhoto.setTag(photoUrl);
+		App.getImageLoader().displayImage(photoUrl, contentPhoto, 0);
 	}
 
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
 		switch (id) {
-		case R.id.status_action_reply:
+		case R.id.action_reply:
 			if (isMe) {
 				doDelete();
 			} else {
 				UIController.doReply(mContext, status);
 			}
 			break;
-		case R.id.status_action_retweet:
+		case R.id.action_retweet:
 			UIController.doRetweet(mContext, status);
 			break;
-		case R.id.status_action_favorite:
+		case R.id.action_favorite:
 			doFavorite();
 			break;
-		case R.id.status_action_share:
+		case R.id.action_share:
 			UIController.doShare(mContext, status);
 			break;
-		case R.id.status_top:
+		case R.id.header:
 			UIController.showProfile(mContext, status.getUserId());
 			break;
-		case R.id.status_photo:
-			onClickPhoto();
+		case R.id.content_photo:
+			goPhotoViewer();
 			break;
-		case R.id.status_thread:
-			Intent intent = new Intent(mContext, UIThread.class);
-			intent.putExtra("data", status);
-			mContext.startActivity(intent);
-			break;
+		// case R.id.thread:
+		// Intent intent = new Intent(mContext, UIThread.class);
+		// intent.putExtra("data", status);
+		// mContext.startActivity(intent);
+		// break;
 		default:
 			break;
 		}
@@ -323,101 +331,52 @@ public class UIStatus extends UIBaseSupport {
 
 	}
 
-	private void onClickPhoto() {
-		if (App.DEBUG) {
-			Log.d(TAG, "onClickPhoto() mPhotoState=" + mPhotoState);
-		}
-		switch (mPhotoState) {
-		case PHOTO_ICON:
-			loadPhoto(PHOTO_LARGE);
-			break;
-		case PHOTO_SMALL:
-			loadPhoto(PHOTO_LARGE);
-			break;
-		case PHOTO_LARGE:
-			goPhotoViewer();
-			break;
-		case PHOTO_LOADING:
-			break;
-		default:
-			break;
-		}
-	}
-
 	private void goPhotoViewer() {
-		if (!TextUtils.isEmpty(mPhotoUrl)) {
-			String filePath = getPhotoPath(mPhotoUrl);
+		// TODO
+
+		String photoUrl = status.getPhotoLargeUrl();
+		if (!TextUtils.isEmpty(photoUrl)) {
 			if (App.DEBUG) {
-				Log.d(TAG, "goPhotoViewer() url=" + filePath);
+				Log.d(TAG, "goPhotoViewer() url=" + photoUrl);
 			}
 			Intent intent = new Intent(mContext, UIPhoto.class);
-			intent.putExtra("url", filePath);
+			intent.putExtra("url", photoUrl);
 			mContext.startActivity(intent);
 			overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_enter);
 		}
 	}
 
-	private void loadPhoto(final int type) {
-		if (type == PHOTO_ICON) {
-			iPhoto.setImageResource(R.drawable.photo_icon);
-			if (App.DEBUG) {
-				Log.d(TAG, "loadPhoto mPhotoState=" + mPhotoState + " type="
-						+ type);
-			}
-			return;
-		}
-		mPhotoState = PHOTO_LOADING;
-		iPhoto.setImageResource(R.drawable.photo_loading);
-		// clear queue before load big photos;
-		ImageLoader.getInstance().clearQueue();
-		if (App.DEBUG) {
-			Log.d(TAG, "loadPhoto mPhotoState=" + mPhotoState + " type=" + type);
-		}
+	private void fetchStatus() {
 		final Handler handler = new Handler() {
-
 			@Override
 			public void handleMessage(Message msg) {
-				int what = msg.what;
-				if (what == ImageLoader.MESSAGE_FINISH) {
-					Bitmap bitmap = (Bitmap) msg.obj;
-					if (App.DEBUG) {
-						Log.d(TAG, "handler onfinish bitmap=" + bitmap);
-					}
-					if (bitmap != null) {
-						iPhoto.setImageBitmap(bitmap);
-						mPhotoState = type;
-					} else {
-						iPhoto.setImageResource(R.drawable.photo_icon);
-						mPhotoState = PHOTO_ICON;
-					}
-				} else if (what == ImageLoader.MESSAGE_ERROR) {
-					iPhoto.setImageResource(R.drawable.photo_icon);
-					mPhotoState = PHOTO_ICON;
+				switch (msg.what) {
+				case FanFouService.RESULT_SUCCESS:
+					StatusModel result = msg.getData().getParcelable("data");
+					onFetchStatusComplete(result);
+					break;
+				case FanFouService.RESULT_ERROR:
+					String errorMessage = msg.getData().getString(
+							"error_message");
+					onFetchStatusError(errorMessage);
+					break;
+				default:
+					break;
 				}
 			}
 		};
-
-		if (type == PHOTO_LARGE) {
-			mPhotoUrl = status.getPhotoLargeUrl();
-		} else if (type == PHOTO_SMALL) {
-			mPhotoUrl = status.getPhotoThumbUrl();
-		}
-
 		if (App.DEBUG) {
-			Log.d(TAG, "loadPhoto mPhotoState=" + mPhotoState + " type=" + type
-					+ " url=" + mPhotoUrl);
+			Log.d(TAG, "fetchStatus");
 		}
+		FanFouService.showStatus(mContext, statusId, handler);
+	}
 
-		iPhoto.setTag(mPhotoUrl);
-		Bitmap bitmap = mLoader.getImage(mPhotoUrl, handler);
-		if (bitmap != null) {
-			iPhoto.setImageBitmap(bitmap);
-			mPhotoState = type;
-			if (App.DEBUG) {
-				Log.d(TAG, "loadPhoto has cache url=" + mPhotoUrl + " type="
-						+ type);
-			}
-		}
+	private void onDeleteComplete() {
+		finish();
+	}
+
+	private void onDeleteError(String message) {
+		Utils.notify(mContext, message);
 	}
 
 	private void doDelete() {
@@ -428,12 +387,12 @@ public class UIStatus extends UIBaseSupport {
 				int what = msg.what;
 				switch (what) {
 				case FanFouService.RESULT_SUCCESS:
-					finish();
+					onDeleteComplete();
 					break;
 				case FanFouService.RESULT_ERROR:
 					int code = msg.getData().getInt("error_code");
 					String message = msg.getData().getString("error_message");
-					Utils.notify(mContext, message);
+					onDeleteError(message);
 					break;
 				default:
 					break;
@@ -453,6 +412,16 @@ public class UIStatus extends UIBaseSupport {
 
 	}
 
+	private void onFavoriteComplete(boolean favorited) {
+		status.setFavorited(favorited);
+		updateFavoriteAction(status.isFavorited());
+		Utils.notify(mContext, favorited ? "收藏成功" : "取消收藏成功");
+	}
+
+	private void onFavoriteError(String message) {
+
+	}
+
 	private void doFavorite() {
 
 		final Handler handler = new Handler() {
@@ -462,18 +431,17 @@ public class UIStatus extends UIBaseSupport {
 				switch (msg.what) {
 				case FanFouService.RESULT_SUCCESS:
 					boolean favorited = msg.getData().getBoolean("boolean");
-					status.setFavorited(favorited);
-					updateFavoriteButton(status.isFavorited());
-					Utils.notify(mContext, favorited ? "收藏成功" : "取消收藏成功");
+					onFavoriteComplete(favorited);
 					break;
 				case FanFouService.RESULT_ERROR:
+					onFavoriteError(null);
 					break;
 				default:
 					break;
 				}
 			}
 		};
-		updateFavoriteButton(!status.isFavorited());
+		updateFavoriteAction(!status.isFavorited());
 		if (status.isFavorited()) {
 			FanFouService.unfavorite(mContext, status.getId(), handler);
 		} else {
@@ -484,6 +452,42 @@ public class UIStatus extends UIBaseSupport {
 	private void doCopy(String content) {
 		IOHelper.copyToClipBoard(this, content);
 		Utils.notify(this, "消息内容已复制到剪贴板");
+	}
+
+	private void onFetchStatusComplete(StatusModel model) {
+		updateUI(model);
+	}
+
+	private void onFetchStatusError(String message) {
+		showEmptyView(message);
+	}
+
+	private class FetchStatusTask extends
+			BetterAsyncTask<String, Void, StatusModel> {
+
+		public FetchStatusTask(Context context) {
+			super(context);
+		}
+
+		@Override
+		protected void onPrepare(Context context) {
+		}
+
+		@Override
+		protected void onPost(Context context, StatusModel result) {
+			onFetchStatusComplete(result);
+		}
+
+		@Override
+		protected void onError(Context context, Exception exception) {
+			onFetchStatusError(exception.getMessage());
+		}
+
+		@Override
+		protected StatusModel run(String... params) throws Exception {
+			return App.getApi().showStatus(params[0]);
+		}
+
 	}
 
 }

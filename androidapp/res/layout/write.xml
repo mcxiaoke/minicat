@@ -71,7 +71,7 @@
 				<ImageView android:id="@id/write_picture_remove"
 					android:layout_width="wrap_content" android:layout_height="wrap_content"
 					android:layout_centerVertical="true" android:layout_toRightOf="@id/write_picture_prieview"
-					android:padding="8dp" android:src="@drawable/i_close" />
+					android:padding="8dp" android:src="@drawable/ic_remove" />
 			</RelativeLayout>
 		</LinearLayout>
 	</ScrollView>

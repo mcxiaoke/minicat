@@ -181,11 +181,11 @@ public class UIHome extends UIBaseSupport {
 		return R.menu.home_menu;
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.home_menu, menu);
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		getSupportMenuInflater().inflate(R.menu.home_menu, menu);
+//		return true;
+//	}
 
 	@Override
 	public boolean onOptionsItemSelected(

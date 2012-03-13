@@ -45,6 +45,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 2.7 2011.12.02
  * @version 2.8 2011.12.23
  * @version 3.0 2012.02.22
+ * @version 3.1 2012.03.13
  */
 public class UIUserChoose extends UIBaseSupport implements
 		FilterQueryProvider, OnItemClickListener {
@@ -151,13 +152,6 @@ public class UIUserChoose extends UIBaseSupport implements
 
 	private void setListView() {
 		mListView = (ListView) findViewById(android.R.id.list);
-		mListView.setCacheColorHint(0);
-		mListView.setHorizontalScrollBarEnabled(false);
-		mListView.setVerticalScrollBarEnabled(false);
-		mListView.setSelector(getResources().getDrawable(
-				R.drawable.list_selector_holo_light));
-		mListView.setDivider(getResources().getDrawable(R.drawable.separator));
-
 		mListView.setOnItemClickListener(this);
 		mListView.setItemsCanFocus(false);
 		mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);

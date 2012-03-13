@@ -2,11 +2,18 @@
 <resources>
 
     <declare-styleable name="AppTheme">
-        <attr name="profileItemStatisticsBox" format="reference" />
-        <attr name="profileItemStatisticsText" format="reference" />
-        <attr name="profileItemActionButton" format="reference" />
-        <attr name="profileItemInfoTitle" format="reference" />
-        <attr name="profileItemInfoText" format="reference" />
+        <attr name="primaryTextColor" format="reference|color"></attr>
+        <attr name="secondaryTextColor" format="reference|color"></attr>
+        <attr name="primaryTextColorReverse" format="reference|color"></attr>
+        <attr name="secondaryTextColorReverse" format="reference|color"></attr>
+        <attr name="highlightTextColor" format="reference|color"></attr>
+        <attr name="actionButtonBackground" format="reference"></attr>
+        <attr name="infoTitleBackground" format="reference|color"></attr>
+        <attr name="infoTextBackground" format="reference|color"></attr>
+        <attr name="statisticsBoxBackground" format="reference"></attr>
+        <attr name="statisticsTextColor" format="reference|color"></attr>
+        <attr name="actionItemBackground" format="reference"></attr>
+        <attr name="actionsBackground" format="reference|color"></attr>
     </declare-styleable>
 
 </resources>

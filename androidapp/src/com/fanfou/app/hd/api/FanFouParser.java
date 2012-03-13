@@ -42,6 +42,7 @@ import android.util.Log;
  * @version 3.0 2012.02.21
  * @version 4.0 2012.02.23
  * @version 4.1 2012.02.24
+ * @version 4.2 2012.03.13
  * 
  */
 final class FanFouParser implements ApiParser {
@@ -311,6 +312,7 @@ final class FanFouParser implements ApiParser {
 		if (o.has("photo")) {
 			JSONObject po = o.getJSONObject("photo");
 			Photo photo = photo(po);
+			model.setPhoto(true);
 			model.setMedia(photo.url);
 			model.setPhotoImageUrl(photo.imageUrl);
 			model.setPhotoLargeUrl(photo.largeUrl);

@@ -17,6 +17,7 @@ import android.os.Parcelable;
  * @version 1.2 2012.02.17
  * @version 1.3 2012.02.20
  * @version 1.4 2012.02.22
+ * @version 1.5 2012.03.13
  * 
  */
 public class StatusModel extends BaseModel {
@@ -254,11 +255,6 @@ public class StatusModel extends BaseModel {
 			return new StatusModel[size];
 		}
 	};
-
-	@Override
-	public String toString() {
-		return "[Status] " + StatusColumns.ID;
-	}
 
 	@Override
 	public int describeContents() {
@@ -509,6 +505,28 @@ public class StatusModel extends BaseModel {
 			this.userRawid=user.getRawid();
 			this.userProfileImageUrl=user.getProfileImageUrl();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "StatusModel [simpleText=" + simpleText + ", source=" + source
+				+ ", geo=" + geo + ", media=" + media + ", userRawid="
+				+ userRawid + ", userId=" + userId + ", userScreenName="
+				+ userScreenName + ", userProfileImageUrl="
+				+ userProfileImageUrl + ", inReplyToStatusId="
+				+ inReplyToStatusId + ", inReplyToUserId=" + inReplyToUserId
+				+ ", inReplyToScreenName=" + inReplyToScreenName
+				+ ", rtStatusId=" + rtStatusId + ", rtUserId=" + rtUserId
+				+ ", rtScreenName=" + rtScreenName + ", photoImageUrl="
+				+ photoImageUrl + ", photoThumbUrl=" + photoThumbUrl
+				+ ", photoLargeUrl=" + photoLargeUrl + ", truncated="
+				+ truncated + ", favorited=" + favorited + ", retweeted="
+				+ retweeted + ", self=" + self + ", read=" + read + ", thread="
+				+ thread + ", photo=" + photo + ", special=" + special
+				+ ", urls=" + urls + ", hashtags=" + hashtags + ", mentions="
+				+ mentions + ", user=" + user + ", id=" + id + ", account="
+				+ account + ", owner=" + owner + ", type=" + type + ", rawid="
+				+ rawid + "]";
 	}
 
 	@Override

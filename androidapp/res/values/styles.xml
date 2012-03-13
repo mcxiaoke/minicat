@@ -306,26 +306,28 @@
     </style>
 
     <!-- ===========================below add by mcxiaoke====================== -->
+    <!-- ===========================below add by mcxiaoke====================== -->
+    <!-- ===========================below add by mcxiaoke====================== -->
+    <!-- ===========================below add by mcxiaoke====================== -->
+    <!-- ===========================below add by mcxiaoke====================== -->
+    <!-- ===========================below add by mcxiaoke====================== -->
+    <!-- ===========================below add by mcxiaoke====================== -->
+    <!-- ===========================below add by mcxiaoke====================== -->
 
-    <style name="ProfileImage">
+    <style name="ProfileImageStyle">
         <item name="android:layout_width">@dimen/profile_image_width</item>
         <item name="android:layout_height">@dimen/profile_image_width</item>
         <item name="android:layout_margin">@dimen/profile_image_margin</item>
     </style>
 
-    <style name="ProfileItemStatisticsText">
+    <style name="ProfileStatisticsTextStyle">
         <item name="android:textSize">16sp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">?statisticsTextColor</item>
     </style>
 
-    <style name="ProfileItemStatisticsText.Blue">
-        <item name="android:textColor">@color/actionbar_background</item>
-    </style>
-
-    <style name="ProfileItemStatisticsText.Black"></style>
-
-    <style name="ProfileItemStatisticsBox">
+    <style name="ProfileStatisticsBoxStyle">
         <item name="android:gravity">center</item>
         <item name="android:clickable">true</item>
         <item name="android:descendantFocusability">blocksDescendants</item>
@@ -333,15 +335,10 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">vertical</item>
+        <item name="android:background">?statisticsBoxBackground</item>
     </style>
 
-    <style name="ProfileItemStatisticsBox.Blue">
-        <item name="android:background">@drawable/list_selector_holo_light</item>
-    </style>
-
-    <style name="ProfileItemStatisticsBox.Black"></style>
-
-    <style name="ProfileItemActionButton">
+    <style name="ProfileActionButtonStyle">
         <item name="android:gravity">center</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_width">match_parent</item>
@@ -349,48 +346,68 @@
         <item name="android:layout_margin">5dp</item>
         <item name="android:padding">5dp</item>
         <item name="android:textSize">16sp</item>
+        <item name="android:background">?actionButtonBackground</item>
+        <item name="android:textColor">?primaryTextColorReverse</item>
     </style>
 
-    <style name="ProfileItemActionButton.Blue">
-        <item name="android:background">@drawable/button_blue</item>
-        <item name="android:textColor">@color/solid_white</item>
-    </style>
-
-    <style name="ProfileItemActionButton.Black"></style>
-
-    <style name="ProfileItemInfoTitle">
+    <style name="InfoTitleStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:paddingTop">6dp</item>
         <item name="android:paddingBottom">6dp</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
+        <item name="android:background">?infoTitleBackground</item>
+        <item name="android:textColor">?primaryTextColor</item>
     </style>
 
-    <style name="ProfileItemInfoTitle.Blue">
-        <item name="android:background">@color/profile_item_title_background</item>
-        <item name="android:textColor">@color/solid_black</item>
-    </style>
-
-    <style name="ProfileItemInfoTitle.Black"></style>
-
-    <style name="ProfileItemInfoText">
+    <style name="InfoTextStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:paddingTop">6dp</item>
         <item name="android:paddingBottom">6dp</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
+        <item name="android:textColor">?primaryTextColor</item>
     </style>
 
-    <style name="ProfileItemInfoText.Blue">
-        <item name="android:textColor">@color/solid_black</item>
+    <style name="StatusTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:padding">@dimen/status_text_padding</item>
+        <item name="android:textColor">?primaryTextColor</item>
     </style>
 
-    <style name="ProfileItemInfoText.Black"></style>
+    <style name="StatusMetaInfoStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size_tiny</item>
+        <item name="android:padding">@dimen/status_text_padding</item>
+        <item name="android:textColor">?secondaryTextColor</item>
+    </style>
 
+    <style name="StatusPhotoStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+    <style name="StatusActionItemStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:padding">@dimen/action_item_padding</item>
+        <item name="android:background">?actionItemBackground</item>
+        <!-- <item name="android:contentDescription">@string/contentDescription</item> -->
+    </style>
+
+    <!-- ========================= above add by mcxiaoke======================== -->
+    <!-- ========================= above add by mcxiaoke======================== -->
+    <!-- ========================= above add by mcxiaoke======================== -->
+    <!-- ========================= above add by mcxiaoke======================== -->
     <!-- ========================= above add by mcxiaoke======================== -->
 
 </resources>

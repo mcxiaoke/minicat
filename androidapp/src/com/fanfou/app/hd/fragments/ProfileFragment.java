@@ -31,6 +31,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 2.0 2012.03.06
  * @version 2.1 2012.03.07
  * @version 2.2 2012.03.08
+ * @version 2.3 2012.03.13
  * 
  */
 public class ProfileFragment extends AbstractFragment implements
@@ -173,7 +174,7 @@ public class ProfileFragment extends AbstractFragment implements
 		emptyController = new EmptyViewController(vEmpty);
 
 		if (user == null) {
-			showUser();
+			fetchUser();
 			showProgress();
 		} else {
 			showContent();
@@ -306,7 +307,7 @@ public class ProfileFragment extends AbstractFragment implements
 		actionFollow.setText(following ? strFollow : strUnFollow);
 	}
 
-	private void showUser() {
+	private void fetchUser() {
 		final Handler handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {

@@ -53,5 +53,7 @@
     <string name="action_unfollow">UnFollow</string>
     <string name="action_dm">Send</string>
     <string name="action_mention">Mention</string>
+    
+    <string name="contentDescription">Image</string>
 
 </resources>

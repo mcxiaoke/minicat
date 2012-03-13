@@ -11,7 +11,7 @@
         android:id="@+id/menu_write"
         android:icon="@drawable/ic_edit"
         android:orderInCategory="1"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
         android:title="写消息">
     </item>
     <item

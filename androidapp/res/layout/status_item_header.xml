@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" android:padding="@dimen/profile_header_padding" >
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector"
+    android:clickable="true"
+    android:padding="@dimen/profile_header_padding" >
 
     <ImageView
         android:id="@+id/header_image"
@@ -26,6 +29,7 @@
         android:layout_below="@id/header_name"
         android:layout_toRightOf="@id/header_image"
         android:padding="@dimen/profile_header_text_padding"
-        android:textSize="@dimen/text_size_tiny" />
+        android:textSize="@dimen/text_size_tiny"
+        android:visibility="gone" />
 
 </RelativeLayout>
