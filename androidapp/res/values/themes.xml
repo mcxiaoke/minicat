@@ -5,6 +5,8 @@
 
     <!-- ====================Theme.Blue start=================== -->
 
+    <style name="AppTheme.UIPhoto" parent="Theme.Sherlock.NoActionBar"></style>
+
     <style name="AppTheme.Blue" parent="Theme.Sherlock.Light">
 
         <!-- actionBar style -->
@@ -24,9 +26,9 @@
         <item name="secondaryTextColorReverse">@color/soft_black</item>
         <item name="highlightTextColor">@color/soft_white</item>
         <item name="actionButtonBackground">@drawable/button_blue</item>
-        <item name="actionItemBackground">@drawable/selector</item>
+        <item name="actionItemBackground">@drawable/action_item_background</item>
         <item name="actionsBackground">@color/theme</item>
-        <item name="infoTitleBackground">@color/soft_black</item>
+        <item name="infoTitleBackground">@color/soft_white</item>
         <item name="statisticsTextColor">@color/theme</item>
         <item name="statisticsBoxBackground">@drawable/selector</item>
     </style>

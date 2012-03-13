@@ -28,6 +28,8 @@
  
     <color name="selector_pressed">#6600ccff</color>
     
+    <color name="item_title_background">#99cccccc</color>
+    
     <color name="popup_background">#ffcccccc</color>
     <color name="popup_background_pressed">#ffc2c2c2</color>
     

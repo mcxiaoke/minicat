@@ -15,11 +15,9 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.fanfou.app.hd.cache.IImageLoader;
 import com.fanfou.app.hd.controller.EmptyViewController;
 import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.dao.model.StatusModel;
@@ -56,7 +54,7 @@ import com.fanfou.app.hd.util.Utils;
  */
 public class UIStatus extends UIBaseSupport {
 
-	private ScrollView mScrollView;
+	private View vContainer;
 
 	private String statusId;
 	private StatusModel status;
@@ -132,7 +130,6 @@ public class UIStatus extends UIBaseSupport {
 
 		if (status != null) {
 			statusId = status.getId();
-			status = null;
 		}
 
 	}
@@ -158,7 +155,7 @@ public class UIStatus extends UIBaseSupport {
 	}
 
 	private void findViews() {
-		mScrollView = (ScrollView) findViewById(R.id.scrollview);
+		vContainer = findViewById(R.id.container);
 		vEmpty = findViewById(android.R.id.empty);
 
 		vHeader = findViewById(R.id.header);
@@ -188,12 +185,12 @@ public class UIStatus extends UIBaseSupport {
 	}
 
 	private void showEmptyView(String text) {
-		mScrollView.setVisibility(View.GONE);
+		vContainer.setVisibility(View.GONE);
 		emptyController.showEmpty(text);
 	}
 
 	private void showProgress() {
-		mScrollView.setVisibility(View.GONE);
+		vContainer.setVisibility(View.GONE);
 		emptyController.showProgress();
 		if (App.DEBUG) {
 			Log.d(TAG, "showProgress");
@@ -202,7 +199,7 @@ public class UIStatus extends UIBaseSupport {
 
 	private void showContent() {
 		emptyController.hideProgress();
-		mScrollView.setVisibility(View.VISIBLE);
+		vContainer.setVisibility(View.VISIBLE);
 		if (App.DEBUG) {
 			Log.d(TAG, "showContent");
 		}
@@ -210,6 +207,8 @@ public class UIStatus extends UIBaseSupport {
 
 	private void setListeners() {
 		vHeader.setOnClickListener(this);
+		
+		contentPhoto.setOnClickListener(this);
 
 		imReply.setOnClickListener(this);
 		imRepost.setOnClickListener(this);
@@ -312,23 +311,6 @@ public class UIStatus extends UIBaseSupport {
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		doCopy(status.getSimpleText());
-	}
-
-	private String getPhotoPath(String key) {
-		if (TextUtils.isEmpty(key)) {
-			return null;
-		}
-		File file = new File(IOHelper.getImageCacheDir(mContext),
-				StringHelper.md5(key) + ".jpg");
-		if (App.DEBUG) {
-			log("loadFile path=" + file);
-		}
-		if (file.exists()) {
-			return file.getAbsolutePath();
-		} else {
-			return null;
-		}
-
 	}
 
 	private void goPhotoViewer() {
