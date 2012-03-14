@@ -95,8 +95,6 @@ public class UIHome extends UIBaseSupport {
 		if (App.DEBUG) {
 			log("onCreate()");
 		}
-		ActionBar ab = getSupportActionBar();
-
 	}
 
 	@Override

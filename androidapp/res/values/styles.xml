@@ -338,8 +338,8 @@
         <item name="android:padding">2dp</item>
         <item name="android:background">?profileActionBackground</item>
     </style>
-    
-        <style name="ProfileActionTextStyle">
+
+    <style name="ProfileActionTextStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">0dp</item>
@@ -393,7 +393,7 @@
     </style>
 
     <style name="StatusActionItemStyle">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:padding">@dimen/action_item_padding</item>
@@ -422,7 +422,7 @@
         <item name="android:textSize">@dimen/text_size_medium</item>
         <!-- <item name="android:textColor">@color/theme</item> -->
         <item name="android:singleLine">true</item>
-        <item name="android:background">@drawable/input</item>
+        <item name="android:background">?input_background</item>
         <item name="android:padding">10dp</item>
         <item name="android:layout_marginBottom">20dp</item>
     </style>
@@ -435,6 +435,14 @@
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:background">?loginButtonBackground</item>
         <item name="android:textColor">?primaryTextColorReverse</item>
+    </style>
+
+    <style name="WriteActionItemStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:padding">@dimen/action_item_padding</item>
+        <item name="android:background">?writeActionItemBackground</item>
     </style>
 
     <!-- ========================= above add by mcxiaoke======================== -->

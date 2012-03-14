@@ -62,6 +62,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 5.5 2012.02.22
  * @version 5.6 2012.02.28
  * @version 5.7 2012.03.09
+ * @version 6.0 2012.03.14
  * 
  */
 public class UIWrite extends UIBaseSupport {
@@ -124,18 +125,18 @@ public class UIWrite extends UIBaseSupport {
 		return R.menu.write_menu;
 	}
 
-//	@Override
-//	public boolean onOptionsItemSelected(MenuItem item) {
-//		int id = item.getItemId();
-//		switch (id) {
-//		case R.id.menu_send:
-//			onMenuSendClick();
-//			break;
-//		default:
-//			break;
-//		}
-//		return super.onOptionsItemSelected(item);
-//	}
+	// @Override
+	// public boolean onOptionsItemSelected(MenuItem item) {
+	// int id = item.getItemId();
+	// switch (id) {
+	// case R.id.menu_send:
+	// onMenuSendClick();
+	// break;
+	// default:
+	// break;
+	// }
+	// return super.onOptionsItemSelected(item);
+	// }
 
 	private void onMenuSendClick() {
 		doSend();
@@ -328,7 +329,7 @@ public class UIWrite extends UIBaseSupport {
 	}
 
 	private void deleteRecord(long id) {
-		if(id>0){
+		if (id > 0) {
 			DataController.deleteRecord(mContext, id);
 		}
 	}
@@ -360,7 +361,7 @@ public class UIWrite extends UIBaseSupport {
 	@Override
 	protected void setLayout() {
 
-		setContentView(R.layout.write);
+		setContentView(R.layout.ui_write);
 
 		mAutoCompleteTextView = (MyAutoCompleteTextView) findViewById(R.id.write_text);
 
@@ -384,8 +385,7 @@ public class UIWrite extends UIBaseSupport {
 
 		iPictureRemove.setOnClickListener(this);
 
-		iLocationIcon.setImageResource(enableLocation ? R.drawable.ic_bar_geoon
-				: R.drawable.ic_bar_geooff);
+		iLocationIcon.setImageLevel(enableLocation ? 1 : 0);
 
 		setAutoComplete();
 		parseIntent();
@@ -449,12 +449,12 @@ public class UIWrite extends UIBaseSupport {
 		}
 
 	}
-	
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		getSupportMenuInflater().inflate(R.menu.write_menu, menu);
-//		return true;
-//	}
+
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// getSupportMenuInflater().inflate(R.menu.write_menu, menu);
+	// return true;
+	// }
 
 	@Override
 	public boolean onOptionsItemSelected(
@@ -534,14 +534,13 @@ public class UIWrite extends UIBaseSupport {
 				enableLocation);
 		if (App.DEBUG)
 			log("location enable status=" + enableLocation);
+		iLocationIcon.setImageLevel(enableLocation ? 1 : 0);
 		if (enableLocation) {
-			iLocationIcon.setImageResource(R.drawable.ic_bar_geoon);
 			if (mLocationProvider != null) {
 				mLocationManager.requestLocationUpdates(mLocationProvider, 0,
 						0, mLocationMonitor);
 			}
 		} else {
-			iLocationIcon.setImageResource(R.drawable.ic_bar_geooff);
 			mLocationManager.removeUpdates(mLocationMonitor);
 		}
 	}

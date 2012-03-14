@@ -21,11 +21,11 @@
 				android:layout_weight="1" />
 
 			<ImageView android:id="@id/item_status_icon_photo"
-				android:src="@drawable/i_mini_photo" android:layout_width="wrap_content"
+				android:src="@drawable/ic_mini_photo" android:layout_width="wrap_content"
 				android:layout_height="wrap_content" android:visibility="gone" android:scaleType="centerInside"/>
 
 			<ImageView android:id="@id/item_status_icon_reply"
-				android:src="@drawable/i_mini_reply" android:layout_width="wrap_content"
+				android:src="@drawable/ic_mini_thread" android:layout_width="wrap_content"
 				android:layout_height="wrap_content" android:visibility="gone" />
 
 		</LinearLayout>

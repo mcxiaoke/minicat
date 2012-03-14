@@ -7,7 +7,7 @@
 		android:layout_height="wrap_content" android:gravity="center_vertical"
 		android:textSize="@dimen/text_size_medium" android:padding="4dp" android:layout_weight="1" />
 
-	<ImageView style="@style/Icon.Mini" android:id="@id/mini_icon" android:src="@drawable/i_mini_photo"
+	<ImageView style="@style/Icon.Mini" android:id="@id/mini_icon" android:src="@drawable/ic_mini_photo"
 		android:visibility="gone" />
 
 </LinearLayout>

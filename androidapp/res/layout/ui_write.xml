@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <com.fanfou.app.hd.ui.widget.MyAutoCompleteTextView
+                android:id="@id/write_text"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                android:background="?input_background"
+                android:gravity="top|left"
+                android:maxLines="10"
+                android:minLines="5"
+                android:padding="10dp"
+                android:singleLine="false" />
+
+            <RelativeLayout
+                android:id="@id/write_extras"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp" >
+
+                <TextView
+                    android:id="@id/write_extra_words"
+                    style="@style/Text.Count"
+                    android:layout_alignParentRight="true"
+                    android:gravity="right|center_vertical" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@id/write_actions"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="?writeActionBackground"
+                android:orientation="horizontal" >
+
+                <ImageButton
+                    android:id="@id/write_action_at"
+                    style="@style/WriteActionItemStyle"
+                    android:src="@drawable/ic_act_mention" />
+
+                <ImageButton
+                    android:id="@id/write_action_draft"
+                    style="@style/WriteActionItemStyle"
+                    android:src="@drawable/ic_act_record" />
+
+                <ImageButton
+                    android:id="@id/write_action_location"
+                    style="@style/WriteActionItemStyle"
+                    android:src="@drawable/ic_act_location_0" />
+
+                <ImageButton
+                    android:id="@id/write_action_gallery"
+                    style="@style/WriteActionItemStyle"
+                    android:src="@drawable/ic_act_gallery" />
+
+                <ImageButton
+                    android:id="@id/write_action_camera"
+                    style="@style/WriteActionItemStyle"
+                    android:src="@drawable/ic_act_camera" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@id/write_picture"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingTop="4dp"
+                android:visibility="gone" >
+
+                <ImageView
+                    android:id="@+id/write_separator2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:background="@drawable/separator" />
+
+                <ImageView
+                    android:id="@id/write_picture_prieview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/write_separator2"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="8dp" />
+
+                <ImageView
+                    android:id="@id/write_picture_remove"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/write_picture_prieview"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_remove" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

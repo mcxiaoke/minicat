@@ -20,29 +20,36 @@
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_vertical_thumb</item>
         <item name="android:scrollbarSize">@dimen/scrollbarSize</item>
         <item name="android:scrollbarStyle">insideOverlay</item>
-        
+
         <!-- text color -->
         <item name="primaryTextColor">@color/solid_black</item>
         <item name="secondaryTextColor">@color/soft_white</item>
         <item name="primaryTextColorReverse">@color/solid_white</item>
         <item name="secondaryTextColorReverse">@color/soft_black</item>
         <item name="highlightTextColor">@color/soft_white</item>
-        
+
         <!-- profile style -->
         <item name="profileItemTitleBackground">@color/soft_white</item>
         <item name="profileActionBackground">@drawable/button_blue</item>
         <item name="profileBlockBackground">#3335b5e5</item>
         <item name="profileCountTextColor">@color/theme</item>
         <item name="profileCountBackground">@drawable/selector</item>
-        
+
         <!-- status style -->
         <item name="statusActionItemBackground">@drawable/action_item_background</item>
         <item name="statusActionBackground">@color/theme</item>
+
+        <!-- write style -->
+        <item name="writeActionItemBackground">@drawable/action_item_background</item>
+        <item name="writeActionBackground">@color/theme</item>
 
         <!-- login logo style -->
         <item name="loginTopLogo">@drawable/login_logo</item>
         <item name="loginBottomLogo">@drawable/login_bottom</item>
         <item name="loginButtonBackground">@drawable/button_blue</item>
+
+        <!-- Global Styles -->
+        <item name="input_background">@drawable/input</item>
     </style>
 
     <!-- Theme.Blue Style start -->

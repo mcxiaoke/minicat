@@ -26,7 +26,7 @@
 
 				<ImageView android:id="@+id/user_protected" style="@style/Icon.Mini"
 					android:layout_toRightOf="@id/user_name"
-					android:layout_alignBottom="@id/user_name" android:src="@drawable/i_mini_locked" />
+					android:layout_alignBottom="@id/user_name" android:src="@drawable/ic_mini_protected" />
 
 			</RelativeLayout>
 
