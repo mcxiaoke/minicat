@@ -34,7 +34,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/input_background"
+            android:background="@drawable/input"
             android:gravity="top|left"
             android:hint="私信内容，不能超过140字"
             android:maxLines="3"

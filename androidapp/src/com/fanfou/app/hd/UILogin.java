@@ -91,7 +91,7 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
 
 	@Override
 	protected void setLayout() {
-		setContentView(R.layout.login);
+		setContentView(R.layout.ui_login);
 
 		if (DEBUG) {
 			Log.d(TAG, "setLayout()");

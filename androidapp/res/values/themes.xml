@@ -31,6 +31,11 @@
         <item name="infoTitleBackground">@color/soft_white</item>
         <item name="statisticsTextColor">@color/theme</item>
         <item name="statisticsBoxBackground">@drawable/selector</item>
+
+        <!-- login logo and bottom -->
+        <item name="loginTopLogo">@drawable/login_logo</item>
+        <item name="loginBottomLogo">@drawable/login_bottom</item>
+        <item name="loginButtonBackground">@drawable/button_blue</item>
     </style>
 
     <!-- Theme.Blue Style start -->

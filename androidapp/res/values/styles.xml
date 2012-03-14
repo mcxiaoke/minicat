@@ -15,7 +15,7 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:background">@drawable/login_button_background</item>
+        <item name="android:background">@drawable/button_blue</item>
         <item name="android:textColor">@color/solid_white</item>
     </style>
 
@@ -276,23 +276,12 @@
 
     <style name="EditText"></style>
 
-    <style name="EditText.Login">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:textColor">@color/theme</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:background">@drawable/input_background</item>
-        <item name="android:padding">12dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
-    </style>
-
     <style name="EditText.InfoOneLine">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:singleLine">true</item>
-        <item name="android:background">@drawable/input_background</item>
+        <item name="android:background">@drawable/input</item>
         <item name="android:padding">8dp</item>
         <item name="android:layout_margin">4dp</item>
     </style>
@@ -301,7 +290,7 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:background">@drawable/input_background</item>
+        <item name="android:background">@drawable/input</item>
         <item name="android:padding">8dp</item>
         <item name="android:layout_margin">4dp</item>
     </style>
@@ -403,6 +392,42 @@
         <item name="android:padding">@dimen/action_item_padding</item>
         <item name="android:background">?actionItemBackground</item>
         <!-- <item name="android:contentDescription">@string/contentDescription</item> -->
+    </style>
+
+    <style name="LoginTopLogo">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:src">?loginTopLogo</item>
+    </style>
+
+    <style name="LoginBottomLogo">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:src">?loginBottomLogo</item>
+    </style>
+
+    <style name="LoginInput">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <!-- <item name="android:textColor">@color/theme</item> -->
+        <item name="android:singleLine">true</item>
+        <item name="android:background">@drawable/input</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_marginBottom">20dp</item>
+    </style>
+
+    <style name="LoginButton">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size_xlarge</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:background">?loginButtonBackground</item>
+        <item name="android:textColor">?primaryTextColorReverse</item>
     </style>
 
     <!-- ========================= above add by mcxiaoke======================== -->

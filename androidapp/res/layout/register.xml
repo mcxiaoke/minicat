@@ -28,26 +28,26 @@
 
             <EditText
                 android:id="@+id/register_nickname"
-                style="@style/EditText.Login"
+                style="@style/LoginInput"
                 android:hint="@string/register_nickname_hint"
                 android:maxLength="12" />
 
             <EditText
                 android:id="@+id/register_email"
-                style="@style/EditText.Login"
+                style="@style/LoginInput"
                 android:hint="@string/register_email_hint"
                 android:inputType="textEmailAddress" />
 
             <EditText
                 android:id="@+id/register_password"
-                style="@style/EditText.Login"
+                style="@style/LoginInput"
                 android:hint="@string/register_password_hint"
                 android:inputType="textPassword"
                 android:password="true" />
 
             <EditText
                 android:id="@+id/register_password_confirm"
-                style="@style/EditText.Login"
+                style="@style/LoginInput"
                 android:hint="@string/register_password_confirm_hint"
                 android:inputType="textPassword" 
                 android:password="true" android:imeOptions="actionSend"/>

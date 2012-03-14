@@ -170,6 +170,7 @@ public class ImageLoader implements IImageLoader {
 	}
 
 	private void addTask(String url, final Handler handler) {
+		//TODO incompatible type
 		if (mTaskQueue.contains(url)) {
 			return;
 		}
@@ -180,6 +181,7 @@ public class ImageLoader implements IImageLoader {
 	}
 
 	private void addInnerTask(String url, final ImageView view) {
+		//TODO incompatible type
 		if (mTaskQueue.contains(url)) {
 			return;
 		}

@@ -2,18 +2,28 @@
 <resources>
 
     <declare-styleable name="AppTheme">
+        <!-- Global Text Color -->
         <attr name="primaryTextColor" format="reference|color"></attr>
         <attr name="secondaryTextColor" format="reference|color"></attr>
         <attr name="primaryTextColorReverse" format="reference|color"></attr>
         <attr name="secondaryTextColorReverse" format="reference|color"></attr>
         <attr name="highlightTextColor" format="reference|color"></attr>
+        
+        <!-- Profile Page  -->
         <attr name="actionButtonBackground" format="reference"></attr>
         <attr name="infoTitleBackground" format="reference|color"></attr>
         <attr name="infoTextBackground" format="reference|color"></attr>
         <attr name="statisticsBoxBackground" format="reference"></attr>
         <attr name="statisticsTextColor" format="reference|color"></attr>
+        
+        <!-- Status Detail Page -->
         <attr name="actionItemBackground" format="reference"></attr>
         <attr name="actionsBackground" format="reference|color"></attr>
+        
+        <!-- Login Page -->
+        <attr name="loginTopLogo" format="reference"></attr>
+        <attr name="loginBottomLogo" format="reference"></attr>
+        <attr name="loginButtonBackground" format="reference"></attr>
     </declare-styleable>
 
 </resources>

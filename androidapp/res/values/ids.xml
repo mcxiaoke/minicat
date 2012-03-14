@@ -80,7 +80,8 @@
     <item name="button1" type="id"/>
     <item name="button2" type="id"/>
     <item name="mini_icon" type="id"/>
-
     <item name="menu_refresh" type="id"/>
+
+    <!-- id add in version 2.0 -->
 
 </resources>
