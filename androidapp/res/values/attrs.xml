@@ -10,15 +10,17 @@
         <attr name="highlightTextColor" format="reference|color"></attr>
         
         <!-- Profile Page  -->
-        <attr name="actionButtonBackground" format="reference"></attr>
-        <attr name="infoTitleBackground" format="reference|color"></attr>
-        <attr name="infoTextBackground" format="reference|color"></attr>
-        <attr name="statisticsBoxBackground" format="reference"></attr>
-        <attr name="statisticsTextColor" format="reference|color"></attr>
+        <attr name="profileActionBackground" format="reference"></attr>
+        <attr name="profileBlockBackground" format="reference|color"></attr>
+        <attr name="profileItemTitleBackground" format="reference|color"></attr>
+        
+        
+        <attr name="profileCountBackground" format="reference"></attr>
+        <attr name="profileCountTextColor" format="reference|color"></attr>
         
         <!-- Status Detail Page -->
-        <attr name="actionItemBackground" format="reference"></attr>
-        <attr name="actionsBackground" format="reference|color"></attr>
+        <attr name="statusActionItemBackground" format="reference"></attr>
+        <attr name="statusActionBackground" format="reference|color"></attr>
         
         <!-- Login Page -->
         <attr name="loginTopLogo" format="reference"></attr>

@@ -32,6 +32,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 2.1 2012.03.07
  * @version 2.2 2012.03.08
  * @version 2.3 2012.03.13
+ * @version 2.4 2012.03.14
  * 
  */
 public class ProfileFragment extends AbstractFragment implements
@@ -66,11 +67,15 @@ public class ProfileFragment extends AbstractFragment implements
 
 	private TextView headerRelation;
 
-	private TextView actionFollow;
+	private View actionFollow;
 
-	private TextView actionDM;
+	private View actionDM;
 
-	private TextView actionMention;
+	private View actionMention;
+
+	private TextView actionFollowText;
+	private TextView actionDMText;
+	private TextView actionMentionText;
 
 	private TextView tvStatuses;
 
@@ -148,14 +153,17 @@ public class ProfileFragment extends AbstractFragment implements
 		headerName = (TextView) root.findViewById(R.id.header_name);
 		headerRelation = (TextView) root.findViewById(R.id.header_relation);
 
-		actionFollow = (TextView) root.findViewById(R.id.action_follow);
-		actionDM = (TextView) root.findViewById(R.id.action_dm);
-		actionMention = (TextView) root.findViewById(R.id.action_mention);
+		actionFollow = root.findViewById(R.id.action_follow);
+		actionDM = root.findViewById(R.id.action_dm);
+		actionMention = root.findViewById(R.id.action_mention);
 
-		tvStatuses = (TextView) root.findViewById(R.id.statistics_statuses);
-		tvFavorites = (TextView) root.findViewById(R.id.statistics_favorites);
-		tvFriends = (TextView) root.findViewById(R.id.statistics_friends);
-		tvFollowers = (TextView) root.findViewById(R.id.statistics_followers);
+		actionFollowText = (TextView) root
+				.findViewById(R.id.action_follow_text);
+
+		tvStatuses = (TextView) root.findViewById(R.id.count_statuses);
+		tvFavorites = (TextView) root.findViewById(R.id.count_favorites);
+		tvFriends = (TextView) root.findViewById(R.id.count_friends);
+		tvFollowers = (TextView) root.findViewById(R.id.count_followers);
 
 		vStatuses = root.findViewById(R.id.box_statuses);
 		vFavorites = root.findViewById(R.id.box_favorites);
@@ -260,7 +268,7 @@ public class ProfileFragment extends AbstractFragment implements
 	}
 
 	private void updateAction() {
-		actionFollow.setText(user.isFollowing() ? strUnFollow : strFollow);
+		actionFollowText.setText(user.isFollowing() ? strUnFollow : strFollow);
 	}
 
 	private void updateStatistics() {
@@ -304,7 +312,7 @@ public class ProfileFragment extends AbstractFragment implements
 	}
 
 	private void preToggleFollowState(boolean following) {
-		actionFollow.setText(following ? strFollow : strUnFollow);
+		actionFollowText.setText(following ? strFollow : strUnFollow);
 	}
 
 	private void fetchUser() {

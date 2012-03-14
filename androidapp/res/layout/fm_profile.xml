@@ -19,7 +19,7 @@
 
             <include layout="@layout/profile_item_actions" />
 
-            <include layout="@layout/profile_item_statistics" />
+            <include layout="@layout/profile_item_count" />
 
             <include layout="@layout/profile_item_userinfo" />
         </LinearLayout>

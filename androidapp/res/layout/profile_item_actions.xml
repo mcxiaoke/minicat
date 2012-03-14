@@ -2,23 +2,53 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#3335b5e5"
+    android:background="?profileBlockBackground"
     android:orientation="horizontal"
-    android:padding="10dp" >
+    android:padding="8dp" >
 
-    <TextView
+    <LinearLayout
         android:id="@+id/action_follow"
-        style="@style/ProfileActionButtonStyle"
-        android:text="@string/action_follow" />
+        style="@style/ProfileActionStyle" >
 
-    <TextView
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_mini_follow" />
+
+        <TextView
+            android:id="@+id/action_follow_text"
+            style="@style/ProfileActionTextStyle"
+            android:text="@string/action_follow" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/action_dm"
-        style="@style/ProfileActionButtonStyle"
-        android:text="@string/action_dm" />
+        style="@style/ProfileActionStyle" >
 
-    <TextView
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_mini_dm" />
+
+        <TextView
+            android:id="@+id/action_dm_text"
+            style="@style/ProfileActionTextStyle"
+            android:text="@string/action_dm" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/action_mention"
-        style="@style/ProfileActionButtonStyle"
-        android:text="@string/action_mention" />
+        style="@style/ProfileActionStyle" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_mini_mention" />
+
+        <TextView
+            android:id="@+id/action_ention_text"
+            style="@style/ProfileActionTextStyle"
+            android:text="@string/action_mention" />
+    </LinearLayout>
 
 </LinearLayout>

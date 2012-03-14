@@ -3,20 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="20dp"
-    android:background="#3335b5e5"
+    android:background="?profileBlockBackground"
     android:orientation="horizontal"
     android:paddingBottom="10dp" >
 
     <LinearLayout
         android:id="@+id/box_statuses"
-        style="@style/ProfileStatisticsBoxStyle" >
+        style="@style/ProfileCountStyle" >
 
         <TextView
-            android:id="@+id/statistics_statuses"
-            style="@style/ProfileStatisticsTextStyle" />
+            android:id="@+id/count_statuses"
+            style="@style/ProfileCountTextStyle"/>
 
         <TextView
-            style="@style/ProfileStatisticsTextStyle"
+            style="@style/ProfileCountTextStyle"
             android:text="消息" />
     </LinearLayout>
 
@@ -24,14 +24,14 @@
 
     <LinearLayout
         android:id="@+id/box_favorites"
-        style="@style/ProfileStatisticsBoxStyle" >
+        style="@style/ProfileCountStyle" >
 
         <TextView
-            android:id="@+id/statistics_favorites"
-            style="@style/ProfileStatisticsTextStyle" />
+            android:id="@+id/count_favorites"
+            style="@style/ProfileCountTextStyle" />
 
         <TextView
-            style="@style/ProfileStatisticsTextStyle"
+            style="@style/ProfileCountTextStyle"
             android:text="收藏" />
     </LinearLayout>
 
@@ -39,14 +39,14 @@
 
     <LinearLayout
         android:id="@+id/box_friends"
-        style="@style/ProfileStatisticsBoxStyle" >
+        style="@style/ProfileCountStyle" >
 
         <TextView
-            android:id="@+id/statistics_friends"
-            style="@style/ProfileStatisticsTextStyle" />
+            android:id="@+id/count_friends"
+            style="@style/ProfileCountTextStyle" />
 
         <TextView
-            style="@style/ProfileStatisticsTextStyle"
+            style="@style/ProfileCountTextStyle"
             android:text="好友" />
     </LinearLayout>
 
@@ -54,14 +54,14 @@
 
     <LinearLayout
         android:id="@+id/box_followers"
-        style="@style/ProfileStatisticsBoxStyle" >
+        style="@style/ProfileCountStyle" >
 
         <TextView
-            android:id="@+id/statistics_followers"
-            style="@style/ProfileStatisticsTextStyle" />
+            android:id="@+id/count_followers"
+            style="@style/ProfileCountTextStyle" />
 
         <TextView
-            style="@style/ProfileStatisticsTextStyle"
+            style="@style/ProfileCountTextStyle"
             android:text="关注者" />
     </LinearLayout>
 

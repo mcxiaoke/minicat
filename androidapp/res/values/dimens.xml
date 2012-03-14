@@ -36,6 +36,6 @@
     <dimen name="status_text_padding">10dp</dimen>
     <dimen name="status_photo_padding">10dp</dimen>
     <dimen name="action_item_height">48dp</dimen>
-    <dimen name="action_item_padding">10dp</dimen>
+    <dimen name="action_item_padding">8dp</dimen>
 
 </resources>
