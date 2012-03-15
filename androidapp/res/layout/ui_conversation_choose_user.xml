@@ -13,9 +13,10 @@
         android:padding="10dp"
         android:text="收件人" />
 
-    <ImageButton 
+    <ImageButton
         android:id="@+id/recipient_choose"
-        style="@style/Icon.Action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:src="@drawable/ic_adduser" />
 
     <TextView

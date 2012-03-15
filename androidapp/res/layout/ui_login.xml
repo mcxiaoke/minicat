@@ -6,7 +6,7 @@
 
     <ImageView
         android:id="@+id/login_logo"
-        style="@style/LoginTopLogo" />
+        style="@style/LoginTopLogoStyle" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,12 +18,12 @@
 
         <EditText
             android:id="@+id/login_username"
-            style="@style/LoginInput"
+            style="@style/LoginInputStyle"
             android:hint="@string/login_username_hint" />
 
         <EditText
             android:id="@+id/login_password"
-            style="@style/LoginInput"
+            style="@style/LoginInputStyle"
             android:hint="@string/login_password_hint"
             android:imeOptions="actionSend"
             android:inputType="textPassword"
@@ -31,12 +31,12 @@
 
         <Button
             android:id="@+id/button_signin"
-            style="@style/LoginButton"
+            style="@style/LoginButtonStyle"
             android:text="@string/login_button_text" />
     </LinearLayout>
 
     <ImageView
-        style="@style/LoginBottomLogo"
+        style="@style/LoginBottomLogoStyle"
         android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

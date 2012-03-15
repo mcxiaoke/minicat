@@ -28,17 +28,17 @@
 		android:layout_height="wrap_content" android:orientation="horizontal"
 		android:paddingTop="10dp" android:layout_margin="2dp">
 
-		<Button style="@style/Button.Blue.Big" android:id="@id/button_save"
+		<Button style="@style/ButtonStyle" android:id="@id/button_save"
 			android:text="保存" />
 		
 		<View android:layout_height="0dp" android:layout_width="5dp" />
 		
-		<Button style="@style/Button.Blue.Big" android:id="@id/button_discard"
+		<Button style="@style/ButtonStyle" android:id="@id/button_discard"
 			android:text="放弃" />
 
 		<View android:layout_height="0dp" android:layout_width="5dp" />
 
-		<Button style="@style/Button.Blue.Big" android:id="@id/button_cancel"
+		<Button style="@style/ButtonStyle" android:id="@id/button_cancel"
 			android:text="@android:string/cancel" />
 		
 	</LinearLayout>

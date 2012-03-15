@@ -1,56 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:orientation="vertical" android:id="@+id/root">
+    android:id="@+id/root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-	<ScrollView android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:scrollbars="none"
-		 android:padding="6dp" >
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="6dp"
+        android:scrollbars="none" >
 
-		<LinearLayout android:orientation="vertical"
-			android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-			<LinearLayout android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:orientation="horizontal"
-				android:id="@+id/profile_image_area" android:gravity="center_vertical" android:layout_marginLeft="4dp">
+            <LinearLayout
+                android:id="@+id/profile_image_area"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
 
-				<ImageView style="@style/Image.Head" android:id="@+id/profile_image"
-					android:src="@drawable/default_head" />
+                <ImageView
+                    android:id="@+id/profile_image"
+                    style="@style/Image.Head"
+                    android:src="@drawable/default_head" />
 
-				<ImageView style="@style/Icon.Action" android:id="@+id/profile_image_edit"
-					android:src="@drawable/ic_edit_profile_image" android:layout_marginLeft="10dp"/>
-			</LinearLayout>
+                <ImageView
+                    android:id="@+id/profile_image_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_edit_profile_image" />
+            </LinearLayout>
 
-			<TextView style="@style/Text.ItemName" android:id="@+id/profile_name"
-				android:text="昵称" />
+            <TextView
+                android:id="@+id/profile_name"
+                style="@style/Text.ItemName"
+                android:text="昵称" />
 
-			<EditText style="@style/EditText.InfoOneLine" android:id="@+id/profile_name_edit" />
+            <EditText
+                android:id="@+id/profile_name_edit"
+                style="@style/EditText.InfoOneLine" />
 
-			<TextView style="@style/Text.ItemName" android:id="@+id/profile_url"
-				android:text="个人网址" />
+            <TextView
+                android:id="@+id/profile_url"
+                style="@style/Text.ItemName"
+                android:text="个人网址" />
 
-			<EditText style="@style/EditText.InfoOneLine" android:id="@+id/profile_url_edit"
-				android:inputType="textUri" />
+            <EditText
+                android:id="@+id/profile_url_edit"
+                style="@style/EditText.InfoOneLine"
+                android:inputType="textUri" />
 
-			<TextView style="@style/Text.ItemName" android:id="@+id/profile_location"
-				android:text="所在地" />
+            <TextView
+                android:id="@+id/profile_location"
+                style="@style/Text.ItemName"
+                android:text="所在地" />
 
-			<EditText style="@style/EditText.InfoOneLine" android:id="@+id/profile_location_edit" />
+            <EditText
+                android:id="@+id/profile_location_edit"
+                style="@style/EditText.InfoOneLine" />
 
-			<TextView style="@style/Text.ItemName" android:id="@+id/profile_description"
-				android:text="自述" />
+            <TextView
+                android:id="@+id/profile_description"
+                style="@style/Text.ItemName"
+                android:text="自述" />
 
-			<EditText style="@style/EditText.InfoMultiLine" android:id="@+id/profile_description_edit"
-				android:minLines="4" android:gravity="left|top" />
+            <EditText
+                android:id="@+id/profile_description_edit"
+                style="@style/EditText.InfoMultiLine"
+                android:gravity="left|top"
+                android:minLines="4" />
 
-			<include layout="@layout/two_button_group"
-				android:layout_width="fill_parent" android:layout_height="wrap_content" />
-
-		</LinearLayout>
-
-	</ScrollView>
+            <include
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/two_button_group" />
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
-
-
-

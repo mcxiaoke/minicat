@@ -49,7 +49,8 @@
         <item name="loginButtonBackground">@drawable/button_blue</item>
 
         <!-- Global Styles -->
-        <item name="input_background">@drawable/input</item>
+        <item name="inputBackground">@drawable/input</item>
+        <item name="buttonBackground">@drawable/button_blue</item>
     </style>
 
     <!-- Theme.Blue Style start -->

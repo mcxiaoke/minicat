@@ -28,29 +28,30 @@
 
             <EditText
                 android:id="@+id/register_nickname"
-                style="@style/LoginInput"
+                style="@style/LoginInputStyle"
                 android:hint="@string/register_nickname_hint"
                 android:maxLength="12" />
 
             <EditText
                 android:id="@+id/register_email"
-                style="@style/LoginInput"
+                style="@style/LoginInputStyle"
                 android:hint="@string/register_email_hint"
                 android:inputType="textEmailAddress" />
 
             <EditText
                 android:id="@+id/register_password"
-                style="@style/LoginInput"
+                style="@style/LoginInputStyle"
                 android:hint="@string/register_password_hint"
                 android:inputType="textPassword"
                 android:password="true" />
 
             <EditText
                 android:id="@+id/register_password_confirm"
-                style="@style/LoginInput"
+                style="@style/LoginInputStyle"
                 android:hint="@string/register_password_confirm_hint"
-                android:inputType="textPassword" 
-                android:password="true" android:imeOptions="actionSend"/>
+                android:imeOptions="actionSend"
+                android:inputType="textPassword"
+                android:password="true" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -76,7 +77,7 @@
 
             <Button
                 android:id="@+id/button_register"
-                style="@style/Button.Blue.Login"
+                style="@style/ButtonStyle"
                 android:text="@string/register_button_text" />
         </LinearLayout>
     </RelativeLayout>

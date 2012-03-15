@@ -7,89 +7,6 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <style name="Button">
-        <item name="android:gravity">center</item>
-    </style>
-
-    <style name="Button.Blue">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:background">@drawable/button_blue</item>
-        <item name="android:textColor">@color/solid_white</item>
-    </style>
-
-    <style name="Button.BlueBlack">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:background">@drawable/button_bg</item>
-        <item name="android:textColor">@color/solid_black</item>
-        <item name="android:textSize">@dimen/text_size_large</item>
-    </style>
-
-    <style name="Button.Blue.Big">
-        <item name="android:textSize">@dimen/text_size_large</item>
-    </style>
-
-    <style name="Button.Blue.Middle">
-        <item name="android:textSize">@dimen/text_size_medium</item>
-    </style>
-
-    <style name="Button.Blue2">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:background">@drawable/button_bg</item>
-        <item name="android:textColor">@color/solid_white</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
-    </style>
-
-    <style name="Button.Blue.Login">
-        <item name="android:textSize">@dimen/text_size_large</item>
-        <item name="android:padding">10dp</item>
-        <item name="android:layout_marginLeft">2dp</item>
-        <item name="android:layout_marginRight">2dp</item>
-        <item name="android:layout_marginTop">10dp</item>
-    </style>
-
-    <style name="Button.Small">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_small</item>
-    </style>
-
-    <style name="Button.Fill">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-    </style>
-
-    <style name="Button.Fill.Small">
-        <item name="android:padding">3dp</item>
-        <item name="android:textSize">@dimen/text_size_small</item>
-    </style>
-
-    <style name="Icon"></style>
-
-    <style name="Icon.Mini">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">2dp</item>
-    </style>
-
-    <style name="Icon.Action">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">2dp</item>
-    </style>
-
-    <style name="Icon.Fixed">
-        <item name="android:layout_width">@dimen/icon_width</item>
-        <item name="android:layout_height">@dimen/icon_height</item>
-        <item name="android:padding">2dp</item>
-    </style>
-
     <style name="Image" />
 
     <style name="Image.Head">
@@ -401,7 +318,7 @@
         <!-- <item name="android:contentDescription">@string/contentDescription</item> -->
     </style>
 
-    <style name="LoginTopLogo">
+    <style name="LoginTopLogoStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerHorizontal">true</item>
@@ -409,25 +326,25 @@
         <item name="android:src">?loginTopLogo</item>
     </style>
 
-    <style name="LoginBottomLogo">
+    <style name="LoginBottomLogoStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:src">?loginBottomLogo</item>
     </style>
 
-    <style name="LoginInput">
+    <style name="LoginInputStyle">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
         <!-- <item name="android:textColor">@color/theme</item> -->
         <item name="android:singleLine">true</item>
-        <item name="android:background">?input_background</item>
+        <item name="android:background">?inputBackground</item>
         <item name="android:padding">10dp</item>
         <item name="android:layout_marginBottom">20dp</item>
     </style>
 
-    <style name="LoginButton">
+    <style name="LoginButtonStyle">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_size_xlarge</item>
@@ -443,6 +360,23 @@
         <item name="android:layout_weight">1</item>
         <item name="android:padding">@dimen/action_item_padding</item>
         <item name="android:background">?writeActionItemBackground</item>
+    </style>
+
+    <style name="MiniIconStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">2dp</item>
+    </style>
+
+    <style name="ButtonStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">6dp</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:background">?buttonBackground</item>
+        <item name="android:textColor">?primaryTextColorReverse</item>
     </style>
 
     <!-- ========================= above add by mcxiaoke======================== -->

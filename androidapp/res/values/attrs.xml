@@ -11,7 +11,8 @@
         <attr name="highlightTextColor" format="reference|color"></attr>
 
         <!-- Global Attrs -->
-        <attr name="input_background" format="reference"></attr>
+        <attr name="buttonBackground" format="reference"></attr>
+        <attr name="inputBackground" format="reference"></attr>
 
         <!-- Profile Page -->
         <attr name="profileActionBackground" format="reference"></attr>
