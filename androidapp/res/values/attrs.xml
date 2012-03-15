@@ -13,6 +13,11 @@
         <!-- Global Attrs -->
         <attr name="buttonBackground" format="reference"></attr>
         <attr name="inputBackground" format="reference"></attr>
+        
+        <!-- ActionBar Attrs -->
+        <attr name="actionBarIcon" format="reference"></attr>
+        <attr name="actionBarTextColor" format="reference|color"></attr>
+        <attr name="actionBarBackground" format="reference"></attr>
 
         <!-- Profile Page -->
         <attr name="profileActionBackground" format="reference"></attr>

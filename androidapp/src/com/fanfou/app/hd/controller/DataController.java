@@ -16,7 +16,6 @@ import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.dao.DataProvider;
 import com.fanfou.app.hd.dao.model.BaseModel;
 import com.fanfou.app.hd.dao.model.DirectMessageColumns;
-import com.fanfou.app.hd.dao.model.DirectMessageModel;
 import com.fanfou.app.hd.dao.model.Model;
 import com.fanfou.app.hd.dao.model.RecordColumns;
 import com.fanfou.app.hd.dao.model.StatusColumns;

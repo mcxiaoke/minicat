@@ -5,21 +5,28 @@
 
     <!-- ====================Theme.Blue start=================== -->
 
-    <style name="AppTheme.UIPhoto" parent="Theme.Sherlock.NoActionBar"></style>
-
     <style name="AppTheme.Blue" parent="Theme.Sherlock.Light">
 
         <!-- actionBar style -->
-        <item name="actionBarStyle">@style/Blue.ActionBarStyle</item>
-        <item name="android:actionBarStyle">@style/Blue.ActionBarStyle</item>
+        <item name="actionBarStyle">@style/ActionBarStyle</item>
+        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
 
         <!-- listview style -->
-        <item name="android:listViewStyle">@style/Blue.ListViewStyle</item>
+        <item name="android:listViewStyle">@style/ListViewStyle</item>
 
         <!-- scrollbars style -->
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_vertical_thumb</item>
         <item name="android:scrollbarSize">@dimen/scrollbarSize</item>
         <item name="android:scrollbarStyle">insideOverlay</item>
+        
+        
+
+        <!-- ========= the line below need change for for different theme ========= -->
+
+        <!-- action bar color and drawable -->
+        <item name="actionBarIcon">@drawable/icon</item>
+        <item name="actionBarTextColor">@color/solid_white</item>
+        <item name="actionBarBackground">@drawable/actionbar_background</item>
 
         <!-- text color -->
         <item name="primaryTextColor">@color/solid_black</item>
@@ -28,53 +35,51 @@
         <item name="secondaryTextColorReverse">@color/soft_black</item>
         <item name="highlightTextColor">@color/soft_white</item>
 
-        <!-- profile style -->
+        <!-- profile color -->
         <item name="profileItemTitleBackground">@color/soft_white</item>
         <item name="profileActionBackground">@drawable/button_blue</item>
         <item name="profileBlockBackground">#3335b5e5</item>
         <item name="profileCountTextColor">@color/theme</item>
         <item name="profileCountBackground">@drawable/selector</item>
 
-        <!-- status style -->
+        <!-- status color -->
         <item name="statusActionItemBackground">@drawable/action_item_background</item>
         <item name="statusActionBackground">@color/theme</item>
 
-        <!-- write style -->
+        <!-- write color -->
         <item name="writeActionItemBackground">@drawable/action_item_background</item>
         <item name="writeActionBackground">@color/theme</item>
 
-        <!-- login logo style -->
+        <!-- login logo -->
         <item name="loginTopLogo">@drawable/login_logo</item>
         <item name="loginBottomLogo">@drawable/login_bottom</item>
         <item name="loginButtonBackground">@drawable/button_blue</item>
 
-        <!-- Global Styles -->
+        <!-- Global color and drawable -->
         <item name="inputBackground">@drawable/input</item>
         <item name="buttonBackground">@drawable/button_blue</item>
-    </style>
+    </style> <!-- ===================Theme.Blue end==================== -->
 
-    <!-- Theme.Blue Style start -->
-
-    <style name="Blue"></style>
+    <style name="AppTheme.UIPhoto" parent="Theme.Sherlock.NoActionBar"></style>
 
     <!-- ActionBar Style -->
 
-    <style name="Blue.ActionBarStyle" parent="Widget.Sherlock.Light.ActionBar">
-        <item name="titleTextStyle">@style/Blue.ActionBarTitleStyle</item>
-        <item name="android:titleTextStyle">@style/Blue.ActionBarTitleStyle</item>
-        <item name="icon">@drawable/ic_home</item>
-        <item name="android:icon">@drawable/ic_home</item>
-        <item name="background">@drawable/actionbar_background</item>
-        <item name="android:background">@drawable/actionbar_background</item>
+    <style name="ActionBarStyle" parent="Widget.Sherlock.Light.ActionBar">
+        <item name="titleTextStyle">@style/ActionBarTitleStyle</item>
+        <item name="android:titleTextStyle">@style/ActionBarTitleStyle</item>
+        <item name="icon">?actionBarIcon</item>
+        <item name="android:icon">?actionBarIcon</item>
+        <item name="background">?actionBarBackground</item>
+        <item name="android:background">?actionBarBackground</item>
     </style>
 
-    <style name="Blue.ActionBarTitleStyle">
-        <item name="android:textColor">@color/solid_white</item>
+    <style name="ActionBarTitleStyle">
+        <item name="android:textColor">?actionBarTextColor</item>
     </style>
 
     <!-- ListView Style -->
 
-    <style name="Blue.ListViewStyle">
+    <style name="ListViewStyle">
 
         <!-- <item name="android:background">@drawable/test</item> -->
         <item name="android:listSelector">@drawable/selector</item>
@@ -89,8 +94,6 @@
         <item name="android:dropDownItemStyle">@style/Fix.DropDownItemLight</item>
         <item name="android:autoCompleteTextViewStyle">@style/Fix.AutoCompleteTextViewLight</item>
     </style>
-
-    <!-- ===================Theme.Blue end==================== -->
 
     <style name="Fix.AutoCompleteTextViewLight" parent="@android:style/Widget.AutoCompleteTextView">
         <item name="android:textColor">@android:color/primary_text_light</item>
