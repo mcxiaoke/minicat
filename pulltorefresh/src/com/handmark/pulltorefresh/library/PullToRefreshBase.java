@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
+
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 
 public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
@@ -53,13 +54,11 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 				 * calculations. We use 1000 as it gives us good accuracy and
 				 * small rounding errors
 				 */
-				long normalizedTime = (1000 * (System.currentTimeMillis() - mStartTime))
-						/ ANIMATION_DURATION_MS;
+				long normalizedTime = (1000 * (System.currentTimeMillis() - mStartTime)) / ANIMATION_DURATION_MS;
 				normalizedTime = Math.max(Math.min(normalizedTime, 1000), 0);
 
 				final int deltaY = Math.round((mScrollFromY - mScrollToY)
-						* mInterpolator
-								.getInterpolation(normalizedTime / 1000f));
+						* mInterpolator.getInterpolation(normalizedTime / 1000f));
 				mCurrentY = mScrollFromY - deltaY;
 				setHeaderScroll(mCurrentY);
 			}
@@ -79,6 +78,9 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	// ===========================================================
 	// Constants
 	// ===========================================================
+
+	static final boolean DEBUG = false;
+	static final String LOG_TAG = "PullToRefresh";
 
 	static final float FRICTION = 2.0f;
 
@@ -118,6 +120,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	private final Handler mHandler = new Handler();
 
 	private OnRefreshListener mOnRefreshListener;
+	private OnRefreshListener2 mOnRefreshListener2;
 
 	private SmoothScrollRunnable mCurrentSmoothScrollRunnable;
 
@@ -200,8 +203,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	 * @param disableScrollingWhileRefreshing
 	 *            - true if you want to disable scrolling while refreshing
 	 */
-	public final void setDisableScrollingWhileRefreshing(
-			boolean disableScrollingWhileRefreshing) {
+	public final void setDisableScrollingWhileRefreshing(boolean disableScrollingWhileRefreshing) {
 		mDisableScrollingWhileRefreshing = disableScrollingWhileRefreshing;
 	}
 
@@ -223,6 +225,16 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	 */
 	public final void setOnRefreshListener(OnRefreshListener listener) {
 		mOnRefreshListener = listener;
+	}
+
+	/**
+	 * Set OnRefreshListener for the Widget
+	 * 
+	 * @param listener
+	 *            - Listener to be used when the Widget is set to Refresh
+	 */
+	public final void setOnRefreshListener(OnRefreshListener2 listener) {
+		mOnRefreshListener2 = listener;
 	}
 
 	/**
@@ -317,45 +329,59 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 			return true;
 		}
 
-		if (event.getAction() == MotionEvent.ACTION_DOWN
-				&& event.getEdgeFlags() != 0) {
+		if (event.getAction() == MotionEvent.ACTION_DOWN && event.getEdgeFlags() != 0) {
 			return false;
 		}
 
 		switch (event.getAction()) {
 
-		case MotionEvent.ACTION_MOVE: {
-			if (mIsBeingDragged) {
-				mLastMotionY = event.getY();
-				pullEvent();
-				return true;
-			}
-			break;
-		}
-
-		case MotionEvent.ACTION_DOWN: {
-			if (isReadyForPull()) {
-				mLastMotionY = mInitialMotionY = event.getY();
-				return true;
-			}
-			break;
-		}
-
-		case MotionEvent.ACTION_CANCEL:
-		case MotionEvent.ACTION_UP: {
-			if (mIsBeingDragged) {
-				mIsBeingDragged = false;
-
-				if (mState == RELEASE_TO_REFRESH && null != mOnRefreshListener) {
-					setRefreshingInternal(true);
-					mOnRefreshListener.onRefresh();
-				} else {
-					smoothScrollTo(0);
+			case MotionEvent.ACTION_MOVE: {
+				if (mIsBeingDragged) {
+					mLastMotionY = event.getY();
+					pullEvent();
+					return true;
 				}
-				return true;
+				break;
 			}
-			break;
-		}
+
+			case MotionEvent.ACTION_DOWN: {
+				if (isReadyForPull()) {
+					mLastMotionY = mInitialMotionY = event.getY();
+					return true;
+				}
+				break;
+			}
+
+			case MotionEvent.ACTION_CANCEL:
+			case MotionEvent.ACTION_UP: {
+				if (mIsBeingDragged) {
+					mIsBeingDragged = false;
+
+					if (mState == RELEASE_TO_REFRESH) {
+
+						if (null != mOnRefreshListener) {
+							setRefreshingInternal(true);
+							mOnRefreshListener.onRefresh();
+							return true;
+
+						} else if (null != mOnRefreshListener2) {
+							setRefreshingInternal(true);
+							if (mCurrentMode == MODE_PULL_DOWN_TO_REFRESH) {
+								mOnRefreshListener2.onPullDownToRefresh();
+							} else if (mCurrentMode == MODE_PULL_UP_TO_REFRESH) {
+								mOnRefreshListener2.onPullUpToRefresh();
+							}
+							return true;
+						}
+
+						return true;
+					}
+
+					smoothScrollTo(0);
+					return true;
+				}
+				break;
+			}
 		}
 
 		return false;
@@ -374,8 +400,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 
 		final int action = event.getAction();
 
-		if (action == MotionEvent.ACTION_CANCEL
-				|| action == MotionEvent.ACTION_UP) {
+		if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
 			mIsBeingDragged = false;
 			return false;
 		}
@@ -385,50 +410,49 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 		}
 
 		switch (action) {
-		case MotionEvent.ACTION_MOVE: {
-			if (isReadyForPull()) {
+			case MotionEvent.ACTION_MOVE: {
+				if (isReadyForPull()) {
 
-				final float y = event.getY();
-				final float dy = y - mLastMotionY;
-				final float yDiff = Math.abs(dy);
-				final float xDiff = Math.abs(event.getX() - mLastMotionX);
+					final float y = event.getY();
+					final float dy = y - mLastMotionY;
+					final float yDiff = Math.abs(dy);
+					final float xDiff = Math.abs(event.getX() - mLastMotionX);
 
-				if (yDiff > mTouchSlop && yDiff > xDiff) {
-					if ((mMode == MODE_PULL_DOWN_TO_REFRESH || mMode == MODE_BOTH)
-							&& dy >= 0.0001f && isReadyForPullDown()) {
-						mLastMotionY = y;
-						mIsBeingDragged = true;
-						if (mMode == MODE_BOTH) {
-							mCurrentMode = MODE_PULL_DOWN_TO_REFRESH;
-						}
-					} else if ((mMode == MODE_PULL_UP_TO_REFRESH || mMode == MODE_BOTH)
-							&& dy <= 0.0001f && isReadyForPullUp()) {
-						mLastMotionY = y;
-						mIsBeingDragged = true;
-						if (mMode == MODE_BOTH) {
-							mCurrentMode = MODE_PULL_UP_TO_REFRESH;
+					if (yDiff > mTouchSlop && yDiff > xDiff) {
+						if ((mMode == MODE_PULL_DOWN_TO_REFRESH || mMode == MODE_BOTH) && dy >= 0.0001f
+								&& isReadyForPullDown()) {
+							mLastMotionY = y;
+							mIsBeingDragged = true;
+							if (mMode == MODE_BOTH) {
+								mCurrentMode = MODE_PULL_DOWN_TO_REFRESH;
+							}
+						} else if ((mMode == MODE_PULL_UP_TO_REFRESH || mMode == MODE_BOTH) && dy <= 0.0001f
+								&& isReadyForPullUp()) {
+							mLastMotionY = y;
+							mIsBeingDragged = true;
+							if (mMode == MODE_BOTH) {
+								mCurrentMode = MODE_PULL_UP_TO_REFRESH;
+							}
 						}
 					}
 				}
+				break;
 			}
-			break;
-		}
-		case MotionEvent.ACTION_DOWN: {
-			if (isReadyForPull()) {
-				mLastMotionY = mInitialMotionY = event.getY();
-				mLastMotionX = event.getX();
-				mIsBeingDragged = false;
+			case MotionEvent.ACTION_DOWN: {
+				if (isReadyForPull()) {
+					mLastMotionY = mInitialMotionY = event.getY();
+					mLastMotionX = event.getX();
+					mIsBeingDragged = false;
+				}
+				break;
 			}
-			break;
-		}
 		}
 
 		return mIsBeingDragged;
 	}
 
 	protected void addRefreshableView(Context context, T refreshableView) {
-		addView(refreshableView, new LinearLayout.LayoutParams(
-				LayoutParams.FILL_PARENT, 0, 1.0f));
+		addView(refreshableView, new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, 0, 1.0f));
 	}
 
 	/**
@@ -447,8 +471,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	 *            created View
 	 * @return New instance of the Refreshable View
 	 */
-	protected abstract T createRefreshableView(Context context,
-			AttributeSet attrs);
+	protected abstract T createRefreshableView(Context context, AttributeSet attrs);
 
 	protected final int getCurrentMode() {
 		return mCurrentMode;
@@ -517,8 +540,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 		}
 
 		if (doScroll) {
-			smoothScrollTo(mCurrentMode == MODE_PULL_DOWN_TO_REFRESH ? -mHeaderHeight
-					: mHeaderHeight);
+			smoothScrollTo(mCurrentMode == MODE_PULL_DOWN_TO_REFRESH ? -mHeaderHeight : mHeaderHeight);
 		}
 	}
 
@@ -532,8 +554,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 		}
 
 		if (getScrollY() != y) {
-			mCurrentSmoothScrollRunnable = new SmoothScrollRunnable(mHandler,
-					getScrollY(), y);
+			mCurrentSmoothScrollRunnable = new SmoothScrollRunnable(mHandler, getScrollY(), y);
 			mHandler.post(mCurrentSmoothScrollRunnable);
 		}
 	}
@@ -545,11 +566,9 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 		mTouchSlop = ViewConfiguration.getTouchSlop();
 
 		// Styleables from XML
-		TypedArray a = context.obtainStyledAttributes(attrs,
-				R.styleable.PullToRefresh);
+		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.PullToRefresh);
 		if (a.hasValue(R.styleable.PullToRefresh_mode)) {
-			mMode = a.getInteger(R.styleable.PullToRefresh_mode,
-					MODE_PULL_DOWN_TO_REFRESH);
+			mMode = a.getInteger(R.styleable.PullToRefresh_mode, MODE_PULL_DOWN_TO_REFRESH);
 		}
 
 		// Refreshable View
@@ -558,70 +577,51 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 		addRefreshableView(context, mRefreshableView);
 
 		// Loading View Strings
-		String pullLabel = context
-				.getString(R.string.pull_to_refresh_pull_label);
-		String refreshingLabel = context
-				.getString(R.string.pull_to_refresh_refreshing_label);
-		String releaseLabel = context
-				.getString(R.string.pull_to_refresh_release_label);
+		String pullLabel = context.getString(R.string.pull_to_refresh_pull_label);
+		String refreshingLabel = context.getString(R.string.pull_to_refresh_refreshing_label);
+		String releaseLabel = context.getString(R.string.pull_to_refresh_release_label);
 
 		// Add Loading Views
 		if (mMode == MODE_PULL_DOWN_TO_REFRESH || mMode == MODE_BOTH) {
-			mHeaderLayout = new LoadingLayout(context,
-					MODE_PULL_DOWN_TO_REFRESH, releaseLabel, pullLabel,
-					refreshingLabel);
-			addView(mHeaderLayout, 0, new LinearLayout.LayoutParams(
-					ViewGroup.LayoutParams.FILL_PARENT,
+			mHeaderLayout = new LoadingLayout(context, MODE_PULL_DOWN_TO_REFRESH, releaseLabel, pullLabel,
+					refreshingLabel, a);
+			addView(mHeaderLayout, 0, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
 					ViewGroup.LayoutParams.WRAP_CONTENT));
 			measureView(mHeaderLayout);
 			mHeaderHeight = mHeaderLayout.getMeasuredHeight();
 		}
 		if (mMode == MODE_PULL_UP_TO_REFRESH || mMode == MODE_BOTH) {
-			mFooterLayout = new LoadingLayout(context, MODE_PULL_UP_TO_REFRESH,
-					releaseLabel, pullLabel, refreshingLabel);
-			addView(mFooterLayout, new LinearLayout.LayoutParams(
-					ViewGroup.LayoutParams.FILL_PARENT,
+			mFooterLayout = new LoadingLayout(context, MODE_PULL_UP_TO_REFRESH, releaseLabel, pullLabel,
+					refreshingLabel, a);
+			addView(mFooterLayout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
 					ViewGroup.LayoutParams.WRAP_CONTENT));
 			measureView(mFooterLayout);
 			mHeaderHeight = mFooterLayout.getMeasuredHeight();
 		}
 
 		// Styleables from XML
-		if (a.hasValue(R.styleable.PullToRefresh_pullHeaderTextColor)) {
-			final int color = a.getColor(
-					R.styleable.PullToRefresh_pullHeaderTextColor, Color.BLACK);
-			if (null != mHeaderLayout) {
-				mHeaderLayout.setTextColor(color);
-			}
-			if (null != mFooterLayout) {
-				mFooterLayout.setTextColor(color);
-			}
-		}
 		if (a.hasValue(R.styleable.PullToRefresh_pullHeaderBackground)) {
-			setBackgroundResource(a
-					.getResourceId(
-							R.styleable.PullToRefresh_pullHeaderBackground,
-							Color.WHITE));
+			setBackgroundResource(a.getResourceId(R.styleable.PullToRefresh_pullHeaderBackground, Color.WHITE));
 		}
 		if (a.hasValue(R.styleable.PullToRefresh_adapterViewBackground)) {
-			mRefreshableView.setBackgroundResource(a.getResourceId(
-					R.styleable.PullToRefresh_adapterViewBackground,
+			mRefreshableView.setBackgroundResource(a.getResourceId(R.styleable.PullToRefresh_adapterViewBackground,
 					Color.WHITE));
 		}
 		a.recycle();
+		a = null;
 
 		// Hide Loading Views
 		switch (mMode) {
-		case MODE_BOTH:
-			setPadding(0, -mHeaderHeight, 0, -mHeaderHeight);
-			break;
-		case MODE_PULL_UP_TO_REFRESH:
-			setPadding(0, 0, 0, -mHeaderHeight);
-			break;
-		case MODE_PULL_DOWN_TO_REFRESH:
-		default:
-			setPadding(0, -mHeaderHeight, 0, 0);
-			break;
+			case MODE_BOTH:
+				setPadding(0, -mHeaderHeight, 0, -mHeaderHeight);
+				break;
+			case MODE_PULL_UP_TO_REFRESH:
+				setPadding(0, 0, 0, -mHeaderHeight);
+				break;
+			case MODE_PULL_DOWN_TO_REFRESH:
+			default:
+				setPadding(0, -mHeaderHeight, 0, 0);
+				break;
 		}
 
 		// If we're not using MODE_BOTH, then just set mCurrentMode to current
@@ -634,19 +634,16 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	private void measureView(View child) {
 		ViewGroup.LayoutParams p = child.getLayoutParams();
 		if (p == null) {
-			p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
-					ViewGroup.LayoutParams.WRAP_CONTENT);
+			p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		}
 
 		int childWidthSpec = ViewGroup.getChildMeasureSpec(0, 0, p.width);
 		int lpHeight = p.height;
 		int childHeightSpec;
 		if (lpHeight > 0) {
-			childHeightSpec = MeasureSpec.makeMeasureSpec(lpHeight,
-					MeasureSpec.EXACTLY);
+			childHeightSpec = MeasureSpec.makeMeasureSpec(lpHeight, MeasureSpec.EXACTLY);
 		} else {
-			childHeightSpec = MeasureSpec.makeMeasureSpec(0,
-					MeasureSpec.UNSPECIFIED);
+			childHeightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
 		}
 		child.measure(childWidthSpec, childHeightSpec);
 	}
@@ -663,46 +660,42 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 		final int oldHeight = getScrollY();
 
 		switch (mCurrentMode) {
-		case MODE_PULL_UP_TO_REFRESH:
-			newHeight = Math.round(Math.max(mInitialMotionY - mLastMotionY, 0)
-					/ FRICTION);
-			break;
-		case MODE_PULL_DOWN_TO_REFRESH:
-		default:
-			newHeight = Math.round(Math.min(mInitialMotionY - mLastMotionY, 0)
-					/ FRICTION);
-			break;
+			case MODE_PULL_UP_TO_REFRESH:
+				newHeight = Math.round(Math.max(mInitialMotionY - mLastMotionY, 0) / FRICTION);
+				break;
+			case MODE_PULL_DOWN_TO_REFRESH:
+			default:
+				newHeight = Math.round(Math.min(mInitialMotionY - mLastMotionY, 0) / FRICTION);
+				break;
 		}
 
 		setHeaderScroll(newHeight);
 
 		if (newHeight != 0) {
-			if (mState == PULL_TO_REFRESH
-					&& mHeaderHeight < Math.abs(newHeight)) {
+			if (mState == PULL_TO_REFRESH && mHeaderHeight < Math.abs(newHeight)) {
 				mState = RELEASE_TO_REFRESH;
 
 				switch (mCurrentMode) {
-				case MODE_PULL_UP_TO_REFRESH:
-					mFooterLayout.releaseToRefresh();
-					break;
-				case MODE_PULL_DOWN_TO_REFRESH:
-					mHeaderLayout.releaseToRefresh();
-					break;
+					case MODE_PULL_UP_TO_REFRESH:
+						mFooterLayout.releaseToRefresh();
+						break;
+					case MODE_PULL_DOWN_TO_REFRESH:
+						mHeaderLayout.releaseToRefresh();
+						break;
 				}
 
 				return true;
 
-			} else if (mState == RELEASE_TO_REFRESH
-					&& mHeaderHeight >= Math.abs(newHeight)) {
+			} else if (mState == RELEASE_TO_REFRESH && mHeaderHeight >= Math.abs(newHeight)) {
 				mState = PULL_TO_REFRESH;
 
 				switch (mCurrentMode) {
-				case MODE_PULL_UP_TO_REFRESH:
-					mFooterLayout.pullToRefresh();
-					break;
-				case MODE_PULL_DOWN_TO_REFRESH:
-					mHeaderLayout.pullToRefresh();
-					break;
+					case MODE_PULL_UP_TO_REFRESH:
+						mFooterLayout.pullToRefresh();
+						break;
+					case MODE_PULL_DOWN_TO_REFRESH:
+						mHeaderLayout.pullToRefresh();
+						break;
 				}
 
 				return true;
@@ -714,12 +707,12 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 
 	private boolean isReadyForPull() {
 		switch (mMode) {
-		case MODE_PULL_DOWN_TO_REFRESH:
-			return isReadyForPullDown();
-		case MODE_PULL_UP_TO_REFRESH:
-			return isReadyForPullUp();
-		case MODE_BOTH:
-			return isReadyForPullUp() || isReadyForPullDown();
+			case MODE_PULL_DOWN_TO_REFRESH:
+				return isReadyForPullDown();
+			case MODE_PULL_UP_TO_REFRESH:
+				return isReadyForPullUp();
+			case MODE_BOTH:
+				return isReadyForPullUp() || isReadyForPullDown();
 		}
 		return false;
 	}
@@ -728,9 +721,41 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout {
 	// Inner and Anonymous Classes
 	// ===========================================================
 
+	/**
+	 * Simple Listener to listen for any callbacks to Refresh.
+	 * 
+	 * @author Chris Banes
+	 */
 	public static interface OnRefreshListener {
 
+		/**
+		 * onRefresh will be called for both Pull Down from top, and Pull Up
+		 * from Bottom
+		 */
 		public void onRefresh();
+
+	}
+
+	/**
+	 * An advanced version of the Listener to listen for callbacks to Refresh.
+	 * This listener is different as it allows you to differentiate between Pull
+	 * Ups, and Pull Downs.
+	 * 
+	 * @author Chris Banes
+	 */
+	public static interface OnRefreshListener2 {
+
+		/**
+		 * onPullDownToRefresh will be called only when the user has Pulled Down
+		 * from the top, and released.
+		 */
+		public void onPullDownToRefresh();
+
+		/**
+		 * onPullUpToRefresh will be called only when the user has Pulled Up
+		 * from the bottom, and released.
+		 */
+		public void onPullUpToRefresh();
 
 	}
 
