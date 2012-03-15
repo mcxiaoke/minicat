@@ -47,7 +47,7 @@ public class ConversationCursorAdapter extends BaseMessageCursorAdapter {
 		} else {
 			holder.headIcon.setTag(headUrl);
 			mLoader.displayImage(headUrl, holder.headIcon,
-					R.drawable.default_head);
+					R.drawable.ic_head);
 		}
 
 		holder.nameText.setText(dm.getSenderScreenName());

@@ -27,14 +27,14 @@
                 <ImageView
                     android:id="@+id/profile_image"
                     style="@style/Image.Head"
-                    android:src="@drawable/default_head" />
+                    android:src="@drawable/ic_head" />
 
                 <ImageView
                     android:id="@+id/profile_image_edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_edit_profile_image" />
+                    android:src="@drawable/ic_modify" />
             </LinearLayout>
 
             <TextView

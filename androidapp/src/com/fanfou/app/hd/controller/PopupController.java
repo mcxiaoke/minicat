@@ -66,12 +66,12 @@ public class PopupController {
 				context.getResources().getDrawable(R.drawable.ic_pop_retweet));
 
 		ActionItem favorite = new ActionItem(QUICK_ACTION_ID_FAVORITE, "收藏",
-				context.getResources().getDrawable(R.drawable.ic_pop_favorite));
+				context.getResources().getDrawable(R.drawable.ic_pop_favorite_0));
 		// favorite.setSticky(true);
 
 		ActionItem unfavorite = new ActionItem(QUICK_ACTION_ID_UNFAVORITE,
 				"取消", context.getResources().getDrawable(
-						R.drawable.ic_pop_unfavorite));
+						R.drawable.ic_pop_favorite_1));
 		// unfavorite.setSticky(true);
 
 		ActionItem profile = new ActionItem(QUICK_ACTION_ID_PROFILE, "空间",

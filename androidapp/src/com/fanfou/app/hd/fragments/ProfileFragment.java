@@ -263,7 +263,7 @@ public class ProfileFragment extends AbstractFragment implements
 		String headerImageUrl = user.getProfileImageUrl();
 		headerImage.setTag(headerImageUrl);
 		App.getImageLoader().displayImage(headerImageUrl, headerImage,
-				R.drawable.default_head);
+				R.drawable.ic_head);
 
 	}
 

@@ -80,7 +80,7 @@ public abstract class UserArrayAdapter extends BaseAdapter implements
 		} else {
 			holder.headIcon.setTag(headUrl);
 			mLoader.displayImage(headUrl, holder.headIcon,
-					R.drawable.default_head);
+					R.drawable.ic_head);
 		}
 
 		UIHelper.setUserContent(holder, u);

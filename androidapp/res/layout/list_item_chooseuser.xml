@@ -35,6 +35,6 @@
 	<CheckBox android:id="@+id/item_user_checkbox"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:clickable="false" android:focusable="false"
-		android:focusableInTouchMode="false" android:button="@drawable/checkbox_bg" />
+		android:focusableInTouchMode="false" android:button="@drawable/checkbox_multi" />
 
 </LinearLayout>

@@ -128,12 +128,12 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 			if (bitmap != null) {
 				holder.headIcon.setImageBitmap(bitmap);
 			}else{
-				holder.headIcon.setImageResource(R.drawable.default_head);
+				holder.headIcon.setImageResource(R.drawable.ic_head);
 			}
 		} else {
 			holder.headIcon.setTag(headUrl);
 			mLoader.displayImage(headUrl, holder.headIcon,
-					R.drawable.default_head);
+					R.drawable.ic_head);
 		}
 
 		setColor(cursor, row);

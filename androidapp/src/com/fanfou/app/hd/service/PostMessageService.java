@@ -108,7 +108,7 @@ public class PostMessageService extends BaseIntentService {
 
 	private int showSendingNotification() {
 		int id = 10;
-		Notification notification = new Notification(R.drawable.ic_notify_icon,
+		Notification notification = new Notification(R.drawable.ic_stat_notify,
 				"饭否私信正在发送...", System.currentTimeMillis());
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				new Intent(), 0);
@@ -121,7 +121,7 @@ public class PostMessageService extends BaseIntentService {
 	@SuppressWarnings("unused")
 	private int showSuccessNotification() {
 		int id = 12;
-		Notification notification = new Notification(R.drawable.ic_notify_icon,
+		Notification notification = new Notification(R.drawable.ic_stat_notify,
 				"私信发送成功", System.currentTimeMillis());
 		Intent intent = new Intent(this, UILogin.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
@@ -136,7 +136,7 @@ public class PostMessageService extends BaseIntentService {
 	private int showFailedNotification(String title, String message) {
 		int id = 11;
 
-		Notification notification = new Notification(R.drawable.ic_notify_icon,
+		Notification notification = new Notification(R.drawable.ic_stat_notify,
 				title, System.currentTimeMillis());
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				new Intent(), 0);

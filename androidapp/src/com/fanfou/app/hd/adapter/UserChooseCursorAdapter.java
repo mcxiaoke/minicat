@@ -91,7 +91,7 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter {
 		} else {
 			holder.headIcon.setTag(headUrl);
 			mLoader.displayImage(headUrl, holder.headIcon,
-					R.drawable.default_head);
+					R.drawable.ic_head);
 		}
 
 		UIHelper.showOrHide(holder.lockIcon, u.isProtect());

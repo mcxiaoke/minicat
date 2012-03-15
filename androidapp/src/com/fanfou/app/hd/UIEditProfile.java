@@ -187,11 +187,11 @@ public class UIEditProfile extends UIBaseSupport {
 		if (App.DEBUG) {
 			log("updateProfileImagePreview() url=" + user.getProfileImageUrl());
 		}
-		mHeadView.setImageResource(R.drawable.default_head);
+		mHeadView.setImageResource(R.drawable.ic_head);
 		mHeadView.invalidate();
 		mHeadView.setTag(user.getProfileImageUrl());
 		mLoader.displayImage(user.getProfileImageUrl(), mHeadView,
-				R.drawable.default_head);
+				R.drawable.ic_head);
 
 	}
 

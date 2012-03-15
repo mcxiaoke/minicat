@@ -92,7 +92,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		showNotification(NOTIFICATION_ID_HOME, context, contentIntent, title,
-				message, R.drawable.ic_notify_home);
+				message, R.drawable.ic_stat_home);
 	}
 
 	private static void showHomeMoreNotification(Context context, int count) {
@@ -107,7 +107,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
 				intent, 0);
 		showNotification(NOTIFICATION_ID_HOME, context, contentIntent, title,
-				message, R.drawable.ic_notify_home);
+				message, R.drawable.ic_stat_home);
 	}
 
 	private static void showMentionOneNotification(Context context,
@@ -123,7 +123,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		showNotification(NOTIFICATION_ID_MENTION, context, contentIntent,
-				title, message, R.drawable.ic_notify_mention);
+				title, message, R.drawable.ic_stat_mention);
 	}
 
 	private static void showMentionMoreNotification(Context context, int count) {
@@ -138,7 +138,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
 				intent, 0);
 		showNotification(NOTIFICATION_ID_MENTION, context, contentIntent,
-				title, message, R.drawable.ic_notify_mention);
+				title, message, R.drawable.ic_stat_mention);
 	}
 
 	private static void showDmOneNotification(Context context,
@@ -157,7 +157,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		String title = "收到" + dm.getSenderScreenName() + "的私信";
 		String message = dm.getSenderScreenName() + ":" + dm.getText();
 		showNotification(NOTIFICATION_ID_DM, context, contentIntent, title,
-				message, R.drawable.ic_notify_dm);
+				message, R.drawable.ic_stat_dm);
 	}
 
 	private static void showDmMoreNotification(Context context, int count) {
@@ -172,7 +172,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
 				intent, 0);
 		showNotification(NOTIFICATION_ID_DM, context, contentIntent, title,
-				message, R.drawable.ic_notify_dm);
+				message, R.drawable.ic_stat_dm);
 
 	}
 

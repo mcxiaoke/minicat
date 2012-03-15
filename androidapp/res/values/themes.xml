@@ -64,8 +64,8 @@
         <item name="android:titleTextStyle">@style/Blue.ActionBarTitleStyle</item>
         <item name="icon">@drawable/ic_home</item>
         <item name="android:icon">@drawable/ic_home</item>
-        <item name="background">@drawable/action_bar_background</item>
-        <item name="android:background">@drawable/action_bar_background</item>
+        <item name="background">@drawable/actionbar_background</item>
+        <item name="android:background">@drawable/actionbar_background</item>
     </style>
 
     <style name="Blue.ActionBarTitleStyle">

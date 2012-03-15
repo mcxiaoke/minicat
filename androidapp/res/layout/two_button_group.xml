@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="wrap_content"
-	android:orientation="horizontal" android:background="@drawable/rect_bg"
-	android:paddingTop="10dp" android:paddingLeft="6dp" android:paddingRight="6dp" android:paddingBottom="6dp">
+	android:orientation="horizontal" android:paddingTop="10dp" android:paddingLeft="6dp" android:paddingRight="6dp" android:paddingBottom="6dp">
 	<Button style="@style/ButtonStyle" android:id="@id/button_ok"
 		android:text="@android:string/ok" />
 

@@ -242,7 +242,7 @@ public class UIStatus extends UIBaseSupport {
 		String headerImageUrl = status.getUserProfileImageUrl();
 		headerImage.setTag(headerImageUrl);
 		App.getImageLoader().displayImage(headerImageUrl, headerImage,
-				R.drawable.default_head);
+				R.drawable.ic_head);
 
 	}
 

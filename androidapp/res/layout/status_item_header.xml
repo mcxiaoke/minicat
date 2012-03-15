@@ -11,7 +11,7 @@
         style="@style/ProfileImageStyle"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:src="@drawable/default_head" />
+        android:src="@drawable/ic_head" />
 
     <TextView
         android:id="@+id/header_name"

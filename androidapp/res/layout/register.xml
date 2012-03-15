@@ -64,7 +64,7 @@
                     android:id="@+id/register_follow_suggestions"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:button="@drawable/cb_followrandom"
+                    android:button="@drawable/checkbox_single"
                     android:checked="true" />
 
                 <TextView
