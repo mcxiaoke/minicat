@@ -1,22 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- common string -->
     <string name="app_name">饭否 HD</string>
+    <string name="app_description">饭否Android客户端</string>
+    <string name="app_version">版本：</string>
+    <string name="app_support">技术支持：</string>
+    <string name="app_contact">联系方式：</string>
     <string name="search_hint">搜索饭否网站消息</string>
-    <string name="login_signup_web">网站注册</string>
-    <string name="login_signup_sms">短信注册</string>
+    <string name="loading">载入中＃8320；</string>
+
+    <!-- error message -->
     <string name="msg_connection_error">现在无法连接服务器，请稍后重试</string>
     <string name="msg_server_error">服务器异常，请稍后重试</string>
+
+    <!-- crash report text -->
     <string name="crash_toast_text">啊噢，客户端崩溃了，一份包含错误信息的崩溃报告已经被发送给开发者用于分析出错原因 !</string>
+
+    <!-- about page text -->
     <string name="support_text">意见和建议提交，问题反馈，获取版本更新信息，请关注官方技术支持帐号 @Android客户端</string>
     <string name="introduction_text">本软件适用于Android 1.6以上系统，本软件的下载和使用完全免费，使用过程中产生的流量费用由运营商收取。</string>
     <string name="contact_text">饭否网站： http://fanfou.com\n发送邮件：android@fanfou.com</string>
+
+    <!-- Color Picker -->
     <string name="dialog_color_picker">颜色选择器</string>
     <string name="press_color_to_apply">点击右侧方块确认选择</string>
-    <string name="loading">载入中...</string>
-    <string name="action_follow">添加关注</string>
-    <string name="action_unfollow">取消关注</string>
-    <string name="action_dm">发私信</string>
-    <string name="action_mention">发消息</string>
+
+    <!-- login page -->
+    <string name="login_username_hint">输入饭否帐号/Email/手机号</string>
+    <string name="login_password_hint">输入饭否密码</string>
+    <string name="login_button_text">登  录</string>
+
+    <!-- register page -->
+    <string name="register_nickname_hint">输入昵称</string>
+    <string name="register_email_hint">输入Email地址</string>
+    <string name="register_password_hint">输入密码</string>
+    <string name="register_password_confirm_hint">再次输入密码</string>
+    <string name="register_button_text">注  册</string>
+    <string name="register_follow_suggestions_text">关注推荐的活跃用户</string>
+
+    <!-- profile text -->
+    <string name="profile_timeline">消息</string>
+    <string name="profile_favorites">收藏</string>
+    <string name="profile_friends">好友</string>
+    <string name="profile_Followers">关注者</string>
+    <string name="profile_info_title">资料</string>
+    <string name="profile_desc_title">自述</string>
+    <string name="profile_follow">添加关注</string>
+    <string name="profile_unfollow">取消关注</string>
+    <string name="profile_send">发私信</string>
+    <string name="profile_mention">发消息</string>
+
+    <!-- menu text -->
+    <string name="menu_refresh">刷新</string>
+    <string name="menu_search">搜索</string>
+    <string name="menu_share">分享</string>
+    <string name="menu_delete">删除</string>
+    <string name="menu_option">选项</string>
+    <string name="menu_save">保存</string>
+    <string name="menu_clear">清空</string>
+    <string name="menu_home">返回首页</string>
+    <string name="menu_logout">注销</string>
+    <string name="menu_feedback">反馈</string>
+
+    <!-- page titles -->
+    <string name="page_title_home">首页</string>
+    <string name="page_title_mention">提及</string>
+    <string name="page_title_public">随便看看</string>
+    <string name="page_title_more">栏目</string>
+    <string name="page_title_about">关于</string>
+    <string name="page_title_friends">好友</string>
+    <string name="page_title_followers">关注者</string>
+    <string name="page_title_favorites">收藏</string>
+    <string name="page_title_timeline">时间线</string>
+    <string name="page_title_profile">空间</string>
+    <string name="page_title_status">消息</string>
+    <string name="page_title_option">选项</string>
+    <string name="page_title_trends">热词</string>
+    <string name="page_title_write">写消息</string>
+    <string name="page_title_conversation_list">私信</string>
+    <string name="page_title_conversation">聊天</string>
+    <string name="page_title_thread">对话线索</string>
+    <string name="page_title_photo">照片</string>
+    <string name="page_title_draft">草稿箱</string>
+    <string name="page_title_modify">编辑资料</string>
 
 </resources>

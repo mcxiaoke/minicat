@@ -1,6 +1,5 @@
 package com.fanfou.app.hd;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 
 import com.fanfou.app.hd.ui.widget.GestureManager.SwipeListener;
 import com.fanfou.app.hd.util.Linkify;
-import com.fanfou.app.hd.util.Utils;
 
 /**
  * @author mcxiaoke
@@ -24,7 +22,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.2 2011.11.17
  * 
  */
-public class UIAbout extends Activity implements OnClickListener,
+public class UIAbout extends UIBaseSupport implements OnClickListener,
 		SwipeListener {
 	public static final String COPYRIGHT = "\u00a9";
 	public static final String REGISTERED = "\u00ae";
@@ -43,12 +41,15 @@ public class UIAbout extends Activity implements OnClickListener,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		App.setActiveContext(getClass().getCanonicalName(), this);
-		Utils.initScreenConfig(this);
-		setLayout();
 	}
 
-	private void setLayout() {
+	@Override
+	protected void initialize() {
+		setTitle("关于");
+	}
+
+	@Override
+	protected void setLayout() {
 		setContentView(R.layout.about);
 
 		mLogo = (ImageView) findViewById(R.id.about_icon);
@@ -66,8 +67,7 @@ public class UIAbout extends Activity implements OnClickListener,
 		mTitle.setText("饭否Android客户端");
 		TextPaint t1 = mTitle.getPaint();
 		t1.setFakeBoldText(true);
-		String version = App.versionName + "(Build" + App.versionCode
-				+ ")";
+		String version = App.versionName + "(Build" + App.versionCode + ")";
 		mVersion.setText("版本：" + version);
 		mIntroduction.setText(R.string.introduction_text);
 		mSupport.setText("技术支持");

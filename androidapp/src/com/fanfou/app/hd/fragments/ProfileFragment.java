@@ -141,8 +141,8 @@ public class ProfileFragment extends AbstractFragment implements
 	}
 
 	private void initResources() {
-		strFollow = getString(R.string.action_follow);
-		strUnFollow = getString(R.string.action_unfollow);
+		strFollow = getString(R.string.profile_follow);
+		strUnFollow = getString(R.string.profile_unfollow);
 	}
 
 	private void findViews(View root) {

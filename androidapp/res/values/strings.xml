@@ -1,58 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- common string -->
     <string name="app_name">FanFou HD</string>
+    <string name="app_description">FanFou App for Android</string>
+    <string name="app_version">Version: </string>
+    <string name="app_support">Support: </string>
+    <string name="app_contact">Contact: </string>
     <string name="search_hint">Search on fanfou.com</string>
-    <string name="consumerKey">consumerKey</string>
-    <string name="consumerSecret">consumerSecret</string>
-    <string name="accessToken">accessToken</string>
-    <string name="accessTokenSecret">accessTokenSecret</string>
-    <string name="login_signup_web">Signup via Web</string>
-    <string name="login_signup_sms">Signup via Sms</string>
+    <string name="loading">Loading＃8320；</string>
+
+    <!-- error message -->
     <string name="msg_connection_error">connection error, please try again later.</string>
     <string name="msg_server_error">api server error, please try again later.</string>
+
+    <!-- crash report text -->
     <string name="crash_toast_text">Ooooops ! I crashed, but a report will be sent to
 		fanfou developers to help them fix the issue !</string>
-    <string name="crash_mail_header">请点击发送邮件，报告以下匿名崩溃数据帮助饭否改进客户端：\n\n</string>
+
+    <!-- about page text -->
     <string name="support_text">见和建议提交，问题反馈，获取版本更新信息，请关注官方技术支持帐号 @Android客户端</string>
     <string name="introduction_text">本软件适用于Android
 		1.6以上系统，本软件的下载和使用完全免费，使用过程中产生的流量费用由运营商收取。</string>
-    <string name="contact_text">否网站： http://fanfou.com\n发送邮件：android@fanfou.com</string>
+    <string name="contact_text">Website: http://fanfou.com\nEmail: android@fanfou.com</string>
 
     <!-- Color Picker -->
     <string name="dialog_color_picker">Color Picker</string>
     <string name="press_color_to_apply">Press on Color to apply</string>
 
-    <!-- Preferences -->
-    <string name="pref_category">Category</string>
-    <string name="color1_title">Color 1</string>
-    <string name="color1_summary">black color by default, set by reference</string>
-    <string name="color2_title">Color 2</string>
-    <string name="color2_summary">ot persistent color\nalpha slider added via code</string>
-    <string name="color3_title">Color 3</string>
-    <string name="color3_summary">picker with alpha slider</string>
-    <string name="color4_title">Color 4</string>
-    <string name="color4_summary">color set with HEX code in xml</string>
-    <string name="login_username_hint">输入饭否帐号/Email/手机号</string>
-    <string name="login_password_hint">输入饭否密码</string>
-    <string name="login_button_text">登  录</string>
-    <string name="register_nickname_hint">输入昵称</string>
-    <string name="register_email_hint">输入Email地址</string>
-    <string name="register_password_hint">输入密码</string>
-    <string name="register_password_confirm_hint">再次输入密码</string>
-    <string name="register_button_text">注  册</string>
-    <string name="register_follow_suggestions_text">关注推荐的活跃用户</string>
+    <!-- login page -->
+    <string name="login_username_hint">Account/Email/Phone Number</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_button_text">Login</string>
+
+    <!-- register page -->
+    <string name="register_nickname_hint">Nickname</string>
+    <string name="register_email_hint">Email</string>
+    <string name="register_password_hint">Password</string>
+    <string name="register_password_confirm_hint">Password again</string>
+    <string name="register_button_text">Signup</string>
+    <string name="register_follow_suggestions_text">Follow Recommandations</string>
     <string name="alternate_title">An alternate title that is long</string>
     <string name="toggle_title">Toggle title</string>
+
+    <!-- profile text -->
+    <string name="profile_timeline">Timeline</string>
+    <string name="profile_favorites">Favorites</string>
+    <string name="profile_friends">Friends</string>
+    <string name="profile_Followers">Followers</string>
+    <string name="profile_info_title">Introducation</string>
+    <string name="profile_desc_title">Description</string>
+    <string name="profile_follow">Follow</string>
+    <string name="profile_unfollow">UnFollow</string>
+    <string name="profile_send">Send</string>
+    <string name="profile_mention">Mention</string>
+
+    <!-- menu text -->
     <string name="menu_refresh">Refresh</string>
     <string name="menu_search">Search</string>
     <string name="menu_share">Share</string>
-    <string name="loading">Loading...</string>
-    <string name="action_follow">Follow</string>
-    <string name="action_unfollow">UnFollow</string>
-    <string name="action_dm">Send</string>
-    <string name="action_mention">Mention</string>
+    <string name="menu_delete">Delete</string>
+    <string name="menu_option">Option</string>
+    <string name="menu_save">Save</string>
+    <string name="menu_clear">Clear</string>
+    <string name="menu_home">Back Home</string>
+    <string name="menu_logout">Logout</string>
+    <string name="menu_feedback">Feedback</string>
+
+    <!-- page titles -->
+    <string name="page_title_home">Home</string>
+    <string name="page_title_mention">Mention</string>
+    <string name="page_title_public">Public</string>
+    <string name="page_title_more">More</string>
+    <string name="page_title_about">About</string>
+    <string name="page_title_friends">Friends</string>
+    <string name="page_title_followers">Followers</string>
+    <string name="page_title_favorites">favorites</string>
+    <string name="page_title_timeline">Timeline</string>
+    <string name="page_title_profile">Profile</string>
+    <string name="page_title_status">Status</string>
+    <string name="page_title_option">Option</string>
+    <string name="page_title_trends">Trends</string>
+    <string name="page_title_write">Write</string>
+    <string name="page_title_conversation_list">Conversation List</string>
+    <string name="page_title_conversation">Conversation</string>
+    <string name="page_title_thread">Thread</string>
+    <string name="page_title_photo">Photo</string>
+    <string name="page_title_draft">Draft Box</string>
+    <string name="page_title_modify">Edit Profile</string>
     
-    <string name="contentDescription">Image</string>
+    <!-- messages text -->
+    <string name="msg_dm_content_cannot_be_null"></string>
+    <string name="msg_dm_content_has_been_copied"></string>
+    <string name="msg_dm_please_select_recipient"></string>
+    
+    <string name="msg_dialog_choose_head"></string>
+    <string name="msg_dialog_profile_is_updating"></string>
+    <string name="msg_profile_update_failed"></string>
+    <string name="msg_profile_update_success"></string>
+    <string name="msg_dm_content_cannot_be_null"></string>
 
 </resources>

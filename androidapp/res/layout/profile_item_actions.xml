@@ -17,8 +17,7 @@
 
         <TextView
             android:id="@+id/action_follow_text"
-            style="@style/ProfileActionTextStyle"
-            android:text="@string/action_follow" />
+            style="@style/ProfileActionTextStyle" />
     </LinearLayout>
 
     <LinearLayout
@@ -33,7 +32,7 @@
         <TextView
             android:id="@+id/action_dm_text"
             style="@style/ProfileActionTextStyle"
-            android:text="@string/action_dm" />
+            android:text="@string/profile_send" />
     </LinearLayout>
 
     <LinearLayout
@@ -48,7 +47,7 @@
         <TextView
             android:id="@+id/action_ention_text"
             style="@style/ProfileActionTextStyle"
-            android:text="@string/action_mention" />
+            android:text="@string/profile_mention" />
     </LinearLayout>
 
 </LinearLayout>

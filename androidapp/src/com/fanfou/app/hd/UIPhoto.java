@@ -82,11 +82,6 @@ public class UIPhoto extends UIBaseSupport {
 		setTitle("查看图片");
 	}
 
-	@Override
-	protected void onMenuHomeClick() {
-		finish();
-	}
-
 	private void findViews() {
 		mImageView = (ImageViewTouch) findViewById(R.id.photoview_pic);
 		vEmpty = findViewById(android.R.id.empty);
