@@ -37,6 +37,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 3.2 2012.02.09
  * @version 3.3 2012.02.10
  * @version 3.4 2012.03.09
+ * @version 3.5 2012.03.16
  * 
  */
 abstract class UIBaseSupport extends SherlockFragmentActivity implements
@@ -58,6 +59,7 @@ abstract class UIBaseSupport extends SherlockFragmentActivity implements
 		init();
 		initialize();
 		setLayout();
+		setActionBar();
 	}
 
 	@Override
@@ -82,25 +84,11 @@ abstract class UIBaseSupport extends SherlockFragmentActivity implements
 	protected abstract void initialize();
 
 	protected abstract void setLayout();
-
-	protected static class MyBroadcastReceiver extends BroadcastReceiver {
-		private UIBaseSupport mUIBase;
-
-		public MyBroadcastReceiver(UIBaseSupport base) {
-			this.mUIBase = base;
-		}
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (App.DEBUG) {
-				Log.d("NotificationReceiver", "active, broadcast received: "
-						+ intent.toString());
-			}
-			// if (mUIBase.onBroadcastReceived(intent)) {
-			// abortBroadcast();
-			// }
-		}
-
+	
+	protected void setActionBar(){
+		ActionBar ab = getSupportActionBar();
+		ab.setHomeButtonEnabled(true);
+		ab.setDisplayHomeAsUpEnabled(true);
 	}
 
 	protected int getMenuResourceId() {
@@ -109,8 +97,8 @@ abstract class UIBaseSupport extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-		int id=getMenuResourceId();
-		if(id>0){
+		int id = getMenuResourceId();
+		if (id > 0) {
 			getSupportMenuInflater().inflate(getMenuResourceId(), menu);
 		}
 		return true;
@@ -119,16 +107,28 @@ abstract class UIBaseSupport extends SherlockFragmentActivity implements
 	@Override
 	public boolean onOptionsItemSelected(
 			com.actionbarsherlock.view.MenuItem item) {
-		if (item.getItemId() == android.R.id.home) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
 			onMenuHomeClick();
 			return true;
+			// break;
+		case R.id.menu_write:
+			onMenuWriteClick();
+			return true;
+			// break;
+
+		default:
+			return super.onOptionsItemSelected(item);
+			// break;
 		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	protected void onMenuHomeClick() {
-		UIController.showHome(mContext);
-//		finish();
+		 finish();
+	}
+
+	protected void onMenuWriteClick() {
+		UIController.showWrite(mContext);
 	}
 
 	@Override

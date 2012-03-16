@@ -99,11 +99,6 @@ public class UIStatus extends UIBaseSupport {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		ActionBar ab = getSupportActionBar();
-		ab.setHomeButtonEnabled(true);
-		ab.setDisplayHomeAsUpEnabled(true);
-
 	}
 
 	@Override

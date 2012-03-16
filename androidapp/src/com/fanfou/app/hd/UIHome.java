@@ -11,10 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.BaseAdapter;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.SubMenu;
 import com.astuetz.viewpager.extensions.SwipeyTabButton;
 import com.astuetz.viewpager.extensions.SwipeyTabsView;
 import com.astuetz.viewpager.extensions.TabsAdapter;
@@ -22,16 +18,11 @@ import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.cache.ImageLoader;
 import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
-import com.fanfou.app.hd.fragments.AbstractFragment;
 import com.fanfou.app.hd.fragments.AbstractListFragment;
 import com.fanfou.app.hd.fragments.ColumnsFragment;
-import com.fanfou.app.hd.fragments.ConversationListFragment;
 import com.fanfou.app.hd.fragments.HomeTimelineFragment;
 import com.fanfou.app.hd.fragments.MentionTimelineFragment;
 import com.fanfou.app.hd.fragments.PublicTimelineFragment;
-import com.fanfou.app.hd.fragments.PullToRefreshListFragment;
-import com.fanfou.app.hd.fragments.UserTimelineFragment;
-import com.fanfou.app.hd.util.OptionHelper;
 
 /**
  * @author mcxiaoke
@@ -95,6 +86,15 @@ public class UIHome extends UIBaseSupport {
 		if (App.DEBUG) {
 			log("onCreate()");
 		}
+	}
+
+	@Override
+	protected void setActionBar() {
+		getSupportActionBar().setHomeButtonEnabled(true);
+	}
+	
+	@Override
+	protected void onMenuHomeClick() {
 	}
 
 	@Override
@@ -225,10 +225,6 @@ public class UIHome extends UIBaseSupport {
 
 	private void onMenuAboutClick() {
 		UIController.showAbout(this);
-	}
-
-	protected void onMenuWriteClick() {
-		UIController.showWrite(mContext);
 	}
 
 	private void onMenuFeedbackClick() {

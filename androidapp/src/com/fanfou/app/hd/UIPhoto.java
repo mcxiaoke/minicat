@@ -62,7 +62,6 @@ public class UIPhoto extends UIBaseSupport {
 		}
 
 		setContentView(R.layout.photoview);
-		setActionBar();
 		findViews();
 
 		if (App.DEBUG) {
@@ -77,12 +76,10 @@ public class UIPhoto extends UIBaseSupport {
 
 	}
 
-	private void setActionBar() {
+	@Override
+	protected void setActionBar() {
+		super.setActionBar();
 		setTitle("查看图片");
-		ActionBar ab = getSupportActionBar();
-		ab.setHomeButtonEnabled(true);
-		ab.setDisplayHomeAsUpEnabled(true);
-
 	}
 
 	@Override
