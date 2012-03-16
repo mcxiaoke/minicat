@@ -171,9 +171,11 @@ public class ProfileFragment extends AbstractFragment implements
 		vFollowers = root.findViewById(R.id.box_followers);
 
 		infoTitle = (TextView) root.findViewById(R.id.info_title);
+		Utils.setBoldText(infoTitle);
 		infoContent = (TextView) root.findViewById(R.id.info_content);
 
 		descTitle = (TextView) root.findViewById(R.id.desc_title);
+		Utils.setBoldText(descTitle);
 		descContent = (TextView) root.findViewById(R.id.desc_content);
 
 	}

@@ -33,10 +33,13 @@
         <!-- action attrs -->
         <attr name="actionItemBackground" format="reference"></attr>
         <attr name="actionBoxBackground" format="reference|color"></attr>
-        
+
+        <!-- status attrs -->
+        <attr name="statusHeaderBackground" format="reference"></attr>
+
         <!-- icon attrs -->
         <attr name="iconRemove" format="reference"></attr>
-        
+
         <!-- Write Page -->
         <attr name="writeCountBackground" format="reference|color"></attr>
         <attr name="writeCountTextColor" format="reference|color"></attr>

@@ -26,11 +26,8 @@
 
     <!-- fanfou blue -->
     <color name="fanfoublue">#ff00ccff</color>
-    <color name="fanfoublue_pressed">#ff33b5e5</color>
-    <color name="fanfoublue_translucent">#9900ccff</color>
-    <color name="fanfoublue_transparent">#0500ccff</color>
-    
-    <color name="fanfoublue_background">#3333b5e5</color>
+    <color name="fanfoublue_pressed">#6600ccff</color>
+    <color name="fanfoublue_background">#ffeaf8fc</color>
 
     <!-- list divider color -->
     <color name="light_grey_translucent">#99cccccc</color>

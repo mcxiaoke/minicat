@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.fanfou.app.hd.cache.ImageLoader;
 import com.fanfou.app.hd.controller.EmptyViewController;
 import com.fanfou.app.hd.ui.imagezoom.ImageViewTouch;
@@ -61,6 +62,7 @@ public class UIPhoto extends UIBaseSupport {
 		}
 
 		setContentView(R.layout.photoview);
+		setActionBar();
 		findViews();
 
 		if (App.DEBUG) {
@@ -73,6 +75,19 @@ public class UIPhoto extends UIBaseSupport {
 			loadFromLocal(url);
 		}
 
+	}
+
+	private void setActionBar() {
+		setTitle("查看图片");
+		ActionBar ab = getSupportActionBar();
+		ab.setHomeButtonEnabled(true);
+		ab.setDisplayHomeAsUpEnabled(true);
+
+	}
+
+	@Override
+	protected void onMenuHomeClick() {
+		finish();
 	}
 
 	private void findViews() {

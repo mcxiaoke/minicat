@@ -110,7 +110,7 @@
         <activity
             android:name=".UIPhoto"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_photoviewer_name"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.UIPhoto" />
         <activity
             android:name=".UIStatus"

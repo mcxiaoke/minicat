@@ -14,6 +14,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.WindowManager;
@@ -23,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fanfou.app.hd.App;
@@ -220,6 +222,11 @@ public final class Utils {
 		if (!portrait) {
 			context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}
+	}
+	
+	public static void setBoldText(final TextView tv){
+		TextPaint tp=tv.getPaint();
+		tp.setFakeBoldText(true);
 	}
 
 	/**

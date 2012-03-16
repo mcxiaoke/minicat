@@ -28,12 +28,6 @@
                     layout="@layout/status_item_header" />
 
                 <include
-                    android:id="@+id/divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    layout="@layout/divider_horizational" />
-
-                <include
                     android:id="@+id/content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

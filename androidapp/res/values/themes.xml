@@ -34,11 +34,11 @@
         <item name="secondaryTextColorReverse">@color/light_grey</item>
 
         <!-- profile color -->
-        <item name="profileItemTitleBackground">@color/grey</item>
+        <item name="profileItemTitleBackground">@color/light_grey</item>
         <item name="profileActionBackground">@drawable/button_blue</item>
         <item name="profileBlockBackground">@color/fanfoublue_background</item>
         <item name="profileCountTextColor">@color/fanfoublue</item>
-        <item name="profileCountBackground">@drawable/list_selector</item>
+        <item name="profileCountBackground">@drawable/action</item>
 
         <!-- action color -->
         <item name="actionItemBackground">@drawable/action</item>
@@ -47,6 +47,9 @@
         <!-- write color -->
         <item name="iconRemove">@drawable/ic_remove</item>
         <item name="writeCountTextColor">@color/fanfoublue</item>
+
+        <!-- status style -->
+        <item name="statusHeaderBackground">@drawable/header_blue</item>
 
         <!-- login logo -->
         <item name="loginTopLogo">@drawable/login_logo</item>
@@ -58,10 +61,10 @@
         <item name="buttonBackground">@drawable/button_blue</item>
         <item name="primaryColor">@color/fanfoublue</item>
         <item name="secondaryColor">@color/fanfoublue_pressed</item>
-        <item name="uiBackground">@color/fanfoublue_transparent</item>
+        <item name="uiBackground">@color/transparent</item>
     </style> <!-- ===================Theme.Blue end==================== -->
 
-    <style name="AppTheme.UIPhoto" parent="Theme.Sherlock.NoActionBar"></style>
+    <style name="AppTheme.UIPhoto" parent="Theme.Sherlock"></style>
 
     <!-- ActionBar Style -->
 

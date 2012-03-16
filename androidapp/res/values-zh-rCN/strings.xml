@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">饭否 HD</string>
-    <string name="app_photoviewer_name">饭否图片查看器</string>
     <string name="search_hint">搜索饭否网站消息</string>
     <string name="login_signup_web">网站注册</string>
     <string name="login_signup_sms">短信注册</string>
