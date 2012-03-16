@@ -1,46 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:padding="2dp">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="4dp" >
 
-	<ImageView android:id="@id/item_status_head"
-		android:layout_alignParentLeft="true" style="@style/Image.Head" />
+    <ImageView
+        android:id="@+id/head"
+        style="@style/HeadStyle"
+        android:layout_alignParentLeft="true" />
 
-	<LinearLayout android:layout_toRightOf="@id/item_status_head"
-		android:orientation="vertical" android:layout_width="fill_parent"
-		android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/head"
+        android:orientation="vertical" >
 
-		<LinearLayout android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
 
-			<TextView android:id="@id/item_status_user"
-				android:textStyle="bold" 
-				style="@style/Text.Name" android:text="UserName" />
+            <TextView
+                android:id="@+id/name"
+                style="@style/Item.TextBoldStyle" />
 
-			<View android:layout_width="0dp" android:layout_height="0dp"
-				android:layout_weight="1" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
-			<ImageView android:id="@id/item_status_icon_photo"
-				android:src="@drawable/ic_mini_photo" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:visibility="gone" android:scaleType="centerInside"/>
+            <ImageView
+                android:id="@+id/ic_mini_favorite"
+                style="@style/IconMiniStyle"
+                android:src="@drawable/ic_mini_favorite" />
 
-			<ImageView android:id="@id/item_status_icon_reply"
-				android:src="@drawable/ic_mini_thread" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:visibility="gone" />
+            <ImageView
+                android:id="@+id/ic_mini_reply"
+                style="@style/IconMiniStyle"
+                android:src="@drawable/ic_mini_thread" />
 
-		</LinearLayout>
+            <ImageView
+                android:id="@+id/ic_mini_retweet"
+                style="@style/IconMiniStyle"
+                android:src="@drawable/ic_mini_retweet" />
 
-		<TextView android:id="@id/item_status_text" style="@style/Text.Status"
-			android:text=" status content is here " />
+            <ImageView
+                android:id="@+id/ic_mini_photo"
+                style="@style/IconMiniStyle"
+                android:src="@drawable/ic_mini_photo" />
+        </LinearLayout>
 
-		<RelativeLayout android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/text"
+            style="@style/Item.TextStyle" />
 
-			<TextView android:id="@id/item_status_meta" style="@style/Text.Meta"
-				android:layout_alignParentRight="true" android:text="created date" />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
 
-		</RelativeLayout>
-
-	</LinearLayout>
+            <TextView
+                android:id="@+id/metainfo"
+                style="@style/Item.MetaInfoStyle"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>

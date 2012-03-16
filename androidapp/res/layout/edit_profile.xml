@@ -26,7 +26,7 @@
 
                 <ImageView
                     android:id="@+id/profile_image"
-                    style="@style/Image.Head"
+                    style="@style/HeadStyle"
                     android:src="@drawable/ic_head" />
 
                 <ImageView
@@ -39,7 +39,7 @@
 
             <TextView
                 android:id="@+id/profile_name"
-                style="@style/Text.ItemName"
+                style="@style/Item.TextBoldStyle"
                 android:text="昵称" />
 
             <EditText
@@ -48,7 +48,7 @@
 
             <TextView
                 android:id="@+id/profile_url"
-                style="@style/Text.ItemName"
+                style="@style/Item.TextBoldStyle"
                 android:text="个人网址" />
 
             <EditText
@@ -58,7 +58,7 @@
 
             <TextView
                 android:id="@+id/profile_location"
-                style="@style/Text.ItemName"
+                style="@style/Item.TextBoldStyle"
                 android:text="所在地" />
 
             <EditText
@@ -67,7 +67,7 @@
 
             <TextView
                 android:id="@+id/profile_description"
-                style="@style/Text.ItemName"
+                style="@style/Item.TextBoldStyle"
                 android:text="自述" />
 
             <EditText

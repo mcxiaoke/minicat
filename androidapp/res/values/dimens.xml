@@ -5,8 +5,8 @@
     <dimen name="actionbar_height">40dp</dimen>
     <dimen name="icon_height">40dp</dimen>
     <dimen name="icon_width">40dp</dimen>
-    <dimen name="item_user_head_width">48dp</dimen>
-    <dimen name="item_user_head_height">48dp</dimen>
+    <dimen name="head_width">48dp</dimen>
+    <dimen name="head_height">48dp</dimen>
     <dimen name="photo_preview_height">160dp</dimen>
     <dimen name="widget_margin">8dp</dimen>
     <dimen name="widget_padding">6dp</dimen>

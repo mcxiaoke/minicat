@@ -375,7 +375,7 @@ public class FanFouService extends IntentService {
 				sendSuccessMessage();
 			} else {
 				ContentValues values = new ContentValues();
-				values.put("favorited", true);
+				values.put(StatusColumns.FAVORITED, true);
 				DataController.update(this, s, values);
 				Bundle bundle = new Bundle();
 				bundle.putInt("type", type);

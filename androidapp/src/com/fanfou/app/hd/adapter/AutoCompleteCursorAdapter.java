@@ -88,7 +88,7 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 		String id = cursor.getString(cursor.getColumnIndex(UserColumns.ID));
 		String screenName = cursor.getString(cursor
 				.getColumnIndex(UserColumns.SCREEN_NAME));
-		TextView tv = (TextView) view.findViewById(R.id.item_user_name);
+		TextView tv = (TextView) view.findViewById(R.id.name);
 		tv.setText("@" + screenName + " (" + id + ")");
 	}
 

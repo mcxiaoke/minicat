@@ -67,13 +67,13 @@ public abstract class BaseMessageCursorAdapter extends BaseCursorAdapter {
 
 		ViewHolder(View base) {
 			this.headIcon = (ImageView) base
-					.findViewById(R.id.item_message_head);
+					.findViewById(R.id.head);
 			this.contentText = (TextView) base
-					.findViewById(R.id.item_message_text);
+					.findViewById(R.id.text);
 			this.dateText = (TextView) base
-					.findViewById(R.id.item_message_date);
+					.findViewById(R.id.date);
 			this.nameText = (TextView) base
-					.findViewById(R.id.item_message_user);
+					.findViewById(R.id.name);
 
 		}
 	}

@@ -56,28 +56,26 @@ public class PopupController {
 
 	private static QuickAction makePopup(Context context,
 			final StatusModel status) {
-		ActionItem reply = new ActionItem(QUICK_ACTION_ID_REPLY, "回复", context
+		ActionItem reply = new ActionItem(QUICK_ACTION_ID_REPLY, context
 				.getResources().getDrawable(R.drawable.ic_pop_reply));
 
-		ActionItem delete = new ActionItem(QUICK_ACTION_ID_DELETE, "删除",
-				context.getResources().getDrawable(R.drawable.ic_pop_delete));
+		ActionItem delete = new ActionItem(QUICK_ACTION_ID_DELETE, context
+				.getResources().getDrawable(R.drawable.ic_pop_delete));
 
-		ActionItem retweet = new ActionItem(QUICK_ACTION_ID_RETWEET, "转发",
-				context.getResources().getDrawable(R.drawable.ic_pop_retweet));
+		ActionItem retweet = new ActionItem(QUICK_ACTION_ID_RETWEET, context
+				.getResources().getDrawable(R.drawable.ic_pop_retweet));
 
-		ActionItem favorite = new ActionItem(QUICK_ACTION_ID_FAVORITE, "收藏",
-				context.getResources().getDrawable(R.drawable.ic_pop_favorite_0));
-		// favorite.setSticky(true);
+		ActionItem favorite = new ActionItem(QUICK_ACTION_ID_FAVORITE, context
+				.getResources().getDrawable(R.drawable.ic_pop_favorite_0));
 
 		ActionItem unfavorite = new ActionItem(QUICK_ACTION_ID_UNFAVORITE,
-				"取消", context.getResources().getDrawable(
-						R.drawable.ic_pop_favorite_1));
-		// unfavorite.setSticky(true);
+				context.getResources()
+						.getDrawable(R.drawable.ic_pop_favorite_1));
 
-		ActionItem profile = new ActionItem(QUICK_ACTION_ID_PROFILE, "空间",
-				context.getResources().getDrawable(R.drawable.ic_pop_profile));
+		ActionItem profile = new ActionItem(QUICK_ACTION_ID_PROFILE, context
+				.getResources().getDrawable(R.drawable.ic_pop_profile));
 
-		ActionItem share = new ActionItem(QUICK_ACTION_ID_SHARE, "分享", context
+		ActionItem share = new ActionItem(QUICK_ACTION_ID_SHARE, context
 				.getResources().getDrawable(R.drawable.ic_pop_share));
 
 		final boolean me = status.getUserId().equals(App.getAccount());

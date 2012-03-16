@@ -1,8 +1,10 @@
 package com.fanfou.app.hd.adapter;
 
 import android.text.TextPaint;
+import android.util.Log;
 import android.view.View;
 
+import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.util.DateTimeHelper;
@@ -36,17 +38,12 @@ public class UIHelper {
 
 	public static void setStatusMetaInfo(StatusViewHolder holder,
 			final StatusModel s) {
-		if (s.isThread()) {
-			holder.replyIcon.setVisibility(View.VISIBLE);
-		} else {
-			holder.replyIcon.setVisibility(View.GONE);
-		}
-
-		if (s.isPhoto()) {
-			holder.photoIcon.setVisibility(View.VISIBLE);
-		} else {
-			holder.photoIcon.setVisibility(View.GONE);
-		}
+		holder.replyIcon.setVisibility(s.isThread() ? View.VISIBLE : View.GONE);
+		holder.retweetIcon.setVisibility(s.isRetweeted() ? View.VISIBLE
+				: View.GONE);
+		holder.favoriteIcon.setVisibility(s.isFavorited() ? View.VISIBLE
+				: View.GONE);
+		holder.photoIcon.setVisibility(s.isPhoto() ? View.VISIBLE : View.GONE);
 
 		holder.nameText.setText(s.getUserScreenName());
 		holder.metaText.setText(getDateString(s.getTime()) + " 通过"

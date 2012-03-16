@@ -9,13 +9,6 @@
 
     <style name="Image" />
 
-    <style name="Image.Head">
-        <item name="android:layout_width">@dimen/item_user_head_width</item>
-        <item name="android:layout_height">@dimen/item_user_head_height</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_margin">2dp</item>
-    </style>
-
     <style name="About"></style>
 
     <style name="About.Title">
@@ -57,62 +50,6 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="Text"></style>
-
-    <style name="Text.Name">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
-    </style>
-
-    <style name="Text.NameBig">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_large</item>
-    </style>
-
-    <style name="Text.ItemName">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_large</item>
-        <item name="android:textColor">@color/black</item>
-    </style>
-
-    <style name="Text.Meta">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/text_size_tiny</item>
-    </style>
-
-    <style name="Text.MetaBig">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/text_size_tiny</item>
-    </style>
-
-    <style name="Text.Content">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_large</item>
-        <item name="android:textColor">@color/black</item>
-    </style>
-
-    <style name="Text.Info">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:textColor">@color/black</item>
-    </style>
-
-    <style name="Text.Status">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_small</item>
-        <item name="android:textColor">@color/black</item>
-    </style>
-
     <style name="Box">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -127,28 +64,6 @@
         <!-- <item name="android:padding">5dp</item> -->
         <item name="android:orientation">horizontal</item>
         <item name="android:gravity">center</item>
-    </style>
-
-    <style name="Text">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">2dp</item>
-    </style>
-
-    <style name="Text.Tiny">
-        <item name="android:textSize">@dimen/text_size_tiny</item>
-    </style>
-
-    <style name="Text.Small">
-        <item name="android:textSize">@dimen/text_size_small</item>
-    </style>
-
-    <style name="Text.Medium">
-        <item name="android:textSize">@dimen/text_size_medium</item>
-    </style>
-
-    <style name="Text.Large">
-        <item name="android:textSize">@dimen/text_size_large</item>
     </style>
 
     <style name="EditText"></style>
@@ -361,6 +276,40 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:src">?iconRemove</item>
         <item name="android:background">@drawable/action</item>
+    </style>
+
+    <style name="IconMiniStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="Item">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="Item.TextStyle">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">?primaryTextColor</item>
+    </style>
+
+    <style name="Item.TextBoldStyle">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">?primaryTextColor</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Item.MetaInfoStyle">
+        <item name="android:textColor">?secondaryTextColor</item>
+        <item name="android:textSize">@dimen/text_size_tiny</item>
+    </style>
+
+    <style name="HeadStyle">
+        <item name="android:layout_width">@dimen/head_width</item>
+        <item name="android:layout_height">@dimen/head_height</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_margin">2dp</item>
     </style>
 
     <!-- ========================= above add by mcxiaoke======================== -->

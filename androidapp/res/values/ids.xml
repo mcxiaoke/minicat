@@ -6,30 +6,7 @@
     <item name="button_ok" type="id"/>
     <item name="button_save" type="id"/>
     <item name="button_discard" type="id"/>
-    <item name="item_user" type="id"/>
-    <item name="item_user_id" type="id"/>
-    <item name="item_user_name" type="id"/>
-    <item name="item_user_flag" type="id"/>
-    <item name="item_user_head" type="id"/>
-    <item name="item_user_text" type="id"/>
-    <item name="item_user_date" type="id"/>
-    <item name="item_user_gender" type="id"/>
-    <item name="item_user_location" type="id"/>
-    <item name="item_status" type="id"/>
-    <item name="item_status_head" type="id"/>
-    <item name="item_status_text" type="id"/>
-    <item name="item_status_user" type="id"/>
-    <item name="item_status_meta" type="id"/>
-    <item name="item_status_icon_photo" type="id"/>
-    <item name="item_status_icon_loc" type="id"/>
-    <item name="item_status_icon_reply" type="id"/>
-    <item name="item_status_icon_fav" type="id"/>
-    <item name="item_message" type="id"/>
-    <item name="item_message_head" type="id"/>
-    <item name="item_message_text" type="id"/>
-    <item name="item_message_user" type="id"/>
-    <item name="item_message_date" type="id"/>
-    <item name="item_message_source" type="id"/>
+
     <item name="list_header" type="id"/>
     <item name="list_header_text" type="id"/>
     <item name="list_header_progress" type="id"/>

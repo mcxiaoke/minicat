@@ -44,7 +44,7 @@ public class SearchAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.list_item_search, null);
+			convertView = mInflater.inflate(R.layout.list_item_column, null);
 			holder = new ViewHolder(convertView);
 			convertView.setTag(holder);
 		} else {
@@ -60,7 +60,7 @@ public class SearchAdapter extends BaseAdapter {
 		TextView name;
 
 		public ViewHolder(View base) {
-			name = (TextView) base.findViewById(R.id.item_status_text);
+			name = (TextView) base.findViewById(R.id.text);
 		}
 	}
 

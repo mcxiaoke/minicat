@@ -2,6 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="wrap_content"
 	android:padding="4dp" android:orientation="horizontal">
-	<TextView android:id="@id/item_user_name" style="@style/Text.NameBig"
+	<TextView android:id="@+id/name" style="@style/Item.TextBoldStyle"
 		android:text="Username" android:padding="6dp"/>
 </LinearLayout>
