@@ -1,35 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="vertical" android:id="@+id/root">
+    android:id="@+id/root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-	<ScrollView android:layout_width="fill_parent"
-		android:layout_height="0dp" android:layout_weight="1"
-		android:padding="10dp" android:scrollbars="none">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:scrollbars="none" >
 
-		<LinearLayout android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:gravity="center"
-			android:orientation="vertical" android:padding="10dp">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp" >
 
-			<TextView android:id="@id/title" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:text="Dialog Title"
-				android:textSize="@dimen/text_size_large" android:textColor="@color/solid_black" />
+            <TextView
+                android:id="@id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dialog Title"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_large" />
 
-			<TextView android:id="@id/text" android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:text="Dialog Content"
-				android:textSize="@dimen/text_size_medium" android:textColor="@color/solid_black"
-				android:autoLink="web" />
-		</LinearLayout>
+            <TextView
+                android:id="@id/text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:text="Dialog Content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_medium" />
+        </LinearLayout>
+    </ScrollView>
 
-	</ScrollView>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp" >
 
-	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:orientation="horizontal"
-		android:padding="10dp">
-		<Button style="@style/ButtonStyle" android:id="@id/button1" />
+        <Button
+            android:id="@id/button1"
+            style="@style/ButtonStyle" />
 
-		<View android:layout_height="0dp" android:layout_width="10dp" />
+        <View
+            android:layout_width="10dp"
+            android:layout_height="0dp" />
 
-		<Button style="@style/ButtonStyle" android:id="@id/button2" />
-	</LinearLayout>
+        <Button
+            android:id="@id/button2"
+            style="@style/ButtonStyle" />
+    </LinearLayout>
 
 </LinearLayout>

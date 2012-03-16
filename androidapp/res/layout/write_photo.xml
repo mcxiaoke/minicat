@@ -13,7 +13,7 @@
 
     <ImageButton
         android:id="@+id/photo_remove"
-        style="@style/WriteInfoRemoveStyle"
+        style="@style/IconRemoveStyle"
         android:layout_toRightOf="@id/photo_show" />
 
 </RelativeLayout>

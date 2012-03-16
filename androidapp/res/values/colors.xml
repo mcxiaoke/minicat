@@ -16,24 +16,23 @@
     <color name="metainfo_color">#ff999999</color>
 
     <!-- ==added by version 2.0 below=== -->
+    <!-- common colors -->
+    <color name="transparent">#00000000</color>
+    <color name="white">#ffffffff</color>
+    <color name="black">#ff000000</color>
+    <color name="dark_grey">#ff333333</color>
+    <color name="grey">#ff999999</color>
+    <color name="light_grey">#ffcccccc</color>
 
-    <color name="solid_white">#ffffffff</color>
-    <color name="solid_black">#ff000000</color>
-    <color name="soft_black">#ff333333</color>
-    <color name="soft_white">#ffcccccc</color>
+    <!-- fanfou blue -->
+    <color name="fanfoublue">#ff00ccff</color>
+    <color name="fanfoublue_pressed">#ff33b5e5</color>
+    <color name="fanfoublue_translucent">#9900ccff</color>
+    <color name="fanfoublue_transparent">#0500ccff</color>
     
-    <color name="theme">#ff00ccff</color>
-    <color name="theme_pressed">#ff2ea5ff</color>
- 
-    <color name="selector_pressed">#6600ccff</color>
-    
-    <color name="item_title_background">#99cccccc</color>
-    
-    <color name="popup_background">#ffcccccc</color>
-    <color name="popup_background_pressed">#ffc2c2c2</color>
-    
-    <color name="list_divider">#99cccccc</color>
+    <color name="fanfoublue_background">#3333b5e5</color>
 
-    <!-- Blue light to dark : #33b5e #0099cc #006699 -->
+    <!-- list divider color -->
+    <color name="light_grey_translucent">#99cccccc</color>
 
 </resources>

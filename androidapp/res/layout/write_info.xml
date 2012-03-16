@@ -20,7 +20,7 @@
 
         <ImageButton
             android:id="@+id/photo_remove"
-            style="@style/WriteInfoRemoveStyle" />
+            style="@style/IconRemoveStyle" />
     </LinearLayout>
 
     <TextView

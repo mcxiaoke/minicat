@@ -24,32 +24,29 @@
 
         <!-- action bar color and drawable -->
         <item name="actionBarIcon">@drawable/icon</item>
-        <item name="actionBarTextColor">@color/solid_white</item>
+        <item name="actionBarTextColor">@color/white</item>
         <item name="actionBarBackground">@drawable/actionbar_background</item>
 
         <!-- text color -->
-        <item name="primaryTextColor">@color/solid_black</item>
-        <item name="secondaryTextColor">@color/soft_white</item>
-        <item name="primaryTextColorReverse">@color/solid_white</item>
-        <item name="secondaryTextColorReverse">@color/soft_black</item>
-        <item name="highlightTextColor">@color/soft_white</item>
+        <item name="primaryTextColor">@color/black</item>
+        <item name="secondaryTextColor">@color/grey</item>
+        <item name="primaryTextColorReverse">@color/white</item>
+        <item name="secondaryTextColorReverse">@color/light_grey</item>
 
         <!-- profile color -->
-        <item name="profileItemTitleBackground">@color/soft_white</item>
+        <item name="profileItemTitleBackground">@color/grey</item>
         <item name="profileActionBackground">@drawable/button_blue</item>
-        <item name="profileBlockBackground">#3335b5e5</item>
-        <item name="profileCountTextColor">@color/theme</item>
-        <item name="profileCountBackground">@drawable/selector</item>
+        <item name="profileBlockBackground">@color/fanfoublue_background</item>
+        <item name="profileCountTextColor">@color/fanfoublue</item>
+        <item name="profileCountBackground">@drawable/list_selector</item>
 
-        <!-- status color -->
-        <item name="statusActionItemBackground">@drawable/action_item_background</item>
-        <item name="statusActionBackground">@color/theme</item>
+        <!-- action color -->
+        <item name="actionItemBackground">@drawable/action</item>
+        <item name="actionBoxBackground">@color/fanfoublue</item>
 
         <!-- write color -->
-        <item name="writeActionItemBackground">@drawable/action_item_background</item>
-        <item name="writeActionBackground">@color/theme</item>
-        <item name="writeRemoveButtonImage">@drawable/ic_remove</item>
-        <item name="writeCountTextColor">@color/theme</item>
+        <item name="iconRemove">@drawable/ic_remove</item>
+        <item name="writeCountTextColor">@color/fanfoublue</item>
 
         <!-- login logo -->
         <item name="loginTopLogo">@drawable/login_logo</item>
@@ -59,8 +56,9 @@
         <!-- Global color and drawable -->
         <item name="inputBackground">@drawable/input</item>
         <item name="buttonBackground">@drawable/button_blue</item>
-        <item name="primaryColor">@color/theme</item>
-        <item name="secondaryColor">@color/theme_pressed</item>
+        <item name="primaryColor">@color/fanfoublue</item>
+        <item name="secondaryColor">@color/fanfoublue_pressed</item>
+        <item name="uiBackground">@color/fanfoublue_transparent</item>
     </style> <!-- ===================Theme.Blue end==================== -->
 
     <style name="AppTheme.UIPhoto" parent="Theme.Sherlock.NoActionBar"></style>
@@ -83,10 +81,8 @@
     <!-- ListView Style -->
 
     <style name="ListViewStyle">
-
-        <!-- <item name="android:background">@drawable/test</item> -->
-        <item name="android:listSelector">@drawable/selector</item>
-        <item name="android:divider">@color/list_divider</item>
+        <item name="android:listSelector">@drawable/list_selector</item>
+        <item name="android:divider">@color/light_grey_translucent</item>
         <item name="android:dividerHeight">@dimen/dividerWidth</item>
         <item name="android:cacheColorHint">@android:color/transparent</item>
     </style>

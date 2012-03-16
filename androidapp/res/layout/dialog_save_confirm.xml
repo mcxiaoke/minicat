@@ -11,7 +11,7 @@
 
 		<TextView android:id="@id/title" android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:text="Dialog Title"
-			android:textSize="@dimen/text_size_large" android:textColor="@color/solid_white" />
+			android:textSize="@dimen/text_size_large" android:textColor="?primaryTextColor" />
 	</LinearLayout>
 
 	<ScrollView android:layout_width="fill_parent"
@@ -20,7 +20,7 @@
 
 		<TextView android:id="@id/text" android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:text="Dialog Content"
-			android:textSize="@dimen/text_size_medium" android:textColor="@color/solid_white"
+			android:textSize="@dimen/text_size_medium" android:textColor="?primaryTextColor"
 			android:autoLink="web" />
 	</ScrollView>
 

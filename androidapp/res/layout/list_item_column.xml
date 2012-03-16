@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:textColor="@color/theme"
+        android:textColor="?primaryColor"
         android:textSize="18sp" />
 
 </RelativeLayout>

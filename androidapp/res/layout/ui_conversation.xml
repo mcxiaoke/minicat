@@ -48,7 +48,7 @@
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
             android:text="发送"
-            android:textColor="@color/solid_white"
+            android:textColor="?primaryTextColor"
             android:textSize="@dimen/text_size_medium" />
     </LinearLayout>
 
