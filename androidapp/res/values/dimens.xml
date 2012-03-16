@@ -7,19 +7,12 @@
     <dimen name="icon_width">40dp</dimen>
     <dimen name="item_user_head_width">48dp</dimen>
     <dimen name="item_user_head_height">48dp</dimen>
-    <dimen name="photo_preview_width">160dp</dimen>
     <dimen name="photo_preview_height">160dp</dimen>
-    <dimen name="write_extra_height">52dp</dimen>
-    <dimen name="write_minheight">60dp</dimen>
-    <dimen name="write_maxheight">180dp</dimen>
-    <dimen name="write_image_height">60dp</dimen>
-    <dimen name="write_actions_height">48dp</dimen>
     <dimen name="widget_margin">8dp</dimen>
     <dimen name="widget_padding">6dp</dimen>
 
     <!-- ====added by version 2.0 below==== -->
 
-    <dimen name="text_size_micro">10sp</dimen>
     <dimen name="text_size_tiny">12sp</dimen>
     <dimen name="text_size_small">14sp</dimen>
     <dimen name="text_size_medium">16sp</dimen>
@@ -37,5 +30,8 @@
     <dimen name="status_photo_padding">10dp</dimen>
     <dimen name="action_item_height">48dp</dimen>
     <dimen name="action_item_padding">8dp</dimen>
+    <dimen name="write_input_margin">6dp</dimen>
+    <dimen name="write_input_padding">8dp</dimen>
+    <dimen name="write_photo_width">48dp</dimen>
 
 </resources>

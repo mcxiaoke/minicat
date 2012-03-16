@@ -4,6 +4,5 @@
     <item android:drawable="@drawable/button_blue_pressed" android:state_enabled="true" android:state_pressed="true"/>
     <item android:drawable="@drawable/button_blue_pressed" android:state_enabled="true" android:state_focused="true"/>
     <item android:drawable="@drawable/button_blue_default" android:state_enabled="true"/>
-    <item android:drawable="@drawable/button_blue_default" android:state_enabled="false"/>
 
 </selector>

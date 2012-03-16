@@ -82,7 +82,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/soft_white</item>
-        <item name="android:textSize">@dimen/text_size_micro</item>
+        <item name="android:textSize">@dimen/text_size_tiny</item>
     </style>
 
     <style name="Text.MetaBig">
@@ -103,13 +103,6 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:textColor">@color/soft_black</item>
-    </style>
-
-    <style name="Text.Count">
-        <item name="android:layout_width">120dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:textColor">@color/soft_black</item>
     </style>
 
@@ -140,10 +133,6 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">2dp</item>
-    </style>
-
-    <style name="Text.Micro">
-        <item name="android:textSize">@dimen/text_size_micro</item>
     </style>
 
     <style name="Text.Tiny">
@@ -191,6 +180,23 @@
     <!-- ===========================below add by mcxiaoke====================== -->
     <!-- ===========================below add by mcxiaoke====================== -->
     <!-- ===========================below add by mcxiaoke====================== -->
+
+    <style name="MiniIconStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">2dp</item>
+    </style>
+
+    <style name="ButtonStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">6dp</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:background">?buttonBackground</item>
+        <item name="android:textColor">?primaryTextColorReverse</item>
+    </style>
 
     <style name="ProfileImageStyle">
         <item name="android:layout_width">@dimen/profile_image_width</item>
@@ -333,21 +339,37 @@
         <item name="android:background">?writeActionItemBackground</item>
     </style>
 
-    <style name="MiniIconStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">2dp</item>
+    <style name="WriteInputStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <!-- <item name="android:layout_weight">1</item> -->
+        <item name="android:gravity">left|top</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:background">@null</item>
+        <item name="android:padding">@dimen/write_input_padding</item>
     </style>
 
-    <style name="ButtonStyle">
+    <style name="WriteInfoCountStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">6dp</item>
+        <item name="android:padding">4dp</item>
         <item name="android:layout_margin">2dp</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:textSize">@dimen/text_size_large</item>
-        <item name="android:background">?buttonBackground</item>
-        <item name="android:textColor">?primaryTextColorReverse</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">?writeCountTextColor</item>
+    </style>
+
+    <style name="WriteInfoPhotoStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="WriteInfoRemoveStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src">?writeRemoveButtonImage</item>
+        <item name="android:background">@drawable/selector</item>
     </style>
 
     <!-- ========================= above add by mcxiaoke======================== -->

@@ -1,5 +1,6 @@
 package com.fanfou.app.hd.cache;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Comparator;
 import java.util.Map;
@@ -17,6 +18,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.util.IOHelper;
 
 /**
  * @author mcxiaoke
@@ -46,7 +48,7 @@ public class ImageLoader implements IImageLoader {
 	private final Map<String, ImageView> mViewsMap;
 	private final ImageCache mCache;
 	private final Handler mHandler;
-//	private final RestClient mClient;
+	// private final RestClient mClient;
 	private final Thread mDaemon;
 
 	private static final class ImageLoaderHolder {
@@ -63,9 +65,9 @@ public class ImageLoader implements IImageLoader {
 		// this.mExecutorService = Executors.newSingleThreadExecutor(new
 		// NameCountThreadFactory());
 		this.mCache = ImageCache.getInstance();
-//		this.mViewsMap = new HashMap<String, ImageView>();
+		// this.mViewsMap = new HashMap<String, ImageView>();
 		this.mViewsMap = new WeakHashMap<String, ImageView>();
-//		this.mClient = new RestClient();
+		// this.mClient = new RestClient();
 		this.mHandler = new InnerHandler();
 		this.mDaemon = new Daemon();
 		this.mDaemon.start();
@@ -111,12 +113,16 @@ public class ImageLoader implements IImageLoader {
 		String url = task.url;
 		Handler handler = task.handler;
 		Bitmap bitmap = mCache.get(url);
+		InputStream is = null;
 		if (bitmap == null) {
 			try {
-//				RestResponse res=mClient.get(url, false);
-				bitmap=BitmapFactory.decodeStream(new URL(url).openStream());
+				// RestResponse res=mClient.get(url, false);
+				is = new URL(url).openStream();
+				bitmap = BitmapFactory.decodeStream(is);
 			} catch (Exception e) {
 				Log.e(TAG, "download error:" + e.getMessage());
+			} finally {
+				IOHelper.forceClose(is);
 			}
 			if (bitmap != null) {
 				mCache.put(url, bitmap);
@@ -160,7 +166,7 @@ public class ImageLoader implements IImageLoader {
 		}
 		Bitmap bitmap = mCache.get(url);
 		if (bitmap == null) {
-			if(iconId>0){
+			if (iconId > 0) {
 				view.setImageResource(iconId);
 			}
 			addInnerTask(url, view);
@@ -170,7 +176,7 @@ public class ImageLoader implements IImageLoader {
 	}
 
 	private void addTask(String url, final Handler handler) {
-		//TODO incompatible type
+		// TODO incompatible type
 		if (mTaskQueue.contains(url)) {
 			return;
 		}
@@ -181,7 +187,7 @@ public class ImageLoader implements IImageLoader {
 	}
 
 	private void addInnerTask(String url, final ImageView view) {
-		//TODO incompatible type
+		// TODO incompatible type
 		if (mTaskQueue.contains(url)) {
 			return;
 		}

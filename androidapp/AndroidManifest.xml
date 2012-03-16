@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fanfou.app.hd"
-    android:versionCode="20120313"
-    android:versionName="2.0-alpha4-20120313" >
+    android:sharedUserId="com.fanfou.app"
+    android:versionCode="20120315"
+    android:versionName="2.0-beta(20120315)" >
 
     <uses-sdk
         android:minSdkVersion="7"
@@ -166,8 +167,7 @@
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.Blue.AutoCompleteTextViewFix"
-            android:windowSoftInputMode="stateVisible|adjustPan" >
+            android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 

@@ -457,8 +457,9 @@ public class FanFouService extends IntentService {
 			final Handler handler) {
 		startService(context, USER_SHOW, userId, handler);
 	}
-	
-	public static void showStatus(Context context, String id, final Handler handler){
+
+	public static void showStatus(Context context, String id,
+			final Handler handler) {
 		startService(context, STATUS_SHOW, id, handler);
 	}
 
@@ -485,6 +486,9 @@ public class FanFouService extends IntentService {
 
 	public static void showRelation(Context context, String userA,
 			String userB, final Handler handler) {
+		if (context == null || handler == null) {
+			return;
+		}
 		Intent intent = new Intent(context, FanFouService.class);
 		intent.putExtra("type", FRIENDSHIPS_EXISTS);
 		intent.putExtra("user_a", userA);
@@ -741,7 +745,8 @@ public class FanFouService extends IntentService {
 			if (statuses == null || statuses.size() == 0) {
 				sendIntMessage(0);
 				if (App.DEBUG)
-					Log.d(TAG, "getTimeline() count=0. userId=" + id+" type="+type);
+					Log.d(TAG, "getTimeline() count=0. userId=" + id + " type="
+							+ type);
 				return;
 			} else {
 				int size = statuses.size();

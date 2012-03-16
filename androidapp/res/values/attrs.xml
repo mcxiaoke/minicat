@@ -10,10 +10,14 @@
         <attr name="secondaryTextColorReverse" format="reference|color"></attr>
         <attr name="highlightTextColor" format="reference|color"></attr>
 
+        <!-- Global Theme Color -->
+        <attr name="primaryColor" format="reference|color"></attr>
+        <attr name="secondaryColor" format="reference|color"></attr>
+
         <!-- Global Attrs -->
         <attr name="buttonBackground" format="reference"></attr>
         <attr name="inputBackground" format="reference"></attr>
-        
+
         <!-- ActionBar Attrs -->
         <attr name="actionBarIcon" format="reference"></attr>
         <attr name="actionBarTextColor" format="reference|color"></attr>
@@ -33,6 +37,9 @@
         <!-- Write Page -->
         <attr name="writeActionItemBackground" format="reference"></attr>
         <attr name="writeActionBackground" format="reference|color"></attr>
+        <attr name="writeRemoveButtonImage" format="reference"></attr>
+        <attr name="writeCountBackground" format="reference|color"></attr>
+        <attr name="writeCountTextColor" format="reference|color"></attr>
 
         <!-- Login Page -->
         <attr name="loginTopLogo" format="reference"></attr>

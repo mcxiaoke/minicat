@@ -2,9 +2,9 @@ package com.fanfou.app.hd;
 
 import java.io.File;
 
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
@@ -15,13 +15,12 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Selection;
 import android.util.Log;
-import android.view.MenuItem;
+import android.util.TypedValue;
 import android.view.View;
-import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.view.Menu;
 import com.fanfou.app.hd.adapter.AtTokenizer;
 import com.fanfou.app.hd.adapter.AutoCompleteCursorAdapter;
 import com.fanfou.app.hd.controller.DataController;
@@ -63,6 +62,8 @@ import com.fanfou.app.hd.util.Utils;
  * @version 5.6 2012.02.28
  * @version 5.7 2012.03.09
  * @version 6.0 2012.03.14
+ * @version 7.0 2012.03.15
+ * @version 7.1 2012.03.16
  * 
  */
 public class UIWrite extends UIBaseSupport {
@@ -79,16 +80,16 @@ public class UIWrite extends UIBaseSupport {
 
 	private MyAutoCompleteTextView mAutoCompleteTextView;
 
-	private View mPictureView;
-	private ImageView iPicturePrieview;
-	private ImageView iPictureRemove;
-	private TextView tWordsCount;
+	private View vPhoto;
+	private ImageView vPhotoPreview;
+	private ImageButton vPhotoRemove;
+	private TextView tCount;
 
-	private ImageView iAtIcon;
-	private ImageView iDraftIcon;
-	private ImageView iLocationIcon;
-	private ImageView iGalleryIcon;
-	private ImageView iCameraIcon;
+	private ImageButton actionMention;
+	private ImageButton actionRecord;
+	private ImageButton actionLocation;
+	private ImageButton actionGallery;
+	private ImageButton actionCamera;
 
 	private Uri photoUri;
 	private File photo;
@@ -125,23 +126,6 @@ public class UIWrite extends UIBaseSupport {
 		return R.menu.write_menu;
 	}
 
-	// @Override
-	// public boolean onOptionsItemSelected(MenuItem item) {
-	// int id = item.getItemId();
-	// switch (id) {
-	// case R.id.menu_send:
-	// onMenuSendClick();
-	// break;
-	// default:
-	// break;
-	// }
-	// return super.onOptionsItemSelected(item);
-	// }
-
-	private void onMenuSendClick() {
-		doSend();
-	}
-
 	@Override
 	protected void initialize() {
 		enableLocation = OptionHelper.readBoolean(mContext,
@@ -149,19 +133,14 @@ public class UIWrite extends UIBaseSupport {
 		mLocationManager = (LocationManager) this
 				.getSystemService(Context.LOCATION_SERVICE);
 		mLocationMonitor = new LocationMonitor();
-		size = new Float(getResources().getDimension(
-				R.dimen.photo_preview_width)).intValue();
+		size = new Float(getResources().getDimension(R.dimen.write_photo_width))
+				.intValue();
 		for (String provider : mLocationManager.getProviders(true)) {
 			if (LocationManager.NETWORK_PROVIDER.equals(provider)
 					|| LocationManager.GPS_PROVIDER.equals(provider)) {
 				mLocationProvider = provider;
 				break;
 			}
-		}
-
-		if (mDisplayMetrics.heightPixels < 600) {
-			getWindow().setSoftInputMode(
-					WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
 		}
 	}
 
@@ -184,7 +163,7 @@ public class UIWrite extends UIBaseSupport {
 				if (App.DEBUG) {
 					log("onActivityResult requestCode=REQUEST_PHOTO_CAPTURE");
 				}
-				doCameraShot();
+				onCameraShot();
 				break;
 			case REQUEST_USERNAME_ADD:
 				if (App.DEBUG) {
@@ -208,42 +187,33 @@ public class UIWrite extends UIBaseSupport {
 		parseIntent();
 	}
 
-	private void doCameraShot() {
+	private void onCameraShot() {
 		if (App.DEBUG) {
 			log("doCameraShot() from camera uri=" + photoUri);
 			log("doCameraShot() from camera filename="
 					+ photo.getAbsolutePath());
 			log("doCameraShot() file.size=" + photo.length());
 		}
-		showPreview();
+		showPhoto();
 	}
 
-	private void showPreview() {
-		mPictureView.setVisibility(View.VISIBLE);
+	private void showPhoto() {
+		vPhoto.setVisibility(View.VISIBLE);
 		try {
-			iPicturePrieview.setImageBitmap(ImageHelper.getRoundedCornerBitmap(
+			vPhotoPreview.setImageBitmap(ImageHelper.getRoundedCornerBitmap(
 					ImageHelper.resampleImage(photo, size), 6));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void hidePreview() {
-		mPictureView.setVisibility(View.GONE);
+	private void hidePhoto() {
+		vPhoto.setVisibility(View.GONE);
 	}
 
 	private void showCount(int count) {
-		if (count > 140) {
-			tWordsCount.setTextColor(getResources().getColorStateList(
-					R.color.write_count_alert_text));
-			tWordsCount.setText("字数超标：" + (count - 140));
-		} else {
-
-			tWordsCount.setTextColor(getResources().getColorStateList(
-					R.color.write_count_text));
-			tWordsCount.setText("剩余字数：" + (140 - count));
-		}
-
+		int num = 140 - count;
+		tCount.setText(String.valueOf(num));
 	}
 
 	private void parsePhoto(Uri uri) {
@@ -264,7 +234,7 @@ public class UIWrite extends UIBaseSupport {
 			}
 			if (App.DEBUG)
 				log("from gallery file=" + path);
-			showPreview();
+			showPhoto();
 		}
 	}
 
@@ -302,12 +272,11 @@ public class UIWrite extends UIBaseSupport {
 				}
 			} else if (action.equals(Constants.ACTION_SEND_FROM_GALLERY)) {
 				type = TYPE_GALLERY;
-				startAddPicture();
+				pickPhotoFromGallery();
 			} else if (action.equals(Constants.ACTION_SEND_FROM_CAMERA)) {
 				type = TYPE_CAMERA;
-				startCameraShot();
+				pickPhotoFromCamera();
 			}
-
 			if (App.DEBUG) {
 				log("intent type=" + type);
 				log("intent text=" + text);
@@ -323,8 +292,11 @@ public class UIWrite extends UIBaseSupport {
 						mAutoCompleteTextView.getText().length());
 			}
 		}
+
+		showCount(mAutoCompleteTextView.getText().length());
+
 		if (photoUri != null) {
-			showPreview();
+			showPhoto();
 		}
 	}
 
@@ -335,6 +307,8 @@ public class UIWrite extends UIBaseSupport {
 	}
 
 	private void setAutoComplete() {
+		mAutoCompleteTextView = (MyAutoCompleteTextView) findViewById(R.id.input);
+
 		mAutoCompleteTextView.addTextChangedListener(new TextChangeListener() {
 
 			@Override
@@ -363,29 +337,28 @@ public class UIWrite extends UIBaseSupport {
 
 		setContentView(R.layout.ui_write);
 
-		mAutoCompleteTextView = (MyAutoCompleteTextView) findViewById(R.id.write_text);
+		actionMention = (ImageButton) findViewById(R.id.action_mention);
+		actionRecord = (ImageButton) findViewById(R.id.action_record);
+		actionLocation = (ImageButton) findViewById(R.id.action_location);
+		actionGallery = (ImageButton) findViewById(R.id.action_gallery);
+		actionCamera = (ImageButton) findViewById(R.id.action_camera);
 
-		mPictureView = findViewById(R.id.write_picture);
-		iPicturePrieview = (ImageView) findViewById(R.id.write_picture_prieview);
-		iPictureRemove = (ImageView) findViewById(R.id.write_picture_remove);
+		actionMention.setOnClickListener(this);
+		actionRecord.setOnClickListener(this);
+		actionLocation.setOnClickListener(this);
+		actionGallery.setOnClickListener(this);
+		actionCamera.setOnClickListener(this);
 
-		tWordsCount = (TextView) findViewById(R.id.write_extra_words);
+		actionLocation.setImageLevel(enableLocation ? 1 : 0);
 
-		iAtIcon = (ImageView) findViewById(R.id.write_action_at);
-		iDraftIcon = (ImageView) findViewById(R.id.write_action_draft);
-		iLocationIcon = (ImageView) findViewById(R.id.write_action_location);
-		iGalleryIcon = (ImageView) findViewById(R.id.write_action_gallery);
-		iCameraIcon = (ImageView) findViewById(R.id.write_action_camera);
+		vPhoto = findViewById(R.id.photo);
+		vPhotoPreview = (ImageView) findViewById(R.id.photo_show);
+		vPhotoRemove = (ImageButton) findViewById(R.id.photo_remove);
+		vPhotoRemove.setOnClickListener(this);
 
-		iAtIcon.setOnClickListener(this);
-		iDraftIcon.setOnClickListener(this);
-		iLocationIcon.setOnClickListener(this);
-		iGalleryIcon.setOnClickListener(this);
-		iCameraIcon.setOnClickListener(this);
+		tCount = (TextView) findViewById(R.id.count);
 
-		iPictureRemove.setOnClickListener(this);
-
-		iLocationIcon.setImageLevel(enableLocation ? 1 : 0);
+		setTitle("写消息");
 
 		setAutoComplete();
 		parseIntent();
@@ -395,7 +368,7 @@ public class UIWrite extends UIBaseSupport {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (enableLocation && mLocationProvider != null) {
+		if (mLocationProvider != null) {
 			mLocationManager.requestLocationUpdates(mLocationProvider, 0, 0,
 					mLocationMonitor);
 		}
@@ -403,10 +376,8 @@ public class UIWrite extends UIBaseSupport {
 
 	@Override
 	protected void onPause() {
+		mLocationManager.removeUpdates(mLocationMonitor);
 		super.onPause();
-		if (enableLocation) {
-			mLocationManager.removeUpdates(mLocationMonitor);
-		}
 	}
 
 	@Override
@@ -426,23 +397,23 @@ public class UIWrite extends UIBaseSupport {
 	public void onClick(View v) {
 		int id = v.getId();
 		switch (id) {
-		case R.id.write_action_at:
-			startAddUsername();
+		case R.id.action_mention:
+			pickMentions();
 			break;
-		case R.id.write_action_draft:
+		case R.id.action_record:
 			UIController.showRecords(mContext);
 			break;
-		case R.id.write_action_location:
-			switchLocation();
+		case R.id.action_location:
+			toggleLocation();
 			break;
-		case R.id.write_action_gallery:
-			startAddPicture();
+		case R.id.action_gallery:
+			pickPhotoFromGallery();
 			break;
-		case R.id.write_action_camera:
-			startCameraShot();
+		case R.id.action_camera:
+			pickPhotoFromCamera();
 			break;
-		case R.id.write_picture_remove:
-			removePicture();
+		case R.id.photo_remove:
+			removePhoto();
 			break;
 		default:
 			break;
@@ -450,19 +421,14 @@ public class UIWrite extends UIBaseSupport {
 
 	}
 
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// getSupportMenuInflater().inflate(R.menu.write_menu, menu);
-	// return true;
-	// }
-
 	@Override
 	public boolean onOptionsItemSelected(
 			com.actionbarsherlock.view.MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_send:
 			doSend();
-			break;
+			return true;
+			// break;
 		default:
 			break;
 		}
@@ -500,13 +466,13 @@ public class UIWrite extends UIBaseSupport {
 		getContentResolver().insert(RecordColumns.CONTENT_URI, rm.values());
 	}
 
-	private void removePicture() {
-		hidePreview();
+	private void removePhoto() {
+		hidePhoto();
 		photo = null;
 		photoUri = null;
 	}
 
-	private void startCameraShot() {
+	private void pickPhotoFromCamera() {
 		photo = IOHelper.getPhotoFilePath(this);
 		photoUri = Uri.fromFile(photo);
 		if (App.DEBUG) {
@@ -520,7 +486,7 @@ public class UIWrite extends UIBaseSupport {
 
 	}
 
-	private void startAddPicture() {
+	private void pickPhotoFromGallery() {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
 		// startActivityForResult(intent, REQUEST_PHOTO_LIBRARY);
@@ -528,24 +494,16 @@ public class UIWrite extends UIBaseSupport {
 				REQUEST_PHOTO_LIBRARY);
 	}
 
-	private void switchLocation() {
+	private void toggleLocation() {
 		enableLocation = !enableLocation;
 		OptionHelper.saveBoolean(mContext, R.string.option_location_enable,
 				enableLocation);
 		if (App.DEBUG)
 			log("location enable status=" + enableLocation);
-		iLocationIcon.setImageLevel(enableLocation ? 1 : 0);
-		if (enableLocation) {
-			if (mLocationProvider != null) {
-				mLocationManager.requestLocationUpdates(mLocationProvider, 0,
-						0, mLocationMonitor);
-			}
-		} else {
-			mLocationManager.removeUpdates(mLocationMonitor);
-		}
+		actionLocation.setImageLevel(enableLocation ? 1 : 0);
 	}
 
-	private void startAddUsername() {
+	private void pickMentions() {
 		Intent intent = new Intent(this, UIUserChoose.class);
 		startActivityForResult(intent, REQUEST_USERNAME_ADD);
 	}

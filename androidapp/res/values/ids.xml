@@ -36,22 +36,7 @@
     <item name="list_footer" type="id"/>
     <item name="list_footer_text" type="id"/>
     <item name="list_footer_progress" type="id"/>
-    <item name="write_title" type="id"/>
-    <item name="write_info" type="id"/>
-    <item name="write_text" type="id"/>
-    <item name="write_actions" type="id"/>
-    <item name="write_action_back" type="id"/>
-    <item name="write_action_at" type="id"/>
-    <item name="write_action_draft" type="id"/>
-    <item name="write_action_location" type="id"/>
-    <item name="write_action_gallery" type="id"/>
-    <item name="write_action_camera" type="id"/>
-    <item name="write_origin" type="id"/>
-    <item name="write_extras" type="id"/>
-    <item name="write_picture" type="id"/>
-    <item name="write_picture_prieview" type="id"/>
-    <item name="write_picture_remove" type="id"/>
-    <item name="write_extra_words" type="id"/>
+
     <item name="user_profile" type="id"/>
     <item name="user_empty" type="id"/>
     <item name="user_head" type="id"/>
