@@ -1,11 +1,17 @@
 package com.fanfou.app.hd.fragments;
 
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.api.Paging;
+import com.fanfou.app.hd.controller.DataController;
+import com.fanfou.app.hd.dao.DataProvider;
+import com.fanfou.app.hd.dao.model.StatusColumns;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.service.FanFouService;
 import com.fanfou.app.hd.util.Utils;
@@ -14,6 +20,7 @@ import com.fanfou.app.hd.util.Utils;
  * @author mcxiaoke
  * @version 1.0 2012.02.06
  * @version 1.1 2012.03.08
+ * @version 1.2 2012.03.19
  * 
  */
 public class MentionTimelineFragment extends BaseTimlineFragment {
@@ -43,6 +50,11 @@ public class MentionTimelineFragment extends BaseTimlineFragment {
 	@Override
 	protected int getType() {
 		return StatusModel.TYPE_MENTIONS;
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		return DataController.getTimelineCursorLoader(getActivity(), StatusModel.TYPE_MENTIONS);
 	}
 
 	@Override

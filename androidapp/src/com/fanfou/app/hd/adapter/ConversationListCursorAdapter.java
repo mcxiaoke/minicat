@@ -28,11 +28,6 @@ public class ConversationListCursorAdapter extends BaseMessageCursorAdapter {
 		super(context, c);
 	}
 
-	public ConversationListCursorAdapter(Context context, Cursor c,
-			boolean autoRequery, boolean autoLink) {
-		super(context, c, autoRequery);
-	}
-
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		View row = view;

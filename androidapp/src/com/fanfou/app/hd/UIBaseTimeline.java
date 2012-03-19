@@ -3,14 +3,11 @@ package com.fanfou.app.hd;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-
-import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.fragments.BaseTimlineFragment;
-import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.ui.widget.GestureManager.SwipeListener;
-import com.fanfou.app.hd.util.StringHelper;
 
 /**
  * @author mcxiaoke
@@ -26,20 +23,19 @@ import com.fanfou.app.hd.util.StringHelper;
  * @version 4.1 2012.01.31
  * @version 5.0 2012.02.08
  * @version 5.1 2012.02.09
+ * @version 5.2 2012.03.19
  * 
  */
 abstract class UIBaseTimeline extends UIBaseSupport implements SwipeListener {
 
 	private static final String TAG = UIBaseTimeline.class.getSimpleName();
-	
+
 	private BaseTimlineFragment mFragment;
 
 	private String userId;
-	private String userName;
-	private UserModel user;
-	
+
 	protected abstract int getType();
-	
+
 	protected abstract BaseTimlineFragment getFragment(String userId);
 
 	@Override
@@ -58,13 +54,13 @@ abstract class UIBaseTimeline extends UIBaseSupport implements SwipeListener {
 		setContentView(R.layout.ui_container);
 		setFragment();
 	}
-	
+
 	private void setFragment() {
 		if (App.DEBUG) {
 			Log.d(TAG, "setFragment()");
 		}
-		
-		mFragment=getFragment(userId);
+
+		mFragment = getFragment(userId);
 		FragmentTransaction transaction = getSupportFragmentManager()
 				.beginTransaction();
 		transaction.add(R.id.container, mFragment);
@@ -73,16 +69,9 @@ abstract class UIBaseTimeline extends UIBaseSupport implements SwipeListener {
 
 	private void parseIntent() {
 		Intent intent = getIntent();
-		user = (UserModel) intent.getParcelableExtra("data");
-		if (user == null) {
-			userId = intent.getStringExtra("id");
-		} else {
-			userId = user.getId();
-			userName = user.getScreenName();
-		}
-		
-		if(StringHelper.isEmpty(userId)){
-			userId=App.getAccount();
+		userId = intent.getStringExtra("id");
+		if (TextUtils.isEmpty(userId)) {
+			userId = App.getAccount();
 		}
 	}
 

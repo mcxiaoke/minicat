@@ -20,12 +20,12 @@ import com.fanfou.app.hd.dao.model.UserModel;
  * 
  */
 public class UserCursorAdapter extends BaseCursorAdapter {
-	public UserCursorAdapter(Context context, Cursor c) {
-		super(context, c, false);
+	public UserCursorAdapter(Context context) {
+		super(context, null);
 	}
 
-	public UserCursorAdapter(Context context, Cursor c, boolean autoRequery) {
-		super(context, c, autoRequery);
+	public UserCursorAdapter(Context context, Cursor c) {
+		super(context, c);
 	}
 
 	@Override
@@ -53,13 +53,12 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 			Bitmap bitmap = mLoader.getImage(headUrl, null);
 			if (bitmap != null) {
 				holder.headIcon.setImageBitmap(bitmap);
-			}else{
+			} else {
 				holder.headIcon.setImageResource(R.drawable.ic_head);
 			}
 		} else {
 			holder.headIcon.setTag(headUrl);
-			mLoader.displayImage(headUrl, holder.headIcon,
-					R.drawable.ic_head);
+			mLoader.displayImage(headUrl, holder.headIcon, R.drawable.ic_head);
 		}
 
 		UIHelper.setUserContent(holder, u);

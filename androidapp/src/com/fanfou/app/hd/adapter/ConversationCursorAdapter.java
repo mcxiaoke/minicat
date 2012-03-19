@@ -18,13 +18,12 @@ public class ConversationCursorAdapter extends BaseMessageCursorAdapter {
 
 	public static final String TAG = "ConversationCursorAdapter";
 
-	public ConversationCursorAdapter(Context context, Cursor c) {
-		super(context, c, false);
+	public ConversationCursorAdapter(Context context) {
+		super(context, null);
 	}
 
-	public ConversationCursorAdapter(Context context, Cursor c,
-			boolean autoRequery) {
-		super(context, c, autoRequery);
+	public ConversationCursorAdapter(Context context, Cursor c) {
+		super(context, c);
 	}
 
 	@Override
@@ -46,8 +45,7 @@ public class ConversationCursorAdapter extends BaseMessageCursorAdapter {
 			}
 		} else {
 			holder.headIcon.setTag(headUrl);
-			mLoader.displayImage(headUrl, holder.headIcon,
-					R.drawable.ic_head);
+			mLoader.displayImage(headUrl, holder.headIcon, R.drawable.ic_head);
 		}
 
 		holder.nameText.setText(dm.getSenderScreenName());

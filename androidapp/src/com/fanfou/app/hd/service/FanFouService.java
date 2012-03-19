@@ -7,6 +7,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -717,6 +718,8 @@ public class FanFouService extends IntentService {
 			Log.d(TAG, "getTimeline userId=" + id + " paging=" + p + " type="
 					+ type);
 		}
+		
+		Uri uri=StatusColumns.CONTENT_URI;
 
 		try {
 			switch (type) {

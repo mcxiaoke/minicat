@@ -30,14 +30,12 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 			.getSimpleName();
 
 	private Activity mContext;
-	// private Cursor mCursor;
 	private LayoutInflater mInflater;
 
 	public AutoCompleteCursorAdapter(Activity context, Cursor cursor) {
 		super(context, cursor);
 		mContext = context;
 		mInflater = LayoutInflater.from(mContext);
-		// mCursor = cursor;
 	}
 
 	@Override
@@ -52,10 +50,8 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 			return null;
 		}
 
-		// String condition=PATTERN_SQL.matcher(constraint).replaceAll("");
 		if (App.DEBUG) {
 			Log.d(TAG, "constraint = " + constraint);
-			// Log.d(TAG, "condition = "+condition);
 		}
 
 		final String[] projection = new String[] { UserColumns._ID,
@@ -68,19 +64,8 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 		if (App.DEBUG) {
 			Log.d(TAG, "runQueryOnBackgroundThread where=" + where);
 		}
-
-		// Cursor oldCursor = getCursor();
-
-		// return mContext.getContentResolver().query(UserInfo.CONTENT_URI,
-		// projection, where, null, null);
-
 		return mContext.getContentResolver().query(UserColumns.CONTENT_URI,
 				projection, where, null, null);
-		// if(oldCursor!=null){
-		// oldCursor.close();
-		// oldCursor = null;
-		// }
-		// return newCursor;
 	}
 
 	@Override

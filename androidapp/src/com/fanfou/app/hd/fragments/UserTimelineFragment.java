@@ -1,7 +1,6 @@
 package com.fanfou.app.hd.fragments;
 
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -13,7 +12,6 @@ import com.fanfou.app.hd.dao.DataProvider;
 import com.fanfou.app.hd.dao.model.StatusColumns;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.service.FanFouService;
-import com.fanfou.app.hd.util.StringHelper;
 import com.fanfou.app.hd.util.Utils;
 
 /**
@@ -21,6 +19,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.0 2012.02.07
  * @version 1.1 2012.02.09
  * @version 1.2 2012.03.08
+ * @version 1.3 2012.03.19
  * 
  */
 public class UserTimelineFragment extends BaseTimlineFragment {
@@ -58,10 +57,6 @@ public class UserTimelineFragment extends BaseTimlineFragment {
 		if (args != null) {
 			userId = args.getString("id");
 		}
-
-		if (StringHelper.isEmpty(userId)) {
-			userId = App.getAccount();
-		}
 	}
 
 	@Override
@@ -76,9 +71,6 @@ public class UserTimelineFragment extends BaseTimlineFragment {
 
 	@Override
 	protected void doFetch(boolean doGetMore) {
-		if (App.DEBUG) {
-			Log.d(TAG, "doFetch() doGetMore=" + doGetMore);
-		}
 		final ResultHandler handler = new ResultHandler(this);
 		final Cursor cursor = getCursor();
 
@@ -88,20 +80,21 @@ public class UserTimelineFragment extends BaseTimlineFragment {
 		} else {
 			p.sinceId = Utils.getSinceId(cursor);
 		}
+		if (App.DEBUG) {
+			Log.d(TAG, "doFetch() userId=" + userId + " doGetMore=" + doGetMore
+					+ " paging=" + p + " type=" + getType());
+		}
 		FanFouService.getTimeline(getActivity(), getType(), handler, userId, p);
 	}
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		Uri uri = StatusColumns.CONTENT_URI;
 		String selection = StatusColumns.TYPE + " =? AND "
 				+ StatusColumns.USER_ID + " =? ";
 		String[] selectionArgs = new String[] { String.valueOf(getType()),
 				userId };
-		String sortOrder = DataProvider.ORDERBY_TIME_DESC;
-		CursorLoader loader = new CursorLoader(getActivity(), uri, null,
-				selection, selectionArgs, sortOrder);
-		return loader;
+		return new CursorLoader(getActivity(), StatusColumns.CONTENT_URI, null,
+				selection, selectionArgs, DataProvider.ORDERBY_RAWID_DESC);
 	}
 
 }

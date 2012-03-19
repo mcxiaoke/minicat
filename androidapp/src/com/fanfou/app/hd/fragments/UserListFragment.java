@@ -84,7 +84,7 @@ public abstract class UserListFragment extends PullToRefreshListFragment
 
 	@Override
 	protected CursorAdapter onCreateAdapter() {
-		return new UserCursorAdapter(getActivity(), getCursor());
+		return new UserCursorAdapter(getActivity(), null);
 	}
 
 	@Override
@@ -100,10 +100,6 @@ public abstract class UserListFragment extends PullToRefreshListFragment
 
 		final ResultHandler handler = new ResultHandler(this);
 		FanFouService.getUsers(getActivity(), userId, getType(), p, handler);
-	}
-
-	@Override
-	protected void showToast(int count) {
 	}
 
 	@Override

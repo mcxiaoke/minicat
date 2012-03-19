@@ -293,10 +293,6 @@ public class UIHome extends UIBaseSupport {
 			return NUMS_OF_PAGE;
 		}
 
-		public void updateUI(int position) {
-			getItem(position).updateUI();
-		}
-
 	}
 
 	private static class PageTabsAdapter implements TabsAdapter {

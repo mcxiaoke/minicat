@@ -10,15 +10,18 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.dao.DataProvider;
 import com.fanfou.app.hd.dao.model.BaseModel;
 import com.fanfou.app.hd.dao.model.DirectMessageColumns;
+import com.fanfou.app.hd.dao.model.DirectMessageModel;
 import com.fanfou.app.hd.dao.model.Model;
 import com.fanfou.app.hd.dao.model.RecordColumns;
 import com.fanfou.app.hd.dao.model.StatusColumns;
+import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.dao.model.UserColumns;
 import com.fanfou.app.hd.dao.model.UserModel;
 
@@ -27,52 +30,11 @@ import com.fanfou.app.hd.dao.model.UserModel;
  * @version 1.0 2012.02.16
  * @version 2.0 2012.02.24
  * @version 2.1 2012.02.28
+ * @version 2.2 2012.03.19
  * 
  */
 public class DataController {
-	private static final String TAG=DataController.class.getSimpleName();
-
-	private static Uri buildFriendsUri(String id) {
-		return Uri.withAppendedPath(UserColumns.CONTENT_URI, "friends/" + id);
-	}
-
-	private static Uri buildFollowersUri(String id) {
-		return Uri.withAppendedPath(UserColumns.CONTENT_URI, "followers/" + id);
-	}
-
-	private static Uri buildUserUri(String id) {
-		return withAppendedId(UserColumns.CONTENT_URI, id);
-	}
-
-	private static Uri buildStatusUri(String id) {
-		return withAppendedId(StatusColumns.CONTENT_URI, id);
-	}
-
-	private static Uri buildConversationListUri() {
-		return Uri.withAppendedPath(DirectMessageColumns.CONTENT_URI,
-				"conversation_list");
-	}
-
-	private static Uri buildInBoxUri() {
-		return Uri.withAppendedPath(DirectMessageColumns.CONTENT_URI, "inbox");
-	}
-
-	private static Uri buildOutBoxUri() {
-		return Uri.withAppendedPath(DirectMessageColumns.CONTENT_URI, "outbox");
-	}
-
-	private static Uri buildConversationUri(String id) {
-		return Uri.withAppendedPath(DirectMessageColumns.CONTENT_URI,
-				"conversation/" + id);
-	}
-
-	private static Uri buildDirectMessageUri(String id) {
-		return withAppendedId(DirectMessageColumns.CONTENT_URI, id);
-	}
-
-	private static Uri buildRecordUri(String id) {
-		return withAppendedId(RecordColumns.CONTENT_URI, id);
-	}
+	private static final String TAG = DataController.class.getSimpleName();
 
 	private static Uri withAppendedId(Uri baseUri, String id) {
 		return Uri.withAppendedPath(baseUri, "id/" + id);
@@ -115,8 +77,8 @@ public class DataController {
 		cr.delete(DirectMessageColumns.CONTENT_URI, null, null);
 		cr.delete(RecordColumns.CONTENT_URI, null, null);
 	}
-	
-	public static void clear(Context context, Uri uri){
+
+	public static void clear(Context context, Uri uri) {
 		context.getContentResolver().delete(uri, null, null);
 	}
 
@@ -124,11 +86,11 @@ public class DataController {
 		if (models == null || models.size() == 0) {
 			return -1;
 		}
-		
-		if(App.DEBUG){
-			Log.d(TAG, "store models.size="+models.size());
+
+		if (App.DEBUG) {
+			Log.d(TAG, "store models.size=" + models.size());
 		}
-		
+
 		Uri uri = models.get(0).getContentUri();
 		int result = context.getContentResolver().bulkInsert(uri,
 				DataController.toContentValues(models));
@@ -143,9 +105,9 @@ public class DataController {
 		return context.getContentResolver().insert(model.getContentUri(),
 				model.values());
 	}
-	
-	public static int updateUserModel(Context context, final UserModel u){
-		ContentValues values=new ContentValues();
+
+	public static int updateUserModel(Context context, final UserModel u) {
+		ContentValues values = new ContentValues();
 		values.put(UserColumns.TYPE, u.getType());
 		values.put(UserColumns.FOLLOWING, u.isFollowing());
 		values.put(UserColumns.STATUSES_COUNT, u.getStatusesCount());
@@ -154,7 +116,8 @@ public class DataController {
 		values.put(UserColumns.FOLLOWERS_COUNT, u.getFollowersCount());
 		values.put(UserColumns.DESCRIPTION, u.getDescription());
 		values.put(UserColumns.PROFILE_IMAGE_URL, u.getProfileImageUrl());
-		values.put(UserColumns.PROFILE_IMAGE_URL_LARGE, u.getProfileImageUrlLarge());
+		values.put(UserColumns.PROFILE_IMAGE_URL_LARGE,
+				u.getProfileImageUrlLarge());
 		return DataController.update(context, u, values);
 	}
 
@@ -179,41 +142,99 @@ public class DataController {
 		Uri uri = withAppendedId(model.getContentUri(), model.getId());
 		return context.getContentResolver().delete(uri, null, null);
 	}
-	
-	public static int deleteStatusByUserId(Context context, String userId){
-		return context.getContentResolver().delete(StatusColumns.CONTENT_URI, StatusColumns.USER_ID
-				+ " =? ", new String[] { userId });
+
+	public static int deleteStatusByUserId(Context context, String userId) {
+		return context.getContentResolver().delete(StatusColumns.CONTENT_URI,
+				StatusColumns.USER_ID + " =? ", new String[] { userId });
 	}
-	
+
 	public static int deleteRecord(Context context, long id) {
 		Uri uri = ContentUris.withAppendedId(RecordColumns.CONTENT_URI, id);
 		return context.getContentResolver().delete(uri, null, null);
 	}
 
 	public static CursorLoader getConversationListLoader(Activity activity) {
-		Uri uri = buildConversationListUri();
-		return new CursorLoader(activity, uri, null, null, null, null);
+		String where = DirectMessageColumns.TYPE + " =? ";
+		String[] whereArgs = new String[] { String
+				.valueOf(DirectMessageModel.TYPE_CONVERSATION_LIST) };
+		String orderBy = DataProvider.ORDERBY_TIME_DESC;
+		return new CursorLoader(activity, DirectMessageColumns.CONTENT_URI,
+				null, where, whereArgs, orderBy);
 	}
 
-	public static CursorLoader getConversationLoader(Activity activity, String id) {
-		Uri uri = buildConversationUri(id);
+	public static CursorLoader getConversationLoader(Activity activity,
+			String id) {
+		String where = DirectMessageColumns.TYPE + " =? AND "
+				+ DirectMessageColumns.CONVERSATION_ID + " =? ";
+		String[] whereArgs = new String[] {
+				String.valueOf(DirectMessageModel.TYPE_CONVERSATION), id };
 		String orderBy = DataProvider.ORDERBY_TIME;
-		return new CursorLoader(activity, uri, null, null, null, orderBy);
+		return new CursorLoader(activity, DirectMessageColumns.CONTENT_URI,
+				null, where, whereArgs, orderBy);
 	}
 
-	public static Cursor getConversationCursor(Activity activity, String id) {
-		Uri uri = buildConversationUri(id);
-		String orderBy = DataProvider.ORDERBY_TIME;
-		return activity.managedQuery(uri, null, null, null, orderBy);
+	public static Loader<Cursor> getTimelineCursorLoader(Context context,
+			int type) {
+		String where = StatusColumns.TYPE + " =? ";
+		String[] whereArgs = new String[] { String.valueOf(type) };
+		String orderBy = DataProvider.ORDERBY_RAWID_DESC;
+		return new CursorLoader(context, StatusColumns.CONTENT_URI, null,
+				where, whereArgs, orderBy);
 	}
-	
-	public static Cursor getFriendsCursor(Context context, String[] columns, String id, String orderBy){
-		Uri uri=buildFriendsUri(id);
-		return context.getContentResolver().query(uri, columns, null, null, orderBy);
+
+	public static Loader<Cursor> getUserTimelineCursorLoader(Context context,
+			String userId) {
+		String where = StatusColumns.TYPE + " =? AND " + StatusColumns.USER_ID
+				+ " =? ";
+		String[] whereArgs = new String[] {
+				String.valueOf(StatusModel.TYPE_USER), userId };
+		String orderBy = DataProvider.ORDERBY_RAWID_DESC;
+		return new CursorLoader(context, StatusColumns.CONTENT_URI, null,
+				where, whereArgs, orderBy);
 	}
-	
-	public static Cursor getFriendsCursor(Context context, String id, String orderBy){
-		return getFriendsCursor(context, null, id, orderBy);
+
+	public static Loader<Cursor> getUserFavoritesCursorLoader(Context context,
+			String userId) {
+		String where = StatusColumns.TYPE + " =? AND " + StatusColumns.OWNER
+				+ " =? ";
+		String[] whereArgs = new String[] {
+				String.valueOf(StatusModel.TYPE_FAVORITES), userId };
+		String orderBy = DataProvider.ORDERBY_RAWID_DESC;
+		return new CursorLoader(context, StatusColumns.CONTENT_URI, null,
+				where, whereArgs, orderBy);
+	}
+
+	public static Loader<Cursor> getAutoCompleteCursorLoader(Context context,
+			String id) {
+		final String[] projection = new String[] { UserColumns._ID,
+				UserColumns.ID, UserColumns.SCREEN_NAME, UserColumns.TYPE,
+				UserColumns.OWNER };
+		final String where = UserColumns.TYPE + " =? AND " + UserColumns.OWNER
+				+ " =? ";
+		final String[] whereArgs = new String[] {
+				String.valueOf(UserModel.TYPE_FRIENDS), id };
+		return new CursorLoader(context, UserColumns.CONTENT_URI, projection,
+				where, whereArgs, null);
+	}
+
+	public static Loader<Cursor> getFriendsCursorLoader(Context context,
+			String id) {
+		final String where = UserColumns.TYPE + " =? AND " + UserColumns.OWNER
+				+ " =? ";
+		final String[] whereArgs = new String[] {
+				String.valueOf(UserModel.TYPE_FRIENDS), id };
+		return new CursorLoader(context, UserColumns.CONTENT_URI, null, where,
+				whereArgs, null);
+	}
+
+	public static Loader<Cursor> getFollowersCursorLoader(Context context,
+			String id) {
+		final String where = UserColumns.TYPE + " =? AND " + UserColumns.OWNER
+				+ " =? ";
+		final String[] whereArgs = new String[] {
+				String.valueOf(UserModel.TYPE_FOLLOWERS), id };
+		return new CursorLoader(context, UserColumns.CONTENT_URI, null, where,
+				whereArgs, null);
 	}
 
 }

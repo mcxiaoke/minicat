@@ -3,7 +3,6 @@ package com.fanfou.app.hd;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.fragments.BaseTimlineFragment;
 import com.fanfou.app.hd.fragments.UserFavoritesFragment;
-import com.fanfou.app.hd.service.Constants;
 
 /**
  * @author mcxiaoke

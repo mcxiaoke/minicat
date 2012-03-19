@@ -14,12 +14,10 @@ import android.util.Log;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.dao.model.DirectMessageColumns;
-import com.fanfou.app.hd.dao.model.DirectMessageModel;
 import com.fanfou.app.hd.dao.model.IBaseColumns;
 import com.fanfou.app.hd.dao.model.RecordColumns;
 import com.fanfou.app.hd.dao.model.StatusColumns;
 import com.fanfou.app.hd.dao.model.UserColumns;
-import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.util.StringHelper;
 
 /**
@@ -47,6 +45,7 @@ import com.fanfou.app.hd.util.StringHelper;
  * @version 6.1 2012.02.24
  * @version 6.2 2012.02.28
  * @version 6.3 2012.03.02
+ * @version 7.0 2012.03.19
  * 
  */
 public class DataProvider extends ContentProvider implements IBaseColumns {
@@ -68,19 +67,12 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 			+ " DESC";
 
 	public static final int USERS = 1;// 查询全部用户信息，可附加条件参数
-	public static final int USERS_FRIENDS = 2;// 查询某个用户的好友， //friends/userId
-	public static final int USERS_FOLLOWERS = 3;// 查询某个用户的关注者 //followers/userId
-	public static final int USERS_SEARCH = 4; // 搜索用户，未实现
 	public static final int USER_ID = 5; // 根据ID查询单个用户
 
 	public static final int STATUSES = 21;
 	public static final int STATUS_ID = 22;
 
 	public static final int MESSAGES = 41;// 所有私信
-	public static final int MESSAGES_CONVERSATION_LIST = 42;// 所有人对话列表
-	public static final int MESSAGES_CONVERSATION = 43;// 个人对话列表
-	public static final int MESSAGES_INBOX = 44;
-	public static final int MESSAGES_OUTBOX = 45;
 	public static final int MESSAGE_ID = 46;
 
 	public static final int RECORDS = 61;
@@ -89,37 +81,27 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 	private static final UriMatcher sUriMatcher;
 
 	static {
+		// no match
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
+		// user list
 		sUriMatcher.addURI(AUTHORITY, UserColumns.TABLE_NAME, USERS);
-		sUriMatcher.addURI(AUTHORITY, UserColumns.TABLE_NAME + "/friends/*",
-				USERS_FRIENDS);
-		sUriMatcher.addURI(AUTHORITY, UserColumns.TABLE_NAME + "/followers/*",
-				USERS_FOLLOWERS);
-		sUriMatcher.addURI(AUTHORITY, UserColumns.TABLE_NAME + "/search/*",
-				USERS_SEARCH);
 		sUriMatcher
 				.addURI(AUTHORITY, UserColumns.TABLE_NAME + "/id/*", USER_ID);
 
+		// timeline
 		sUriMatcher.addURI(AUTHORITY, StatusColumns.TABLE_NAME, STATUSES);
 		sUriMatcher.addURI(AUTHORITY, StatusColumns.TABLE_NAME + "/id/*",
 				STATUS_ID);
 
+		// direct message
 		sUriMatcher
 				.addURI(AUTHORITY, DirectMessageColumns.TABLE_NAME, MESSAGES);
-		sUriMatcher.addURI(AUTHORITY, DirectMessageColumns.TABLE_NAME
-				+ "/conversation_list", MESSAGES_CONVERSATION_LIST);
 
 		sUriMatcher.addURI(AUTHORITY,
 				DirectMessageColumns.TABLE_NAME + "/id/*", MESSAGE_ID);
 
-		sUriMatcher.addURI(AUTHORITY, DirectMessageColumns.TABLE_NAME
-				+ "/inbox", MESSAGES_INBOX);
-		sUriMatcher.addURI(AUTHORITY, DirectMessageColumns.TABLE_NAME
-				+ "/outbox", MESSAGES_OUTBOX);
-		sUriMatcher.addURI(AUTHORITY, DirectMessageColumns.TABLE_NAME
-				+ "/conversation/*", MESSAGES_CONVERSATION);
-
+		// record
 		sUriMatcher.addURI(AUTHORITY, RecordColumns.TABLE_NAME, RECORDS);
 		sUriMatcher.addURI(AUTHORITY, RecordColumns.TABLE_NAME + "/#",
 				RECORD_ID);
@@ -136,9 +118,6 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 	public String getType(Uri uri) {
 		switch (sUriMatcher.match(uri)) {
 		case USERS:
-		case USERS_FRIENDS:
-		case USERS_FOLLOWERS:
-		case USERS_SEARCH:
 			return UserColumns.CONTENT_TYPE;
 		case USER_ID:
 			return UserColumns.CONTENT_ITEM_TYPE;
@@ -147,10 +126,6 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 		case STATUS_ID:
 			return StatusColumns.CONTENT_ITEM_TYPE;
 		case MESSAGES:
-		case MESSAGES_CONVERSATION_LIST:
-		case MESSAGES_CONVERSATION:
-		case MESSAGES_INBOX:
-		case MESSAGES_OUTBOX:
 			return DirectMessageColumns.CONTENT_TYPE;
 		case MESSAGE_ID:
 			return DirectMessageColumns.CONTENT_ITEM_TYPE;
@@ -183,28 +158,6 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 		Cursor cursor = qb.query(db, null, where, whereArgs, null, null,
 				orderBy);
 		return queryCursor(uri, cursor);
-	}
-
-	private Cursor queryUsers(Uri uri, int type, String orderBy) {
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		qb.setTables(UserColumns.TABLE_NAME);
-		String order = orderBy;
-		String owner = uri.getPathSegments().get(2);
-		String selection = UserColumns.TYPE + " =? AND " + UserColumns.OWNER
-				+ " =? ";
-		String[] selectionArgs = new String[] { String.valueOf(type), owner };
-		Cursor cursor = qb.query(db, null, selection, selectionArgs, null,
-				null, order);
-		return queryCursor(uri, cursor);
-	}
-
-	private Cursor queryUserFriends(Uri uri, String orderBy) {
-		return queryUsers(uri, UserModel.TYPE_FRIENDS, orderBy);
-	}
-
-	private Cursor queryUserFollowers(Uri uri, String orderBy) {
-		return queryUsers(uri, UserModel.TYPE_FOLLOWERS, orderBy);
 	}
 
 	private Cursor queryItemById(String table, Uri uri) {
@@ -241,56 +194,6 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 		return queryCursor(DirectMessageColumns.CONTENT_URI, cursor);
 	}
 
-	private Cursor queryDirectMessagesInBox(String orderBy) {
-		if (App.DEBUG) {
-			Log.d(TAG, "queryDirectMessagesInBox");
-		}
-		String selection = DirectMessageColumns.TYPE + " =? ";
-		String[] selectionArgs = new String[] { String
-				.valueOf(DirectMessageModel.TYPE_INBOX) };
-		return queryByCondition(DirectMessageColumns.TABLE_NAME,
-				DirectMessageColumns.CONTENT_URI, null, selection,
-				selectionArgs, orderBy);
-	}
-
-	private Cursor queryDirectMessagesOutBox(String orderBy) {
-		if (App.DEBUG) {
-			Log.d(TAG, "queryDirectMessagesOutBox");
-		}
-		String selection = DirectMessageColumns.TYPE + " =? ";
-		String[] selectionArgs = new String[] { String
-				.valueOf(DirectMessageModel.TYPE_OUTBOX) };
-		return queryByCondition(DirectMessageColumns.TABLE_NAME,
-				DirectMessageColumns.CONTENT_URI, null, selection,
-				selectionArgs, orderBy);
-	}
-
-	private Cursor queryDirectMessagesConversationList(String orderBy) {
-		if (App.DEBUG) {
-			Log.d(TAG, "queryDirectMessagesConversationList");
-		}
-		String selection = DirectMessageColumns.TYPE + " =? ";
-		String[] selectionArgs = new String[] { String
-				.valueOf(DirectMessageModel.TYPE_CONVERSATION_LIST) };
-		return queryByCondition(DirectMessageColumns.TABLE_NAME,
-				DirectMessageColumns.CONTENT_URI, null, selection,
-				selectionArgs, orderBy);
-	}
-
-	private Cursor queryDirectMessagesConversation(Uri uri, String orderBy) {
-		String userId = uri.getPathSegments().get(2);
-		String selection = DirectMessageColumns.TYPE + " != ? AND "
-				+ DirectMessageColumns.CONVERSATION_ID + " = ? ";
-		String[] selectionArgs = new String[] {
-				String.valueOf(DirectMessageModel.TYPE_CONVERSATION_LIST), userId };
-		Cursor cursor= queryByCondition(DirectMessageColumns.TABLE_NAME, uri, null,
-				selection, selectionArgs, orderBy);
-		if (App.DEBUG) {
-			Log.d(TAG, "queryDirectMessagesConversation uri: " + uri+" cursor.size: "+cursor.getCount());
-		}
-		return cursor;
-	}
-
 	@Override
 	public Cursor query(Uri uri, String[] columns, String where,
 			String[] whereArgs, String orderBy) {
@@ -299,11 +202,11 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 					+ ") whereArgs = " + StringHelper.toString(whereArgs)
 					+ " orderBy = " + orderBy);
 
-//			List<String> paths = uri.getPathSegments();
-//			for (int i = 0; i < paths.size(); i++) {
-//				Log.d(TAG,
-//						"getPathSegments() path[" + i + "] --> " + paths.get(i));
-//			}
+			List<String> paths = uri.getPathSegments();
+			for (int i = 0; i < paths.size(); i++) {
+				Log.d(TAG,
+						"getPathSegments() path[" + i + "] --> " + paths.get(i));
+			}
 
 		}
 		switch (sUriMatcher.match(uri)) {
@@ -311,19 +214,6 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 			// content://com.fanfou.app.hd.provider/user/
 			return queryByCondition(UserColumns.TABLE_NAME, uri, columns,
 					where, whereArgs, orderBy);
-			// break;
-		case USERS_FRIENDS:
-			// uri:
-			// content://com.fanfou.app.hd.provider/user/friends/[userid(owner)]
-			// ignore where and whereargs
-			return queryUserFriends(uri, orderBy);
-			// break;
-		case USERS_FOLLOWERS:
-			// uri:
-			// content://com.fanfou.app.hd.provider/user/followers/[userid(owner)]
-			// ignore where and whereargs
-			return queryUserFollowers(uri, orderBy);
-			// break;
 		case USER_ID:
 			// uri: conent://com.fanfou.app.hd.provider/user/id/[userid]
 			return queryUserById(uri);
@@ -339,20 +229,6 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 			// break;
 		case MESSAGES:
 			return queryDirectMessagesAll(orderBy);
-			// content://com.fanfou.app.hd.provider/dm
-		case MESSAGES_INBOX:
-			// content://com.fanfou.app.hd.provider/dm/inbox
-			return queryDirectMessagesInBox(orderBy);
-		case MESSAGES_OUTBOX:
-			return queryDirectMessagesOutBox(orderBy);
-			// content://com.fanfou.app.hd.provider/dm/outbox
-		case MESSAGES_CONVERSATION_LIST:
-			// content://com.fanfou.app.hd.provider/dm/conversation_list
-			return queryDirectMessagesConversationList(orderBy);
-			// break;
-		case MESSAGES_CONVERSATION:
-			// content://com.fanfou.app.hd.provider/dm/conversation/[userId]
-			return queryDirectMessagesConversation(uri, orderBy);
 			// break;
 		case MESSAGE_ID:
 			// content://com.fanfou.app.hd.provider/dm/id/[id]
@@ -378,37 +254,30 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 
 		if (DEBUG) {
 			Log.d(TAG, "insert() uri: " + uri);
-//			List<String> paths = uri.getPathSegments();
-//			for (int i = 0; i < paths.size(); i++) {
-//				Log.d(TAG,
-//						"getPathSegments() path[" + i + "] --> " + paths.get(i));
-//			}
+			List<String> paths = uri.getPathSegments();
+			for (int i = 0; i < paths.size(); i++) {
+				Log.d(TAG,
+						"getPathSegments() path[" + i + "] --> " + paths.get(i));
+			}
 		}
 
 		switch (sUriMatcher.match(uri)) {
 		case USERS:
 		case STATUSES:
 		case MESSAGES:
-		case MESSAGES_INBOX:
-		case MESSAGES_OUTBOX:
-		case MESSAGES_CONVERSATION_LIST:
 		case RECORDS:
 			SQLiteDatabase db = dbHelper.getWritableDatabase();
 			String table = uri.getPathSegments().get(0);
 			long rowId = db.insert(table, null, values);
-			if(rowId>0){
-				getContext().getContentResolver().notifyChange(uri, null);
-				Uri resultUri= ContentUris.withAppendedId(uri, rowId);
+			if (rowId > 0) {
+				// getContext().getContentResolver().notifyChange(uri, null);
+				Uri resultUri = ContentUris.withAppendedId(uri, rowId);
 				if (App.DEBUG) {
 					log("insert() resultUri=" + resultUri + " id="
 							+ values.getAsString(ID) + " rowId=" + rowId);
 				}
 			}
-			return null;
-			// break;
-		case USERS_SEARCH:
-		case USERS_FRIENDS:
-		case USERS_FOLLOWERS:
+			return uri;
 		case USER_ID:
 		case STATUS_ID:
 		case MESSAGE_ID:
@@ -421,88 +290,46 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 
 	@Override
 	public int bulkInsert(Uri uri, ContentValues[] values) {
-		int numInserted=0;
-		String table=uri.getPathSegments().get(0);
-		SQLiteDatabase db=dbHelper.getWritableDatabase();
+		int numInserted = 0;
+		String table = uri.getPathSegments().get(0);
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
 		try {
 			for (ContentValues value : values) {
-				long id=db.insert(table, null, value);
-				if(id>0){
+				long id = db.insert(table, null, value);
+				if (id > 0) {
 					++numInserted;
 				}
 			}
 			db.setTransactionSuccessful();
 			getContext().getContentResolver().notifyChange(uri, null);
-//			numInserted=values.length;
-		}finally{
+		} finally {
 			db.endTransaction();
 		}
 		return numInserted;
 	}
 
-	private int deleteByCondition(String table, String where, String[] whereArgs) {
+	private int deleteByCondition(Uri uri, String where, String[] whereArgs) {
+		String table = uri.getPathSegments().get(0);
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		int count = db.delete(table, where, whereArgs);
 		return count;
 	}
 
-	private int deleteByCondition(Uri uri, String where, String[] whereArgs) {
-		String table = uri.getPathSegments().get(0);
-		return deleteByCondition(table, where, whereArgs);
-	}
-
-	private int deleteUsersByType(int type, String owner) {
-		String table = UserColumns.TABLE_NAME;
-		String where = UserColumns.TYPE + " =? AND " + UserColumns.OWNER
-				+ " =? ";
-		String[] whereArgs = new String[] { String.valueOf(type), owner };
-		return deleteByCondition(table, where, whereArgs);
-	}
-
-	private int deleteUsersByType(Uri uri, int type) {
-		final List<String> path = uri.getPathSegments();
-		String userId = path.get(2);
-		return deleteUsersByType(type, userId);
-	}
-
-	private int deleteItemById(String table, String id) {
+	private int deleteItemById(Uri uri) {
+		List<String> path = uri.getPathSegments();
+		String table = path.get(0);
+		String id = path.get(2);
 		String where = IBaseColumns.ID + " =? ";
 		String[] whereArgs = new String[] { id };
-		return deleteByCondition(table, where, whereArgs);
-	}
-
-	private int deleteUserById(Uri uri) {
-		String id = uri.getPathSegments().get(2);
-		String table = UserColumns.TABLE_NAME;
-		return deleteItemById(table, id);
-	}
-
-	private int deleteStatusById(Uri uri) {
-		String id = uri.getPathSegments().get(2);
-		String table = StatusColumns.TABLE_NAME;
-		return deleteItemById(table, id);
-	}
-
-	private int deleteDirectMessageById(Uri uri) {
-		String id = uri.getPathSegments().get(2);
-		String table = DirectMessageColumns.TABLE_NAME;
-		return deleteItemById(table, id);
+		return dbHelper.getWritableDatabase().delete(table, where, whereArgs);
 	}
 
 	private int deleteRecordById(Uri uri) {
 		String id = uri.getPathSegments().get(1);
 		String table = RecordColumns.TABLE_NAME;
-		String where = RecordColumns._ID + " = "+id;
-		return deleteByCondition(table, where, null);
-	}
-
-	private int deleteDirectMessagesConversation(Uri uri) {
-		String id = uri.getPathSegments().get(2);
-		String table = DirectMessageColumns.TABLE_NAME;
-		String where = DirectMessageColumns.CONVERSATION_ID + " =? ";
-		String[] whereArgs = new String[] { id };
-		return deleteByCondition(table, where, whereArgs);
+		String where = RecordColumns._ID + " = " + id;
+		return dbHelper.getWritableDatabase().delete(table, where, null);
 	}
 
 	@Override
@@ -522,31 +349,15 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 		case STATUSES:
 		case RECORDS:
 		case MESSAGES:
-		case MESSAGES_CONVERSATION_LIST:
-		case MESSAGES_INBOX:
-		case MESSAGES_OUTBOX:
 			count = deleteByCondition(uri, where, whereArgs);
 			break;
-		case USERS_FRIENDS:
-			count = deleteUsersByType(uri, UserModel.TYPE_FRIENDS);
-			break;
-		case USERS_FOLLOWERS:
-			count = deleteUsersByType(uri, UserModel.TYPE_FOLLOWERS);
-			break;
 		case USER_ID:
-			count = deleteUserById(uri);
-			break;
 		case STATUS_ID:
-			count = deleteStatusById(uri);
-			break;
 		case MESSAGE_ID:
-			count = deleteDirectMessageById(uri);
+			count = deleteItemById(uri);
 			break;
 		case RECORD_ID:
 			count = deleteRecordById(uri);
-			break;
-		case MESSAGES_CONVERSATION:
-			count = deleteDirectMessagesConversation(uri);
 			break;
 		default:
 			throw new IllegalArgumentException("delete() Unknown URI " + uri);
@@ -595,14 +406,20 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 			count = db.update(StatusColumns.TABLE_NAME, values, where,
 					whereArgs);
 			break;
-		case USERS_FRIENDS:
-		case USERS_FOLLOWERS:
+
+		// case STATUSES_HOME:
+		// case STATUSES_MENTION:
+		// case STATUSES_PUBLIC:
+		// case STATUSES_TIMELINE:
+		// case STATUSES_FAVORITES:
+		// case USERS_FRIENDS:
+		// case USERS_FOLLOWERS:
+		// case MESSAGES_CONVERSATION_LIST:
+		// case MESSAGES_INBOX:
+		// case MESSAGES_OUTBOX:
+		// case MESSAGES_CONVERSATION:
+		// case USERS_SEARCH:
 		case MESSAGES:
-		case MESSAGES_CONVERSATION_LIST:
-		case MESSAGES_INBOX:
-		case MESSAGES_OUTBOX:
-		case MESSAGES_CONVERSATION:
-		case USERS_SEARCH:
 		case RECORDS:
 		case RECORD_ID:
 			throw new UnsupportedOperationException(

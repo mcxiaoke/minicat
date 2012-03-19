@@ -27,19 +27,18 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter {
 
 	private ArrayList<Boolean> mStates;
 	private HashMap<Integer, Boolean> mStateMap;
+	
+	public UserChooseCursorAdapter(Context context) {
+		super(context, null);
+		initialize();
+	}
 
 	public UserChooseCursorAdapter(Context context, Cursor c) {
-		super(context, c, false);
-		init();
+		super(context, c);
+		initialize();
 	}
-
-	public UserChooseCursorAdapter(Context context, Cursor c,
-			boolean autoRequery) {
-		super(context, c, autoRequery);
-		init();
-	}
-
-	private void init() {
+	
+	private void initialize() {
 		mStates = new ArrayList<Boolean>();
 		mStateMap = new HashMap<Integer, Boolean>();
 	}

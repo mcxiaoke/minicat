@@ -84,7 +84,7 @@ public class UIRecords extends UIBaseSupport implements OnItemClickListener {
 	private void setListView() {
 		mCursor = managedQuery(RecordColumns.CONTENT_URI, null, null,
 				null, null);
-		mAdapter = new RecordCursorAdaper(this, mCursor,true);
+		mAdapter = new RecordCursorAdaper(this, mCursor);
 		mListView = (ListView) findViewById(android.R.id.list);
 		mListView.setAdapter(mAdapter);
 		mListView.setOnItemClickListener(this);

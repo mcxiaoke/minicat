@@ -28,43 +28,27 @@ public abstract class BaseCursorAdapter extends CursorAdapter implements
 
 	protected Context mContext;
 	protected LayoutInflater mInflater;
-	protected Cursor mCursor;
 	protected IImageLoader mLoader;
 	protected boolean busy;
 	private int fontSize;
 
+	public BaseCursorAdapter(Context context) {
+		super(context, null, FLAG_REGISTER_CONTENT_OBSERVER);
+		initialize(context);
+	}
+
 	public BaseCursorAdapter(Context context, Cursor c) {
-		super(context, c, false);
-		init(context, c);
+		super(context, c, FLAG_REGISTER_CONTENT_OBSERVER);
+		initialize(context);
 	}
 
-	public BaseCursorAdapter(Context context, Cursor c, boolean autoRequery) {
-		super(context, c, autoRequery);
-		init(context, c);
-	}
-
-	private void init(Context context, Cursor c) {
+	private void initialize(Context context) {
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);
 		this.mLoader = App.getImageLoader();
-		this.mCursor = c;
 		this.fontSize = OptionHelper.readInt(mContext,
 				R.string.option_fontsize,
 				context.getResources().getInteger(R.integer.defaultFontSize));
-	}
-
-	@Override
-	public CharSequence convertToString(Cursor cursor) {
-		String result;
-		if (cursor == null) {
-			result = "Cursor Class: " + this.getClass().getSimpleName()
-					+ ", Cursor is null. ";
-		} else {
-			result = "Cursor Class: " + this.getClass().getSimpleName()
-					+ ", Count:" + cursor.getCount();
-			;
-		}
-		return result;
 	}
 
 	abstract int getLayoutId();

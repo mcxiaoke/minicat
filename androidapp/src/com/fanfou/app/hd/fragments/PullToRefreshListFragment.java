@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
@@ -38,6 +39,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 1.5 2012.02.28
  * @version 1.6 2012.03.02
  * @version 1.7 2012.03.08
+ * @version 1.8 2012.03.19
  * 
  */
 public abstract class PullToRefreshListFragment extends AbstractListFragment
@@ -55,7 +57,6 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	private Parcelable mParcelable;
 
 	private BaseCursorAdapter mAdapter;
-	private Cursor mCursor;
 
 	private boolean refreshOnStart;
 
@@ -95,13 +96,16 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 			Log.d(TAG, "onCreateView() isVisible=" + isVisible());
 		}
 		View v = inflater.inflate(R.layout.fm_pull_list, container, false);
-		mPullToRefreshView = (PullToRefreshListView) v;
+		setLayout(v);
+		return v;
+	}
+
+	private void setLayout(View root) {
+		mPullToRefreshView = (PullToRefreshListView) root;
 		mPullToRefreshView.setOnRefreshListener(this);
 		mListView = mPullToRefreshView.getRefreshableView();
 		mListView.setOnItemClickListener(this);
 		mListView.setOnItemLongClickListener(this);
-
-		return v;
 	}
 
 	@Override
@@ -136,8 +140,6 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
 	protected abstract void doFetch(boolean doGetMore);
 
-	protected abstract void showToast(int count);
-
 	protected abstract int getType();
 
 	@Override
@@ -169,7 +171,10 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	}
 
 	public Cursor getCursor() {
-		return mCursor;
+		if (mAdapter != null) {
+			return mAdapter.getCursor();
+		}
+		return null;
 	}
 
 	@Override
@@ -202,9 +207,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
 	@Override
 	public void updateUI() {
-		if (mCursor != null) {
-			mCursor.requery();
-		}
+		// getLoaderManager().restartLoader(LOADER_ID, null, this);
 	}
 
 	@Override
@@ -224,16 +227,8 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 			Log.d(TAG, "onSuccess(data)");
 		}
 		int count = data.getInt("count");
-		onSuccess(count);
-	}
-
-	private void onSuccess(final int count) {
-		if (App.DEBUG) {
-			Log.d(TAG, "onSuccess(count)");
-		}
-		if (count > 0 && mCursor != null) {
-			mCursor.requery();
-			showToast(count);
+		if (count > 0) {
+			updateUI();
 		}
 	}
 
@@ -343,8 +338,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
-		mCursor = newCursor;
-		getAdapter().swapCursor(mCursor);
+		getAdapter().swapCursor(newCursor);
 		checkRefresh();
 		if (App.DEBUG) {
 			Log.d(TAG, "onLoadFinished() adapter=" + mAdapter.getCount()
@@ -354,7 +348,6 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	}
 
 	protected void checkRefresh() {
-
 		if (refreshOnStart && mAdapter.isEmpty()) {
 			startRefresh();
 		}

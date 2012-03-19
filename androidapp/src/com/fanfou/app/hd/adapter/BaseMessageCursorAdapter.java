@@ -21,13 +21,12 @@ import com.fanfou.app.hd.R;
  */
 public abstract class BaseMessageCursorAdapter extends BaseCursorAdapter {
 
-	public BaseMessageCursorAdapter(Context context, Cursor c) {
-		super(context, c);
+	public BaseMessageCursorAdapter(Context context) {
+		super(context, null);
 	}
 
-	public BaseMessageCursorAdapter(Context context, Cursor c,
-			boolean autoRequery) {
-		super(context, c, autoRequery);
+	public BaseMessageCursorAdapter(Context context, Cursor c) {
+		super(context, c);
 	}
 
 	private static final String TAG = BaseMessageCursorAdapter.class
@@ -66,14 +65,10 @@ public abstract class BaseMessageCursorAdapter extends BaseCursorAdapter {
 		TextView contentText = null;
 
 		ViewHolder(View base) {
-			this.headIcon = (ImageView) base
-					.findViewById(R.id.head);
-			this.contentText = (TextView) base
-					.findViewById(R.id.text);
-			this.dateText = (TextView) base
-					.findViewById(R.id.date);
-			this.nameText = (TextView) base
-					.findViewById(R.id.name);
+			this.headIcon = (ImageView) base.findViewById(R.id.head);
+			this.contentText = (TextView) base.findViewById(R.id.text);
+			this.dateText = (TextView) base.findViewById(R.id.date);
+			this.nameText = (TextView) base.findViewById(R.id.name);
 
 		}
 	}

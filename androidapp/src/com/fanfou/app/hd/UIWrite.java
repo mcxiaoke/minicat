@@ -4,7 +4,6 @@ import java.io.File;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
@@ -12,10 +11,11 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.text.Editable;
 import android.text.Selection;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -27,7 +27,6 @@ import com.fanfou.app.hd.controller.DataController;
 import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.dao.model.RecordColumns;
 import com.fanfou.app.hd.dao.model.RecordModel;
-import com.fanfou.app.hd.dao.model.UserColumns;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.PostStatusService;
@@ -66,9 +65,12 @@ import com.fanfou.app.hd.util.Utils;
  * @version 7.1 2012.03.16
  * 
  */
-public class UIWrite extends UIBaseSupport {
+public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor>{
 
 	private static final String TAG = UIWrite.class.getSimpleName();
+	
+	private static final int LOADER_ID=1;
+	
 	private static final int REQUEST_PHOTO_CAPTURE = 0;
 	private static final int REQUEST_PHOTO_LIBRARY = 1;
 	private static final int REQUEST_LOCATION_ADD = 2;
@@ -79,6 +81,7 @@ public class UIWrite extends UIBaseSupport {
 	}
 
 	private MyAutoCompleteTextView mAutoCompleteTextView;
+	private AutoCompleteCursorAdapter mAutoCompleteCursorAdapter;
 
 	private View vPhoto;
 	private ImageView vPhotoPreview;
@@ -321,15 +324,8 @@ public class UIWrite extends UIBaseSupport {
 		});
 
 		mAutoCompleteTextView.setTokenizer(new AtTokenizer());
-		final String[] projection = new String[] { UserColumns._ID,
-				UserColumns.ID, UserColumns.SCREEN_NAME, UserColumns.TYPE,
-				UserColumns.OWNER };
-
-		Cursor cursor = DataController.getFriendsCursor(this, projection,
-				App.getAccount(), null);
-
-		mAutoCompleteTextView.setAdapter(new AutoCompleteCursorAdapter(this,
-				cursor));
+		mAutoCompleteCursorAdapter=new AutoCompleteCursorAdapter(mContext, null);
+		mAutoCompleteTextView.setAdapter(mAutoCompleteCursorAdapter);
 	}
 
 	@Override
@@ -362,6 +358,8 @@ public class UIWrite extends UIBaseSupport {
 
 		setAutoComplete();
 		parseIntent();
+		
+		getSupportLoaderManager().initLoader(LOADER_ID, null, this);
 
 	}
 
@@ -574,6 +572,21 @@ public class UIWrite extends UIBaseSupport {
 		public void onProviderDisabled(String provider) {
 		}
 
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		return DataController.getAutoCompleteCursorLoader(mContext, App.getAccount());
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
+		mAutoCompleteCursorAdapter.swapCursor(newCursor);
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+		mAutoCompleteCursorAdapter.swapCursor(null);
 	}
 
 }

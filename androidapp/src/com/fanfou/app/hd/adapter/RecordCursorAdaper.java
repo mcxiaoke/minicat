@@ -50,10 +50,6 @@ public class RecordCursorAdaper extends BaseCursorAdapter {
 		super(context, c);
 	}
 
-	public RecordCursorAdaper(Context context, Cursor c, boolean autoRequery) {
-		super(context, c, autoRequery);
-	}
-
 	@Override
 	int getLayoutId() {
 		return R.layout.list_item_draft;

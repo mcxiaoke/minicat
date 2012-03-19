@@ -76,12 +76,7 @@ public class ConversationFragment extends PullToRefreshListFragment {
 		if (App.DEBUG) {
 			Log.d(TAG, "createAdapter()");
 		}
-		return new ConversationCursorAdapter(getActivity(), getCursor(), true);
-	}
-
-	@Override
-	protected void showToast(int count) {
-		Utils.notify(getActivity(), count + "条新私信");
+		return new ConversationCursorAdapter(getActivity());
 	}
 
 	@Override

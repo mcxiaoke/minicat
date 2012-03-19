@@ -40,21 +40,16 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 	}
 
 	public StatusCursorAdapter(Context context) {
-		super(context, null, false);
-		init(context, false);
+		super(context, null);
+		initialize(context, false);
 	}
 
 	public StatusCursorAdapter(Context context, Cursor c) {
-		super(context, c, false);
-		init(context, false);
+		super(context, c);
+		initialize(context, false);
 	}
 
-	public StatusCursorAdapter(boolean colored, Context context, Cursor c) {
-		super(context, c, false);
-		init(context, colored);
-	}
-
-	private void init(Context context, boolean colored) {
+	private void initialize(Context context, boolean colored) {
 		this.colored = colored;
 		if (colored) {
 			mMentionedBgColor = OptionHelper.readInt(mContext,
@@ -92,18 +87,6 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 	@Override
 	public int getViewTypeCount() {
 		return TYPES.length;
-	}
-
-	public void switchCursor(Cursor cursor) {
-		if (cursor != null) {
-			mCursor = cursor;
-			changeCursor(mCursor);
-			mCursor.requery();
-		} else {
-			mCursor = null;
-			changeCursor(mCursor);
-			notifyDataSetChanged();
-		}
 	}
 
 	@Override
