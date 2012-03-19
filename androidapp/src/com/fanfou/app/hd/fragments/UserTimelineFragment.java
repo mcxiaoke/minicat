@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.api.Paging;
+import com.fanfou.app.hd.controller.DataController;
 import com.fanfou.app.hd.dao.DataProvider;
 import com.fanfou.app.hd.dao.model.StatusColumns;
 import com.fanfou.app.hd.dao.model.StatusModel;
@@ -89,12 +90,8 @@ public class UserTimelineFragment extends BaseTimlineFragment {
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		String selection = StatusColumns.TYPE + " =? AND "
-				+ StatusColumns.USER_ID + " =? ";
-		String[] selectionArgs = new String[] { String.valueOf(getType()),
-				userId };
-		return new CursorLoader(getActivity(), StatusColumns.CONTENT_URI, null,
-				selection, selectionArgs, DataProvider.ORDERBY_RAWID_DESC);
+		return DataController
+				.getUserTimelineCursorLoader(getActivity(), userId);
 	}
 
 }

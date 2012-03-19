@@ -18,6 +18,7 @@ import com.fanfou.app.hd.dao.model.IBaseColumns;
 import com.fanfou.app.hd.dao.model.RecordColumns;
 import com.fanfou.app.hd.dao.model.StatusColumns;
 import com.fanfou.app.hd.dao.model.UserColumns;
+import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.util.StringHelper;
 
 /**
@@ -48,7 +49,7 @@ import com.fanfou.app.hd.util.StringHelper;
  * @version 7.0 2012.03.19
  * 
  */
-public class DataProvider extends ContentProvider implements IBaseColumns {
+public final class DataProvider extends ContentProvider implements IBaseColumns {
 
 	private static final boolean DEBUG = App.DEBUG;
 
@@ -138,7 +139,7 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 		}
 	}
 
-	private Cursor queryCursor(Uri uri, Cursor cursor) {
+	private Cursor queryWithNotify(Uri uri, Cursor cursor) {
 		if (cursor == null) {
 			if (App.DEBUG) {
 				log("query() uri " + uri + " failed.");
@@ -150,48 +151,27 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 		return cursor;
 	}
 
-	private Cursor queryByCondition(String table, Uri uri, String[] columns,
-			String where, String[] whereArgs, String orderBy) {
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		qb.setTables(table);
-		Cursor cursor = qb.query(db, null, where, whereArgs, null, null,
+	private Cursor queryCollection(Uri uri, String[] columns, String where,
+			String[] whereArgs, String orderBy) {
+		String table = uri.getPathSegments().get(0);
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		Cursor cursor = db.query(table, null, where, whereArgs, null, null,
 				orderBy);
-		return queryCursor(uri, cursor);
+		return queryWithNotify(uri, cursor);
 	}
 
-	private Cursor queryItemById(String table, Uri uri) {
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
+	private Cursor queryItem(Uri uri) {
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 		final List<String> path = uri.getPathSegments();
-		// String table=path.get(0);
+		String table = path.get(0);
 		String id = path.get(2);
 		String selection = IBaseColumns.ID + " =? ";
 		String[] selectionArgs = new String[] { id };
 		qb.setTables(table);
 		Cursor cursor = qb.query(db, null, selection, selectionArgs, null,
 				null, null);
-		return queryCursor(uri, cursor);
-	}
-
-	private Cursor queryUserById(Uri uri) {
-		return queryItemById(UserColumns.TABLE_NAME, uri);
-	}
-
-	private Cursor queryStatusById(Uri uri) {
-		return queryItemById(StatusColumns.TABLE_NAME, uri);
-	}
-
-	private Cursor queryDirectMessageById(Uri uri) {
-		return queryItemById(DirectMessageColumns.TABLE_NAME, uri);
-	}
-
-	private Cursor queryDirectMessagesAll(String orderBy) {
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		qb.setTables(DirectMessageColumns.TABLE_NAME);
-		Cursor cursor = qb.query(db, null, null, null, null, null, orderBy);
-		return queryCursor(DirectMessageColumns.CONTENT_URI, cursor);
+		return queryWithNotify(uri, cursor);
 	}
 
 	@Override
@@ -211,33 +191,14 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 		}
 		switch (sUriMatcher.match(uri)) {
 		case USERS:
-			// content://com.fanfou.app.hd.provider/user/
-			return queryByCondition(UserColumns.TABLE_NAME, uri, columns,
-					where, whereArgs, orderBy);
-		case USER_ID:
-			// uri: conent://com.fanfou.app.hd.provider/user/id/[userid]
-			return queryUserById(uri);
-			// break;
 		case STATUSES:
-			// content://com.fanfou.app.hd.provider/status/
-			return queryByCondition(StatusColumns.TABLE_NAME, uri, columns,
-					where, whereArgs, orderBy);
-			// break;
-		case STATUS_ID:
-			// content://com.fanfou.app.hd.provider/status/id/[statusId]
-			return queryStatusById(uri);
-			// break;
 		case MESSAGES:
-			return queryDirectMessagesAll(orderBy);
-			// break;
-		case MESSAGE_ID:
-			// content://com.fanfou.app.hd.provider/dm/id/[id]
-			return queryDirectMessageById(uri);
-			// break;
 		case RECORDS:
-			return queryByCondition(RecordColumns.TABLE_NAME, uri, columns,
-					where, whereArgs, orderBy);
-			// break;
+			return queryCollection(uri, columns, where, whereArgs, orderBy);
+		case USER_ID:
+		case STATUS_ID:
+		case MESSAGE_ID:
+			return queryItem(uri);
 		case RECORD_ID:
 			throw new UnsupportedOperationException("unsupported operation: "
 					+ uri);
@@ -248,9 +209,6 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
-		if (values == null || values.size() == 0) {
-			throw new NullPointerException("插入数据不能为空.");
-		}
 
 		if (DEBUG) {
 			Log.d(TAG, "insert() uri: " + uri);
@@ -266,17 +224,7 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 		case STATUSES:
 		case MESSAGES:
 		case RECORDS:
-			SQLiteDatabase db = dbHelper.getWritableDatabase();
-			String table = uri.getPathSegments().get(0);
-			long rowId = db.insert(table, null, values);
-			if (rowId > 0) {
-				// getContext().getContentResolver().notifyChange(uri, null);
-				Uri resultUri = ContentUris.withAppendedId(uri, rowId);
-				if (App.DEBUG) {
-					log("insert() resultUri=" + resultUri + " id="
-							+ values.getAsString(ID) + " rowId=" + rowId);
-				}
-			}
+			insertItem(uri, values);
 			return uri;
 		case USER_ID:
 		case STATUS_ID:
@@ -285,6 +233,23 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 			throw new UnsupportedOperationException("Cannot insert URI: " + uri);
 		default:
 			throw new IllegalArgumentException("insert() Unknown URI " + uri);
+		}
+	}
+
+	private void insertItem(Uri uri, ContentValues values) {
+		if (values == null || values.size() == 0) {
+			throw new NullPointerException("插入数据不能为空.");
+		}
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		String table = uri.getPathSegments().get(0);
+		long rowId = db.insert(table, null, values);
+		if (rowId > 0) {
+			getContext().getContentResolver().notifyChange(uri, null);
+			Uri resultUri = ContentUris.withAppendedId(uri, rowId);
+			if (App.DEBUG) {
+				log("insert() resultUri=" + resultUri + " id="
+						+ values.getAsString(ID) + " rowId=" + rowId);
+			}
 		}
 	}
 
@@ -366,6 +331,30 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 		return count;
 	}
 
+	private int updateById(Uri uri, ContentValues values) {
+		List<String> path = uri.getPathSegments();
+		String table = path.get(0);
+		String id = path.get(2);
+		return dbHelper.getWritableDatabase().update(table, values,
+				UserColumns.ID + "=?", new String[] { id });
+	}
+
+	private int updateRecordById(Uri uri, ContentValues values) {
+		List<String> path = uri.getPathSegments();
+		String table = path.get(0);
+		String id = path.get(2);
+		return dbHelper.getWritableDatabase().update(table, values,
+				UserColumns._ID + "=?", new String[] { id });
+	}
+
+	private int updateByCondition(Uri uri, ContentValues values, String where,
+			String[] whereArgs) {
+		List<String> path = uri.getPathSegments();
+		String table = path.get(0);
+		return dbHelper.getWritableDatabase().update(table, values, where,
+				whereArgs);
+	}
+
 	@Override
 	public int update(Uri uri, ContentValues values, String where,
 			String[] whereArgs) {
@@ -379,51 +368,22 @@ public class DataProvider extends ContentProvider implements IBaseColumns {
 						"getPathSegments() path[" + i + "] --> " + paths.get(i));
 			}
 		}
-
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		int count;
-		String id;
 		switch (sUriMatcher.match(uri)) {
 		case USER_ID:
-			id = uri.getPathSegments().get(2);
-			count = db.update(UserColumns.TABLE_NAME, values, UserColumns.ID
-					+ "=?", new String[] { id });
-			break;
 		case STATUS_ID:
-			id = uri.getPathSegments().get(2);
-			count = db.update(StatusColumns.TABLE_NAME, values,
-					StatusColumns.ID + "=?", new String[] { id });
-			break;
 		case MESSAGE_ID:
-			id = uri.getPathSegments().get(2);
-			count = db.update(DirectMessageColumns.TABLE_NAME, values,
-					DirectMessageColumns.ID + "=?", new String[] { id });
+			count = updateById(uri, values);
+			break;
+		case RECORD_ID:
+			count = updateRecordById(uri, values);
 			break;
 		case USERS:
-			count = db.update(UserColumns.TABLE_NAME, values, where, whereArgs);
-			break;
 		case STATUSES:
-			count = db.update(StatusColumns.TABLE_NAME, values, where,
-					whereArgs);
-			break;
-
-		// case STATUSES_HOME:
-		// case STATUSES_MENTION:
-		// case STATUSES_PUBLIC:
-		// case STATUSES_TIMELINE:
-		// case STATUSES_FAVORITES:
-		// case USERS_FRIENDS:
-		// case USERS_FOLLOWERS:
-		// case MESSAGES_CONVERSATION_LIST:
-		// case MESSAGES_INBOX:
-		// case MESSAGES_OUTBOX:
-		// case MESSAGES_CONVERSATION:
-		// case USERS_SEARCH:
 		case MESSAGES:
 		case RECORDS:
-		case RECORD_ID:
-			throw new UnsupportedOperationException(
-					"unsupported update action: URI " + uri);
+			count = updateByCondition(uri, values, where, whereArgs);
+			break;
 		default:
 			throw new IllegalArgumentException("update() Unknown URI " + uri);
 		}

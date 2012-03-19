@@ -59,7 +59,7 @@ import com.fanfou.app.hd.util.Assert;
  * @version 8.1 2012.03.07
  * 
  */
-public class FanFouService extends IntentService {
+public final class FanFouService extends IntentService {
 	private static final String TAG = FanFouService.class.getSimpleName();
 	private static final boolean DEBUG = App.DEBUG;
 
@@ -105,7 +105,7 @@ public class FanFouService extends IntentService {
 	public void onCreate() {
 		super.onCreate();
 		api = App.getApi();
-		account = App.getAccount();
+
 	}
 
 	@Override
@@ -113,6 +113,8 @@ public class FanFouService extends IntentService {
 		if (intent == null) {
 			return;
 		}
+
+		account = App.getAccount();
 		messenger = intent.getParcelableExtra("messenger");
 		id = intent.getStringExtra("id");
 		type = intent.getIntExtra("type", -1);
@@ -718,8 +720,8 @@ public class FanFouService extends IntentService {
 			Log.d(TAG, "getTimeline userId=" + id + " paging=" + p + " type="
 					+ type);
 		}
-		
-		Uri uri=StatusColumns.CONTENT_URI;
+
+		Uri uri = StatusColumns.CONTENT_URI;
 
 		try {
 			switch (type) {

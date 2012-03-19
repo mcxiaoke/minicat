@@ -30,7 +30,7 @@ import com.fanfou.app.hd.dao.model.UserModel;
  * @version 1.0 2012.02.16
  * @version 2.0 2012.02.24
  * @version 2.1 2012.02.28
- * @version 2.2 2012.03.19
+ * @version 3.0 2012.03.19
  * 
  */
 public class DataController {
@@ -177,9 +177,8 @@ public class DataController {
 			int type) {
 		String where = StatusColumns.TYPE + " =? ";
 		String[] whereArgs = new String[] { String.valueOf(type) };
-		String orderBy = DataProvider.ORDERBY_RAWID_DESC;
 		return new CursorLoader(context, StatusColumns.CONTENT_URI, null,
-				where, whereArgs, orderBy);
+				where, whereArgs, DataProvider.ORDERBY_RAWID_DESC);
 	}
 
 	public static Loader<Cursor> getUserTimelineCursorLoader(Context context,
@@ -188,9 +187,8 @@ public class DataController {
 				+ " =? ";
 		String[] whereArgs = new String[] {
 				String.valueOf(StatusModel.TYPE_USER), userId };
-		String orderBy = DataProvider.ORDERBY_RAWID_DESC;
 		return new CursorLoader(context, StatusColumns.CONTENT_URI, null,
-				where, whereArgs, orderBy);
+				where, whereArgs, DataProvider.ORDERBY_RAWID_DESC);
 	}
 
 	public static Loader<Cursor> getUserFavoritesCursorLoader(Context context,
@@ -199,9 +197,8 @@ public class DataController {
 				+ " =? ";
 		String[] whereArgs = new String[] {
 				String.valueOf(StatusModel.TYPE_FAVORITES), userId };
-		String orderBy = DataProvider.ORDERBY_RAWID_DESC;
 		return new CursorLoader(context, StatusColumns.CONTENT_URI, null,
-				where, whereArgs, orderBy);
+				where, whereArgs, DataProvider.ORDERBY_RAWID_DESC);
 	}
 
 	public static Loader<Cursor> getAutoCompleteCursorLoader(Context context,

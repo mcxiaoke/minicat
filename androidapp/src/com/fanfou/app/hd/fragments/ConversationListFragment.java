@@ -94,10 +94,6 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		// Uri uri=DataController.buildConversationListUri();
-		// CursorLoader loader=new CursorLoader(getActivity(), uri, null, null,
-		// null, null);
-		// return loader;
 		return DataController.getConversationListLoader(getActivity());
 	}
 

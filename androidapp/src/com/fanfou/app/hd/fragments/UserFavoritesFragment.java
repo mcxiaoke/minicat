@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.api.Paging;
+import com.fanfou.app.hd.controller.DataController;
 import com.fanfou.app.hd.dao.model.StatusColumns;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.service.FanFouService;
@@ -85,14 +86,8 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		Uri uri = StatusColumns.CONTENT_URI;
-		String selection = StatusColumns.TYPE + " =? AND "
-				+ StatusColumns.OWNER + " =? ";
-		String[] selectionArgs = new String[] { String.valueOf(getType()),
-				userId };
-		CursorLoader loader = new CursorLoader(getActivity(), uri, null,
-				selection, selectionArgs, null);
-		return loader;
+		return DataController.getUserFavoritesCursorLoader(getActivity(),
+				userId);
 	}
 
 	@Override
