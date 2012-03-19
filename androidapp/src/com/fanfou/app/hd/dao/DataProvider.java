@@ -244,7 +244,7 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
 		String table = uri.getPathSegments().get(0);
 		long rowId = db.insert(table, null, values);
 		if (rowId > 0) {
-			getContext().getContentResolver().notifyChange(uri, null);
+//			getContext().getContentResolver().notifyChange(uri, null);
 			Uri resultUri = ContentUris.withAppendedId(uri, rowId);
 			if (App.DEBUG) {
 				log("insert() resultUri=" + resultUri + " id="

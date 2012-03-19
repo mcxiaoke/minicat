@@ -721,8 +721,6 @@ public final class FanFouService extends IntentService {
 					+ type);
 		}
 
-		Uri uri = StatusColumns.CONTENT_URI;
-
 		try {
 			switch (type) {
 			case StatusModel.TYPE_HOME:
@@ -755,7 +753,7 @@ public final class FanFouService extends IntentService {
 				return;
 			} else {
 				int size = statuses.size();
-				if (size == p.count || (p.sinceId == null && p.page <= 1)) {
+				if (size == p.count && p.maxId == null && p.page <= 1) {
 					deleteOldStatuses();
 				}
 				int insertedCount = DataController.store(this, statuses);
@@ -780,21 +778,15 @@ public final class FanFouService extends IntentService {
 	private int deleteOldStatuses() {
 		int numDeleted = 0;
 		if (type == StatusModel.TYPE_USER) {
-			String where = StatusColumns.TYPE + " = ? AND "
-					+ StatusColumns.USER_ID + " =? ";
-			String[] whereArgs = new String[] { String.valueOf(type), id };
-			numDeleted = getContentResolver().delete(StatusColumns.CONTENT_URI,
-					where, whereArgs);
+			numDeleted = DataController.deleteUserTimeline(this, id);
 		} else if (type == StatusModel.TYPE_FAVORITES) {
-			String where = StatusColumns.TYPE + " = ? AND "
-					+ StatusColumns.OWNER + " =? ";
-			String[] whereArgs = new String[] { String.valueOf(type), id };
-			numDeleted = getContentResolver().delete(StatusColumns.CONTENT_URI,
-					where, whereArgs);
+			numDeleted = DataController.deleteUserFavorites(this, id);
+		} else {
+			numDeleted = DataController.deleteStatusByType(this, type);
 		}
 		if (App.DEBUG) {
 			Log.d(TAG, "deleteOldStatuses numDeleted=" + numDeleted + " type="
-					+ type);
+					+ type + " id=" + id);
 		}
 		return numDeleted;
 	}

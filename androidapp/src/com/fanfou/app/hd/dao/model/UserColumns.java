@@ -58,15 +58,15 @@ public interface UserColumns extends IBaseColumns {
 			
 			+ NAME + " text not null, " 
 			+ SCREEN_NAME + " text not null, " 
-			+ LOCATION + " text not null, " 
-			+ GENDER + " text not null, " 
-			+ BIRTHDAY + " text not null, "
-			+ DESCRIPTION + " text not null, " 
+			+ LOCATION + " text, " 
+			+ GENDER + " text, " 
+			+ BIRTHDAY + " text, "
+			+ DESCRIPTION + " text, " 
 			
 			+ PROFILE_IMAGE_URL + " text not null, "
 			+ PROFILE_IMAGE_URL_LARGE + " text not null, "
-			+ URL + " text not null, " 
-			+ STATUS + " text not null, "
+			+ URL + " text, " 
+			+ STATUS + " text, "
 			
 			+ FOLLOWERS_COUNT + " integer not null, " 
 			+ FRIENDS_COUNT + " integer not null, "

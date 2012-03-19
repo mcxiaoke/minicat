@@ -143,6 +143,31 @@ public class DataController {
 		return context.getContentResolver().delete(uri, null, null);
 	}
 
+	public static int deleteStatusByType(Context context, int type) {
+		String where = StatusColumns.TYPE + " = ? ";
+		String[] whereArgs = new String[] { String.valueOf(type) };
+		return context.getContentResolver().delete(StatusColumns.CONTENT_URI,
+				where, whereArgs);
+	}
+
+	public static int deleteUserTimeline(Context context, String userId) {
+		String where = StatusColumns.TYPE + " = ? AND " + StatusColumns.USER_ID
+				+ " =? ";
+		String[] whereArgs = new String[] {
+				String.valueOf(StatusModel.TYPE_USER), userId };
+		return context.getContentResolver().delete(StatusColumns.CONTENT_URI,
+				where, whereArgs);
+	}
+
+	public static int deleteUserFavorites(Context context, String userId) {
+		String where = StatusColumns.TYPE + " = ? AND " + StatusColumns.OWNER
+				+ " =? ";
+		String[] whereArgs = new String[] {
+				String.valueOf(StatusModel.TYPE_FAVORITES), userId };
+		return context.getContentResolver().delete(StatusColumns.CONTENT_URI,
+				where, whereArgs);
+	}
+
 	public static int deleteStatusByUserId(Context context, String userId) {
 		return context.getContentResolver().delete(StatusColumns.CONTENT_URI,
 				StatusColumns.USER_ID + " =? ", new String[] { userId });

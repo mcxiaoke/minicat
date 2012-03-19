@@ -90,19 +90,4 @@
         <item name="android:cacheColorHint">@android:color/transparent</item>
     </style>
 
-    <!-- AutoCompleteTextView Color Fix -->
-
-    <style name="AppTheme.Blue.AutoCompleteTextViewFix">
-        <item name="android:dropDownItemStyle">@style/Fix.DropDownItemLight</item>
-        <item name="android:autoCompleteTextViewStyle">@style/Fix.AutoCompleteTextViewLight</item>
-    </style>
-
-    <style name="Fix.AutoCompleteTextViewLight" parent="@android:style/Widget.AutoCompleteTextView">
-        <item name="android:textColor">@android:color/primary_text_light</item>
-    </style>
-
-    <style name="Fix.DropDownItemLight" parent="@android:style/Widget.DropDownItem">
-        <item name="android:textColor">@android:color/primary_text_light</item>
-    </style>
-
 </resources>
