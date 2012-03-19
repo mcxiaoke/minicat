@@ -3,19 +3,18 @@ package com.fanfou.app.hd.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v4.widget.CursorAdapter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.dao.model.UserColumns;
 import com.fanfou.app.hd.dao.model.UserModel;
-import com.fanfou.app.hd.service.Constants;
 
 /**
  * @author mcxiaoke
@@ -33,7 +32,7 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 	private LayoutInflater mInflater;
 
 	public AutoCompleteCursorAdapter(Activity context, Cursor cursor) {
-		super(context, cursor);
+		super(context, cursor,FLAG_REGISTER_CONTENT_OBSERVER);
 		mContext = context;
 		mInflater = LayoutInflater.from(mContext);
 	}
