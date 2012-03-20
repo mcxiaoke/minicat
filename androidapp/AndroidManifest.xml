@@ -150,7 +150,7 @@
 
                 <data
                     android:host="user"
-                    android:scheme="fanfou" />
+                    android:scheme="fanfouhd" />
             </intent-filter>
         </activity>
         <activity
@@ -218,7 +218,7 @@
 
                 <data
                     android:host="search"
-                    android:scheme="fanfou" />
+                    android:scheme="fanfouhd" />
             </intent-filter>
 
             <meta-data

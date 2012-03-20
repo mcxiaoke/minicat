@@ -23,6 +23,7 @@ import com.fanfou.app.hd.dao.model.StatusModel;
  * @version 1.7 2011.11.21
  * @version 1.8 2012.02.01
  * @version 1.9 2012.02.24
+ * @version 2.0 2012.03.18
  * 
  */
 public class StatusHelper {
@@ -49,7 +50,7 @@ public class StatusHelper {
 		}
 	};
 
-	private static final String SCHEME_USER = "fanfou://user/";
+	private static final String SCHEME_USER = "fanfouhd://user/";
 
 	public static void linkifyUsers(TextView view) {
 		Linkify.addLinks(view, PATTERN_USER, SCHEME_USER, MATCH_FILTER_USER,
@@ -66,7 +67,7 @@ public class StatusHelper {
 		}
 	};
 
-	private static final String SCHEME_SEARCH = "fanfou://search/";
+	private static final String SCHEME_SEARCH = "fanfouhd://search/";
 
 	public static void linkifyTags(TextView view) {
 		Linkify.addLinks(view, PATTERN_SEARCH, SCHEME_SEARCH, null,
@@ -74,7 +75,7 @@ public class StatusHelper {
 	}
 
 	private static Pattern PATTERN_USERLINK = Pattern
-			.compile("@<a href=\"http:\\/\\/fanfou\\.com\\/(.*?)\" class=\"former\">(.*?)<\\/a>");
+			.compile("<a href=\"http:\\/\\/fanfou\\.com\\/(.*?)\" class=\"former\">(.*?)<\\/a>");
 
 	private static String preprocessText(String text) {
 		// 处理HTML格式返回的用户链接

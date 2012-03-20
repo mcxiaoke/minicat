@@ -2,52 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?profileBlockBackground"
-    android:orientation="horizontal"
-    android:padding="8dp" >
+    android:background="?actionBoxBackground"
+    android:orientation="horizontal" >
 
-    <LinearLayout
+    <ImageButton
         android:id="@+id/action_follow"
-        style="@style/ProfileActionStyle" >
+        style="@style/ActionItemStyle"
+        android:src="@drawable/ic_follow" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_mini_follow" />
-
-        <TextView
-            android:id="@+id/action_follow_text"
-            style="@style/ProfileActionTextStyle" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/action_dm"
-        style="@style/ProfileActionStyle" >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_mini_dm" />
-
-        <TextView
-            android:id="@+id/action_dm_text"
-            style="@style/ProfileActionTextStyle"
-            android:text="@string/profile_send" />
-    </LinearLayout>
-
-    <LinearLayout
+    <ImageButton
         android:id="@+id/action_mention"
-        style="@style/ProfileActionStyle" >
+        style="@style/ActionItemStyle"
+        android:src="@drawable/ic_mention" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_mini_mention" />
+    <ImageButton
+        android:id="@+id/action_dm"
+        style="@style/ActionItemStyle"
+        android:src="@drawable/ic_dm" />
 
-        <TextView
-            android:id="@+id/action_ention_text"
-            style="@style/ProfileActionTextStyle"
-            android:text="@string/profile_mention" />
-    </LinearLayout>
+    <ImageButton
+        android:id="@+id/action_more"
+        style="@style/ActionItemStyle"
+        android:src="@drawable/ic_more" />
 
 </LinearLayout>

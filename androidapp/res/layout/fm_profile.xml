@@ -4,26 +4,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ScrollView
-        android:id="@+id/content"
+    <LinearLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" android:scrollbars="none">
+        android:orientation="vertical" >
 
-        <LinearLayout
-            android:layout_width="fill_parent"
+        <ScrollView
+            android:id="@+id/scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="none" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <include layout="@layout/profile_item_header" />
+
+                <include layout="@layout/profile_item_count" />
+
+                <include layout="@layout/profile_item_userinfo" />
+            </LinearLayout>
+        </ScrollView>
+
+        <include
+            android:id="@+id/actions"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <include layout="@layout/profile_item_header" />
-
-            <include layout="@layout/profile_item_actions" />
-
-            <include layout="@layout/profile_item_count" />
-
-            <include layout="@layout/profile_item_userinfo" />
-        </LinearLayout>
-    </ScrollView>
+            layout="@layout/profile_item_actions" />
+    </LinearLayout>
 
     <include layout="@layout/empty_layout" />
 

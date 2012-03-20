@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,6 +34,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 2.2 2012.03.08
  * @version 2.3 2012.03.13
  * @version 2.4 2012.03.14
+ * @version 3.0 2012.03.20
  * 
  */
 public class ProfileFragment extends AbstractFragment implements
@@ -67,16 +69,6 @@ public class ProfileFragment extends AbstractFragment implements
 
 	private TextView headerRelation;
 
-	private View actionFollow;
-
-	private View actionDM;
-
-	private View actionMention;
-
-	private TextView actionFollowText;
-	private TextView actionDMText;
-	private TextView actionMentionText;
-
 	private TextView tvStatuses;
 
 	private TextView tvFavorites;
@@ -98,8 +90,10 @@ public class ProfileFragment extends AbstractFragment implements
 
 	private TextView descContent;
 
-	private String strFollow;
-	private String strUnFollow;
+	private ImageButton actionFollow;
+	private ImageButton actionMention;
+	private ImageButton actionDM;
+	private ImageButton actionMore;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -135,30 +129,22 @@ public class ProfileFragment extends AbstractFragment implements
 		user = data.getParcelable("data");
 		if (user == null) {
 			userId = data.getString("id");
+			user = App.getUser(userId);
 		} else {
 			userId = user.getId();
 		}
 	}
 
 	private void initResources() {
-		strFollow = getString(R.string.profile_follow);
-		strUnFollow = getString(R.string.profile_unfollow);
 	}
 
 	private void findViews(View root) {
-		vContent = (ViewGroup) root.findViewById(R.id.content);
+		vContent = (ViewGroup) root.findViewById(R.id.container);
 		vEmpty = root.findViewById(android.R.id.empty);
 
 		headerImage = (ImageView) root.findViewById(R.id.header_image);
 		headerName = (TextView) root.findViewById(R.id.header_name);
 		headerRelation = (TextView) root.findViewById(R.id.header_relation);
-
-		actionFollow = root.findViewById(R.id.action_follow);
-		actionDM = root.findViewById(R.id.action_dm);
-		actionMention = root.findViewById(R.id.action_mention);
-
-		actionFollowText = (TextView) root
-				.findViewById(R.id.action_follow_text);
 
 		tvStatuses = (TextView) root.findViewById(R.id.count_statuses);
 		tvFavorites = (TextView) root.findViewById(R.id.count_favorites);
@@ -177,6 +163,11 @@ public class ProfileFragment extends AbstractFragment implements
 		descTitle = (TextView) root.findViewById(R.id.desc_title);
 		Utils.setBoldText(descTitle);
 		descContent = (TextView) root.findViewById(R.id.desc_content);
+
+		actionFollow = (ImageButton) root.findViewById(R.id.action_follow);
+		actionMention = (ImageButton) root.findViewById(R.id.action_mention);
+		actionDM = (ImageButton) root.findViewById(R.id.action_dm);
+		actionMore = (ImageButton) root.findViewById(R.id.action_more);
 
 	}
 
@@ -213,14 +204,15 @@ public class ProfileFragment extends AbstractFragment implements
 	}
 
 	private void setListeners() {
-		actionFollow.setOnClickListener(this);
-		actionDM.setOnClickListener(this);
-		actionMention.setOnClickListener(this);
-
 		vStatuses.setOnClickListener(this);
 		vFavorites.setOnClickListener(this);
 		vFriends.setOnClickListener(this);
 		vFollowers.setOnClickListener(this);
+
+		actionFollow.setOnClickListener(this);
+		actionMention.setOnClickListener(this);
+		actionDM.setOnClickListener(this);
+		actionMore.setOnClickListener(this);
 	}
 
 	private void updateUI(final UserModel user) {
@@ -269,7 +261,7 @@ public class ProfileFragment extends AbstractFragment implements
 	}
 
 	private void updateAction() {
-		actionFollowText.setText(user.isFollowing() ? strUnFollow : strFollow);
+		actionFollow.setImageLevel(user.isFollowing() ? 1 : 0);
 	}
 
 	private void updateStatistics() {
@@ -310,10 +302,6 @@ public class ProfileFragment extends AbstractFragment implements
 
 	private void updateRelation(String relation) {
 		headerRelation.setText(relation);
-	}
-
-	private void preToggleFollowState(boolean following) {
-		actionFollowText.setText(following ? strFollow : strUnFollow);
 	}
 
 	private void fetchUser() {
@@ -405,7 +393,6 @@ public class ProfileFragment extends AbstractFragment implements
 				}
 			}
 		};
-		preToggleFollowState(true);
 		FanFouService.follow(getActivity(), user.getId(), handler);
 	}
 
@@ -443,7 +430,6 @@ public class ProfileFragment extends AbstractFragment implements
 
 			@Override
 			public void onButton1Click() {
-				preToggleFollowState(false);
 				FanFouService.unFollow(getActivity(), user.getId(), handler);
 			}
 		});
@@ -470,6 +456,9 @@ public class ProfileFragment extends AbstractFragment implements
 							+ " noPermission=" + noPermission);
 		}
 		switch (v.getId()) {
+		case R.id.action_follow:
+			doFollow();
+			break;
 		case R.id.action_mention:
 			UIController.showWrite(getActivity(), "@" + user.getScreenName()
 					+ " ");
@@ -477,8 +466,7 @@ public class ProfileFragment extends AbstractFragment implements
 		case R.id.action_dm:
 			UIController.showConversation(getActivity(), user);
 			break;
-		case R.id.action_follow:
-			doFollow();
+		case R.id.action_more:
 			break;
 		case R.id.box_statuses:
 			// if (hasPermission()) {
