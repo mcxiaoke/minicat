@@ -3,7 +3,6 @@ package com.fanfou.app.hd;
 import com.fanfou.app.hd.controller.UIController;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 
 /**

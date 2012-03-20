@@ -18,16 +18,19 @@ package com.fanfou.app.hd;
 import java.util.HashMap;
 
 import com.fanfou.app.hd.fragments.ColumnsFragment;
+import com.fanfou.app.hd.fragments.ConversationListFragment;
 import com.fanfou.app.hd.fragments.HomeTimelineFragment;
 import com.fanfou.app.hd.fragments.MentionTimelineFragment;
 import com.fanfou.app.hd.fragments.PublicTimelineFragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TabHost;
 
 /**
@@ -35,7 +38,7 @@ import android.widget.TabHost;
  * TabHost through fragments. It uses a trick (see the code below) to allow the
  * tabs to switch between fragments instead of simple views.
  */
-public class UITabHome extends FragmentActivity {
+public class UITabHome extends UIBaseSupport {
 	TabHost mTabHost;
 	TabManager mTabManager;
 
@@ -46,28 +49,59 @@ public class UITabHome extends FragmentActivity {
 		setContentView(R.layout.fm_tabs);
 		mTabHost = (TabHost) findViewById(android.R.id.tabhost);
 		mTabHost.setup();
-		
-		Bundle args=new Bundle();
+
+		Bundle args = new Bundle();
+		args.putBoolean("refresh", true);
 		args.putString("id", "mcxiaoke");
 
 		mTabManager = new TabManager(this, mTabHost, R.id.realtabcontent);
 
 		mTabManager.addTab(
-				mTabHost.newTabSpec("home").setIndicator("首页"),
-				HomeTimelineFragment.class, null);
+				mTabHost.newTabSpec("home").setIndicator(getIndicator(0)),
+				HomeTimelineFragment.class, args);
 		mTabManager.addTab(
-				mTabHost.newTabSpec("mention").setIndicator("提及"),
-				MentionTimelineFragment.class, null);
+				mTabHost.newTabSpec("mention").setIndicator(getIndicator(1)),
+				MentionTimelineFragment.class, args);
 		mTabManager.addTab(
-				mTabHost.newTabSpec("public").setIndicator("公共"),
-				PublicTimelineFragment.class, null);
+				mTabHost.newTabSpec("dm").setIndicator(getIndicator(2)),
+				ConversationListFragment.class, args);
 		mTabManager.addTab(
-				mTabHost.newTabSpec("column").setIndicator("其它"),
-				ColumnsFragment.class, null);
+				mTabHost.newTabSpec("public").setIndicator(getIndicator(3)),
+				PublicTimelineFragment.class, args);
+		mTabManager.addTab(
+				mTabHost.newTabSpec("column").setIndicator(getIndicator(4)),
+				ColumnsFragment.class, args);
 
 		if (savedInstanceState != null) {
 			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
 		}
+	}
+
+	private ImageView getIndicator(int id) {
+		ImageView view = new ImageView(this);
+		view.setPadding(8, 8, 8, 8);
+		view.setBackgroundResource(R.drawable.tab_background);
+		switch (id) {
+		case 0:
+			view.setImageResource(R.drawable.ic_tab_home);
+			break;
+		case 1:
+			view.setImageResource(R.drawable.ic_tab_mention_1);
+			break;
+		case 2:
+			view.setImageResource(R.drawable.ic_tab_dm_1);
+			break;
+		case 3:
+			view.setImageResource(R.drawable.ic_tab_browse_1);
+			break;
+		case 4:
+			view.setImageResource(R.drawable.ic_more);
+			break;
+		default:
+			break;
+		}
+
+		return view;
 	}
 
 	@Override
@@ -180,5 +214,17 @@ public class UITabHome extends FragmentActivity {
 						.executePendingTransactions();
 			}
 		}
+	}
+
+	@Override
+	protected void initialize() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void setLayout() {
+		// TODO Auto-generated method stub
+
 	}
 }

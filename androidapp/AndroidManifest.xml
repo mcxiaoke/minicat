@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fanfou.app.hd"
     android:sharedUserId="com.fanfou.app"
-    android:versionCode="20120315"
-    android:versionName="2.0-beta(20120315)" >
+    android:versionCode="20120320"
+    android:versionName="2.0-beta(20120320)" >
 
     <uses-sdk
         android:minSdkVersion="7"
