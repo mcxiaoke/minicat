@@ -312,6 +312,13 @@
         <item name="android:layout_margin">2dp</item>
     </style>
 
+    <style name="Animations" />
+
+    <style name="Animations.Move">
+        <item name="@android:windowEnterAnimation">@anim/move_left_to_right</item>
+        <item name="@android:windowExitAnimation">@anim/move_right_to_left</item>
+    </style>
+
     <!-- ========================= above add by mcxiaoke======================== -->
     <!-- ========================= above add by mcxiaoke======================== -->
     <!-- ========================= above add by mcxiaoke======================== -->

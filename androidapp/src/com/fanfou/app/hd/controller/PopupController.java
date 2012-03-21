@@ -12,11 +12,11 @@ import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.adapter.BaseStatusArrayAdapter;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
+import com.fanfou.app.hd.quickaction.ActionItem;
+import com.fanfou.app.hd.quickaction.QuickAction;
+import com.fanfou.app.hd.quickaction.QuickAction.OnActionItemClickListener;
 import com.fanfou.app.hd.service.FanFouService;
 import com.fanfou.app.hd.util.Utils;
-import com.lib.quickaction.ActionItem;
-import com.lib.quickaction.QuickAction;
-import com.lib.quickaction.QuickAction.OnActionItemClickListener;
 
 /**
  * @author mcxiaoke
@@ -57,30 +57,29 @@ public class PopupController {
 	private static QuickAction makePopup(Context context,
 			final StatusModel status) {
 		ActionItem reply = new ActionItem(QUICK_ACTION_ID_REPLY, context
-				.getResources().getDrawable(R.drawable.ic_pop_reply));
+				.getResources().getDrawable(R.drawable.ic_reply));
 
 		ActionItem delete = new ActionItem(QUICK_ACTION_ID_DELETE, context
-				.getResources().getDrawable(R.drawable.ic_pop_delete));
+				.getResources().getDrawable(R.drawable.ic_delete));
 
 		ActionItem retweet = new ActionItem(QUICK_ACTION_ID_RETWEET, context
-				.getResources().getDrawable(R.drawable.ic_pop_retweet));
+				.getResources().getDrawable(R.drawable.ic_retweet));
 
 		ActionItem favorite = new ActionItem(QUICK_ACTION_ID_FAVORITE, context
-				.getResources().getDrawable(R.drawable.ic_pop_favorite_0));
+				.getResources().getDrawable(R.drawable.ic_favorite_0));
 
 		ActionItem unfavorite = new ActionItem(QUICK_ACTION_ID_UNFAVORITE,
-				context.getResources()
-						.getDrawable(R.drawable.ic_pop_favorite_1));
+				context.getResources().getDrawable(R.drawable.ic_favorite_1));
 
 		ActionItem profile = new ActionItem(QUICK_ACTION_ID_PROFILE, context
-				.getResources().getDrawable(R.drawable.ic_pop_profile));
+				.getResources().getDrawable(R.drawable.ic_profile));
 
 		ActionItem share = new ActionItem(QUICK_ACTION_ID_SHARE, context
-				.getResources().getDrawable(R.drawable.ic_pop_share));
+				.getResources().getDrawable(R.drawable.ic_share));
 
 		final boolean me = status.getUserId().equals(App.getAccount());
 
-		final QuickAction q = new QuickAction(context, QuickAction.HORIZONTAL);
+		final QuickAction q = new QuickAction(context);
 		q.addActionItem(me ? delete : reply);
 		q.addActionItem(retweet);
 		q.addActionItem(status.isFavorited() ? unfavorite : favorite);

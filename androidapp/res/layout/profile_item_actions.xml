@@ -21,8 +21,8 @@
         android:src="@drawable/ic_dm" />
 
     <ImageButton
-        android:id="@+id/action_more"
+        android:id="@+id/action_block"
         style="@style/ActionItemStyle"
-        android:src="@drawable/ic_more" />
+        android:src="@drawable/ic_block" />
 
 </LinearLayout>

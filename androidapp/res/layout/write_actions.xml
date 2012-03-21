@@ -9,26 +9,26 @@
     <ImageButton
         android:id="@+id/action_mention"
         style="@style/ActionItemStyle"
-        android:src="@drawable/ic_act_mention" />
+        android:src="@drawable/ic_mention" />
 
     <ImageButton
         android:id="@+id/action_record"
         style="@style/ActionItemStyle"
-        android:src="@drawable/ic_act_record" />
+        android:src="@drawable/ic_record" />
 
     <ImageButton
         android:id="@+id/action_location"
         style="@style/ActionItemStyle"
-        android:src="@drawable/ic_act_location" />
+        android:src="@drawable/ic_location" />
 
     <ImageButton
         android:id="@+id/action_gallery"
         style="@style/ActionItemStyle"
-        android:src="@drawable/ic_act_gallery" />
+        android:src="@drawable/ic_gallery" />
 
     <ImageButton
         android:id="@+id/action_camera"
         style="@style/ActionItemStyle"
-        android:src="@drawable/ic_act_camera" />
+        android:src="@drawable/ic_camera" />
 
 </LinearLayout>

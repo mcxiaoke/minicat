@@ -8,21 +8,21 @@
     <ImageButton
         android:id="@+id/action_reply"
         style="@style/ActionItemStyle"
-        android:src="@drawable/ic_bar_reply" />
+        android:src="@drawable/ic_reply" />
 
     <ImageButton
         android:id="@+id/action_retweet"
         style="@style/ActionItemStyle"
-        android:src="@drawable/ic_bar_retweet" />
+        android:src="@drawable/ic_retweet" />
 
     <ImageButton
         android:id="@+id/action_favorite"
         style="@style/ActionItemStyle"
-        android:src="@drawable/ic_bar_favorite" />
+        android:src="@drawable/ic_favorite" />
 
     <ImageButton
         android:id="@+id/action_share"
         style="@style/ActionItemStyle"
-        android:src="@drawable/ic_bar_share" />
+        android:src="@drawable/ic_share" />
 
 </LinearLayout>

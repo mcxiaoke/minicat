@@ -114,8 +114,8 @@ public class UIStatus extends UIBaseSupport {
 	}
 
 	private void updateReplyAction() {
-		imReply.setImageResource(isMe ? R.drawable.ic_bar_delete
-				: R.drawable.ic_bar_reply);
+		imReply.setImageResource(isMe ? R.drawable.ic_delete
+				: R.drawable.ic_reply);
 	}
 
 	private void parseIntent() {

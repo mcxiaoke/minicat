@@ -26,7 +26,8 @@
 
     <application
         android:name=".App"
-        android:icon="@drawable/icon"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/ic_launcher2"
         android:label="@string/app_name"
         android:theme="@style/AppTheme.Blue" >
         <activity

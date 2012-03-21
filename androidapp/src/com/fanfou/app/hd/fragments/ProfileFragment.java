@@ -93,7 +93,7 @@ public class ProfileFragment extends AbstractFragment implements
 	private ImageButton actionFollow;
 	private ImageButton actionMention;
 	private ImageButton actionDM;
-	private ImageButton actionMore;
+	private ImageButton actionBlock;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -167,7 +167,7 @@ public class ProfileFragment extends AbstractFragment implements
 		actionFollow = (ImageButton) root.findViewById(R.id.action_follow);
 		actionMention = (ImageButton) root.findViewById(R.id.action_mention);
 		actionDM = (ImageButton) root.findViewById(R.id.action_dm);
-		actionMore = (ImageButton) root.findViewById(R.id.action_more);
+		actionBlock = (ImageButton) root.findViewById(R.id.action_block);
 
 	}
 
@@ -212,7 +212,7 @@ public class ProfileFragment extends AbstractFragment implements
 		actionFollow.setOnClickListener(this);
 		actionMention.setOnClickListener(this);
 		actionDM.setOnClickListener(this);
-		actionMore.setOnClickListener(this);
+		actionBlock.setOnClickListener(this);
 	}
 
 	private void updateUI(final UserModel user) {
@@ -466,7 +466,7 @@ public class ProfileFragment extends AbstractFragment implements
 		case R.id.action_dm:
 			UIController.showConversation(getActivity(), user);
 			break;
-		case R.id.action_more:
+		case R.id.action_block:
 			break;
 		case R.id.box_statuses:
 			// if (hasPermission()) {
