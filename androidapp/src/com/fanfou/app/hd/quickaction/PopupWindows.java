@@ -1,5 +1,7 @@
 package com.fanfou.app.hd.quickaction;
 
+import com.fanfou.app.hd.R;
+
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -76,7 +78,7 @@ public class PopupWindows {
 			mWindow.setBackgroundDrawable(new BitmapDrawable());
 		else
 			mWindow.setBackgroundDrawable(mBackground);
-
+		
 		mWindow.setWidth(WindowManager.LayoutParams.MATCH_PARENT);
 		mWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
 		mWindow.setTouchable(true);
