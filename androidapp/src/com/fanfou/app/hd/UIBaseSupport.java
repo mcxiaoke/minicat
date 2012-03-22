@@ -87,7 +87,6 @@ abstract class UIBaseSupport extends SherlockFragmentActivity implements
 	
 	protected void setActionBar(){
 		ActionBar ab = getSupportActionBar();
-		ab.setHomeButtonEnabled(true);
 		ab.setDisplayHomeAsUpEnabled(true);
 	}
 

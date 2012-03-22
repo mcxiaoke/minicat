@@ -23,7 +23,7 @@
 
 
         <!-- action bar color and drawable -->
-        <item name="actionBarIcon">@drawable/ic_launcher</item>
+        <item name="actionBarIcon">@drawable/i_logo</item>
         <item name="actionBarTextColor">@color/white</item>
         <item name="actionBarBackground">@drawable/actionbar_background</item>
 
@@ -64,7 +64,9 @@
         <item name="uiBackground">@color/transparent</item>
     </style> <!-- ===================Theme.Blue end==================== -->
 
-    <style name="AppTheme.UIPhoto" parent="Theme.Sherlock"></style>
+    <style name="AppTheme.UIPhoto" parent="Theme.Sherlock.NoActionBar">
+        <item name="actionItemBackground">@drawable/action</item>
+    </style>
 
     <!-- ActionBar Style -->
 

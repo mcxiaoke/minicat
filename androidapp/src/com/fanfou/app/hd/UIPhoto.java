@@ -11,9 +11,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.fanfou.app.hd.cache.ImageLoader;
 import com.fanfou.app.hd.controller.EmptyViewController;
 import com.fanfou.app.hd.ui.imagezoom.ImageViewTouch;
@@ -31,9 +36,10 @@ import com.fanfou.app.hd.util.Utils;
  * @version 3.1 2011.11.17
  * @version 3.2 2011.11.22
  * @version 4.0 2012.03.13
+ * @version 4.1 2012.03.22
  * 
  */
-public class UIPhoto extends UIBaseSupport {
+public class UIPhoto extends UIBaseSupport{
 
 	private static final String TAG = UIPhoto.class.getSimpleName();
 	private String url;
@@ -61,7 +67,7 @@ public class UIPhoto extends UIBaseSupport {
 			return;
 		}
 
-		setContentView(R.layout.photoview);
+		setContentView(R.layout.ui_photo);
 		findViews();
 
 		if (App.DEBUG) {
@@ -78,14 +84,42 @@ public class UIPhoto extends UIBaseSupport {
 
 	@Override
 	protected void setActionBar() {
-		super.setActionBar();
-		setTitle("查看图片");
 	}
 
 	private void findViews() {
-		mImageView = (ImageViewTouch) findViewById(R.id.photoview_pic);
+		mImageView = (ImageViewTouch) findViewById(R.id.photo);
+		findViewById(R.id.close).setOnClickListener(this);
 		vEmpty = findViewById(android.R.id.empty);
 		emptyViewController = new EmptyViewController(vEmpty);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.close:
+			finish();
+			break;
+		default:
+			break;
+		}
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		getMenuInflater().inflate(R.menu.photo_menu, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(android.view.MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_save:
+			doSave();
+			return true;
+		default:
+			return super.onContextItemSelected(item);
+		}
 	}
 
 	private void showProgress() {
@@ -140,12 +174,6 @@ public class UIPhoto extends UIBaseSupport {
 		}
 	}
 
-	@Override
-	public void onContentChanged() {
-		super.onContentChanged();
-		// mImageView = (ImageViewTouch) findViewById(R.id.photoview_pic);
-	}
-
 	private void parseIntent(Intent intent) {
 		String action = intent.getAction();
 		if (action == null) {
@@ -163,7 +191,7 @@ public class UIPhoto extends UIBaseSupport {
 
 	@Override
 	protected int getMenuResourceId() {
-		return R.menu.photo_menu;
+		return -1;
 	}
 
 	@Override
@@ -184,9 +212,11 @@ public class UIPhoto extends UIBaseSupport {
 			File dest = new File(IOHelper.getPhotoDir(this), file.getName());
 			if (dest.exists()) {
 				Utils.notify(this, "照片已保存到 " + dest.getAbsolutePath());
+				Utils.notify(this, "照片已保存到 " + dest.getAbsolutePath());
 			} else {
 				try {
 					IOHelper.copyFile(file, dest);
+					Utils.notify(this, "照片已保存到 " + dest.getAbsolutePath());
 					Utils.notify(this, "照片已保存到 " + dest.getAbsolutePath());
 				} catch (IOException e) {
 					if (App.DEBUG) {

@@ -5,12 +5,21 @@
     android:orientation="vertical" >
 
     <com.fanfou.app.hd.ui.imagezoom.ImageViewTouch
-        android:id="@+id/photoview_pic"
+        android:id="@+id/photo"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_centerInParent="true"
         android:scaleType="fitCenter"
         android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="?actionItemBackground"
+        android:padding="10dp"
+        android:src="@drawable/ic_close" />
 
     <include layout="@layout/empty_layout" />
 
