@@ -67,7 +67,7 @@ public class App extends Application {
 
 	private static final String TAG = "Application";
 
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = BuildConfig.DEBUG;
 
 	private static Map<String, BaseModel> cache = new WeakHashMap<String, BaseModel>();
 	private static HashMap<String, WeakReference<Context>> contexts = new HashMap<String, WeakReference<Context>>();

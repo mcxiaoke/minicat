@@ -23,7 +23,7 @@
 
 
         <!-- action bar color and drawable -->
-        <item name="actionBarIcon">@drawable/icon</item>
+        <item name="actionBarIcon">@drawable/ic_launcher</item>
         <item name="actionBarTextColor">@color/white</item>
         <item name="actionBarBackground">@drawable/actionbar_background</item>
 
