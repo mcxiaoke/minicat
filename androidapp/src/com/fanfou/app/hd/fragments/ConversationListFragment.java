@@ -31,9 +31,9 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 	private static final String TAG = ConversationListFragment.class
 			.getSimpleName();
 
-	public static ConversationListFragment newInstance(int type) {
+	public static ConversationListFragment newInstance(boolean refresh) {
 		Bundle args = new Bundle();
-		args.putInt("type", type);
+		args.putBoolean("refresh", refresh);
 		ConversationListFragment fragment = new ConversationListFragment();
 		fragment.setArguments(args);
 		if (App.DEBUG) {

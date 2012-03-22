@@ -1,5 +1,8 @@
 package com.fanfou.app.hd;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,9 +23,12 @@ import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
 import com.fanfou.app.hd.fragments.AbstractListFragment;
 import com.fanfou.app.hd.fragments.ColumnsFragment;
+import com.fanfou.app.hd.fragments.ConversationListFragment;
 import com.fanfou.app.hd.fragments.HomeTimelineFragment;
 import com.fanfou.app.hd.fragments.MentionTimelineFragment;
 import com.fanfou.app.hd.fragments.PublicTimelineFragment;
+import com.viewpagerindicator.TabPageIndicator;
+import com.viewpagerindicator.TitleProvider;
 
 /**
  * @author mcxiaoke
@@ -66,15 +72,10 @@ import com.fanfou.app.hd.fragments.PublicTimelineFragment;
 public class UIHome extends UIBaseSupport {
 
 	public static final String TAG = UIHome.class.getSimpleName();
-	public static final String[] PAGE_TITLES = new String[] { "栏目", "主页", "提及",
-			"随便看看" };
 
-	public static final int NUMS_OF_PAGE = PAGE_TITLES.length;
-
-	// private ActionBar mActionBar;
 	private ViewPager mViewPager;
 	private PagesAdapter mPagesAdapter;
-	private SwipeyTabsView mTabsView;
+	private SwipeyTabsView mIndicator;
 
 	private void log(String message) {
 		Log.d(TAG, message);
@@ -92,7 +93,7 @@ public class UIHome extends UIBaseSupport {
 	protected void setActionBar() {
 		getSupportActionBar().setHomeButtonEnabled(true);
 	}
-	
+
 	@Override
 	protected void onMenuHomeClick() {
 	}
@@ -111,9 +112,9 @@ public class UIHome extends UIBaseSupport {
 		mViewPager.setAdapter(mPagesAdapter);
 		mViewPager.setCurrentItem(1);
 
-		mTabsView = (SwipeyTabsView) findViewById(R.id.viewindicator);
-		mTabsView.setAdapter(new PageTabsAdapter(this));
-		mTabsView.setViewPager(mViewPager);
+		mIndicator = (SwipeyTabsView) findViewById(R.id.indicator);
+		mIndicator.setAdapter(new PageTabsAdapter(this));
+		mIndicator.setViewPager(mViewPager);
 
 	}
 
@@ -179,11 +180,11 @@ public class UIHome extends UIBaseSupport {
 		return R.menu.home_menu;
 	}
 
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		getSupportMenuInflater().inflate(R.menu.home_menu, menu);
-//		return true;
-//	}
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// getSupportMenuInflater().inflate(R.menu.home_menu, menu);
+	// return true;
+	// }
 
 	@Override
 	public boolean onOptionsItemSelected(
@@ -205,7 +206,7 @@ public class UIHome extends UIBaseSupport {
 			return true;
 		default:
 			return true;
-//			break;
+			// break;
 		}
 	}
 
@@ -252,45 +253,38 @@ public class UIHome extends UIBaseSupport {
 	public void onClick(View v) {
 	}
 
-	private void checkRefresh(int page) {
-		if (App.DEBUG) {
-			Log.d(TAG, "checkRefresh page=" + page);
-		}
-		AbstractListFragment fragment = mPagesAdapter.getItem(page);
-		BaseAdapter adapter = fragment.getAdapter();
-		if (App.DEBUG) {
-			Log.e(TAG, "fragment=" + fragment);
-			Log.e(TAG, "adapter=" + adapter);
-		}
-		if (adapter.isEmpty()) {
-			fragment.startRefresh();
-		}
-	}
-
-	private void startRefresh(int page) {
-		mPagesAdapter.getItem(page).startRefresh();
-	}
+	public static final String[] PAGE_TITLES = new String[] { "随便看看", "主页",
+			"提及", "私信" };
 
 	private static class PagesAdapter extends FragmentPagerAdapter {
 
-		private final AbstractListFragment[] fragments = new AbstractListFragment[NUMS_OF_PAGE];
+		private final List<AbstractListFragment> fragments = new ArrayList<AbstractListFragment>();
 
 		public PagesAdapter(FragmentManager fm) {
 			super(fm);
-			fragments[0] = ColumnsFragment.newInstance();
-			fragments[1] = HomeTimelineFragment.newInstance(true);
-			fragments[2] = MentionTimelineFragment.newInstance(true);
-			fragments[3] = PublicTimelineFragment.newInstance();
+			addFragments();
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return PAGE_TITLES[position];
 		}
 
 		@Override
 		public AbstractListFragment getItem(int position) {
-			return fragments[position % NUMS_OF_PAGE];
+			return fragments.get(position);
 		}
 
 		@Override
 		public int getCount() {
-			return NUMS_OF_PAGE;
+			return PAGE_TITLES.length;
+		}
+
+		private void addFragments() {
+			fragments.add(PublicTimelineFragment.newInstance(true));
+			fragments.add(HomeTimelineFragment.newInstance(true));
+			fragments.add(MentionTimelineFragment.newInstance(true));
+			fragments.add(ConversationListFragment.newInstance(true));
 		}
 
 	}
@@ -308,7 +302,7 @@ public class UIHome extends UIBaseSupport {
 			LayoutInflater inflater = mContext.getLayoutInflater();
 			SwipeyTabButton tab = (SwipeyTabButton) inflater.inflate(
 					R.layout.tab_swipey, null);
-			tab.setText(PAGE_TITLES[position % NUMS_OF_PAGE]);
+			tab.setText(PAGE_TITLES[position]);
 			return tab;
 		}
 
