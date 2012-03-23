@@ -189,10 +189,10 @@ public class DataController {
 
 	public static CursorLoader getConversationLoader(Activity activity,
 			String id) {
-		String where = DirectMessageColumns.TYPE + " =? AND "
+		String where = DirectMessageColumns.TYPE + " !=? AND "
 				+ DirectMessageColumns.CONVERSATION_ID + " =? ";
 		String[] whereArgs = new String[] {
-				String.valueOf(DirectMessageModel.TYPE_CONVERSATION), id };
+				String.valueOf(DirectMessageModel.TYPE_CONVERSATION_LIST), id };
 		String orderBy = DataProvider.ORDERBY_TIME;
 		return new CursorLoader(activity, DirectMessageColumns.CONTENT_URI,
 				null, where, whereArgs, orderBy);

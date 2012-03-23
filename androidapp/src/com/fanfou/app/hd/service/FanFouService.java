@@ -575,7 +575,6 @@ public final class FanFouService extends IntentService {
 		} else {
 			p.count = DEFAULT_TIMELINE_COUNT;
 		}
-		p.count = 5;
 
 		try {
 			List<DirectMessageModel> messages = api.getConversation(id, p);
