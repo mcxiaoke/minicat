@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.fanfou.app.hd.adapter.AtTokenizer;
 import com.fanfou.app.hd.adapter.AutoCompleteCursorAdapter;
 import com.fanfou.app.hd.controller.DataController;
+import com.fanfou.app.hd.controller.SimpleDialogListener;
 import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.dao.model.RecordColumns;
 import com.fanfou.app.hd.dao.model.RecordModel;
@@ -65,12 +66,12 @@ import com.fanfou.app.hd.util.Utils;
  * @version 7.1 2012.03.16
  * 
  */
-public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor>{
+public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 
 	private static final String TAG = UIWrite.class.getSimpleName();
-	
-	private static final int LOADER_ID=1;
-	
+
+	private static final int LOADER_ID = 1;
+
 	private static final int REQUEST_PHOTO_CAPTURE = 0;
 	private static final int REQUEST_PHOTO_LIBRARY = 1;
 	private static final int REQUEST_LOCATION_ADD = 2;
@@ -324,7 +325,8 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor>{
 		});
 
 		mAutoCompleteTextView.setTokenizer(new AtTokenizer());
-		mAutoCompleteCursorAdapter=new AutoCompleteCursorAdapter(mContext, null);
+		mAutoCompleteCursorAdapter = new AutoCompleteCursorAdapter(mContext,
+				null);
 		mAutoCompleteTextView.setAdapter(mAutoCompleteCursorAdapter);
 	}
 
@@ -358,7 +360,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor>{
 
 		setAutoComplete();
 		parseIntent();
-		
+
 		getSupportLoaderManager().initLoader(LOADER_ID, null, this);
 
 	}
@@ -435,20 +437,21 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor>{
 
 	private void checkSave() {
 
-		final ConfirmDialog dialog = new ConfirmDialog(this, "保存草稿",
-				"要保存未发送内容为草稿吗？");
-		dialog.setButton1Text("保存");
-		dialog.setButton2Text("放弃");
-		dialog.setClickListener(new ConfirmDialog.ClickHandler() {
+		final ConfirmDialog dialog = new ConfirmDialog(this);
+		dialog.setMessage("要保存未发送内容为草稿吗？");
+		dialog.setTitle("保存草稿");
+		dialog.setClickListener(new SimpleDialogListener() {
 
 			@Override
-			public void onButton1Click() {
+			public void onPositiveClick() {
+				super.onPositiveClick();
 				doSaveRecord();
 				finish();
 			}
 
 			@Override
-			public void onButton2Click() {
+			public void onNegativeClick() {
+				super.onNegativeClick();
 				finish();
 			}
 		});
@@ -576,7 +579,8 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor>{
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		return DataController.getAutoCompleteCursorLoader(mContext, App.getAccount());
+		return DataController.getAutoCompleteCursorLoader(mContext,
+				App.getAccount());
 	}
 
 	@Override

@@ -91,12 +91,14 @@ public class PopupController {
 
 	private static void deleteStatus(final Activity context, final String id,
 			final Handler handler) {
-		final ConfirmDialog dialog = new ConfirmDialog(context, "删除消息",
-				"要删除这条消息吗？");
-		dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
+		final ConfirmDialog dialog = new ConfirmDialog(context);
+		dialog.setTitle("提示");
+		dialog.setMessage("确定要删除这条消息吗?");
+		dialog.setClickListener(new SimpleDialogListener() {
 
 			@Override
-			public void onButton1Click() {
+			public void onPositiveClick() {
+				super.onPositiveClick();
 				FanFouService.deleteStatus(context, id, handler);
 			}
 		});

@@ -20,8 +20,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.fanfou.app.hd.api.ResultInfo;
+import com.fanfou.app.hd.controller.SimpleDialogListener;
 import com.fanfou.app.hd.dao.model.UserModel;
-import com.fanfou.app.hd.dialog.AlertInfoDialog;
+import com.fanfou.app.hd.dialog.InfoDialog;
 import com.fanfou.app.hd.http.RestResponse;
 import com.fanfou.app.hd.http.Parameter;
 import com.fanfou.app.hd.http.RestClient;
@@ -288,19 +289,18 @@ public class UISignup extends Activity implements OnClickListener {
 			}
 			final String message = "你的昵称是[" + u.getScreenName()
 					+ "]，请稍后通过MENU菜单进入个人空间完善你的个人资料，点击确定直接登录";
-			final AlertInfoDialog dialog = new AlertInfoDialog(mContext,
-					"注册成功", message);
-			dialog.setOnClickListener(new AlertInfoDialog.OnOKClickListener() {
+			final InfoDialog dialog = new InfoDialog(mContext);
+			dialog.setTitle("注册成功");
+			dialog.setMessage(message);
+			dialog.setClickListener(new SimpleDialogListener() {
 
 				@Override
-				public void onOKClick() {
+				public void onPositiveClick() {
+					super.onPositiveClick();
 					Intent data = new Intent();
 					data.putExtra("userid", u.getId());
 					data.putExtra("password", mPassword);
 					data.putExtra("email", mEmail);
-					if (!cFollowPushed.isChecked()) {
-//						data.putExtra(Constants.EXTRA_PAGE, 3);
-					}
 					setResult(Activity.RESULT_OK, data);
 					finish();
 				}
@@ -308,8 +308,8 @@ public class UISignup extends Activity implements OnClickListener {
 			dialog.show();
 		}
 
-		private UserModel register(String email, String nickname, String password,
-				String deviceId) throws IOException {
+		private UserModel register(String email, String nickname,
+				String password, String deviceId) throws IOException {
 			List<Parameter> params = new ArrayList<Parameter>();
 			params.add(new Parameter("email", email));
 			params.add(new Parameter("realname", nickname));
@@ -326,8 +326,8 @@ public class UISignup extends Activity implements OnClickListener {
 
 			// NetClient client = new NetClient();
 
-			RestResponse res = new RestClient().post("http://api.fanfou.com/register.json",
-					params, false);
+			RestResponse res = new RestClient().post(
+					"http://api.fanfou.com/register.json", params, false);
 
 			// HttpResponse response = client.post(FanFouApiConfig.URL_REGISTER,
 			// params);
@@ -337,7 +337,8 @@ public class UISignup extends Activity implements OnClickListener {
 			}
 			UserModel result = null;
 			if (res.statusCode == 200) {
-//				result = FanFouParser.user(res.getContent(), User.TYPE_OTHER);
+				// result = FanFouParser.user(res.getContent(),
+				// User.TYPE_OTHER);
 			}
 			return result;
 		}

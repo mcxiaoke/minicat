@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.fanfou.app.hd.controller.EmptyViewController;
+import com.fanfou.app.hd.controller.SimpleDialogListener;
 import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
@@ -202,7 +203,7 @@ public class UIStatus extends UIBaseSupport {
 
 	private void setListeners() {
 		vHeader.setOnClickListener(this);
-		
+
 		contentPhoto.setOnClickListener(this);
 
 		imReply.setOnClickListener(this);
@@ -377,11 +378,13 @@ public class UIStatus extends UIBaseSupport {
 			}
 
 		};
-		final ConfirmDialog dialog = new ConfirmDialog(this, "删除消息",
-				"要删除这条消息吗？");
-		dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
+		final ConfirmDialog dialog = new ConfirmDialog(this);
+		dialog.setMessage("确定要删除这条消息吗？");
+		dialog.setClickListener(new SimpleDialogListener() {
+
 			@Override
-			public void onButton1Click() {
+			public void onPositiveClick() {
+				super.onPositiveClick();
 				FanFouService.deleteStatus(mContext, status.getId(), handler);
 			}
 		});

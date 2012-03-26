@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.controller.EmptyViewController;
+import com.fanfou.app.hd.controller.SimpleDialogListener;
 import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
@@ -423,17 +424,19 @@ public class ProfileFragment extends AbstractFragment implements
 				}
 			}
 		};
-
-		final ConfirmDialog dialog = new ConfirmDialog(getActivity(), "取消关注",
-				"要取消关注" + user.getScreenName() + "吗？");
-		dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
+		
+		
+		final ConfirmDialog dialog = new ConfirmDialog(getActivity());
+		dialog.setTitle("提示");
+		dialog.setMessage("要取消关注" + user.getScreenName() + "吗？");
+		dialog.setClickListener(new SimpleDialogListener() {
 
 			@Override
-			public void onButton1Click() {
+			public void onPositiveClick() {
+				super.onPositiveClick();
 				FanFouService.unFollow(getActivity(), user.getId(), handler);
 			}
 		});
-
 		dialog.show();
 	}
 

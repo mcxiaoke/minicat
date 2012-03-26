@@ -16,6 +16,7 @@ import android.widget.ListView;
 
 import com.fanfou.app.hd.adapter.RecordCursorAdaper;
 import com.fanfou.app.hd.controller.DataController;
+import com.fanfou.app.hd.controller.SimpleDialogListener;
 import com.fanfou.app.hd.dao.model.RecordColumns;
 import com.fanfou.app.hd.dao.model.RecordModel;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
@@ -108,12 +109,14 @@ public class UIRecords extends UIBaseSupport implements OnItemClickListener {
 	}
 
 	private void doSendAll() {
-		final ConfirmDialog dialog = new ConfirmDialog(this, "发送所有",
-				"确定发送所有草稿吗？");
-		dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
+		final ConfirmDialog dialog = new ConfirmDialog(this);
+		dialog.setTitle("提示");
+		dialog.setMessage("确定发送所有草稿吗？");
+		dialog.setClickListener(new SimpleDialogListener() {
 
 			@Override
-			public void onButton1Click() {
+			public void onPositiveClick() {
+				super.onPositiveClick();
 				startTaskQueueService();
 				onMenuHomeClick();
 			}

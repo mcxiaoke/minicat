@@ -4,23 +4,21 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
-public class ConfirmDialog extends AlertDialog implements
+public class InfoDialog extends AlertDialog implements
 		DialogInterface.OnClickListener {
 	private DialogListener mListener;
 
-	public ConfirmDialog(Context context) {
+	public InfoDialog(Context context) {
 		super(context);
 		initialize(context);
 	}
 
-	public ConfirmDialog(Context context, int theme) {
+	public InfoDialog(Context context, int theme) {
 		super(context, theme);
 		initialize(context);
 	}
 
 	private void initialize(Context context) {
-		setButton(BUTTON_NEGATIVE, context.getString(android.R.string.cancel),
-				this);
 		setButton(BUTTON_POSITIVE, context.getString(android.R.string.ok), this);
 	}
 
@@ -35,11 +33,6 @@ public class ConfirmDialog extends AlertDialog implements
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		switch (which) {
-		case BUTTON_NEGATIVE:
-			if (mListener != null) {
-				mListener.onNegativeClick();
-			}
-			break;
 		case BUTTON_POSITIVE:
 			if (mListener != null) {
 				mListener.onPositiveClick();

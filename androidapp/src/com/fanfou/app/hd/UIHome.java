@@ -16,6 +16,7 @@ import android.view.View;
 import com.actionbarsherlock.app.ActionBar;
 import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.cache.ImageLoader;
+import com.fanfou.app.hd.controller.SimpleDialogListener;
 import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
 import com.fanfou.app.hd.fragments.AbstractListFragment;
@@ -23,6 +24,7 @@ import com.fanfou.app.hd.fragments.ConversationListFragment;
 import com.fanfou.app.hd.fragments.HomeTimelineFragment;
 import com.fanfou.app.hd.fragments.MentionTimelineFragment;
 import com.fanfou.app.hd.fragments.PublicTimelineFragment;
+import com.fanfou.app.hd.service.FanFouService;
 
 /**
  * @author mcxiaoke
@@ -239,12 +241,14 @@ public class UIHome extends UIBaseSupport implements OnPageChangeListener {
 	}
 
 	private void onMenuLogoutClick() {
-		final ConfirmDialog dialog = new ConfirmDialog(this, "注销",
-				"确定注销当前登录帐号吗？");
-		dialog.setClickListener(new ConfirmDialog.AbstractClickHandler() {
+		final ConfirmDialog dialog = new ConfirmDialog(this);
+		dialog.setTitle("提示");
+		dialog.setMessage("确定注销当前登录帐号吗？");
+		dialog.setClickListener(new SimpleDialogListener() {
 
 			@Override
-			public void onButton1Click() {
+			public void onPositiveClick() {
+				super.onPositiveClick();
 				App.doLogin(mContext);
 				finish();
 			}
