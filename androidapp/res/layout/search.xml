@@ -6,7 +6,7 @@
     android:orientation="vertical" >
 
     <include
-        layout="@layout/empty" />
+        layout="@layout/empty_layout" />
 
     <ListView
         android:id="@android:id/list"

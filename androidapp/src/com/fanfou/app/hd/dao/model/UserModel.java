@@ -121,31 +121,30 @@ public class UserModel extends BaseModel {
 
 	@Override
 	public ContentValues values() {
-		UserModel u = this;
 		ContentValues cv = convert();
 
-		cv.put(UserColumns.NAME, u.name);
-		cv.put(UserColumns.SCREEN_NAME, u.screenName);
-		cv.put(UserColumns.LOCATION, u.location);
-		cv.put(UserColumns.GENDER, u.gender);
-		cv.put(UserColumns.BIRTHDAY, u.birthday);
-		cv.put(UserColumns.DESCRIPTION, u.description);
+		cv.put(UserColumns.NAME, name);
+		cv.put(UserColumns.SCREEN_NAME, screenName);
+		cv.put(UserColumns.LOCATION, location);
+		cv.put(UserColumns.GENDER, gender);
+		cv.put(UserColumns.BIRTHDAY, birthday);
+		cv.put(UserColumns.DESCRIPTION, description);
 
-		cv.put(UserColumns.PROFILE_IMAGE_URL, u.profileImageUrl);
-		cv.put(UserColumns.PROFILE_IMAGE_URL_LARGE, u.profileImageUrlLarge);
-		cv.put(UserColumns.URL, u.url);
-		cv.put(UserColumns.STATUS, u.status);
+		cv.put(UserColumns.PROFILE_IMAGE_URL, profileImageUrl);
+		cv.put(UserColumns.PROFILE_IMAGE_URL_LARGE, profileImageUrlLarge);
+		cv.put(UserColumns.URL, url);
+		cv.put(UserColumns.STATUS, status);
 
-		cv.put(UserColumns.FOLLOWERS_COUNT, u.followersCount);
-		cv.put(UserColumns.FRIENDS_COUNT, u.friendsCount);
-		cv.put(UserColumns.FAVORITES_COUNT, u.favouritesCount);
-		cv.put(UserColumns.STATUSES_COUNT, u.statusesCount);
+		cv.put(UserColumns.FOLLOWERS_COUNT, followersCount);
+		cv.put(UserColumns.FRIENDS_COUNT, friendsCount);
+		cv.put(UserColumns.FAVORITES_COUNT, favouritesCount);
+		cv.put(UserColumns.STATUSES_COUNT, statusesCount);
 
-		cv.put(UserColumns.FOLLOWING, u.following);
-		cv.put(UserColumns.PROTECTED, u.protect);
-		cv.put(UserColumns.NOTIFICATIONS, u.notifications);
-		cv.put(UserColumns.VERIFIED, u.verified);
-		cv.put(UserColumns.FOLLOW_ME, u.followMe);
+		cv.put(UserColumns.FOLLOWING, following);
+		cv.put(UserColumns.PROTECTED, protect);
+		cv.put(UserColumns.NOTIFICATIONS, notifications);
+		cv.put(UserColumns.VERIFIED, verified);
+		cv.put(UserColumns.FOLLOW_ME, followMe);
 
 		return cv;
 	}

@@ -46,7 +46,7 @@
 
         <Button
             android:id="@id/button1"
-            style="@style/ButtonStyle" />
+            style="?Style.Button" />
 
         <View
             android:layout_width="10dp"
@@ -54,7 +54,7 @@
 
         <Button
             android:id="@id/button2"
-            style="@style/ButtonStyle" />
+            style="?Style.Button" />
     </LinearLayout>
 
 </LinearLayout>

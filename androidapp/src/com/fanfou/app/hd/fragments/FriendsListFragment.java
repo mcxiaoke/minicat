@@ -38,4 +38,9 @@ public class FriendsListFragment extends UserListFragment {
 		return UserModel.TYPE_FRIENDS;
 	}
 
+	@Override
+	public String getTitle() {
+		return "好友 ";
+	}
+
 }

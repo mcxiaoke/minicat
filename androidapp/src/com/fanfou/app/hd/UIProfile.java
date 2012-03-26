@@ -1,20 +1,16 @@
 package com.fanfou.app.hd;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 
-import com.astuetz.viewpager.extensions.SwipeyTabButton;
-import com.astuetz.viewpager.extensions.SwipeyTabsView;
-import com.astuetz.viewpager.extensions.TabsAdapter;
 import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.fragments.AbstractFragment;
 import com.fanfou.app.hd.fragments.ProfileFragment;
@@ -28,31 +24,15 @@ import com.fanfou.app.hd.fragments.UserTimelineFragment;
  * @version 1.2 2012.02.09
  * @version 1.3 2012.02.22
  * @version 2.0 2012.03.06
+ * @version 2.5 2012.03.23
  * 
  */
-public class UIProfile extends UIBaseSupport {
+public class UIProfile extends UIBaseSupport implements OnPageChangeListener {
 
 	public static final String TAG = UIProfile.class.getSimpleName();
 
-	public static enum Page {
-		FAVORITES, PROFILE, TIMELINE
-	};
-
-	public static final int NUMS_OF_PAGE = Page.values().length;
-	private static final HashMap<Page, String> sTitles = new HashMap<UIProfile.Page, String>(
-			NUMS_OF_PAGE);
-
-	static {
-		// sTitles.put(Page.FOLLOWERS, "关注者");
-		// sTitles.put(Page.FRIENDS, "好友");
-		sTitles.put(Page.FAVORITES, "收藏");
-		sTitles.put(Page.PROFILE, "简介");
-		sTitles.put(Page.TIMELINE, "消息");
-	}
-
 	private ViewPager mViewPager;
 	private PagesAdapter mPagesAdapter;
-	private SwipeyTabsView mTabsView;
 
 	private UserModel user;
 	private String userId;
@@ -101,11 +81,7 @@ public class UIProfile extends UIBaseSupport {
 		mPagesAdapter = new PagesAdapter(getSupportFragmentManager(), userId);
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);
 		mViewPager.setAdapter(mPagesAdapter);
-		mViewPager.setCurrentItem(Page.PROFILE.ordinal());
-
-		mTabsView = (SwipeyTabsView) findViewById(R.id.viewindicator);
-		mTabsView.setAdapter(new PageTabsAdapter(this));
-		mTabsView.setViewPager(mViewPager);
+		mViewPager.setCurrentItem(1);
 	}
 
 	@Override
@@ -118,53 +94,54 @@ public class UIProfile extends UIBaseSupport {
 		super.onPause();
 	}
 
+	@Override
+	public void onPageScrollStateChanged(int arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onPageSelected(int position) {
+		// TODO Auto-generated method stub
+
+	}
+
 	private static class PagesAdapter extends FragmentPagerAdapter {
 
-		private final AbstractFragment[] fragments = new AbstractFragment[NUMS_OF_PAGE];
+		private final List<AbstractFragment> fragments = new ArrayList<AbstractFragment>();
 		private String userId;
 
 		public PagesAdapter(FragmentManager fm, String uid) {
 			super(fm);
 			this.userId = uid;
-			fragments[Page.FAVORITES.ordinal()] = UserFavoritesFragment
-					.newInstance(userId);
-			fragments[Page.PROFILE.ordinal()] = ProfileFragment
-					.newInstance(userId);
-			fragments[Page.TIMELINE.ordinal()] = UserTimelineFragment
-					.newInstance(userId);
+			addFragments();
 		}
 
 		@Override
 		public AbstractFragment getItem(int position) {
-			return fragments[position];
+			return fragments.get(position);
 		}
 
 		@Override
 		public int getCount() {
-			return NUMS_OF_PAGE;
-		}
-
-	}
-
-	private static class PageTabsAdapter implements TabsAdapter {
-
-		private Activity mContext;
-
-		public PageTabsAdapter(Activity ctx) {
-			this.mContext = ctx;
+			return fragments.size();
 		}
 
 		@Override
-		public View getView(int position) {
-			SwipeyTabButton tab;
+		public CharSequence getPageTitle(int position) {
+			return getItem(position).getTitle();
+		}
 
-			LayoutInflater inflater = mContext.getLayoutInflater();
-			tab = (SwipeyTabButton) inflater.inflate(R.layout.tab_swipey, null);
-
-			if (position < NUMS_OF_PAGE)
-				tab.setText(sTitles.get(Page.values()[position]));
-
-			return tab;
+		private void addFragments() {
+			fragments.add(UserFavoritesFragment.newInstance(userId));
+			fragments.add(ProfileFragment.newInstance(userId));
+			fragments.add(UserTimelineFragment.newInstance(userId));
 		}
 
 	}

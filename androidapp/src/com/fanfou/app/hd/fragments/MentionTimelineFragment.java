@@ -54,7 +54,8 @@ public class MentionTimelineFragment extends BaseTimlineFragment {
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		return DataController.getTimelineCursorLoader(getActivity(), StatusModel.TYPE_MENTIONS);
+		return DataController.getTimelineCursorLoader(getActivity(),
+				StatusModel.TYPE_MENTIONS);
 	}
 
 	@Override
@@ -75,6 +76,11 @@ public class MentionTimelineFragment extends BaseTimlineFragment {
 		}
 		FanFouService.getTimeline(getActivity(), StatusModel.TYPE_MENTIONS,
 				handler, p);
+	}
+
+	@Override
+	public String getTitle() {
+		return "提及";
 	}
 
 }

@@ -3,11 +3,10 @@ package com.fanfou.app.hd;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.CursorAdapter;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Filter;
 
 import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.dao.model.UserModel;
@@ -16,8 +15,6 @@ import com.fanfou.app.hd.fragments.FriendsListFragment;
 import com.fanfou.app.hd.fragments.OnInitCompleteListener;
 import com.fanfou.app.hd.fragments.UserListFragment;
 import com.fanfou.app.hd.ui.widget.TextChangeListener;
-import com.fanfou.app.hd.util.Assert;
-import com.fanfou.app.hd.util.StringHelper;
 
 /**
  * @author mcxiaoke
@@ -33,19 +30,17 @@ import com.fanfou.app.hd.util.StringHelper;
  * @version 3.0 2012.01.30
  * @version 3.1 2012.01.31
  * @version 4.0 2012.02.08
+ * @version 4.1 2012.03.26
  * 
  */
 public class UIUserList extends UIBaseSupport implements OnInitCompleteListener {
 	private static final String TAG = UIUserList.class.getSimpleName();
 
 	private UserListFragment mFragment;
-	private CursorAdapter mAdapter;
-	private Filter mFilter;
 
 	private EditText mEditText;
 
 	private String userId;
-	private String userName;
 	private UserModel user;
 	private int type;
 
@@ -66,7 +61,6 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 	protected void initialize() {
 		if (!parseIntent()) {
 			finish();
-			return;
 		}
 	}
 
@@ -82,23 +76,12 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 	private void filter(String text) {
 		if (App.DEBUG) {
 			Log.d(TAG, "filter() text=" + text);
-			Assert.notNull(mAdapter, "adaper is null.");
-			Assert.notNull(mAdapter.getFilter(), "adaper.filter is null.");
 		}
-		if (StringHelper.isEmpty(text)) {
-			return;
-		}
-		if (mFilter != null) {
-			mFilter.filter(text);
-		}
+			mFragment.filter(text);
 	}
 
 	private void showSearchBox() {
 		mEditText.setVisibility(View.VISIBLE);
-	}
-
-	private void hideSearchBox() {
-		mEditText.setVisibility(View.GONE);
 	}
 
 	private void setFragment() {
@@ -106,9 +89,9 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 			Log.d(TAG, "setFragment()");
 		}
 		if (type == UserModel.TYPE_FRIENDS) {
-			mFragment = FriendsListFragment.newInstance(userId,true);
+			mFragment = FriendsListFragment.newInstance(userId, true);
 		} else {
-			mFragment = FollowersListFragment.newInstance(userId,true);
+			mFragment = FollowersListFragment.newInstance(userId, true);
 		}
 
 		mFragment.setOnInitCompleteListener(this);
@@ -138,15 +121,14 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 
 	private boolean parseIntent() {
 		Intent intent = getIntent();
-		type = intent.getIntExtra("type",UserModel.TYPE_FRIENDS);
+		type = intent.getIntExtra("type", UserModel.TYPE_FRIENDS);
 		user = (UserModel) intent.getParcelableExtra("data");
 		if (user == null) {
 			userId = intent.getStringExtra("id");
 		} else {
 			userId = user.getId();
-			userName = user.getScreenName();
 		}
-		return !StringHelper.isEmpty(userId);
+		return !TextUtils.isEmpty(userId);
 	}
 
 	@Override
@@ -159,11 +141,6 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 
 	@Override
 	public void onInitComplete(Bundle data) {
-		if (App.DEBUG) {
-			Assert.notNull(mFragment.getAdapter(), "adaper is null.");
-		}
-		mAdapter = mFragment.getAdapter();
-		mFilter = mAdapter.getFilter();
 		showSearchBox();
 	}
 

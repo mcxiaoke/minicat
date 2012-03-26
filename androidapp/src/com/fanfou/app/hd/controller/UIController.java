@@ -184,6 +184,12 @@ public class UIController {
 		intent.putExtra("id", id);
 		context.startActivity(intent);
 	}
+	
+	public static void showProfile(Context context, UserModel user) {
+		Intent intent = new Intent(context, UIProfile.class);
+		intent.putExtra("data", user);
+		context.startActivity(intent);
+	}
 
 	public static void showTimeline(Context context, String id) {
 		Intent intent = new Intent(context, UITimeline.class);

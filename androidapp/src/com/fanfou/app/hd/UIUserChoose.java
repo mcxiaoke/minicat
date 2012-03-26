@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
@@ -22,7 +24,9 @@ import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 
 import com.fanfou.app.hd.adapter.UserChooseCursorAdapter;
-import com.fanfou.app.hd.dao.model.UserColumns;
+import com.fanfou.app.hd.api.Paging;
+import com.fanfou.app.hd.controller.DataController;
+import com.fanfou.app.hd.controller.EmptyViewController;
 import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.service.AutoCompleteService;
 import com.fanfou.app.hd.service.Constants;
@@ -46,24 +50,29 @@ import com.fanfou.app.hd.util.Utils;
  * @version 2.8 2011.12.23
  * @version 3.0 2012.02.22
  * @version 3.1 2012.03.13
+ * @version 3.2 2012.03.26
  */
-public class UIUserChoose extends UIBaseSupport implements
-		FilterQueryProvider, OnItemClickListener {
-	protected ListView mListView;
-	protected EditText mEditText;
-	protected ViewGroup mEmptyView;
+public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
+		OnItemClickListener, LoaderCallbacks<Cursor> {
+	private static final String TAG = UIUserChoose.class.getSimpleName();
+
+	private static final int LOADER_ID = 1;
+
+	private ListView mListView;
+	private EditText mEditText;
+	private ViewGroup vEmpty;
+	private EmptyViewController emptyController;
 
 	private ViewStub mViewStub;
 	private View mButtonGroup;
 	private Button okButton;
 	private Button cancelButton;
 
-	protected Cursor mCursor;
-	protected UserChooseCursorAdapter mCursorAdapter;
+	private UserChooseCursorAdapter mCursorAdapter;
 
 	private List<String> mUserNames;
 
-	protected int page = 1;
+	private int page = 1;
 
 	private boolean isInitialized = false;
 
@@ -84,70 +93,50 @@ public class UIUserChoose extends UIBaseSupport implements
 	@Override
 	protected void initialize() {
 		mUserNames = new ArrayList<String>();
-		initCursorAdapter();
-
 	}
 
-	protected void initCursorAdapter() {
-		String where = UserColumns.TYPE + "=? AND " + UserColumns.OWNER
-				+ "=?";
-		String[] whereArgs = new String[] {
-				String.valueOf(UserModel.TYPE_FRIENDS), App.getAccount() };
-		mCursor = managedQuery(UserColumns.CONTENT_URI, null, where,
-				whereArgs, null);
-
-		mCursorAdapter = new UserChooseCursorAdapter(mContext, mCursor);
-		mCursorAdapter.setFilterQueryProvider(this);
-	}
-
-	protected void initCheckState() {
-		if (mCursor.getCount() > 0) {
+	private void initCheckState() {
+		if (mCursorAdapter.getCount() > 0) {
 			showContent();
 		} else {
 			doRefresh();
-			Handler handler = new Handler();
-			handler.postDelayed(new Runnable() {
-
-				@Override
-				public void run() {
-					WakefulIntentService.sendWakefulWork(mContext,
-							AutoCompleteService.class);
-				}
-			}, 30000);
 			showProgress();
 		}
+	}
+
+	private void showEmptyView(String text) {
+		mListView.setVisibility(View.GONE);
+		emptyController.showEmpty(text);
 	}
 
 	private void showProgress() {
 		mListView.setVisibility(View.GONE);
 		mEditText.setVisibility(View.GONE);
-		mEmptyView.setVisibility(View.VISIBLE);
+		emptyController.showProgress();
+		if (App.DEBUG) {
+			Log.d(TAG, "showProgress");
+		}
 	}
 
 	private void showContent() {
-		if (App.DEBUG) {
-			log("showContent()");
-		}
 		isInitialized = true;
-		mEmptyView.setVisibility(View.GONE);
-		mEditText.setVisibility(View.VISIBLE);
+		emptyController.hideProgress();
 		mListView.setVisibility(View.VISIBLE);
+		mEditText.setVisibility(View.VISIBLE);
+		if (App.DEBUG) {
+			Log.d(TAG, "showContent");
+		}
 	}
 
 	@Override
 	protected void setLayout() {
 		setContentView(R.layout.user_choose);
-
 		mViewStub = (ViewStub) findViewById(R.id.stub);
-
-		mEmptyView = (ViewGroup) findViewById(R.id.empty);
-
 		mEditText = (EditText) findViewById(R.id.choose_input);
 		mEditText.addTextChangedListener(new MyTextWatcher());
-
+		vEmpty = (ViewGroup) findViewById(android.R.id.empty);
+		emptyController = new EmptyViewController(vEmpty);
 		setListView();
-
-		initCheckState();
 	}
 
 	private void setListView() {
@@ -155,7 +144,11 @@ public class UIUserChoose extends UIBaseSupport implements
 		mListView.setOnItemClickListener(this);
 		mListView.setItemsCanFocus(false);
 		mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+		
+		mCursorAdapter = new UserChooseCursorAdapter(mContext, null);
+		mCursorAdapter.setFilterQueryProvider(this);
 		mListView.setAdapter(mCursorAdapter);
+		getSupportLoaderManager().initLoader(LOADER_ID, null, this);
 	}
 
 	private void initViewStub() {
@@ -172,27 +165,26 @@ public class UIUserChoose extends UIBaseSupport implements
 		cancelButton.setOnClickListener(this);
 	}
 
-	protected void doRefresh() {
+	private void doRefresh() {
 		page = 1;
 		doRetrieve(false);
 	}
 
-	protected void doGetMore() {
+	private void doGetMore() {
 		page++;
 		doRetrieve(true);
 	}
 
-	protected void doRetrieve(boolean isGetMore) {
-//		FanFouService.doFetchFriends(this, new ResultHandler(), page,
-//				App.getAccount());
+	private void doRetrieve(boolean isGetMore) {
+		Paging paging = new Paging();
+		paging.page = page;
+		FanFouService.getUsers(mContext, App.getAccount(),
+				UserModel.TYPE_FRIENDS, paging, new ResultHandler());
 	}
 
-	protected void updateUI() {
+	private void updateUI() {
 		if (App.DEBUG) {
 			log("updateUI()");
-		}
-		if (mCursor != null) {
-			mCursor.requery();
 		}
 	}
 
@@ -217,7 +209,7 @@ public class UIUserChoose extends UIBaseSupport implements
 		int id = v.getId();
 		switch (id) {
 		case R.id.button_ok:
-			doAddUserNames();
+			selectUserNames();
 			break;
 		case R.id.button_cancel:
 			finish();
@@ -227,7 +219,7 @@ public class UIUserChoose extends UIBaseSupport implements
 		}
 	}
 
-	private void doAddUserNames() {
+	private void selectUserNames() {
 		if (!mUserNames.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
 			for (String screenName : mUserNames) {
@@ -260,7 +252,7 @@ public class UIUserChoose extends UIBaseSupport implements
 		mListView.clearChoices();
 	}
 
-	protected class ResultHandler extends Handler {
+	private class ResultHandler extends Handler {
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -279,7 +271,7 @@ public class UIUserChoose extends UIBaseSupport implements
 				String errorMessage = msg.getData().getString("error_message");
 				Utils.notify(mContext, errorMessage);
 				if (!isInitialized) {
-					showContent();
+					showEmptyView(errorMessage);
 				}
 				break;
 			default:
@@ -291,13 +283,8 @@ public class UIUserChoose extends UIBaseSupport implements
 
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
-		String where = UserColumns.TYPE + " = " + UserModel.TYPE_FRIENDS
-				+ " AND " + UserColumns.OWNER + " = '" + App.getAccount()
-				+ "' AND (" + UserColumns.SCREEN_NAME + " like '%" + constraint
-				+ "%' OR " + UserColumns.ID + " like '%" + constraint + "%' )";
-		;
-		return managedQuery(UserColumns.CONTENT_URI, null, where,
-				null, null);
+		return DataController.getUserListCursor(this, UserModel.TYPE_FRIENDS,
+				App.getAccount());
 	}
 
 	@Override
@@ -310,11 +297,6 @@ public class UIUserChoose extends UIBaseSupport implements
 			int key = sba.keyAt(i);
 			boolean value = sba.valueAt(i);
 			mCursorAdapter.setItemChecked(key, value);
-			if (App.DEBUG) {
-				log("sba.values i=" + i + " key=" + key + " value=" + value
-						+ " cursor.size=" + mCursor.getCount()
-						+ " adapter.size=" + mCursorAdapter.getCount());
-			}
 			if (value) {
 				final Cursor cursor = (Cursor) mCursorAdapter.getItem(key);
 				final UserModel u = UserModel.from(cursor);
@@ -335,6 +317,26 @@ public class UIUserChoose extends UIBaseSupport implements
 		} else {
 			mButtonGroup.setVisibility(View.VISIBLE);
 		}
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+		return DataController.getAutoCompleteCursorLoader(mContext,
+				App.getAccount());
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
+		mCursorAdapter.swapCursor(newCursor);
+		if(App.DEBUG){
+			Log.d(TAG, "onLoadFinished() adapter.size="+mCursorAdapter.getCount());
+		}
+		initCheckState();
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+		mCursorAdapter.swapCursor(null);
 	}
 
 }

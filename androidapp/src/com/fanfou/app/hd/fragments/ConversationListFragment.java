@@ -101,4 +101,9 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 	protected void parseArguments(Bundle args) {
 	}
 
+	@Override
+	public String getTitle() {
+		return "私信";
+	}
+
 }

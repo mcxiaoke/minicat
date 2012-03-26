@@ -52,11 +52,11 @@ public class HomeTimelineFragment extends BaseTimlineFragment {
 	protected int getType() {
 		return StatusModel.TYPE_HOME;
 	}
-	
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		return DataController.getTimelineCursorLoader(getActivity(), StatusModel.TYPE_HOME);
+		return DataController.getTimelineCursorLoader(getActivity(),
+				StatusModel.TYPE_HOME);
 	}
 
 	@Override
@@ -75,6 +75,11 @@ public class HomeTimelineFragment extends BaseTimlineFragment {
 		}
 		FanFouService.getTimeline(getActivity(), StatusModel.TYPE_HOME,
 				handler, p);
+	}
+
+	@Override
+	public String getTitle() {
+		return "主页";
 	}
 
 }

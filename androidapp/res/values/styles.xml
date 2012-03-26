@@ -102,15 +102,31 @@
         <item name="android:layout_margin">2dp</item>
     </style>
 
-    <style name="ButtonStyle">
+    <style name="Widget"></style>
+
+    <style name="Widget.ButtonGroup">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="Widget.ButtonGroup.Light">
+        <item name="android:background">@color/fanfoublue_background</item>
+    </style>
+
+    <style name="Widget.Button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">6dp</item>
-        <item name="android:layout_margin">2dp</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:textSize">@dimen/text_size_large</item>
-        <item name="android:background">?buttonBackground</item>
-        <item name="android:textColor">?primaryTextColorReverse</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:layout_margin">6dp</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
+
+    <style name="Widget.Button.Light">
+        <item name="android:background">@drawable/button_blue</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="ProfileImageStyle">

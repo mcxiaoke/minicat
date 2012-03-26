@@ -46,7 +46,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 		implements OnRefreshListener, OnItemLongClickListener,
 		LoaderCallbacks<Cursor> {
 
-	private static final int LOADER_ID = 1;
+	protected static final int LOADER_ID = 1;
 
 	private static final String TAG = PullToRefreshListFragment.class
 			.getSimpleName();

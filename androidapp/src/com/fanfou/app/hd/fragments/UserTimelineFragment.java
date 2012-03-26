@@ -94,4 +94,9 @@ public class UserTimelineFragment extends BaseTimlineFragment {
 				.getUserTimelineCursorLoader(getActivity(), userId);
 	}
 
+	@Override
+	public String getTitle() {
+		return "消息";
+	}
+
 }

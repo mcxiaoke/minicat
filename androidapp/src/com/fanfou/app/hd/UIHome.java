@@ -3,18 +3,17 @@ package com.fanfou.app.hd;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import com.astuetz.viewpager.extensions.SwipeyTabButton;
-import com.astuetz.viewpager.extensions.SwipeyTabsView;
-import com.astuetz.viewpager.extensions.TabsAdapter;
+
+import com.actionbarsherlock.app.ActionBar;
 import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.cache.ImageLoader;
 import com.fanfou.app.hd.controller.UIController;
@@ -62,15 +61,15 @@ import com.fanfou.app.hd.fragments.PublicTimelineFragment;
  * @version 8.5 2012.02.27
  * @version 8.6 2012.02.28
  * @version 8.7 2012.03.09
+ * @version 9.0 2012.03.23
  * 
  */
-public class UIHome extends UIBaseSupport {
+public class UIHome extends UIBaseSupport implements OnPageChangeListener {
 
 	public static final String TAG = UIHome.class.getSimpleName();
 
 	private ViewPager mViewPager;
 	private PagesAdapter mPagesAdapter;
-	private SwipeyTabsView mIndicator;
 
 	private void log(String message) {
 		Log.d(TAG, message);
@@ -86,7 +85,8 @@ public class UIHome extends UIBaseSupport {
 
 	@Override
 	protected void setActionBar() {
-		getSupportActionBar().setHomeButtonEnabled(true);
+		ActionBar ab = getSupportActionBar();
+		ab.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_HOME);
 	}
 
 	@Override
@@ -100,17 +100,17 @@ public class UIHome extends UIBaseSupport {
 
 	@Override
 	protected void setLayout() {
-
 		setContentView(R.layout.ui_home);
+		setViewPager();
+
+	}
+
+	private void setViewPager() {
 		mPagesAdapter = new PagesAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);
 		mViewPager.setAdapter(mPagesAdapter);
-		mViewPager.setCurrentItem(1);
-
-		mIndicator = (SwipeyTabsView) findViewById(R.id.indicator);
-		mIndicator.setAdapter(new PageTabsAdapter(this));
-		mIndicator.setViewPager(mViewPager);
-
+		mViewPager.setOnPageChangeListener(this);
+		mViewPager.setCurrentItem((mPagesAdapter.getCount()-1) / 2);
 	}
 
 	@Override
@@ -188,21 +188,29 @@ public class UIHome extends UIBaseSupport {
 		switch (item.getItemId()) {
 		case R.id.menu_write:
 			onMenuWriteClick();
-			return true;
-			// break;
+			break;
 		case R.id.menu_logout:
 			onMenuLogoutClick();
-			return true;
+			break;
 		case R.id.menu_option:
 			onMenuOptionClick();
-			return true;
+			break;
 		case R.id.menu_search:
 			onMenuSearchClick();
-			return true;
+			break;
+		case R.id.menu_about:
+			onMenuAboutClick();
+			break;
+		case R.id.menu_feedback:
+			onMenuFeedbackClick();
+			break;
+		case R.id.menu_profile:
+			onMenuProfileClick();
+			break;
 		default:
-			return true;
-			// break;
+			break;
 		}
+		return true;
 	}
 
 	private void onMenuOptionClick() {
@@ -211,7 +219,7 @@ public class UIHome extends UIBaseSupport {
 	}
 
 	private void onMenuProfileClick() {
-		// ActionManager.doMyProfile(this);
+		UIController.showProfile(this, App.getAccount());
 	}
 
 	private void onMenuSearchClick() {
@@ -224,10 +232,10 @@ public class UIHome extends UIBaseSupport {
 	}
 
 	private void onMenuFeedbackClick() {
-		// ActionManager.doWrite(this,
-		// getString(R.string.config_feedback_account)
-		// + " (" + Build.MODEL + "-" + Build.VERSION.RELEASE + " "
-		// + App.appVersionName + ") ");
+		String text = getString(R.string.config_feedback_account) + " ("
+				+ Build.MODEL + "-" + Build.VERSION.RELEASE + " "
+				+ App.versionName + ") ";
+		UIController.showWrite(this, text);
 	}
 
 	private void onMenuLogoutClick() {
@@ -248,8 +256,18 @@ public class UIHome extends UIBaseSupport {
 	public void onClick(View v) {
 	}
 
-	public static final String[] PAGE_TITLES = new String[] { "随便看看", "主页",
-			"提及", "私信" };
+	@Override
+	public void onPageScrollStateChanged(int arg0) {
+	}
+
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+	}
+
+	@Override
+	public void onPageSelected(int position) {
+		setTitle(mPagesAdapter.getPageTitle(position));
+	}
 
 	private static class PagesAdapter extends FragmentPagerAdapter {
 
@@ -262,7 +280,7 @@ public class UIHome extends UIBaseSupport {
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			return PAGE_TITLES[position];
+			return getItem(position).getTitle();
 		}
 
 		@Override
@@ -272,7 +290,7 @@ public class UIHome extends UIBaseSupport {
 
 		@Override
 		public int getCount() {
-			return PAGE_TITLES.length;
+			return fragments.size();
 		}
 
 		private void addFragments() {
@@ -281,26 +299,5 @@ public class UIHome extends UIBaseSupport {
 			fragments.add(MentionTimelineFragment.newInstance(true));
 			fragments.add(ConversationListFragment.newInstance(true));
 		}
-
 	}
-
-	private static class PageTabsAdapter implements TabsAdapter {
-
-		private Activity mContext;
-
-		public PageTabsAdapter(Activity ctx) {
-			this.mContext = ctx;
-		}
-
-		@Override
-		public View getView(int position) {
-			LayoutInflater inflater = mContext.getLayoutInflater();
-			SwipeyTabButton tab = (SwipeyTabButton) inflater.inflate(
-					R.layout.tab_swipey, null);
-			tab.setText(PAGE_TITLES[position]);
-			return tab;
-		}
-
-	}
-
 }

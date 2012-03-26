@@ -1,25 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingBottom="6dp"
-    android:paddingLeft="6dp"
-    android:paddingRight="6dp"
-    android:paddingTop="10dp" >
-
-    <Button
-        android:id="@+id/button_ok"
-        style="@style/ButtonStyle"
-        android:text="@android:string/ok" />
-
-    <View
-        android:layout_width="10dp"
-        android:layout_height="0dp" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="?Style.ButtonGroup" >
 
     <Button
         android:id="@+id/button_cancel"
-        style="@style/ButtonStyle"
+        style="?Style.Button"
         android:text="@android:string/cancel" />
+
+    <Button
+        android:id="@+id/button_ok"
+        style="?Style.Button"
+        android:text="@android:string/ok" />
 
 </LinearLayout>

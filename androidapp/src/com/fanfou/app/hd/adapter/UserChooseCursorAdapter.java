@@ -23,7 +23,7 @@ import com.fanfou.app.hd.dao.model.UserModel;
  * @version 2.1 2012.02.27
  * 
  */
-public class UserChooseCursorAdapter extends BaseCursorAdapter {
+public class UserChooseCursorAdapter extends BaseCursorAdapter{
 
 	private ArrayList<Boolean> mStates;
 	private HashMap<Integer, Boolean> mStateMap;
@@ -101,7 +101,7 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter {
 		holder.locationText.setText(u.getLocation());
 
 		Boolean b = mStateMap.get(cursor.getPosition());
-		if (b == null || b == Boolean.FALSE) {
+		if (b == null || b.equals(Boolean.FALSE)) {
 			holder.checkBox.setChecked(false);
 		} else {
 			holder.checkBox.setChecked(true);

@@ -22,6 +22,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.0 2012.02.28
  * @version 1.1 2012.03.07
  * @version 1.2 2012.03.08
+ * @version 1.3 2012.03.23
  * 
  */
 public class ConversationFragment extends PullToRefreshListFragment {
@@ -29,14 +30,16 @@ public class ConversationFragment extends PullToRefreshListFragment {
 			.getSimpleName();
 
 	private String userId;
+	private String screenName;
 
-	public static ConversationFragment newInstance(String id) {
-		return newInstance(id, false);
+	public static ConversationFragment newInstance(String id, String screenName) {
+		return newInstance(id, screenName,false);
 	}
 
-	public static ConversationFragment newInstance(String id, boolean refresh) {
+	public static ConversationFragment newInstance(String id, String screenName, boolean refresh) {
 		Bundle args = new Bundle();
 		args.putString("id", id);
+		args.putString("screen_name", screenName);
 		args.putBoolean("refresh", refresh);
 		ConversationFragment fragment = new ConversationFragment();
 		fragment.setArguments(args);
@@ -112,6 +115,12 @@ public class ConversationFragment extends PullToRefreshListFragment {
 	@Override
 	protected void parseArguments(Bundle args) {
 		userId = args.getString("id");
+		screenName=args.getString("screen_name");
+	}
+
+	@Override
+	public String getTitle() {
+		return screenName;
 	}
 
 }

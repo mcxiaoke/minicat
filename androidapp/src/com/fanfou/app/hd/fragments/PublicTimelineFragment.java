@@ -61,4 +61,9 @@ public class PublicTimelineFragment extends BaseTimlineFragment {
 		FanFouService.getPublicTimeline(getActivity(), handler);
 	}
 
+	@Override
+	public String getTitle() {
+		return "随便看看";
+	}
+
 }

@@ -493,4 +493,9 @@ public class ProfileFragment extends AbstractFragment implements
 		}
 	}
 
+	@Override
+	public String getTitle() {
+		return "资料";
+	}
+
 }

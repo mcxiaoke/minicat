@@ -6,6 +6,10 @@
     <!-- ====================Theme.Blue start=================== -->
 
     <style name="AppTheme.Blue" parent="Theme.Sherlock.Light">
+        
+        <!-- widget style  -->
+        <item name="Style.ButtonGroup">@style/Widget.ButtonGroup.Light</item>
+        <item name="Style.Button">@style/Widget.Button.Light</item>
 
         <!-- actionBar style -->
         <item name="actionBarStyle">@style/ActionBarStyle</item>
@@ -73,14 +77,17 @@
     <style name="ActionBarStyle" parent="Widget.Sherlock.Light.ActionBar">
         <item name="titleTextStyle">@style/ActionBarTitleStyle</item>
         <item name="android:titleTextStyle">@style/ActionBarTitleStyle</item>
-        <item name="icon">?actionBarIcon</item>
-        <item name="android:icon">?actionBarIcon</item>
+        <item name="logo">?actionBarIcon</item>
+        <item name="android:logo">?actionBarIcon</item>
         <item name="background">?actionBarBackground</item>
         <item name="android:background">?actionBarBackground</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
     <style name="ActionBarTitleStyle">
         <item name="android:textColor">?actionBarTextColor</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
     </style>
 
     <!-- ListView Style -->

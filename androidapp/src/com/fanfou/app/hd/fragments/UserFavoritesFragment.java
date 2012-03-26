@@ -101,4 +101,9 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 		}
 	}
 
+	@Override
+	public String getTitle() {
+		return "收藏";
+	}
+
 }

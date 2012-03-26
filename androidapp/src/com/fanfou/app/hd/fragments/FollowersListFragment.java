@@ -40,4 +40,9 @@ public class FollowersListFragment extends UserListFragment {
 		return UserModel.TYPE_FOLLOWERS;
 	}
 
+	@Override
+	public String getTitle() {
+		return "关注者";
+	}
+
 }

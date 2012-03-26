@@ -160,10 +160,6 @@
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".UIUserSelect"
-            android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name" />
-        <activity
             android:name=".UIWrite"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"

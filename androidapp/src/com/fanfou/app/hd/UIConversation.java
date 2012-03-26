@@ -1,28 +1,18 @@
 package com.fanfou.app.hd;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
-import com.fanfou.app.hd.cache.IImageLoader;
-import com.fanfou.app.hd.controller.DataController;
-import com.fanfou.app.hd.dao.model.DirectMessageModel;
 import com.fanfou.app.hd.fragments.ConversationFragment;
 import com.fanfou.app.hd.service.PostMessageService;
 import com.fanfou.app.hd.ui.widget.TextChangeListener;
-import com.fanfou.app.hd.util.IOHelper;
-import com.fanfou.app.hd.util.IntentHelper;
 import com.fanfou.app.hd.util.Utils;
 
 /**
@@ -36,6 +26,7 @@ import com.fanfou.app.hd.util.Utils;
  * @version 1.6 2012.02.10
  * @version 2.0 2012.02.21
  * @version 3.0 2012.02.28
+ * @version 4.0 2012.03.26
  * 
  */
 public class UIConversation extends UIBaseSupport {
@@ -44,13 +35,6 @@ public class UIConversation extends UIBaseSupport {
 	private String userId;
 	private String screenName;
 	private String profileImageUrl;
-
-	private ViewGroup container;
-	private ViewStub mViewStub;
-	private ViewGroup recipientView;
-	private TextView recipientText;
-	private ImageButton recipientIcon;
-	private TextView recipientName;
 
 	private EditText mEditText;
 
@@ -70,10 +54,6 @@ public class UIConversation extends UIBaseSupport {
 		userId = intent.getStringExtra("id");
 		screenName = intent.getStringExtra("screen_name");
 		profileImageUrl = intent.getStringExtra("profile_image_url");
-
-		if (App.DEBUG) {
-			IntentHelper.logIntent(TAG, intent);
-		}
 	}
 
 	@Override
@@ -84,8 +64,6 @@ public class UIConversation extends UIBaseSupport {
 	@Override
 	protected void setLayout() {
 		setContentView(R.layout.ui_conversation);
-
-		container = (ViewGroup) findViewById(R.id.container);
 
 		mEditText = (EditText) findViewById(R.id.input);
 		mEditText.addTextChangedListener(new TextChangeListener() {
@@ -100,46 +78,26 @@ public class UIConversation extends UIBaseSupport {
 		btnSend = (Button) findViewById(R.id.button_ok);
 		btnSend.setOnClickListener(this);
 
-		mViewStub = (ViewStub) findViewById(R.id.stub);
-
 		if (TextUtils.isEmpty(userId)) {
-			initRecipientView();
+			finish();
 		} else {
 			setTitle(screenName);
 			setFragment();
-			// checkConversation();
 		}
-
 	}
 
 	private void setFragment() {
-		fragment = ConversationFragment.newInstance(userId);
+		fragment = ConversationFragment.newInstance(userId, screenName);
 
 		FragmentManager fm = getSupportFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
 		ft.add(R.id.container, fragment);
 		ft.commit();
-		
+
 		if (App.DEBUG) {
 			Log.d(TAG, "setFragment() userId=" + userId + " screenName="
 					+ screenName);
 		}
-	}
-
-	private void initRecipientView() {
-		recipientView = (ViewGroup) mViewStub.inflate();
-		recipientIcon = (ImageButton) findViewById(R.id.recipient_choose);
-		recipientText = (TextView) findViewById(R.id.recipient_text);
-		recipientName = (TextView) findViewById(R.id.recipient_name);
-		recipientIcon.setOnClickListener(this);
-	}
-
-	private void updateRecipientView() {
-		IImageLoader loader = App.getImageLoader();
-		recipientName.setText(screenName);
-		recipientIcon.setTag(profileImageUrl);
-		loader.displayImage(profileImageUrl, recipientIcon, 0);
-
 	}
 
 	@Override
@@ -149,20 +107,12 @@ public class UIConversation extends UIBaseSupport {
 		case R.id.button_ok:
 			doSend(false);
 			break;
-		case R.id.recipient_choose:
-			startSelectUser();
-			break;
 		default:
 			break;
 		}
 	}
 
 	private static final int REQUEST_CODE_SELECT_USER = 2001;
-
-	private void startSelectUser() {
-		Intent intent = new Intent(this, UIUserSelect.class);
-		startActivityForResult(intent, REQUEST_CODE_SELECT_USER);
-	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -174,21 +124,6 @@ public class UIConversation extends UIBaseSupport {
 				profileImageUrl = data.getStringExtra("profile_image_url");
 			}
 		}
-	}
-
-	private void doCopy(DirectMessageModel dm) {
-		IOHelper.copyToClipBoard(this,
-				dm.getSenderScreenName() + "：" + dm.getText());
-		Utils.notify(this, "私信内容已复制到剪贴板");
-	}
-
-	private void doDelete(DirectMessageModel dm) {
-		// FanFouService.doDirectMessagesDelete(this, id, handler);
-		// if (dm.type == DirectMessage.TYPE_OUT) {
-		// ActionManager.doMessageDelete(this, dm.id, null, false);
-		// } else {
-		// Utils.notify(this, "只能删除你自己发送的私信");
-		// }
 	}
 
 	private void doSend(boolean finish) {

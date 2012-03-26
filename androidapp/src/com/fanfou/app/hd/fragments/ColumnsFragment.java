@@ -211,4 +211,9 @@ public class ColumnsFragment extends AbstractListFragment {
 
 	}
 
+	@Override
+	public String getTitle() {
+		return "栏目";
+	}
+
 }

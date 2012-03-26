@@ -261,6 +261,9 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
 		db.beginTransaction();
 		try {
 			for (ContentValues value : values) {
+				if(App.DEBUG){
+					Log.d(TAG, "bulkInsert() "+value);
+				}
 				long id = db.insert(table, null, value);
 				if (id > 0) {
 					++numInserted;

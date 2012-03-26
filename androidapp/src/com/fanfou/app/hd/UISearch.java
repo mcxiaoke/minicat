@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.fanfou.app.hd.adapter.SearchAdapter;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
+import com.fanfou.app.hd.controller.EmptyViewController;
 import com.fanfou.app.hd.dao.model.Search;
 
 /**
@@ -27,9 +29,11 @@ import com.fanfou.app.hd.dao.model.Search;
  * 
  */
 public class UISearch extends UIBaseSupport implements OnItemClickListener {
+	private static final String TAG = UISearch.class.getSimpleName();
 
 	private ListView mListView;
-	private View mEmptyView;
+	private View vEmpty;
+	private EmptyViewController emptyController;
 	private BaseAdapter mAdapter;
 	private ArrayList<Search> mHotwords = new ArrayList<Search>(20);
 
@@ -46,15 +50,17 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
 	@Override
 	protected void setLayout() {
 		setContentView(R.layout.search);
-		mEmptyView = findViewById(R.id.empty);
-		TextView tv = (TextView) findViewById(R.id.empty_text);
-		tv.setText("热词载入中...");
 
 		mListView = (ListView) findViewById(android.R.id.list);
 		mListView.setOnItemClickListener(this);
+		mAdapter = new SearchAdapter(this, mHotwords);
+		mListView.setAdapter(mAdapter);
 
-		// onSearchRequested();
+		vEmpty = findViewById(android.R.id.empty);
+		emptyController = new EmptyViewController(vEmpty);
+
 		fetchHotwords();
+		showProgress();
 	}
 
 	private void parseIntent() {
@@ -65,12 +71,29 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
 	}
 
 	private void showHotwords() {
-		mEmptyView.setVisibility(View.GONE);
-		mListView.setVisibility(View.VISIBLE);
-
-		mAdapter = new SearchAdapter(this, mHotwords);
-		mListView.setAdapter(mAdapter);
+		showContent();
 		mAdapter.notifyDataSetChanged();
+	}
+
+	private void showEmptyView(String text) {
+		mListView.setVisibility(View.GONE);
+		emptyController.showEmpty(text);
+	}
+
+	private void showProgress() {
+		mListView.setVisibility(View.GONE);
+		emptyController.showProgress();
+		if (App.DEBUG) {
+			Log.d(TAG, "showProgress");
+		}
+	}
+
+	private void showContent() {
+		emptyController.hideProgress();
+		mListView.setVisibility(View.VISIBLE);
+		if (App.DEBUG) {
+			Log.d(TAG, "showContent");
+		}
 	}
 
 	@Override
@@ -92,12 +115,12 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
 		@Override
 		protected void onPostExecute(Integer result) {
 			switch (result) {
+			case 0:
 			case 1:
 				showHotwords();
 				break;
-			case 0:
-				break;
 			case -1:
+				showEmptyView("暂时无法载入热词");
 				break;
 			default:
 				break;
@@ -126,7 +149,6 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
 				}
 
 			} catch (ApiException e) {
-				e.printStackTrace();
 				return -1;
 			}
 		}

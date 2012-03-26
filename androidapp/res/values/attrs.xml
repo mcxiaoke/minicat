@@ -2,6 +2,10 @@
 <resources>
 
     <declare-styleable name="AppTheme">
+        
+        <!-- Style List -->
+        <attr name="Style.ButtonGroup" format="reference"></attr>
+        <attr name="Style.Button" format="reference"></attr>
 
         <!-- Global Text Color -->
         <attr name="primaryTextColor" format="reference|color"></attr>

@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
@@ -31,6 +32,7 @@ import com.fanfou.app.hd.dao.model.UserModel;
  * @version 2.0 2012.02.24
  * @version 2.1 2012.02.28
  * @version 3.0 2012.03.19
+ * @version 3.1 2012.03.26
  * 
  */
 public class DataController {
@@ -88,14 +90,12 @@ public class DataController {
 		}
 
 		if (App.DEBUG) {
-			Log.d(TAG, "store models.size=" + models.size());
+			Log.d(TAG, "store models.size=" + models.size()+" table="+models.get(0).getContentUri());
 		}
 
 		Uri uri = models.get(0).getContentUri();
-		int result = context.getContentResolver().bulkInsert(uri,
+		return context.getContentResolver().bulkInsert(uri,
 				DataController.toContentValues(models));
-		context.getContentResolver().notifyChange(uri, null, false);
-		return result;
 	}
 
 	public static Uri store(Context context, Model model) {
@@ -241,22 +241,45 @@ public class DataController {
 
 	public static Loader<Cursor> getFriendsCursorLoader(Context context,
 			String id) {
-		final String where = UserColumns.TYPE + " =? AND " + UserColumns.OWNER
-				+ " =? ";
-		final String[] whereArgs = new String[] {
-				String.valueOf(UserModel.TYPE_FRIENDS), id };
-		return new CursorLoader(context, UserColumns.CONTENT_URI, null, where,
-				whereArgs, null);
+		return getUserListCursorLoader(context, UserModel.TYPE_FRIENDS, id);
 	}
 
 	public static Loader<Cursor> getFollowersCursorLoader(Context context,
 			String id) {
+		return getUserListCursorLoader(context, UserModel.TYPE_FOLLOWERS, id);
+	}
+
+	public static Loader<Cursor> getUserListCursorLoader(Context context,
+			int type, String id) {
 		final String where = UserColumns.TYPE + " =? AND " + UserColumns.OWNER
 				+ " =? ";
-		final String[] whereArgs = new String[] {
-				String.valueOf(UserModel.TYPE_FOLLOWERS), id };
+		final String[] whereArgs = new String[] { String.valueOf(type), id };
 		return new CursorLoader(context, UserColumns.CONTENT_URI, null, where,
 				whereArgs, null);
+	}
+
+	public static Cursor getUserListCursor(Context context, int type, String id) {
+		final String where = UserColumns.TYPE + " =? AND " + UserColumns.OWNER
+				+ " =? ";
+		final String[] whereArgs = new String[] { String.valueOf(type), id };
+		return context.getContentResolver().query(UserColumns.CONTENT_URI,
+				null, where, whereArgs, null);
+	}
+
+	public static Cursor getUserListSearchCursor(Context context, int type,
+			String id, CharSequence constraint) {
+		if (TextUtils.isEmpty(constraint)) {
+			return getUserListCursor(context, type, id);
+		}
+		String where = UserColumns.TYPE + " =? AND " + UserColumns.OWNER
+				+ " =? AND (" + UserColumns.SCREEN_NAME + " like ? OR "
+				+ UserColumns.ID + " like ? )";
+		String query = new StringBuilder().append("%").append(constraint)
+				.append("%").toString();
+		String[] whereArgs = new String[] { String.valueOf(type), id, query,
+				query };
+		return context.getContentResolver().query(UserColumns.CONTENT_URI,
+				null, where, whereArgs, null);
 	}
 
 }

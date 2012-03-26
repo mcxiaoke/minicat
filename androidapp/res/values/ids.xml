@@ -23,9 +23,7 @@
     <item name="search" type="id"/>
     <item name="search_input" type="id"/>
     <item name="search_button" type="id"/>
-    <item name="empty" type="id"/>
-    <item name="empty_text" type="id"/>
-    <item name="empty_progress" type="id"/>
+    
     <item name="about" type="id"/>
     <item name="about_icon" type="id"/>
     <item name="about_title" type="id"/>

@@ -1,9 +1,7 @@
 package com.fanfou.app.hd.fragments;
 
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.text.TextUtils;
@@ -15,7 +13,8 @@ import android.widget.FilterQueryProvider;
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.adapter.UserCursorAdapter;
 import com.fanfou.app.hd.api.Paging;
-import com.fanfou.app.hd.dao.model.UserColumns;
+import com.fanfou.app.hd.controller.DataController;
+import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.service.FanFouService;
 
@@ -27,6 +26,7 @@ import com.fanfou.app.hd.service.FanFouService;
  * @version 1.3 2012.02.22
  * @version 1.4 2012.02.24
  * @version 1.5 2012.03.08
+ * @version 2.0 2012.03.26
  * 
  */
 public abstract class UserListFragment extends PullToRefreshListFragment
@@ -60,7 +60,7 @@ public abstract class UserListFragment extends PullToRefreshListFragment
 						"userId=" + u.getId() + " username="
 								+ u.getScreenName());
 			}
-			// ActionManager.doProfile(getActivity(), u);
+			UIController.showProfile(getActivity(), u);
 		}
 	}
 
@@ -104,16 +104,8 @@ public abstract class UserListFragment extends PullToRefreshListFragment
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		Uri uri = UserColumns.CONTENT_URI;
-		String where = UserColumns.TYPE + "=? AND " + UserColumns.OWNER + "=?";
-		String[] whereArgs = new String[] { String.valueOf(getType()), userId };
-		CursorLoader loader = new CursorLoader(getActivity(), uri, null, where,
-				whereArgs, null);
-		if (App.DEBUG) {
-			Log.d(TAG, "onCreateLoader() uri=[" + uri + "] where=[" + where
-					+ "] whereArgs=[" + whereArgs + "]");
-		}
-		return loader;
+		return DataController.getUserListCursorLoader(getActivity(), getType(),
+				userId);
 	}
 
 	@Override
@@ -125,16 +117,12 @@ public abstract class UserListFragment extends PullToRefreshListFragment
 
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
-		if (App.DEBUG) {
-			Log.d(TAG, "runQuery() constraint=" + constraint);
-		}
-		String where = UserColumns.TYPE + " = " + getType() + " AND "
-				+ UserColumns.OWNER + " = '" + userId + "' AND ("
-				+ UserColumns.SCREEN_NAME + " like '%" + constraint + "%' OR "
-				+ UserColumns.ID + " like '%" + constraint + "%' )";
-		;
-		return getActivity().managedQuery(UserColumns.CONTENT_URI, null, where,
-				null, null);
+		return DataController.getUserListSearchCursor(getActivity(), getType(), userId, constraint);
+
+	}
+	
+	public void filter(String text){
+		getAdapter().getFilter().filter(text);
 	}
 
 }
