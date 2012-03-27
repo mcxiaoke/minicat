@@ -2,10 +2,14 @@
 <resources>
 
     <declare-styleable name="AppTheme">
-        
+
         <!-- Style List -->
-        <attr name="Style.ButtonGroup" format="reference"></attr>
-        <attr name="Style.Button" format="reference"></attr>
+        <attr name="ButtonGroupStyle" format="reference"></attr>
+        <attr name="ButtonStyle" format="reference"></attr>
+        <attr name="TitlePageIndicatorStyle" format="reference"></attr>
+        <attr name="EditProfileInputStyle" format="reference"></attr>
+        <attr name="ActionItemStyle" format="reference"></attr>
+        <attr name="ActionGroupStyle" format="reference"></attr>
 
         <!-- Global Text Color -->
         <attr name="primaryTextColor" format="reference|color"></attr>
@@ -22,21 +26,11 @@
         <attr name="buttonBackground" format="reference"></attr>
         <attr name="inputBackground" format="reference"></attr>
 
-        <!-- ActionBar Attrs -->
-        <attr name="actionBarIcon" format="reference"></attr>
-        <attr name="actionBarTextColor" format="reference|color"></attr>
-        <attr name="actionBarBackground" format="reference"></attr>
-
         <!-- Profile Page -->
-        <attr name="profileActionBackground" format="reference"></attr>
         <attr name="profileBlockBackground" format="reference|color"></attr>
         <attr name="profileItemTitleBackground" format="reference|color"></attr>
         <attr name="profileCountBackground" format="reference"></attr>
         <attr name="profileCountTextColor" format="reference|color"></attr>
-
-        <!-- action attrs -->
-        <attr name="actionItemBackground" format="reference"></attr>
-        <attr name="actionBoxBackground" format="reference|color"></attr>
 
         <!-- status attrs -->
         <attr name="statusHeaderBackground" format="reference"></attr>

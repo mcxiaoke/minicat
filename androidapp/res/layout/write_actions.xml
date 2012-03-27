@@ -3,32 +3,31 @@
     android:id="@+id/actions"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?actionBoxBackground"
     android:orientation="horizontal" >
 
     <ImageButton
         android:id="@+id/action_mention"
-        style="@style/ActionItemStyle"
+        style="?ActionItemStyle"
         android:src="@drawable/ic_mention" />
 
     <ImageButton
         android:id="@+id/action_record"
-        style="@style/ActionItemStyle"
+        style="?ActionItemStyle"
         android:src="@drawable/ic_record" />
 
     <ImageButton
         android:id="@+id/action_location"
-        style="@style/ActionItemStyle"
+        style="?ActionItemStyle"
         android:src="@drawable/ic_location" />
 
     <ImageButton
         android:id="@+id/action_gallery"
-        style="@style/ActionItemStyle"
+        style="?ActionItemStyle"
         android:src="@drawable/ic_gallery" />
 
     <ImageButton
         android:id="@+id/action_camera"
-        style="@style/ActionItemStyle"
+        style="?ActionItemStyle"
         android:src="@drawable/ic_camera" />
 
 </LinearLayout>

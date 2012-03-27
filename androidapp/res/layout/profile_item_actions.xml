@@ -2,27 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?actionBoxBackground"
     android:orientation="horizontal" >
 
     <ImageButton
         android:id="@+id/action_follow"
-        style="@style/ActionItemStyle"
+        style="?ActionItemStyle"
         android:src="@drawable/ic_follow" />
 
     <ImageButton
         android:id="@+id/action_mention"
-        style="@style/ActionItemStyle"
+        style="?ActionItemStyle"
         android:src="@drawable/ic_mention" />
 
     <ImageButton
         android:id="@+id/action_dm"
-        style="@style/ActionItemStyle"
+        style="?ActionItemStyle"
         android:src="@drawable/ic_dm" />
 
     <ImageButton
         android:id="@+id/action_block"
-        style="@style/ActionItemStyle"
+        style="?ActionItemStyle"
         android:src="@drawable/ic_block" />
 
 </LinearLayout>

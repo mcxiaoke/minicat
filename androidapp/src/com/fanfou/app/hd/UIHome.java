@@ -24,7 +24,7 @@ import com.fanfou.app.hd.fragments.ConversationListFragment;
 import com.fanfou.app.hd.fragments.HomeTimelineFragment;
 import com.fanfou.app.hd.fragments.MentionTimelineFragment;
 import com.fanfou.app.hd.fragments.PublicTimelineFragment;
-import com.fanfou.app.hd.service.FanFouService;
+import com.viewpagerindicator.TitlePageIndicator;
 
 /**
  * @author mcxiaoke
@@ -72,6 +72,7 @@ public class UIHome extends UIBaseSupport implements OnPageChangeListener {
 
 	private ViewPager mViewPager;
 	private PagesAdapter mPagesAdapter;
+	private TitlePageIndicator mIndicator;
 
 	private void log(String message) {
 		Log.d(TAG, message);
@@ -111,8 +112,13 @@ public class UIHome extends UIBaseSupport implements OnPageChangeListener {
 		mPagesAdapter = new PagesAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);
 		mViewPager.setAdapter(mPagesAdapter);
-		mViewPager.setOnPageChangeListener(this);
+//		mViewPager.setOnPageChangeListener(this);
 		mViewPager.setCurrentItem((mPagesAdapter.getCount()-1) / 2);
+		
+		mIndicator=(TitlePageIndicator) findViewById(R.id.indicator);
+		mIndicator.setViewPager(mViewPager);
+		mIndicator.setOnPageChangeListener(this);
+		
 	}
 
 	@Override

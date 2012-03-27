@@ -44,7 +44,7 @@
 
             <EditText
                 android:id="@+id/profile_name_edit"
-                style="@style/EditText.InfoOneLine" />
+                style="?EditProfileInputStyle" />
 
             <TextView
                 android:id="@+id/profile_url"
@@ -53,7 +53,7 @@
 
             <EditText
                 android:id="@+id/profile_url_edit"
-                style="@style/EditText.InfoOneLine"
+                style="?EditProfileInputStyle"
                 android:inputType="textUri" />
 
             <TextView
@@ -63,7 +63,7 @@
 
             <EditText
                 android:id="@+id/profile_location_edit"
-                style="@style/EditText.InfoOneLine" />
+                style="?EditProfileInputStyle" />
 
             <TextView
                 android:id="@+id/profile_description"
@@ -72,7 +72,7 @@
 
             <EditText
                 android:id="@+id/profile_description_edit"
-                style="@style/EditText.InfoMultiLine"
+                style="?EditProfileInputStyle"
                 android:gravity="left|top"
                 android:minLines="4" />
 

@@ -5,31 +5,26 @@
 
     <!-- ====================Theme.Blue start=================== -->
 
-    <style name="AppTheme.Blue" parent="Theme.Sherlock.Light">
-        
-        <!-- widget style  -->
-        <item name="Style.ButtonGroup">@style/Widget.ButtonGroup.Light</item>
-        <item name="Style.Button">@style/Widget.Button.Light</item>
+    <style name="AppTheme.Light" parent="Theme.Sherlock.Light">
 
-        <!-- actionBar style -->
-        <item name="actionBarStyle">@style/ActionBarStyle</item>
-        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
+        <!-- widget style -->
+        <item name="ButtonGroupStyle">@style/Widget.ButtonGroup.Light</item>
+        <item name="ButtonStyle">@style/Widget.Button.Light</item>
+        <item name="TitlePageIndicatorStyle">@style/Widget.TitlePageIndicator.Light</item>
+        <item name="EditProfileInputStyle">@style/Widget.EditProfileInput.Light</item>
+        <item name="ActionItemStyle">@style/Widget.ActionItem.Light</item>
+        <item name="ActionGroupStyle">@style/Widget.ActionGroup</item>
 
-        <!-- listview style -->
-        <item name="android:listViewStyle">@style/ListViewStyle</item>
+        <!-- system control -->
+        <item name="actionBarStyle">@style/Widget.ActionBar.Light</item>
+        <item name="android:actionBarStyle">@style/Widget.ActionBar.Light</item>
+        <item name="android:listViewStyle">@style/Widget.ListView.Light</item>
 
         <!-- scrollbars style -->
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_vertical_thumb</item>
+        <item name="android:scrollbarThumbHorizontal">@drawable/scrollbar_vertical_thumb</item>
         <item name="android:scrollbarSize">@dimen/scrollbarSize</item>
         <item name="android:scrollbarStyle">insideOverlay</item>
-
-        <!-- ========= the line below need change for for different theme ========= -->
-
-
-        <!-- action bar color and drawable -->
-        <item name="actionBarIcon">@drawable/i_logo</item>
-        <item name="actionBarTextColor">@color/white</item>
-        <item name="actionBarBackground">@drawable/actionbar_background</item>
 
         <!-- text color -->
         <item name="primaryTextColor">@color/black</item>
@@ -39,14 +34,9 @@
 
         <!-- profile color -->
         <item name="profileItemTitleBackground">@color/light_grey</item>
-        <item name="profileActionBackground">@drawable/button_blue</item>
         <item name="profileBlockBackground">@color/fanfoublue_background</item>
         <item name="profileCountTextColor">@color/fanfoublue</item>
         <item name="profileCountBackground">@drawable/action</item>
-
-        <!-- action color -->
-        <item name="actionItemBackground">@drawable/action</item>
-        <item name="actionBoxBackground">@color/fanfoublue</item>
 
         <!-- write color -->
         <item name="iconRemove">@drawable/ic_remove</item>
@@ -68,35 +58,11 @@
         <item name="uiBackground">@color/transparent</item>
     </style> <!-- ===================Theme.Blue end==================== -->
 
-    <style name="AppTheme.UIPhoto" parent="Theme.Sherlock.NoActionBar">
-        <item name="actionItemBackground">@drawable/action</item>
-    </style>
+    <style name="AppTheme.UIPhoto" parent="Theme.Sherlock.NoActionBar"></style>
 
     <!-- ActionBar Style -->
 
-    <style name="ActionBarStyle" parent="Widget.Sherlock.Light.ActionBar">
-        <item name="titleTextStyle">@style/ActionBarTitleStyle</item>
-        <item name="android:titleTextStyle">@style/ActionBarTitleStyle</item>
-        <item name="logo">?actionBarIcon</item>
-        <item name="android:logo">?actionBarIcon</item>
-        <item name="background">?actionBarBackground</item>
-        <item name="android:background">?actionBarBackground</item>
-        <item name="windowActionBarOverlay">true</item>
-        <item name="android:windowActionBarOverlay">true</item>
-    </style>
 
-    <style name="ActionBarTitleStyle">
-        <item name="android:textColor">?actionBarTextColor</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
-    </style>
 
-    <!-- ListView Style -->
-
-    <style name="ListViewStyle">
-        <item name="android:listSelector">@drawable/list_selector</item>
-        <item name="android:divider">@color/light_grey_translucent</item>
-        <item name="android:dividerHeight">@dimen/dividerWidth</item>
-        <item name="android:cacheColorHint">@android:color/transparent</item>
-    </style>
 
 </resources>

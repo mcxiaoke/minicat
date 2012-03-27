@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Dialog" parent="@android:style/Theme.Dialog">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:backgroundDimEnabled">false</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-    </style>
-
-    <style name="Image" />
-
     <style name="About"></style>
 
     <style name="About.Title">
@@ -50,50 +42,6 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="Box">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
-    <style name="Box.Vertical">
-        <item name="android:orientation">vertical</item>
-    </style>
-
-    <style name="Box.Horizontal">
-
-        <!-- <item name="android:padding">5dp</item> -->
-        <item name="android:orientation">horizontal</item>
-        <item name="android:gravity">center</item>
-    </style>
-
-    <style name="EditText"></style>
-
-    <style name="EditText.InfoOneLine">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:background">@drawable/input</item>
-        <item name="android:padding">8dp</item>
-        <item name="android:layout_margin">4dp</item>
-    </style>
-
-    <style name="EditText.InfoMultiLine">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:background">@drawable/input</item>
-        <item name="android:padding">8dp</item>
-        <item name="android:layout_margin">4dp</item>
-    </style>
-
-    <!-- ===========================below add by mcxiaoke====================== -->
-    <!-- ===========================below add by mcxiaoke====================== -->
-    <!-- ===========================below add by mcxiaoke====================== -->
-    <!-- ===========================below add by mcxiaoke====================== -->
-    <!-- ===========================below add by mcxiaoke====================== -->
-    <!-- ===========================below add by mcxiaoke====================== -->
-    <!-- ===========================below add by mcxiaoke====================== -->
     <!-- ===========================below add by mcxiaoke====================== -->
 
     <style name="MiniIconStyle">
@@ -103,6 +51,53 @@
     </style>
 
     <style name="Widget"></style>
+
+    <style name="Widget.ActionBar" parent="Widget.Sherlock.Light.ActionBar">
+        <item name="logo">@drawable/i_logo</item>
+        <item name="android:logo">@drawable/i_logo</item>
+    </style>
+
+    <style name="Widget.ActionBar.Light">
+        <item name="titleTextStyle">@style/Widget.ActionBarTitle.Light</item>
+        <item name="android:titleTextStyle">@style/Widget.ActionBarTitle.Light</item>
+        <item name="background">@drawable/actionbar_background</item>
+        <item name="android:background">@drawable/actionbar_background</item>
+    </style>
+
+    <style name="Widget.ActionBarTitle">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="Widget.ActionBarTitle.Light"></style>
+
+    <style name="Widget.ListView">
+        <item name="android:dividerHeight">@dimen/dividerWidth</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="android:scrollbars">vertical</item>
+    </style>
+
+    <style name="Widget.ListView.Light">
+        <item name="android:listSelector">@drawable/list_selector</item>
+        <item name="android:divider">@color/light_grey_translucent</item>
+    </style>
+
+    <style name="Widget.TitlePageIndicator">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size_tiny</item>
+        <item name="android:textColor">@color/light_grey</item>
+        <item name="android:background">@color/dark_grey</item>
+        <item name="footerLineHeight">1dp</item>
+        <item name="footerIndicatorHeight">2dp</item>
+        <item name="footerIndicatorStyle">underline</item>
+        <item name="selectedBold">false</item>
+    </style>
+
+    <style name="Widget.TitlePageIndicator.Light">
+        <item name="footerColor">@color/fanfoublue</item>
+    </style>
 
     <style name="Widget.ButtonGroup">
         <item name="android:layout_width">match_parent</item>
@@ -129,6 +124,16 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="Widget.EditProfileInput">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="Widget.EditProfileInput.Light">
+        <item name="android:background">@drawable/input</item>
+    </style>
+
     <style name="ProfileImageStyle">
         <item name="android:layout_width">@dimen/profile_image_width</item>
         <item name="android:layout_height">@dimen/profile_image_width</item>
@@ -152,16 +157,6 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">vertical</item>
         <item name="android:background">?profileCountBackground</item>
-    </style>
-
-    <style name="ProfileActionStyle">
-        <item name="android:gravity">center</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">4dp</item>
-        <item name="android:padding">2dp</item>
-        <item name="android:background">?profileActionBackground</item>
     </style>
 
     <style name="ProfileActionTextStyle">
@@ -253,12 +248,21 @@
         <item name="android:textColor">?primaryTextColorReverse</item>
     </style>
 
-    <style name="ActionItemStyle">
+    <style name="Widget.ActionItem">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:padding">@dimen/action_item_padding</item>
-        <item name="android:background">?actionItemBackground</item>
+    </style>
+
+    <style name="Widget.ActionItem.Light">
+        <item name="android:background">@drawable/action_blue</item>
+    </style>
+
+    <style name="Widget.ActionGroup">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
     </style>
 
     <style name="WriteInputStyle">

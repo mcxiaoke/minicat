@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="?Style.ButtonGroup" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="?ButtonGroupStyle" >
 
     <Button
         android:id="@+id/button_cancel"
-        style="?Style.Button"
+        style="?ButtonStyle"
         android:text="@android:string/cancel" />
 
     <Button
         android:id="@+id/button_ok"
-        style="?Style.Button"
+        style="?ButtonStyle"
         android:text="@android:string/ok" />
 
 </LinearLayout>
