@@ -16,6 +16,7 @@ import com.fanfou.app.hd.fragments.AbstractFragment;
 import com.fanfou.app.hd.fragments.ProfileFragment;
 import com.fanfou.app.hd.fragments.UserFavoritesFragment;
 import com.fanfou.app.hd.fragments.UserTimelineFragment;
+import com.viewpagerindicator.TitlePageIndicator;
 
 /**
  * @author mcxiaoke
@@ -25,6 +26,7 @@ import com.fanfou.app.hd.fragments.UserTimelineFragment;
  * @version 1.3 2012.02.22
  * @version 2.0 2012.03.06
  * @version 2.5 2012.03.23
+ * @version 2.6 2012.03.27
  * 
  */
 public class UIProfile extends UIBaseSupport implements OnPageChangeListener {
@@ -33,6 +35,7 @@ public class UIProfile extends UIBaseSupport implements OnPageChangeListener {
 
 	private ViewPager mViewPager;
 	private PagesAdapter mPagesAdapter;
+	private TitlePageIndicator mIndicator;
 
 	private UserModel user;
 	private String userId;
@@ -82,6 +85,10 @@ public class UIProfile extends UIBaseSupport implements OnPageChangeListener {
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);
 		mViewPager.setAdapter(mPagesAdapter);
 		mViewPager.setCurrentItem(1);
+
+		mIndicator = (TitlePageIndicator) findViewById(R.id.indicator);
+		mIndicator.setViewPager(mViewPager);
+		mIndicator.setOnPageChangeListener(this);
 	}
 
 	@Override
@@ -96,20 +103,16 @@ public class UIProfile extends UIBaseSupport implements OnPageChangeListener {
 
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onPageSelected(int position) {
-		// TODO Auto-generated method stub
-
+		setTitle(mPagesAdapter.getPageTitle(position));
 	}
 
 	private static class PagesAdapter extends FragmentPagerAdapter {
@@ -139,9 +142,9 @@ public class UIProfile extends UIBaseSupport implements OnPageChangeListener {
 		}
 
 		private void addFragments() {
-			fragments.add(UserFavoritesFragment.newInstance(userId));
+			fragments.add(UserFavoritesFragment.newInstance(userId, true));
 			fragments.add(ProfileFragment.newInstance(userId));
-			fragments.add(UserTimelineFragment.newInstance(userId));
+			fragments.add(UserTimelineFragment.newInstance(userId, true));
 		}
 
 	}

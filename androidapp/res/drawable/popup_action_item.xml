@@ -3,6 +3,6 @@
 
     <item android:drawable="@drawable/popup_action_item_pressed" android:state_pressed="true"/>
     <item android:drawable="@drawable/popup_action_item_pressed" android:state_focused="true"/>
-    <item android:drawable="@android:color/transparent"/>
+    <item android:drawable="@drawable/popup_action_item_default"/>
 
 </selector>

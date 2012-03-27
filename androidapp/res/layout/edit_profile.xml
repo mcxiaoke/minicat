@@ -26,7 +26,7 @@
 
                 <ImageView
                     android:id="@+id/profile_image"
-                    style="@style/HeadStyle"
+                    style="@style/Widget.Head"
                     android:src="@drawable/ic_head" />
 
                 <ImageView

@@ -76,6 +76,8 @@ public class App extends Application {
 	public static String versionName;
 	public static String packageName;
 	public static PackageInfo info;
+	
+	public static int themeId;
 
 	private static AccountInfo accountInfo;
 
@@ -105,6 +107,8 @@ public class App extends Application {
 		// .detectAll().penaltyLog().build());
 		// }
 		instance = this;
+		
+		themeId=R.style.AppThemeLight;
 
 		sApnType = NetworkHelper.getApnType(this);
 		sPreferences = PreferenceManager.getDefaultSharedPreferences(this);

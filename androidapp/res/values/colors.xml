@@ -34,5 +34,11 @@
 
     <!-- list divider color -->
     <color name="light_grey_translucent">#99cccccc</color>
+    
+    <!-- list item status text color -->
+    <color name="list_title_text_light">#ff000000</color>
+    <color name="list_content_text_light">#ff090909</color>
+    <color name="list_meta_text_light">#ffcccccc</color>
+    
 
 </resources>

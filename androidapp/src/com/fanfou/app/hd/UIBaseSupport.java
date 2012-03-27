@@ -55,6 +55,7 @@ abstract class UIBaseSupport extends SherlockFragmentActivity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		setTheme(App.themeId);
 		super.onCreate(savedInstanceState);
 		init();
 		initialize();
@@ -79,6 +80,7 @@ abstract class UIBaseSupport extends SherlockFragmentActivity implements
 		this.mDisplayMetrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
 		Utils.initScreenConfig(this);
+		
 	}
 
 	protected abstract void initialize();

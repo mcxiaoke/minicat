@@ -30,7 +30,7 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 	private int rootWidth = 0;
 
 	private static final android.widget.LinearLayout.LayoutParams ACTION_ITEM_PARAMS = new android.widget.LinearLayout.LayoutParams(
-			LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1.0f);;
+			LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1.0f);;
 
 	public QuickAction(Context context) {
 		super(context);
@@ -121,7 +121,7 @@ public class QuickAction extends PopupWindows implements OnDismissListener {
 
 	private LayoutParams getLayoutParams() {
 		return new android.widget.LinearLayout.LayoutParams(
-				LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1.0f);
+				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1.0f);
 	}
 
 	/**

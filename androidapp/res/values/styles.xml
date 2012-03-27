@@ -298,7 +298,7 @@
         <item name="android:background">@drawable/action</item>
     </style>
 
-    <style name="IconMiniStyle">
+    <style name="Widget.Icon">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:visibility">gone</item>
@@ -310,8 +310,9 @@
     </style>
 
     <style name="Item.TextStyle">
+        <item name="android:padding">3dp</item>
         <item name="android:textSize">@dimen/text_size_small</item>
-        <item name="android:textColor">?primaryTextColor</item>
+        <item name="android:textColor">#ff131313</item>
     </style>
 
     <style name="Item.TextBoldStyle">
@@ -325,7 +326,7 @@
         <item name="android:textSize">@dimen/text_size_tiny</item>
     </style>
 
-    <style name="HeadStyle">
+    <style name="Widget.Head">
         <item name="android:layout_width">@dimen/head_width</item>
         <item name="android:layout_height">@dimen/head_height</item>
         <item name="android:gravity">center</item>

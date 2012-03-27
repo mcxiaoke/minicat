@@ -17,6 +17,10 @@
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <solid android:color="@color/fanfoublue_pressed" />
+    <solid android:color="#33cccccc" />
+
+    <corners android:radius="3.0dp" />
+    
+    <padding android:left="3dp" android:right="3dp" android:top="3dp" android:bottom="3dp"/>
 
 </shape>

@@ -6,7 +6,7 @@
 
     <ImageView
         android:id="@+id/head"
-        style="@style/HeadStyle"
+        style="@style/Widget.Head"
         android:layout_alignParentLeft="true" />
 
     <RelativeLayout

@@ -9,7 +9,7 @@
 
     <ImageView
         android:id="@+id/head"
-        style="@style/HeadStyle" />
+        style="@style/Widget.Head" />
 
     <RelativeLayout
         android:layout_width="0dp"

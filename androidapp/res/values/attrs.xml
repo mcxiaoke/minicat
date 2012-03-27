@@ -10,6 +10,8 @@
         <attr name="EditProfileInputStyle" format="reference"></attr>
         <attr name="ActionItemStyle" format="reference"></attr>
         <attr name="ActionGroupStyle" format="reference"></attr>
+        
+        <!-- drawable/color list -->
 
         <!-- Global Text Color -->
         <attr name="primaryTextColor" format="reference|color"></attr>

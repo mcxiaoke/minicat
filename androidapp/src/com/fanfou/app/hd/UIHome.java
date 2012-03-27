@@ -64,6 +64,7 @@ import com.viewpagerindicator.TitlePageIndicator;
  * @version 8.6 2012.02.28
  * @version 8.7 2012.03.09
  * @version 9.0 2012.03.23
+ * @version 9.1 2012.03.27
  * 
  */
 public class UIHome extends UIBaseSupport implements OnPageChangeListener {

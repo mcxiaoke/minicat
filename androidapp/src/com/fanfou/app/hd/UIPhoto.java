@@ -3,6 +3,7 @@ package com.fanfou.app.hd;
 import java.io.File;
 import java.io.IOException;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -14,11 +15,7 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
-import android.view.View.OnLongClickListener;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+import android.view.View.OnClickListener;
 import com.fanfou.app.hd.cache.ImageLoader;
 import com.fanfou.app.hd.controller.EmptyViewController;
 import com.fanfou.app.hd.ui.imagezoom.ImageViewTouch;
@@ -37,9 +34,10 @@ import com.fanfou.app.hd.util.Utils;
  * @version 3.2 2011.11.22
  * @version 4.0 2012.03.13
  * @version 4.1 2012.03.22
+ * @version 5.0 2012.03.27
  * 
  */
-public class UIPhoto extends UIBaseSupport{
+public class UIPhoto extends Activity implements OnClickListener{
 
 	private static final String TAG = UIPhoto.class.getSimpleName();
 	private String url;
@@ -53,14 +51,14 @@ public class UIPhoto extends UIBaseSupport{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		initialize();
+		setLayout();
 	}
 
-	@Override
 	protected void initialize() {
 		parseIntent(getIntent());
 	}
 
-	@Override
 	protected void setLayout() {
 		if (TextUtils.isEmpty(url)) {
 			finish();
@@ -80,10 +78,6 @@ public class UIPhoto extends UIBaseSupport{
 			loadFromLocal(url);
 		}
 
-	}
-
-	@Override
-	protected void setActionBar() {
 	}
 
 	private void findViews() {
@@ -187,11 +181,6 @@ public class UIPhoto extends UIBaseSupport{
 			}
 		}
 
-	}
-
-	@Override
-	protected int getMenuResourceId() {
-		return -1;
 	}
 
 	@Override

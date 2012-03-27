@@ -10,5 +10,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 public abstract class AbstractFragment extends SherlockFragment {
 	
 	public abstract String getTitle();
+	public abstract void updateUI();
 
 }

@@ -206,11 +206,6 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	}
 
 	@Override
-	public void updateUI() {
-		// getLoaderManager().restartLoader(LOADER_ID, null, this);
-	}
-
-	@Override
 	public void startRefresh() {
 		if (App.DEBUG) {
 			Log.d(TAG, "startRefresh() isVisible=" + isVisible());

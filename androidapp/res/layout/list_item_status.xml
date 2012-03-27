@@ -6,7 +6,7 @@
 
     <ImageView
         android:id="@+id/head"
-        style="@style/HeadStyle"
+        style="@style/Widget.Head"
         android:layout_alignParentLeft="true" />
 
     <LinearLayout
@@ -31,22 +31,22 @@
 
             <ImageView
                 android:id="@+id/ic_mini_favorite"
-                style="@style/IconMiniStyle"
+                style="@style/Widget.Icon"
                 android:src="@drawable/ic_mini_favorite" />
 
             <ImageView
                 android:id="@+id/ic_mini_reply"
-                style="@style/IconMiniStyle"
+                style="@style/Widget.Icon"
                 android:src="@drawable/ic_mini_thread" />
 
             <ImageView
                 android:id="@+id/ic_mini_retweet"
-                style="@style/IconMiniStyle"
+                style="@style/Widget.Icon"
                 android:src="@drawable/ic_mini_retweet" />
 
             <ImageView
                 android:id="@+id/ic_mini_photo"
-                style="@style/IconMiniStyle"
+                style="@style/Widget.Icon"
                 android:src="@drawable/ic_mini_photo" />
         </LinearLayout>
 
