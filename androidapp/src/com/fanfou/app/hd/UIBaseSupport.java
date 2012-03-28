@@ -49,7 +49,6 @@ abstract class UIBaseSupport extends SherlockFragmentActivity implements
 
 	protected UIBaseSupport mContext;
 	protected LayoutInflater mInflater;
-	protected boolean isActive = false;
 
 	protected DisplayMetrics mDisplayMetrics;
 
@@ -80,14 +79,14 @@ abstract class UIBaseSupport extends SherlockFragmentActivity implements
 		this.mDisplayMetrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
 		Utils.initScreenConfig(this);
-		
+
 	}
 
 	protected abstract void initialize();
 
 	protected abstract void setLayout();
-	
-	protected void setActionBar(){
+
+	protected void setActionBar() {
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayHomeAsUpEnabled(true);
 	}
@@ -110,42 +109,45 @@ abstract class UIBaseSupport extends SherlockFragmentActivity implements
 			com.actionbarsherlock.view.MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			onMenuHomeClick();
+			onHomeLogoClick();
 			return true;
 			// break;
 		case R.id.menu_write:
 			onMenuWriteClick();
 			return true;
 			// break;
-
+		case R.id.menu_home:
+			onMenuHomeClick();
+			return true;
+			// break;
 		default:
 			return super.onOptionsItemSelected(item);
 			// break;
 		}
 	}
 
-	protected void onMenuHomeClick() {
-		 finish();
+	protected void onHomeLogoClick() {
+		finish();
 	}
 
 	protected void onMenuWriteClick() {
 		UIController.showWrite(mContext);
 	}
 
+	protected void onMenuHomeClick() {
+		UIController.showHome(mContext);
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// App.active = isActive = true;
+		App.active = true;
 	}
 
 	@Override
 	protected void onPause() {
-		// App.active = isActive = false;
+		App.active = false;
 		super.onPause();
-	}
-
-	protected boolean isActive() {
-		return isActive;
 	}
 
 	protected static final int PAGE_NORMAL = 0;

@@ -74,6 +74,7 @@ public class App extends Application {
 	public static String versionName;
 	public static String packageName;
 	public static PackageInfo info;
+	public static boolean active;
 	
 	public static int themeId;
 
