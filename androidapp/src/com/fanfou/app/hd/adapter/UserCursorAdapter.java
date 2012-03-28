@@ -29,7 +29,7 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 	}
 
 	@Override
-	int getLayoutId() {
+	protected int getLayoutId() {
 		return R.layout.list_item_user;
 	}
 

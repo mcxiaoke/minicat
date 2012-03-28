@@ -54,7 +54,7 @@ public abstract class BaseMessageCursorAdapter extends BaseCursorAdapter {
 	public abstract void bindView(View view, Context context, Cursor cursor);
 
 	@Override
-	int getLayoutId() {
+	protected int getLayoutId() {
 		return R.layout.list_item_message;
 	}
 

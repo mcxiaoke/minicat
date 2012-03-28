@@ -108,11 +108,6 @@ public class StatusArrayAdapter extends BaseStatusArrayAdapter {
 		}
 	}
 
-	@Override
-	int getLayoutId() {
-		return R.layout.list_item_status;
-	}
-
 	public void changeData(List<StatusModel> data) {
 		setData(data);
 		notifyDataSetChanged();

@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.cache.IImageLoader;
 import com.fanfou.app.hd.dao.model.StatusModel;
+import com.fanfou.app.hd.ui.widget.StatusView;
 import com.fanfou.app.hd.util.OptionHelper;
 
 /**
@@ -26,10 +28,13 @@ import com.fanfou.app.hd.util.OptionHelper;
  * @version 1.7 2011.11.10
  * @version 1.8 2011.12.06
  * @version 2.0 2012.02.22
+ * @version 2.5 2012.03.28
  * 
  */
 public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 		OnScrollListener {
+	private static final String TAG = BaseStatusArrayAdapter.class
+			.getSimpleName();
 	protected Context mContext;
 	protected LayoutInflater mInflater;
 	protected IImageLoader mLoader;
@@ -59,14 +64,12 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		StatusViewHolder holder;
-		if (convertView == null) {
-			convertView = mInflater.inflate(getLayoutId(), null);
-			holder = new StatusViewHolder(convertView);
-			UIHelper.setStatusTextStyle(holder, fontSize);
-			convertView.setTag(holder);
-		} else {
-			holder = (StatusViewHolder) convertView.getTag();
+		StatusView view = (StatusView) convertView;
+		if (view == null) {
+			view = new StatusView(mContext);
+			if (App.DEBUG) {
+				Log.d(TAG, "getView newView=" + view);
+			}
 		}
 
 		final StatusModel s = getData().get(position);
@@ -75,17 +78,17 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 		if (busy) {
 			Bitmap bitmap = mLoader.getImage(headUrl, null);
 			if (bitmap != null) {
-				holder.headIcon.setImageBitmap(bitmap);
+				view.setImage(bitmap);
 			}
 		} else {
-			holder.headIcon.setTag(headUrl);
-			mLoader.displayImage(headUrl, holder.headIcon,
+			view.setTag(headUrl);
+			mLoader.displayImage(headUrl, view.getImageView(),
 					R.drawable.ic_head);
 		}
 
-		UIHelper.setStatusMetaInfo(holder, s);
-		setStatusContent(holder, s.getSimpleText());
-		return convertView;
+		UIHelper.setStatusMetaInfo(view, s);
+		setStatusContent(view, s.getSimpleText());
+		return view;
 	}
 
 	@Override
@@ -117,21 +120,19 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 		mData.addAll(data);
 		notifyDataSetChanged();
 	}
-	
-	public void remove(StatusModel status){
+
+	public void remove(StatusModel status) {
 		mData.remove(status);
 		notifyDataSetChanged();
 	}
-	
-	public void add(StatusModel status){
+
+	public void add(StatusModel status) {
 		mData.add(status);
 		notifyDataSetChanged();
 	}
 
-	abstract int getLayoutId();
-
-	protected void setStatusContent(StatusViewHolder holder, String text) {
-		holder.contentText.setText(text);
+	protected void setStatusContent(StatusView view, String text) {
+		view.setContent(text);
 	}
 
 	public int getFontSize() {

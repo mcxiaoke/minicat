@@ -119,10 +119,6 @@ public abstract class UserArrayAdapter extends BaseAdapter implements
 		return R.layout.list_item_user;
 	}
 
-	protected void setStatusContent(StatusViewHolder holder, String text) {
-		holder.contentText.setText(text);
-	}
-
 	public int getFontSize() {
 		return fontSize;
 	}

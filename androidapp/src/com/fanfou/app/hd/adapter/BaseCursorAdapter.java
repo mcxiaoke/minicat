@@ -51,7 +51,9 @@ public abstract class BaseCursorAdapter extends CursorAdapter implements
 				context.getResources().getInteger(R.integer.defaultFontSize));
 	}
 
-	abstract int getLayoutId();
+	protected int getLayoutId() {
+		return -1;
+	}
 
 	public int getFontSize() {
 		return fontSize;

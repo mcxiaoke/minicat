@@ -52,7 +52,7 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter{
 	}
 
 	@Override
-	int getLayoutId() {
+	protected int getLayoutId() {
 		return R.layout.list_item_chooseuser;
 	}
 

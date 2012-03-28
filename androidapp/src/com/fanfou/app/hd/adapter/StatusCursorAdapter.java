@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.dao.model.StatusModel;
+import com.fanfou.app.hd.ui.widget.StatusView;
 import com.fanfou.app.hd.util.OptionHelper;
 
 /**
@@ -91,37 +92,33 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		View view = mInflater.inflate(getLayoutId(), null);
-		StatusViewHolder holder = new StatusViewHolder(view);
-		UIHelper.setStatusTextStyle(holder, getFontSize());
-		view.setTag(holder);
+		View view= new StatusView(context);
+		if (App.DEBUG) {
+			Log.d(TAG, "newView newView=" + view);
+		}
 		return view;
 	}
 
 	@Override
 	public void bindView(View view, Context context, final Cursor cursor) {
-		View row = view;
-		final StatusViewHolder holder = (StatusViewHolder) row.getTag();
-
 		final StatusModel s = StatusModel.from(cursor);
-
+		final StatusView sv = (StatusView) view;
 		String headUrl = s.getUserProfileImageUrl();
 		if (busy) {
 			Bitmap bitmap = mLoader.getImage(headUrl, null);
 			if (bitmap != null) {
-				holder.headIcon.setImageBitmap(bitmap);
-			}else{
-				holder.headIcon.setImageResource(R.drawable.ic_head);
+				sv.setImage(bitmap);
+			} else {
+				sv.setImage(R.drawable.ic_head);
 			}
 		} else {
-			holder.headIcon.setTag(headUrl);
-			mLoader.displayImage(headUrl, holder.headIcon,
-					R.drawable.ic_head);
+			sv.getImageView().setTag(headUrl);
+			mLoader.displayImage(headUrl, sv.getImageView(), R.drawable.ic_head);
 		}
 
-		setColor(cursor, row);
-		UIHelper.setStatusMetaInfo(holder, s);
-		holder.contentText.setText(s.getSimpleText());
+		setColor(cursor, view);
+		UIHelper.setStatusMetaInfo(sv, s);
+		sv.setContent(s.getSimpleText());
 
 	}
 
@@ -141,11 +138,6 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 				break;
 			}
 		}
-	}
-
-	@Override
-	int getLayoutId() {
-		return R.layout.list_item_status;
 	}
 
 }

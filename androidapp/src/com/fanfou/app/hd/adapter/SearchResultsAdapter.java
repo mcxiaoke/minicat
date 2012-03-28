@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.dao.model.StatusModel;
+import com.fanfou.app.hd.ui.widget.StatusView;
 import com.fanfou.app.hd.util.StringHelper;
 
 /**
@@ -41,9 +42,9 @@ public class SearchResultsAdapter extends BaseStatusArrayAdapter {
 	}
 
 	@Override
-	protected void setStatusContent(final StatusViewHolder holder,
+	protected void setStatusContent(final StatusView view,
 			String text) {
-		holder.contentText.setText(buildHighlightSpan(text));
+		view.setContent(buildHighlightSpan(text));
 	}
 
 	private SpannableStringBuilder buildHighlightSpan(String text) {
@@ -61,11 +62,6 @@ public class SearchResultsAdapter extends BaseStatusArrayAdapter {
 			}
 		}
 		return span;
-	}
-
-	@Override
-	int getLayoutId() {
-		return R.layout.list_item_status;
 	}
 
 	public void updateDataAndUI(List<StatusModel> data, String keyword) {

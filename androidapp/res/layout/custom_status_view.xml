@@ -8,18 +8,22 @@
 
     <ImageView
         android:id="@+id/image"
-        style="@style/Widget.Head"
+        android:layout_width="@dimen/head_width"
+        android:layout_height="@dimen/head_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:src="@drawable/ic_head" />
+        android:layout_margin="4dp"
+        android:src="@drawable/ic_head"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/title"
-        style="@style/Item.TextBoldStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/image"
         android:layout_alignWithParentIfMissing="true"
-        android:text="TITLE" />
+        android:layout_toRightOf="@id/image"
+        android:padding="4dp" />
 
     <LinearLayout
         android:id="@+id/icons"
@@ -27,7 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:padding="4dp" >
 
         <ImageView
             android:id="@+id/ic_favorite"
@@ -47,16 +52,18 @@
 
     <TextView
         android:id="@+id/text"
-        style="@style/Item.TextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignLeft="@id/title"
         android:layout_below="@id/title"
-        android:text="TEXT TEXT TEXT TEXT TEXT" />
+        android:padding="2dp" />
 
     <TextView
         android:id="@+id/meta"
-        style="@style/Item.MetaInfoStyle"
-        android:layout_alignLeft="@id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:layout_below="@id/text"
-        android:text="META INFO 2012" />
+        android:padding="4dp" />
 
 </merge>

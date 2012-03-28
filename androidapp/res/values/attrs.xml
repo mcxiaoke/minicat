@@ -54,16 +54,5 @@
         <attr name="statusViewStyle" format="reference"></attr>
     </declare-styleable>
 
-    <!-- custom attrs for statusview -->
-    <declare-styleable name="StatusView">
-        <attr name="showImage" format="boolean"></attr>
-        <attr name="titleTextSize" format="reference|dimension"></attr>
-        <attr name="titleTextColor" format="reference|color"></attr>
-        <attr name="titleTextBold" format="boolean"></attr>
-        <attr name="contentTextSize" format="reference|dimension"></attr>
-        <attr name="contentTextColor" format="reference|color"></attr>
-        <attr name="metaTextSize" format="reference|dimension"></attr>
-        <attr name="metaTextColor" format="reference|color"></attr>
-    </declare-styleable>
 
 </resources>

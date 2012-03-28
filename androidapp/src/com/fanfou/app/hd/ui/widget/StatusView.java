@@ -1,5 +1,6 @@
 package com.fanfou.app.hd.ui.widget;
 
+import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.util.Utils;
 
@@ -9,6 +10,8 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -113,15 +116,22 @@ public class StatusView extends RelativeLayout {
 		mShowImage = a.getBoolean(R.styleable.StatusView_showImage,
 				defaultShowImage);
 
-		mTitleTextView.setTextSize(mTitleTextSize);
+		if (App.DEBUG) {
+			Log.d(VIEW_LOG_TAG, "title text size=" + mTitleTextSize);
+			Log.d(VIEW_LOG_TAG, "content text size=" + mContentTextSize);
+			Log.d(VIEW_LOG_TAG, "meta text size=" + mMetaTextSize);
+		}
+
+		mTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTitleTextSize);
 		mTitleTextView.setTextColor(mTitleTextColor);
 		if (mTitleTextBold) {
 			Utils.setBoldText(mTitleTextView);
 		}
 
-		mContentTextView.setTextSize(mContentTextSize);
+		mContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+				mContentTextSize);
 		mContentTextView.setTextColor(mContentTextColor);
-		mMetaTextView.setTextSize(mMetaTextSize);
+		mMetaTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mMetaTextSize);
 		mMetaTextView.setTextColor(mMetaTextColor);
 
 		mImageView.setVisibility(mShowImage ? View.VISIBLE : View.GONE);
@@ -192,6 +202,22 @@ public class StatusView extends RelativeLayout {
 
 	public void setMetaTextColor(int color) {
 		mMetaTextView.setTextColor(color);
+	}
+
+	public ImageView getImageView() {
+		return mImageView;
+	}
+
+	public TextView getTitleTextView() {
+		return mTitleTextView;
+	}
+
+	public TextView getContentTextView() {
+		return mContentTextView;
+	}
+
+	public TextView getMetaTextView() {
+		return mMetaTextView;
 	}
 
 }
