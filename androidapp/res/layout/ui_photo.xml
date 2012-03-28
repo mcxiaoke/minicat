@@ -12,7 +12,7 @@
         android:scaleType="fitCenter"
         android:visibility="gone" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

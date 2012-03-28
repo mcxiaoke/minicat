@@ -160,17 +160,14 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
 		return queryWithNotify(uri, cursor);
 	}
 
-	private Cursor queryItem(Uri uri) {
+	private Cursor queryItemById(Uri uri) {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
-		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 		final List<String> path = uri.getPathSegments();
 		String table = path.get(0);
 		String id = path.get(2);
 		String selection = IBaseColumns.ID + " =? ";
 		String[] selectionArgs = new String[] { id };
-		qb.setTables(table);
-		Cursor cursor = qb.query(db, null, selection, selectionArgs, null,
-				null, null);
+		Cursor cursor = db.query(table, null, selection, selectionArgs, null, null, null);
 		return queryWithNotify(uri, cursor);
 	}
 
@@ -198,7 +195,7 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
 		case USER_ID:
 		case STATUS_ID:
 		case MESSAGE_ID:
-			return queryItem(uri);
+			return queryItemById(uri);
 		case RECORD_ID:
 			throw new UnsupportedOperationException("unsupported operation: "
 					+ uri);

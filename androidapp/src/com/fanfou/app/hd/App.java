@@ -68,8 +68,6 @@ public class App extends Application {
 	private static final String TAG = "Application";
 
 	public static final boolean DEBUG = BuildConfig.DEBUG;
-
-	private static Map<String, BaseModel> cache = new WeakHashMap<String, BaseModel>();
 	private static HashMap<String, WeakReference<Context>> contexts = new HashMap<String, WeakReference<Context>>();
 
 	public static int versionCode;
@@ -304,30 +302,6 @@ public class App extends Application {
 
 	public static boolean isVerified() {
 		return accountInfo.isVerified();
-	}
-
-	public static void cache(UserModel user) {
-		if (user != null) {
-			String key = new StringBuilder().append("#user#")
-					.append(user.getId()).toString();
-			cache.put(key, user);
-		}
-	}
-
-	public static void cache(StatusModel status) {
-		if (status != null) {
-			String key = new StringBuilder().append("#status#")
-					.append(status.getId()).toString();
-			cache.put(key, status);
-		}
-	}
-
-	public static UserModel getUser(String key) {
-		return (UserModel) cache.get(key);
-	}
-
-	public static StatusModel getStatus(String key) {
-		return (StatusModel) cache.get(key);
 	}
 
 	public static synchronized void setActiveContext(String className,

@@ -22,6 +22,7 @@ import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
 import com.fanfou.app.hd.api.Paging;
+import com.fanfou.app.hd.controller.CacheController;
 import com.fanfou.app.hd.controller.DataController;
 import com.fanfou.app.hd.dao.model.BaseModel;
 import com.fanfou.app.hd.dao.model.DirectMessageModel;
@@ -333,8 +334,8 @@ public final class FanFouService extends IntentService {
 			if (u == null) {
 				sendSuccessMessage();
 			} else {
+				CacheController.cacheAndStore(this, u);
 				sendParcelableMessage(u);
-
 			}
 		} catch (ApiException e) {
 			if (App.DEBUG) {
@@ -473,6 +474,7 @@ public final class FanFouService extends IntentService {
 			if (s == null) {
 				sendSuccessMessage();
 			} else {
+				CacheController.cacheAndStore(this, s);
 				sendParcelableMessage(s);
 			}
 		} catch (ApiException e) {
@@ -755,7 +757,8 @@ public final class FanFouService extends IntentService {
 				if (size == p.count && p.maxId == null && p.page <= 1) {
 					deleteOldStatuses();
 				}
-				int insertedCount = DataController.store(this, statuses);
+				int insertedCount = DataController.storeStatusesWithUsers(this,
+						statuses);
 				if (App.DEBUG) {
 					Log.d(TAG, "getTimeline() size=" + size + " userId=" + id
 							+ " count=" + p.count + " page=" + p.page

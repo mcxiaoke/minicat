@@ -1,5 +1,6 @@
 package com.fanfou.app.hd.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -43,19 +44,19 @@ public class DataController {
 	}
 
 	public static int parseInt(Cursor c, String columnName) {
-		return c.getInt(c.getColumnIndex(columnName));
+		return c.getInt(c.getColumnIndexOrThrow(columnName));
 	}
 
 	public static long parseLong(Cursor c, String columnName) {
-		return c.getLong(c.getColumnIndex(columnName));
+		return c.getLong(c.getColumnIndexOrThrow(columnName));
 	}
 
 	public static String parseString(Cursor c, String columnName) {
-		return c.getString(c.getColumnIndex(columnName));
+		return c.getString(c.getColumnIndexOrThrow(columnName));
 	}
 
 	public static boolean parseBoolean(Cursor c, String columnName) {
-		return c.getInt(c.getColumnIndex(columnName)) != 0;
+		return c.getInt(c.getColumnIndexOrThrow(columnName)) != 0;
 	}
 
 	public static ContentValues[] toContentValues(
@@ -84,13 +85,30 @@ public class DataController {
 		context.getContentResolver().delete(uri, null, null);
 	}
 
+	public static int storeStatusesWithUsers(Context context,
+			List<StatusModel> statuses) {
+		if (statuses == null || statuses.size() == 0) {
+			return -1;
+		}
+
+		int size = statuses.size();
+		List<UserModel> users = new ArrayList<UserModel>(size);
+		for (StatusModel status : statuses) {
+			users.add(status.getUser());
+		}
+
+		store(context, statuses);
+		return store(context, users);
+	}
+
 	public static int store(Context context, List<? extends BaseModel> models) {
 		if (models == null || models.size() == 0) {
 			return -1;
 		}
 
 		if (App.DEBUG) {
-			Log.d(TAG, "store models.size=" + models.size()+" table="+models.get(0).getContentUri());
+			Log.d(TAG, "store models.size=" + models.size() + " table="
+					+ models.get(0).getContentUri());
 		}
 
 		Uri uri = models.get(0).getContentUri();
@@ -176,6 +194,35 @@ public class DataController {
 	public static int deleteRecord(Context context, long id) {
 		Uri uri = ContentUris.withAppendedId(RecordColumns.CONTENT_URI, id);
 		return context.getContentResolver().delete(uri, null, null);
+	}
+
+	public static UserModel getUser(Context context, String id) {
+		Uri uri = withAppendedId(UserColumns.CONTENT_URI, id);
+		Cursor cursor = context.getContentResolver().query(uri, null, null,
+				null, null);
+		if (App.DEBUG) {
+			Log.d(TAG,
+					"getUser() cursor=" + cursor + " cursor.size="
+							+ cursor.getCount());
+		}
+		if (cursor != null && cursor.moveToFirst()) {
+			UserModel um = UserModel.from(cursor);
+			cursor.close();
+			return um;
+		}
+		return null;
+	}
+
+	public static StatusModel getStatus(Context context, String id) {
+		Uri uri = withAppendedId(StatusColumns.CONTENT_URI, id);
+		Cursor cursor = context.getContentResolver().query(uri, null, null,
+				null, null);
+		if (cursor != null && cursor.moveToFirst()) {
+			StatusModel sm = StatusModel.from(cursor);
+			cursor.close();
+			return sm;
+		}
+		return null;
 	}
 
 	public static CursorLoader getConversationListLoader(Activity activity) {

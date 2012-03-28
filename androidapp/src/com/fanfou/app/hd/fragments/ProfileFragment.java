@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
+import com.fanfou.app.hd.controller.CacheController;
+import com.fanfou.app.hd.controller.DataController;
 import com.fanfou.app.hd.controller.EmptyViewController;
 import com.fanfou.app.hd.controller.SimpleDialogListener;
 import com.fanfou.app.hd.controller.UIController;
@@ -99,8 +101,7 @@ public class ProfileFragment extends AbstractFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Bundle args = getArguments();
-		parseArguments(args);
+		parseArguments();
 	}
 
 	@Override
@@ -114,23 +115,23 @@ public class ProfileFragment extends AbstractFragment implements
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		setEmptyView();
 		setListeners();
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+
 		initResources();
-		updateUI();
+		checkRefresh();
 
 	}
 
-	private void parseArguments(Bundle data) {
+	private void parseArguments() {
+		Bundle data = getArguments();
 		user = data.getParcelable("data");
 		if (user == null) {
 			userId = data.getString("id");
-			user = App.getUser(userId);
 		} else {
 			userId = user.getId();
 		}
@@ -142,6 +143,7 @@ public class ProfileFragment extends AbstractFragment implements
 	private void findViews(View root) {
 		vContent = (ViewGroup) root.findViewById(R.id.container);
 		vEmpty = root.findViewById(android.R.id.empty);
+		emptyController = new EmptyViewController(vEmpty);
 
 		headerImage = (ImageView) root.findViewById(R.id.header_image);
 		headerName = (TextView) root.findViewById(R.id.header_name);
@@ -172,14 +174,16 @@ public class ProfileFragment extends AbstractFragment implements
 
 	}
 
-	private void setEmptyView() {
-		emptyController = new EmptyViewController(vEmpty);
-
+	private void checkRefresh() {
+		if (user == null) {
+			user = CacheController.getUserAndCache(userId, getActivity());
+		}
 		if (user == null) {
 			fetchUser();
 			showProgress();
 		} else {
 			showContent();
+			updateUI();
 		}
 	}
 
@@ -424,8 +428,7 @@ public class ProfileFragment extends AbstractFragment implements
 				}
 			}
 		};
-		
-		
+
 		final ConfirmDialog dialog = new ConfirmDialog(getActivity());
 		dialog.setTitle("提示");
 		dialog.setMessage("要取消关注" + user.getScreenName() + "吗？");

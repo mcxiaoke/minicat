@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.fanfou.app.hd.controller.CacheController;
 import com.fanfou.app.hd.controller.EmptyViewController;
 import com.fanfou.app.hd.controller.SimpleDialogListener;
 import com.fanfou.app.hd.controller.UIController;
@@ -126,6 +127,8 @@ public class UIStatus extends UIBaseSupport {
 
 		if (status != null) {
 			statusId = status.getId();
+		} else {
+			status = CacheController.getStatusAndCache(statusId, mContext);
 		}
 
 	}
@@ -310,8 +313,6 @@ public class UIStatus extends UIBaseSupport {
 	}
 
 	private void goPhotoViewer() {
-		// TODO
-
 		String photoUrl = status.getPhotoLargeUrl();
 		if (!TextUtils.isEmpty(photoUrl)) {
 			if (App.DEBUG) {

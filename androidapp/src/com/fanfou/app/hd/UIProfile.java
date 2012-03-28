@@ -142,9 +142,9 @@ public class UIProfile extends UIBaseSupport implements OnPageChangeListener {
 		}
 
 		private void addFragments() {
-			fragments.add(UserFavoritesFragment.newInstance(userId, true));
+			fragments.add(UserFavoritesFragment.newInstance(userId));
 			fragments.add(ProfileFragment.newInstance(userId));
-			fragments.add(UserTimelineFragment.newInstance(userId, true));
+			fragments.add(UserTimelineFragment.newInstance(userId));
 		}
 
 	}
