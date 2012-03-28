@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="4dp" >
+
+    <ImageView
+        android:id="@+id/head"
+        style="@style/Widget.Head"
+        android:layout_alignParentLeft="true" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/head"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/name"
+                style="@style/Item.TextBoldStyle" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/ic_mini_favorite"
+                style="@style/Widget.Icon"
+                android:src="@drawable/ic_mini_favorite" />
+
+            <ImageView
+                android:id="@+id/ic_mini_reply"
+                style="@style/Widget.Icon"
+                android:src="@drawable/ic_mini_thread" />
+
+            <ImageView
+                android:id="@+id/ic_mini_retweet"
+                style="@style/Widget.Icon"
+                android:src="@drawable/ic_mini_retweet" />
+
+            <ImageView
+                android:id="@+id/ic_mini_photo"
+                style="@style/Widget.Icon"
+                android:src="@drawable/ic_mini_photo" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text"
+            style="@style/Item.TextStyle" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/metainfo"
+                style="@style/Item.MetaInfoStyle"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

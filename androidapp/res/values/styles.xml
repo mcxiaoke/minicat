@@ -333,6 +333,20 @@
         <item name="android:layout_margin">2dp</item>
     </style>
 
+    <style name="Widget.StatusView">
+        <item name="showImage">@bool/status_view_default_show_head_image</item>
+        <item name="titleTextSize">@dimen/status_view_default_title_text_size</item>
+        <item name="titleTextBold">@bool/status_view_default_title_text_bold</item>
+        <item name="contentTextSize">@dimen/status_view_default_content_text_size</item>
+        <item name="metaTextSize">@dimen/status_view_default_meta_text_size</item>
+    </style>
+
+    <style name="Widget.StatusView.Light">
+        <item name="titleTextColor">@color/status_view_default_title_text_color</item>
+        <item name="contentTextColor">@color/status_view_default_content_text_color</item>
+        <item name="metaTextColor">@color/status_view_default_meta_text_color</item>
+    </style>
+
     <style name="Animations" />
 
     <style name="Animations.Move">

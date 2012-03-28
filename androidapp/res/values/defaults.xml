@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <bool name="status_view_default_show_head_image">true</bool>
+    <bool name="status_view_default_title_text_bold">true</bool>
+
+    <dimen name="status_view_default_title_text_size">18sp</dimen>
+
+    <color name="status_view_default_title_text_color">#ff000000</color>
+
+    <dimen name="status_view_default_content_text_size">16sp</dimen>
+
+    <color name="status_view_default_content_text_color">#ff090909</color>
+
+    <dimen name="status_view_default_meta_text_size">12sp</dimen>
+
+    <color name="status_view_default_meta_text_color">#ff999999</color>
+
+</resources>
