@@ -333,6 +333,17 @@
         <item name="android:layout_margin">2dp</item>
     </style>
 
+    <style name="Widget.SendGroup">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">4dp</item>
+    </style>
+    
+    <style name="Widget.SendGroup.Light">
+        <item name="android:background">@color/fanfoublue</item>
+    </style>
 
     <style name="Animations" />
 

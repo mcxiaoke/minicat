@@ -167,7 +167,8 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
 		String id = path.get(2);
 		String selection = IBaseColumns.ID + " =? ";
 		String[] selectionArgs = new String[] { id };
-		Cursor cursor = db.query(table, null, selection, selectionArgs, null, null, null);
+		Cursor cursor = db.query(table, null, selection, selectionArgs, null,
+				null, null);
 		return queryWithNotify(uri, cursor);
 	}
 
@@ -240,8 +241,9 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		String table = uri.getPathSegments().get(0);
 		long rowId = db.insert(table, null, values);
+		getContext().getContentResolver().notifyChange(uri, null);
 		if (rowId > 0) {
-//			getContext().getContentResolver().notifyChange(uri, null);
+			// getContext().getContentResolver().notifyChange(uri, null);
 			Uri resultUri = ContentUris.withAppendedId(uri, rowId);
 			if (App.DEBUG) {
 				log("insert() resultUri=" + resultUri + " id="
@@ -258,8 +260,8 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
 		db.beginTransaction();
 		try {
 			for (ContentValues value : values) {
-				if(App.DEBUG){
-					Log.d(TAG, "bulkInsert() "+value);
+				if (App.DEBUG) {
+					Log.d(TAG, "bulkInsert() " + value);
 				}
 				long id = db.insert(table, null, value);
 				if (id > 0) {

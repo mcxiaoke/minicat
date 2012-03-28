@@ -9,6 +9,7 @@
 
         <!-- widget style -->
         <item name="ButtonGroupStyle">@style/Widget.ButtonGroup.Light</item>
+        <item name="SendGroupStyle">@style/Widget.SendGroup.Light</item>
         <item name="ButtonStyle">@style/Widget.Button.Light</item>
         <item name="TitlePageIndicatorStyle">@style/Widget.TitlePageIndicator.Light</item>
         <item name="EditProfileInputStyle">@style/Widget.EditProfileInput.Light</item>

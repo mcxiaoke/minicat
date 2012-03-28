@@ -385,7 +385,7 @@ final class FanFouParser implements ApiParser {
 			UserModel recipient = user(ro, UserModel.TYPE_NONE, account);
 			model.setRecipient(recipient);
 		}
-
+		
 		// if (json.has("otherid")) {
 		// model.setConversationId(o.getString("otherid"));
 		// }

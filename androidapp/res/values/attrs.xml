@@ -5,6 +5,7 @@
 
         <!-- Style List -->
         <attr name="ButtonGroupStyle" format="reference"></attr>
+        <attr name="SendGroupStyle" format="reference"></attr>
         <attr name="ButtonStyle" format="reference"></attr>
         <attr name="TitlePageIndicatorStyle" format="reference"></attr>
         <attr name="EditProfileInputStyle" format="reference"></attr>
@@ -53,6 +54,5 @@
         <!-- status view attr -->
         <attr name="statusViewStyle" format="reference"></attr>
     </declare-styleable>
-
 
 </resources>

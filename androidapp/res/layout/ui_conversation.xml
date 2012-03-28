@@ -13,14 +13,8 @@
 
     <LinearLayout
         android:id="@+id/actions"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:paddingBottom="2dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:paddingTop="10dp" >
+        style="?SendGroupStyle"
+        android:layout_alignParentBottom="true" >
 
         <EditText
             android:id="@+id/input"
@@ -34,14 +28,13 @@
             android:padding="10dp"
             android:textSize="@dimen/text_size_medium" />
 
-        <Button
+        <ImageButton
             android:id="@id/button_ok"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:padding="4dp"
-            android:text="发送"
-            android:textColor="?primaryTextColor"
-            android:textSize="@dimen/text_size_medium" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/action"
+            android:padding="6dp"
+            android:src="@drawable/ic_send" />
     </LinearLayout>
 
 </RelativeLayout>

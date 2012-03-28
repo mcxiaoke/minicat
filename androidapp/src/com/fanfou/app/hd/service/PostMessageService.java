@@ -5,6 +5,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
@@ -25,9 +30,13 @@ import com.fanfou.app.hd.util.IOHelper;
  * @version 2.2 2011.12.13
  * @version 2.3 2012.02.22
  * @version 2.4 2012.02.24
+ * @version 2.5 2012.03.28
  * 
  */
 public class PostMessageService extends BaseIntentService {
+
+	public static final int RESULT_SUCCESS = 1;
+	public static final int RESULT_ERROR = -1;
 
 	private static final String TAG = PostMessageService.class.getSimpleName();
 	private NotificationManager nm;
@@ -36,10 +45,10 @@ public class PostMessageService extends BaseIntentService {
 		Log.i(TAG, message);
 	}
 
-	private String content;
+	private String text;
 	private String userId;
-	private String screenName;
-	private String reply;
+
+	private Messenger messenger;
 
 	public PostMessageService() {
 		super("UpdateService");
@@ -57,14 +66,12 @@ public class PostMessageService extends BaseIntentService {
 	}
 
 	private void parseIntent(Intent intent) {
+		messenger = intent.getParcelableExtra("messenger");
 		userId = intent.getStringExtra("id");
-		screenName = intent.getStringExtra("screen_name");
-		content = intent.getStringExtra("text");
-		reply = intent.getStringExtra("reply");
+		text = intent.getStringExtra("text");
 		if (App.DEBUG) {
 			log("parseIntent userId=" + userId);
-			log("parseIntent userName=" + screenName);
-			log("parseIntent content=" + content);
+			log("parseIntent content=" + text);
 		}
 	}
 
@@ -73,17 +80,23 @@ public class PostMessageService extends BaseIntentService {
 		boolean res = true;
 		Api api = App.getApi();
 		try {
-			DirectMessageModel result = api.createDirectmessage(userId,
-					content, reply);
+			DirectMessageModel model = api.createDirectmessage(userId, text,
+					null);
+
 			nm.cancel(10);
-			if (result == null) {
-				IOHelper.copyToClipBoard(this, content);
-				showFailedNotification("私信未发送，内容已保存到剪贴板", "未知原因");
+			if (model == null) {
 				res = false;
 			} else {
-				DataController.store(this, result);
+				if (model.getRecipientId().equals(App.getAccount())) {
+					model.setIncoming(true);
+					model.setConversationId(model.getSenderId());
+				} else {
+					model.setIncoming(false);
+					model.setConversationId(model.getRecipientId());
+				}
+				DataController.store(this, model);
 				res = true;
-				sendSuccessBroadcast();
+				sendMessage(RESULT_SUCCESS, null);
 			}
 		} catch (ApiException e) {
 			nm.cancel(10);
@@ -92,14 +105,7 @@ public class PostMessageService extends BaseIntentService {
 						"error: code=" + e.statusCode + " msg="
 								+ e.getMessage());
 			}
-			IOHelper.copyToClipBoard(this, content);
-			if (e.statusCode >= 500) {
-				showFailedNotification("私信未发送，内容已保存到剪贴板",
-						getString(R.string.msg_server_error));
-			} else {
-				showFailedNotification("私信未发送，内容已保存到剪贴板",
-						getString(R.string.msg_connection_error));
-			}
+			sendErrorMessage(e);
 		} finally {
 			nm.cancel(12);
 		}
@@ -118,40 +124,44 @@ public class PostMessageService extends BaseIntentService {
 		return id;
 	}
 
-	@SuppressWarnings("unused")
-	private int showSuccessNotification() {
-		int id = 12;
-		Notification notification = new Notification(R.drawable.ic_stat_notify,
-				"私信发送成功", System.currentTimeMillis());
-		Intent intent = new Intent(this, UILogin.class);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-				intent, 0);
-		notification.setLatestEventInfo(this, "饭否私信", "私信发送成功", contentIntent);
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
-		nm.notify(id, notification);
-		return id;
+	private void sendMessage(int what, final Bundle bundle) {
+		if (messenger == null) {
+			return;
+		}
+		Message m = Message.obtain();
+		m.what = what;
+		if (bundle != null) {
+			m.getData().putAll(bundle);
+		}
+		try {
+			messenger.send(m);
+		} catch (RemoteException e) {
+			if (App.DEBUG) {
+				e.printStackTrace();
+			}
+		}
 	}
 
-	private int showFailedNotification(String title, String message) {
-		int id = 11;
-
-		Notification notification = new Notification(R.drawable.ic_stat_notify,
-				title, System.currentTimeMillis());
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-				new Intent(), 0);
-		notification.setLatestEventInfo(this, title, message, contentIntent);
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
-		nm.notify(id, notification);
-		return id;
-
+	private void sendErrorMessage(ApiException e) {
+		String message = e.getMessage();
+		if (e.statusCode == ApiException.IO_ERROR) {
+			message = getString(R.string.msg_connection_error);
+		} else if (e.statusCode >= 500) {
+			message = getString(R.string.msg_server_error);
+		}
+		Bundle bundle = new Bundle();
+		bundle.putInt("error_code", e.statusCode);
+		bundle.putString("error_message", message);
+		sendMessage(RESULT_ERROR, bundle);
 	}
 
-	private void sendSuccessBroadcast() {
-		Intent intent = new Intent(Constants.ACTION_MESSAGE_SENT);
-		intent.setPackage(getPackageName());
-		sendOrderedBroadcast(intent, null);
+	public static void send(Context context, final Handler handler, String id,
+			String text) {
+		Intent intent = new Intent(context, PostMessageService.class);
+		intent.putExtra("messenger", new Messenger(handler));
+		intent.putExtra("id", id);
+		intent.putExtra("text", text);
+		context.startService(intent);
 	}
 
 }

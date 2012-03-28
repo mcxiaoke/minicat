@@ -2,13 +2,15 @@ package com.fanfou.app.hd;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.fanfou.app.hd.fragments.ConversationFragment;
 import com.fanfou.app.hd.service.PostMessageService;
@@ -38,7 +40,7 @@ public class UIConversation extends UIBaseSupport {
 
 	private EditText mEditText;
 
-	private Button btnSend;
+	private ImageButton btnSend;
 
 	private String text;
 
@@ -75,7 +77,7 @@ public class UIConversation extends UIBaseSupport {
 			}
 		});
 
-		btnSend = (Button) findViewById(R.id.button_ok);
+		btnSend = (ImageButton) findViewById(R.id.button_ok);
 		btnSend.setOnClickListener(this);
 
 		if (TextUtils.isEmpty(userId)) {
@@ -87,7 +89,7 @@ public class UIConversation extends UIBaseSupport {
 	}
 
 	private void setFragment() {
-		fragment = ConversationFragment.newInstance(userId, screenName);
+		fragment = ConversationFragment.newInstance(userId, screenName,true);
 
 		FragmentManager fm = getSupportFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
@@ -137,21 +139,46 @@ public class UIConversation extends UIBaseSupport {
 			return;
 		}
 
-		startSendService();
+		PostMessageService.send(mContext, new ResultHandler(), userId, text);
 		if (finish) {
 			Utils.hideKeyboard(this, mEditText);
 			finish();
 		} else {
-			mEditText.setText("");
+			btnSend.setEnabled(false);
+			mEditText.setEnabled(false);
+
 		}
 	}
 
-	private void startSendService() {
-		Intent i = new Intent(mContext, PostMessageService.class);
-		i.putExtra("id", userId);
-		i.putExtra("screen_name", screenName);
-		i.putExtra("text", text);
-		startService(i);
+	private void onSendSuccess(Bundle data) {
+		mEditText.getEditableText().clear();
+		mEditText.setEnabled(true);
+		btnSend.setEnabled(true);
+	}
+
+	private void onSendError(Bundle data) {
+		String errorMessage = data.getString("error_message");
+		Utils.notify(this, errorMessage);
+		mEditText.setEnabled(true);
+		btnSend.setEnabled(true);
+	}
+
+	@Override
+	protected int getMenuResourceId() {
+		return R.menu.simple_menu;
+	}
+
+	private class ResultHandler extends Handler {
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			if (msg.what == PostMessageService.RESULT_SUCCESS) {
+				onSendSuccess(msg.getData());
+			} else if (msg.what == PostMessageService.RESULT_ERROR) {
+				onSendError(msg.getData());
+			}
+		}
 	}
 
 }
