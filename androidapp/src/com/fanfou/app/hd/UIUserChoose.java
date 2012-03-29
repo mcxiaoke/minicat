@@ -132,7 +132,7 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
 	protected void setLayout() {
 		setContentView(R.layout.user_choose);
 		mViewStub = (ViewStub) findViewById(R.id.stub);
-		mEditText = (EditText) findViewById(R.id.choose_input);
+		mEditText = (EditText) findViewById(R.id.input);
 		mEditText.addTextChangedListener(new MyTextWatcher());
 		vEmpty = (ViewGroup) findViewById(android.R.id.empty);
 		emptyController = new EmptyViewController(vEmpty);

@@ -67,6 +67,7 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 		StatusView view = (StatusView) convertView;
 		if (view == null) {
 			view = new StatusView(mContext);
+			view.setId(R.id.list_item);
 			if (App.DEBUG) {
 				Log.d(TAG, "getView newView=" + view);
 			}

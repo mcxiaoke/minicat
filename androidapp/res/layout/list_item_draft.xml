@@ -3,11 +3,11 @@
 	android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="horizontal"
 	android:padding="6dp">
 
-	<TextView android:id="@id/text" android:layout_width="0dp"
+	<TextView android:id="@+id/text" android:layout_width="0dp"
 		android:layout_height="wrap_content" android:gravity="center_vertical"
 		android:textSize="@dimen/text_size_medium" android:padding="4dp" android:layout_weight="1" />
 
-	<ImageView style="@style/MiniIconStyle" android:id="@id/mini_icon" android:src="@drawable/ic_mini_photo"
+	<ImageView style="@style/MiniIconStyle" android:id="@+id/icon" android:src="@drawable/ic_mini_photo"
 		android:visibility="gone" />
 
 </LinearLayout>

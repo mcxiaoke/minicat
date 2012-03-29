@@ -1,47 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <item name="buttons" type="id"/>
-    <item name="button_cancel" type="id"/>
-    <item name="button_ok" type="id"/>
-    <item name="button_save" type="id"/>
-    <item name="button_discard" type="id"/>
-
     <item name="list_header" type="id"/>
     <item name="list_header_text" type="id"/>
     <item name="list_header_progress" type="id"/>
     <item name="list_footer" type="id"/>
     <item name="list_footer_text" type="id"/>
     <item name="list_footer_progress" type="id"/>
-
-    <item name="user_profile" type="id"/>
-    <item name="user_empty" type="id"/>
-    <item name="user_head" type="id"/>
-    <item name="user_name" type="id"/>
-    <item name="user_id" type="id"/>
-    <item name="choose_input" type="id"/>
-    <item name="search" type="id"/>
-    <item name="search_input" type="id"/>
-    <item name="search_button" type="id"/>
     
-    <item name="about" type="id"/>
-    <item name="about_icon" type="id"/>
-    <item name="about_title" type="id"/>
-    <item name="about_version" type="id"/>
-    <item name="about_intro" type="id"/>
-    <item name="about_support" type="id"/>
-    <item name="about_support_text" type="id"/>
-    <item name="about_contact" type="id"/>
-    <item name="about_contact_text" type="id"/>
-    <item name="about_copyright" type="id"/>
-    <item name="title" type="id"/>
-    <item name="text" type="id"/>
-    <item name="date" type="id"/>
-    <item name="button1" type="id"/>
-    <item name="button2" type="id"/>
-    <item name="mini_icon" type="id"/>
-    <item name="menu_refresh" type="id"/>
-
-    <!-- id add in version 2.0 -->
+    <item name="list_item" type="id"></item>
 
 </resources>

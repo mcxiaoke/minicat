@@ -1,62 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:fillViewport="true"
+    android:scrollbars="none" >
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:scrollbars="none" >
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="10dp" >
 
-        <LinearLayout
-            android:layout_width="fill_parent"
+        <ImageView
+            android:id="@+id/about_icon"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:padding="10dp" >
+            android:src="@drawable/about_logo" />
 
-            <ImageView
-                android:id="@id/about_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/about_logo" />
+        <TextView
+            android:id="@+id/about_title"
+            style="@style/About.Title" />
 
-            <TextView
-                android:id="@id/about_title"
-                style="@style/About.Title" />
+        <TextView
+            android:id="@+id/about_version"
+            style="@style/About.ItemText.Center" />
 
-            <TextView
-                android:id="@id/about_version"
-                style="@style/About.ItemText.Center" />
+        <TextView
+            android:id="@+id/about_intro"
+            style="@style/About.ItemText" />
 
-            <TextView
-                android:id="@id/about_intro"
-                style="@style/About.ItemText" />
+        <TextView
+            android:id="@+id/about_support"
+            style="@style/About.ItemName" />
 
-            <TextView
-                android:id="@id/about_support"
-                style="@style/About.ItemName" />
+        <TextView
+            android:id="@+id/about_support_text"
+            style="@style/About.ItemText" />
 
-            <TextView
-                android:id="@id/about_support_text"
-                style="@style/About.ItemText" />
+        <TextView
+            android:id="@+id/about_contact"
+            style="@style/About.ItemName" />
 
-            <TextView
-                android:id="@id/about_contact"
-                style="@style/About.ItemName" />
+        <TextView
+            android:id="@+id/about_contact_text"
+            style="@style/About.ItemText"
+            android:autoLink="web|email" />
 
-            <TextView
-                android:id="@id/about_contact_text"
-                style="@style/About.ItemText"
-                android:autoLink="web|email" />
+        <TextView
+            android:id="@+id/about_copyright"
+            style="@style/About.Copyright"
+            android:layout_marginTop="20dp" />
+    </LinearLayout>
 
-            <TextView
-                android:id="@id/about_copyright"
-                style="@style/About.Copyright"
-                android:layout_marginTop="20dp" />
-        </LinearLayout>
-    </ScrollView>
-
-</LinearLayout>
+</ScrollView>

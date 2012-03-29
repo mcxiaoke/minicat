@@ -67,7 +67,7 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 	@Override
 	protected void setLayout() {
 		setContentView(R.layout.ui_users);
-		mEditText = (EditText) findViewById(R.id.choose_input);
+		mEditText = (EditText) findViewById(R.id.input);
 		mEditText.addTextChangedListener(new MyTextWatcher(this));
 		setFragment();
 

@@ -92,7 +92,8 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		View view= new StatusView(context);
+		View view = new StatusView(context);
+		view.setId(R.id.list_item);
 		if (App.DEBUG) {
 			Log.d(TAG, "newView newView=" + view);
 		}

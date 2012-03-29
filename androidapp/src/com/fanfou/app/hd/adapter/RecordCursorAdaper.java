@@ -63,7 +63,7 @@ public class RecordCursorAdaper extends BaseCursorAdapter {
 		ViewHolder(View base) {
 			this.text = (TextView) base.findViewById(R.id.text);
 			// this.date = (TextView) base.findViewById(R.id.date);
-			this.icon = (ImageView) base.findViewById(R.id.mini_icon);
+			this.icon = (ImageView) base.findViewById(R.id.icon);
 
 		}
 	}
