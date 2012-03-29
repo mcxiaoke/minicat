@@ -19,7 +19,7 @@
             android:text="消息" />
     </LinearLayout>
 
-    <include layout="@layout/divider_vertical" />
+    <include layout="@layout/divider_vertical_light" />
 
     <LinearLayout
         android:id="@+id/box_favorites"
@@ -34,7 +34,7 @@
             android:text="收藏" />
     </LinearLayout>
 
-    <include layout="@layout/divider_vertical" />
+    <include layout="@layout/divider_vertical_light" />
 
     <LinearLayout
         android:id="@+id/box_friends"
@@ -49,7 +49,7 @@
             android:text="好友" />
     </LinearLayout>
 
-    <include layout="@layout/divider_vertical" />
+    <include layout="@layout/divider_vertical_light" />
 
     <LinearLayout
         android:id="@+id/box_followers"

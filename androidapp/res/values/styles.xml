@@ -80,7 +80,7 @@
 
     <style name="Widget.ListView.Light">
         <item name="android:listSelector">@drawable/list_selector</item>
-        <item name="android:divider">@color/light_grey_translucent</item>
+        <item name="android:divider">@color/light_list_divider</item>
     </style>
 
     <style name="Widget.TitlePageIndicator">
@@ -96,7 +96,7 @@
     </style>
 
     <style name="Widget.TitlePageIndicator.Light">
-        <item name="footerColor">@color/fanfoublue</item>
+        <item name="footerColor">@color/light_blue</item>
     </style>
 
     <style name="Widget.ButtonGroup">
@@ -107,7 +107,7 @@
     </style>
 
     <style name="Widget.ButtonGroup.Light">
-        <item name="android:background">@color/fanfoublue_background</item>
+        <item name="android:background">@color/light_blue_light</item>
     </style>
 
     <style name="Widget.Button">
@@ -338,11 +338,11 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:padding">4dp</item>
+        <item name="android:padding">2dp</item>
     </style>
     
     <style name="Widget.SendGroup.Light">
-        <item name="android:background">@color/fanfoublue</item>
+        <item name="android:background">@color/light_blue</item>
     </style>
 
     <style name="Animations" />
