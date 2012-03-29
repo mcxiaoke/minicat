@@ -2,13 +2,10 @@ package com.fanfou.app.hd.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.View;
 
-import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.dao.model.DirectMessageModel;
+import com.fanfou.app.hd.ui.widget.ItemView;
 import com.fanfou.app.hd.util.DateTimeHelper;
 
 /**
@@ -29,45 +26,28 @@ public class ConversationListCursorAdapter extends BaseMessageCursorAdapter {
 	}
 
 	@Override
-	public void bindView(View view, Context context, Cursor cursor) {
-		View row = view;
-		final ViewHolder holder = (ViewHolder) row.getTag();
+	public void bindView(View row, Context context, Cursor cursor) {
+		ItemView view = (ItemView) row;
 
 		final DirectMessageModel dm = DirectMessageModel.from(cursor);
 
-		if (App.DEBUG) {
-//			Log.d(TAG, "bindView " + dm);
-		}
-
-		holder.dateText.setText(DateTimeHelper.getInterval(dm.getTime()));
+		view.setMeta(DateTimeHelper.getInterval(dm.getTime()));
 
 		boolean incoming = dm.isIncoming();
 
 		if (incoming) {
-			holder.nameText.setText(dm.getSenderScreenName());
-			holder.contentText.setText(dm.getText());
+			view.setTitle(dm.getSenderScreenName());
+			view.setContent(dm.getText());
 		} else {
-			holder.nameText.setText(dm.getRecipientScreenName());
+			view.setTitle(dm.getRecipientScreenName());
 			StringBuilder builder = new StringBuilder();
 			builder.append("我：").append(dm.getText());
-			holder.contentText.setText(builder.toString());
+			view.setContent(builder.toString());
 		}
 
 		String headUrl = incoming ? dm.getSenderProfileImageUrl() : dm
 				.getRecipientProfileImageUrl();
-
-		if (busy) {
-			Bitmap bitmap = mLoader.getImage(headUrl, null);
-			if (bitmap != null) {
-				holder.headIcon.setImageBitmap(bitmap);
-			} else {
-				holder.headIcon.setImageResource(R.drawable.ic_head);
-			}
-		} else {
-			holder.headIcon.setTag(headUrl);
-			mLoader.displayImage(headUrl, holder.headIcon,
-					R.drawable.ic_head);
-		}
+		UIHelper.setImage(view, mLoader, headUrl, busy);
 
 	}
 

@@ -1,10 +1,14 @@
 package com.fanfou.app.hd.adapter;
 
-import android.text.TextPaint;
+import android.graphics.Bitmap;
 import android.view.View;
+import android.widget.ImageView;
+
+import com.fanfou.app.hd.R;
+import com.fanfou.app.hd.cache.IImageLoader;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.dao.model.UserModel;
-import com.fanfou.app.hd.ui.widget.StatusView;
+import com.fanfou.app.hd.ui.widget.ItemView;
 import com.fanfou.app.hd.util.DateTimeHelper;
 
 /**
@@ -18,46 +22,50 @@ public class UIHelper {
 		return DateTimeHelper.getInterval(date);
 	}
 
-	public static void setStatusTextSize(final StatusView view, int fontSize) {
+	public static void setItemTextSize(final ItemView view, int fontSize) {
 		view.setContentTextSize(fontSize);
 		view.setTitleTextSize(fontSize + 2);
 		view.setMetaTextSize(fontSize - 2);
 	}
 
-	public static void setStatusMetaInfo(final StatusView view,
-			final StatusModel s) {
+	public static void setMetaInfo(final ItemView view, final StatusModel s) {
 		view.showIconThread(s.isThread());
 		view.showIconFavorite(s.isFavorited());
 		view.showIconPhoto(s.isPhoto());
 		view.setTitle(s.getUserScreenName());
-		view.setMeta(getDateString(s.getTime()) + " 通过" + s.getSource());
+
+		StringBuilder meta = new StringBuilder();
+		meta.append(getDateString(s.getTime()));
+		meta.append(" 通过");
+		meta.append(s.getSource());
+		view.setMeta(meta.toString());
 	}
 
-	public static void setUserTextStyle(UserViewHolder holder, int fontSize) {
-		holder.genderText.setTextSize(fontSize);
-		holder.locationText.setTextSize(fontSize);
-		holder.nameText.setTextSize(fontSize);
-		holder.dateText.setTextSize(fontSize - 2);
-		TextPaint tp = holder.nameText.getPaint();
-		tp.setFakeBoldText(true);
+	public static void setContent(final ItemView view, final UserModel u) {
+		view.showIconLock(u.isProtect());
+		view.setTitle(u.getScreenName());
+		StringBuilder content = new StringBuilder();
+		content.append(u.getLocation());
+		content.append(" ");
+		content.append(u.getGender());
+		view.setContent(content.toString());
+		view.showMeta(false);
 	}
 
-	public static void setUserContent(final UserViewHolder holder,
-			final UserModel u) {
-
-		if (u.isProtect()) {
-			holder.lockIcon.setVisibility(View.VISIBLE);
+	public static void setImage(ItemView view, IImageLoader loader,
+			String headUrl, boolean busy) {
+		if (busy) {
+			Bitmap bitmap = loader.getImage(headUrl, null);
+			if (bitmap != null) {
+				view.setImage(bitmap);
+			} else {
+				view.setImage(R.drawable.ic_head);
+			}
 		} else {
-			holder.lockIcon.setVisibility(View.GONE);
+			ImageView head = view.getImageView();
+			head.setTag(headUrl);
+			loader.displayImage(headUrl, head, R.drawable.ic_head);
 		}
-		holder.nameText.setText(u.getScreenName());
-		holder.idText.setText("(" + u.getId() + ")");
-		holder.dateText.setText(DateTimeHelper.formatDateOnly(u.getTime()));
-		holder.genderText.setText(u.getGender());
-		holder.locationText.setText(u.getLocation());
 	}
 
-	public static void showOrHide(View view, boolean show) {
-		view.setVisibility(show ? View.VISIBLE : View.GONE);
-	}
 }

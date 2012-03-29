@@ -6,11 +6,12 @@ import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.dao.model.StatusModel;
-import com.fanfou.app.hd.ui.widget.StatusView;
+import com.fanfou.app.hd.ui.widget.ItemView;
 import com.fanfou.app.hd.util.OptionHelper;
 
 /**
@@ -92,7 +93,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		View view = new StatusView(context);
+		ItemView view = new ItemView(context);
 		view.setId(R.id.list_item);
 		if (App.DEBUG) {
 			Log.d(TAG, "newView newView=" + view);
@@ -101,26 +102,16 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 	}
 
 	@Override
-	public void bindView(View view, Context context, final Cursor cursor) {
+	public void bindView(View row, Context context, final Cursor cursor) {
 		final StatusModel s = StatusModel.from(cursor);
-		final StatusView sv = (StatusView) view;
-		String headUrl = s.getUserProfileImageUrl();
-		if (busy) {
-			Bitmap bitmap = mLoader.getImage(headUrl, null);
-			if (bitmap != null) {
-				sv.setImage(bitmap);
-			} else {
-				sv.setImage(R.drawable.ic_head);
-			}
-		} else {
-			sv.getImageView().setTag(headUrl);
-			mLoader.displayImage(headUrl, sv.getImageView(), R.drawable.ic_head);
-		}
-
+		final ItemView view = (ItemView) row;
+		
 		setColor(cursor, view);
-		UIHelper.setStatusMetaInfo(sv, s);
-		sv.setContent(s.getSimpleText());
+		UIHelper.setMetaInfo(view, s);
+		view.setContent(s.getSimpleText());
 
+		String headUrl = s.getUserProfileImageUrl();
+		UIHelper.setImage(view, mLoader, headUrl, busy);
 	}
 
 	private void setColor(final Cursor cursor, View row) {

@@ -4,9 +4,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.dao.model.DirectMessageModel;
+import com.fanfou.app.hd.ui.widget.ItemView;
 import com.fanfou.app.hd.util.DateTimeHelper;
 
 /**
@@ -27,9 +29,8 @@ public class ConversationCursorAdapter extends BaseMessageCursorAdapter {
 	}
 
 	@Override
-	public void bindView(View view, Context context, Cursor cursor) {
-		View row = view;
-		final ViewHolder holder = (ViewHolder) row.getTag();
+	public void bindView(View row, Context context, Cursor cursor) {
+		ItemView view = (ItemView) row;
 
 		final DirectMessageModel dm = DirectMessageModel.from(cursor);
 
@@ -37,20 +38,14 @@ public class ConversationCursorAdapter extends BaseMessageCursorAdapter {
 			row.setBackgroundColor(0x33999999);
 		}
 
+		view.setTitle(dm.getSenderScreenName());
+		view.setMeta(DateTimeHelper.getInterval(dm.getTime()));
+		view.setContent(dm.getText());
+		
 		String headUrl = dm.getSenderProfileImageUrl();
-		if (busy) {
-			Bitmap bitmap = mLoader.getImage(headUrl, null);
-			if (bitmap != null) {
-				holder.headIcon.setImageBitmap(bitmap);
-			}
-		} else {
-			holder.headIcon.setTag(headUrl);
-			mLoader.displayImage(headUrl, holder.headIcon, R.drawable.ic_head);
-		}
-
-		holder.nameText.setText(dm.getSenderScreenName());
-		holder.dateText.setText(DateTimeHelper.getInterval(dm.getTime()));
-		holder.contentText.setText(dm.getText());
+		UIHelper.setImage(view, mLoader, headUrl, busy);
 	}
+
+
 
 }

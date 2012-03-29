@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/icons"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="4dp" >
+
+    <ImageView
+        android:id="@+id/ic_favorite"
+        style="@style/Widget.MiniIcon"
+        android:src="@drawable/ic_mini_favorite" />
+
+    <ImageView
+        android:id="@+id/ic_thread"
+        style="@style/Widget.MiniIcon"
+        android:src="@drawable/ic_mini_thread" />
+
+    <ImageView
+        android:id="@+id/ic_photo"
+        style="@style/Widget.MiniIcon"
+        android:src="@drawable/ic_mini_photo" />
+
+    <ImageView
+        android:id="@+id/ic_lock"
+        style="@style/Widget.MiniIcon"
+        android:src="@drawable/ic_mini_protected" />
+
+</LinearLayout>

@@ -93,7 +93,7 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter{
 					R.drawable.ic_head);
 		}
 
-		UIHelper.showOrHide(holder.lockIcon, u.isProtect());
+		holder.lockIcon.setVisibility(u.isProtect()?View.VISIBLE:View.GONE);
 
 		holder.nameText.setText(u.getScreenName());
 		holder.idText.setText("(" + u.getId() + ")");

@@ -14,29 +14,35 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
  * @author mcxiaoke
  * @version 1.0 2012.03.28
+ * @version 1.1 2012.03.29
  * 
  */
-public class StatusView extends RelativeLayout {
+public class ItemView extends RelativeLayout {
 	private ImageView mImageView;
 	private TextView mTitleTextView;
 	private TextView mContentTextView;
 	private TextView mMetaTextView;
-	private LinearLayout mIconsLayout;
+
+	private ViewStub mViewStub;
+	private View mIconsView;
 
 	private ImageView mIconFavorite;
 	private ImageView mIconThread;
 	private ImageView mIconPhoto;
+	private ImageView mIconLock;
 
 	private Context mContext;
 	private LayoutInflater mInflater;
+
+	private ViewMode mViewMode;
 
 	private float mTitleTextSize;
 	private float mContentTextSize;
@@ -49,15 +55,15 @@ public class StatusView extends RelativeLayout {
 	private boolean mTitleTextBold;
 	private boolean mShowImage;
 
-	public StatusView(Context context) {
+	public ItemView(Context context) {
 		this(context, null);
 	}
 
-	public StatusView(Context context, AttributeSet attrs) {
-		this(context, attrs, R.attr.statusViewStyle);
+	public ItemView(Context context, AttributeSet attrs) {
+		this(context, attrs, R.attr.itemViewStyle);
 	}
 
-	public StatusView(Context context, AttributeSet attrs, int defStyle) {
+	public ItemView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		initialize(context, attrs, defStyle);
 	}
@@ -65,56 +71,57 @@ public class StatusView extends RelativeLayout {
 	private void initialize(Context context, AttributeSet attrs, int defStyle) {
 		mContext = context;
 		mInflater = LayoutInflater.from(mContext);
-		mInflater.inflate(R.layout.custom_status_view, this, true);
+		mInflater.inflate(R.layout.item_view, this, true);
 		mImageView = (ImageView) findViewById(R.id.image);
 		mTitleTextView = (TextView) findViewById(R.id.title);
 		mContentTextView = (TextView) findViewById(R.id.text);
 		mMetaTextView = (TextView) findViewById(R.id.meta);
-		mIconsLayout = (LinearLayout) findViewById(R.id.icons);
-		mIconFavorite = (ImageView) findViewById(R.id.ic_favorite);
-		mIconThread = (ImageView) findViewById(R.id.ic_thread);
-		mIconPhoto = (ImageView) findViewById(R.id.ic_photo);
+
+		mViewStub = (ViewStub) findViewById(R.id.stub);
 
 		final Resources res = getResources();
 		final float defaultTitleTextSize = res
-				.getDimension(R.dimen.status_view_default_title_text_size);
+				.getDimension(R.dimen.default_title_text_size);
 		final float defaultContentTextSize = res
-				.getDimension(R.dimen.status_view_default_content_text_size);
+				.getDimension(R.dimen.default_content_text_size);
 		final float defaultMetaTextSize = res
-				.getDimension(R.dimen.status_view_default_meta_text_size);
+				.getDimension(R.dimen.default_meta_text_size);
 		final int defaultTitleTextColor = res
-				.getColor(R.color.status_view_default_title_text_color);
+				.getColor(R.color.default_title_text_color);
 		final int defaultContentTextColor = res
-				.getColor(R.color.status_view_default_content_text_color);
+				.getColor(R.color.default_content_text_color);
 		final int defaultMetaTextColor = res
-				.getColor(R.color.status_view_default_meta_text_color);
+				.getColor(R.color.default_meta_text_color);
 
 		final boolean defaultTitleTextBold = res
-				.getBoolean(R.bool.status_view_default_title_text_bold);
+				.getBoolean(R.bool.default_title_text_bold);
 		final boolean defaultShowImage = res
-				.getBoolean(R.bool.status_view_default_show_head_image);
+				.getBoolean(R.bool.default_show_head_image);
+		final int defaultViewMode = res.getInteger(R.integer.default_view_mode);
 
 		TypedArray a = context.obtainStyledAttributes(attrs,
-				R.styleable.StatusView, defStyle, 0);
-		mTitleTextSize = a.getDimension(R.styleable.StatusView_titleTextSize,
+				R.styleable.ItemView, defStyle, 0);
+		mTitleTextSize = a.getDimension(R.styleable.ItemView_titleTextSize,
 				defaultTitleTextSize);
-		mTitleTextColor = a.getColor(R.styleable.StatusView_titleTextColor,
+		mTitleTextColor = a.getColor(R.styleable.ItemView_titleTextColor,
 				defaultTitleTextColor);
-		mTitleTextBold = a.getBoolean(R.styleable.StatusView_titleTextBold,
+		mTitleTextBold = a.getBoolean(R.styleable.ItemView_titleTextBold,
 				defaultTitleTextBold);
 
-		mContentTextSize = a.getDimension(
-				R.styleable.StatusView_contentTextSize, defaultContentTextSize);
-		mContentTextColor = a.getColor(R.styleable.StatusView_contentTextColor,
+		mContentTextSize = a.getDimension(R.styleable.ItemView_contentTextSize,
+				defaultContentTextSize);
+		mContentTextColor = a.getColor(R.styleable.ItemView_contentTextColor,
 				defaultContentTextColor);
 
-		mMetaTextSize = a.getDimension(R.styleable.StatusView_metaTextSize,
+		mMetaTextSize = a.getDimension(R.styleable.ItemView_metaTextSize,
 				defaultMetaTextSize);
-		mMetaTextColor = a.getColor(R.styleable.StatusView_metaTextColor,
+		mMetaTextColor = a.getColor(R.styleable.ItemView_metaTextColor,
 				defaultMetaTextColor);
 
-		mShowImage = a.getBoolean(R.styleable.StatusView_showImage,
+		mShowImage = a.getBoolean(R.styleable.ItemView_showImage,
 				defaultShowImage);
+		mViewMode = ViewMode.of(a.getInteger(R.styleable.ItemView_viewMode,
+				defaultViewMode));
 
 		if (App.DEBUG) {
 			Log.d(VIEW_LOG_TAG, "title text size=" + mTitleTextSize);
@@ -122,6 +129,8 @@ public class StatusView extends RelativeLayout {
 			Log.d(VIEW_LOG_TAG, "meta text size=" + mMetaTextSize);
 		}
 
+		setPadding(0, 0, 0, 0);
+		
 		mTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTitleTextSize);
 		mTitleTextView.setTextColor(mTitleTextColor);
 		if (mTitleTextBold) {
@@ -136,8 +145,22 @@ public class StatusView extends RelativeLayout {
 
 		mImageView.setVisibility(mShowImage ? View.VISIBLE : View.GONE);
 
+		checkViewMode();
+
 		a.recycle();
 		a = null;
+	}
+
+	private void checkViewMode() {
+		if (mViewMode.equals(ViewMode.MessageMode)) {
+			return;
+		}
+		mIconsView = mViewStub.inflate();
+		// mIconsView = findViewById(R.id.icons);
+		mIconFavorite = (ImageView) findViewById(R.id.ic_favorite);
+		mIconThread = (ImageView) findViewById(R.id.ic_thread);
+		mIconPhoto = (ImageView) findViewById(R.id.ic_photo);
+		mIconLock = (ImageView) findViewById(R.id.ic_lock);
 	}
 
 	public void setTitle(CharSequence text) {
@@ -168,6 +191,10 @@ public class StatusView extends RelativeLayout {
 		mImageView.setVisibility(show ? View.VISIBLE : View.GONE);
 	}
 
+	public void showIcons(boolean show) {
+		mIconsView.setVisibility(show ? View.VISIBLE : View.GONE);
+	}
+
 	public void showIconFavorite(boolean show) {
 		mIconFavorite.setVisibility(show ? View.VISIBLE : View.GONE);
 	}
@@ -178,6 +205,22 @@ public class StatusView extends RelativeLayout {
 
 	public void showIconPhoto(boolean show) {
 		mIconPhoto.setVisibility(show ? View.VISIBLE : View.GONE);
+	}
+
+	public void showIconLock(boolean show) {
+		mIconLock.setVisibility(show ? View.VISIBLE : View.GONE);
+	}
+
+	public void showTitle(boolean show) {
+		mTitleTextView.setVisibility(show ? View.VISIBLE : View.GONE);
+	}
+
+	public void showContent(boolean show) {
+		mContentTextView.setVisibility(show ? View.VISIBLE : View.GONE);
+	}
+
+	public void showMeta(boolean show) {
+		mMetaTextView.setVisibility(show ? View.VISIBLE : View.GONE);
 	}
 
 	public void setTitleTextSize(float size) {
@@ -218,6 +261,25 @@ public class StatusView extends RelativeLayout {
 
 	public TextView getMetaTextView() {
 		return mMetaTextView;
+	}
+
+	public enum ViewMode {
+		StatusMode(0), UserMode(1), MessageMode(2);
+
+		private final int mode;
+
+		private ViewMode(int mode) {
+			this.mode = mode;
+		}
+
+		public static ViewMode of(int mode) {
+			for (ViewMode viewMode : ViewMode.values()) {
+				if (viewMode.mode == mode) {
+					return viewMode;
+				}
+			}
+			return StatusMode;
+		}
 	}
 
 }

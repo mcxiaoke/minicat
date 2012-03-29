@@ -3,8 +3,7 @@
     android:id="@+id/root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="horizontal"
-    android:padding="4dp" >
+    android:orientation="horizontal" >
 
     <ImageView
         android:id="@+id/image"
@@ -25,30 +24,13 @@
         android:layout_toRightOf="@id/image"
         android:padding="4dp" />
 
-    <LinearLayout
-        android:id="@+id/icons"
+    <ViewStub
+        android:id="@+id/stub"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:orientation="horizontal"
-        android:padding="4dp" >
-
-        <ImageView
-            android:id="@+id/ic_favorite"
-            style="@style/Widget.Icon"
-            android:src="@drawable/ic_mini_favorite" />
-
-        <ImageView
-            android:id="@+id/ic_thread"
-            style="@style/Widget.Icon"
-            android:src="@drawable/ic_mini_thread" />
-
-        <ImageView
-            android:id="@+id/ic_photo"
-            style="@style/Widget.Icon"
-            android:src="@drawable/ic_mini_photo" />
-    </LinearLayout>
+        android:layout="@layout/item_view_icons" />
 
     <TextView
         android:id="@+id/text"

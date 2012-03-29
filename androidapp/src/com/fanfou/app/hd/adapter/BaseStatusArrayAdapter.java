@@ -17,7 +17,7 @@ import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.cache.IImageLoader;
 import com.fanfou.app.hd.dao.model.StatusModel;
-import com.fanfou.app.hd.ui.widget.StatusView;
+import com.fanfou.app.hd.ui.widget.ItemView;
 import com.fanfou.app.hd.util.OptionHelper;
 
 /**
@@ -64,9 +64,9 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		StatusView view = (StatusView) convertView;
+		ItemView view = (ItemView) convertView;
 		if (view == null) {
-			view = new StatusView(mContext);
+			view = new ItemView(mContext);
 			view.setId(R.id.list_item);
 			if (App.DEBUG) {
 				Log.d(TAG, "getView newView=" + view);
@@ -76,18 +76,9 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 		final StatusModel s = getData().get(position);
 
 		String headUrl = s.getUserProfileImageUrl();
-		if (busy) {
-			Bitmap bitmap = mLoader.getImage(headUrl, null);
-			if (bitmap != null) {
-				view.setImage(bitmap);
-			}
-		} else {
-			view.setTag(headUrl);
-			mLoader.displayImage(headUrl, view.getImageView(),
-					R.drawable.ic_head);
-		}
+		UIHelper.setImage(view, mLoader, headUrl, busy);
 
-		UIHelper.setStatusMetaInfo(view, s);
+		UIHelper.setMetaInfo(view, s);
 		setStatusContent(view, s.getSimpleText());
 		return view;
 	}
@@ -132,7 +123,7 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 		notifyDataSetChanged();
 	}
 
-	protected void setStatusContent(StatusView view, String text) {
+	protected void setStatusContent(ItemView view, String text) {
 		view.setContent(text);
 	}
 

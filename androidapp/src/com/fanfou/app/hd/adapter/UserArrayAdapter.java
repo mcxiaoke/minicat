@@ -5,17 +5,20 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.cache.IImageLoader;
 import com.fanfou.app.hd.dao.model.UserModel;
+import com.fanfou.app.hd.ui.widget.ItemView;
 import com.fanfou.app.hd.util.OptionHelper;
 
 /**
@@ -31,6 +34,7 @@ import com.fanfou.app.hd.util.OptionHelper;
  */
 public abstract class UserArrayAdapter extends BaseAdapter implements
 		OnScrollListener {
+	private static final String TAG = UserArrayAdapter.class.getSimpleName();
 	protected Context mContext;
 	protected LayoutInflater mInflater;
 	protected IImageLoader mLoader;
@@ -59,14 +63,13 @@ public abstract class UserArrayAdapter extends BaseAdapter implements
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		UserViewHolder holder;
-		if (convertView == null) {
-			convertView = mInflater.inflate(getLayoutId(), null);
-			holder = new UserViewHolder(convertView);
-			UIHelper.setUserTextStyle(holder, getFontSize());
-			convertView.setTag(holder);
-		} else {
-			holder = (UserViewHolder) convertView.getTag();
+		ItemView view = (ItemView) convertView;
+		if (view == null) {
+			view = new ItemView(mContext);
+			view.setId(R.id.list_item);
+			if (App.DEBUG) {
+				Log.d(TAG, "getView newView=" + view);
+			}
 		}
 
 		final UserModel u = getData().get(position);
@@ -75,15 +78,17 @@ public abstract class UserArrayAdapter extends BaseAdapter implements
 		if (busy) {
 			Bitmap bitmap = mLoader.getImage(headUrl, null);
 			if (bitmap != null) {
-				holder.headIcon.setImageBitmap(bitmap);
+				view.setImage(bitmap);
+			} else {
+				view.setImage(R.drawable.ic_head);
 			}
 		} else {
-			holder.headIcon.setTag(headUrl);
-			mLoader.displayImage(headUrl, holder.headIcon,
-					R.drawable.ic_head);
+			ImageView head = view.getImageView();
+			head.setTag(headUrl);
+			mLoader.displayImage(headUrl, head, R.drawable.ic_head);
 		}
 
-		UIHelper.setUserContent(holder, u);
+		UIHelper.setContent(view, u);
 		return convertView;
 	}
 
@@ -116,7 +121,8 @@ public abstract class UserArrayAdapter extends BaseAdapter implements
 	}
 
 	protected int getLayoutId() {
-		return R.layout.list_item_user;
+		// return R.layout.list_item_user;
+		return -1;
 	}
 
 	public int getFontSize() {

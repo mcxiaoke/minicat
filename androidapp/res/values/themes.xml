@@ -15,7 +15,7 @@
         <item name="EditProfileInputStyle">@style/Widget.EditProfileInput.Light</item>
         <item name="ActionItemStyle">@style/Widget.ActionItem.Light</item>
         <item name="ActionGroupStyle">@style/Widget.ActionGroup</item>
-        <item name="statusViewStyle">@style/Widget.StatusView.Light</item>
+        <item name="itemViewStyle">@style/Widget.ItemView.Light</item>
 
         <!-- system control -->
         <item name="actionBarStyle">@style/Widget.ActionBar.Light</item>

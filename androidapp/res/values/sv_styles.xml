@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Widget.StatusView">
-        <item name="showImage">@bool/status_view_default_show_head_image</item>
-        <item name="titleTextSize">@dimen/status_view_default_title_text_size</item>
-        <item name="titleTextBold">@bool/status_view_default_title_text_bold</item>
-        <item name="contentTextSize">@dimen/status_view_default_content_text_size</item>
-        <item name="metaTextSize">@dimen/status_view_default_meta_text_size</item>
+    <style name="Widget.ItemView">
+        <item name="viewMode">@integer/default_view_mode</item>
+        <item name="showImage">@bool/default_show_head_image</item>
+        <item name="titleTextSize">@dimen/default_title_text_size</item>
+        <item name="titleTextBold">@bool/default_title_text_bold</item>
+        <item name="contentTextSize">@dimen/default_content_text_size</item>
+        <item name="metaTextSize">@dimen/default_meta_text_size</item>
     </style>
 
-    <style name="Widget.StatusView.Light">
-        <item name="titleTextColor">@color/status_view_default_title_text_color</item>
-        <item name="contentTextColor">@color/status_view_default_content_text_color</item>
-        <item name="metaTextColor">@color/status_view_default_meta_text_color</item>
+    <style name="Widget.ItemView.Light">
+        <item name="titleTextColor">@color/default_title_text_color</item>
+        <item name="contentTextColor">@color/default_content_text_color</item>
+        <item name="metaTextColor">@color/default_meta_text_color</item>
     </style>
 
 </resources>

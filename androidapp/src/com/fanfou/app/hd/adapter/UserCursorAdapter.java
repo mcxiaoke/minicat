@@ -5,9 +5,11 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.dao.model.UserModel;
+import com.fanfou.app.hd.ui.widget.ItemView;
 
 /**
  * @author mcxiaoke
@@ -30,39 +32,26 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 
 	@Override
 	protected int getLayoutId() {
-		return R.layout.list_item_user;
+//		return R.layout.list_item_user;
+		return -1;
 	}
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		View view = mInflater.inflate(getLayoutId(), null);
-		UserViewHolder holder = new UserViewHolder(view);
-		UIHelper.setUserTextStyle(holder, getFontSize());
-		view.setTag(holder);
+		ItemView view=new ItemView(mContext);
+		view.setId(R.id.list_item);
 		return view;
 	}
 
 	@Override
-	public void bindView(View view, Context context, Cursor cursor) {
-		View row = view;
-		final UserViewHolder holder = (UserViewHolder) row.getTag();
+	public void bindView(View row, Context context, Cursor cursor) {
+		ItemView view=(ItemView) row;
 		final UserModel u = UserModel.from(cursor);
 
+		UIHelper.setContent(view, u);
+
 		String headUrl = u.getProfileImageUrl();
-		if (busy) {
-			Bitmap bitmap = mLoader.getImage(headUrl, null);
-			if (bitmap != null) {
-				holder.headIcon.setImageBitmap(bitmap);
-			} else {
-				holder.headIcon.setImageResource(R.drawable.ic_head);
-			}
-		} else {
-			holder.headIcon.setTag(headUrl);
-			mLoader.displayImage(headUrl, holder.headIcon, R.drawable.ic_head);
-		}
-
-		UIHelper.setUserContent(holder, u);
-
+		UIHelper.setImage(view, mLoader, headUrl, busy);
 	}
 
 }
