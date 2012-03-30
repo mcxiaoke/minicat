@@ -16,6 +16,7 @@
         <item name="ActionItemStyle">@style/Widget.ActionItem.Light</item>
         <item name="ActionGroupStyle">@style/Widget.ActionGroup</item>
         <item name="itemViewStyle">@style/Widget.ItemView.Light</item>
+        <item name="searchTextColor">@color/light_blue</item>
 
         <!-- system control -->
         <item name="actionBarStyle">@style/Widget.ActionBar.Light</item>

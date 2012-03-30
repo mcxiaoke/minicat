@@ -13,7 +13,7 @@
         <attr name="ActionGroupStyle" format="reference"></attr>
 
         <!-- drawable/color list -->
-
+        <attr name="searchTextColor" format="reference|color"></attr>
 
         <!-- Global Text Color -->
         <attr name="primaryTextColor" format="reference|color"></attr>

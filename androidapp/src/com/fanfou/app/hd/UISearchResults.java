@@ -4,6 +4,8 @@ import java.util.List;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -49,8 +51,9 @@ public class UISearchResults extends UIBaseSupport implements
 
 	private SearchResultsAdapter mStatusAdapter;
 
-	protected String keyword;
-	protected String maxId;
+	private String keyword;
+	private String maxId;
+	private int highlightColor;
 
 	private Api api;
 
@@ -66,31 +69,41 @@ public class UISearchResults extends UIBaseSupport implements
 	@Override
 	protected void onNewIntent(Intent intent) {
 		setIntent(intent);
-		search();
+		newSearch();
 	}
 
 	@Override
 	protected void initialize() {
+		readHighlightColor();
+		mStatusAdapter = new SearchResultsAdapter(this, highlightColor);
 		api = App.getApi();
+	}
+
+	private void readHighlightColor() {
+		TypedArray a = getTheme().obtainStyledAttributes(R.styleable.AppTheme);
+		highlightColor = a.getColor(R.styleable.AppTheme_searchTextColor,
+				Color.BLACK);
+		a.recycle();
+		a = null;
 	}
 
 	@Override
 	protected void setLayout() {
+
 		setContentView(R.layout.list_pull);
 		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_list);
 		mPullToRefreshListView.setOnRefreshListener(this);
 		mList = mPullToRefreshListView.getRefreshableView();
 		mList.setOnItemClickListener(this);
 		mList.setOnItemLongClickListener(this);
-		mStatusAdapter = new SearchResultsAdapter(this, null);
 		mList.setAdapter(mStatusAdapter);
 
-		search();
+		newSearch();
 	}
 
-	protected void search() {
+	protected void newSearch() {
 		parseIntent();
-		maxId=null;
+		maxId = null;
 		mStatusAdapter.clear();
 		doSearch(true);
 		mPullToRefreshListView.setRefreshing();
@@ -128,9 +141,9 @@ public class UISearchResults extends UIBaseSupport implements
 	}
 
 	protected void onRefreshComplete(List<StatusModel> ss) {
-		if(ss!=null&&ss.size()>0){
-			if(App.DEBUG){
-				Log.d(TAG, "onRefreshComplete() size="+ss.size());
+		if (ss != null && ss.size() > 0) {
+			if (App.DEBUG) {
+				Log.d(TAG, "onRefreshComplete() size=" + ss.size());
 			}
 			mStatusAdapter.updateDataAndUI(ss, keyword);
 		}
@@ -184,10 +197,10 @@ public class UISearchResults extends UIBaseSupport implements
 
 				int size = result.size();
 				maxId = result.get(size - 1).getId();
-				
+
 				log("result size=" + size);
-				log("maxId=" + maxId+" status="+result.get(size - 1));
-				
+				log("maxId=" + maxId + " status=" + result.get(size - 1));
+
 				for (StatusModel s : result) {
 					Log.d(TAG, s.toString());
 				}
@@ -203,11 +216,11 @@ public class UISearchResults extends UIBaseSupport implements
 			List<StatusModel> result = null;
 
 			Paging p = new Paging();
-			p.maxId=maxId;
-			
+			p.maxId = maxId;
+
 			if (App.getApnType() == ApnType.WIFI) {
 				p.count = FanFouService.MAX_TIMELINE_COUNT;
-			}else{
+			} else {
 				p.count = FanFouService.DEFAULT_TIMELINE_COUNT;
 			}
 

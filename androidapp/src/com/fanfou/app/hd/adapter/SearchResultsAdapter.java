@@ -37,14 +37,15 @@ public class SearchResultsAdapter extends BaseStatusArrayAdapter {
 
 	private String mKeyword;
 	private Pattern mPattern;
+	private int mHighlightColor;
 
-	public SearchResultsAdapter(Context context, List<StatusModel> ss) {
-		super(context, ss);
+	public SearchResultsAdapter(Context context, int highlightColor) {
+		super(context, null);
+		this.mHighlightColor = highlightColor;
 	}
 
 	@Override
-	protected void setStatusContent(final ItemView view,
-			String text) {
+	protected void setStatusContent(final ItemView view, String text) {
 		view.setContent(buildHighlightSpan(text));
 	}
 
@@ -55,9 +56,8 @@ public class SearchResultsAdapter extends BaseStatusArrayAdapter {
 			while (m.find()) {
 				int start = m.start();
 				int end = m.end();
-				span.setSpan(new ForegroundColorSpan(mContext.getResources()
-						.getColor(R.color.profile_relation_blue)), start, end,
-						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+				span.setSpan(new ForegroundColorSpan(mHighlightColor), start,
+						end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 				span.setSpan(new StyleSpan(Typeface.BOLD), start, end,
 						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 			}

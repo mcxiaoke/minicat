@@ -41,6 +41,10 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 
 	protected List<StatusModel> mData;
 	protected int fontSize;
+	
+	public BaseStatusArrayAdapter(Context context) {
+		this(context, null);
+	}
 
 	public BaseStatusArrayAdapter(Context context, List<StatusModel> data) {
 		super();
