@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
@@ -49,7 +50,7 @@ public class SearchResultsAdapter extends BaseStatusArrayAdapter {
 
 	private SpannableStringBuilder buildHighlightSpan(String text) {
 		SpannableStringBuilder span = new SpannableStringBuilder(text);
-		if (!StringHelper.isEmpty(mKeyword)) {
+		if (!TextUtils.isEmpty(mKeyword)) {
 			Matcher m = mPattern.matcher(span);
 			while (m.find()) {
 				int start = m.start();
@@ -67,8 +68,7 @@ public class SearchResultsAdapter extends BaseStatusArrayAdapter {
 	public void updateDataAndUI(List<StatusModel> data, String keyword) {
 		mKeyword = keyword;
 		mPattern = Pattern.compile(mKeyword);
-		setData(data);
-		notifyDataSetChanged();
+		addData(data);
 	}
 
 }

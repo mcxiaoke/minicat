@@ -1,6 +1,5 @@
 package com.fanfou.app.hd;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.SearchManager;
@@ -9,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,7 +24,6 @@ import com.fanfou.app.hd.api.Paging;
 import com.fanfou.app.hd.controller.PopupController;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.service.FanFouService;
-import com.fanfou.app.hd.util.StringHelper;
 import com.fanfou.app.hd.util.Utils;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -39,6 +38,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 2.0 2012.01.31
  * @version 2.1 2012.02.01
  * @version 2.2 2012.03.02
+ * @version 2.3 2012.03.30
  * 
  */
 public class UISearchResults extends UIBaseSupport implements
@@ -47,9 +47,7 @@ public class UISearchResults extends UIBaseSupport implements
 	private PullToRefreshListView mPullToRefreshListView;
 	private ListView mList;
 
-	protected SearchResultsAdapter mStatusAdapter;
-
-	private List<StatusModel> mStatuses;
+	private SearchResultsAdapter mStatusAdapter;
 
 	protected String keyword;
 	protected String maxId;
@@ -73,7 +71,6 @@ public class UISearchResults extends UIBaseSupport implements
 
 	@Override
 	protected void initialize() {
-		mStatuses = new ArrayList<StatusModel>();
 		api = App.getApi();
 	}
 
@@ -85,7 +82,7 @@ public class UISearchResults extends UIBaseSupport implements
 		mList = mPullToRefreshListView.getRefreshableView();
 		mList.setOnItemClickListener(this);
 		mList.setOnItemLongClickListener(this);
-		mStatusAdapter = new SearchResultsAdapter(this, mStatuses);
+		mStatusAdapter = new SearchResultsAdapter(this, null);
 		mList.setAdapter(mStatusAdapter);
 
 		search();
@@ -93,7 +90,8 @@ public class UISearchResults extends UIBaseSupport implements
 
 	protected void search() {
 		parseIntent();
-		mStatuses.clear();
+		maxId=null;
+		mStatusAdapter.clear();
 		doSearch(true);
 		mPullToRefreshListView.setRefreshing();
 
@@ -129,9 +127,13 @@ public class UISearchResults extends UIBaseSupport implements
 
 	}
 
-	protected void updateUI(boolean noMore) {
-		mStatusAdapter.updateDataAndUI(mStatuses, keyword);
-		mPullToRefreshListView.onRefreshComplete();
+	protected void onRefreshComplete(List<StatusModel> ss) {
+		if(ss!=null&&ss.size()>0){
+			if(App.DEBUG){
+				Log.d(TAG, "onRefreshComplete() size="+ss.size());
+			}
+			mStatusAdapter.updateDataAndUI(ss, keyword);
+		}
 	}
 
 	private static final String LIST_STATE = "listState";
@@ -171,8 +173,7 @@ public class UISearchResults extends UIBaseSupport implements
 		@Override
 		protected void onPreExecute() {
 			if (maxId == null) {
-				mStatuses.clear();
-				mStatusAdapter.notifyDataSetChanged();
+				mStatusAdapter.clear();
 			}
 		}
 
@@ -182,28 +183,32 @@ public class UISearchResults extends UIBaseSupport implements
 			if (result != null && result.size() > 0) {
 
 				int size = result.size();
-				log("result size=" + size);
 				maxId = result.get(size - 1).getId();
-				log("maxId=" + maxId);
-
-				mStatuses.addAll(result);
-				updateUI(size < 20);
+				
+				log("result size=" + size);
+				log("maxId=" + maxId+" status="+result.get(size - 1));
+				
+				for (StatusModel s : result) {
+					Log.d(TAG, s.toString());
+				}
+				onRefreshComplete(result);
 			}
-			mPullToRefreshListView.onRefreshComplete();
 		}
 
 		@Override
 		protected List<StatusModel> doInBackground(Void... params) {
-			if (StringHelper.isEmpty(keyword)) {
+			if (TextUtils.isEmpty(keyword)) {
 				return null;
 			}
 			List<StatusModel> result = null;
 
 			Paging p = new Paging();
-
-			p.count = FanFouService.DEFAULT_TIMELINE_COUNT;
+			p.maxId=maxId;
+			
 			if (App.getApnType() == ApnType.WIFI) {
 				p.count = FanFouService.MAX_TIMELINE_COUNT;
+			}else{
+				p.count = FanFouService.DEFAULT_TIMELINE_COUNT;
 			}
 
 			try {

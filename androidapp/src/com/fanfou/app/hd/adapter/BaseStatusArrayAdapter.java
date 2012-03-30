@@ -101,6 +101,11 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 		return mData;
 	}
 
+	public void clear() {
+		mData.clear();
+		notifyDataSetChanged();
+	}
+
 	public void setData(List<StatusModel> data) {
 		mData.clear();
 		mData.addAll(data);
