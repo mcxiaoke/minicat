@@ -20,9 +20,4 @@ public class StatusThreadAdapter extends BaseStatusArrayAdapter {
 		super(context, data);
 	}
 
-	public void changeData(List<StatusModel> data) {
-		setData(data);
-		notifyDataSetChanged();
-	}
-
 }

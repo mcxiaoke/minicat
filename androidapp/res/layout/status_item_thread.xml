@@ -2,25 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_vertical|right"
     android:orientation="vertical" >
 
-    <TextView
+    <Button
         android:id="@+id/thread_title"
-        style="@style/ProfileItemTitleStyle"
-        android:text="对话" />
-
-    <FrameLayout
-        android:id="@+id/thread_content"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-    </FrameLayout>
-
-    <!--
-         <ListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
-    -->
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_jump"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_margin="8dp"
+        android:text="查看对话"
+        android:textSize="16sp"
+        android:visibility="gone" />
 
 </LinearLayout>

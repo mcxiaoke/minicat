@@ -2,9 +2,7 @@ package com.fanfou.app.hd;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.TimeZone;
-import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
 import org.acra.ACRA;
@@ -30,8 +28,6 @@ import com.fanfou.app.hd.config.AccountInfo;
 import com.fanfou.app.hd.config.AccountStore;
 import com.fanfou.app.hd.controller.DataController;
 import com.fanfou.app.hd.controller.UIController;
-import com.fanfou.app.hd.dao.model.BaseModel;
-import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.util.AlarmHelper;
 import com.fanfou.app.hd.util.DateTimeHelper;

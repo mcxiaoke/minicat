@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -38,21 +39,20 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @version 3.9 2012.02.24
  * @version 4.0 2012.02.28
  * @version 4.1 2012.03.02
+ * @version 4.2 2012.03.30
  * 
- * Statuses Conversation List Page
+ *          Statuses Conversation List Page
  * 
  */
-public class UIThread extends UIBaseSupport implements
-		OnRefreshListener, OnItemClickListener, OnItemLongClickListener {
+public class UIThread extends UIBaseSupport implements OnRefreshListener,
+		OnItemClickListener, OnItemLongClickListener {
 
 	private PullToRefreshListView mPullToRefreshListView;
 	private ListView mList;
 
 	protected StatusThreadAdapter mStatusAdapter;
 
-	private List<StatusModel> mThread;
-
-	private StatusModel mStatus;
+	private String id;
 
 	private static final String tag = UIThread.class.getSimpleName();
 
@@ -64,14 +64,12 @@ public class UIThread extends UIBaseSupport implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		log("onCreate");
-		doFetchThreads();
 	}
 
 	@Override
 	protected void initialize() {
 		parseIntent();
-		mThread = new ArrayList<StatusModel>();
-		mStatusAdapter = new StatusThreadAdapter(this, mThread);
+		mStatusAdapter = new StatusThreadAdapter(this, null);
 	}
 
 	@Override
@@ -82,18 +80,19 @@ public class UIThread extends UIBaseSupport implements
 		mPullToRefreshListView.setOnRefreshListener(this);
 		mList = mPullToRefreshListView.getRefreshableView();
 		mList.setAdapter(mStatusAdapter);
-		configListView(mList);
+		mList.setOnItemClickListener(this);
+		mList.setOnItemLongClickListener(this);
+
+		if (!TextUtils.isEmpty(id)) {
+			doFetchThreads();
+		} else {
+			finish();
+		}
 	}
 
-	private void configListView(final ListView list) {
-		list.setOnItemClickListener(this);
-		list.setOnItemLongClickListener(this);
-	}
-
-	protected boolean parseIntent() {
+	private void parseIntent() {
 		Intent intent = getIntent();
-		mStatus = (StatusModel) intent.getParcelableExtra("data");
-		return mStatus != null;
+		id = intent.getStringExtra("id");
 	}
 
 	private void doFetchThreads() {
@@ -126,13 +125,11 @@ public class UIThread extends UIBaseSupport implements
 	}
 
 	private class FetchTask extends
-			AsyncTask<Void, StatusModel, List<StatusModel>> {
+			AsyncTask<Void, Void, List<StatusModel>> {
 
 		@Override
-		protected List<StatusModel> doInBackground(
-				Void... params) {
+		protected List<StatusModel> doInBackground(Void... params) {
 			Api api = App.getApi();
-			String id = mStatus.getId();
 			try {
 				if (!StringHelper.isEmpty(id)) {
 					return api.getContextTimeline(id);
@@ -148,10 +145,11 @@ public class UIThread extends UIBaseSupport implements
 		@Override
 		protected void onPostExecute(List<StatusModel> result) {
 			if (result != null && result.size() > 0) {
-				mThread.addAll(result);
+				mStatusAdapter.addData(result);
 			}
 			mPullToRefreshListView.onRefreshComplete();
 			mPullToRefreshListView.setPullToRefreshEnabled(false);
+			mStatusAdapter.notifyDataSetChanged();
 		}
 
 	}

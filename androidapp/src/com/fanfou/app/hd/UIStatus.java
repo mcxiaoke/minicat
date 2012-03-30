@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -70,6 +71,8 @@ public class UIStatus extends UIBaseSupport {
 	private ImageView contentPhoto;
 
 	private TextView contentMetaInfo;
+
+	private Button threadTitle;
 
 	private ImageButton imReply;
 	private ImageButton imRepost;
@@ -167,6 +170,8 @@ public class UIStatus extends UIBaseSupport {
 		contentPhoto = (ImageView) findViewById(R.id.content_photo);
 		contentMetaInfo = (TextView) findViewById(R.id.content_metainfo);
 
+		threadTitle = (Button) findViewById(R.id.thread_title);
+
 		imReply = (ImageButton) findViewById(R.id.action_reply);
 		imRepost = (ImageButton) findViewById(R.id.action_retweet);
 		imFavorite = (ImageButton) findViewById(R.id.action_favorite);
@@ -209,6 +214,8 @@ public class UIStatus extends UIBaseSupport {
 
 		contentPhoto.setOnClickListener(this);
 
+		threadTitle.setOnClickListener(this);
+
 		imReply.setOnClickListener(this);
 		imRepost.setOnClickListener(this);
 		imFavorite.setOnClickListener(this);
@@ -234,6 +241,7 @@ public class UIStatus extends UIBaseSupport {
 		updateContent();
 		updateActions();
 		updatePhoto();
+		updateThread();
 	}
 
 	private void updateHeader() {
@@ -270,6 +278,10 @@ public class UIStatus extends UIBaseSupport {
 		App.getImageLoader().displayImage(photoUrl, contentPhoto, 0);
 	}
 
+	private void updateThread() {
+		threadTitle.setVisibility(status.isThread() ? View.VISIBLE : View.GONE);
+	}
+
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
@@ -296,11 +308,9 @@ public class UIStatus extends UIBaseSupport {
 		case R.id.content_photo:
 			goPhotoViewer();
 			break;
-		// case R.id.thread:
-		// Intent intent = new Intent(mContext, UIThread.class);
-		// intent.putExtra("data", status);
-		// mContext.startActivity(intent);
-		// break;
+		case R.id.thread_title:
+			UIController.showThread(mContext, status.getId());
+			break;
 		default:
 			break;
 		}

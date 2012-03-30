@@ -90,7 +90,6 @@ public class UIHome extends UIBaseSupport implements OnPageChangeListener {
 	@Override
 	protected void setActionBar() {
 		ActionBar ab = getSupportActionBar();
-		ab.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_HOME);
 	}
 
 	@Override

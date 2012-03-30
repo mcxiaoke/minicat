@@ -19,6 +19,7 @@ import com.fanfou.app.hd.UIHome;
 import com.fanfou.app.hd.UILogin;
 import com.fanfou.app.hd.UIProfile;
 import com.fanfou.app.hd.UIRecords;
+import com.fanfou.app.hd.UIThread;
 import com.fanfou.app.hd.UITimeline;
 import com.fanfou.app.hd.UIUserList;
 import com.fanfou.app.hd.UIWrite;
@@ -173,9 +174,9 @@ public class UIController {
 		}
 
 	}
-	
-	public static void showRecords(Context context){
-		Intent intent=new Intent(context, UIRecords.class);
+
+	public static void showRecords(Context context) {
+		Intent intent = new Intent(context, UIRecords.class);
 		context.startActivity(intent);
 	}
 
@@ -184,7 +185,7 @@ public class UIController {
 		intent.putExtra("id", id);
 		context.startActivity(intent);
 	}
-	
+
 	public static void showProfile(Context context, UserModel user) {
 		Intent intent = new Intent(context, UIProfile.class);
 		intent.putExtra("data", user);
@@ -199,6 +200,12 @@ public class UIController {
 
 	public static void showFavorites(Context context, String id) {
 		Intent intent = new Intent(context, UIFavorites.class);
+		intent.putExtra("id", id);
+		context.startActivity(intent);
+	}
+
+	public static void showThread(Context context, String id) {
+		Intent intent = new Intent(context, UIThread.class);
 		intent.putExtra("id", id);
 		context.startActivity(intent);
 	}
