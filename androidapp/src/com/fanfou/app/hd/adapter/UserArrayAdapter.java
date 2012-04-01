@@ -16,7 +16,7 @@ import android.widget.ImageView;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.cache.IImageLoader;
+import com.fanfou.app.hd.cache.ImageLoader;
 import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.ui.widget.ItemView;
 import com.fanfou.app.hd.util.OptionHelper;
@@ -37,7 +37,7 @@ public abstract class UserArrayAdapter extends BaseAdapter implements
 	private static final String TAG = UserArrayAdapter.class.getSimpleName();
 	protected Context mContext;
 	protected LayoutInflater mInflater;
-	protected IImageLoader mLoader;
+	protected ImageLoader mLoader;
 
 	protected List<UserModel> mData;
 	protected int fontSize;

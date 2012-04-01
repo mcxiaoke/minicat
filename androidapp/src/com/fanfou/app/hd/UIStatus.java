@@ -72,7 +72,7 @@ public class UIStatus extends UIBaseSupport {
 
 	private TextView contentMetaInfo;
 
-	private Button threadTitle;
+	private ImageButton imThread;
 
 	private ImageButton imReply;
 	private ImageButton imRepost;
@@ -149,10 +149,6 @@ public class UIStatus extends UIBaseSupport {
 		findViews();
 		setEmptyView();
 		setListeners();
-
-		//
-		// registerForContextMenu(tContent);
-
 		updateUI();
 	}
 
@@ -170,7 +166,7 @@ public class UIStatus extends UIBaseSupport {
 		contentPhoto = (ImageView) findViewById(R.id.content_photo);
 		contentMetaInfo = (TextView) findViewById(R.id.content_metainfo);
 
-		threadTitle = (Button) findViewById(R.id.thread_title);
+		imThread = (ImageButton) findViewById(R.id.thread_title);
 
 		imReply = (ImageButton) findViewById(R.id.action_reply);
 		imRepost = (ImageButton) findViewById(R.id.action_retweet);
@@ -214,7 +210,7 @@ public class UIStatus extends UIBaseSupport {
 
 		contentPhoto.setOnClickListener(this);
 
-		threadTitle.setOnClickListener(this);
+		imThread.setOnClickListener(this);
 
 		imReply.setOnClickListener(this);
 		imRepost.setOnClickListener(this);
@@ -275,11 +271,12 @@ public class UIStatus extends UIBaseSupport {
 		contentPhoto.setVisibility(View.VISIBLE);
 		String photoUrl = status.getPhotoImageUrl();
 		contentPhoto.setTag(photoUrl);
-		App.getImageLoader().displayImage(photoUrl, contentPhoto, 0);
+		App.getImageLoader().displayImage(photoUrl, contentPhoto,
+				R.drawable.photo_loading);
 	}
 
 	private void updateThread() {
-		threadTitle.setVisibility(status.isThread() ? View.VISIBLE : View.GONE);
+		imThread.setVisibility(status.isThread() ? View.VISIBLE : View.GONE);
 	}
 
 	@Override

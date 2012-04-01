@@ -24,7 +24,7 @@ import android.widget.TextView;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
 import com.fanfou.app.hd.api.ResultInfo;
-import com.fanfou.app.hd.cache.IImageLoader;
+import com.fanfou.app.hd.cache.ImageLoader;
 import com.fanfou.app.hd.controller.DataController;
 import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.service.Constants;
@@ -75,7 +75,7 @@ public class UIEditProfile extends UIBaseSupport {
 
 	private UserModel user;
 
-	private IImageLoader mLoader;
+	private ImageLoader mLoader;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -22,7 +22,6 @@ import android.util.Log;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiFactory;
 import com.fanfou.app.hd.auth.AccessToken;
-import com.fanfou.app.hd.cache.IImageLoader;
 import com.fanfou.app.hd.cache.ImageLoader;
 import com.fanfou.app.hd.config.AccountInfo;
 import com.fanfou.app.hd.config.AccountStore;
@@ -78,7 +77,7 @@ public class App extends Application {
 
 	private static SharedPreferences sPreferences;
 	private static ApnType sApnType;
-	private static IImageLoader imageLoader;
+	private static ImageLoader imageLoader;
 
 	private static Api api;
 	private static App instance;
@@ -261,12 +260,8 @@ public class App extends Application {
 		App.sApnType = sApnType;
 	}
 
-	public static IImageLoader getImageLoader() {
+	public static ImageLoader getImageLoader() {
 		return imageLoader;
-	}
-
-	public static void setImageLoader(IImageLoader sImageLoader) {
-		App.imageLoader = sImageLoader;
 	}
 
 	public static Api getApi() {

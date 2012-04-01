@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -36,20 +38,21 @@ import com.fanfou.app.hd.util.IOHelper;
  * @version 5.3 2012.02.27
  * 
  */
-public class ImageLoader implements IImageLoader {
+public final class ImageLoader implements Runnable {
 
 	public static final String TAG = ImageLoader.class.getSimpleName();
 
 	public static final int MESSAGE_FINISH = 0;
 	public static final int MESSAGE_ERROR = 1;
 
-	private final PriorityBlockingQueue<Task> mTaskQueue = new PriorityBlockingQueue<Task>(
+	private static final int CORE_POOL_SIZE = 3;
+
+	private final PriorityBlockingQueue<ImageLoaderInfo> mTaskQueue = new PriorityBlockingQueue<ImageLoaderInfo>(
 			60, new TaskComparator());
 	private final Map<String, ImageView> mViewsMap;
 	private final ImageCache mCache;
 	private final Handler mHandler;
-	// private final RestClient mClient;
-	private final Thread mDaemon;
+	private ExecutorService mExecutorService;
 
 	private static final class ImageLoaderHolder {
 		private static final ImageLoader INSTANCE = new ImageLoader();
@@ -59,57 +62,19 @@ public class ImageLoader implements IImageLoader {
 		if (App.DEBUG) {
 			Log.d(TAG, "ImageLoader new instance.");
 		}
-		// this.mExecutorService =
-		// Executors.newFixedThreadPool(CORE_POOL_SIZE,new
-		// NameCountThreadFactory());
-		// this.mExecutorService = Executors.newSingleThreadExecutor(new
-		// NameCountThreadFactory());
+		this.mExecutorService = Executors.newFixedThreadPool(CORE_POOL_SIZE,
+				new NameCountThreadFactory());
 		this.mCache = ImageCache.getInstance();
-		// this.mViewsMap = new HashMap<String, ImageView>();
 		this.mViewsMap = new WeakHashMap<String, ImageView>();
-		// this.mClient = new RestClient();
 		this.mHandler = new InnerHandler();
-		this.mDaemon = new Daemon();
-		this.mDaemon.start();
-		// this.mExecutorService.execute(this);
+		this.mExecutorService.execute(this);
 	}
 
 	public static ImageLoader getInstance() {
 		return ImageLoaderHolder.INSTANCE;
 	}
 
-	private final class Daemon extends Thread {
-
-		@Override
-		public synchronized void start() {
-			super.start();
-			if (App.DEBUG) {
-				Log.d(TAG, "Daemon is start.");
-			}
-		}
-
-		@Override
-		public void run() {
-			while (true) {
-				if (App.DEBUG) {
-					Log.d(TAG, "Daemon is running.");
-				}
-				try {
-					final Task task = mTaskQueue.take();
-					download(task);
-					// final Worker worker = new Worker(task, mCache, mClient);
-					// mExecutorService.execute(worker);
-				} catch (InterruptedException e) {
-					if (App.DEBUG) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-
-	}
-
-	private void download(final Task task) {
+	private void download(final ImageLoaderInfo task) {
 		String url = task.url;
 		Handler handler = task.handler;
 		Bitmap bitmap = mCache.get(url);
@@ -147,7 +112,6 @@ public class ImageLoader implements IImageLoader {
 		}
 	}
 
-	@Override
 	public Bitmap getImage(String key, final Handler handler) {
 		if (TextUtils.isEmpty(key)) {
 			return null;
@@ -159,7 +123,6 @@ public class ImageLoader implements IImageLoader {
 		return bitmap;
 	}
 
-	@Override
 	public void displayImage(String url, final ImageView view, final int iconId) {
 		if (TextUtils.isEmpty(url) || view == null) {
 			return;
@@ -176,25 +139,19 @@ public class ImageLoader implements IImageLoader {
 	}
 
 	private void addTask(String url, final Handler handler) {
-		// TODO incompatible type
-		if (mTaskQueue.contains(url)) {
+		ImageLoaderInfo task = new ImageLoaderInfo(url, handler);
+		if (mTaskQueue.contains(task)) {
 			return;
 		}
-		if (App.DEBUG) {
-			Log.d(TAG, "addTask url=" + url + " handler=" + handler);
-		}
-		mTaskQueue.add(new Task(url, handler));
+		mTaskQueue.add(task);
 	}
 
 	private void addInnerTask(String url, final ImageView view) {
-		// TODO incompatible type
-		if (mTaskQueue.contains(url)) {
+		ImageLoaderInfo task = new ImageLoaderInfo(url, mHandler);
+		if (mTaskQueue.contains(task)) {
 			return;
 		}
-		if (App.DEBUG) {
-			Log.d(TAG, "addInnerTask url=" + url + " mHandler=" + mHandler);
-		}
-		mTaskQueue.add(new Task(url, mHandler));
+		mTaskQueue.add(task);
 		mViewsMap.put(url, view);
 	}
 
@@ -228,40 +185,60 @@ public class ImageLoader implements IImageLoader {
 		}
 	}
 
-	private static final class Task {
+	private static boolean isExpired(final ImageView view, String url) {
+		if (view == null) {
+			return true;
+		}
+		String tag = (String) view.getTag();
+		return tag == null || !tag.equals(url);
+	}
+
+	public void shutdown() {
+		clearQueue();
+		clearCache();
+	}
+
+	public void clearCache() {
+		mCache.clear();
+	}
+
+	public void clearQueue() {
+		mTaskQueue.clear();
+		mViewsMap.clear();
+	}
+
+	@Override
+	public void run() {
+		while (true) {
+			if (App.DEBUG) {
+				Log.d(TAG, "Daemon is running.");
+			}
+			try {
+				final ImageLoaderInfo task = mTaskQueue.take();
+				download(task);
+			} catch (InterruptedException e) {
+				if (App.DEBUG) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	private static final class ImageLoaderInfo {
 		public final String url;
 		public final Handler handler;
 		public final long timestamp;
 
-		public Task(String url, final Handler handler) {
+		public ImageLoaderInfo(String url, final Handler handler) {
 			this.url = url;
 			this.handler = handler;
 			this.timestamp = System.nanoTime();
 		}
-
-		//
-		// @Override
-		// public int compareTo(Task another) {
-		// if (timestamp > another.timestamp) {
-		// return 1;
-		// } else if (timestamp < another.timestamp) {
-		// return -1;
-		// } else {
-		// return 0;
-		// }
-		// }
-
-		@Override
-		public String toString() {
-			return new StringBuilder().append("[Task] url:").append(url)
-					.append(" handler:").append(handler).append(" timestamp:")
-					.append(timestamp).toString();
-		}
 	}
 
-	private static final class TaskComparator implements Comparator<Task> {
+	private static final class TaskComparator implements Comparator<ImageLoaderInfo> {
 		@Override
-		public int compare(Task t1, Task t2) {
+		public int compare(ImageLoaderInfo t1, ImageLoaderInfo t2) {
 			if (t1.timestamp > t2.timestamp) {
 				return -1;
 			} else if (t1.timestamp < t2.timestamp) {
@@ -284,29 +261,10 @@ public class ImageLoader implements IImageLoader {
 		}
 
 	}
-
-	private static boolean isExpired(final ImageView view, String url) {
-		if (view == null) {
-			return true;
-		}
-		String tag = (String) view.getTag();
-		return tag == null || !tag.equals(url);
+	
+	public static interface ImageLoaderListener{
+		public void onLoadComplete(final Bitmap bitmap);
+		public void onLoadError(String errorMessage);
 	}
 
-	@Override
-	public void shutdown() {
-		clearQueue();
-		clearCache();
-	}
-
-	@Override
-	public void clearCache() {
-		mCache.clear();
-	}
-
-	@Override
-	public void clearQueue() {
-		mTaskQueue.clear();
-		mViewsMap.clear();
-	}
 }

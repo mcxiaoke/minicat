@@ -14,7 +14,7 @@ import android.widget.BaseAdapter;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.cache.IImageLoader;
+import com.fanfou.app.hd.cache.ImageLoader;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.ui.widget.ItemView;
 import com.fanfou.app.hd.util.OptionHelper;
@@ -36,7 +36,7 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 			.getSimpleName();
 	protected Context mContext;
 	protected LayoutInflater mInflater;
-	protected IImageLoader mLoader;
+	protected ImageLoader mLoader;
 	protected boolean busy;
 
 	protected List<StatusModel> mData;

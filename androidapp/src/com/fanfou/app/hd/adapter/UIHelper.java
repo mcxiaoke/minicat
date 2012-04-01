@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.cache.IImageLoader;
+import com.fanfou.app.hd.cache.ImageLoader;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.ui.widget.ItemView;
@@ -52,7 +52,7 @@ public class UIHelper {
 		view.showMeta(false);
 	}
 
-	public static void setImage(ItemView view, IImageLoader loader,
+	public static void setImage(ItemView view, ImageLoader loader,
 			String headUrl, boolean busy) {
 		if (busy) {
 			Bitmap bitmap = loader.getImage(headUrl, null);

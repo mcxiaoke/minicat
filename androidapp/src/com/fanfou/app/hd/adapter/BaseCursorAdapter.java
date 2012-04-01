@@ -9,7 +9,7 @@ import android.widget.AbsListView.OnScrollListener;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.cache.IImageLoader;
+import com.fanfou.app.hd.cache.ImageLoader;
 import com.fanfou.app.hd.util.OptionHelper;
 
 /**
@@ -28,7 +28,7 @@ public abstract class BaseCursorAdapter extends CursorAdapter implements
 
 	protected Context mContext;
 	protected LayoutInflater mInflater;
-	protected IImageLoader mLoader;
+	protected ImageLoader mLoader;
 	protected boolean busy;
 	private int fontSize;
 
