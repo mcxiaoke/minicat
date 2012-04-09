@@ -11,7 +11,7 @@
         android:layout_height="@dimen/head_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="4dp"
+        android:layout_margin="@dimen/head_margin"
         android:src="@drawable/ic_head"
         android:visibility="gone" />
 

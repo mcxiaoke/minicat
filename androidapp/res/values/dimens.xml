@@ -7,12 +7,14 @@
     <dimen name="icon_width">40dp</dimen>
     <dimen name="head_width">48dp</dimen>
     <dimen name="head_height">48dp</dimen>
+    <dimen name="head_margin">4dp</dimen>
     <dimen name="photo_preview_height">160dp</dimen>
     <dimen name="widget_margin">8dp</dimen>
     <dimen name="widget_padding">6dp</dimen>
 
     <!-- ====added by version 2.0 below==== -->
 
+    <dimen name="text_size_micro">10sp</dimen>
     <dimen name="text_size_tiny">12sp</dimen>
     <dimen name="text_size_small">14sp</dimen>
     <dimen name="text_size_medium">16sp</dimen>
@@ -22,8 +24,6 @@
     <dimen name="profile_header_relation_text_size">14sp</dimen>
     <dimen name="profile_header_padding">6dp</dimen>
     <dimen name="profile_header_text_padding">2dp</dimen>
-    <dimen name="profile_image_width">48dp</dimen>
-    <dimen name="profile_image_margin">2dp</dimen>
     <dimen name="scrollbarSize">3dp</dimen>
     <dimen name="dividerWidth">1dp</dimen>
     <dimen name="status_text_padding">10dp</dimen>

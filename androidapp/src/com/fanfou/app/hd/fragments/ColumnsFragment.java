@@ -26,6 +26,7 @@ import com.fanfou.app.hd.UIProfile;
 import com.fanfou.app.hd.UIRecords;
 import com.fanfou.app.hd.UISearch;
 import com.fanfou.app.hd.UISetting;
+import com.fanfou.app.hd.UITabProfile;
 import com.fanfou.app.hd.UIUserList;
 
 /**
@@ -66,7 +67,7 @@ public class ColumnsFragment extends AbstractListFragment {
 	}
 
 	private void fillColumns() {
-		Intent profile = new Intent(getActivity(), UIProfile.class);
+		Intent profile = new Intent(getActivity(), UITabProfile.class);
 		profile.putExtra("id", App.getAccount());
 		ActionColumn myProfile = new ActionColumn("我的空间", profile);
 

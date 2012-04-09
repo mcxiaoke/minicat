@@ -135,9 +135,9 @@
     </style>
 
     <style name="ProfileImageStyle">
-        <item name="android:layout_width">@dimen/profile_image_width</item>
-        <item name="android:layout_height">@dimen/profile_image_width</item>
-        <item name="android:layout_margin">@dimen/profile_image_margin</item>
+        <item name="android:layout_width">@dimen/head_width</item>
+        <item name="android:layout_height">@dimen/head_height</item>
+        <item name="android:layout_margin">@dimen/head_margin</item>
     </style>
 
     <style name="ProfileCountTextStyle">

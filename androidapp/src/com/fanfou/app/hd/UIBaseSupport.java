@@ -168,6 +168,22 @@ abstract class UIBaseSupport extends SherlockFragmentActivity implements
 		return false;
 	}
 
+	protected int getPixelInt(int dpi) {
+		return (int) (dpi * mDisplayMetrics.density);
+	}
+
+	protected int getPixelInt(float dpi) {
+		return (int) (dpi * mDisplayMetrics.density);
+	}
+
+	protected float getPixel(int dpi) {
+		return (dpi * mDisplayMetrics.density);
+	}
+
+	protected float getPixel(float dpi) {
+		return (dpi * mDisplayMetrics.density);
+	}
+
 	@Override
 	public void onClick(View v) {
 	}

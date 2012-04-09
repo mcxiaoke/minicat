@@ -19,6 +19,8 @@ import com.fanfou.app.hd.UIHome;
 import com.fanfou.app.hd.UILogin;
 import com.fanfou.app.hd.UIProfile;
 import com.fanfou.app.hd.UIRecords;
+import com.fanfou.app.hd.UITabHome;
+import com.fanfou.app.hd.UITabProfile;
 import com.fanfou.app.hd.UIThread;
 import com.fanfou.app.hd.UITimeline;
 import com.fanfou.app.hd.UIUserList;
@@ -53,7 +55,7 @@ public class UIController {
 	}
 
 	public static void showHome(Context context) {
-		Intent intent = new Intent(context, UIHome.class);
+		Intent intent = new Intent(context, UITabHome.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		context.startActivity(intent);
 	}
@@ -181,13 +183,13 @@ public class UIController {
 	}
 
 	public static void showProfile(Context context, String id) {
-		Intent intent = new Intent(context, UIProfile.class);
+		Intent intent = new Intent(context, UITabProfile.class);
 		intent.putExtra("id", id);
 		context.startActivity(intent);
 	}
 
 	public static void showProfile(Context context, UserModel user) {
-		Intent intent = new Intent(context, UIProfile.class);
+		Intent intent = new Intent(context, UITabProfile.class);
 		intent.putExtra("data", user);
 		context.startActivity(intent);
 	}

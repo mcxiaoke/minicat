@@ -17,13 +17,19 @@ package com.fanfou.app.hd;
 
 import java.util.HashMap;
 
+import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.fragments.ColumnsFragment;
 import com.fanfou.app.hd.fragments.ConversationListFragment;
 import com.fanfou.app.hd.fragments.HomeTimelineFragment;
 import com.fanfou.app.hd.fragments.MentionTimelineFragment;
+import com.fanfou.app.hd.fragments.ProfileFragment;
 import com.fanfou.app.hd.fragments.PublicTimelineFragment;
+import com.fanfou.app.hd.fragments.UserFavoritesFragment;
+import com.fanfou.app.hd.fragments.UserTimelineFragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -40,47 +46,77 @@ import android.widget.TextView;
  * TabHost through fragments. It uses a trick (see the code below) to allow the
  * tabs to switch between fragments instead of simple views.
  */
-public class UITabHome extends UIBaseSupport {
+public class UITabProfile extends UIBaseSupport {
 	TabHost mTabHost;
 	TabManager mTabManager;
+
+	private UserModel user;
+	private String userId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		if (savedInstanceState != null) {
+			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
+		} else {
+			mTabHost.setCurrentTabByTag("profile");
+		}
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		setIntent(intent);
+	}
+
+	@Override
+	protected void initialize() {
+		parseIntent();
+	}
+
+	@Override
+	protected void setLayout() {
 		setContentView(R.layout.fm_tabs);
 		mTabHost = (TabHost) findViewById(android.R.id.tabhost);
 		mTabHost.setup();
 
 		Bundle args = new Bundle();
 		args.putBoolean("refresh", true);
-		args.putString("id", "mcxiaoke");
+		args.putString("id", userId);
 
 		mTabManager = new TabManager(this, mTabHost, R.id.realtabcontent);
 
 		mTabManager.addTab(
-				mTabHost.newTabSpec("home").setIndicator(getIndicator(0)),
-				HomeTimelineFragment.class, args);
+				mTabHost.newTabSpec("favorites").setIndicator(getIndicator(0)),
+				UserFavoritesFragment.class, args);
 		mTabManager.addTab(
-				mTabHost.newTabSpec("mention").setIndicator(getIndicator(1)),
-				MentionTimelineFragment.class, args);
+				mTabHost.newTabSpec("profile").setIndicator(getIndicator(1)),
+				ProfileFragment.class, args);
 		mTabManager.addTab(
-				mTabHost.newTabSpec("dm").setIndicator(getIndicator(2)),
-				ConversationListFragment.class, args);
-		mTabManager.addTab(
-				mTabHost.newTabSpec("public").setIndicator(getIndicator(3)),
-				PublicTimelineFragment.class, args);
-		mTabManager.addTab(
-				mTabHost.newTabSpec("column").setIndicator(getIndicator(4)),
-				ColumnsFragment.class, args);
-
-		if (savedInstanceState != null) {
-			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
-		}
+				mTabHost.newTabSpec("timeline").setIndicator(getIndicator(2)),
+				UserTimelineFragment.class, args);
 	}
 
-	@Override
-	protected void setActionBar() {
+	private void parseIntent() {
+		Intent intent = getIntent();
+		String action = intent.getAction();
+		if (action == null) {
+			userId = intent.getStringExtra("id");
+			user = (UserModel) intent.getParcelableExtra("data");
+			if (user != null) {
+				userId = user.getId();
+			}
+		} else if (action.equals(Intent.ACTION_VIEW)) {
+			Uri data = intent.getData();
+			if (data != null) {
+				userId = data.getLastPathSegment();
+			}
+		}
+
+		if (user != null) {
+			userId = user.getId();
+		}
 	}
 
 	private View getIndicator(int id) {
@@ -90,24 +126,16 @@ public class UITabHome extends UIBaseSupport {
 		TextView text = (TextView) view.findViewById(R.id.text);
 		switch (id) {
 		case 0:
-			icon.setImageResource(R.drawable.ic_tab_home_1);
-			text.setText("首页");
+			icon.setImageResource(R.drawable.ic_tab_favorites_1);
+			text.setText("收藏");
 			break;
 		case 1:
-			icon.setImageResource(R.drawable.ic_tab_mention_1);
-			text.setText("提及");
+			icon.setImageResource(R.drawable.ic_tab_profile_1);
+			text.setText("资料");
 			break;
 		case 2:
-			icon.setImageResource(R.drawable.ic_tab_dm_1);
-			text.setText("私信");
-			break;
-		case 3:
-			icon.setImageResource(R.drawable.ic_tab_browse_1);
-			text.setText("公共");
-			break;
-		case 4:
-			icon.setImageResource(R.drawable.ic_more);
-			text.setText("更多");
+			icon.setImageResource(R.drawable.ic_tab_timeline_1);
+			text.setText("消息");
 			break;
 		default:
 			break;
@@ -228,15 +256,4 @@ public class UITabHome extends UIBaseSupport {
 		}
 	}
 
-	@Override
-	protected void initialize() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void setLayout() {
-		// TODO Auto-generated method stub
-
-	}
 }

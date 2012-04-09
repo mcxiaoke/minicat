@@ -28,7 +28,6 @@ public class UIStart extends Activity {
 	private void checkLogin() {
 		if (App.isVerified()) {
 			UIController.showHome(this);
-//			startActivity(new Intent(this,UITabHome.class));
 		} else {
 			UIController.showLogin(this);
 		}
