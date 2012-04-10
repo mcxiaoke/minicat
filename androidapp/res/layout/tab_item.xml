@@ -4,20 +4,20 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/tab_background"
-    android:gravity="center_horizontal"
+    android:gravity="center"
     android:orientation="vertical"
-    android:padding="2dp" >
+    android:padding="8dp" >
 
     <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <TextView
+<!--     <TextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/text_size_micro" />
+        android:textSize="@dimen/text_size_micro" /> -->
 
 </LinearLayout>

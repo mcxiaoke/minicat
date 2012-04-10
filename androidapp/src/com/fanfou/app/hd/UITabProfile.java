@@ -123,19 +123,19 @@ public class UITabProfile extends UIBaseSupport {
 		LinearLayout view = (LinearLayout) LayoutInflater.from(mContext)
 				.inflate(R.layout.tab_item, null);
 		ImageView icon = (ImageView) view.findViewById(R.id.icon);
-		TextView text = (TextView) view.findViewById(R.id.text);
+//		TextView text = (TextView) view.findViewById(R.id.text);
 		switch (id) {
 		case 0:
 			icon.setImageResource(R.drawable.ic_tab_favorites_1);
-			text.setText("收藏");
+//			text.setText("收藏");
 			break;
 		case 1:
 			icon.setImageResource(R.drawable.ic_tab_profile_1);
-			text.setText("资料");
+//			text.setText("资料");
 			break;
 		case 2:
 			icon.setImageResource(R.drawable.ic_tab_timeline_1);
-			text.setText("消息");
+//			text.setText("消息");
 			break;
 		default:
 			break;

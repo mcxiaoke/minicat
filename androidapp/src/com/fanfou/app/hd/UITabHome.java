@@ -87,27 +87,27 @@ public class UITabHome extends UIBaseSupport {
 		LinearLayout view = (LinearLayout) LayoutInflater.from(mContext)
 				.inflate(R.layout.tab_item, null);
 		ImageView icon = (ImageView) view.findViewById(R.id.icon);
-		TextView text = (TextView) view.findViewById(R.id.text);
+//		TextView text = (TextView) view.findViewById(R.id.text);
 		switch (id) {
 		case 0:
 			icon.setImageResource(R.drawable.ic_tab_home_1);
-			text.setText("首页");
+//			text.setText("首页");
 			break;
 		case 1:
 			icon.setImageResource(R.drawable.ic_tab_mention_1);
-			text.setText("提及");
+//			text.setText("提及");
 			break;
 		case 2:
 			icon.setImageResource(R.drawable.ic_tab_dm_1);
-			text.setText("私信");
+//			text.setText("私信");
 			break;
 		case 3:
 			icon.setImageResource(R.drawable.ic_tab_browse_1);
-			text.setText("公共");
+//			text.setText("公共");
 			break;
 		case 4:
 			icon.setImageResource(R.drawable.ic_more);
-			text.setText("更多");
+//			text.setText("更多");
 			break;
 		default:
 			break;
