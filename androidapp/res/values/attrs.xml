@@ -11,6 +11,8 @@
         <attr name="EditProfileInputStyle" format="reference"></attr>
         <attr name="ActionItemStyle" format="reference"></attr>
         <attr name="ActionGroupStyle" format="reference"></attr>
+        <attr name="ImageButtonStyle" format="reference"></attr>
+        <attr name="FollowStateStyle" format="reference"></attr>
 
         <!-- drawable/color list -->
         <attr name="searchTextColor" format="reference|color"></attr>

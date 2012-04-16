@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -93,10 +94,12 @@ public class ProfileFragment extends AbstractFragment implements
 
 	private TextView descContent;
 
-//	private ImageButton actionFollow;
-//	private ImageButton actionMention;
-//	private ImageButton actionDM;
-//	private ImageButton actionBlock;
+	private Button actionFollow;
+	private ImageButton actionOthers;
+
+	// private ImageButton actionMention;
+	// private ImageButton actionDM;
+	// private ImageButton actionBlock;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -167,10 +170,11 @@ public class ProfileFragment extends AbstractFragment implements
 		Utils.setBoldText(descTitle);
 		descContent = (TextView) root.findViewById(R.id.desc_content);
 
-//		actionFollow = (ImageButton) root.findViewById(R.id.action_follow);
-//		actionMention = (ImageButton) root.findViewById(R.id.action_mention);
-//		actionDM = (ImageButton) root.findViewById(R.id.action_dm);
-//		actionBlock = (ImageButton) root.findViewById(R.id.action_block);
+		actionOthers = (ImageButton) root.findViewById(R.id.action_others);
+		actionFollow = (Button) root.findViewById(R.id.action_follow);
+		// actionMention = (ImageButton) root.findViewById(R.id.action_mention);
+		// actionDM = (ImageButton) root.findViewById(R.id.action_dm);
+		// actionBlock = (ImageButton) root.findViewById(R.id.action_block);
 
 	}
 
@@ -214,10 +218,11 @@ public class ProfileFragment extends AbstractFragment implements
 		vFriends.setOnClickListener(this);
 		vFollowers.setOnClickListener(this);
 
-//		actionFollow.setOnClickListener(this);
-//		actionMention.setOnClickListener(this);
-//		actionDM.setOnClickListener(this);
-//		actionBlock.setOnClickListener(this);
+		actionOthers.setOnClickListener(this);
+		actionFollow.setOnClickListener(this);
+		// actionMention.setOnClickListener(this);
+		// actionDM.setOnClickListener(this);
+		// actionBlock.setOnClickListener(this);
 	}
 
 	private void updateUI(final UserModel user) {
@@ -266,7 +271,12 @@ public class ProfileFragment extends AbstractFragment implements
 	}
 
 	private void updateAction() {
-//		actionFollow.setImageLevel(user.isFollowing() ? 1 : 0);
+		boolean following = user.isFollowing();
+		actionFollow
+				.setBackgroundResource(following ? R.drawable.follow_state_following
+						: R.drawable.follow_state_notfollowing);
+		actionFollow.setText(following ? "正在关注" : "没有关注");
+		// actionFollow.setImageLevel(user.isFollowing() ? 1 : 0);
 	}
 
 	private void updateStatistics() {

@@ -304,6 +304,31 @@
         <item name="android:visibility">gone</item>
     </style>
 
+    <style name="Widget.ImageButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="Widget.ImageButton.Light">
+        <item name="android:background">@drawable/action_blue</item>
+    </style>
+
+    <style name="Widget.FollowState">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
+
+    <style name="Widget.FollowState.Light">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/follow_state_following</item>
+    </style>
+
     <style name="Item">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -340,7 +365,7 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:padding">2dp</item>
     </style>
-    
+
     <style name="Widget.SendGroup.Light">
         <item name="android:background">@color/light_blue</item>
     </style>

@@ -15,6 +15,8 @@
         <item name="EditProfileInputStyle">@style/Widget.EditProfileInput.Light</item>
         <item name="ActionItemStyle">@style/Widget.ActionItem.Light</item>
         <item name="ActionGroupStyle">@style/Widget.ActionGroup</item>
+        <item name="ImageButtonStyle">@style/Widget.ImageButton.Light</item>
+        <item name="FollowStateStyle">@style/Widget.FollowState.Light</item>
         <item name="itemViewStyle">@style/Widget.ItemView.Light</item>
         <item name="searchTextColor">@color/light_blue</item>
 
@@ -38,7 +40,7 @@
         <!-- profile color -->
         <item name="profileItemTitleBackground">@color/light_grey</item>
         <item name="profileBlockBackground">@color/light_blue_light</item>
-        <item name="profileCountTextColor">@color/light_blue</item>
+        <item name="profileCountTextColor">@color/black</item>
         <item name="profileCountBackground">@drawable/action</item>
 
         <!-- write color -->

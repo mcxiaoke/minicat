@@ -24,6 +24,8 @@
 
                 <include layout="@layout/profile_item_header" />
 
+                <include layout="@layout/profile_item_state" />
+
                 <include layout="@layout/profile_item_count" />
 
                 <include layout="@layout/profile_item_userinfo" />
