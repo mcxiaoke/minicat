@@ -37,6 +37,7 @@ public class UIConversation extends UIBaseSupport {
 	private String userId;
 	private String screenName;
 	private String profileImageUrl;
+	private boolean refresh;
 
 	private EditText mEditText;
 
@@ -56,6 +57,7 @@ public class UIConversation extends UIBaseSupport {
 		userId = intent.getStringExtra("id");
 		screenName = intent.getStringExtra("screen_name");
 		profileImageUrl = intent.getStringExtra("profile_image_url");
+		refresh=intent.getBooleanExtra("refresh", false);
 	}
 
 	@Override
@@ -89,7 +91,7 @@ public class UIConversation extends UIBaseSupport {
 	}
 
 	private void setFragment() {
-		fragment = ConversationFragment.newInstance(userId, screenName,true);
+		fragment = ConversationFragment.newInstance(userId, screenName,refresh);
 
 		FragmentManager fm = getSupportFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();

@@ -10,6 +10,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
@@ -20,6 +21,7 @@ import com.fanfou.app.hd.dao.DataProvider;
 import com.fanfou.app.hd.dao.model.BaseModel;
 import com.fanfou.app.hd.dao.model.DirectMessageColumns;
 import com.fanfou.app.hd.dao.model.DirectMessageModel;
+import com.fanfou.app.hd.dao.model.IBaseColumns;
 import com.fanfou.app.hd.dao.model.Model;
 import com.fanfou.app.hd.dao.model.RecordColumns;
 import com.fanfou.app.hd.dao.model.StatusColumns;
@@ -122,6 +124,15 @@ public class DataController {
 		}
 		return context.getContentResolver().insert(model.getContentUri(),
 				model.values());
+	}
+	
+	public static boolean update(Context context, BaseModel model) {
+		if (model == null) {
+			return false;
+		}
+		String where=IBaseColumns.ID+" =? ";
+		String[] whereArgs=new String[]{model.getId()};
+		return context.getContentResolver().update(model.getContentUri(), model.values(), where, whereArgs)!=-1;
 	}
 
 	public static int updateUserModel(Context context, final UserModel u) {

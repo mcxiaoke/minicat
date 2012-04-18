@@ -26,14 +26,14 @@ public final class CacheController {
 
 	public static void cacheAndStore(Context context, UserModel user) {
 		if (user != null) {
-			DataController.store(context, user);
+			DataController.update(context, user);
 			cache(user);
 		}
 	}
 
 	public static void cacheAndStore(Context context, StatusModel status) {
 		if (status != null) {
-			DataController.store(context, status);
+			DataController.update(context, status);
 			cache(status);
 		}
 	}

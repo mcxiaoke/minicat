@@ -62,6 +62,7 @@ public class UIController {
 
 	public static void showConversation(Context context, DirectMessageModel dm) {
 		Intent intent = new Intent(context, UIConversation.class);
+		intent.putExtra("refresh", true);
 		if (dm.isIncoming()) {
 			intent.putExtra("id", dm.getSenderId());
 			intent.putExtra("screen_name", dm.getSenderScreenName());
@@ -75,11 +76,13 @@ public class UIController {
 		context.startActivity(intent);
 	}
 
-	public static void showConversation(Context context, UserModel user) {
+	public static void showConversation(Context context, UserModel user,
+			boolean refresh) {
 		Intent intent = new Intent(context, UIConversation.class);
 		intent.putExtra("id", user.getId());
 		intent.putExtra("screen_name", user.getScreenName());
 		intent.putExtra("profile_image_url", user.getProfileImageUrl());
+		intent.putExtra("refresh", refresh);
 		context.startActivity(intent);
 	}
 

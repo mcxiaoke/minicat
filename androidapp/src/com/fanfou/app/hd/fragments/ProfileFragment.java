@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,6 +15,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.controller.CacheController;
@@ -24,6 +29,7 @@ import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
 import com.fanfou.app.hd.service.FanFouService;
 import com.fanfou.app.hd.util.DateTimeHelper;
+import com.fanfou.app.hd.util.IOHelper;
 import com.fanfou.app.hd.util.StringHelper;
 import com.fanfou.app.hd.util.Utils;
 
@@ -171,6 +177,8 @@ public class ProfileFragment extends AbstractFragment implements
 		descContent = (TextView) root.findViewById(R.id.desc_content);
 
 		actionOthers = (ImageButton) root.findViewById(R.id.action_others);
+		registerForContextMenu(actionOthers);
+
 		actionFollow = (Button) root.findViewById(R.id.action_follow);
 		// actionMention = (ImageButton) root.findViewById(R.id.action_mention);
 		// actionDM = (ImageButton) root.findViewById(R.id.action_dm);
@@ -453,12 +461,65 @@ public class ProfileFragment extends AbstractFragment implements
 		dialog.show();
 	}
 
+	private void showOthers() {
+		actionOthers.showContextMenu();
+	}
+
 	private boolean hasPermission() {
 		if (noPermission) {
 			Utils.notify(getActivity(), "你没有通过这个用户的验证");
 			return false;
 		}
 		return true;
+	}
+
+	private void doSendDirectMessage() {
+		UIController.showConversation(getActivity(), user, false);
+	}
+
+	private void doRefreshProfile() {
+		fetchUser();
+	}
+
+	private void doBlockUser() {
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean onContextItemSelected(android.view.MenuItem item) {
+		// return super.onContextItemSelected(item);
+		int id = item.getItemId();
+		switch (id) {
+		case R.id.menu_dm:
+			doSendDirectMessage();
+			break;
+		case R.id.menu_refresh:
+			doRefreshProfile();
+			break;
+		case R.id.menu_block:
+			doBlockUser();
+			break;
+		default:
+			break;
+		}
+		return true;
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		android.view.MenuInflater inflater = getActivity().getMenuInflater();
+		inflater.inflate(R.menu.profile_context_menu, menu);
 	}
 
 	@Override
@@ -475,19 +536,22 @@ public class ProfileFragment extends AbstractFragment implements
 		case R.id.action_follow:
 			doFollow();
 			break;
+		case R.id.action_others:
+			showOthers();
+			break;
 		case R.id.action_mention:
 			UIController.showWrite(getActivity(), "@" + user.getScreenName()
 					+ " ");
 			break;
 		case R.id.action_dm:
-			UIController.showConversation(getActivity(), user);
+			UIController.showConversation(getActivity(), user, false);
 			break;
 		case R.id.action_block:
 			break;
 		case R.id.box_statuses:
-			// if (hasPermission()) {
-			// UIController.showTimeline(getActivity(), user.getId());
-			// }
+			if (hasPermission()) {
+				UIController.showTimeline(getActivity(), user.getId());
+			}
 			break;
 		case R.id.box_favorites:
 			if (hasPermission()) {
