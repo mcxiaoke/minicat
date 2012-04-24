@@ -1,8 +1,10 @@
 package com.fanfou.app.hd.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -21,15 +23,14 @@ import com.actionbarsherlock.view.MenuItem;
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.controller.CacheController;
-import com.fanfou.app.hd.controller.DataController;
 import com.fanfou.app.hd.controller.EmptyViewController;
 import com.fanfou.app.hd.controller.SimpleDialogListener;
 import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.dialog.ConfirmDialog;
 import com.fanfou.app.hd.service.FanFouService;
+import com.fanfou.app.hd.ui.widget.OnActionClickListener;
 import com.fanfou.app.hd.util.DateTimeHelper;
-import com.fanfou.app.hd.util.IOHelper;
 import com.fanfou.app.hd.util.StringHelper;
 import com.fanfou.app.hd.util.Utils;
 
@@ -66,6 +67,7 @@ public class ProfileFragment extends AbstractFragment implements
 	private UserModel user;
 
 	private boolean noPermission = false;
+	private String relationState;
 
 	private EmptyViewController emptyController;
 
@@ -102,6 +104,9 @@ public class ProfileFragment extends AbstractFragment implements
 
 	private Button actionFollow;
 	private ImageButton actionOthers;
+	private View stateView;
+
+	private OnActionClickListener mOnActionClickListener;
 
 	// private ImageButton actionMention;
 	// private ImageButton actionDM;
@@ -111,6 +116,15 @@ public class ProfileFragment extends AbstractFragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		parseArguments();
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			mOnActionClickListener = (OnActionClickListener) activity;
+		} catch (Exception e) {
+		}
 	}
 
 	@Override
@@ -176,11 +190,16 @@ public class ProfileFragment extends AbstractFragment implements
 		Utils.setBoldText(descTitle);
 		descContent = (TextView) root.findViewById(R.id.desc_content);
 
+		stateView = root.findViewById(R.id.state);
+		if (userId.equals(App.getAccount())) {
+			stateView.setVisibility(View.GONE);
+		}
 		actionOthers = (ImageButton) root.findViewById(R.id.action_others);
 		registerForContextMenu(actionOthers);
 
 		actionFollow = (Button) root.findViewById(R.id.action_follow);
-		// actionMention = (ImageButton) root.findViewById(R.id.action_mention);
+		// actionMention = (ImageButton)
+		// root.findViewById(R.id.action_mention);
 		// actionDM = (ImageButton) root.findViewById(R.id.action_dm);
 		// actionBlock = (ImageButton) root.findViewById(R.id.action_block);
 
@@ -256,7 +275,8 @@ public class ProfileFragment extends AbstractFragment implements
 		updateInfo();
 		updateDescription();
 
-		showRelation();
+		
+		updateRelation();
 
 	}
 
@@ -323,8 +343,12 @@ public class ProfileFragment extends AbstractFragment implements
 		descContent.setText(user.getDescription());
 	}
 
-	private void updateRelation(String relation) {
-		headerRelation.setText(relation);
+	private void updateRelation() {
+		if(TextUtils.isEmpty(relationState)){
+			showRelation();
+		}else{
+			headerRelation.setText(relationState);
+		}
 	}
 
 	private void fetchUser() {
@@ -363,7 +387,8 @@ public class ProfileFragment extends AbstractFragment implements
 				switch (msg.what) {
 				case FanFouService.RESULT_SUCCESS:
 					boolean follow = msg.getData().getBoolean("boolean");
-					updateRelation(follow ? "正在关注你" : "没有关注你");
+					relationState=follow ? "正在关注你" : "没有关注你";
+					updateRelation();
 					break;
 				case FanFouService.RESULT_ERROR:
 					break;
@@ -550,12 +575,14 @@ public class ProfileFragment extends AbstractFragment implements
 			break;
 		case R.id.box_statuses:
 			if (hasPermission()) {
-				UIController.showTimeline(getActivity(), user.getId());
+				mOnActionClickListener.onActionClick(2, "timeline");
+				// UIController.showTimeline(getActivity(), user.getId());
 			}
 			break;
 		case R.id.box_favorites:
 			if (hasPermission()) {
-				UIController.showFavorites(getActivity(), user.getId());
+				mOnActionClickListener.onActionClick(0, "favorites");
+				// UIController.showFavorites(getActivity(), user.getId());
 			}
 			break;
 		case R.id.box_friends:

@@ -14,8 +14,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.fanfou.app.hd.adapter.SearchAdapter;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
@@ -40,6 +40,20 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+	}
+
+	@Override
+	protected int getMenuResourceId() {
+		return R.menu.topic_menu;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menu_search) {
+			onSearchRequested();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override

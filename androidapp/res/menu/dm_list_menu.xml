@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/dm_copy" android:title="复制" />
-    <item android:id="@+id/dm_delete" android:title="删除" />
-    <item android:id="@+id/dm_cancel" android:title="取消" />
-    
-</menu>

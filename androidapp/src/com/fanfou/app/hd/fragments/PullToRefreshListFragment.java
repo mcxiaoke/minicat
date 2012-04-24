@@ -84,6 +84,15 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 			Log.d(TAG, "onCreate() isVisible=" + isVisible());
 		}
 
+		Bundle args = getArguments();
+		if (args != null) {
+			refreshOnStart = args.getBoolean("refresh");
+			if (App.DEBUG) {
+				Log.d(TAG, "refreshOnStart=" + refreshOnStart);
+			}
+			parseArguments(args);
+		}
+
 	}
 
 	@Override
@@ -112,9 +121,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 			Log.d(TAG, "onActivityCreated() isVisible=" + isVisible());
 		}
 
-		Bundle args = getArguments();
-		refreshOnStart = args.getBoolean("refresh");
-		parseArguments(args);
+		parseArguments(getArguments());
 
 		if (savedInstanceState != null) {
 			mParcelable = savedInstanceState.getParcelable("state");

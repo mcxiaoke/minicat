@@ -17,6 +17,11 @@ package com.fanfou.app.hd;
 
 import java.util.HashMap;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.fanfou.app.hd.controller.SimpleDialogListener;
+import com.fanfou.app.hd.controller.UIController;
+import com.fanfou.app.hd.dialog.ConfirmDialog;
 import com.fanfou.app.hd.fragments.ColumnsFragment;
 import com.fanfou.app.hd.fragments.ConversationListFragment;
 import com.fanfou.app.hd.fragments.HomeTimelineFragment;
@@ -24,6 +29,8 @@ import com.fanfou.app.hd.fragments.MentionTimelineFragment;
 import com.fanfou.app.hd.fragments.PublicTimelineFragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -33,7 +40,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
-import android.widget.TextView;
 
 /**
  * This demonstrates how you can implement switching between the tabs of a
@@ -83,31 +89,109 @@ public class UITabHome extends UIBaseSupport {
 	protected void setActionBar() {
 	}
 
+	@Override
+	protected int getMenuResourceId() {
+		return R.menu.home_menu;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(
+			com.actionbarsherlock.view.MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_write:
+			onMenuWriteClick();
+			break;
+		case R.id.menu_logout:
+			onMenuLogoutClick();
+			break;
+		case R.id.menu_option:
+			onMenuOptionClick();
+			break;
+		case R.id.menu_search:
+			onMenuSearchClick();
+			break;
+		case R.id.menu_about:
+			onMenuAboutClick();
+			break;
+		case R.id.menu_feedback:
+			onMenuFeedbackClick();
+			break;
+		case R.id.menu_profile:
+			onMenuProfileClick();
+			break;
+		default:
+			super.onOptionsItemSelected(item);
+			break;
+		}
+		return true;
+	}
+
+	private void onMenuOptionClick() {
+		Intent intent = new Intent(this, UISetting.class);
+		startActivity(intent);
+	}
+
+	private void onMenuProfileClick() {
+		UIController.showProfile(this, App.getAccount());
+	}
+
+	private void onMenuSearchClick() {
+		Intent intent = new Intent(this, UISearch.class);
+		startActivity(intent);
+	}
+
+	private void onMenuAboutClick() {
+		UIController.showAbout(this);
+	}
+
+	private void onMenuFeedbackClick() {
+		String text = getString(R.string.config_feedback_account) + " ("
+				+ Build.MODEL + "-" + Build.VERSION.RELEASE + " "
+				+ App.versionName + ") ";
+		UIController.showWrite(this, text);
+	}
+
+	private void onMenuLogoutClick() {
+		final ConfirmDialog dialog = new ConfirmDialog(this);
+		dialog.setTitle("提示");
+		dialog.setMessage("确定注销当前登录帐号吗？");
+		dialog.setClickListener(new SimpleDialogListener() {
+
+			@Override
+			public void onPositiveClick() {
+				super.onPositiveClick();
+				App.doLogin(mContext);
+				finish();
+			}
+		});
+		dialog.show();
+	}
+
 	private View getIndicator(int id) {
 		LinearLayout view = (LinearLayout) LayoutInflater.from(mContext)
 				.inflate(R.layout.tab_item, null);
 		ImageView icon = (ImageView) view.findViewById(R.id.icon);
-//		TextView text = (TextView) view.findViewById(R.id.text);
+		// TextView text = (TextView) view.findViewById(R.id.text);
 		switch (id) {
 		case 0:
 			icon.setImageResource(R.drawable.ic_tab_home_1);
-//			text.setText("首页");
+			// text.setText("首页");
 			break;
 		case 1:
 			icon.setImageResource(R.drawable.ic_tab_mention_1);
-//			text.setText("提及");
+			// text.setText("提及");
 			break;
 		case 2:
 			icon.setImageResource(R.drawable.ic_tab_dm_1);
-//			text.setText("私信");
+			// text.setText("私信");
 			break;
 		case 3:
 			icon.setImageResource(R.drawable.ic_tab_browse_1);
-//			text.setText("公共");
+			// text.setText("公共");
 			break;
 		case 4:
 			icon.setImageResource(R.drawable.ic_more);
-//			text.setText("更多");
+			// text.setText("更多");
 			break;
 		default:
 			break;

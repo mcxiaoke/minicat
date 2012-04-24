@@ -99,7 +99,7 @@ abstract class UIBaseSupport extends SherlockFragmentActivity implements
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		int id = getMenuResourceId();
 		if (id > 0) {
-			getSupportMenuInflater().inflate(getMenuResourceId(), menu);
+			getSupportMenuInflater().inflate(id, menu);
 		}
 		return true;
 	}

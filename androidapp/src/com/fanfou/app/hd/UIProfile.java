@@ -79,7 +79,7 @@ public class UIProfile extends UIBaseSupport implements OnPageChangeListener {
 
 	@Override
 	protected void setLayout() {
-		setContentView(R.layout.ui_profile);
+		setContentView(R.layout.ui_profile_viewpager);
 
 		mPagesAdapter = new PagesAdapter(getSupportFragmentManager(), userId);
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);

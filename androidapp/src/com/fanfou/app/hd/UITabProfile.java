@@ -1,31 +1,6 @@
-/*
- * Copyright (C) 2011 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.fanfou.app.hd;
 
 import java.util.HashMap;
-
-import com.fanfou.app.hd.dao.model.UserModel;
-import com.fanfou.app.hd.fragments.ColumnsFragment;
-import com.fanfou.app.hd.fragments.ConversationListFragment;
-import com.fanfou.app.hd.fragments.HomeTimelineFragment;
-import com.fanfou.app.hd.fragments.MentionTimelineFragment;
-import com.fanfou.app.hd.fragments.ProfileFragment;
-import com.fanfou.app.hd.fragments.PublicTimelineFragment;
-import com.fanfou.app.hd.fragments.UserFavoritesFragment;
-import com.fanfou.app.hd.fragments.UserTimelineFragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -39,19 +14,26 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
-import android.widget.TextView;
 
-/**
- * This demonstrates how you can implement switching between the tabs of a
- * TabHost through fragments. It uses a trick (see the code below) to allow the
- * tabs to switch between fragments instead of simple views.
- */
-public class UITabProfile extends UIBaseSupport {
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.fanfou.app.hd.controller.UIController;
+import com.fanfou.app.hd.dao.model.UserModel;
+import com.fanfou.app.hd.fragments.ProfileFragment;
+import com.fanfou.app.hd.fragments.UserFavoritesFragment;
+import com.fanfou.app.hd.fragments.UserTimelineFragment;
+import com.fanfou.app.hd.ui.widget.OnActionClickListener;
+
+public class UITabProfile extends UIBaseSupport implements
+		OnActionClickListener {
+
 	TabHost mTabHost;
 	TabManager mTabManager;
 
 	private UserModel user;
 	private String userId;
+	private boolean permission;
+	private boolean self;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +53,42 @@ public class UITabProfile extends UIBaseSupport {
 	}
 
 	@Override
+	protected void setActionBar() {
+		super.setActionBar();
+	}
+
+	@Override
+	protected int getMenuResourceId() {
+		return self ? R.menu.myprofile_menu : R.menu.base_menu;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == R.id.menu_edit) {
+			doEditProfile();
+			return true;
+		}else if(id==R.id.menu_refresh){
+			doRefreshProfile();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	private void doRefreshProfile(){
+		
+	}
+
+	private void doEditProfile() {
+		UIController.showEditProfile(mContext, user);
+	}
+
+	@Override
 	protected void initialize() {
 		parseIntent();
 	}
@@ -84,6 +102,7 @@ public class UITabProfile extends UIBaseSupport {
 		Bundle args = new Bundle();
 		args.putBoolean("refresh", true);
 		args.putString("id", userId);
+		args.putBoolean("permission", permission);
 
 		mTabManager = new TabManager(this, mTabHost, R.id.realtabcontent);
 
@@ -117,25 +136,27 @@ public class UITabProfile extends UIBaseSupport {
 		if (user != null) {
 			userId = user.getId();
 		}
+
+			self = App.getAccount().equals(userId);
 	}
 
 	private View getIndicator(int id) {
 		LinearLayout view = (LinearLayout) LayoutInflater.from(mContext)
 				.inflate(R.layout.tab_item, null);
 		ImageView icon = (ImageView) view.findViewById(R.id.icon);
-//		TextView text = (TextView) view.findViewById(R.id.text);
+		// TextView text = (TextView) view.findViewById(R.id.text);
 		switch (id) {
 		case 0:
 			icon.setImageResource(R.drawable.ic_tab_favorites_1);
-//			text.setText("收藏");
+			// text.setText("收藏");
 			break;
 		case 1:
 			icon.setImageResource(R.drawable.ic_tab_profile_1);
-//			text.setText("资料");
+			// text.setText("资料");
 			break;
 		case 2:
 			icon.setImageResource(R.drawable.ic_tab_timeline_1);
-//			text.setText("消息");
+			// text.setText("消息");
 			break;
 		default:
 			break;
@@ -254,6 +275,12 @@ public class UITabProfile extends UIBaseSupport {
 						.executePendingTransactions();
 			}
 		}
+	}
+
+	@Override
+	public void onActionClick(int position, String tag) {
+		mTabHost.setCurrentTabByTag(tag);
+//		mTabManager.onTabChanged(tag);
 	}
 
 }

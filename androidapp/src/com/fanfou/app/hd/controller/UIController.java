@@ -8,17 +8,21 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.UIAbout;
 import com.fanfou.app.hd.UIConversation;
+import com.fanfou.app.hd.UIEditProfile;
 import com.fanfou.app.hd.UIFavorites;
 import com.fanfou.app.hd.UIHome;
 import com.fanfou.app.hd.UILogin;
 import com.fanfou.app.hd.UIProfile;
 import com.fanfou.app.hd.UIRecords;
+import com.fanfou.app.hd.UISearch;
+import com.fanfou.app.hd.UISetting;
 import com.fanfou.app.hd.UITabHome;
 import com.fanfou.app.hd.UITabProfile;
 import com.fanfou.app.hd.UIThread;
@@ -36,12 +40,35 @@ import com.fanfou.app.hd.util.Utils;
 /**
  * @author mcxiaoke
  * @version 1.0 2012-2-24 下午5:08:25
+ * @version 1.1 2012.04.24
  * 
  */
 public class UIController {
 
 	private static void startUI(Context ctx, Class<?> cls) {
 		ctx.startActivity(new Intent(ctx, cls));
+	}
+	
+	public static void showFanfouBlog(Context context){
+		Intent intent=new Intent(Intent.ACTION_VIEW);
+		intent.setData(Uri.parse("http://blog.fanfou.com/"));
+		context.startActivity(intent);
+	}
+	
+	public static void showAnnounce(Context context){
+		Intent intent=new Intent(Intent.ACTION_VIEW);
+		intent.setData(Uri.parse("fanfouhd://user/androidsupport"));
+		context.startActivity(intent);
+	}
+
+	public static void showOption(Context context) {
+		startUI(context, UISetting.class);
+	}
+	
+	public static void showEditProfile(Context context, final UserModel user){
+		Intent intent=new Intent(context, UIEditProfile.class);
+		intent.putExtra("data", user);
+		context.startActivity(intent);
 	}
 
 	public static void showAbout(Context context) {
@@ -52,6 +79,10 @@ public class UIController {
 		Intent intent = new Intent(context, UILogin.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		context.startActivity(intent);
+	}
+
+	public static void showTopic(Context context) {
+		startUI(context, UISearch.class);
 	}
 
 	public static void showHome(Context context) {
@@ -201,6 +232,10 @@ public class UIController {
 		Intent intent = new Intent(context, UITimeline.class);
 		intent.putExtra("id", id);
 		context.startActivity(intent);
+	}
+	
+	public static void showPublicTimeline(Context context){
+		//TODO
 	}
 
 	public static void showFavorites(Context context, String id) {

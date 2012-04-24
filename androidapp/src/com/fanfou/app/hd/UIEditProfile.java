@@ -21,6 +21,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
 import com.fanfou.app.hd.api.ResultInfo;
