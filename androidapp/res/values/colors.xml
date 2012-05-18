@@ -18,12 +18,13 @@
     <!-- ==added by version 2.0 below=== -->
     <!-- common colors -->
     <color name="transparent">#00000000</color>
-    <color name="yellow">#fff5be00</color>
+    <color name="yellow">#fffdff66</color>
     <color name="white">#ffffffff</color>
     <color name="black">#ff000000</color>
     <color name="dark_grey">#ff333333</color>
     <color name="grey">#ff999999</color>
     <color name="light_grey">#ffcccccc</color>
+    <color name="state_text">#ff4a331e</color>
 
     <!-- light theme color -->
     <color name="light_blue">#ff00ccff</color>
