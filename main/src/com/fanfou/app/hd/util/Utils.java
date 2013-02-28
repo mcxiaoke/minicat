@@ -15,7 +15,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -29,17 +28,12 @@ import android.widget.Toast;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.UIAbout;
-import com.fanfou.app.hd.UIConversation;
 import com.fanfou.app.hd.UIPhoto;
 import com.fanfou.app.hd.UIStatus;
 import com.fanfou.app.hd.controller.DataController;
-import com.fanfou.app.hd.dao.model.BaseModel;
-import com.fanfou.app.hd.dao.model.DirectMessageColumns;
 import com.fanfou.app.hd.dao.model.DirectMessageModel;
 import com.fanfou.app.hd.dao.model.IBaseColumns;
 import com.fanfou.app.hd.dao.model.StatusModel;
-import com.fanfou.app.hd.service.Constants;
 
 /**
  * 

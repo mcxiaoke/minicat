@@ -5,18 +5,18 @@
     android:versionCode="20120605"
     android:versionName="2.0" >
 
-    <uses-sdk
-        android:minSdkVersion="7"
-        android:targetSdkVersion="15" />
+    <uses-sdk android:minSdkVersion="7" />
 
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
         android:normalScreens="true"
+        android:smallScreens="true"
         android:xlargeScreens="true" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -229,7 +229,8 @@
 
         <provider
             android:name=".dao.DataProvider"
-            android:authorities="com.fanfou.app.hd.provider" />
+            android:authorities="com.fanfou.app.hd.provider"
+            android:exported="false" />
 
         <service
             android:name=".service.PostStatusService"
@@ -256,11 +257,6 @@
         <receiver android:name=".receiver.BootReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-        <receiver android:name=".receiver.NotificationReceiver" >
-            <intent-filter>
-                <action android:name="com.fanfou.app.hd.action.NOTIFICATION" />
             </intent-filter>
         </receiver>
         <receiver android:name=".receiver.NetworkReceiver" >

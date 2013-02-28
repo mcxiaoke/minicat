@@ -14,12 +14,10 @@ import android.util.Log;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.UILogin;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
 import com.fanfou.app.hd.controller.DataController;
 import com.fanfou.app.hd.dao.model.DirectMessageModel;
-import com.fanfou.app.hd.util.IOHelper;
 
 /**
  * @author mcxiaoke

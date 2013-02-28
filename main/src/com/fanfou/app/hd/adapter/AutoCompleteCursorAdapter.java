@@ -3,6 +3,7 @@ package com.fanfou.app.hd.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.provider.BaseColumns;
 import android.support.v4.widget.CursorAdapter;
 import android.text.TextUtils;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
+import com.fanfou.app.hd.dao.model.IBaseColumns;
 import com.fanfou.app.hd.dao.model.UserColumns;
 import com.fanfou.app.hd.dao.model.UserModel;
 
@@ -53,13 +55,13 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 			Log.d(TAG, "constraint = " + constraint);
 		}
 
-		final String[] projection = new String[] { UserColumns._ID,
-				UserColumns.ID, UserColumns.SCREEN_NAME, UserColumns.TYPE,
-				UserColumns.OWNER };
-		String where = UserColumns.OWNER + " = '" + App.getAccount() + "' AND "
-				+ UserColumns.TYPE + " = '" + UserModel.TYPE_FRIENDS
+		final String[] projection = new String[] { BaseColumns._ID,
+				IBaseColumns.ID, UserColumns.SCREEN_NAME, IBaseColumns.TYPE,
+				IBaseColumns.OWNER };
+		String where = IBaseColumns.OWNER + " = '" + App.getAccount() + "' AND "
+				+ IBaseColumns.TYPE + " = '" + UserModel.TYPE_FRIENDS
 				+ "' AND " + UserColumns.SCREEN_NAME + " like '%" + constraint
-				+ "%' OR " + UserColumns.ID + " like '%" + constraint + "%'";
+				+ "%' OR " + IBaseColumns.ID + " like '%" + constraint + "%'";
 		if (App.DEBUG) {
 			Log.d(TAG, "runQueryOnBackgroundThread where=" + where);
 		}
@@ -69,7 +71,7 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		String id = cursor.getString(cursor.getColumnIndex(UserColumns.ID));
+		String id = cursor.getString(cursor.getColumnIndex(IBaseColumns.ID));
 		String screenName = cursor.getString(cursor
 				.getColumnIndex(UserColumns.SCREEN_NAME));
 		TextView tv = (TextView) view.findViewById(R.id.name);

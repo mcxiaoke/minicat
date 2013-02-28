@@ -1,9 +1,7 @@
 package com.fanfou.app.hd.dao.model;
 
 import android.content.ContentValues;
-import android.net.Uri;
 import android.os.Parcel;
-import android.os.Parcelable;
 
 
 /**

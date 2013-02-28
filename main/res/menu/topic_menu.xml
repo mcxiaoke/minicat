@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/menu_search"
-        android:icon="@drawable/ic_menu_search"
+        android:icon="@drawable/ic_search"
         android:orderInCategory="0"
         android:showAsAction="always"
         android:title="搜索">

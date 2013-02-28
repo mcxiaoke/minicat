@@ -117,16 +117,16 @@ public class StatusModel extends BaseModel {
 			return null;
 		}
 		StatusModel st = new StatusModel();
-		st.id=DataController.parseString(cursor, StatusColumns.ID);
-		st.account=DataController.parseString(cursor, StatusColumns.ACCOUNT);
-		st.owner=DataController.parseString(cursor, StatusColumns.OWNER);
-		st.note=DataController.parseString(cursor, StatusColumns.NOTE);
+		st.id=DataController.parseString(cursor, IBaseColumns.ID);
+		st.account=DataController.parseString(cursor, IBaseColumns.ACCOUNT);
+		st.owner=DataController.parseString(cursor, IBaseColumns.OWNER);
+		st.note=DataController.parseString(cursor, IBaseColumns.NOTE);
 		
-		st.type=DataController.parseInt(cursor, StatusColumns.TYPE);
-		st.flag=DataController.parseInt(cursor, StatusColumns.FLAG);
+		st.type=DataController.parseInt(cursor, IBaseColumns.TYPE);
+		st.flag=DataController.parseInt(cursor, IBaseColumns.FLAG);
 		
-		st.rawid=DataController.parseLong(cursor, StatusColumns.RAWID);
-		st.time=DataController.parseLong(cursor, StatusColumns.TIME);
+		st.rawid=DataController.parseLong(cursor, IBaseColumns.RAWID);
+		st.time=DataController.parseLong(cursor, IBaseColumns.TIME);
 		
 		st.text=DataController.parseString(cursor, StatusColumns.TEXT);
 		st.simpleText=DataController.parseString(cursor, StatusColumns.SIMPLE_TEXT);

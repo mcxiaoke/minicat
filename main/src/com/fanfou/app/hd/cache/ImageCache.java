@@ -9,8 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
-
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.util.IOHelper;
 import com.fanfou.app.hd.util.ImageHelper;

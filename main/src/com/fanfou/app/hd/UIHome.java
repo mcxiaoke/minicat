@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.View;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.cache.ImageLoader;
 import com.fanfou.app.hd.controller.SimpleDialogListener;
 import com.fanfou.app.hd.controller.UIController;
@@ -24,6 +23,7 @@ import com.fanfou.app.hd.fragments.ConversationListFragment;
 import com.fanfou.app.hd.fragments.HomeTimelineFragment;
 import com.fanfou.app.hd.fragments.MentionTimelineFragment;
 import com.fanfou.app.hd.fragments.PublicTimelineFragment;
+import com.fanfou.app.hd.util.NetworkHelper;
 import com.viewpagerindicator.TitlePageIndicator;
 
 /**
@@ -143,7 +143,7 @@ public class UIHome extends UIBaseSupport implements OnPageChangeListener {
 		if (App.DEBUG) {
 			Log.d(TAG, "onStop()");
 		}
-		if (App.getApnType() != ApnType.WIFI) {
+		if (!NetworkHelper.isWifi(this)) {
 			App.getImageLoader().clearQueue();
 		}
 	}

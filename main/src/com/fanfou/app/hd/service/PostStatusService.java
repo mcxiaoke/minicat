@@ -11,17 +11,16 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.UIRecords;
 import com.fanfou.app.hd.UIWrite;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
 import com.fanfou.app.hd.controller.DataController;
-import com.fanfou.app.hd.dao.model.RecordColumns;
 import com.fanfou.app.hd.dao.model.RecordModel;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.util.ImageHelper;
+import com.fanfou.app.hd.util.NetworkHelper;
 import com.fanfou.app.hd.util.StringHelper;
 
 /**
@@ -101,11 +100,9 @@ public class PostStatusService extends BaseIntentService {
 				}
 			} else {
 				int quality;
-				ApnType apnType = App.getApnType();
-				if (apnType == ApnType.WIFI) {
+				if (NetworkHelper.isWifi(this)) {
 					quality = ImageHelper.IMAGE_QUALITY_HIGH;
-				} else if (apnType == ApnType.HSDPA) {
-					quality = ImageHelper.IMAGE_QUALITY_MEDIUM;
+					// quality = ImageHelper.IMAGE_QUALITY_MEDIUM;
 				} else {
 					quality = ImageHelper.IMAGE_QUALITY_LOW;
 				}
@@ -114,7 +111,7 @@ public class PostStatusService extends BaseIntentService {
 				if (photo != null && photo.length() > 0) {
 					if (App.DEBUG)
 						log("photo file=" + srcFile.getName() + " size="
-								+ photo.length() / 1024 + " quality=" + quality+" apnType="+apnType);
+								+ photo.length() / 1024 + " quality=" + quality);
 					result = api.uploadPhoto(photo, text, location);
 					photo.delete();
 				}
@@ -170,7 +167,7 @@ public class PostStatusService extends BaseIntentService {
 	}
 
 	private void doSaveRecords() {
-		RecordModel rm=new RecordModel();
+		RecordModel rm = new RecordModel();
 		rm.setText(text);
 		rm.setFile(srcFile == null ? "" : srcFile.getPath());
 		rm.setReply(relationId);

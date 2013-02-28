@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.content.Context;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.dao.model.StatusModel;
 
 /**

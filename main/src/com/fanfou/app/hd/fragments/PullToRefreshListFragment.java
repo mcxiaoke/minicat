@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
@@ -26,6 +25,8 @@ import com.fanfou.app.hd.controller.PopupController;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.util.Utils;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
@@ -43,7 +44,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * 
  */
 public abstract class PullToRefreshListFragment extends AbstractListFragment
-		implements OnRefreshListener, OnItemLongClickListener,
+		implements OnRefreshListener<ListView>, OnItemLongClickListener,
 		LoaderCallbacks<Cursor> {
 
 	protected static final int LOADER_ID = 1;
@@ -109,6 +110,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	private void setLayout(View root) {
 		mPullToRefreshView = (PullToRefreshListView) root;
 		mPullToRefreshView.setOnRefreshListener(this);
+		mPullToRefreshView.setShowIndicator(false);
 		mListView = mPullToRefreshView.getRefreshableView();
 		mListView.setOnItemClickListener(this);
 		mListView.setOnItemLongClickListener(this);
@@ -151,11 +153,13 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	protected abstract int getType();
 
 	@Override
-	public void onRefresh() {
+	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 		if (App.DEBUG) {
 			Log.d(TAG, "onRefresh() isVisible=" + isVisible());
 		}
-		doFetch(!mPullToRefreshView.hasPullFromTop());
+		Mode currentMode=refreshView.getCurrentMode();
+		boolean bottom=(Mode.PULL_FROM_END.equals(currentMode));
+		doFetch(bottom);
 	}
 
 	@Override

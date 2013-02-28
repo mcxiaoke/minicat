@@ -1,7 +1,6 @@
 package com.fanfou.app.hd.adapter;
 
 import android.graphics.Bitmap;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.fanfou.app.hd.R;

@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.util.AttributeSet;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.util.IntentHelper;
 
 /**
  * @author mcxiaoke

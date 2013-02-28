@@ -18,6 +18,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.dao.model.BaseModel;
 import com.fanfou.app.hd.dao.model.DirectMessageModel;
 import com.fanfou.app.hd.dao.model.Search;
 import com.fanfou.app.hd.dao.model.StatusModel;
@@ -61,6 +62,7 @@ final class FanFouParser implements ApiParser {
 
 	}
 
+	@Override
 	public void setAccount(String account) {
 		this.account = account;
 	}
@@ -118,7 +120,7 @@ final class FanFouParser implements ApiParser {
 			for (int i = 0; i < array.length(); i++) {
 				JSONObject o = array.getJSONObject(i);
 				DirectMessageModel dm = directMessage(o,
-						DirectMessageModel.TYPE_NONE);
+						BaseModel.TYPE_NONE);
 				if (dm != null) {
 					if (account.equals(dm.getRecipientId())) {
 						dm.setType(DirectMessageModel.TYPE_INBOX);
@@ -288,7 +290,7 @@ final class FanFouParser implements ApiParser {
 
 		if (o.has("user")) {
 			JSONObject uo = o.getJSONObject("user");
-			UserModel user = user(uo, UserModel.TYPE_NONE, owner);
+			UserModel user = user(uo, BaseModel.TYPE_NONE, owner);
 			model.setUser(user);
 		}
 
@@ -373,7 +375,7 @@ final class FanFouParser implements ApiParser {
 
 		if (o.has("sender")) {
 			JSONObject ro = o.getJSONObject("sender");
-			UserModel sender = user(ro, UserModel.TYPE_NONE, account);
+			UserModel sender = user(ro, BaseModel.TYPE_NONE, account);
 			model.setSender(sender);
 		}
 
@@ -382,7 +384,7 @@ final class FanFouParser implements ApiParser {
 
 		if (o.has("recipient")) {
 			JSONObject ro = o.getJSONObject("recipient");
-			UserModel recipient = user(ro, UserModel.TYPE_NONE, account);
+			UserModel recipient = user(ro, BaseModel.TYPE_NONE, account);
 			model.setRecipient(recipient);
 		}
 		

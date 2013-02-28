@@ -137,7 +137,7 @@ public class DataController {
 
 	public static int updateUserModel(Context context, final UserModel u) {
 		ContentValues values = new ContentValues();
-		values.put(UserColumns.TYPE, u.getType());
+		values.put(IBaseColumns.TYPE, u.getType());
 		values.put(UserColumns.FOLLOWING, u.isFollowing());
 		values.put(UserColumns.STATUSES_COUNT, u.getStatusesCount());
 		values.put(UserColumns.FAVORITES_COUNT, u.getFavouritesCount());
@@ -173,14 +173,14 @@ public class DataController {
 	}
 
 	public static int deleteStatusByType(Context context, int type) {
-		String where = StatusColumns.TYPE + " = ? ";
+		String where = IBaseColumns.TYPE + " = ? ";
 		String[] whereArgs = new String[] { String.valueOf(type) };
 		return context.getContentResolver().delete(StatusColumns.CONTENT_URI,
 				where, whereArgs);
 	}
 
 	public static int deleteUserTimeline(Context context, String userId) {
-		String where = StatusColumns.TYPE + " = ? AND " + StatusColumns.USER_ID
+		String where = IBaseColumns.TYPE + " = ? AND " + StatusColumns.USER_ID
 				+ " =? ";
 		String[] whereArgs = new String[] {
 				String.valueOf(StatusModel.TYPE_USER), userId };
@@ -189,7 +189,7 @@ public class DataController {
 	}
 
 	public static int deleteUserFavorites(Context context, String userId) {
-		String where = StatusColumns.TYPE + " = ? AND " + StatusColumns.OWNER
+		String where = IBaseColumns.TYPE + " = ? AND " + IBaseColumns.OWNER
 				+ " =? ";
 		String[] whereArgs = new String[] {
 				String.valueOf(StatusModel.TYPE_FAVORITES), userId };
@@ -237,7 +237,7 @@ public class DataController {
 	}
 
 	public static CursorLoader getConversationListLoader(Activity activity) {
-		String where = DirectMessageColumns.TYPE + " =? ";
+		String where = IBaseColumns.TYPE + " =? ";
 		String[] whereArgs = new String[] { String
 				.valueOf(DirectMessageModel.TYPE_CONVERSATION_LIST) };
 		String orderBy = DataProvider.ORDERBY_TIME_DESC;
@@ -247,7 +247,7 @@ public class DataController {
 
 	public static CursorLoader getConversationLoader(Activity activity,
 			String id) {
-		String where = DirectMessageColumns.TYPE + " !=? AND "
+		String where = IBaseColumns.TYPE + " !=? AND "
 				+ DirectMessageColumns.CONVERSATION_ID + " =? ";
 		String[] whereArgs = new String[] {
 				String.valueOf(DirectMessageModel.TYPE_CONVERSATION_LIST), id };
@@ -258,7 +258,7 @@ public class DataController {
 
 	public static Loader<Cursor> getTimelineCursorLoader(Context context,
 			int type) {
-		String where = StatusColumns.TYPE + " =? ";
+		String where = IBaseColumns.TYPE + " =? ";
 		String[] whereArgs = new String[] { String.valueOf(type) };
 		return new CursorLoader(context, StatusColumns.CONTENT_URI, null,
 				where, whereArgs, DataProvider.ORDERBY_RAWID_DESC);
@@ -266,7 +266,7 @@ public class DataController {
 
 	public static Loader<Cursor> getUserTimelineCursorLoader(Context context,
 			String userId) {
-		String where = StatusColumns.TYPE + " =? AND " + StatusColumns.USER_ID
+		String where = IBaseColumns.TYPE + " =? AND " + StatusColumns.USER_ID
 				+ " =? ";
 		String[] whereArgs = new String[] {
 				String.valueOf(StatusModel.TYPE_USER), userId };
@@ -276,7 +276,7 @@ public class DataController {
 
 	public static Loader<Cursor> getUserFavoritesCursorLoader(Context context,
 			String userId) {
-		String where = StatusColumns.TYPE + " =? AND " + StatusColumns.OWNER
+		String where = IBaseColumns.TYPE + " =? AND " + IBaseColumns.OWNER
 				+ " =? ";
 		String[] whereArgs = new String[] {
 				String.valueOf(StatusModel.TYPE_FAVORITES), userId };
@@ -286,10 +286,10 @@ public class DataController {
 
 	public static Loader<Cursor> getAutoCompleteCursorLoader(Context context,
 			String id) {
-		final String[] projection = new String[] { UserColumns._ID,
-				UserColumns.ID, UserColumns.SCREEN_NAME, UserColumns.TYPE,
-				UserColumns.OWNER };
-		final String where = UserColumns.TYPE + " =? AND " + UserColumns.OWNER
+		final String[] projection = new String[] { BaseColumns._ID,
+				IBaseColumns.ID, UserColumns.SCREEN_NAME, IBaseColumns.TYPE,
+				IBaseColumns.OWNER };
+		final String where = IBaseColumns.TYPE + " =? AND " + IBaseColumns.OWNER
 				+ " =? ";
 		final String[] whereArgs = new String[] {
 				String.valueOf(UserModel.TYPE_FRIENDS), id };
@@ -309,7 +309,7 @@ public class DataController {
 
 	public static Loader<Cursor> getUserListCursorLoader(Context context,
 			int type, String id) {
-		final String where = UserColumns.TYPE + " =? AND " + UserColumns.OWNER
+		final String where = IBaseColumns.TYPE + " =? AND " + IBaseColumns.OWNER
 				+ " =? ";
 		final String[] whereArgs = new String[] { String.valueOf(type), id };
 		return new CursorLoader(context, UserColumns.CONTENT_URI, null, where,
@@ -317,7 +317,7 @@ public class DataController {
 	}
 
 	public static Cursor getUserListCursor(Context context, int type, String id) {
-		final String where = UserColumns.TYPE + " =? AND " + UserColumns.OWNER
+		final String where = IBaseColumns.TYPE + " =? AND " + IBaseColumns.OWNER
 				+ " =? ";
 		final String[] whereArgs = new String[] { String.valueOf(type), id };
 		return context.getContentResolver().query(UserColumns.CONTENT_URI,
@@ -329,9 +329,9 @@ public class DataController {
 		if (TextUtils.isEmpty(constraint)) {
 			return getUserListCursor(context, type, id);
 		}
-		String where = UserColumns.TYPE + " =? AND " + UserColumns.OWNER
+		String where = IBaseColumns.TYPE + " =? AND " + IBaseColumns.OWNER
 				+ " =? AND (" + UserColumns.SCREEN_NAME + " like ? OR "
-				+ UserColumns.ID + " like ? )";
+				+ IBaseColumns.ID + " like ? )";
 		String query = new StringBuilder().append("%").append(constraint)
 				.append("%").toString();
 		String[] whereArgs = new String[] { String.valueOf(type), id, query,

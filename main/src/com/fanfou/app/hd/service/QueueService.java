@@ -7,11 +7,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
 import com.fanfou.app.hd.controller.DataController;
@@ -19,6 +17,7 @@ import com.fanfou.app.hd.dao.model.RecordColumns;
 import com.fanfou.app.hd.dao.model.RecordModel;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.util.ImageHelper;
+import com.fanfou.app.hd.util.NetworkHelper;
 
 /**
  * @author mcxiaoke
@@ -50,7 +49,7 @@ public class QueueService extends BaseIntentService {
 	}
 
 	private boolean deleteRecord(long id) {
-		return DataController.deleteRecord(this, id)>0;
+		return DataController.deleteRecord(this, id) > 0;
 	}
 
 	private boolean doSend(final RecordModel rm) {
@@ -63,19 +62,18 @@ public class QueueService extends BaseIntentService {
 				result = api.updateStatus(rm.text, rm.reply, null, null);
 			} else {
 				int quality;
-				ApnType apnType = App.getApnType();
-				if (apnType == ApnType.WIFI) {
+				if (NetworkHelper.isWifi(this)) {
 					quality = ImageHelper.IMAGE_QUALITY_HIGH;
+					// quality = ImageHelper.IMAGE_QUALITY_MEDIUM;
 				} else {
-					quality = ImageHelper.IMAGE_QUALITY_MEDIUM;
+					quality = ImageHelper.IMAGE_QUALITY_LOW;
 				}
 				File photo = ImageHelper.prepareUploadFile(this, srcFile,
 						quality);
 				if (photo != null && photo.length() > 0) {
 					if (App.DEBUG)
 						log("photo file=" + srcFile.getName() + " size="
-								+ photo.length() / 1024 + " quality=" + quality
-								+ " apnType=" + apnType);
+								+ photo.length() / 1024 + " quality=" + quality);
 					result = api.uploadPhoto(photo, rm.text, null);
 					photo.delete();
 				}

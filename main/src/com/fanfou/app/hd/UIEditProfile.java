@@ -21,15 +21,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
 import com.fanfou.app.hd.api.ResultInfo;
 import com.fanfou.app.hd.cache.ImageLoader;
 import com.fanfou.app.hd.controller.DataController;
 import com.fanfou.app.hd.dao.model.UserModel;
-import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.ui.widget.TextChangeListener;
 import com.fanfou.app.hd.util.IOHelper;
 import com.fanfou.app.hd.util.ImageHelper;

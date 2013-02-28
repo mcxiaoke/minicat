@@ -55,21 +55,19 @@ public class NetworkState {
 				if (App.DEBUG) {
 					log(info.toString());
 				}
-//				App.noConnection = false;
 				if (info.getType() == ConnectivityManager.TYPE_WIFI) {
 					apnType = ApnType.WIFI;
 				} else if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
-					String apnTypeName = info.getExtraInfo();
+					String apnTypeName = info.getExtraInfo().toLowerCase();
 					if (!TextUtils.isEmpty(apnTypeName)) {
-						if (apnTypeName.equals("3gnet")) {
-							apnType = ApnType.HSDPA;
+						if ("ctwap".equals(apnTypeName)) {
+							apnType = ApnType.CTWAP;
 						} else if (apnTypeName.contains("wap")) {
 							apnType = ApnType.WAP;
 						}
 					}
 				}
 			} else {
-//				App.noConnection = true;
 			}
 		} catch (Exception e) {
 		}

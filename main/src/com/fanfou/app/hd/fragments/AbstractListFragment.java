@@ -21,6 +21,7 @@ public abstract class AbstractListFragment extends AbstractFragment implements
 
 	public abstract void startRefresh();
 	
+	@Override
 	public void updateUI() {
 	}
 

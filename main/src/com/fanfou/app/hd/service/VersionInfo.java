@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.fanfou.app.hd.App;
-
 /**
  * @author mcxiaoke
  * @version 1.0 2011.09.04

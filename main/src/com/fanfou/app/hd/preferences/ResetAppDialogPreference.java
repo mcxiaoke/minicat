@@ -9,7 +9,6 @@ import android.util.AttributeSet;
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.util.AlarmHelper;
 import com.fanfou.app.hd.util.IOHelper;
-import com.fanfou.app.hd.util.IntentHelper;
 import com.fanfou.app.hd.util.OptionHelper;
 import com.fanfou.app.hd.util.Utils;
 

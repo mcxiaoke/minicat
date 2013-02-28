@@ -17,8 +17,6 @@ package com.fanfou.app.hd;
 
 import java.util.HashMap;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.fanfou.app.hd.controller.SimpleDialogListener;
 import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.dialog.ConfirmDialog;

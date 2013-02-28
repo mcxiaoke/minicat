@@ -5,6 +5,7 @@ import java.io.File;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
@@ -66,7 +67,7 @@ public class UIRecords extends UIBaseSupport implements OnItemClickListener {
 	private void deleteRecord(int position){
 		final Cursor cursor=(Cursor) mAdapter.getItem(position);
 		if(cursor!=null){
-			int id=DataController.parseInt(cursor, RecordColumns._ID);
+			int id=DataController.parseInt(cursor, BaseColumns._ID);
 			int result=DataController.deleteRecord(mContext, id);
 			if(result>0){
 //				mCursor.requery();

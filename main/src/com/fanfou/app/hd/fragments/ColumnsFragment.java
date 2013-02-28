@@ -72,7 +72,7 @@ public class ColumnsFragment extends AbstractListFragment {
 		mColumns.add(new FeedbackAction());
 		mColumns.add(new UpdateAction());
 		mColumns.add(new OptionAction());
-		mColumns.add(new ThemeAction());
+//		mColumns.add(new ThemeAction());
 		mColumns.add(new AboutAction());
 
 	}

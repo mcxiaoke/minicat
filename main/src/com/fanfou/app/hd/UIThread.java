@@ -1,6 +1,5 @@
 package com.fanfou.app.hd;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
@@ -22,6 +21,7 @@ import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.util.StringHelper;
 import com.fanfou.app.hd.util.Utils;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**
@@ -44,8 +44,9 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  *          Statuses Conversation List Page
  * 
  */
-public class UIThread extends UIBaseSupport implements OnRefreshListener,
-		OnItemClickListener, OnItemLongClickListener {
+public class UIThread extends UIBaseSupport implements
+		OnRefreshListener<ListView>, OnItemClickListener,
+		OnItemLongClickListener {
 
 	private PullToRefreshListView mPullToRefreshListView;
 	private ListView mList;
@@ -124,8 +125,7 @@ public class UIThread extends UIBaseSupport implements OnRefreshListener,
 		}
 	}
 
-	private class FetchTask extends
-			AsyncTask<Void, Void, List<StatusModel>> {
+	private class FetchTask extends AsyncTask<Void, Void, List<StatusModel>> {
 
 		@Override
 		protected List<StatusModel> doInBackground(Void... params) {
@@ -164,8 +164,7 @@ public class UIThread extends UIBaseSupport implements OnRefreshListener,
 	}
 
 	@Override
-	public void onRefresh() {
-
+	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 	}
 
 }

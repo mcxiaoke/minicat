@@ -9,11 +9,11 @@ import java.net.URL;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRoute;
 import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.conn.params.ConnRouteParams;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
@@ -33,6 +33,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -46,6 +47,7 @@ import com.fanfou.app.hd.App.ApnType;
  * 
  */
 public final class NetworkHelper {
+	private static final String TAG = NetworkHelper.class.getSimpleName();
 
 	public static final int SOCKET_BUFFER_SIZE = 2048;
 	public static final int CONNECTION_TIMEOUT_MS = 5000;
@@ -130,39 +132,49 @@ public final class NetworkHelper {
 		}
 	}
 
-	public static void setProxy(final HttpParams params, final ApnType type) {
-		if (type == ApnType.WAP) {
-			if (App.DEBUG) {
-				Log.d("setProxy", "set proxy for wap");
-			}
-			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
-					"10.0.0.172", 80));
-		} else {
-			if (App.DEBUG) {
-				Log.d("setProxy", "set no proxy");
-			}
-			params.removeParameter(ConnRoutePNames.DEFAULT_PROXY);
-		}
-	}
-
-	public static void setProxy(final HttpClient client) {
-		if (client == null) {
+	/**
+	 * 根据当前网络状态填充代理
+	 * 
+	 * @param context
+	 * @param httpParams
+	 */
+	public static void setProxy(final Context context,
+			final HttpParams httpParams) {
+		if (context == null) {
 			return;
 		}
-		HttpParams params = client.getParams();
-		ApnType type = App.getApnType();
-		if (type == ApnType.WAP) {
-			if (App.DEBUG) {
-				Log.d("setProxy", "set proxy for wap");
-			}
-			params.setParameter(ConnRoutePNames.DEFAULT_PROXY, new HttpHost(
-					"10.0.0.172", 80));
-		} else {
-			if (App.DEBUG) {
-				Log.d("setProxy", "set no proxy");
-			}
-			params.removeParameter(ConnRoutePNames.DEFAULT_PROXY);
+
+		WifiManager wifiManager = (WifiManager) context
+				.getSystemService(Context.WIFI_SERVICE);
+		if (wifiManager.isWifiEnabled()) {
+			return;
 		}
+
+		ConnectivityManager connectivityManager = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		final NetworkInfo networkInfo = connectivityManager
+				.getActiveNetworkInfo();
+		if (networkInfo == null || networkInfo.getExtraInfo() == null) {
+			return;
+		}
+		String info = networkInfo.getExtraInfo().toLowerCase();
+		// 3gnet/3gwap/uninet/uniwap/cmnet/cmwap/ctnet/ctwap
+		// 先根据网络apn信息判断,并进行 proxy 自动补齐
+		if (info != null) {
+			if (info.startsWith("cmwap") || info.startsWith("uniwap")
+					|| info.startsWith("3gwap")) {
+				HttpHost proxy = new HttpHost("10.0.0.172", 80);
+				httpParams.setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+				return;
+			} else if (info.startsWith("ctwap")) {
+				HttpHost proxy = new HttpHost("10.0.0.200", 80);
+				httpParams.setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+				return;
+			} else if (info.startsWith("cmnet") || info.startsWith("uninet")
+					|| info.startsWith("ctnet") || info.startsWith("3gnet")) {
+				return;
+			} // else fall through
+		} // else fall through
 	}
 
 	public static ApnType getApnType(Context context) {
@@ -174,22 +186,23 @@ public final class NetworkHelper {
 			if (App.DEBUG) {
 				Log.d("App", "NetworkInfo: " + info);
 			}
-			if (info != null && info.isConnectedOrConnecting()) {
-//				App.noConnection = false;
+			if (info != null) {
 				if (info.getType() == ConnectivityManager.TYPE_WIFI) {
 					type = ApnType.WIFI;
 				} else if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
-					String apnTypeName = info.getExtraInfo();
+					String apnTypeName = info.getExtraInfo().toLowerCase();
 					if (!TextUtils.isEmpty(apnTypeName)) {
-						if (apnTypeName.equals("3gnet")) {
-							type = ApnType.HSDPA;
+						if ("ctwap".equals(apnTypeName)) {
+							type = ApnType.CTWAP;
 						} else if (apnTypeName.contains("wap")) {
 							type = ApnType.WAP;
+						} else if (apnTypeName.equals("3gnet")) {
+							type = ApnType.NET;
 						}
 					}
 				}
 			} else {
-//				App.noConnection = true;
+				type = ApnType.WIFI;
 			}
 		} catch (Exception e) {
 			if (App.DEBUG) {
@@ -227,6 +240,42 @@ public final class NetworkHelper {
 		// client.addResponseInterceptor(new GzipResponseInterceptor());
 		// client.setHttpRequestRetryHandler(new RequestRetryHandler(3));
 		return client;
+	}
+
+	public static boolean isConnected(Context context) {
+		if (context == null)
+			return false;
+		ConnectivityManager connectivity = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (connectivity == null) {
+			LogUtil.d(TAG, "+++couldn't get connectivity manager");
+		} else {
+			NetworkInfo[] info = connectivity.getAllNetworkInfo();
+			if (info != null) {
+				for (int i = 0; i < info.length; i++) {
+					if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+						LogUtil.d(TAG, "+++network is available");
+						return true;
+					}
+				}
+			}
+		}
+
+		LogUtil.d(TAG, "+++network is not available");
+
+		return false;
+	}
+
+	public static boolean isWifi(Context context) {
+		ConnectivityManager connec = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo info = connec.getActiveNetworkInfo();
+		String typeName = "";
+		if (info != null) {
+			typeName = info.getTypeName();
+		}
+
+		return "wifi".equalsIgnoreCase(typeName);
 	}
 
 }

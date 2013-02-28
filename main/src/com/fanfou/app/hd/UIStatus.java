@@ -1,7 +1,5 @@
 package com.fanfou.app.hd;
 
-import java.io.File;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,12 +11,10 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.fanfou.app.hd.controller.CacheController;
 import com.fanfou.app.hd.controller.EmptyViewController;
 import com.fanfou.app.hd.controller.SimpleDialogListener;
@@ -30,7 +26,6 @@ import com.fanfou.app.hd.task.BetterAsyncTask;
 import com.fanfou.app.hd.util.DateTimeHelper;
 import com.fanfou.app.hd.util.IOHelper;
 import com.fanfou.app.hd.util.StatusHelper;
-import com.fanfou.app.hd.util.StringHelper;
 import com.fanfou.app.hd.util.Utils;
 
 /**

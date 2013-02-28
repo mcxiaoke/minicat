@@ -19,6 +19,7 @@ import com.fanfou.app.hd.controller.DataController;
 import com.fanfou.app.hd.dao.DataProvider;
 import com.fanfou.app.hd.dao.model.DirectMessageColumns;
 import com.fanfou.app.hd.dao.model.DirectMessageModel;
+import com.fanfou.app.hd.dao.model.IBaseColumns;
 import com.fanfou.app.hd.dao.model.StatusColumns;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.util.DateTimeHelper;
@@ -246,7 +247,7 @@ public class NotificationService extends WakefulIntentService {
 	}
 
 	private Cursor initCursor(int type) {
-		String where = StatusColumns.TYPE + " =? ";
+		String where = IBaseColumns.TYPE + " =? ";
 		String[] whereArgs = new String[] { String.valueOf(type) };
 		String orderBy = DataProvider.ORDERBY_TIME_DESC;
 		Uri uri;

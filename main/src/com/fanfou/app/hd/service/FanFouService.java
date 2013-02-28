@@ -7,7 +7,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,7 +16,6 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
@@ -26,11 +24,13 @@ import com.fanfou.app.hd.controller.CacheController;
 import com.fanfou.app.hd.controller.DataController;
 import com.fanfou.app.hd.dao.model.BaseModel;
 import com.fanfou.app.hd.dao.model.DirectMessageModel;
+import com.fanfou.app.hd.dao.model.IBaseColumns;
 import com.fanfou.app.hd.dao.model.StatusColumns;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.dao.model.UserColumns;
 import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.util.Assert;
+import com.fanfou.app.hd.util.NetworkHelper;
 
 /**
  * @author mcxiaoke
@@ -523,7 +523,7 @@ public final class FanFouService extends IntentService {
 		String id = intent.getStringExtra("id");
 		Paging p = intent.getParcelableExtra("data");
 
-		if (App.getApnType() == ApnType.WIFI) {
+		if (NetworkHelper.isWifi(this)) {
 			p.count = MAX_USERS_COUNT;
 		} else {
 			p.count = DEFAULT_USERS_COUNT;
@@ -540,8 +540,8 @@ public final class FanFouService extends IntentService {
 				int size = users.size();
 				ContentResolver cr = getContentResolver();
 				if (p.page < 2 && id != account) {
-					String where = UserColumns.TYPE + "=? AND "
-							+ UserColumns.OWNER + "=?";
+					String where = IBaseColumns.TYPE + "=? AND "
+							+ IBaseColumns.OWNER + "=?";
 					String[] whereArgs = new String[] { String.valueOf(type),
 							id };
 					int deletedNums = cr.delete(UserColumns.CONTENT_URI, where,
@@ -572,7 +572,7 @@ public final class FanFouService extends IntentService {
 
 		Paging p = intent.getParcelableExtra("data");
 		Assert.notNull(p);
-		if (App.getApnType() == ApnType.WIFI) {
+		if (NetworkHelper.isWifi(this)) {
 			p.count = MAX_TIMELINE_COUNT;
 		} else {
 			p.count = DEFAULT_TIMELINE_COUNT;
@@ -602,7 +602,7 @@ public final class FanFouService extends IntentService {
 	private void getConversationList(Intent intent) {
 		Paging p = intent.getParcelableExtra("data");
 		Assert.notNull(p);
-		if (App.getApnType() == ApnType.WIFI) {
+		if (NetworkHelper.isWifi(this)) {
 			p.count = MAX_TIMELINE_COUNT;
 		} else {
 			p.count = DEFAULT_TIMELINE_COUNT;
@@ -673,7 +673,7 @@ public final class FanFouService extends IntentService {
 		Paging p = intent.getParcelableExtra("data");
 		Assert.notNull(p);
 
-		if (App.getApnType() == ApnType.WIFI) {
+		if (NetworkHelper.isWifi(this)) {
 			p.count = MAX_TIMELINE_COUNT;
 		} else {
 			p.count = DEFAULT_TIMELINE_COUNT;
@@ -711,7 +711,7 @@ public final class FanFouService extends IntentService {
 		if (p == null) {
 			p = new Paging();
 		}
-		if (App.getApnType() == ApnType.WIFI) {
+		if (NetworkHelper.isWifi(this)) {
 			p.count = MAX_TIMELINE_COUNT;
 		} else {
 			p.count = DEFAULT_TIMELINE_COUNT;

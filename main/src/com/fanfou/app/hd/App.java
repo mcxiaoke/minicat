@@ -30,7 +30,6 @@ import com.fanfou.app.hd.controller.UIController;
 import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.util.AlarmHelper;
 import com.fanfou.app.hd.util.DateTimeHelper;
-import com.fanfou.app.hd.util.NetworkHelper;
 
 /**
  * @author mcxiaoke
@@ -76,7 +75,6 @@ public class App extends Application {
 	private static AccountInfo accountInfo;
 
 	private static SharedPreferences sPreferences;
-	private static ApnType sApnType;
 	private static ImageLoader imageLoader;
 
 	private static Api api;
@@ -104,7 +102,6 @@ public class App extends Application {
 		
 		themeId=R.style.AppThemeLight;
 
-		sApnType = NetworkHelper.getApnType(this);
 		sPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		PreferenceManager.setDefaultValues(this, R.xml.options, false);
 
@@ -252,14 +249,6 @@ public class App extends Application {
 		App.sPreferences = sPreferences;
 	}
 
-	public static ApnType getApnType() {
-		return sApnType;
-	}
-
-	public static void setApnType(ApnType sApnType) {
-		App.sApnType = sApnType;
-	}
-
 	public static ImageLoader getImageLoader() {
 		return imageLoader;
 	}
@@ -336,7 +325,7 @@ public class App extends Application {
 	}
 
 	public static enum ApnType {
-		WIFI, HSDPA, NET, WAP;
+		WIFI, NET, WAP, CTWAP;
 	}
 
 }

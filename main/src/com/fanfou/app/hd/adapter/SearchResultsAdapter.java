@@ -13,10 +13,8 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
 
-import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.ui.widget.ItemView;
-import com.fanfou.app.hd.util.StringHelper;
 
 /**
  * @author mcxiaoke

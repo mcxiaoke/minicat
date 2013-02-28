@@ -404,6 +404,7 @@ public class ImageLoader {
 			this.imageLoadingInfo = imageLoadingInfo;
 		}
 
+		@Override
 		public void run() {
 			if (imageLoadingInfo.isConsistent()) {
 				if (loggingEnabled)

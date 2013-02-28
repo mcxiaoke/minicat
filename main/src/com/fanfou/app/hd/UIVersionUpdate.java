@@ -10,7 +10,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.service.DownloadService;
 import com.fanfou.app.hd.service.VersionInfo;
 import com.fanfou.app.hd.util.Utils;

@@ -257,6 +257,7 @@ public class ProfileFragment extends AbstractFragment implements
 		updateUI();
 	}
 
+	@Override
 	public void updateUI() {
 		if (user == null) {
 			return;

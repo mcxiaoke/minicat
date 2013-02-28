@@ -26,7 +26,6 @@ import com.fanfou.app.hd.dialog.InfoDialog;
 import com.fanfou.app.hd.http.RestResponse;
 import com.fanfou.app.hd.http.Parameter;
 import com.fanfou.app.hd.http.RestClient;
-import com.fanfou.app.hd.service.Constants;
 import com.fanfou.app.hd.ui.widget.TextChangeListener;
 import com.fanfou.app.hd.util.DeviceHelper;
 import com.fanfou.app.hd.util.StringHelper;

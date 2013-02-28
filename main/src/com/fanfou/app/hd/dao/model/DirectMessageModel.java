@@ -71,18 +71,18 @@ public class DirectMessageModel extends BaseModel {
 		}
 
 		DirectMessageModel dm = new DirectMessageModel();
-		dm.id = DataController.parseString(cursor, DirectMessageColumns.ID);
+		dm.id = DataController.parseString(cursor, IBaseColumns.ID);
 		dm.account = DataController.parseString(cursor,
-				DirectMessageColumns.ACCOUNT);
+				IBaseColumns.ACCOUNT);
 		dm.owner = DataController.parseString(cursor,
-				DirectMessageColumns.OWNER);
-		dm.note = DataController.parseString(cursor, DirectMessageColumns.NOTE);
+				IBaseColumns.OWNER);
+		dm.note = DataController.parseString(cursor, IBaseColumns.NOTE);
 
-		dm.type = DataController.parseInt(cursor, DirectMessageColumns.TYPE);
-		dm.flag = DataController.parseInt(cursor, DirectMessageColumns.FLAG);
+		dm.type = DataController.parseInt(cursor, IBaseColumns.TYPE);
+		dm.flag = DataController.parseInt(cursor, IBaseColumns.FLAG);
 
-		dm.rawid = DataController.parseLong(cursor, DirectMessageColumns.RAWID);
-		dm.time = DataController.parseLong(cursor, DirectMessageColumns.TIME);
+		dm.rawid = DataController.parseLong(cursor, IBaseColumns.RAWID);
+		dm.time = DataController.parseLong(cursor, IBaseColumns.TIME);
 
 		dm.text = DataController.parseString(cursor, DirectMessageColumns.TEXT);
 

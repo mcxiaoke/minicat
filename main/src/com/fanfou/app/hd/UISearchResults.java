@@ -18,7 +18,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
-import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.adapter.SearchResultsAdapter;
 import com.fanfou.app.hd.api.Api;
 import com.fanfou.app.hd.api.ApiException;
@@ -26,8 +25,11 @@ import com.fanfou.app.hd.api.Paging;
 import com.fanfou.app.hd.controller.PopupController;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.service.FanFouService;
+import com.fanfou.app.hd.util.NetworkHelper;
 import com.fanfou.app.hd.util.Utils;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**
@@ -44,7 +46,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * 
  */
 public class UISearchResults extends UIBaseSupport implements
-		OnRefreshListener, OnItemClickListener, OnItemLongClickListener {
+		OnRefreshListener<ListView>, OnItemClickListener,
+		OnItemLongClickListener {
 	private static final String TAG = UISearchResults.class.getSimpleName();
 	private PullToRefreshListView mPullToRefreshListView;
 	private ListView mList;
@@ -218,7 +221,7 @@ public class UISearchResults extends UIBaseSupport implements
 			Paging p = new Paging();
 			p.maxId = maxId;
 
-			if (App.getApnType() == ApnType.WIFI) {
+			if (NetworkHelper.isWifi(mContext)) {
 				p.count = FanFouService.MAX_TIMELINE_COUNT;
 			} else {
 				p.count = FanFouService.DEFAULT_TIMELINE_COUNT;
@@ -261,8 +264,9 @@ public class UISearchResults extends UIBaseSupport implements
 	}
 
 	@Override
-	public void onRefresh() {
-		boolean fromTop = mPullToRefreshListView.hasPullFromTop();
+	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+		boolean fromTop = Mode.PULL_FROM_START.equals(refreshView
+				.getCurrentMode());
 		if (App.DEBUG) {
 			Log.d(TAG, "onRefresh() top=" + fromTop);
 		}

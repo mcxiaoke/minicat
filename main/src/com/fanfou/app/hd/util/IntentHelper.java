@@ -8,11 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.UIHome;
-import com.fanfou.app.hd.UILogin;
-import com.fanfou.app.hd.service.Constants;
 
 public final class IntentHelper {
 	private static final String TAG = IntentHelper.class.getSimpleName();

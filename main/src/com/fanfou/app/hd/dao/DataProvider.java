@@ -8,8 +8,8 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
@@ -18,7 +18,6 @@ import com.fanfou.app.hd.dao.model.IBaseColumns;
 import com.fanfou.app.hd.dao.model.RecordColumns;
 import com.fanfou.app.hd.dao.model.StatusColumns;
 import com.fanfou.app.hd.dao.model.UserColumns;
-import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.util.StringHelper;
 
 /**
@@ -295,7 +294,7 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
 	private int deleteRecordById(Uri uri) {
 		String id = uri.getPathSegments().get(1);
 		String table = RecordColumns.TABLE_NAME;
-		String where = RecordColumns._ID + " = " + id;
+		String where = BaseColumns._ID + " = " + id;
 		return dbHelper.getWritableDatabase().delete(table, where, null);
 	}
 
@@ -338,7 +337,7 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
 		String table = path.get(0);
 		String id = path.get(2);
 		return dbHelper.getWritableDatabase().update(table, values,
-				UserColumns.ID + "=?", new String[] { id });
+				IBaseColumns.ID + "=?", new String[] { id });
 	}
 
 	private int updateRecordById(Uri uri, ContentValues values) {
@@ -346,7 +345,7 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
 		String table = path.get(0);
 		String id = path.get(2);
 		return dbHelper.getWritableDatabase().update(table, values,
-				UserColumns._ID + "=?", new String[] { id });
+				BaseColumns._ID + "=?", new String[] { id });
 	}
 
 	private int updateByCondition(Uri uri, ContentValues values, String where,

@@ -8,13 +8,13 @@
         android:showAsAction="always"
         android:title="刷新资料">
     </item>
-    <item
+<!--     <item
         android:id="@+id/menu_edit"
         android:icon="@drawable/ic_modify"
         android:orderInCategory="1"
         android:showAsAction="always"
         android:title="修改资料">
-    </item>
+    </item> -->
     <item
         android:id="@+id/menu_home"
         android:icon="@drawable/ic_menu_home"

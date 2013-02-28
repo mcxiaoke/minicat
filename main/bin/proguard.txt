@@ -61,6 +61,9 @@
 # view res/layout/abs__action_bar_tab.xml #generated:3
 -keep class com.actionbarsherlock.internal.widget.ScrollingTabContainerView$TabView { <init>(...); }
 
+# view res/layout/abs__search_view.xml #generated:84
+-keep class com.actionbarsherlock.widget.SearchView$SearchAutoComplete { <init>(...); }
+
 # view AndroidManifest.xml #generated:27
 -keep class com.fanfou.app.hd.App { <init>(...); }
 
@@ -139,10 +142,10 @@
 # view AndroidManifest.xml #generated:166
 -keep class com.fanfou.app.hd.UIWrite { <init>(...); }
 
-# view AndroidManifest.xml #generated:271
+# view AndroidManifest.xml #generated:267
 -keep class com.fanfou.app.hd.appwidget.WidgetSmall { <init>(...); }
 
-# view AndroidManifest.xml #generated:283
+# view AndroidManifest.xml #generated:279
 -keep class com.fanfou.app.hd.appwidget.WidgetTiny { <init>(...); }
 
 # view AndroidManifest.xml #generated:230
@@ -164,34 +167,31 @@
 # view res/xml/options.xml #generated:69
 -keep class com.fanfou.app.hd.preferences.colorpicker.ColorPickerPreference { <init>(...); }
 
-# view AndroidManifest.xml #generated:256
+# view AndroidManifest.xml #generated:257
 -keep class com.fanfou.app.hd.receiver.BootReceiver { <init>(...); }
 
-# view AndroidManifest.xml #generated:266
+# view AndroidManifest.xml #generated:262
 -keep class com.fanfou.app.hd.receiver.NetworkReceiver { <init>(...); }
 
-# view AndroidManifest.xml #generated:261
--keep class com.fanfou.app.hd.receiver.NotificationReceiver { <init>(...); }
-
-# view AndroidManifest.xml #generated:246
+# view AndroidManifest.xml #generated:247
 -keep class com.fanfou.app.hd.service.AutoCompleteService { <init>(...); }
 
-# view AndroidManifest.xml #generated:237
+# view AndroidManifest.xml #generated:238
 -keep class com.fanfou.app.hd.service.DownloadService { <init>(...); }
 
-# view AndroidManifest.xml #generated:252
+# view AndroidManifest.xml #generated:253
 -keep class com.fanfou.app.hd.service.FanFouService { <init>(...); }
 
-# view AndroidManifest.xml #generated:243
+# view AndroidManifest.xml #generated:244
 -keep class com.fanfou.app.hd.service.NotificationService { <init>(...); }
 
-# view AndroidManifest.xml #generated:240
+# view AndroidManifest.xml #generated:241
 -keep class com.fanfou.app.hd.service.PostMessageService { <init>(...); }
 
-# view AndroidManifest.xml #generated:234
+# view AndroidManifest.xml #generated:235
 -keep class com.fanfou.app.hd.service.PostStatusService { <init>(...); }
 
-# view AndroidManifest.xml #generated:249
+# view AndroidManifest.xml #generated:250
 -keep class com.fanfou.app.hd.service.QueueService { <init>(...); }
 
 # view res/layout/ui_photo.xml #generated:7

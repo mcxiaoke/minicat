@@ -82,16 +82,16 @@ public class UserModel extends BaseModel {
 			return null;
 		}
 		UserModel user = new UserModel();
-		user.id=DataController.parseString(cursor, UserColumns.ID);
-		user.account=DataController.parseString(cursor, UserColumns.ACCOUNT);
-		user.owner=DataController.parseString(cursor, UserColumns.OWNER);
-		user.note=DataController.parseString(cursor, UserColumns.NOTE);
+		user.id=DataController.parseString(cursor, IBaseColumns.ID);
+		user.account=DataController.parseString(cursor, IBaseColumns.ACCOUNT);
+		user.owner=DataController.parseString(cursor, IBaseColumns.OWNER);
+		user.note=DataController.parseString(cursor, IBaseColumns.NOTE);
 		
-		user.type=DataController.parseInt(cursor, UserColumns.TYPE);
-		user.flag=DataController.parseInt(cursor, UserColumns.FLAG);
+		user.type=DataController.parseInt(cursor, IBaseColumns.TYPE);
+		user.flag=DataController.parseInt(cursor, IBaseColumns.FLAG);
 		
-		user.rawid=DataController.parseLong(cursor, UserColumns.RAWID);
-		user.time=DataController.parseLong(cursor, UserColumns.TIME);
+		user.rawid=DataController.parseLong(cursor, IBaseColumns.RAWID);
+		user.time=DataController.parseLong(cursor, IBaseColumns.TIME);
 		
 		user.name=DataController.parseString(cursor, UserColumns.NAME);
 		user.screenName=DataController.parseString(cursor, UserColumns.SCREEN_NAME);

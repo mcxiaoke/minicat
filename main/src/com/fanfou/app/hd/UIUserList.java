@@ -8,13 +8,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import com.fanfou.app.hd.App.ApnType;
 import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.fragments.FollowersListFragment;
 import com.fanfou.app.hd.fragments.FriendsListFragment;
 import com.fanfou.app.hd.fragments.OnInitCompleteListener;
 import com.fanfou.app.hd.fragments.UserListFragment;
 import com.fanfou.app.hd.ui.widget.TextChangeListener;
+import com.fanfou.app.hd.util.NetworkHelper;
 
 /**
  * @author mcxiaoke
@@ -77,7 +77,7 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 		if (App.DEBUG) {
 			Log.d(TAG, "filter() text=" + text);
 		}
-			mFragment.filter(text);
+		mFragment.filter(text);
 	}
 
 	private void showSearchBox() {
@@ -134,7 +134,7 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if (App.getApnType() != ApnType.WIFI) {
+		if (!NetworkHelper.isWifi(this)) {
 			App.getImageLoader().clearQueue();
 		}
 	}

@@ -70,18 +70,15 @@ public class UITabProfile extends UIBaseSupport implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.menu_edit) {
-			doEditProfile();
-			return true;
-		}else if(id==R.id.menu_refresh){
+		if (id == R.id.menu_refresh) {
 			doRefreshProfile();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	private void doRefreshProfile(){
-		
+
+	private void doRefreshProfile() {
+
 	}
 
 	private void doEditProfile() {
@@ -137,7 +134,7 @@ public class UITabProfile extends UIBaseSupport implements
 			userId = user.getId();
 		}
 
-			self = App.getAccount().equals(userId);
+		self = App.getAccount().equals(userId);
 	}
 
 	private View getIndicator(int id) {
@@ -280,7 +277,7 @@ public class UITabProfile extends UIBaseSupport implements
 	@Override
 	public void onActionClick(int position, String tag) {
 		mTabHost.setCurrentTabByTag(tag);
-//		mTabManager.onTabChanged(tag);
+		// mTabManager.onTabChanged(tag);
 	}
 
 }

@@ -1,16 +1,12 @@
 package com.fanfou.app.hd.fragments;
 
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.controller.DataController;
-import com.fanfou.app.hd.dao.DataProvider;
-import com.fanfou.app.hd.dao.model.StatusColumns;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.service.FanFouService;
 

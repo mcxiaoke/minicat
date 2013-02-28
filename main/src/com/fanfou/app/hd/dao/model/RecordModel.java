@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.BaseColumns;
 
 /**
  * @author mcxiaoke
@@ -43,7 +44,7 @@ public class RecordModel implements Model{
 		
 		RecordModel rm=new RecordModel();
 		
-		rm.id=DataController.parseInt(cursor, RecordColumns._ID);
+		rm.id=DataController.parseInt(cursor, BaseColumns._ID);
 		rm.type=DataController.parseInt(cursor, RecordColumns.TYPE);
 		rm.text=DataController.parseString(cursor, RecordColumns.TEXT);
 		rm.reply=DataController.parseString(cursor, RecordColumns.REPLY);
@@ -55,6 +56,7 @@ public class RecordModel implements Model{
 	}
 
 
+	@Override
 	public ContentValues values() {
 		ContentValues cv=new ContentValues();
 		cv.put(RecordColumns.TYPE, type);
