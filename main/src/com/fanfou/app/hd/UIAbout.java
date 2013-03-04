@@ -79,7 +79,7 @@ public class UIAbout extends UIBaseSupport implements OnClickListener,
 		TextPaint t3 = mContact.getPaint();
 		t3.setFakeBoldText(true);
 		mContactText.setText(R.string.contact_text);
-		mCopyright.setText("\u00a9 2007-2011 fanfou.com");
+		mCopyright.setText("\u00a9 2007-2013 fanfou.com");
 
 	}
 
@@ -92,7 +92,7 @@ public class UIAbout extends UIBaseSupport implements OnClickListener,
 		if (start > 0) {
 			int end = start + spanText.length();
 			span.setSpan(new Linkify.URLSpanNoUnderline(
-					"fanfou://user/androidsupport"), start, end,
+					"fanfouhd://user/androidsupport"), start, end,
 					Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		}
 	}

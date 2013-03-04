@@ -793,14 +793,14 @@ int id login_username 0x7f0700bc
 int id manualOnly 0x7f070009
 int id menu_about 0x7f0700d4
 int id menu_block 0x7f0700da
-int id menu_dm 0x7f0700d9
+int id menu_dm 0x7f0700d8
 int id menu_feedback 0x7f0700d5
 int id menu_home 0x7f0700d0
 int id menu_logout 0x7f0700d6
 int id menu_option 0x7f0700d3
 int id menu_profile 0x7f0700d1
-int id menu_refresh 0x7f0700d7
-int id menu_save 0x7f0700d8
+int id menu_refresh 0x7f0700d9
+int id menu_save 0x7f0700d7
 int id menu_search 0x7f0700d2
 int id menu_send 0x7f0700db
 int id menu_write 0x7f0700cf

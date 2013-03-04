@@ -5,10 +5,6 @@ import java.util.HashMap;
 import java.util.TimeZone;
 import java.util.logging.Logger;
 
-import org.acra.ACRA;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
-
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -56,7 +52,6 @@ import com.fanfou.app.hd.util.DateTimeHelper;
  * 
  */
 
-@ReportsCrashes(formKey = "", formUri = "http://apps.fanfou.com/andstat/cr/", mode = ReportingInteractionMode.SILENT)
 public class App extends Application {
 
 	private static final String TAG = "Application";
@@ -69,7 +64,7 @@ public class App extends Application {
 	public static String packageName;
 	public static PackageInfo info;
 	public static boolean active;
-	
+
 	public static int themeId;
 
 	private static AccountInfo accountInfo;
@@ -88,7 +83,6 @@ public class App extends Application {
 		initAppInfo();
 		initialize();
 		initAccountInfo();
-		ACRA.init(this);
 	}
 
 	private void initialize() {
@@ -99,8 +93,8 @@ public class App extends Application {
 		// .detectAll().penaltyLog().build());
 		// }
 		instance = this;
-		
-		themeId=R.style.AppThemeLight;
+
+		themeId = R.style.AppThemeLight;
 
 		sPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		PreferenceManager.setDefaultValues(this, R.xml.options, false);

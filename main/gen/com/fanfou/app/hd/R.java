@@ -2039,14 +2039,14 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int manualOnly=0x7f070009;
         public static final int menu_about=0x7f0700d4;
         public static final int menu_block=0x7f0700da;
-        public static final int menu_dm=0x7f0700d9;
+        public static final int menu_dm=0x7f0700d8;
         public static final int menu_feedback=0x7f0700d5;
         public static final int menu_home=0x7f0700d0;
         public static final int menu_logout=0x7f0700d6;
         public static final int menu_option=0x7f0700d3;
         public static final int menu_profile=0x7f0700d1;
-        public static final int menu_refresh=0x7f0700d7;
-        public static final int menu_save=0x7f0700d8;
+        public static final int menu_refresh=0x7f0700d9;
+        public static final int menu_save=0x7f0700d7;
         public static final int menu_search=0x7f0700d2;
         public static final int menu_send=0x7f0700db;
         public static final int menu_write=0x7f0700cf;
