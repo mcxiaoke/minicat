@@ -7,39 +7,3 @@
 [submodule "deps/viewpagerindicator"]
 	path = deps/viewpagerindicator
 	url = git://github.com/JakeWharton/Android-ViewPagerIndicator.git
-[submodule "deps/colorpickerpreference"]
-	path = deps/colorpickerpreference
-	url = git://github.com/attenzione/android-ColorPickerPreference.git
-[submodule "deps/yukuutil"]
-	path = deps/yukuutil
-	url = http://code.google.com/p/yuku-android-util/
-[submodule "deps/nineoldandroids"]
-	path = deps/nineoldandroids
-	url = git://github.com/JakeWharton/NineOldAndroids.git
-[submodule "deps/imagefilter"]
-	path = deps/imagefilter
-	url = git://github.com/daizhenjun/ImageFilterForAndroid.git
-[submodule "deps/webimage"]
-	path = deps/webimage
-	url = git://github.com/wrapp/WebImage-Android.git
-[submodule "deps/universalimageloader"]
-	path = deps/universalimageloader
-	url = git://github.com/simpleton/Android-Universal-Image-Loader.git
-[submodule "deps/viewbadger"]
-	path = deps/viewbadger
-	url = git://github.com/jgilfelt/android-viewbadger.git
-[submodule "deps/imagezoom"]
-	path = deps/imagezoom
-	url = git://github.com/igorcrevar/AndroidImageViewZoom.git
-[submodule "deps/lazylist"]
-	path = deps/lazylist
-	url = git://github.com/thest1/LazyList.git
-[submodule "deps/quickaction"]
-	path = deps/quickaction
-	url = git://github.com/lorensiuswlt/NewQuickAction3D.git
-[submodule "deps/greendao"]
-	path = deps/greendao
-	url = git://github.com/greenrobot/greenDAO.git
-[submodule "deps/androrm"]
-	path = deps/androrm
-	url = git://github.com/pxlplnt/androrm.git
