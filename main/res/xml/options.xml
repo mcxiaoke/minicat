@@ -60,13 +60,13 @@
         </PreferenceCategory>
     </PreferenceScreen>
     <PreferenceScreen android:title="显示设置" >
-        <com.fanfou.app.hd.preferences.colorpicker.ColorPickerPreference
+        <org.mcxiaoke.fancooker.preferences.colorpicker.ColorPickerPreference
             alphaSlider="true"
             android:defaultValue="@color/self_color"
             android:key="@string/option_color_highlight_self"
             android:summary="时间线上我的消息背景颜色"
             android:title="我的消息" />
-        <com.fanfou.app.hd.preferences.colorpicker.ColorPickerPreference
+        <org.mcxiaoke.fancooker.preferences.colorpicker.ColorPickerPreference
             alphaSlider="true"
             android:defaultValue="@color/mentioned_color"
             android:key="@string/option_color_highlight_mention"
@@ -79,7 +79,7 @@
             android:summary="文本模式，不显示头像和图片"
             android:title="使用文本模式" />
 
-        <com.fanfou.app.hd.preferences.SeekBarPreference
+        <org.mcxiaoke.fancooker.preferences.SeekBarPreference
             android:defaultValue="15"
             android:dialogTitle="选择字体大小"
             android:key="@string/option_fontsize"
@@ -111,7 +111,7 @@
             android:title="锁定竖屏" />
     </PreferenceScreen>
     <PreferenceScreen android:title="其它功能" >
-        <com.fanfou.app.hd.preferences.ClearDataDialogPreference
+        <org.mcxiaoke.fancooker.preferences.ClearDataDialogPreference
             android:dialogMessage="是否要清空数据库中缓存的消息，私信和个人数据？（提示：客户端会自动清理过旧的数据，不建议手动清空）"
             android:dialogTitle="清空数据缓存"
             android:key="@string/option_cleandb"
@@ -120,7 +120,7 @@
             android:summary="清空缓存的消息，私信和个人数据"
             android:title="清空数据缓存" />
 
-        <com.fanfou.app.hd.preferences.ClearCacheDialogPreference
+        <org.mcxiaoke.fancooker.preferences.ClearCacheDialogPreference
             android:dialogMessage="是否要清空存储卡中缓存的用户头像和消息图片？（提示：图片缓存在存储卡上，占用空间很小，不建议手动清空）"
             android:dialogTitle="清空图片缓存"
             android:key="@string/option_cleanpic"
@@ -129,7 +129,7 @@
             android:summary="清空存储卡中缓存的图片"
             android:title="清空图片缓存" />
 
-        <com.fanfou.app.hd.preferences.ResetAppDialogPreference
+        <org.mcxiaoke.fancooker.preferences.ResetAppDialogPreference
             android:dialogMessage="是否要重置所有数据？（此操作会清空所有个人设置，图片缓存和数据库）"
             android:dialogTitle="重置数据"
             android:key="@string/option_clear_data_and_settings"

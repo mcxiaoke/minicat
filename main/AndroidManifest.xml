@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.fanfou.app.hd"
-    android:sharedUserId="com.fanfou.app"
+    package="org.mcxiaoke.fancooker"
+    android:sharedUserId="org.mcxiaoke.fancooker"
     android:versionCode="20120605"
     android:versionName="2.0" >
 
@@ -229,7 +229,7 @@
 
         <provider
             android:name=".dao.DataProvider"
-            android:authorities="com.fanfou.app.hd.provider"
+            android:authorities="org.mcxiaoke.fancooker.provider"
             android:exported="false" />
 
         <service
