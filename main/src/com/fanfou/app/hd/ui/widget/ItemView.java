@@ -1,9 +1,5 @@
 package com.fanfou.app.hd.ui.widget;
 
-import com.fanfou.app.hd.App;
-import com.fanfou.app.hd.R;
-import com.fanfou.app.hd.util.Utils;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -18,6 +14,10 @@ import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.fanfou.app.hd.App;
+import com.fanfou.app.hd.R;
+import com.fanfou.app.hd.util.Utils;
 
 /**
  * @author mcxiaoke

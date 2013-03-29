@@ -14,11 +14,11 @@
 
 package com.fanfou.app.hd.analytics;
 
+import android.content.Context;
+
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.google.android.apps.analytics.Item;
 import com.google.android.apps.analytics.Transaction;
-
-import android.content.Context;
 
 public class GoogleAnalyticsTrackerDelegateImpl implements GoogleAnalyticsTrackerDelegate {
 

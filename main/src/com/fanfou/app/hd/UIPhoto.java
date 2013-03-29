@@ -16,6 +16,7 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
 import android.view.View.OnClickListener;
+
 import com.fanfou.app.hd.cache.ImageLoader;
 import com.fanfou.app.hd.controller.EmptyViewController;
 import com.fanfou.app.hd.ui.imagezoom.ImageViewTouch;

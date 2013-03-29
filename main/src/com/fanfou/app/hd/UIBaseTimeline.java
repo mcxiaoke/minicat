@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+
 import com.fanfou.app.hd.fragments.BaseTimlineFragment;
 import com.fanfou.app.hd.ui.widget.GestureManager.SwipeListener;
 

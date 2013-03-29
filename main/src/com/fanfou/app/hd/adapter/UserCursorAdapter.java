@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.fanfou.app.hd.R;
 import com.fanfou.app.hd.dao.model.UserModel;
 import com.fanfou.app.hd.ui.widget.ItemView;

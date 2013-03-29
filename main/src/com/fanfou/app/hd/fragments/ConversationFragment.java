@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.adapter.ConversationCursorAdapter;

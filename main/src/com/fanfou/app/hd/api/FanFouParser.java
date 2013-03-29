@@ -17,16 +17,16 @@ import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import android.text.Html;
+import android.text.TextUtils;
+import android.util.Log;
+
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.dao.model.BaseModel;
 import com.fanfou.app.hd.dao.model.DirectMessageModel;
 import com.fanfou.app.hd.dao.model.Search;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.dao.model.UserModel;
-
-import android.text.Html;
-import android.text.TextUtils;
-import android.util.Log;
 
 /**
  * @author mcxiaoke

@@ -17,15 +17,6 @@ package com.fanfou.app.hd;
 
 import java.util.HashMap;
 
-import com.fanfou.app.hd.controller.SimpleDialogListener;
-import com.fanfou.app.hd.controller.UIController;
-import com.fanfou.app.hd.dialog.ConfirmDialog;
-import com.fanfou.app.hd.fragments.ColumnsFragment;
-import com.fanfou.app.hd.fragments.ConversationListFragment;
-import com.fanfou.app.hd.fragments.HomeTimelineFragment;
-import com.fanfou.app.hd.fragments.MentionTimelineFragment;
-import com.fanfou.app.hd.fragments.PublicTimelineFragment;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -38,6 +29,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
+
+import com.fanfou.app.hd.controller.SimpleDialogListener;
+import com.fanfou.app.hd.controller.UIController;
+import com.fanfou.app.hd.dialog.ConfirmDialog;
+import com.fanfou.app.hd.fragments.ColumnsFragment;
+import com.fanfou.app.hd.fragments.ConversationListFragment;
+import com.fanfou.app.hd.fragments.HomeTimelineFragment;
+import com.fanfou.app.hd.fragments.MentionTimelineFragment;
+import com.fanfou.app.hd.fragments.PublicTimelineFragment;
 
 /**
  * This demonstrates how you can implement switching between the tabs of a

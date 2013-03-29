@@ -1,0 +1,12 @@
+[submodule "deps/ActionBarSherlock"]
+	path = deps/ActionBarSherlock
+	url = git@github.com:mcxiaoke/ActionBarSherlock.git
+[submodule "deps/PullToRefresh"]
+	path = deps/PullToRefresh
+	url = git@github.com:mcxiaoke/Android-PullToRefresh.git
+[submodule "deps/SlidingMenu"]
+	path = deps/SlidingMenu
+	url = git@github.com:mcxiaoke/SlidingMenu.git
+[submodule "deps/ViewPagerIndicator"]
+	path = deps/ViewPagerIndicator
+	url = git@github.com:mcxiaoke/Android-ViewPagerIndicator.git

@@ -14,10 +14,10 @@
 
 package com.fanfou.app.hd.analytics;
 
+import android.content.Context;
+
 import com.google.android.apps.analytics.Item;
 import com.google.android.apps.analytics.Transaction;
-
-import android.content.Context;
 
 /**
  * Delegate for GoogleAnalyticsTracker.  This interface allows for mocking

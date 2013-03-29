@@ -41,6 +41,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 
 import android.content.Context;
+
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.util.DeviceHelper;
 import com.fanfou.app.hd.util.NetworkHelper;

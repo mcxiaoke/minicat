@@ -14,16 +14,16 @@
 
 package com.fanfou.app.hd.analytics;
 
-import com.google.android.apps.analytics.Item;
-import com.google.android.apps.analytics.Transaction;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.LinkedBlockingQueue;
+import com.google.android.apps.analytics.Item;
+import com.google.android.apps.analytics.Transaction;
 
 /**
  * EasyTracker is a class designed to easy the burden of adding tracking code

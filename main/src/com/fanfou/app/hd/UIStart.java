@@ -1,9 +1,9 @@
 package com.fanfou.app.hd;
 
-import com.fanfou.app.hd.controller.UIController;
-
 import android.app.Activity;
 import android.os.Bundle;
+
+import com.fanfou.app.hd.controller.UIController;
 
 /**
  * @author mcxiaoke

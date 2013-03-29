@@ -1,9 +1,9 @@
 package com.fanfou.app.hd.task;
 
-import com.fanfou.app.hd.App;
-
 import android.content.Context;
 import android.os.AsyncTask;
+
+import com.fanfou.app.hd.App;
 
 /**
  * @author mcxiaoke

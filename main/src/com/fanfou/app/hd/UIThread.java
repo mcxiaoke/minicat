@@ -20,8 +20,8 @@ import com.fanfou.app.hd.controller.PopupController;
 import com.fanfou.app.hd.dao.model.StatusModel;
 import com.fanfou.app.hd.util.StringHelper;
 import com.fanfou.app.hd.util.Utils;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**

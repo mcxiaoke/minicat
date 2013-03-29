@@ -3,6 +3,7 @@ package com.fanfou.app.hd.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.view.View;
+
 import com.fanfou.app.hd.dao.model.DirectMessageModel;
 import com.fanfou.app.hd.ui.widget.ItemView;
 import com.fanfou.app.hd.util.DateTimeHelper;

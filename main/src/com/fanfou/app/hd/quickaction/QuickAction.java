@@ -3,8 +3,6 @@ package com.fanfou.app.hd.quickaction;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fanfou.app.hd.R;
-
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -16,6 +14,8 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.PopupWindow.OnDismissListener;
+
+import com.fanfou.app.hd.R;
 
 public class QuickAction extends PopupWindows implements OnDismissListener {
 	private ViewGroup mRootView;

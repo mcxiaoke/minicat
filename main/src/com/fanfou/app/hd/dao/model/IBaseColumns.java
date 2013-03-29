@@ -1,8 +1,8 @@
 package com.fanfou.app.hd.dao.model;
 
-import com.fanfou.app.hd.service.Constants;
-
 import android.provider.BaseColumns;
+
+import com.fanfou.app.hd.service.Constants;
 
 /**
  * @author mcxiaoke

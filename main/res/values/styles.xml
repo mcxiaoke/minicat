@@ -54,14 +54,11 @@
 
     <style name="Widget.ActionBar" parent="Widget.Sherlock.Light.ActionBar">
         <item name="logo">@drawable/i_logo</item>
-        <item name="android:logo">@drawable/i_logo</item>
     </style>
 
     <style name="Widget.ActionBar.Light">
         <item name="titleTextStyle">@style/Widget.ActionBarTitle.Light</item>
-        <item name="android:titleTextStyle">@style/Widget.ActionBarTitle.Light</item>
         <item name="background">@drawable/actionbar_background</item>
-        <item name="android:background">@drawable/actionbar_background</item>
     </style>
 
     <style name="Widget.ActionBarTitle">
@@ -81,22 +78,6 @@
     <style name="Widget.ListView.Light">
         <item name="android:listSelector">@drawable/list_selector</item>
         <item name="android:divider">@color/light_list_divider</item>
-    </style>
-
-    <style name="Widget.TitlePageIndicator">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_tiny</item>
-        <item name="android:textColor">@color/light_grey</item>
-        <item name="android:background">@color/dark_grey</item>
-        <item name="footerLineHeight">1dp</item>
-        <item name="footerIndicatorHeight">2dp</item>
-        <item name="footerIndicatorStyle">underline</item>
-        <item name="selectedBold">false</item>
-    </style>
-
-    <style name="Widget.TitlePageIndicator.Light">
-        <item name="footerColor">@color/light_blue</item>
     </style>
 
     <style name="Widget.ButtonGroup">

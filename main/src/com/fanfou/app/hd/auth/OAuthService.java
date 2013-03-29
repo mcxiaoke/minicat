@@ -24,10 +24,10 @@ import android.util.Log;
 import com.fanfou.app.hd.App;
 import com.fanfou.app.hd.auth.exception.AuthException;
 import com.fanfou.app.hd.http.NetHelper;
-import com.fanfou.app.hd.http.RestRequest;
-import com.fanfou.app.hd.http.RestResponse;
 import com.fanfou.app.hd.http.Parameter;
 import com.fanfou.app.hd.http.RestClient;
+import com.fanfou.app.hd.http.RestRequest;
+import com.fanfou.app.hd.http.RestResponse;
 import com.fanfou.app.hd.util.Base64;
 
 /**

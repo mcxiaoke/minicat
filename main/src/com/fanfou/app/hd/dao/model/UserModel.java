@@ -1,12 +1,12 @@
 package com.fanfou.app.hd.dao.model;
 
-import com.fanfou.app.hd.controller.DataController;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.fanfou.app.hd.controller.DataController;
 
 /**
  * @author mcxiaoke
