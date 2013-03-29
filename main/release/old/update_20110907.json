@@ -1,1 +1,0 @@
-{"versionCode":"20110907","versionName":"1.1.1","releaseDate":"2011.09.07","changelog":"1.大幅度提高数据库和网络操作性能，低速网络下体验更好；\n2. 添加自动升级和检测更新功能；\n3. 添加清除图片和消息缓存的功能；\n4. 底部发送图标可自定义位置； \n5. 修改一些细节，修复私信发送错误等问题","downloadUrl":"http://apps.fanfou.com/android/fanfou_20110907.apk","versionType":"minor","packageName":"fanfou_20110907.apk","forceUpdate":"true"}

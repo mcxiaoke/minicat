@@ -1,1 +1,0 @@
-{"versionCode":"20111126","versionName":"1.8.3","releaseDate":"2011.11.26","changelog":"1.修复2.1系统私信消息通知，点击消息，自动完成崩溃的问题；\n2.修复网络连接不稳定造成偶尔崩溃的问题；\n3.修改后台任务，减少电量消耗；\n4.其它细节修改，BUG修复；\n5.修复消息重复提醒的问题","downloadUrl":"http://apps.fanfou.com/android/fanfou.apk","versionType":"bugfix","packageName":"fanfou.apk","forceUpdate":"false"}
