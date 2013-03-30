@@ -127,10 +127,6 @@
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name" />
         <activity
-            android:name=".UISignup"
-            android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name" />
-        <activity
             android:name=".UIMe"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name" />
