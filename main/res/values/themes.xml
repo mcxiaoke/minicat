@@ -5,7 +5,7 @@
 
     <!-- ====================Theme.Blue start=================== -->
 
-    <style name="AppThemeLight" parent="Theme.Sherlock.Light">
+    <style name="AppThemeLight" parent="Theme.Sherlock.Light.DarkActionBar">
 
         <!-- widget style -->
         <item name="ButtonGroupStyle">@style/Widget.ButtonGroup.Light</item>

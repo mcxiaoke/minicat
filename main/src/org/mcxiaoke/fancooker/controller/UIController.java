@@ -11,6 +11,7 @@ import org.mcxiaoke.fancooker.UIAbout;
 import org.mcxiaoke.fancooker.UIConversation;
 import org.mcxiaoke.fancooker.UIEditProfile;
 import org.mcxiaoke.fancooker.UIFavorites;
+import org.mcxiaoke.fancooker.UIHome;
 import org.mcxiaoke.fancooker.UILogin;
 import org.mcxiaoke.fancooker.UIRecords;
 import org.mcxiaoke.fancooker.UISearch;
@@ -24,16 +25,25 @@ import org.mcxiaoke.fancooker.UIWrite;
 import org.mcxiaoke.fancooker.dao.model.DirectMessageModel;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
 import org.mcxiaoke.fancooker.dao.model.UserModel;
+import org.mcxiaoke.fancooker.fragments.ConversationFragment;
+import org.mcxiaoke.fancooker.fragments.ConversationListFragment;
+import org.mcxiaoke.fancooker.fragments.HomeFragment;
 import org.mcxiaoke.fancooker.service.FanFouService;
 import org.mcxiaoke.fancooker.util.OptionHelper;
 import org.mcxiaoke.fancooker.util.StatusHelper;
 import org.mcxiaoke.fancooker.util.Utils;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 
 /**
  * @author mcxiaoke
@@ -46,15 +56,15 @@ public class UIController {
 	private static void startUI(Context ctx, Class<?> cls) {
 		ctx.startActivity(new Intent(ctx, cls));
 	}
-	
-	public static void showFanfouBlog(Context context){
-		Intent intent=new Intent(Intent.ACTION_VIEW);
+
+	public static void showFanfouBlog(Context context) {
+		Intent intent = new Intent(Intent.ACTION_VIEW);
 		intent.setData(Uri.parse("http://blog.fanfou.com/"));
 		context.startActivity(intent);
 	}
-	
-	public static void showAnnounce(Context context){
-		Intent intent=new Intent(Intent.ACTION_VIEW);
+
+	public static void showAnnounce(Context context) {
+		Intent intent = new Intent(Intent.ACTION_VIEW);
 		intent.setData(Uri.parse("fanfouhd://user/androidsupport"));
 		context.startActivity(intent);
 	}
@@ -62,9 +72,9 @@ public class UIController {
 	public static void showOption(Context context) {
 		startUI(context, UISetting.class);
 	}
-	
-	public static void showEditProfile(Context context, final UserModel user){
-		Intent intent=new Intent(context, UIEditProfile.class);
+
+	public static void showEditProfile(Context context, final UserModel user) {
+		Intent intent = new Intent(context, UIEditProfile.class);
 		intent.putExtra("data", user);
 		context.startActivity(intent);
 	}
@@ -84,7 +94,7 @@ public class UIController {
 	}
 
 	public static void showHome(Context context) {
-		Intent intent = new Intent(context, UITabHome.class);
+		Intent intent = new Intent(context, UIHome.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		context.startActivity(intent);
 	}
@@ -214,6 +224,24 @@ public class UIController {
 		context.startActivity(intent);
 	}
 
+	public static void showMessage(FragmentActivity context, String id) {
+		context.getSupportFragmentManager()
+				.beginTransaction()
+				.setCustomAnimations(android.R.anim.slide_in_left,
+						android.R.anim.slide_out_right)
+				.replace(R.id.content_frame,
+						ConversationListFragment.newInstance(false)).commit();
+	}
+
+	public static void showHome(FragmentActivity context, String id) {
+		context.getSupportFragmentManager()
+				.beginTransaction()
+				.setCustomAnimations(android.R.anim.slide_in_left,
+						android.R.anim.slide_out_right)
+				.replace(R.id.content_frame, HomeFragment.newInstance())
+				.commit();
+	}
+
 	public static void showProfile(Context context, String id) {
 		Intent intent = new Intent(context, UITabProfile.class);
 		intent.putExtra("id", id);
@@ -231,9 +259,9 @@ public class UIController {
 		intent.putExtra("id", id);
 		context.startActivity(intent);
 	}
-	
-	public static void showPublicTimeline(Context context){
-		//TODO
+
+	public static void showPublicTimeline(Context context) {
+		// TODO
 	}
 
 	public static void showFavorites(Context context, String id) {

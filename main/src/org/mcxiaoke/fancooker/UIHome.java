@@ -1,80 +1,41 @@
 package org.mcxiaoke.fancooker;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.mcxiaoke.fancooker.cache.ImageLoader;
 import org.mcxiaoke.fancooker.controller.SimpleDialogListener;
 import org.mcxiaoke.fancooker.controller.UIController;
 import org.mcxiaoke.fancooker.dialog.ConfirmDialog;
-import org.mcxiaoke.fancooker.fragments.AbstractListFragment;
 import org.mcxiaoke.fancooker.fragments.ConversationListFragment;
-import org.mcxiaoke.fancooker.fragments.HomeTimelineFragment;
-import org.mcxiaoke.fancooker.fragments.MentionTimelineFragment;
-import org.mcxiaoke.fancooker.fragments.PublicTimelineFragment;
+import org.mcxiaoke.fancooker.fragments.HomeFragment;
+import org.mcxiaoke.fancooker.fragments.ProfileFragment;
+import org.mcxiaoke.fancooker.menu.MenuCallback;
+import org.mcxiaoke.fancooker.menu.MenuFragment;
+import org.mcxiaoke.fancooker.menu.MenuItemResource;
 import org.mcxiaoke.fancooker.util.NetworkHelper;
 
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.viewpagerindicator.TitlePageIndicator;
+import com.slidingmenu.lib.SlidingMenu;
 
 /**
  * @author mcxiaoke
- * @version 1.0 2011.05.31
- * @version 2.0 2011.07.16
- * @version 3.0 2011.09.24
- * @version 3.2 2011.10.25
- * @version 3.3 2011.10.27
- * @version 3.5 2011.10.29
- * @version 3.6 2011.11.02
- * @version 3.7 2011.11.04
- * @version 4.0 2011.11.04
- * @version 4.1 2011.11.07
- * @version 4.2 2011.11.08
- * @version 4.3 2011.11.09
- * @version 4.4 2011.11.11
- * @version 4.5 2011.11.16
- * @version 4.6 2011.11.21
- * @version 4.7 2011.11.22
- * @version 4.8 2011.11.30
- * @version 4.9 2011.12.02
- * @version 5.0 2011.12.05
- * @version 5.1 2011.12.06
- * @version 5.2 2011.12.09
- * @version 5.3 2011.12.13
- * @version 6.0 2011.12.19
- * @version 6.1 2011.12.23
- * @version 6.2 2011.12.26
- * @version 7.0 2012.01.30
- * @version 7.1 2012.01.31
- * @version 8.0 2012.02.06
- * @version 8.1 2012.02.07
- * @version 8.2 2012.02.08
- * @version 8.3 2012.02.09
- * @version 8.4 2012.02.10
- * @version 8.5 2012.02.27
- * @version 8.6 2012.02.28
- * @version 8.7 2012.03.09
- * @version 9.0 2012.03.23
- * @version 9.1 2012.03.27
  * 
  */
-public class UIHome extends UIBaseSupport implements OnPageChangeListener {
+public class UIHome extends UIBaseSupport implements MenuCallback {
 
 	public static final String TAG = UIHome.class.getSimpleName();
 
-	private ViewPager mViewPager;
-	private PagesAdapter mPagesAdapter;
-	private TitlePageIndicator mIndicator;
+	private ViewGroup mContainer;
+	private SlidingMenu mSlidingMenu;
+	private MenuFragment mMenuFragment;
 
 	private void log(String message) {
 		Log.d(TAG, message);
@@ -91,6 +52,7 @@ public class UIHome extends UIBaseSupport implements OnPageChangeListener {
 	@Override
 	protected void setActionBar() {
 		ActionBar ab = getSupportActionBar();
+		ab.setDisplayHomeAsUpEnabled(false);
 	}
 
 	@Override
@@ -104,22 +66,26 @@ public class UIHome extends UIBaseSupport implements OnPageChangeListener {
 
 	@Override
 	protected void setLayout() {
-		setContentView(R.layout.ui_home);
-		setViewPager();
+		setContentView(R.layout.content_frame);
+		mContainer = (ViewGroup) findViewById(R.id.content_frame);
+		FragmentManager fm = getSupportFragmentManager();
 
-	}
+		fm.beginTransaction()
+				.replace(R.id.content_frame, HomeFragment.newInstance())
+				.commit();
 
-	private void setViewPager() {
-		mPagesAdapter = new PagesAdapter(getSupportFragmentManager());
-		mViewPager = (ViewPager) findViewById(R.id.viewpager);
-		mViewPager.setAdapter(mPagesAdapter);
-//		mViewPager.setOnPageChangeListener(this);
-		mViewPager.setCurrentItem((mPagesAdapter.getCount()-1) / 2);
-		
-		mIndicator=(TitlePageIndicator) findViewById(R.id.indicator);
-		mIndicator.setViewPager(mViewPager);
-		mIndicator.setOnPageChangeListener(this);
-		
+		mSlidingMenu = new SlidingMenu(this);
+		mSlidingMenu.setMode(SlidingMenu.LEFT);
+		mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+		mSlidingMenu.setShadowWidth(20);
+		mSlidingMenu.setShadowDrawable(R.drawable.menu_shadow);
+		mSlidingMenu.setBehindOffset(90);
+		mSlidingMenu.setFadeDegree(0.35f);
+		mSlidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+		mSlidingMenu.setMenu(R.layout.menu_frame);
+
+		mMenuFragment = MenuFragment.newInstance();
+		fm.beginTransaction().replace(R.id.menu_frame, mMenuFragment).commit();
 	}
 
 	@Override
@@ -172,11 +138,6 @@ public class UIHome extends UIBaseSupport implements OnPageChangeListener {
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		setIntent(intent);
-		// int page = getIntent().getIntExtra(Constants.EXTRA_PAGE, HOME);
-		// mViewPager.setCurrentItem(page);
-		if (App.DEBUG) {
-			// log("onNewIntent page=" + page);
-		}
 	}
 
 	@Override
@@ -184,16 +145,13 @@ public class UIHome extends UIBaseSupport implements OnPageChangeListener {
 		return R.menu.home_menu;
 	}
 
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// getSupportMenuInflater().inflate(R.menu.home_menu, menu);
-	// return true;
-	// }
+	protected void onHomeLogoClick() {
+		mSlidingMenu.toggle();
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(
 			com.actionbarsherlock.view.MenuItem item) {
-		// return super.onOptionsItemSelected(item);
 		switch (item.getItemId()) {
 		case R.id.menu_write:
 			onMenuWriteClick();
@@ -267,48 +225,61 @@ public class UIHome extends UIBaseSupport implements OnPageChangeListener {
 	public void onClick(View v) {
 	}
 
-	@Override
-	public void onPageScrollStateChanged(int arg0) {
+	private void replaceFramgnt(Fragment fragment) {
+		log("fragment=" + fragment);
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.replace(R.id.content_frame, fragment);
+		ft.commit();
+		mSlidingMenu.showContent();
+	}
+
+	private void showHome() {
+		replaceFramgnt(HomeFragment.newInstance());
+	}
+
+	private void showProfile() {
+		replaceFramgnt(ProfileFragment.newInstance(App.getAccount()));
+	}
+
+	private void showMessage() {
+		replaceFramgnt(ConversationListFragment.newInstance(false));
 	}
 
 	@Override
-	public void onPageScrolled(int arg0, float arg1, int arg2) {
+	public void onMenuItemSelected(int position, MenuItemResource menuItem) {
+		log("onMenuItemSelected: " + menuItem);
+		int id = menuItem.getId();
+		switch (id) {
+		case MenuFragment.MENU_ID_HOME:
+			showHome();
+			break;
+		case MenuFragment.MENU_ID_PROFILE:
+			showProfile();
+			break;
+		case MenuFragment.MENU_ID_MESSAGE:
+			showMessage();
+			break;
+		case MenuFragment.MENU_ID_TOPIC:
+			UIController.showTopic(this);
+			break;
+		case MenuFragment.MENU_ID_RECORD:
+			UIController.showRecords(this);
+			break;
+		case MenuFragment.MENU_ID_DIGEST:
+			UIController.showFanfouBlog(this);
+			break;
+		case MenuFragment.MENU_ID_THEME:
+			break;
+		case MenuFragment.MENU_ID_OPTION:
+			UIController.showOption(this);
+			break;
+		case MenuFragment.MENU_ID_ABOUT:
+			UIController.showAbout(this);
+			break;
+		default:
+			break;
+		}
+
 	}
 
-	@Override
-	public void onPageSelected(int position) {
-		setTitle(mPagesAdapter.getPageTitle(position));
-	}
-
-	private static class PagesAdapter extends FragmentPagerAdapter {
-
-		private final List<AbstractListFragment> fragments = new ArrayList<AbstractListFragment>();
-
-		public PagesAdapter(FragmentManager fm) {
-			super(fm);
-			addFragments();
-		}
-
-		@Override
-		public CharSequence getPageTitle(int position) {
-			return getItem(position).getTitle();
-		}
-
-		@Override
-		public AbstractListFragment getItem(int position) {
-			return fragments.get(position);
-		}
-
-		@Override
-		public int getCount() {
-			return fragments.size();
-		}
-
-		private void addFragments() {
-			fragments.add(PublicTimelineFragment.newInstance(true));
-			fragments.add(HomeTimelineFragment.newInstance(true));
-			fragments.add(MentionTimelineFragment.newInstance(true));
-			fragments.add(ConversationListFragment.newInstance(true));
-		}
-	}
 }

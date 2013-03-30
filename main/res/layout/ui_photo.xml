@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <com.fanfou.app.hd.ui.imagezoom.ImageViewTouch
+    <org.mcxiaoke.fancooker.ui.imagezoom.ImageViewTouch
         android:id="@+id/photo"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

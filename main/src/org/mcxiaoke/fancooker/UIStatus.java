@@ -15,6 +15,7 @@ import org.mcxiaoke.fancooker.util.Utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;

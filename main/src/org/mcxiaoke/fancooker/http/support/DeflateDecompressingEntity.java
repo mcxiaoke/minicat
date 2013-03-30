@@ -23,7 +23,7 @@
  * <http://www.apache.org/>.
  *
 */
-package org.apache.http.client.entity;
+package org.mcxiaoke.fancooker.http.support;
 
 import java.io.IOException;
 import java.io.InputStream;

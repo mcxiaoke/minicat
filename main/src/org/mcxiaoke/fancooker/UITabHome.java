@@ -20,11 +20,11 @@ import java.util.HashMap;
 import org.mcxiaoke.fancooker.controller.SimpleDialogListener;
 import org.mcxiaoke.fancooker.controller.UIController;
 import org.mcxiaoke.fancooker.dialog.ConfirmDialog;
-import org.mcxiaoke.fancooker.fragments.ColumnsFragment;
 import org.mcxiaoke.fancooker.fragments.ConversationListFragment;
 import org.mcxiaoke.fancooker.fragments.HomeTimelineFragment;
 import org.mcxiaoke.fancooker.fragments.MentionTimelineFragment;
 import org.mcxiaoke.fancooker.fragments.PublicTimelineFragment;
+import org.mcxiaoke.fancooker.menu.MenuFragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -76,7 +76,7 @@ public class UITabHome extends UIBaseSupport {
 				PublicTimelineFragment.class, args);
 		mTabManager.addTab(
 				mTabHost.newTabSpec("column").setIndicator(getIndicator(4)),
-				ColumnsFragment.class, args);
+				MenuFragment.class, args);
 
 		if (savedInstanceState != null) {
 			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
