@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.ui.widget;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 
 import android.util.Log;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -40,7 +40,7 @@ public class GestureManager {
 		@Override
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 				float velocityY) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d(TAG, "velocityX=" + velocityX);
 			}
 			if (Math.abs(e1.getY() - e2.getY()) < SWIPE_MAX_OFF_PATH) {

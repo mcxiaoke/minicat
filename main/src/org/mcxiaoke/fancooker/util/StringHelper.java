@@ -30,7 +30,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 
 
 /**
@@ -367,7 +367,7 @@ public class StringHelper {
 			return URLEncoder.encode(original, "utf-8").replace("+", "%20")
 					.replace("*", "%2A").replace("%7E", "~");
 		} catch (UnsupportedEncodingException e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 		return null;
@@ -382,7 +382,7 @@ public class StringHelper {
 		try {
 			return URLDecoder.decode(encoded, "utf-8");
 		} catch (UnsupportedEncodingException e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 		return null;
@@ -411,7 +411,7 @@ public class StringHelper {
 			byte[] rawHmac = mac.doFinal(original);
 			return new String(Base64.encodeBytes(rawHmac));
 		} catch (Exception e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 		return null;
@@ -432,7 +432,7 @@ public class StringHelper {
 				md5sum.insert(0, "0");
 			return md5sum.toString();
 		} catch (NoSuchAlgorithmException e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 		return null;
@@ -486,7 +486,7 @@ public class StringHelper {
 
 			return cipher.doFinal(original);
 		} catch (Exception e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 		return null;
@@ -531,7 +531,7 @@ public class StringHelper {
 
 			return cipher.doFinal(encrypted);
 		} catch (Exception e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 		return null;
@@ -555,7 +555,7 @@ public class StringHelper {
 			keyGen.initialize(spec);
 			keys = keyGen.generateKeyPair();
 		} catch (Exception e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 		return keys;
@@ -575,7 +575,7 @@ public class StringHelper {
 			return KeyFactory.getInstance("RSA").generatePublic(
 					new RSAPublicKeySpec(modulus, publicExponent));
 		} catch (Exception e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 		return null;
@@ -595,7 +595,7 @@ public class StringHelper {
 			return KeyFactory.getInstance("RSA").generatePrivate(
 					new RSAPrivateKeySpec(modulus, privateExponent));
 		} catch (Exception e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 		return null;
@@ -614,7 +614,7 @@ public class StringHelper {
 			cipher.init(Cipher.ENCRYPT_MODE, key);
 			return cipher.doFinal(original);
 		} catch (Exception e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 		return null;
@@ -633,7 +633,7 @@ public class StringHelper {
 			cipher.init(Cipher.DECRYPT_MODE, key);
 			return cipher.doFinal(encrypted);
 		} catch (Exception e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 		return null;

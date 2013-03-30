@@ -99,23 +99,8 @@ public class UITabHome extends UIBaseSupport {
 		case R.id.menu_write:
 			onMenuWriteClick();
 			break;
-		case R.id.menu_logout:
-			onMenuLogoutClick();
-			break;
-		case R.id.menu_option:
-			onMenuOptionClick();
-			break;
 		case R.id.menu_search:
 			onMenuSearchClick();
-			break;
-		case R.id.menu_about:
-			onMenuAboutClick();
-			break;
-		case R.id.menu_feedback:
-			onMenuFeedbackClick();
-			break;
-		case R.id.menu_profile:
-			onMenuProfileClick();
 			break;
 		default:
 			super.onOptionsItemSelected(item);
@@ -125,12 +110,10 @@ public class UITabHome extends UIBaseSupport {
 	}
 
 	private void onMenuOptionClick() {
-		Intent intent = new Intent(this, UISetting.class);
-		startActivity(intent);
 	}
 
 	private void onMenuProfileClick() {
-		UIController.showProfile(this, App.getAccount());
+		UIController.showProfile(this, AppContext.getAccount());
 	}
 
 	private void onMenuSearchClick() {
@@ -145,7 +128,7 @@ public class UITabHome extends UIBaseSupport {
 	private void onMenuFeedbackClick() {
 		String text = getString(R.string.config_feedback_account) + " ("
 				+ Build.MODEL + "-" + Build.VERSION.RELEASE + " "
-				+ App.versionName + ") ";
+				+ AppContext.versionName + ") ";
 		UIController.showWrite(this, text);
 	}
 
@@ -158,7 +141,7 @@ public class UITabHome extends UIBaseSupport {
 			@Override
 			public void onPositiveClick() {
 				super.onPositiveClick();
-				App.doLogin(mContext);
+				AppContext.doLogin(mContext);
 				finish();
 			}
 		});

@@ -155,7 +155,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 			case REQUEST_LOCATION_ADD:
 				break;
 			case REQUEST_PHOTO_LIBRARY:
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					log("onActivityResult requestCode=REQUEST_PHOTO_LIBRARY data="
 							+ data);
 				}
@@ -164,13 +164,13 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 				}
 				break;
 			case REQUEST_PHOTO_CAPTURE:
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					log("onActivityResult requestCode=REQUEST_PHOTO_CAPTURE");
 				}
 				onCameraShot();
 				break;
 			case REQUEST_USERNAME_ADD:
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					log("onActivityResult requestCode=REQUEST_USERNAME_ADD data="
 							+ data);
 				}
@@ -192,7 +192,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 	}
 
 	private void onCameraShot() {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			log("doCameraShot() from camera uri=" + photoUri);
 			log("doCameraShot() from camera filename="
 					+ photo.getAbsolutePath());
@@ -223,7 +223,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 	private void parsePhoto(Uri uri) {
 		if (uri != null) {
 
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				log("from gallery uri=" + photoUri);
 
 			String path;
@@ -236,7 +236,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 			if (photo.exists()) {
 				photoUri = uri;
 			}
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				log("from gallery file=" + path);
 			showPhoto();
 		}
@@ -246,7 +246,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 		if (file != null && file.exists()) {
 			photo = file;
 			photoUri = Uri.fromFile(file);
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				log("from file=" + file);
 		}
 	}
@@ -281,7 +281,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 				type = TYPE_CAMERA;
 				pickPhotoFromCamera();
 			}
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				log("intent type=" + type);
 				log("intent text=" + text);
 			}
@@ -382,7 +382,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 
 	@Override
 	public void onBackPressed() {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			log("onBackPressed content=" + content);
 		}
 		if (StringHelper.isEmpty(content)) {
@@ -476,7 +476,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 	private void pickPhotoFromCamera() {
 		photo = IOHelper.getPhotoFilePath(this);
 		photoUri = Uri.fromFile(photo);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			log("startCameraShot() photoPath=" + photo.getAbsolutePath());
 			log("startCameraShot() photoUri=" + photoUri);
 		}
@@ -499,7 +499,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 		enableLocation = !enableLocation;
 		OptionHelper.saveBoolean(mContext, R.string.option_location_enable,
 				enableLocation);
-		if (App.DEBUG)
+		if (AppContext.DEBUG)
 			log("location enable status=" + enableLocation);
 		actionLocation.setImageLevel(enableLocation ? 1 : 0);
 	}
@@ -511,7 +511,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 
 	private void insertNames(Intent intent) {
 		String names = intent.getStringExtra("text");
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			log("doAddUserNames: " + names);
 		}
 		if (!StringHelper.isEmpty(names)) {
@@ -539,7 +539,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 		i.putExtra("data", photo);
 		i.putExtra("location", mLocationString);
 		i.putExtra("id", inReplyToStatusId);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			log("intent=" + i);
 		}
 		startService(i);
@@ -549,7 +549,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 		if (loc != null) {
 			mLocationString = String.format("%1$.5f,%2$.5f", loc.getLatitude(),
 					loc.getLongitude());
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				log("Location Info: " + mLocationString);
 		}
 	}
@@ -580,7 +580,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		return DataController.getAutoCompleteCursorLoader(mContext,
-				App.getAccount());
+				AppContext.getAccount());
 	}
 
 	@Override

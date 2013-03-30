@@ -13,7 +13,7 @@ import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.http.protocol.HTTP;
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -51,7 +51,7 @@ public final class CryptoHelper {
 					.getInstance(EncodeAlgorithm);
 			key = skf.generateSecret(desKeySpec);
 		} catch (Exception e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 		return key != null;
@@ -77,7 +77,7 @@ public final class CryptoHelper {
 			cipher.init(mode, key);
 			return cipher;
 		} catch (Exception e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 		return null;
@@ -123,7 +123,7 @@ public final class CryptoHelper {
 			sb.append(new String(outBytes));
 			return sb.toString();
 		} catch (Exception e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 		return null;
@@ -161,7 +161,7 @@ public final class CryptoHelper {
 			sb.append(bytesToString(outBytes));
 			return sb.toString();
 		} catch (Exception e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 		return null;

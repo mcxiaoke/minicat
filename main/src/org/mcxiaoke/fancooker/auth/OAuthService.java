@@ -18,7 +18,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.message.BasicHeader;
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.auth.exception.AuthException;
 import org.mcxiaoke.fancooker.http.NetHelper;
 import org.mcxiaoke.fancooker.http.Parameter;
@@ -60,7 +60,7 @@ public class OAuthService {
 
 	public void setAccessToken(AccessToken token) {
 		this.mAccessToken = token;
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "setAccessToken() AccessToken:  " + token);
 		}
 	}
@@ -69,7 +69,7 @@ public class OAuthService {
 		String authorization = buildOAuthHeader(request.getMethod(), request
 				.getURI().toString(), params, mOAuthProvider, mAccessToken);
 		request.addHeader(new BasicHeader("Authorization", authorization));
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "authorize() Authorization:  " + authorization);
 		}
 	}
@@ -89,7 +89,7 @@ public class OAuthService {
 		RestResponse res = new RestClient().execute(nr, false);
 
 		String content = res.getContent();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "getOAuthRequestToken() code=" + res.statusCode
 					+ " response=" + content);
 		}
@@ -115,7 +115,7 @@ public class OAuthService {
 
 		RestResponse res = new RestClient().execute(nr, false);
 		String content = res.getContent();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "getOAuthRequestToken() code=" + res.statusCode
 					+ " response=" + content);
 		}
@@ -139,7 +139,7 @@ public class OAuthService {
 		// NetResponse res = new NetResponse(response);
 		RestResponse res = new RestClient().execute(nr, false);
 		String content = res.getContent();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "getOAuthRequestToken() code=" + res.statusCode
 					+ " response=" + content);
 		}
@@ -165,7 +165,7 @@ public class OAuthService {
 
 		RestResponse res = new RestClient().execute(nr, false);
 		String content = res.getContent();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "getOAuthRequestToken() code=" + res.statusCode
 					+ " response=" + content);
 		}
@@ -189,7 +189,7 @@ public class OAuthService {
 		RestResponse res = new RestClient().execute(nr, false);
 
 		String content = res.getContent();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "getOAuthAccessToken() code=" + res.statusCode
 					+ " response=" + content);
 		}
@@ -252,7 +252,7 @@ public class OAuthService {
 				.append(encodedUrl).append("&").append(encodedParams);
 		String oauthBaseString = base.toString();
 
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "getOAuthHeader() url=" + url);
 			Log.d(TAG, "getOAuthHeader() encodedUrl=" + encodedUrl);
 			Log.d(TAG, "getOAuthHeader() encodedParams=" + encodedParams);

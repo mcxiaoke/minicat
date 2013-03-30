@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.adapter;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.dao.model.IBaseColumns;
 import org.mcxiaoke.fancooker.dao.model.UserColumns;
@@ -51,18 +51,18 @@ public class AutoCompleteCursorAdapter extends CursorAdapter {
 			return null;
 		}
 
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "constraint = " + constraint);
 		}
 
 		final String[] projection = new String[] { BaseColumns._ID,
 				IBaseColumns.ID, UserColumns.SCREEN_NAME, IBaseColumns.TYPE,
 				IBaseColumns.OWNER };
-		String where = IBaseColumns.OWNER + " = '" + App.getAccount() + "' AND "
+		String where = IBaseColumns.OWNER + " = '" + AppContext.getAccount() + "' AND "
 				+ IBaseColumns.TYPE + " = '" + UserModel.TYPE_FRIENDS
 				+ "' AND " + UserColumns.SCREEN_NAME + " like '%" + constraint
 				+ "%' OR " + IBaseColumns.ID + " like '%" + constraint + "%'";
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "runQueryOnBackgroundThread where=" + where);
 		}
 		return mContext.getContentResolver().query(UserColumns.CONTENT_URI,

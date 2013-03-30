@@ -2,7 +2,7 @@ package org.mcxiaoke.fancooker.adapter;
 
 import java.util.List;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
 import org.mcxiaoke.fancooker.util.OptionHelper;
@@ -57,7 +57,7 @@ public class StatusArrayAdapter extends BaseStatusArrayAdapter {
 			mSelfBgColor = OptionHelper.readInt(mContext,
 					R.string.option_color_highlight_self, context
 							.getResources().getColor(R.color.self_color));
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				log("init mMentionedBgColor="
 						+ Integer.toHexString(mMentionedBgColor));
 				log("init mSelfBgColor=" + Integer.toHexString(mSelfBgColor));
@@ -71,7 +71,7 @@ public class StatusArrayAdapter extends BaseStatusArrayAdapter {
 		if (s == null) {
 			return NONE;
 		}
-		if (s.getSimpleText().contains("@" + App.getScreenName())) {
+		if (s.getSimpleText().contains("@" + AppContext.getScreenName())) {
 			return MENTION;
 		} else {
 			return s.isSelf() ? SELF : NONE;

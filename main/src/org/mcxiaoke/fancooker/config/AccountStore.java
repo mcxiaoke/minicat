@@ -3,7 +3,7 @@
  */
 package org.mcxiaoke.fancooker.config;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.auth.AccessToken;
 
 import android.content.Context;
@@ -22,7 +22,7 @@ import android.util.Log;
 public class AccountStore {
 	private static final String TAG = AccountStore.class.getSimpleName();
 
-	private static final boolean DEBUG = App.DEBUG;
+	private static final boolean DEBUG = AppContext.DEBUG;
 
 	private static final String STORE_NAME = "account_store";
 

@@ -83,7 +83,7 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (App.DEBUG)
+		if (AppContext.DEBUG)
 			log("onCreate");
 
 	}
@@ -111,7 +111,7 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
 		mListView.setVisibility(View.GONE);
 		mEditText.setVisibility(View.GONE);
 		emptyController.showProgress();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "showProgress");
 		}
 	}
@@ -121,7 +121,7 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
 		emptyController.hideProgress();
 		mListView.setVisibility(View.VISIBLE);
 		mEditText.setVisibility(View.VISIBLE);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "showContent");
 		}
 	}
@@ -176,12 +176,12 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
 	private void doRetrieve(boolean isGetMore) {
 		Paging paging = new Paging();
 		paging.page = page;
-		FanFouService.getUsers(mContext, App.getAccount(),
+		FanFouService.getUsers(mContext, AppContext.getAccount(),
 				UserModel.TYPE_FRIENDS, paging, new ResultHandler());
 	}
 
 	private void updateUI() {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			log("updateUI()");
 		}
 	}
@@ -199,7 +199,7 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
 	@Override
 	protected void onStop() {
 		super.onStop();
-		App.getImageLoader().clearQueue();
+		AppContext.getImageLoader().clearQueue();
 	}
 
 	@Override
@@ -223,7 +223,7 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
 			for (String screenName : mUserNames) {
 				sb.append("@").append(screenName).append(" ");
 			}
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				log("User Names: " + sb.toString());
 			}
 			Intent intent = new Intent();
@@ -282,7 +282,7 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
 		return DataController.getUserListCursor(this, UserModel.TYPE_FRIENDS,
-				App.getAccount());
+				AppContext.getAccount());
 	}
 
 	@Override
@@ -302,7 +302,7 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
 			}
 		}
 
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			log(StringHelper.toString(mUserNames));
 		}
 
@@ -320,13 +320,13 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		return DataController.getAutoCompleteCursorLoader(mContext,
-				App.getAccount());
+				AppContext.getAccount());
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
 		mCursorAdapter.swapCursor(newCursor);
-		if(App.DEBUG){
+		if(AppContext.DEBUG){
 			Log.d(TAG, "onLoadFinished() adapter.size="+mCursorAdapter.getCount());
 		}
 		initCheckState();

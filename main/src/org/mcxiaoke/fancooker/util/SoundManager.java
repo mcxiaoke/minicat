@@ -2,7 +2,7 @@ package org.mcxiaoke.fancooker.util;
 
 import java.util.HashMap;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 
 import android.app.Activity;
@@ -119,7 +119,7 @@ public final class SoundManager {
 			mSoundPoolMap.clear();
 			_instance = null;
 		} catch (Exception e) {
-			if(App.DEBUG){
+			if(AppContext.DEBUG){
 				e.printStackTrace();
 			}
 		}

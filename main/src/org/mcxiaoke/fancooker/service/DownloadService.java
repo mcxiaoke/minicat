@@ -9,7 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.http.HttpEntity;
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.UIVersionUpdate;
 import org.mcxiaoke.fancooker.http.RestClient;
@@ -98,7 +98,7 @@ public class DownloadService extends BaseIntentService {
 				.getSystemService(Context.ALARM_SERVICE);
 		am.setInexactRepeating(AlarmManager.RTC, c.getTimeInMillis(), interval,
 				getPendingIntent(context));
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG,
 					"set interval=2day first time="
 							+ DateTimeHelper.formatDate(c.getTime()));
@@ -109,7 +109,7 @@ public class DownloadService extends BaseIntentService {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(getPendingIntent(context));
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "unset");
 		}
 	}
@@ -117,7 +117,7 @@ public class DownloadService extends BaseIntentService {
 	public static void setIfNot(Context context) {
 		boolean set = OptionHelper.readBoolean(context,
 				R.string.option_set_auto_update, false);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "setIfNot flag=" + set);
 		}
 		if (!set) {
@@ -159,7 +159,7 @@ public class DownloadService extends BaseIntentService {
 
 	private void check() {
 		VersionInfo info = fetchVersionInfo();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			if (info != null) {
 				notifyUpdate(info, this);
 				return;
@@ -167,7 +167,7 @@ public class DownloadService extends BaseIntentService {
 		}
 		
 		// for debug
-		if (info != null && info.versionCode > App.versionCode) {
+		if (info != null && info.versionCode > AppContext.versionCode) {
 			notifyUpdate(info, this);
 		}
 	}
@@ -197,7 +197,7 @@ public class DownloadService extends BaseIntentService {
 					bos.write(buffer, 0, read);
 					download += read;
 					int progress = (int) (100.0 * download / total);
-					if (App.DEBUG) {
+					if (AppContext.DEBUG) {
 						log("progress=" + progress);
 					}
 					if (System.currentTimeMillis() - lastTime >= UPDATE_TIME) {
@@ -218,7 +218,7 @@ public class DownloadService extends BaseIntentService {
 				}
 			}
 		} catch (IOException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.e(TAG, "download error: " + e.getMessage());
 				e.printStackTrace();
 			}
@@ -252,7 +252,7 @@ public class DownloadService extends BaseIntentService {
 
 		@Override
 		public void handleMessage(Message msg) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				log("DownloadHandler what=" + msg.what + " progress="
 						+ msg.arg1);
 			}
@@ -297,22 +297,22 @@ public class DownloadService extends BaseIntentService {
 			RestResponse res = new RestClient().get(UPDATE_VERSION_FILE,
 					false);
 			int statusCode = res.statusCode;
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d(TAG, "statusCode=" + statusCode);
 			}
 			if (statusCode == 200) {
 				String content = res.getContent();
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					Log.d(TAG, "response=" + content);
 				}
 				return VersionInfo.parse(content);
 			}
 		} catch (IOException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				e.printStackTrace();
 			}
 		} catch (Exception e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				e.printStackTrace();
 			}
 		} finally {
@@ -350,8 +350,8 @@ public class DownloadService extends BaseIntentService {
 				.setNegativeButton("以后再说", null);
 		builder.setPositiveButton("立即升级", li);
 		StringBuffer sb = new StringBuffer();
-		sb.append("安装版本：").append(App.versionName).append("(Build")
-				.append(App.versionCode).append(")");
+		sb.append("安装版本：").append(AppContext.versionName).append("(Build")
+				.append(AppContext.versionCode).append(")");
 		sb.append("\n最新版本：").append(info.versionName).append("(Build")
 				.append(info.versionCode).append(")");
 		sb.append("\n更新日期：").append(info.releaseDate);

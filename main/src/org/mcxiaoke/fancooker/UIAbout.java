@@ -67,7 +67,7 @@ public class UIAbout extends UIBaseSupport implements OnClickListener,
 		mTitle.setText("饭否Android客户端");
 		TextPaint t1 = mTitle.getPaint();
 		t1.setFakeBoldText(true);
-		String version = App.versionName + "(Build" + App.versionCode + ")";
+		String version = AppContext.versionName + "(Build" + AppContext.versionCode + ")";
 		mVersion.setText("版本：" + version);
 		mIntroduction.setText(R.string.introduction_text);
 		mSupport.setText("技术支持");

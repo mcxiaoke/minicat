@@ -1,7 +1,7 @@
 package org.mcxiaoke.fancooker.http;
 
-import org.mcxiaoke.fancooker.App;
-import org.mcxiaoke.fancooker.App.ApnType;
+import org.mcxiaoke.fancooker.AppContext;
+import org.mcxiaoke.fancooker.AppContext.ApnType;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -53,7 +53,7 @@ public class NetworkState {
 		try {
 			NetworkInfo info = cm.getActiveNetworkInfo();
 			if (info != null && info.isConnectedOrConnecting()) {
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					log(info.toString());
 				}
 				if (info.getType() == ConnectivityManager.TYPE_WIFI) {
@@ -114,7 +114,7 @@ public class NetworkState {
 				}
 			}
 		} catch (Exception e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				e.printStackTrace();
 			}
 		}

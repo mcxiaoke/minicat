@@ -39,7 +39,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.util.DeviceHelper;
 import org.mcxiaoke.fancooker.util.NetworkHelper;
 import org.mcxiaoke.fancooker.util.Utils;
@@ -206,7 +206,7 @@ public final class NetHelper {
 		HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT_MS);
 		HttpProtocolParams.setUserAgent(params, getUserAgent());
 
-		Context context = App.getApp();
+		Context context = AppContext.getApp();
 		NetworkHelper.setProxy(context, params);
 		DefaultHttpClient client = new DefaultHttpClient(params);
 		client.addRequestInterceptor(new GzipRequestInterceptor());
@@ -225,7 +225,7 @@ public final class NetHelper {
 		HttpConnectionParams.setSoTimeout(params, SOCKET_TIMEOUT_MS);
 		HttpConnectionParams.setSocketBufferSize(params, SOCKET_BUFFER_SIZE);
 		HttpProtocolParams.setUserAgent(params, "FanFou for Android/"
-				+ App.versionName);
+				+ AppContext.versionName);
 
 		ConnManagerParams.setMaxConnectionsPerRoute(params,
 				new ConnPerRouteBean(TOTAL_CONNECTIONS));

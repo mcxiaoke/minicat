@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.api.Api;
 import org.mcxiaoke.fancooker.api.ApiException;
 import org.mcxiaoke.fancooker.controller.DataController;
@@ -56,7 +56,7 @@ public class QueueService extends BaseIntentService {
 	private boolean doSend(final RecordModel rm) {
 		boolean res = false;
 		try {
-			Api api = App.getApi();
+			Api api = AppContext.getApi();
 			StatusModel result = null;
 			File srcFile = new File(rm.getFile());
 			if (srcFile == null || !srcFile.exists()) {
@@ -72,7 +72,7 @@ public class QueueService extends BaseIntentService {
 				File photo = ImageHelper.prepareUploadFile(this, srcFile,
 						quality);
 				if (photo != null && photo.length() > 0) {
-					if (App.DEBUG)
+					if (AppContext.DEBUG)
 						log("photo file=" + srcFile.getName() + " size="
 								+ photo.length() / 1024 + " quality=" + quality);
 					result = api.uploadPhoto(photo, rm.text, null);
@@ -84,7 +84,7 @@ public class QueueService extends BaseIntentService {
 				res = true;
 			}
 		} catch (ApiException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.e(TAG,
 						"error: code=" + e.statusCode + " msg="
 								+ e.getMessage());

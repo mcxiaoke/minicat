@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.receiver;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.UIConversation;
 import org.mcxiaoke.fancooker.UIHome;
@@ -37,7 +37,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		int type = intent.getIntExtra("type", BaseModel.TYPE_NONE);
 		int count = intent.getIntExtra("count", 1);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "broadcast received type=" + type + " count=" + count);
 		}
 		switch (type) {
@@ -81,7 +81,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
 	private static void showHomeOneNotification(Context context,
 			final StatusModel status) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "showHomeOneNotification " + status);
 		}
 		String title = status.getUserScreenName();
@@ -96,7 +96,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 	}
 
 	private static void showHomeMoreNotification(Context context, int count) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "showHomeMoreNotification  count=" + count);
 		}
 		String title = "饭否消息";
@@ -112,7 +112,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
 	private static void showMentionOneNotification(Context context,
 			final StatusModel status) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.i(TAG, "showMentionOneNotification " + status);
 		}
 		String title = status.getUserScreenName() + "@你的消息";
@@ -127,7 +127,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 	}
 
 	private static void showMentionMoreNotification(Context context, int count) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "showMentionMoreNotification count=" + count);
 		}
 		String title = "饭否消息";
@@ -143,7 +143,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
 	private static void showDmOneNotification(Context context,
 			final DirectMessageModel dm) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "showDmOneNotification " + dm);
 		}
 		Intent intent = new Intent(context, UIConversation.class);
@@ -161,7 +161,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 	}
 
 	private static void showDmMoreNotification(Context context, int count) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "showDmMoreNotification count=" + count);
 		}
 		String title = "饭否私信";

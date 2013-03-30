@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.fragments;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.adapter.ConversationListCursorAdapter;
 import org.mcxiaoke.fancooker.api.Paging;
 import org.mcxiaoke.fancooker.controller.DataController;
@@ -37,7 +37,7 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 		args.putBoolean("refresh", refresh);
 		ConversationListFragment fragment = new ConversationListFragment();
 		fragment.setArguments(args);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "newInstance() " + fragment);
 		}
 		return fragment;
@@ -49,7 +49,7 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 		final Cursor cursor = (Cursor) parent.getItemAtPosition(position);
 		if (cursor != null) {
 			final DirectMessageModel dm = DirectMessageModel.from(cursor);
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d(TAG, "cursor=" + cursor + " dm=" + dm);
 			}
 			if (dm != null) {
@@ -69,7 +69,7 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 
 	@Override
 	protected CursorAdapter onCreateAdapter() {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "createAdapter()");
 		}
 		return new ConversationListCursorAdapter(getActivity(), null);

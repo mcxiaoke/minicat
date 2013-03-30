@@ -57,7 +57,7 @@ abstract class UIBaseTimeline extends UIBaseSupport implements SwipeListener {
 	}
 
 	private void setFragment() {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "setFragment()");
 		}
 
@@ -72,7 +72,7 @@ abstract class UIBaseTimeline extends UIBaseSupport implements SwipeListener {
 		Intent intent = getIntent();
 		userId = intent.getStringExtra("id");
 		if (TextUtils.isEmpty(userId)) {
-			userId = App.getAccount();
+			userId = AppContext.getAccount();
 		}
 	}
 

@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.adapter;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
 import org.mcxiaoke.fancooker.ui.widget.ItemView;
@@ -58,7 +58,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 			mSelfBgColor = OptionHelper.readInt(mContext,
 					R.string.option_color_highlight_self, context
 							.getResources().getColor(R.color.self_color));
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				log("init mMentionedBgColor="
 						+ Integer.toHexString(mMentionedBgColor));
 				log("init mSelfBgColor=" + Integer.toHexString(mSelfBgColor));
@@ -77,7 +77,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 			return NONE;
 		}
 		if (s.getType() == StatusModel.TYPE_MENTIONS
-				|| s.getSimpleText().contains("@" + App.getScreenName())) {
+				|| s.getSimpleText().contains("@" + AppContext.getScreenName())) {
 			return MENTION;
 		}
 
@@ -93,7 +93,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		ItemView view = new ItemView(context);
 		view.setId(R.id.list_item);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "newView newView=" + view);
 		}
 		return view;

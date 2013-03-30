@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.fragments;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.api.Paging;
 import org.mcxiaoke.fancooker.controller.DataController;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
@@ -38,7 +38,7 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 		args.putBoolean("refresh", refresh);
 		UserFavoritesFragment fragment = new UserFavoritesFragment();
 		fragment.setArguments(args);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "newInstance() " + fragment);
 		}
 		return fragment;
@@ -48,7 +48,7 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onCreate() userId=" + userId);
 		}
 	}
@@ -60,7 +60,7 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 
 	@Override
 	protected void doFetch(boolean doGetMore) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "doFetch() doGetMore=" + doGetMore);
 		}
 		final ResultHandler handler = new ResultHandler(this);
@@ -74,7 +74,7 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 
 		p.page = page;
 
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "doFetch() doGetMore=" + doGetMore + " Paging=" + p);
 		}
 		FanFouService.getTimeline(getActivity(), StatusModel.TYPE_FAVORITES,
@@ -95,7 +95,7 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 		}
 
 		if (StringHelper.isEmpty(userId)) {
-			userId = App.getAccount();
+			userId = AppContext.getAccount();
 		}
 	}
 

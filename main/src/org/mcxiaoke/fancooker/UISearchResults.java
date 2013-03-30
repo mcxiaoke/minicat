@@ -80,7 +80,7 @@ public class UISearchResults extends UIBaseSupport implements
 	protected void initialize() {
 		readHighlightColor();
 		mStatusAdapter = new SearchResultsAdapter(this, highlightColor);
-		api = App.getApi();
+		api = AppContext.getApi();
 	}
 
 	private void readHighlightColor() {
@@ -118,7 +118,7 @@ public class UISearchResults extends UIBaseSupport implements
 		Intent intent = getIntent();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			keyword = intent.getStringExtra(SearchManager.QUERY);
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				log("parseIntent() keyword=" + keyword);
 			}
 		} else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
@@ -132,7 +132,7 @@ public class UISearchResults extends UIBaseSupport implements
 
 	private void doSearch(boolean reset) {
 		if (keyword != null) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				log("doSearch() keyword=" + keyword);
 			}
 			if (reset) {
@@ -146,7 +146,7 @@ public class UISearchResults extends UIBaseSupport implements
 
 	protected void onRefreshComplete(List<StatusModel> ss) {
 		if (ss != null && ss.size() > 0) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d(TAG, "onRefreshComplete() size=" + ss.size());
 			}
 			mStatusAdapter.updateDataAndUI(ss, keyword);
@@ -231,7 +231,7 @@ public class UISearchResults extends UIBaseSupport implements
 			try {
 				result = api.search(keyword, p);
 			} catch (ApiException e) {
-				if (App.DEBUG)
+				if (AppContext.DEBUG)
 					e.printStackTrace();
 			}
 			return result;
@@ -268,7 +268,7 @@ public class UISearchResults extends UIBaseSupport implements
 	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 		boolean fromTop = Mode.PULL_FROM_START.equals(refreshView
 				.getCurrentMode());
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onRefresh() top=" + fromTop);
 		}
 

@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.adapter;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.cache.ImageLoader;
 import org.mcxiaoke.fancooker.util.OptionHelper;
@@ -45,7 +45,7 @@ public abstract class BaseCursorAdapter extends CursorAdapter implements
 	private void initialize(Context context) {
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);
-		this.mLoader = App.getImageLoader();
+		this.mLoader = AppContext.getImageLoader();
 		this.fontSize = OptionHelper.readInt(mContext,
 				R.string.option_fontsize,
 				context.getResources().getInteger(R.integer.defaultFontSize));

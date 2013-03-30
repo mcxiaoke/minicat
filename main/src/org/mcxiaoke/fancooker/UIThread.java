@@ -130,13 +130,13 @@ public class UIThread extends UIBaseSupport implements
 
 		@Override
 		protected List<StatusModel> doInBackground(Void... params) {
-			Api api = App.getApi();
+			Api api = AppContext.getApi();
 			try {
 				if (!StringHelper.isEmpty(id)) {
 					return api.getContextTimeline(id);
 				}
 			} catch (ApiException e) {
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					e.printStackTrace();
 				}
 			}

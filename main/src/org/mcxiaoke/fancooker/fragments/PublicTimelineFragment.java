@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.fragments;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.controller.DataController;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
 import org.mcxiaoke.fancooker.service.FanFouService;
@@ -32,7 +32,7 @@ public class PublicTimelineFragment extends BaseTimlineFragment {
 		args.putBoolean("refresh", refresh);
 		PublicTimelineFragment fragment = new PublicTimelineFragment();
 		fragment.setArguments(args);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "newInstance() " + fragment);
 		}
 		return fragment;
@@ -51,7 +51,7 @@ public class PublicTimelineFragment extends BaseTimlineFragment {
 
 	@Override
 	protected void doFetch(boolean doGetMore) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "doFetch() doGetMore=" + doGetMore);
 		}
 		final ResultHandler handler = new ResultHandler(this);

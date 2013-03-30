@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.util;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.service.AutoCompleteService;
 import org.mcxiaoke.fancooker.service.DownloadService;
@@ -30,19 +30,19 @@ public final class AlarmHelper {
 	private static final String TAG = AlarmHelper.class.getSimpleName();
 
 	public static void cleanAlarmFlags(Context context) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d("App", "cleanAlarmFlags");
 		}
-		Editor editor = App.getPreferences().edit();
-		editor.remove(App.getApp().getString(R.string.option_set_auto_clean));
-		editor.remove(App.getApp().getString(R.string.option_set_auto_update));
-		editor.remove(App.getApp().getString(R.string.option_set_auto_complete));
-		editor.remove(App.getApp().getString(R.string.option_set_notification));
+		Editor editor = AppContext.getPreferences().edit();
+		editor.remove(AppContext.getApp().getString(R.string.option_set_auto_clean));
+		editor.remove(AppContext.getApp().getString(R.string.option_set_auto_update));
+		editor.remove(AppContext.getApp().getString(R.string.option_set_auto_complete));
+		editor.remove(AppContext.getApp().getString(R.string.option_set_notification));
 		editor.commit();
 	}
 
 	public final static void unsetScheduledTasks(Context context) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "unsetScheduledTasks");
 		}
 		DownloadService.unset(context);
@@ -51,7 +51,7 @@ public final class AlarmHelper {
 	}
 
 	public final static void setScheduledTasks(Context context) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "setScheduledTasks");
 		}
 		DownloadService.set(context);
@@ -60,7 +60,7 @@ public final class AlarmHelper {
 	}
 
 	public final static void setAlarmsIfNot(Context context) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "checkScheduledTasks");
 		}
 		DownloadService.setIfNot(context);

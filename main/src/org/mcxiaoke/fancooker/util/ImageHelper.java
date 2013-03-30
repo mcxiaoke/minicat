@@ -9,7 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -71,7 +71,7 @@ final public class ImageHelper {
 			options.inSampleSize = sampleSize;
 			return BitmapFactory.decodeFile(path, options);
 		} catch (Exception e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 
@@ -87,7 +87,7 @@ final public class ImageHelper {
 		try {
 			return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 		} catch (Exception e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 
@@ -107,7 +107,7 @@ final public class ImageHelper {
 			bitmap.compress(Bitmap.CompressFormat.PNG, quality, baos);
 			return baos.toByteArray();
 		} catch (Exception e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 
@@ -366,7 +366,7 @@ final public class ImageHelper {
 					Bitmap.Config.RGB_565);
 			view.draw(new Canvas(result));
 		} catch (Exception e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 
@@ -381,7 +381,7 @@ final public class ImageHelper {
 			return original.compress(format, quality, new FileOutputStream(
 					outputFilePath));
 		} catch (Exception e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 
@@ -397,7 +397,7 @@ final public class ImageHelper {
 			return original.compress(format, quality, new FileOutputStream(
 					outputFile));
 		} catch (Exception e) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				e.printStackTrace();
 		}
 
@@ -422,7 +422,7 @@ final public class ImageHelper {
 					OUTPUT_BUFFER_SIZE);
 			return bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
 		} catch (IOException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d(TAG, "writeToFile:" + e.getMessage());
 			}
 		} finally {
@@ -451,7 +451,7 @@ final public class ImageHelper {
 		if (bitmap == null) {
 			return null;
 		}
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "compressForUpload bitmap=(" + bitmap.getWidth() + ","
 					+ bitmap.getHeight() + ")");
 		}
@@ -470,7 +470,7 @@ final public class ImageHelper {
 			bitmap.compress(format, quality, fos);
 			return new File(destFileName);
 		} catch (FileNotFoundException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				e.printStackTrace();
 			}
 			return null;
@@ -487,7 +487,7 @@ final public class ImageHelper {
 		for (int w = options.outWidth; w > maxDim * 2; w /= 2) {
 			inSampleSize += 1;
 		}
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "compressImage original=(" + options.outWidth + ","
 					+ options.outHeight + ")");
 			Log.d(TAG, "compressImage inSampleSize=" + inSampleSize);
@@ -502,7 +502,7 @@ final public class ImageHelper {
 			if (bw > maxDim) {
 				float scale = (float) maxDim / (float) bw;
 				m.postScale(scale, scale);
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					Log.d(TAG, "compressImage matrix scale=" + scale);
 				}
 			}
@@ -510,7 +510,7 @@ final public class ImageHelper {
 			if (getExifOrientation(path) != 0) {
 				m.postRotate(rotation);
 			}
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d(TAG, "compressImage matrix rotation=" + rotation);
 				Log.d(TAG, "compressImage bitmap=(" + bw + "," + bh + ")");
 			}

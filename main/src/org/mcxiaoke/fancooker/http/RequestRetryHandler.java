@@ -13,7 +13,7 @@ import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 
 import android.os.SystemClock;
 
@@ -80,7 +80,7 @@ public class RequestRetryHandler implements HttpRequestRetryHandler {
 		if (retry) {
 			SystemClock.sleep(RETRY_SLEEP_TIME_MILLIS);
 		} else {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				exception.printStackTrace();
 		}
 

@@ -47,7 +47,7 @@ abstract class UIBaseSupport extends SherlockFragmentActivity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setTheme(App.themeId);
+		setTheme(AppContext.themeId);
 		super.onCreate(savedInstanceState);
 		init();
 		initialize();
@@ -66,7 +66,7 @@ abstract class UIBaseSupport extends SherlockFragmentActivity implements
 	}
 
 	private void init() {
-		App.setActiveContext(getClass().getCanonicalName(), this);
+		AppContext.setActiveContext(getClass().getCanonicalName(), this);
 		this.mContext = this;
 		this.mInflater = LayoutInflater.from(this);
 		this.mDisplayMetrics = new DisplayMetrics();
@@ -134,12 +134,12 @@ abstract class UIBaseSupport extends SherlockFragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		App.active = true;
+		AppContext.active = true;
 	}
 
 	@Override
 	protected void onPause() {
-		App.active = false;
+		AppContext.active = false;
 		super.onPause();
 	}
 

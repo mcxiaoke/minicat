@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.fragments;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.adapter.BaseCursorAdapter;
 import org.mcxiaoke.fancooker.controller.PopupController;
@@ -66,7 +66,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
 	public PullToRefreshListFragment() {
 		super();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "PullToRefreshListFragment() id=" + this);
 		}
 	}
@@ -74,7 +74,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onAttach() isVisible=" + isVisible());
 		}
 	}
@@ -82,14 +82,14 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onCreate() isVisible=" + isVisible());
 		}
 
 		Bundle args = getArguments();
 		if (args != null) {
 			refreshOnStart = args.getBoolean("refresh");
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d(TAG, "refreshOnStart=" + refreshOnStart);
 			}
 			parseArguments(args);
@@ -100,7 +100,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onCreateView() isVisible=" + isVisible());
 		}
 		View v = inflater.inflate(R.layout.fm_pull_list, container, false);
@@ -120,7 +120,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onActivityCreated() isVisible=" + isVisible());
 		}
 
@@ -139,7 +139,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	@Override
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onHiddenChanged() hidden=" + hidden + " isVisible="
 					+ isVisible());
 		}
@@ -155,7 +155,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
 	@Override
 	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onRefresh() isVisible=" + isVisible());
 		}
 		Mode currentMode=refreshView.getCurrentMode();
@@ -170,14 +170,14 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	}
 
 	protected void doRefresh() {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "doRefresh()");
 		}
 		doFetch(false);
 	}
 
 	protected void doGetMore() {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "doGetMore()");
 		}
 		doFetch(true);
@@ -220,7 +220,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
 	@Override
 	public void startRefresh() {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "startRefresh() isVisible=" + isVisible());
 		}
 		if (!busy) {
@@ -231,7 +231,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	}
 
 	private void onSuccess(Bundle data) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onSuccess(data)");
 		}
 		int count = data.getInt("count");
@@ -241,7 +241,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	}
 
 	private void onError(Bundle data) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onSuccess()");
 		}
 		String errorMessage = data.getString("error_message");
@@ -269,7 +269,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onViewCreated() isVisible=" + isVisible());
 		}
 	}
@@ -277,7 +277,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	@Override
 	public void onStart() {
 		super.onStart();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onStart() isVisible=" + isVisible());
 		}
 	}
@@ -299,7 +299,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 			mListView.onRestoreInstanceState(mParcelable);
 			mParcelable = null;
 		}
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onResume() isVisible=" + isVisible());
 		}
 	}
@@ -307,7 +307,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onPause() isVisible=" + isVisible());
 		}
 	}
@@ -315,7 +315,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	@Override
 	public void onStop() {
 		super.onStop();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onStop() isVisible=" + isVisible());
 		}
 	}
@@ -323,7 +323,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onDestroyView()");
 		}
 	}
@@ -331,7 +331,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onDestroy()");
 		}
 	}
@@ -339,7 +339,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onDetach() isVisible=" + isVisible());
 		}
 	}
@@ -348,7 +348,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
 		getAdapter().swapCursor(newCursor);
 		checkRefresh();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onLoadFinished() adapter=" + mAdapter.getCount()
 					+ " class=" + this.getClass().getSimpleName());
 		}
@@ -363,7 +363,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onLoaderReset()");
 		}
 		getAdapter().swapCursor(null);

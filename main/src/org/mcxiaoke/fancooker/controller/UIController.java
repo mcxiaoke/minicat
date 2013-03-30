@@ -15,8 +15,6 @@ import org.mcxiaoke.fancooker.UIHome;
 import org.mcxiaoke.fancooker.UILogin;
 import org.mcxiaoke.fancooker.UIRecords;
 import org.mcxiaoke.fancooker.UISearch;
-import org.mcxiaoke.fancooker.UISetting;
-import org.mcxiaoke.fancooker.UITabHome;
 import org.mcxiaoke.fancooker.UITabProfile;
 import org.mcxiaoke.fancooker.UIThread;
 import org.mcxiaoke.fancooker.UITimeline;
@@ -25,7 +23,6 @@ import org.mcxiaoke.fancooker.UIWrite;
 import org.mcxiaoke.fancooker.dao.model.DirectMessageModel;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
 import org.mcxiaoke.fancooker.dao.model.UserModel;
-import org.mcxiaoke.fancooker.fragments.ConversationFragment;
 import org.mcxiaoke.fancooker.fragments.ConversationListFragment;
 import org.mcxiaoke.fancooker.fragments.HomeFragment;
 import org.mcxiaoke.fancooker.service.FanFouService;
@@ -33,17 +30,12 @@ import org.mcxiaoke.fancooker.util.OptionHelper;
 import org.mcxiaoke.fancooker.util.StatusHelper;
 import org.mcxiaoke.fancooker.util.Utils;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 
 /**
  * @author mcxiaoke
@@ -70,7 +62,6 @@ public class UIController {
 	}
 
 	public static void showOption(Context context) {
-		startUI(context, UISetting.class);
 	}
 
 	public static void showEditProfile(Context context, final UserModel user) {

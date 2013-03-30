@@ -53,7 +53,7 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (App.DEBUG)
+		if (AppContext.DEBUG)
 			log("onCreate");
 	}
 
@@ -74,7 +74,7 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 	}
 
 	private void filter(String text) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "filter() text=" + text);
 		}
 		mFragment.filter(text);
@@ -85,7 +85,7 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 	}
 
 	private void setFragment() {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "setFragment()");
 		}
 		if (type == UserModel.TYPE_FRIENDS) {
@@ -112,7 +112,7 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d(TAG, "onTextChanged() text=" + s);
 			}
 			mUiUserList.filter(s.toString().trim());
@@ -135,7 +135,7 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 	protected void onStop() {
 		super.onStop();
 		if (!NetworkHelper.isWifi(this)) {
-			App.getImageLoader().clearQueue();
+			AppContext.getImageLoader().clearQueue();
 		}
 	}
 

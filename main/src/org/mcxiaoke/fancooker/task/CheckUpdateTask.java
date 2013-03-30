@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.task;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.service.DownloadService;
 import org.mcxiaoke.fancooker.service.VersionInfo;
 import org.mcxiaoke.fancooker.util.Utils;
@@ -37,7 +37,7 @@ public class CheckUpdateTask  extends AsyncTask<Void, Void, VersionInfo>{
 	@Override
 	protected void onPostExecute(VersionInfo info) {
 		pd.dismiss();
-		if (info != null && info.versionCode > App.versionCode) {
+		if (info != null && info.versionCode > AppContext.versionCode) {
 			DownloadService.showUpdateConfirmDialog(c, info);
 		} else {
 			Utils.notify(c, "你使用的已经是最新版");

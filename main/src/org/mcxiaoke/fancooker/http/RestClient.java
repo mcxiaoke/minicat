@@ -11,7 +11,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.protocol.HTTP;
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 
 import android.util.Log;
 
@@ -237,7 +237,7 @@ public class RestClient {
 
 	private HttpResponse execute(HttpUriRequest request) throws IOException {
 		final HttpClient client = NetHelper.getHttpClient();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "[Request] " + request.getRequestLine().toString()
 					+ " --" + System.currentTimeMillis());
 			Header[] headers = request.getAllHeaders();
@@ -247,7 +247,7 @@ public class RestClient {
 			}
 		}
 		HttpResponse response = client.execute(request);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "[Response] " + response.getStatusLine().toString()
 					+ " --" + System.currentTimeMillis());
 			Header[] headers = response.getAllHeaders();

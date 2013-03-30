@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.fragments;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.adapter.StatusCursorAdapter;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
 import org.mcxiaoke.fancooker.util.Utils;
@@ -51,7 +51,7 @@ public abstract class BaseTimlineFragment extends PullToRefreshListFragment {
 
 	@Override
 	protected CursorAdapter onCreateAdapter() {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "createAdapter() id=" + this + "activity ="
 					+ getActivity());
 		}

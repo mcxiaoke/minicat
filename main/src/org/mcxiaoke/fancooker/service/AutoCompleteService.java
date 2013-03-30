@@ -3,7 +3,7 @@ package org.mcxiaoke.fancooker.service;
 import java.util.Calendar;
 import java.util.List;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.api.Api;
 import org.mcxiaoke.fancooker.api.Paging;
@@ -56,7 +56,7 @@ public class AutoCompleteService extends WakefulIntentService {
 				.getSystemService(Context.ALARM_SERVICE);
 		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
 				interval, getPendingIntent(context));
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG,
 					"set repeat interval=3day first time="
 							+ DateTimeHelper.formatDate(c.getTime()));
@@ -67,7 +67,7 @@ public class AutoCompleteService extends WakefulIntentService {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(getPendingIntent(context));
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "unset");
 		}
 	}
@@ -75,7 +75,7 @@ public class AutoCompleteService extends WakefulIntentService {
 	public static void setIfNot(Context context) {
 		boolean set = OptionHelper.readBoolean(context,
 				R.string.option_set_auto_complete, false);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "setIfNot flag=" + set);
 		}
 		if (!set) {
@@ -98,10 +98,10 @@ public class AutoCompleteService extends WakefulIntentService {
 	}
 
 	private void doFetchAutoComplete() {
-		if (App.isDisconnected() || !App.isVerified()) {
+		if (AppContext.isDisconnected() || !AppContext.isVerified()) {
 			return;
 		}
-		Api api = App.getApi();
+		Api api = AppContext.getApi();
 		Paging p = new Paging();
 		p.count = FanFouService.MAX_USERS_COUNT;
 		p.page = 1;
@@ -109,9 +109,9 @@ public class AutoCompleteService extends WakefulIntentService {
 		while (more) {
 			List<UserModel> result = null;
 			try {
-				result = api.getFriends(App.getAccount(), p);
+				result = api.getFriends(AppContext.getAccount(), p);
 			} catch (Exception e) {
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					Log.e(TAG, e.toString());
 				}
 			}
@@ -120,7 +120,7 @@ public class AutoCompleteService extends WakefulIntentService {
 				int insertedNums = getContentResolver().bulkInsert(
 						UserColumns.CONTENT_URI,
 						DataController.toContentValues(result));
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					log("doFetchAutoComplete page==" + p.page + " size=" + size
 							+ " insert rows=" + insertedNums);
 				}

@@ -3,7 +3,7 @@ package org.mcxiaoke.fancooker.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.dao.DataProvider;
 import org.mcxiaoke.fancooker.dao.model.BaseModel;
 import org.mcxiaoke.fancooker.dao.model.DirectMessageColumns;
@@ -109,7 +109,7 @@ public class DataController {
 			return -1;
 		}
 
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "store models.size=" + models.size() + " table="
 					+ models.get(0).getContentUri());
 		}
@@ -212,7 +212,7 @@ public class DataController {
 		Uri uri = withAppendedId(UserColumns.CONTENT_URI, id);
 		Cursor cursor = context.getContentResolver().query(uri, null, null,
 				null, null);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG,
 					"getUser() cursor=" + cursor + " cursor.size="
 							+ cursor.getCount());

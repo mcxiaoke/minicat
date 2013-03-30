@@ -135,7 +135,7 @@ public class UITabProfile extends UIBaseSupport implements
 			userId = user.getId();
 		}
 
-		self = App.getAccount().equals(userId);
+		self = AppContext.getAccount().equals(userId);
 	}
 
 	private View getIndicator(int id) {

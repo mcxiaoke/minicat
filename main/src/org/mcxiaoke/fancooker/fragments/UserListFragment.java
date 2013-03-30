@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.fragments;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.adapter.UserCursorAdapter;
 import org.mcxiaoke.fancooker.api.Paging;
 import org.mcxiaoke.fancooker.controller.DataController;
@@ -56,7 +56,7 @@ public abstract class UserListFragment extends PullToRefreshListFragment
 		final Cursor c = (Cursor) parent.getItemAtPosition(position);
 		final UserModel u = UserModel.from(c);
 		if (u != null) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d(TAG,
 						"userId=" + u.getId() + " username="
 								+ u.getScreenName());
@@ -68,7 +68,7 @@ public abstract class UserListFragment extends PullToRefreshListFragment
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onCreate() userId=" + userId);
 		}
 	}
@@ -79,7 +79,7 @@ public abstract class UserListFragment extends PullToRefreshListFragment
 			userId = args.getString("id");
 		}
 		if (TextUtils.isEmpty(userId)) {
-			userId = App.getAccount();
+			userId = AppContext.getAccount();
 		}
 	}
 

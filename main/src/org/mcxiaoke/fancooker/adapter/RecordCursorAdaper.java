@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.adapter;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.dao.model.RecordModel;
 import org.mcxiaoke.fancooker.util.StringHelper;
@@ -38,7 +38,7 @@ public class RecordCursorAdaper extends BaseCursorAdapter {
 		final ViewHolder holder = (ViewHolder) row.getTag();
 		holder.text.setText(record.getText());
 		// holder.date.setText(DateTimeHelper.formatDate(d.createdAt));
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "bindView filePath=" + record.getFile());
 		}
 		holder.icon

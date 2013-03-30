@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.fragments;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.adapter.ConversationCursorAdapter;
 import org.mcxiaoke.fancooker.api.Paging;
 import org.mcxiaoke.fancooker.controller.DataController;
@@ -44,7 +44,7 @@ public class ConversationFragment extends PullToRefreshListFragment {
 		args.putBoolean("refresh", refresh);
 		ConversationFragment fragment = new ConversationFragment();
 		fragment.setArguments(args);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "newInstance() " + fragment + " id=" + id);
 		}
 		return fragment;
@@ -53,7 +53,7 @@ public class ConversationFragment extends PullToRefreshListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onCreate() userId=" + userId);
 		}
 	}
@@ -77,7 +77,7 @@ public class ConversationFragment extends PullToRefreshListFragment {
 
 	@Override
 	protected CursorAdapter onCreateAdapter() {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "createAdapter()");
 		}
 		return new ConversationCursorAdapter(getActivity());
@@ -107,7 +107,7 @@ public class ConversationFragment extends PullToRefreshListFragment {
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onCreateLoader() userId=" + userId);
 		}
 		return DataController.getConversationLoader(getActivity(), userId);

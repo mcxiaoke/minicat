@@ -2,7 +2,7 @@ package org.mcxiaoke.fancooker.service;
 
 import java.util.List;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.api.Api;
 import org.mcxiaoke.fancooker.api.ApiException;
@@ -62,7 +62,7 @@ import android.util.Log;
  */
 public final class FanFouService extends IntentService {
 	private static final String TAG = FanFouService.class.getSimpleName();
-	private static final boolean DEBUG = App.DEBUG;
+	private static final boolean DEBUG = AppContext.DEBUG;
 
 	public static final int MAX_TIMELINE_COUNT = 60;
 	public static final int DEFAULT_TIMELINE_COUNT = 20;
@@ -105,7 +105,7 @@ public final class FanFouService extends IntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		api = App.getApi();
+		api = AppContext.getApi();
 
 	}
 
@@ -115,7 +115,7 @@ public final class FanFouService extends IntentService {
 			return;
 		}
 
-		account = App.getAccount();
+		account = AppContext.getAccount();
 		messenger = intent.getParcelableExtra("messenger");
 		id = intent.getStringExtra("id");
 		type = intent.getIntExtra("type", -1);
@@ -246,7 +246,7 @@ public final class FanFouService extends IntentService {
 				sendParcelableMessage(u);
 			}
 		} catch (ApiException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				e.printStackTrace();
 			}
 			sendErrorMessage(e);
@@ -263,7 +263,7 @@ public final class FanFouService extends IntentService {
 				sendParcelableMessage(u);
 			}
 		} catch (ApiException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				e.printStackTrace();
 			}
 			sendErrorMessage(e);
@@ -300,7 +300,7 @@ public final class FanFouService extends IntentService {
 			}
 			sendSuccessMessage();
 		} catch (ApiException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				e.printStackTrace();
 			}
 			sendErrorMessage(e);
@@ -316,7 +316,7 @@ public final class FanFouService extends IntentService {
 			}
 			sendSuccessMessage();
 		} catch (ApiException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				e.printStackTrace();
 			}
 			sendErrorMessage(e);
@@ -338,7 +338,7 @@ public final class FanFouService extends IntentService {
 				sendParcelableMessage(u);
 			}
 		} catch (ApiException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				e.printStackTrace();
 			}
 			sendErrorMessage(e);
@@ -387,7 +387,7 @@ public final class FanFouService extends IntentService {
 				sendSuccessMessage(bundle);
 			}
 		} catch (ApiException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				e.printStackTrace();
 			}
 			if (e.statusCode == 404) {
@@ -417,7 +417,7 @@ public final class FanFouService extends IntentService {
 				sendSuccessMessage(bundle);
 			}
 		} catch (ApiException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				e.printStackTrace();
 			}
 			if (e.statusCode == 404) {
@@ -447,7 +447,7 @@ public final class FanFouService extends IntentService {
 				sendParcelableMessage(s);
 			}
 		} catch (ApiException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				e.printStackTrace();
 			}
 			if (e.statusCode == 404) {
@@ -478,7 +478,7 @@ public final class FanFouService extends IntentService {
 				sendParcelableMessage(s);
 			}
 		} catch (ApiException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				e.printStackTrace();
 			}
 			if (e.statusCode == 404) {
@@ -509,7 +509,7 @@ public final class FanFouService extends IntentService {
 		try {
 			result = api.isFriends(userA, userB);
 		} catch (ApiException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.e(TAG, "doDetectFriendships:" + e.getMessage());
 			}
 			sendErrorMessage(e);
@@ -546,13 +546,13 @@ public final class FanFouService extends IntentService {
 							id };
 					int deletedNums = cr.delete(UserColumns.CONTENT_URI, where,
 							whereArgs);
-					if (App.DEBUG) {
+					if (AppContext.DEBUG) {
 						Log.d(TAG, "fetchUsers delete old rows " + deletedNums
 								+ " ownerId=" + id);
 					}
 				}
 				int nums = DataController.store(this, users);
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					Log.d(TAG, "fetchUsers refresh ,insert rows, num=" + nums
 							+ " ownerId=" + id);
 				}
@@ -561,7 +561,7 @@ public final class FanFouService extends IntentService {
 				sendIntMessage(0);
 			}
 		} catch (ApiException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				e.printStackTrace();
 			}
 			sendErrorMessage(e);
@@ -582,7 +582,7 @@ public final class FanFouService extends IntentService {
 			List<DirectMessageModel> messages = api.getConversation(id, p);
 			if (messages != null && messages.size() > 0) {
 
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					Log.d(TAG, "getConversation() id=" + id + " result="
 							+ messages);
 				}
@@ -717,7 +717,7 @@ public final class FanFouService extends IntentService {
 			p.count = DEFAULT_TIMELINE_COUNT;
 		}
 
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "getTimeline userId=" + id + " paging=" + p + " type="
 					+ type);
 		}
@@ -748,7 +748,7 @@ public final class FanFouService extends IntentService {
 			}
 			if (statuses == null || statuses.size() == 0) {
 				sendIntMessage(0);
-				if (App.DEBUG)
+				if (AppContext.DEBUG)
 					Log.d(TAG, "getTimeline() count=0. userId=" + id + " type="
 							+ type);
 				return;
@@ -759,7 +759,7 @@ public final class FanFouService extends IntentService {
 				}
 				int insertedCount = DataController.storeStatusesWithUsers(this,
 						statuses);
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					Log.d(TAG, "getTimeline() size=" + size + " userId=" + id
 							+ " count=" + p.count + " page=" + p.page
 							+ " type=" + type + " insertedCount="
@@ -768,7 +768,7 @@ public final class FanFouService extends IntentService {
 				sendIntMessage(insertedCount);
 			}
 		} catch (ApiException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.e(TAG, "getTimeline() [error]" + e.statusCode + ":"
 						+ e.errorMessage + " userId=" + id + " type=" + type);
 				e.printStackTrace();
@@ -786,7 +786,7 @@ public final class FanFouService extends IntentService {
 		} else {
 			numDeleted = DataController.deleteStatusByType(this, type);
 		}
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "deleteOldStatuses numDeleted=" + numDeleted + " type="
 					+ type + " id=" + id);
 		}
@@ -800,7 +800,7 @@ public final class FanFouService extends IntentService {
 		intent.putExtra("id", userId);
 		intent.putExtra("messenger", new Messenger(handler));
 		intent.putExtra("data", paging);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "getTimeline() type=" + type + " paging=" + paging
 					+ " userId=" + userId);
 		}
@@ -872,7 +872,7 @@ public final class FanFouService extends IntentService {
 		try {
 			messenger.send(m);
 		} catch (RemoteException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				e.printStackTrace();
 			}
 		}

@@ -188,7 +188,7 @@ public class UIStatus extends UIBaseSupport {
 	private void showProgress() {
 		vContainer.setVisibility(View.GONE);
 		emptyController.showProgress();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "showProgress");
 		}
 	}
@@ -196,7 +196,7 @@ public class UIStatus extends UIBaseSupport {
 	private void showContent() {
 		emptyController.hideProgress();
 		vContainer.setVisibility(View.VISIBLE);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "showContent");
 		}
 	}
@@ -226,7 +226,7 @@ public class UIStatus extends UIBaseSupport {
 			return;
 		}
 
-		isMe = status.getUserId().equals(App.getAccount());
+		isMe = status.getUserId().equals(AppContext.getAccount());
 
 		showContent();
 		updateHeader();
@@ -240,7 +240,7 @@ public class UIStatus extends UIBaseSupport {
 		headerName.setText(status.getUserScreenName());
 		String headerImageUrl = status.getUserProfileImageUrl();
 		headerImage.setTag(headerImageUrl);
-		App.getImageLoader().displayImage(headerImageUrl, headerImage,
+		AppContext.getImageLoader().displayImage(headerImageUrl, headerImage,
 				R.drawable.ic_head);
 
 	}
@@ -267,7 +267,7 @@ public class UIStatus extends UIBaseSupport {
 		contentPhoto.setVisibility(View.VISIBLE);
 		String photoUrl = status.getPhotoImageUrl();
 		contentPhoto.setTag(photoUrl);
-		App.getImageLoader().displayImage(photoUrl, contentPhoto,
+		AppContext.getImageLoader().displayImage(photoUrl, contentPhoto,
 				R.drawable.photo_loading);
 	}
 
@@ -318,7 +318,7 @@ public class UIStatus extends UIBaseSupport {
 	private void goPhotoViewer() {
 		String photoUrl = status.getPhotoLargeUrl();
 		if (!TextUtils.isEmpty(photoUrl)) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d(TAG, "goPhotoViewer() url=" + photoUrl);
 			}
 			Intent intent = new Intent(mContext, UIPhoto.class);
@@ -347,7 +347,7 @@ public class UIStatus extends UIBaseSupport {
 				}
 			}
 		};
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "fetchStatus");
 		}
 		FanFouService.showStatus(mContext, statusId, handler);
@@ -469,7 +469,7 @@ public class UIStatus extends UIBaseSupport {
 
 		@Override
 		protected StatusModel run(String... params) throws Exception {
-			return App.getApi().showStatus(params[0]);
+			return AppContext.getApi().showStatus(params[0]);
 		}
 
 	}

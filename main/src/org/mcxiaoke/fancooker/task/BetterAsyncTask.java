@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.task;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -24,7 +24,7 @@ public abstract class BetterAsyncTask<Params, Progress, Result> extends
 	public BetterAsyncTask(Context context) {
 		super();
 		this.callerId = context.getClass().getCanonicalName();
-		App.setActiveContext(callerId, context);
+		AppContext.setActiveContext(callerId, context);
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public abstract class BetterAsyncTask<Params, Progress, Result> extends
 	}
 
 	protected Context getCallingCotext() {
-		Context caller = App.getActiveContext(callerId);
+		Context caller = AppContext.getActiveContext(callerId);
 		if (caller == null
 				|| !this.callerId.equals(caller.getClass().getCanonicalName())) {
 			return null;

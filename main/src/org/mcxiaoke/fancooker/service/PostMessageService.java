@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.service;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.api.Api;
 import org.mcxiaoke.fancooker.api.ApiException;
@@ -67,7 +67,7 @@ public class PostMessageService extends BaseIntentService {
 		messenger = intent.getParcelableExtra("messenger");
 		userId = intent.getStringExtra("id");
 		text = intent.getStringExtra("text");
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			log("parseIntent userId=" + userId);
 			log("parseIntent content=" + text);
 		}
@@ -76,7 +76,7 @@ public class PostMessageService extends BaseIntentService {
 	private boolean doSend() {
 		showSendingNotification();
 		boolean res = true;
-		Api api = App.getApi();
+		Api api = AppContext.getApi();
 		try {
 			DirectMessageModel model = api.createDirectmessage(userId, text,
 					null);
@@ -85,7 +85,7 @@ public class PostMessageService extends BaseIntentService {
 			if (model == null) {
 				res = false;
 			} else {
-				if (model.getRecipientId().equals(App.getAccount())) {
+				if (model.getRecipientId().equals(AppContext.getAccount())) {
 					model.setIncoming(true);
 					model.setConversationId(model.getSenderId());
 				} else {
@@ -98,7 +98,7 @@ public class PostMessageService extends BaseIntentService {
 			}
 		} catch (ApiException e) {
 			nm.cancel(10);
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.e(TAG,
 						"error: code=" + e.statusCode + " msg="
 								+ e.getMessage());
@@ -134,7 +134,7 @@ public class PostMessageService extends BaseIntentService {
 		try {
 			messenger.send(m);
 		} catch (RemoteException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				e.printStackTrace();
 			}
 		}

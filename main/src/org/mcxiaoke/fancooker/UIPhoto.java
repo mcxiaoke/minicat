@@ -69,7 +69,7 @@ public class UIPhoto extends Activity implements OnClickListener{
 		setContentView(R.layout.ui_photo);
 		findViews();
 
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "mPhotoPath=" + url);
 		}
 
@@ -133,13 +133,13 @@ public class UIPhoto extends Activity implements OnClickListener{
 	private void loadFromLocal(String path) {
 		try {
 			bitmap = ImageHelper.loadFromPath(this, url, 1000, 1000);
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d(TAG, "Bitmap width=" + bitmap.getWidth() + " height="
 						+ bitmap.getHeight());
 			}
 			showContent(bitmap);
 		} catch (IOException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.e(TAG, "" + e);
 			}
 		}
@@ -161,7 +161,7 @@ public class UIPhoto extends Activity implements OnClickListener{
 				}
 			}
 		};
-		Bitmap bitmap = App.getImageLoader().getImage(url, handler);
+		Bitmap bitmap = AppContext.getImageLoader().getImage(url, handler);
 		if (bitmap == null) {
 			showProgress();
 		} else {
@@ -209,7 +209,7 @@ public class UIPhoto extends Activity implements OnClickListener{
 					Utils.notify(this, "照片已保存到 " + dest.getAbsolutePath());
 					Utils.notify(this, "照片已保存到 " + dest.getAbsolutePath());
 				} catch (IOException e) {
-					if (App.DEBUG) {
+					if (AppContext.DEBUG) {
 						e.printStackTrace();
 					}
 				}

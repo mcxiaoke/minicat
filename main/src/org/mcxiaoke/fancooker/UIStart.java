@@ -26,7 +26,7 @@ public class UIStart extends Activity {
 	}
 
 	private void checkLogin() {
-		if (App.isVerified()) {
+		if (AppContext.isVerified()) {
 			UIController.showHome(this);
 		} else {
 			UIController.showLogin(this);

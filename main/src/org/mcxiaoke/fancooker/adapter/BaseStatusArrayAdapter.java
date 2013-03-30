@@ -3,7 +3,7 @@ package org.mcxiaoke.fancooker.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.cache.ImageLoader;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
@@ -54,7 +54,7 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 	private void initialize(Context context, List<StatusModel> data) {
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);
-		this.mLoader = App.getImageLoader();
+		this.mLoader = AppContext.getImageLoader();
 		this.fontSize = OptionHelper.readInt(mContext,
 				R.string.option_fontsize,
 				context.getResources().getInteger(R.integer.defaultFontSize));
@@ -71,7 +71,7 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 		if (view == null) {
 			view = new ItemView(mContext);
 			view.setId(R.id.list_item);
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d(TAG, "getView newView=" + view);
 			}
 		}

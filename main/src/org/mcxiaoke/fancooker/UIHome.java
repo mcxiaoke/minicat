@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Window;
 import com.slidingmenu.lib.SlidingMenu;
 
 /**
@@ -44,7 +45,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			log("onCreate()");
 		}
 	}
@@ -91,7 +92,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onResume()");
 		}
 	}
@@ -99,7 +100,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onPause()");
 		}
 	}
@@ -107,21 +108,21 @@ public class UIHome extends UIBaseSupport implements MenuCallback {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onStop()");
 		}
 		if (!NetworkHelper.isWifi(this)) {
-			App.getImageLoader().clearQueue();
+			AppContext.getImageLoader().clearQueue();
 		}
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "onDestroy()");
 		}
-		App.getImageLoader().shutdown();
+		AppContext.getImageLoader().shutdown();
 	}
 
 	@Override
@@ -156,23 +157,8 @@ public class UIHome extends UIBaseSupport implements MenuCallback {
 		case R.id.menu_write:
 			onMenuWriteClick();
 			break;
-		case R.id.menu_logout:
-			onMenuLogoutClick();
-			break;
-		case R.id.menu_option:
-			onMenuOptionClick();
-			break;
 		case R.id.menu_search:
 			onMenuSearchClick();
-			break;
-		case R.id.menu_about:
-			onMenuAboutClick();
-			break;
-		case R.id.menu_feedback:
-			onMenuFeedbackClick();
-			break;
-		case R.id.menu_profile:
-			onMenuProfileClick();
 			break;
 		default:
 			break;
@@ -181,12 +167,10 @@ public class UIHome extends UIBaseSupport implements MenuCallback {
 	}
 
 	private void onMenuOptionClick() {
-		Intent intent = new Intent(this, UISetting.class);
-		startActivity(intent);
 	}
 
 	private void onMenuProfileClick() {
-		UIController.showProfile(this, App.getAccount());
+		UIController.showProfile(this, AppContext.getAccount());
 	}
 
 	private void onMenuSearchClick() {
@@ -201,7 +185,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback {
 	private void onMenuFeedbackClick() {
 		String text = getString(R.string.config_feedback_account) + " ("
 				+ Build.MODEL + "-" + Build.VERSION.RELEASE + " "
-				+ App.versionName + ") ";
+				+ AppContext.versionName + ") ";
 		UIController.showWrite(this, text);
 	}
 
@@ -214,7 +198,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback {
 			@Override
 			public void onPositiveClick() {
 				super.onPositiveClick();
-				App.doLogin(mContext);
+				AppContext.doLogin(mContext);
 				finish();
 			}
 		});
@@ -238,7 +222,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback {
 	}
 
 	private void showProfile() {
-		replaceFramgnt(ProfileFragment.newInstance(App.getAccount()));
+		replaceFramgnt(ProfileFragment.newInstance(AppContext.getAccount()));
 	}
 
 	private void showMessage() {

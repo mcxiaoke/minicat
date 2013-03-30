@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -36,13 +36,13 @@ public final class DeviceHelper {
 	}
 
 	private static String generateUUID() {
-		String uuid = Settings.Secure.getString(App.getApp()
+		String uuid = Settings.Secure.getString(AppContext.getApp()
 				.getContentResolver(), Settings.Secure.ANDROID_ID);
-		if (App.DEBUG)
+		if (AppContext.DEBUG)
 			Log.d("DeviceHelper", "generateUUID uuid=" + uuid);
 		if (uuid == null || uuid.equals("9774d56d682e549c")) {
 			uuid = UUID.randomUUID().toString();
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				Log.d("DeviceHelper", "generateUUID randomid=" + uuid);
 		}
 		return uuid;
@@ -50,8 +50,8 @@ public final class DeviceHelper {
 
 	public static String getUserAgent() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("FanFou HD for Android ").append(App.versionName)
-				.append(" Build").append(App.versionCode);
+		builder.append("FanFou HD for Android ").append(AppContext.versionName)
+				.append(" Build").append(AppContext.versionCode);
 		builder.append(Build.MODEL).append(" ").append(Build.VERSION.RELEASE)
 				.append(" (").append(Build.DEVICE).append(",")
 				.append(Build.BRAND).append(",").append(Build.MANUFACTURER)

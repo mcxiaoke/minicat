@@ -25,8 +25,8 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
-import org.mcxiaoke.fancooker.App;
-import org.mcxiaoke.fancooker.App.ApnType;
+import org.mcxiaoke.fancooker.AppContext;
+import org.mcxiaoke.fancooker.AppContext.ApnType;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -182,7 +182,7 @@ public final class NetworkHelper {
 			ConnectivityManager cm = (ConnectivityManager) context
 					.getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo info = cm.getActiveNetworkInfo();
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d("App", "NetworkInfo: " + info);
 			}
 			if (info != null) {
@@ -204,7 +204,7 @@ public final class NetworkHelper {
 				type = ApnType.WIFI;
 			}
 		} catch (Exception e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d("NetworkHelper", e.toString());
 			}
 		}

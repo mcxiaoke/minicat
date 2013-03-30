@@ -88,7 +88,7 @@ public class UIEditProfile extends UIBaseSupport {
 	@Override
 	protected void initialize() {
 		parseIntent();
-		mLoader = App.getImageLoader();
+		mLoader = AppContext.getImageLoader();
 	}
 
 	@Override
@@ -183,7 +183,7 @@ public class UIEditProfile extends UIBaseSupport {
 	}
 
 	private void updateProfileImagePreview() {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			log("updateProfileImagePreview() url=" + user.getProfileImageUrl());
 		}
 		mHeadView.setImageResource(R.drawable.ic_head);
@@ -220,7 +220,7 @@ public class UIEditProfile extends UIBaseSupport {
 
 	private File getPhotoFilePath(Uri uri) {
 		if (uri != null) {
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				log("from gallery uri=" + uri);
 			String path;
 			if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
@@ -229,7 +229,7 @@ public class UIEditProfile extends UIBaseSupport {
 				path = uri.getPath();
 			}
 			File file = new File(path);
-			if (App.DEBUG)
+			if (AppContext.DEBUG)
 				log("from gallery file=" + path);
 			return file;
 		}
@@ -305,7 +305,7 @@ public class UIEditProfile extends UIBaseSupport {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			api = App.getApi();
+			api = AppContext.getApi();
 			pd = new ProgressDialog(mContext);
 			pd.setMessage("正在更新个人资料...");
 			pd.setIndeterminate(true);
@@ -381,7 +381,7 @@ public class UIEditProfile extends UIBaseSupport {
 							user);
 				}
 			} catch (ApiException e) {
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					e.printStackTrace();
 				}
 				return new ResultInfo(ResultInfo.CODE_ERROR, e.getMessage());
@@ -415,7 +415,7 @@ public class UIEditProfile extends UIBaseSupport {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			api = App.getApi();
+			api = AppContext.getApi();
 			pd = new ProgressDialog(mEditProfilePage);
 			pd.setMessage("正在更新头像...");
 			pd.setIndeterminate(true);
@@ -492,7 +492,7 @@ public class UIEditProfile extends UIBaseSupport {
 							user);
 				}
 			} catch (ApiException e) {
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					e.printStackTrace();
 				}
 				return new ResultInfo(ResultInfo.CODE_ERROR, e.getMessage());

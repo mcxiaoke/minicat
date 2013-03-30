@@ -2,7 +2,7 @@ package org.mcxiaoke.fancooker.service;
 
 import java.io.File;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.UIRecords;
 import org.mcxiaoke.fancooker.UIWrite;
@@ -64,7 +64,7 @@ public class PostStatusService extends BaseIntentService {
 		if (intent == null) {
 			return;
 		}
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			log("intent=" + intent);
 		}
 		this.nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -80,7 +80,7 @@ public class PostStatusService extends BaseIntentService {
 		srcFile = (File) intent.getSerializableExtra("data");
 		relationId = intent.getStringExtra("id");
 		location = intent.getStringExtra("location");
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			log("location="
 					+ (StringHelper.isEmpty(location) ? "null" : location));
 		}
@@ -89,7 +89,7 @@ public class PostStatusService extends BaseIntentService {
 	private boolean doSend() {
 		showSendingNotification();
 		boolean res = false;
-		Api api = App.getApi();
+		Api api = AppContext.getApi();
 		try {
 			StatusModel result = null;
 			if (srcFile == null || !srcFile.exists()) {
@@ -109,7 +109,7 @@ public class PostStatusService extends BaseIntentService {
 				File photo = ImageHelper.prepareUploadFile(this, srcFile,
 						quality);
 				if (photo != null && photo.length() > 0) {
-					if (App.DEBUG)
+					if (AppContext.DEBUG)
 						log("photo file=" + srcFile.getName() + " size="
 								+ photo.length() / 1024 + " quality=" + quality);
 					result = api.uploadPhoto(photo, text, location);
@@ -122,7 +122,7 @@ public class PostStatusService extends BaseIntentService {
 				res = true;
 			}
 		} catch (ApiException e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.e(TAG, e.toString());
 				e.printStackTrace();
 			}

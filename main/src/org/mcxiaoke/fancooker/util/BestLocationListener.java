@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 
 import android.location.Location;
 import android.location.LocationListener;
@@ -16,7 +16,7 @@ import android.util.Log;
 public class BestLocationListener extends Observable implements
 		LocationListener {
 	private static final String TAG = "BestLocationListener";
-	private static final boolean DEBUG = App.DEBUG;
+	private static final boolean DEBUG = AppContext.DEBUG;
 
 	public static final long LOCATION_UPDATE_MIN_TIME = 0;
 	public static final long LOCATION_UPDATE_MIN_DISTANCE = 0;

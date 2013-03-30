@@ -2,7 +2,7 @@ package org.mcxiaoke.fancooker.dao;
 
 import java.util.List;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.dao.model.DirectMessageColumns;
 import org.mcxiaoke.fancooker.dao.model.IBaseColumns;
 import org.mcxiaoke.fancooker.dao.model.RecordColumns;
@@ -51,7 +51,7 @@ import android.util.Log;
  */
 public final class DataProvider extends ContentProvider implements IBaseColumns {
 
-	private static final boolean DEBUG = App.DEBUG;
+	private static final boolean DEBUG = AppContext.DEBUG;
 
 	private static final String TAG = DataProvider.class.getSimpleName();
 
@@ -141,7 +141,7 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
 
 	private Cursor queryWithNotify(Uri uri, Cursor cursor) {
 		if (cursor == null) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				log("query() uri " + uri + " failed.");
 			}
 		} else {
@@ -175,7 +175,7 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
 	@Override
 	public Cursor query(Uri uri, String[] columns, String where,
 			String[] whereArgs, String orderBy) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "query() uri = " + uri + " where = (" + where
 					+ ") whereArgs = " + StringHelper.toString(whereArgs)
 					+ " orderBy = " + orderBy);
@@ -245,7 +245,7 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
 		if (rowId > 0) {
 			// getContext().getContentResolver().notifyChange(uri, null);
 			Uri resultUri = ContentUris.withAppendedId(uri, rowId);
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				log("insert() resultUri=" + resultUri + " id="
 						+ values.getAsString(ID) + " rowId=" + rowId);
 			}
@@ -260,7 +260,7 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
 		db.beginTransaction();
 		try {
 			for (ContentValues value : values) {
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					Log.d(TAG, "bulkInsert() " + value);
 				}
 				long id = db.insert(table, null, value);
@@ -389,7 +389,7 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
 		default:
 			throw new IllegalArgumentException("update() Unknown URI " + uri);
 		}
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			if (count > 0) {
 				log("update() result uri=" + uri + " count=" + count);
 			}

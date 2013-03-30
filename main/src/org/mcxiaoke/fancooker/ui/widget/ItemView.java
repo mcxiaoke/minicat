@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.ui.widget;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.util.Utils;
 
@@ -123,7 +123,7 @@ public class ItemView extends RelativeLayout {
 		mViewMode = ViewMode.of(a.getInteger(R.styleable.ItemView_viewMode,
 				defaultViewMode));
 
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(VIEW_LOG_TAG, "title text size=" + mTitleTextSize);
 			Log.d(VIEW_LOG_TAG, "content text size=" + mContentTextSize);
 			Log.d(VIEW_LOG_TAG, "meta text size=" + mMetaTextSize);

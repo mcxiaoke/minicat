@@ -47,7 +47,7 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
 
 	private static final int REQUEST_CODE_REGISTER = 0;
 
-	private static final boolean DEBUG = App.DEBUG;
+	private static final boolean DEBUG = AppContext.DEBUG;
 	public static final String TAG = UILogin.class.getSimpleName();
 
 	public void log(String message) {
@@ -118,7 +118,7 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId,
 					KeyEvent event) {
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					Log.d(TAG, "actionId=" + actionId + " KeyEvent=" + event);
 				}
 				if (actionId == EditorInfo.IME_ACTION_SEND) {
@@ -206,9 +206,9 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
 				if (DEBUG) {
 					Log.d(TAG, "LoginTask.doInBackground()");
 				}
-				final Api api = App.getApi();
+				final Api api = AppContext.getApi();
 				AccessToken token = api.getOAuthAccessToken(username, password);
-				if (App.DEBUG)
+				if (AppContext.DEBUG)
 					log("xauth token=" + token);
 
 				if (token != null) {
@@ -218,22 +218,22 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
 					}
 
 					publishProgress(1);
-					App.updateAccessToken(mContext, token);
+					AppContext.updateAccessToken(mContext, token);
 
 					final UserModel u = api.verifyCredentials();
 
 					if (u != null) {
-						App.updateUserInfo(mContext, u);
-						App.updateLoginInfo(mContext, username, password);
-						if (App.DEBUG) {
+						AppContext.updateUserInfo(mContext, u);
+						AppContext.updateLoginInfo(mContext, username, password);
+						if (AppContext.DEBUG) {
 							log("xauth successful! ");
 						}
 						return new ResultInfo(LOGIN_AUTH_SUCCESS);
 					} else {
-						if (App.DEBUG) {
+						if (AppContext.DEBUG) {
 							log("xauth failed.");
 						}
-						App.clearAccountInfo(mContext);
+						AppContext.clearAccountInfo(mContext);
 						return new ResultInfo(LOGIN_AUTH_FAILED,
 								"XAuth successful, but verifyAccount failed. ");
 					}
@@ -243,10 +243,10 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
 				}
 
 			} catch (Exception e) {
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					e.printStackTrace();
 				}
-				App.clearAccountInfo(mContext);
+				AppContext.clearAccountInfo(mContext);
 				return new ResultInfo(LOGIN_IO_ERROR, e.getMessage());
 			} finally {
 			}

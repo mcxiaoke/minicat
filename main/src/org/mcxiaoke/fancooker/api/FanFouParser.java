@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.dao.model.BaseModel;
 import org.mcxiaoke.fancooker.dao.model.DirectMessageModel;
 import org.mcxiaoke.fancooker.dao.model.Search;
@@ -54,7 +54,7 @@ final class FanFouParser implements ApiParser {
 
 	public static final String TAG = FanFouParser.class.getSimpleName();
 
-	public static final boolean DEBUG = App.DEBUG;
+	public static final boolean DEBUG = AppContext.DEBUG;
 
 	private String account;
 

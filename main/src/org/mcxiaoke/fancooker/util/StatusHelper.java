@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
 
 import android.text.Html;
@@ -83,7 +83,7 @@ public class StatusHelper {
 		Matcher m = PATTERN_USERLINK.matcher(text);
 		while (m.find()) {
 			userNameIdMap.put(m.group(2), m.group(1));
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d(TAG, "preprocessText() screenName=" + m.group(2)
 						+ " userId=" + m.group(1));
 			}
@@ -146,7 +146,7 @@ public class StatusHelper {
 				names.add(m.group(1));
 			}
 		}
-		String name = App.getScreenName();
+		String name = AppContext.getScreenName();
 		names.remove(name);
 		return names;
 	}

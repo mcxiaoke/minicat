@@ -11,7 +11,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.util.IOHelper;
 
 import android.graphics.Bitmap;
@@ -60,7 +60,7 @@ public final class ImageLoader implements Runnable {
 	}
 
 	private ImageLoader() {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "ImageLoader new instance.");
 		}
 		this.mExecutorService = Executors.newFixedThreadPool(CORE_POOL_SIZE,
@@ -92,7 +92,7 @@ public final class ImageLoader implements Runnable {
 			}
 			if (bitmap != null) {
 				mCache.put(url, bitmap);
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					Log.d(TAG, "download put bitmap to cache ");
 				}
 			}
@@ -103,11 +103,11 @@ public final class ImageLoader implements Runnable {
 			message.what = bitmap == null ? MESSAGE_ERROR : MESSAGE_FINISH;
 			message.obj = bitmap;
 			handler.sendMessage(message);
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d(TAG, "download handle can use, bitmap= " + bitmap);
 			}
 		} else {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d(TAG, "download handle is null, bitmap= " + bitmap);
 			}
 		}
@@ -162,7 +162,7 @@ public final class ImageLoader implements Runnable {
 		public void handleMessage(Message msg) {
 			String url = msg.getData().getString("url");
 			final ImageView view = mViewsMap.remove(url);
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d(TAG, "InnerHandler what=" + msg.what + " url=" + url
 						+ " view=" + view);
 			}
@@ -171,7 +171,7 @@ public final class ImageLoader implements Runnable {
 				final Bitmap bitmap = (Bitmap) msg.obj;
 				if (bitmap != null && view != null) {
 					if (!isExpired(view, url)) {
-						if (App.DEBUG) {
+						if (AppContext.DEBUG) {
 							Log.d(TAG, "InnerHandler onFinish() url=" + url);
 						}
 						view.setImageBitmap(bitmap);
@@ -211,14 +211,14 @@ public final class ImageLoader implements Runnable {
 	@Override
 	public void run() {
 		while (true) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d(TAG, "Daemon is running.");
 			}
 			try {
 				final ImageLoaderInfo task = mTaskQueue.take();
 				download(task);
 			} catch (InterruptedException e) {
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					e.printStackTrace();
 				}
 			}

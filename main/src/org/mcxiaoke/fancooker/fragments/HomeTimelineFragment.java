@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.fragments;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.api.Paging;
 import org.mcxiaoke.fancooker.controller.DataController;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
@@ -34,7 +34,7 @@ public class HomeTimelineFragment extends BaseTimlineFragment {
 		args.putBoolean("refresh", refresh);
 		HomeTimelineFragment fragment = new HomeTimelineFragment();
 		fragment.setArguments(args);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "newInstance() " + fragment);
 		}
 		return fragment;
@@ -67,7 +67,7 @@ public class HomeTimelineFragment extends BaseTimlineFragment {
 		} else {
 			p.sinceId = Utils.getSinceId(cursor);
 		}
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "doFetch() doGetMore=" + doGetMore + " Paging=" + p);
 		}
 		FanFouService.getTimeline(getActivity(), StatusModel.TYPE_HOME,

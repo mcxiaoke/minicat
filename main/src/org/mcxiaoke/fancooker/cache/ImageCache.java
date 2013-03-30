@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.lang.ref.SoftReference;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.util.IOHelper;
 import org.mcxiaoke.fancooker.util.ImageHelper;
 import org.mcxiaoke.fancooker.util.StringHelper;
@@ -47,7 +47,7 @@ public final class ImageCache implements ICache<Bitmap> {
 
 	public static ImageCache getInstance() {
 		if (INSTANCE == null) {
-			INSTANCE = new ImageCache(App.getApp());
+			INSTANCE = new ImageCache(AppContext.getApp());
 		}
 		return INSTANCE;
 	}

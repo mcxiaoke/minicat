@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.UIPhoto;
 import org.mcxiaoke.fancooker.UIStatus;
@@ -106,7 +106,7 @@ public final class Utils {
 		if (c != null && c.moveToFirst()) {
 			final DirectMessageModel dm = DirectMessageModel.from(c);
 			if (dm != null) {
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					Log.d(TAG, "getDmSinceId() id=" + dm.getId());
 				}
 				return dm.getId();
@@ -248,7 +248,7 @@ public final class Utils {
 
 	public static void checkAuthorization(Activity context, int statusCode) {
 		if (statusCode == 401) {
-			App.doLogin(context);
+			AppContext.doLogin(context);
 			context.finish();
 		}
 	}

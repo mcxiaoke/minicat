@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.controller;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.adapter.BaseStatusArrayAdapter;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
@@ -77,7 +77,7 @@ public class PopupController {
 		ActionItem share = new ActionItem(QUICK_ACTION_ID_SHARE, context
 				.getResources().getDrawable(R.drawable.ic_share));
 
-		final boolean me = status.getUserId().equals(App.getAccount());
+		final boolean me = status.getUserId().equals(AppContext.getAccount());
 
 		final QuickAction q = new QuickAction(context);
 		q.addActionItem(me ? delete : reply);

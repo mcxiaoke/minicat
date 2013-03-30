@@ -52,7 +52,7 @@ import android.util.Log;
  * 
  */
 
-public class App extends Application {
+public class AppContext extends Application {
 
 	private static final String TAG = "Application";
 
@@ -73,7 +73,7 @@ public class App extends Application {
 	private static ImageLoader imageLoader;
 
 	private static Api api;
-	private static App instance;
+	private static AppContext instance;
 
 	private volatile static boolean disConnected;
 
@@ -97,7 +97,6 @@ public class App extends Application {
 		themeId = R.style.AppThemeLight;
 
 		sPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		PreferenceManager.setDefaultValues(this, R.xml.options, false);
 
 		imageLoader = ImageLoader.getInstance();
 
@@ -240,7 +239,7 @@ public class App extends Application {
 	}
 
 	public static void setPreferences(SharedPreferences sPreferences) {
-		App.sPreferences = sPreferences;
+		AppContext.sPreferences = sPreferences;
 	}
 
 	public static ImageLoader getImageLoader() {
@@ -252,7 +251,7 @@ public class App extends Application {
 	}
 
 	public static void setApi(Api api) {
-		App.api = api;
+		AppContext.api = api;
 	}
 
 	public static AccessToken getAccessToken() {
@@ -267,7 +266,7 @@ public class App extends Application {
 		disConnected = state;
 	}
 
-	public static App getApp() {
+	public static AppContext getApp() {
 		return instance;
 	}
 

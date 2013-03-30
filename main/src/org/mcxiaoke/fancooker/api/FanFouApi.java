@@ -15,7 +15,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.protocol.HTTP;
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.auth.AccessToken;
 import org.mcxiaoke.fancooker.auth.OAuthProvider;
 import org.mcxiaoke.fancooker.auth.OAuthService;
@@ -47,7 +47,7 @@ class FanFouApi implements Api {
 	private static final String TAG = "API";
 	private static final String API_HOST = "http://api.fanfou.com";
 
-	private static final boolean DEBUG = App.DEBUG;
+	private static final boolean DEBUG = AppContext.DEBUG;
 	private OAuthService mOAuthService;
 	private OAuthProvider mOAuthProvider;
 	private AccessToken mAccessToken;
@@ -1091,7 +1091,7 @@ class FanFouApi implements Api {
 
 	private HttpResponse execute(HttpUriRequest request) throws IOException {
 		final HttpClient client = NetHelper.getHttpClient();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "[Request] " + request.getRequestLine().toString()
 					+ " --" + System.currentTimeMillis());
 			Header[] headers = request.getAllHeaders();
@@ -1101,7 +1101,7 @@ class FanFouApi implements Api {
 			}
 		}
 		HttpResponse response = client.execute(request);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "[Response] " + response.getStatusLine().toString()
 					+ " --" + System.currentTimeMillis());
 			Header[] headers = response.getAllHeaders();

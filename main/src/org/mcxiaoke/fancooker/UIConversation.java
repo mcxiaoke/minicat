@@ -98,7 +98,7 @@ public class UIConversation extends UIBaseSupport {
 		ft.add(R.id.container, fragment);
 		ft.commit();
 
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "setFragment() userId=" + userId + " screenName="
 					+ screenName);
 		}

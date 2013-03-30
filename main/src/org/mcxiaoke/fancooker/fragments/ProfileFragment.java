@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.fragments;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.controller.CacheController;
 import org.mcxiaoke.fancooker.controller.EmptyViewController;
@@ -58,7 +58,7 @@ public class ProfileFragment extends AbstractFragment implements
 		args.putString("id", userId);
 		ProfileFragment fragment = new ProfileFragment();
 		fragment.setArguments(args);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "newInstance() " + fragment);
 		}
 		return fragment;
@@ -192,7 +192,7 @@ public class ProfileFragment extends AbstractFragment implements
 		descContent = (TextView) root.findViewById(R.id.desc_content);
 
 		stateView = root.findViewById(R.id.state);
-		if (userId.equals(App.getAccount())) {
+		if (userId.equals(AppContext.getAccount())) {
 			stateView.setVisibility(View.GONE);
 		}
 		actionOthers = (ImageButton) root.findViewById(R.id.action_others);
@@ -227,7 +227,7 @@ public class ProfileFragment extends AbstractFragment implements
 	private void showProgress() {
 		vContent.setVisibility(View.GONE);
 		emptyController.showProgress();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "showProgress userId=" + userId);
 		}
 	}
@@ -235,7 +235,7 @@ public class ProfileFragment extends AbstractFragment implements
 	private void showContent() {
 		emptyController.hideProgress();
 		vContent.setVisibility(View.VISIBLE);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "showContent userId=" + userId);
 		}
 	}
@@ -264,7 +264,7 @@ public class ProfileFragment extends AbstractFragment implements
 			return;
 		}
 
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "updateUI() userid=" + userId);
 			Log.d(TAG, "updateUI() user.following=" + user.isFollowing());
 		}
@@ -283,7 +283,7 @@ public class ProfileFragment extends AbstractFragment implements
 	}
 
 	private void updatePermission() {
-		if (user.getId().equals(App.getAccount())) {
+		if (user.getId().equals(AppContext.getAccount())) {
 			noPermission = false;
 			return;
 		}
@@ -295,7 +295,7 @@ public class ProfileFragment extends AbstractFragment implements
 
 		String headerImageUrl = user.getProfileImageUrl();
 		headerImage.setTag(headerImageUrl);
-		App.getImageLoader().displayImage(headerImageUrl, headerImage,
+		AppContext.getImageLoader().displayImage(headerImageUrl, headerImage,
 				R.drawable.ic_head);
 
 	}
@@ -374,7 +374,7 @@ public class ProfileFragment extends AbstractFragment implements
 				}
 			}
 		};
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "showUser userId=" + userId);
 		}
 		FanFouService.showUser(getActivity(), userId, handler);
@@ -400,7 +400,7 @@ public class ProfileFragment extends AbstractFragment implements
 			}
 		};
 		FanFouService.showRelation(getActivity(), user.getId(),
-				App.getAccount(), handler);
+				AppContext.getAccount(), handler);
 	}
 
 	private void doFollow() {
@@ -422,7 +422,7 @@ public class ProfileFragment extends AbstractFragment implements
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
 				case FanFouService.RESULT_SUCCESS:
-					if (App.DEBUG) {
+					if (AppContext.DEBUG) {
 						Log.d(TAG, "follow success");
 					}
 					user.setFollowing(true);
@@ -430,7 +430,7 @@ public class ProfileFragment extends AbstractFragment implements
 					Utils.notify(getActivity(), "关注成功");
 					break;
 				case FanFouService.RESULT_ERROR:
-					if (App.DEBUG) {
+					if (AppContext.DEBUG) {
 						Log.d(TAG, "follow error");
 					}
 					String errorMessage = msg.getData().getString(
@@ -452,7 +452,7 @@ public class ProfileFragment extends AbstractFragment implements
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
 				case FanFouService.RESULT_SUCCESS:
-					if (App.DEBUG) {
+					if (AppContext.DEBUG) {
 						Log.d(TAG, "unfollow success");
 					}
 					user.setFollowing(false);
@@ -460,7 +460,7 @@ public class ProfileFragment extends AbstractFragment implements
 					Utils.notify(getActivity(), "已取消关注");
 					break;
 				case FanFouService.RESULT_ERROR:
-					if (App.DEBUG) {
+					if (AppContext.DEBUG) {
 						Log.d(TAG, "unfollow error");
 					}
 					String errorMessage = msg.getData().getString(
@@ -554,7 +554,7 @@ public class ProfileFragment extends AbstractFragment implements
 		if (user == null) {
 			return;
 		}
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG,
 					"OnClick() view=" + v.getId() + " user.id=" + user.getId()
 							+ " noPermission=" + noPermission);

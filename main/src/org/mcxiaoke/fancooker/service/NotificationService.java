@@ -3,7 +3,7 @@ package org.mcxiaoke.fancooker.service;
 import java.util.Calendar;
 import java.util.List;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.api.Api;
 import org.mcxiaoke.fancooker.api.Paging;
@@ -80,7 +80,7 @@ public class NotificationService extends WakefulIntentService {
 		am.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
 				getPendingIntent(context));
 
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "set interval=" + interval + " next time="
 					+ DateTimeHelper.formatDate(c.getTime()));
 		}
@@ -90,7 +90,7 @@ public class NotificationService extends WakefulIntentService {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(getPendingIntent(context));
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "unset");
 		}
 	}
@@ -98,7 +98,7 @@ public class NotificationService extends WakefulIntentService {
 	public static void setIfNot(Context context) {
 		boolean set = OptionHelper.readBoolean(context,
 				R.string.option_set_notification, false);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "setIfNot flag=" + set);
 		}
 		if (!set) {
@@ -118,7 +118,7 @@ public class NotificationService extends WakefulIntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		mApi = App.getApi();
+		mApi = AppContext.getApi();
 	}
 
 	@Override
@@ -152,7 +152,7 @@ public class NotificationService extends WakefulIntentService {
 		try {
 			dms = mApi.getDirectMessagesInbox(p);
 		} catch (Exception e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.e(TAG, e.getMessage());
 			}
 		}
@@ -160,7 +160,7 @@ public class NotificationService extends WakefulIntentService {
 		if (dms != null) {
 			int size = dms.size();
 			if (size > 0) {
-				if (App.DEBUG) {
+				if (AppContext.DEBUG) {
 					Log.d(TAG, "handleDm() size=" + size);
 				}
 				DataController.store(this, dms);
@@ -182,7 +182,7 @@ public class NotificationService extends WakefulIntentService {
 			p.count = count;
 			ss = mApi.getMentions(p);
 		} catch (Exception e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.e(TAG, e.getMessage());
 			}
 		}
@@ -196,7 +196,7 @@ public class NotificationService extends WakefulIntentService {
 	private void notifyStatus(List<StatusModel> ss, int type) {
 		int size = ss.size();
 		if (size > 0) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.d(TAG, "notifyStatus() size=" + size);
 			}
 			DataController.store(this, ss);
@@ -219,7 +219,7 @@ public class NotificationService extends WakefulIntentService {
 			p.sinceId = Utils.getSinceId(mc);
 			ss = mApi.getHomeTimeline(p);
 		} catch (Exception e) {
-			if (App.DEBUG) {
+			if (AppContext.DEBUG) {
 				Log.e(TAG, e.getMessage());
 			}
 		}
@@ -260,7 +260,7 @@ public class NotificationService extends WakefulIntentService {
 	}
 
 	private void sendStatusNotification(int type, int count, StatusModel status) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "sendStatusNotification type=" + type + " count="
 					+ count + " status=" + (status == null ? "null" : status));
 		}
@@ -268,13 +268,13 @@ public class NotificationService extends WakefulIntentService {
 		intent.putExtra("type", type);
 		intent.putExtra("count", count);
 		intent.putExtra("data", status);
-		intent.setAction(App.packageName + ".NotificationService");
+		intent.setAction(AppContext.packageName + ".NotificationService");
 		broadcast(intent);
 	}
 
 	private void sendMessageNotification(int type, int count,
 			DirectMessageModel dm) {
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "sendMessageNotification type=" + type + " count="
 					+ count + " dm=" + dm);
 		}
@@ -282,14 +282,14 @@ public class NotificationService extends WakefulIntentService {
 		intent.putExtra("type", type);
 		intent.putExtra("count", count);
 		intent.putExtra("data", dm);
-		intent.setAction(App.packageName + ".NotificationService");
+		intent.setAction(AppContext.packageName + ".NotificationService");
 		broadcast(intent);
 	}
 
 	private void broadcast(Intent intent) {
 		intent.setPackage(getPackageName());
 		sendOrderedBroadcast(intent, null);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "broadcast() ");
 			IntentHelper.logIntent(TAG, intent);
 		}

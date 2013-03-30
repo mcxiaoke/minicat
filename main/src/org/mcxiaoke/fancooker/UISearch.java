@@ -98,7 +98,7 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
 	private void showProgress() {
 		mListView.setVisibility(View.GONE);
 		emptyController.showProgress();
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "showProgress");
 		}
 	}
@@ -106,7 +106,7 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
 	private void showContent() {
 		emptyController.hideProgress();
 		mListView.setVisibility(View.VISIBLE);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "showContent");
 		}
 	}
@@ -144,7 +144,7 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
 
 		@Override
 		protected Integer doInBackground(Void... params) {
-			Api api = App.getApi();
+			Api api = AppContext.getApi();
 			try {
 				List<Search> savedSearches = api.getSavedSearches();
 				if (savedSearches != null && savedSearches.size() > 0) {

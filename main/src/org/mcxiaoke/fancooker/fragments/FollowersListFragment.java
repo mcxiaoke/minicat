@@ -1,6 +1,6 @@
 package org.mcxiaoke.fancooker.fragments;
 
-import org.mcxiaoke.fancooker.App;
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.dao.model.UserModel;
 
 import android.os.Bundle;
@@ -30,7 +30,7 @@ public class FollowersListFragment extends UserListFragment {
 		args.putBoolean("refresh", refresh);
 		FollowersListFragment fragment = new FollowersListFragment();
 		fragment.setArguments(args);
-		if (App.DEBUG) {
+		if (AppContext.DEBUG) {
 			Log.d(TAG, "newInstance() " + fragment);
 		}
 		return fragment;
