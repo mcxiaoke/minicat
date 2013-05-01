@@ -5,16 +5,14 @@ package org.mcxiaoke.fancooker.adapter;
 
 import java.util.ArrayList;
 
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 /**
  * @author mcxiaoke
@@ -38,10 +36,10 @@ public class SherlockTabsAdapter extends FragmentPagerAdapter implements
 		}
 	}
 
-	public SherlockTabsAdapter(SherlockFragmentActivity activity, ViewPager pager) {
-		super(activity.getSupportFragmentManager());
+	public SherlockTabsAdapter(Activity activity, ViewPager pager) {
+		super(activity.getFragmentManager());
 		mContext = activity;
-		mActionBar = activity.getSupportActionBar();
+		mActionBar = activity.getActionBar();
 		mViewPager = pager;
 		mViewPager.setAdapter(this);
 		mViewPager.setOnPageChangeListener(this);

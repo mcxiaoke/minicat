@@ -8,9 +8,9 @@ import org.mcxiaoke.fancooker.fragments.UserListFragment;
 import org.mcxiaoke.fancooker.ui.widget.TextChangeListener;
 import org.mcxiaoke.fancooker.util.NetworkHelper;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -96,7 +96,7 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 
 		mFragment.setOnInitCompleteListener(this);
 
-		FragmentTransaction transaction = getSupportFragmentManager()
+		FragmentTransaction transaction = getFragmentManager()
 				.beginTransaction();
 		transaction.add(R.id.container, mFragment);
 		transaction.commit();

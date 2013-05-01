@@ -12,18 +12,18 @@ import org.mcxiaoke.fancooker.menu.MenuFragment;
 import org.mcxiaoke.fancooker.menu.MenuItemResource;
 import org.mcxiaoke.fancooker.util.NetworkHelper;
 
+import android.app.ActionBar;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Window;
 import com.slidingmenu.lib.SlidingMenu;
 
 /**
@@ -36,7 +36,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback {
 
 	private ViewGroup mContainer;
 	private SlidingMenu mSlidingMenu;
-	private MenuFragment mMenuFragment;
+	private Fragment mMenuFragment;
 
 	private void log(String message) {
 		Log.d(TAG, message);
@@ -52,7 +52,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback {
 
 	@Override
 	protected void setActionBar() {
-		ActionBar ab = getSupportActionBar();
+		ActionBar ab = getActionBar();
 		ab.setDisplayHomeAsUpEnabled(false);
 	}
 
@@ -69,7 +69,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback {
 	protected void setLayout() {
 		setContentView(R.layout.content_frame);
 		mContainer = (ViewGroup) findViewById(R.id.content_frame);
-		FragmentManager fm = getSupportFragmentManager();
+		FragmentManager fm = getFragmentManager();
 
 		fm.beginTransaction()
 				.replace(R.id.content_frame, HomeFragment.newInstance())
@@ -151,14 +151,16 @@ public class UIHome extends UIBaseSupport implements MenuCallback {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(
-			com.actionbarsherlock.view.MenuItem item) {
+	public boolean onOptionsItemSelected( MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_write:
 			onMenuWriteClick();
 			break;
 		case R.id.menu_search:
 			onMenuSearchClick();
+			break;
+		case R.id.menu_logout:
+			onMenuLogoutClick();
 			break;
 		default:
 			break;
@@ -211,7 +213,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback {
 
 	private void replaceFramgnt(Fragment fragment) {
 		log("fragment=" + fragment);
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		ft.replace(R.id.content_frame, fragment);
 		ft.commit();
 		mSlidingMenu.showContent();

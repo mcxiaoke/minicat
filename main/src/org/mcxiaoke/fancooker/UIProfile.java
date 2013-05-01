@@ -3,17 +3,18 @@ package org.mcxiaoke.fancooker;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mcxiaoke.fancooker.adapter.FragmentPagerAdapter;
 import org.mcxiaoke.fancooker.dao.model.UserModel;
 import org.mcxiaoke.fancooker.fragments.AbstractFragment;
 import org.mcxiaoke.fancooker.fragments.ProfileFragment;
 import org.mcxiaoke.fancooker.fragments.UserFavoritesFragment;
 import org.mcxiaoke.fancooker.fragments.UserTimelineFragment;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 
@@ -35,7 +36,7 @@ public class UIProfile extends UIBaseSupport implements OnPageChangeListener {
 	public static final String TAG = UIProfile.class.getSimpleName();
 
 	private ViewPager mViewPager;
-	private PagesAdapter mPagesAdapter;
+	private PagerAdapter mPagesAdapter;
 	private TitlePageIndicator mIndicator;
 
 	private UserModel user;
@@ -82,7 +83,7 @@ public class UIProfile extends UIBaseSupport implements OnPageChangeListener {
 	protected void setLayout() {
 		setContentView(R.layout.ui_profile_viewpager);
 
-		mPagesAdapter = new PagesAdapter(getSupportFragmentManager(), userId);
+		mPagesAdapter = new PagesAdapter(getFragmentManager(), userId);
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);
 		mViewPager.setAdapter(mPagesAdapter);
 		mViewPager.setCurrentItem(1);

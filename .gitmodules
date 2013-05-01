@@ -1,6 +1,3 @@
-[submodule "deps/ActionBarSherlock"]
-	path = deps/ActionBarSherlock
-	url = git@github.com:mcxiaoke/ActionBarSherlock.git
 [submodule "deps/PullToRefresh"]
 	path = deps/PullToRefresh
 	url = git@github.com:mcxiaoke/Android-PullToRefresh.git

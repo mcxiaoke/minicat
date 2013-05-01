@@ -9,21 +9,20 @@ import org.mcxiaoke.fancooker.fragments.UserFavoritesFragment;
 import org.mcxiaoke.fancooker.fragments.UserTimelineFragment;
 import org.mcxiaoke.fancooker.ui.widget.OnActionClickListener;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
-
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 
 public class UITabProfile extends UIBaseSupport implements
 		OnActionClickListener {
@@ -181,7 +180,7 @@ public class UITabProfile extends UIBaseSupport implements
 	 * the selected tab changes.
 	 */
 	public static class TabManager implements TabHost.OnTabChangeListener {
-		private final FragmentActivity mActivity;
+		private final Activity mActivity;
 		private final TabHost mTabHost;
 		private final int mContainerId;
 		private final HashMap<String, TabInfo> mTabs = new HashMap<String, TabInfo>();
@@ -216,7 +215,7 @@ public class UITabProfile extends UIBaseSupport implements
 			}
 		}
 
-		public TabManager(FragmentActivity activity, TabHost tabHost,
+		public TabManager(Activity activity, TabHost tabHost,
 				int containerId) {
 			mActivity = activity;
 			mTabHost = tabHost;
@@ -233,10 +232,10 @@ public class UITabProfile extends UIBaseSupport implements
 			// Check to see if we already have a fragment for this tab, probably
 			// from a previously saved state. If so, deactivate it, because our
 			// initial state is that a tab isn't shown.
-			info.fragment = mActivity.getSupportFragmentManager()
+			info.fragment = mActivity.getFragmentManager()
 					.findFragmentByTag(tag);
 			if (info.fragment != null && !info.fragment.isDetached()) {
-				FragmentTransaction ft = mActivity.getSupportFragmentManager()
+				FragmentTransaction ft = mActivity.getFragmentManager()
 						.beginTransaction();
 				ft.detach(info.fragment);
 				ft.commit();
@@ -250,7 +249,7 @@ public class UITabProfile extends UIBaseSupport implements
 		public void onTabChanged(String tabId) {
 			TabInfo newTab = mTabs.get(tabId);
 			if (mLastTab != newTab) {
-				FragmentTransaction ft = mActivity.getSupportFragmentManager()
+				FragmentTransaction ft = mActivity.getFragmentManager()
 						.beginTransaction();
 				if (mLastTab != null) {
 					if (mLastTab.fragment != null) {
@@ -269,7 +268,7 @@ public class UITabProfile extends UIBaseSupport implements
 
 				mLastTab = newTab;
 				ft.commit();
-				mActivity.getSupportFragmentManager()
+				mActivity.getFragmentManager()
 						.executePendingTransactions();
 			}
 		}

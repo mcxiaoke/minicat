@@ -90,7 +90,6 @@
     <string name="page_title_modify">Edit Profile</string>
     
     <!-- messages text -->
-    <string name="msg_dm_content_cannot_be_null"></string>
     <string name="msg_dm_content_has_been_copied"></string>
     <string name="msg_dm_please_select_recipient"></string>
     

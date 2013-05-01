@@ -9,20 +9,20 @@ import org.mcxiaoke.fancooker.service.Constants;
 import org.mcxiaoke.fancooker.util.Utils;
 
 import android.app.Activity;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -158,8 +158,8 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 		if (AppContext.DEBUG) {
 			Log.d(TAG, "onRefresh() isVisible=" + isVisible());
 		}
-		Mode currentMode=refreshView.getCurrentMode();
-		boolean bottom=(Mode.PULL_FROM_END.equals(currentMode));
+		Mode currentMode = refreshView.getCurrentMode();
+		boolean bottom = (Mode.PULL_FROM_END.equals(currentMode));
 		doFetch(bottom);
 	}
 

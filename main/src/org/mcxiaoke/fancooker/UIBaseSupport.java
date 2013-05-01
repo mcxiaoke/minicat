@@ -3,14 +3,15 @@ package org.mcxiaoke.fancooker;
 import org.mcxiaoke.fancooker.controller.UIController;
 import org.mcxiaoke.fancooker.util.Utils;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 /**
  * @author mcxiaoke
@@ -33,7 +34,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
  * @version 3.5 2012.03.16
  * 
  */
-abstract class UIBaseSupport extends SherlockFragmentActivity implements
+abstract class UIBaseSupport extends Activity implements
 		OnClickListener {
 
 	public static final int STATE_INIT = 0;
@@ -80,7 +81,7 @@ abstract class UIBaseSupport extends SherlockFragmentActivity implements
 	protected abstract void setLayout();
 
 	protected void setActionBar() {
-		ActionBar ab = getSupportActionBar();
+		ActionBar ab = getActionBar();
 		ab.setDisplayHomeAsUpEnabled(true);
 	}
 
@@ -89,17 +90,16 @@ abstract class UIBaseSupport extends SherlockFragmentActivity implements
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+	public boolean onCreateOptionsMenu( Menu menu) {
 		int id = getMenuResourceId();
 		if (id > 0) {
-			getSupportMenuInflater().inflate(id, menu);
+			getMenuInflater().inflate(id, menu);
 		}
 		return true;
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(
-			com.actionbarsherlock.view.MenuItem item) {
+	public boolean onOptionsItemSelected( MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			onHomeLogoClick();

@@ -17,7 +17,6 @@
 
     <!-- ==added by version 2.0 below=== -->
     <!-- common colors -->
-    <color name="transparent">#00000000</color>
     <color name="yellow">#fffdff66</color>
     <color name="white">#ffffffff</color>
     <color name="black">#ff000000</color>

@@ -5,7 +5,7 @@
 
     <!-- ====================Theme.Blue start=================== -->
 
-    <style name="AppThemeLight" parent="Theme.Sherlock.Light.DarkActionBar">
+    <style name="AppThemeLight" parent="@android:style/Theme.Holo.Light.DarkActionBar">
 
         <!-- widget style -->
         <item name="ButtonGroupStyle">@style/Widget.ButtonGroup.Light</item>
@@ -20,7 +20,7 @@
         <item name="searchTextColor">@color/light_blue</item>
 
         <!-- system control -->
-        <item name="actionBarStyle">@style/Widget.ActionBar.Light</item>
+        <item name="android:actionBarStyle">@style/Widget.ActionBar.Light</item>
         <item name="android:listViewStyle">@style/Widget.ListView.Light</item>
 
         <!-- scrollbars style -->
@@ -61,7 +61,7 @@
         <item name="uiBackground">@color/transparent</item>
     </style> <!-- ===================Theme.Blue end==================== -->
 
-    <style name="AppTheme.UIPhoto" parent="Theme.Sherlock.NoActionBar"></style>
+    <style name="AppTheme.UIPhoto" parent="@android:style/Theme.Holo.NoActionBar"></style>
 
     <!-- ActionBar Style -->
 

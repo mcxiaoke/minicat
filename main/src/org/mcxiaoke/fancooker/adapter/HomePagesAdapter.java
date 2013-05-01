@@ -8,8 +8,8 @@ import org.mcxiaoke.fancooker.fragments.ConversationListFragment;
 import org.mcxiaoke.fancooker.fragments.HomeTimelineFragment;
 import org.mcxiaoke.fancooker.fragments.MentionTimelineFragment;
 
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.app.FragmentManager;
+
 
 public class HomePagesAdapter extends FragmentPagerAdapter {
 

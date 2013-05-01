@@ -52,17 +52,19 @@
 
     <style name="Widget"></style>
 
-    <style name="Widget.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
-        <item name="logo">@drawable/i_logo</item>
+    <style name="Widget.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:logo">@drawable/i_logo</item>
     </style>
 
     <style name="Widget.ActionBar.Light">
-        <item name="background">@drawable/actionbar_background</item>
+        <item name="android:titleTextStyle">@style/Widget.ActionBarTitle</item>
+        <item name="android:background">@drawable/actionbar_background</item>
     </style>
 
-    <style name="Widget.ActionBarTitle"></style>
-
-    <style name="Widget.ActionBarTitle.Light"></style>
+    <style name="Widget.ActionBarTitle">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
 
     <style name="Widget.ListView">
         <item name="android:dividerHeight">@dimen/dividerWidth</item>

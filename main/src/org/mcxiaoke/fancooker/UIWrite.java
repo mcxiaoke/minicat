@@ -20,8 +20,10 @@ import org.mcxiaoke.fancooker.util.OptionHelper;
 import org.mcxiaoke.fancooker.util.StringHelper;
 import org.mcxiaoke.fancooker.util.Utils;
 
+import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
@@ -29,11 +31,10 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
 import android.text.Editable;
 import android.text.Selection;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -361,7 +362,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 		setAutoComplete();
 		parseIntent();
 
-		getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+		getLoaderManager().initLoader(LOADER_ID, null, this);
 
 	}
 
@@ -422,8 +423,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(
-			com.actionbarsherlock.view.MenuItem item) {
+	public boolean onOptionsItemSelected( MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_send:
 			doSend();

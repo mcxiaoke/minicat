@@ -5,7 +5,6 @@ import org.mcxiaoke.fancooker.ui.widget.GestureManager.SwipeListener;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -62,7 +61,7 @@ abstract class UIBaseTimeline extends UIBaseSupport implements SwipeListener {
 		}
 
 		mFragment = getFragment(userId);
-		FragmentTransaction transaction = getSupportFragmentManager()
+		android.app.FragmentTransaction transaction = getFragmentManager()
 				.beginTransaction();
 		transaction.add(R.id.container, mFragment);
 		transaction.commit();

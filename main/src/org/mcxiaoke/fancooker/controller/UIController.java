@@ -30,12 +30,12 @@ import org.mcxiaoke.fancooker.util.OptionHelper;
 import org.mcxiaoke.fancooker.util.StatusHelper;
 import org.mcxiaoke.fancooker.util.Utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.FragmentActivity;
 
 /**
  * @author mcxiaoke
@@ -215,8 +215,8 @@ public class UIController {
 		context.startActivity(intent);
 	}
 
-	public static void showMessage(FragmentActivity context, String id) {
-		context.getSupportFragmentManager()
+	public static void showMessage(Activity context, String id) {
+		context.getFragmentManager()
 				.beginTransaction()
 				.setCustomAnimations(android.R.anim.slide_in_left,
 						android.R.anim.slide_out_right)
@@ -224,8 +224,8 @@ public class UIController {
 						ConversationListFragment.newInstance(false)).commit();
 	}
 
-	public static void showHome(FragmentActivity context, String id) {
-		context.getSupportFragmentManager()
+	public static void showHome(Activity context, String id) {
+		context.getFragmentManager()
 				.beginTransaction()
 				.setCustomAnimations(android.R.anim.slide_in_left,
 						android.R.anim.slide_out_right)

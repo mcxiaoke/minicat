@@ -1,4 +1,4 @@
-package org.mcxiaoke.fancooker.auth;
+package org.mcxiaoke.fancooker.auth2;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -14,14 +14,12 @@ import java.util.Random;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.http.HttpInetConnection;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.message.BasicHeader;
 import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.auth.exception.AuthException;
-import org.mcxiaoke.fancooker.http.HttpEngine;
 import org.mcxiaoke.fancooker.http.NetHelper;
 import org.mcxiaoke.fancooker.http.Parameter;
 import org.mcxiaoke.fancooker.http.RestClient;
@@ -31,14 +29,6 @@ import org.mcxiaoke.fancooker.util.Base64;
 
 import android.util.Log;
 
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpExecuteInterceptor;
-import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.HttpTransport;
 
 /**
  * @author mcxiaoke
@@ -187,29 +177,23 @@ public class OAuthService {
 
 	public AccessToken getOAuthAccessToken(String username, String password)
 			throws AuthException, IOException {
-		final String authorization = buildXAuthHeader(username, password,
+		String authorization = buildXAuthHeader(username, password,
 				mOAuthProvider, false);
-		HttpTransport httpTransport = HttpEngine.getInstance()
-				.getHttpTransport();
-		HttpRequestInitializer httpRequestInitializer = new HttpRequestInitializer() {
-			@Override
-			public void initialize(HttpRequest request) throws IOException {
-				request.getHeaders().setAuthorization(authorization);
-			}
-		};
-		HttpRequestFactory factory = httpTransport
-				.createRequestFactory(httpRequestInitializer);
-		HttpRequest request = factory.buildGetRequest(new GenericUrl(
-				mOAuthProvider.getAccessTokenURL()));
+		RestRequest nr = RestRequest.newBuilder()
+				.url(mOAuthProvider.getAccessTokenURL())
+				.header("Authorization", authorization).build();
+		// NetClient client = new NetClient();
+		// HttpResponse response = client.exec(nr);
+		// NetResponse res = new NetResponse(response);
 
-		HttpResponse response = request.execute();
-		String content = response.parseAsString();
-		int statusCode = response.getStatusCode();
+		RestResponse res = new RestClient().execute(nr, false);
+
+		String content = res.getContent();
 		if (AppContext.DEBUG) {
-			Log.d(TAG, "getOAuthAccessToken() code=" + statusCode
+			Log.d(TAG, "getOAuthAccessToken() code=" + res.statusCode
 					+ " response=" + content);
 		}
-		if (statusCode == 200) {
+		if (res.statusCode == 200) {
 			return new AccessToken(content);
 		}
 		throw new AuthException("登录失败，帐号或密码错误");

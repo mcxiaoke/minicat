@@ -7,10 +7,10 @@ import org.mcxiaoke.fancooker.util.OptionHelper;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.CursorAdapter;
 
 /**
  * @author mcxiaoke
