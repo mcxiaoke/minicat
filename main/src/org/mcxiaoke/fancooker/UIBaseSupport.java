@@ -181,4 +181,10 @@ abstract class UIBaseSupport extends Activity implements
 	public void onClick(View v) {
 	}
 
+	@Override
+	public void finish() {
+		super.finish();
+		overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+	}
+
 }

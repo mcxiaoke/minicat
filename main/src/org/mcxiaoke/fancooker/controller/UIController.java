@@ -45,8 +45,10 @@ import android.os.Message;
  */
 public class UIController {
 
-	private static void startUI(Context ctx, Class<?> cls) {
-		ctx.startActivity(new Intent(ctx, cls));
+	private static void startUI(Activity activity, Class<?> cls) {
+		activity.startActivity(new Intent(activity, cls));
+		activity.overridePendingTransition(R.anim.push_left_in,
+				R.anim.push_left_out);
 	}
 
 	public static void showFanfouBlog(Context context) {
@@ -70,7 +72,7 @@ public class UIController {
 		context.startActivity(intent);
 	}
 
-	public static void showAbout(Context context) {
+	public static void showAbout(Activity context) {
 		startUI(context, UIAbout.class);
 	}
 
@@ -80,7 +82,7 @@ public class UIController {
 		context.startActivity(intent);
 	}
 
-	public static void showTopic(Context context) {
+	public static void showTopic(Activity context) {
 		startUI(context, UISearch.class);
 	}
 
@@ -90,7 +92,7 @@ public class UIController {
 		context.startActivity(intent);
 	}
 
-	public static void showConversation(Context context, DirectMessageModel dm) {
+	public static void showConversation(Activity context, DirectMessageModel dm) {
 		Intent intent = new Intent(context, UIConversation.class);
 		intent.putExtra("refresh", true);
 		if (dm.isIncoming()) {
@@ -104,9 +106,11 @@ public class UIController {
 					dm.getRecipientProfileImageUrl());
 		}
 		context.startActivity(intent);
+		context.overridePendingTransition(R.anim.push_left_in,
+				R.anim.push_left_out);
 	}
 
-	public static void showConversation(Context context, UserModel user,
+	public static void showConversation(Activity context, UserModel user,
 			boolean refresh) {
 		Intent intent = new Intent(context, UIConversation.class);
 		intent.putExtra("id", user.getId());
@@ -114,24 +118,32 @@ public class UIController {
 		intent.putExtra("profile_image_url", user.getProfileImageUrl());
 		intent.putExtra("refresh", refresh);
 		context.startActivity(intent);
+		context.overridePendingTransition(R.anim.push_left_in,
+				R.anim.push_left_out);
 	}
 
-	public static void showWrite(Context context) {
+	public static void showWrite(Activity context) {
 		Intent intent = new Intent(context, UIWrite.class);
 		context.startActivity(intent);
+		context.overridePendingTransition(R.anim.push_left_in,
+				R.anim.push_left_out);
 	}
 
-	public static void showWrite(Context context, String text, File file) {
+	public static void showWrite(Activity context, String text, File file) {
 		Intent intent = new Intent(context, UIWrite.class);
 		intent.putExtra("text", text);
 		intent.putExtra("data", file);
 		context.startActivity(intent);
+		context.overridePendingTransition(R.anim.push_left_in,
+				R.anim.push_left_out);
 	}
 
-	public static void showWrite(Context context, String text) {
+	public static void showWrite(Activity context, String text) {
 		Intent intent = new Intent(context, UIWrite.class);
 		intent.putExtra("text", text);
 		context.startActivity(intent);
+		context.overridePendingTransition(R.anim.push_left_in,
+				R.anim.push_left_out);
 	}
 
 	public static void doFavorite(final Context context, String id) {
@@ -184,7 +196,7 @@ public class UIController {
 		context.startActivity(Intent.createChooser(intent, "分享"));
 	}
 
-	public static void doReply(Context context, StatusModel status) {
+	public static void doReply(Activity context, StatusModel status) {
 
 		if (status != null) {
 			StringBuilder sb = new StringBuilder();
@@ -204,6 +216,8 @@ public class UIController {
 			intent.putExtra("text", sb.toString());
 			intent.putExtra("type", UIWrite.TYPE_REPLY);
 			context.startActivity(intent);
+			context.overridePendingTransition(R.anim.push_left_in,
+					R.anim.push_left_out);
 		} else {
 			showWrite(context);
 		}
@@ -233,16 +247,20 @@ public class UIController {
 				.commit();
 	}
 
-	public static void showProfile(Context context, String id) {
+	public static void showProfile(Activity context, String id) {
 		Intent intent = new Intent(context, UITabProfile.class);
 		intent.putExtra("id", id);
 		context.startActivity(intent);
+		context.overridePendingTransition(R.anim.push_left_in,
+				R.anim.push_left_out);
 	}
 
-	public static void showProfile(Context context, UserModel user) {
+	public static void showProfile(Activity context, UserModel user) {
 		Intent intent = new Intent(context, UITabProfile.class);
 		intent.putExtra("data", user);
 		context.startActivity(intent);
+		context.overridePendingTransition(R.anim.push_left_in,
+				R.anim.push_left_out);
 	}
 
 	public static void showTimeline(Context context, String id) {

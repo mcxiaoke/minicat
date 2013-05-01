@@ -79,11 +79,13 @@ public final class Utils {
 		}
 	}
 
-	public static void goStatusPage(Context context, StatusModel s) {
+	public static void goStatusPage(Activity context, StatusModel s) {
 		if (s != null) {
 			Intent intent = new Intent(context, UIStatus.class);
 			intent.putExtra("data", s);
 			context.startActivity(intent);
+			context.overridePendingTransition(R.anim.push_left_in,
+					R.anim.push_left_out);
 		}
 	}
 
@@ -217,9 +219,9 @@ public final class Utils {
 			context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}
 	}
-	
-	public static void setBoldText(final TextView tv){
-		TextPaint tp=tv.getPaint();
+
+	public static void setBoldText(final TextView tv) {
+		TextPaint tp = tv.getPaint();
 		tp.setFakeBoldText(true);
 	}
 
