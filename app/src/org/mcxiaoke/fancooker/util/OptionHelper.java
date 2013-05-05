@@ -1,4 +1,4 @@
-﻿package org.mcxiaoke.fancooker.util;
+package org.mcxiaoke.fancooker.util;
 
 import org.mcxiaoke.fancooker.AppContext;
 

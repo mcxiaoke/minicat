@@ -1,4 +1,4 @@
-﻿package org.mcxiaoke.fancooker.util;
+package org.mcxiaoke.fancooker.util;
 
 import java.io.File;
 import java.util.Collection;

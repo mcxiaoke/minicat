@@ -1,4 +1,4 @@
-﻿package org.mcxiaoke.fancooker.http;
+package org.mcxiaoke.fancooker.http;
 
 import java.io.IOException;
 import java.io.InputStream;
