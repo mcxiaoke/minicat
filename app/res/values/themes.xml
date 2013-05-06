@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme"></style>
+    <style name="ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/actionbar_background</item>
+        <item name="android:logo">@drawable/i_logo</item>
+    </style>
 
-    <!-- ====================Theme.Blue start=================== -->
-
-    <style name="AppThemeLight" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+    <style name="AppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
 
         <!-- widget style -->
         <item name="ButtonGroupStyle">@style/Widget.ButtonGroup.Light</item>
@@ -18,16 +20,6 @@
         <item name="FollowStateStyle">@style/Widget.FollowState.Light</item>
         <item name="itemViewStyle">@style/Widget.ItemView.Light</item>
         <item name="searchTextColor">@color/light_blue</item>
-
-        <!-- system control -->
-        <item name="android:actionBarStyle">@style/Widget.ActionBar.Light</item>
-        <item name="android:listViewStyle">@style/Widget.ListView.Light</item>
-
-        <!-- scrollbars style -->
-        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_vertical_thumb</item>
-        <item name="android:scrollbarThumbHorizontal">@drawable/scrollbar_vertical_thumb</item>
-        <item name="android:scrollbarSize">@dimen/scrollbarSize</item>
-        <item name="android:scrollbarStyle">insideOverlay</item>
 
         <!-- text color -->
         <item name="primaryTextColor">@color/black</item>
@@ -59,10 +51,8 @@
         <item name="primaryColor">@color/light_blue</item>
         <item name="secondaryColor">@color/light_blue_dark</item>
         <item name="uiBackground">@color/transparent</item>
-    </style> <!-- ===================Theme.Blue end==================== -->
+    </style>
 
     <style name="AppTheme.UIPhoto" parent="@android:style/Theme.Holo.NoActionBar"></style>
-
-    <!-- ActionBar Style -->
 
 </resources>

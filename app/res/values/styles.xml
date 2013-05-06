@@ -52,32 +52,6 @@
 
     <style name="Widget"></style>
 
-    <style name="Widget.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:logo">@drawable/i_logo</item>
-    </style>
-
-    <style name="Widget.ActionBar.Light">
-        <item name="android:titleTextStyle">@style/Widget.ActionBarTitle</item>
-        <item name="android:background">@drawable/actionbar_background</item>
-    </style>
-
-    <style name="Widget.ActionBarTitle">
-        <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="Widget.ListView">
-        <item name="android:dividerHeight">@dimen/dividerWidth</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:cacheColorHint">@android:color/transparent</item>
-        <item name="android:scrollbars">vertical</item>
-    </style>
-
-    <style name="Widget.ListView.Light">
-        <item name="android:listSelector">@drawable/list_selector</item>
-        <item name="android:divider">@color/light_list_divider</item>
-    </style>
-
     <style name="Widget.ButtonGroup">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -355,11 +329,5 @@
         <item name="@android:windowEnterAnimation">@anim/move_left_to_right</item>
         <item name="@android:windowExitAnimation">@anim/move_right_to_left</item>
     </style>
-
-    <!-- ========================= above add by mcxiaoke======================== -->
-    <!-- ========================= above add by mcxiaoke======================== -->
-    <!-- ========================= above add by mcxiaoke======================== -->
-    <!-- ========================= above add by mcxiaoke======================== -->
-    <!-- ========================= above add by mcxiaoke======================== -->
 
 </resources>

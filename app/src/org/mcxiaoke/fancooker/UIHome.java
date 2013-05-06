@@ -1,5 +1,6 @@
 package org.mcxiaoke.fancooker;
 
+import org.mcxiaoke.fancooker.adapter.HomePagesAdapter;
 import org.mcxiaoke.fancooker.cache.ImageLoader;
 import org.mcxiaoke.fancooker.controller.SimpleDialogListener;
 import org.mcxiaoke.fancooker.controller.UIController;
@@ -17,8 +18,12 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.PagerTabStrip;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,13 +35,18 @@ import com.slidingmenu.lib.SlidingMenu;
  * @author mcxiaoke
  * 
  */
-public class UIHome extends UIBaseSupport implements MenuCallback {
+public class UIHome extends UIBaseSupport implements MenuCallback,
+		OnPageChangeListener {
 
 	public static final String TAG = UIHome.class.getSimpleName();
 
 	private ViewGroup mContainer;
 	private SlidingMenu mSlidingMenu;
 	private Fragment mMenuFragment;
+
+	private ViewPager mViewPager;
+	private PagerTabStrip mPagerTabStrip;
+	private HomePagesAdapter mPagesAdapter;
 
 	private void log(String message) {
 		Log.d(TAG, message);
@@ -69,11 +79,16 @@ public class UIHome extends UIBaseSupport implements MenuCallback {
 	protected void setLayout() {
 		setContentView(R.layout.content_frame);
 		mContainer = (ViewGroup) findViewById(R.id.content_frame);
-		FragmentManager fm = getFragmentManager();
 
-		fm.beginTransaction()
-				.replace(R.id.content_frame, HomeFragment.newInstance())
-				.commit();
+		mViewPager = (ViewPager) findViewById(R.id.viewpager);
+		mViewPager.setOnPageChangeListener(this);
+		mPagerTabStrip = (PagerTabStrip) findViewById(R.id.viewpager_strip);
+		mPagerTabStrip.setDrawFullUnderline(false);
+		mPagerTabStrip.setTabIndicatorColor(getResources().getColor(
+				R.color.light_blue));
+		mPagerTabStrip.setTextColor(Color.WHITE);
+		mPagesAdapter = new HomePagesAdapter(getFragmentManager());
+		mViewPager.setAdapter(mPagesAdapter);
 
 		mSlidingMenu = new SlidingMenu(this);
 		mSlidingMenu.setMode(SlidingMenu.LEFT);
@@ -85,6 +100,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback {
 		mSlidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
 		mSlidingMenu.setMenu(R.layout.menu_frame);
 
+		FragmentManager fm = getFragmentManager();
 		mMenuFragment = MenuFragment.newInstance();
 		fm.beginTransaction().replace(R.id.menu_frame, mMenuFragment).commit();
 	}
@@ -151,7 +167,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected( MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_write:
 			onMenuWriteClick();
@@ -266,6 +282,23 @@ public class UIHome extends UIBaseSupport implements MenuCallback {
 			break;
 		}
 
+	}
+
+	@Override
+	public void onPageScrollStateChanged(int page) {
+	}
+
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+	}
+
+	@Override
+	public void onPageSelected(int page) {
+		if (page == 0) {
+			mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+		} else {
+			mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+		}
 	}
 
 }

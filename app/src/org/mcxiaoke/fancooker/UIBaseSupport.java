@@ -5,6 +5,8 @@ import org.mcxiaoke.fancooker.util.Utils;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -34,8 +36,7 @@ import android.view.View.OnClickListener;
  * @version 3.5 2012.03.16
  * 
  */
-abstract class UIBaseSupport extends Activity implements
-		OnClickListener {
+abstract class UIBaseSupport extends Activity implements OnClickListener {
 
 	public static final int STATE_INIT = 0;
 	public static final int STATE_NORMAL = 1;
@@ -81,8 +82,10 @@ abstract class UIBaseSupport extends Activity implements
 	protected abstract void setLayout();
 
 	protected void setActionBar() {
+		Resources res = getResources();
 		ActionBar ab = getActionBar();
 		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setDisplayUseLogoEnabled(true);
 	}
 
 	protected int getMenuResourceId() {
@@ -90,7 +93,7 @@ abstract class UIBaseSupport extends Activity implements
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu( Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu) {
 		int id = getMenuResourceId();
 		if (id > 0) {
 			getMenuInflater().inflate(id, menu);
@@ -99,7 +102,7 @@ abstract class UIBaseSupport extends Activity implements
 	}
 
 	@Override
-	public boolean onOptionsItemSelected( MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			onHomeLogoClick();

@@ -94,7 +94,7 @@ public class AppContext extends Application {
 		// }
 		instance = this;
 
-		themeId = R.style.AppThemeLight;
+		themeId = R.style.AppTheme;
 
 		sPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
