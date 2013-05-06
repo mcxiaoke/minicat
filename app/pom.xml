@@ -22,9 +22,9 @@
 		<java.version>1.6</java.version>
 		<android.version>4.1.1.4</android.version>
 		<android.support.version>r11</android.support.version>
-		<android.platform>17</android.platform>
+		<android.platform>16</android.platform>
 		<android-maven.version>3.5.3</android-maven.version>
-		<android.actionbarsherlock.version>4.2.0</android.actionbarsherlock.version>
+		<android.actionbarsherlock.version>4.3.1</android.actionbarsherlock.version>
 		<google.httpclient.version>1.14.1-beta</google.httpclient.version>
 	</properties>
 
@@ -118,6 +118,12 @@
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
     <version>2.2.1</version>
+</dependency>
+
+<dependency>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId>
+    <version>4.8.2</version>
 </dependency>
 
 	</dependencies>

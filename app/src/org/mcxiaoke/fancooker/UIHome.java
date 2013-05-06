@@ -248,6 +248,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 	private void replaceFramgnt(Fragment fragment) {
 		log("fragment=" + fragment);
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		ft.setCustomAnimations(R.animator.push_left_in, R.animator.push_left_out);
 		ft.replace(R.id.content_frame, fragment);
 		ft.addToBackStack(null);
 		ft.commit();
