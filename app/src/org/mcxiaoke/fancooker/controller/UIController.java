@@ -24,13 +24,13 @@ import org.mcxiaoke.fancooker.dao.model.DirectMessageModel;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
 import org.mcxiaoke.fancooker.dao.model.UserModel;
 import org.mcxiaoke.fancooker.fragments.ConversationListFragment;
-import org.mcxiaoke.fancooker.fragments.HomeFragment;
 import org.mcxiaoke.fancooker.service.FanFouService;
 import org.mcxiaoke.fancooker.util.OptionHelper;
 import org.mcxiaoke.fancooker.util.StatusHelper;
 import org.mcxiaoke.fancooker.util.Utils;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -45,8 +45,8 @@ import android.os.Message;
  */
 public class UIController {
 
-	private static void startUI(Activity activity, Class<?> cls) {
-		activity.startActivity(new Intent(activity, cls));
+	private static void startUIByAnimation(Activity activity, Intent intent) {
+		activity.startActivity(intent);
 		activity.overridePendingTransition(R.anim.push_left_in,
 				R.anim.push_left_out);
 	}
@@ -57,23 +57,23 @@ public class UIController {
 		context.startActivity(intent);
 	}
 
-	public static void showAnnounce(Context context) {
+	public static void showAnnounce(Activity context) {
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		intent.setData(Uri.parse("fanfouhd://user/androidsupport"));
-		context.startActivity(intent);
+		startUIByAnimation(context, intent);
 	}
 
 	public static void showOption(Context context) {
 	}
 
-	public static void showEditProfile(Context context, final UserModel user) {
+	public static void showEditProfile(Activity context, final UserModel user) {
 		Intent intent = new Intent(context, UIEditProfile.class);
 		intent.putExtra("data", user);
-		context.startActivity(intent);
+		startUIByAnimation(context, intent);
 	}
 
 	public static void showAbout(Activity context) {
-		startUI(context, UIAbout.class);
+		startUIByAnimation(context, new Intent(context, UIAbout.class));
 	}
 
 	public static void showLogin(Context context) {
@@ -83,13 +83,11 @@ public class UIController {
 	}
 
 	public static void showTopic(Activity context) {
-		startUI(context, UISearch.class);
+		startUIByAnimation(context, new Intent(context, UISearch.class));
 	}
 
-	public static void showHome(Context context) {
-		Intent intent = new Intent(context, UIHome.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		context.startActivity(intent);
+	public static void showHome(Activity context) {
+		startUIByAnimation(context, new Intent(context, UIHome.class));
 	}
 
 	public static void showConversation(Activity context, DirectMessageModel dm) {
@@ -105,9 +103,7 @@ public class UIController {
 			intent.putExtra("profile_image_url",
 					dm.getRecipientProfileImageUrl());
 		}
-		context.startActivity(intent);
-		context.overridePendingTransition(R.anim.push_left_in,
-				R.anim.push_left_out);
+		startUIByAnimation(context, intent);
 	}
 
 	public static void showConversation(Activity context, UserModel user,
@@ -117,33 +113,25 @@ public class UIController {
 		intent.putExtra("screen_name", user.getScreenName());
 		intent.putExtra("profile_image_url", user.getProfileImageUrl());
 		intent.putExtra("refresh", refresh);
-		context.startActivity(intent);
-		context.overridePendingTransition(R.anim.push_left_in,
-				R.anim.push_left_out);
+		startUIByAnimation(context, intent);
 	}
 
 	public static void showWrite(Activity context) {
 		Intent intent = new Intent(context, UIWrite.class);
-		context.startActivity(intent);
-		context.overridePendingTransition(R.anim.push_left_in,
-				R.anim.push_left_out);
+		startUIByAnimation(context, intent);
 	}
 
 	public static void showWrite(Activity context, String text, File file) {
 		Intent intent = new Intent(context, UIWrite.class);
 		intent.putExtra("text", text);
 		intent.putExtra("data", file);
-		context.startActivity(intent);
-		context.overridePendingTransition(R.anim.push_left_in,
-				R.anim.push_left_out);
+		startUIByAnimation(context, intent);
 	}
 
 	public static void showWrite(Activity context, String text) {
 		Intent intent = new Intent(context, UIWrite.class);
 		intent.putExtra("text", text);
-		context.startActivity(intent);
-		context.overridePendingTransition(R.anim.push_left_in,
-				R.anim.push_left_out);
+		startUIByAnimation(context, intent);
 	}
 
 	public static void doFavorite(final Context context, String id) {
@@ -176,7 +164,7 @@ public class UIController {
 		return handler;
 	}
 
-	public static void doRetweet(Context context, final StatusModel status) {
+	public static void doRetweet(Activity context, final StatusModel status) {
 		Intent intent = new Intent(context, UIWrite.class);
 		StringBuilder builder = new StringBuilder();
 		builder.append(" 转@").append(status.getUserScreenName()).append(" ")
@@ -184,7 +172,7 @@ public class UIController {
 		intent.putExtra("text", builder.toString());
 		intent.putExtra("id", status.getId());
 		intent.putExtra("type", UIWrite.TYPE_REPOST);
-		context.startActivity(intent);
+		startUIByAnimation(context, intent);
 	}
 
 	public static void doShare(Context context, StatusModel status) {
@@ -215,18 +203,16 @@ public class UIController {
 			intent.putExtra("id", status.getId());
 			intent.putExtra("text", sb.toString());
 			intent.putExtra("type", UIWrite.TYPE_REPLY);
-			context.startActivity(intent);
-			context.overridePendingTransition(R.anim.push_left_in,
-					R.anim.push_left_out);
+			startUIByAnimation(context, intent);
 		} else {
 			showWrite(context);
 		}
 
 	}
 
-	public static void showRecords(Context context) {
+	public static void showRecords(Activity context) {
 		Intent intent = new Intent(context, UIRecords.class);
-		context.startActivity(intent);
+		startUIByAnimation(context, intent);
 	}
 
 	public static void showMessage(Activity context, String id) {
@@ -235,68 +221,56 @@ public class UIController {
 				.setCustomAnimations(android.R.anim.slide_in_left,
 						android.R.anim.slide_out_right)
 				.replace(R.id.content_frame,
-						ConversationListFragment.newInstance(false)).commit();
+						ConversationListFragment.newInstance(false))
+				.addToBackStack(null).commit();
 	}
 
 	public static void showHome(Activity context, String id) {
-		context.getFragmentManager()
-				.beginTransaction()
-				.setCustomAnimations(android.R.anim.slide_in_left,
-						android.R.anim.slide_out_right)
-				.replace(R.id.content_frame, HomeFragment.newInstance())
-				.commit();
+		context.getFragmentManager().popBackStack();
 	}
 
 	public static void showProfile(Activity context, String id) {
 		Intent intent = new Intent(context, UITabProfile.class);
 		intent.putExtra("id", id);
-		context.startActivity(intent);
-		context.overridePendingTransition(R.anim.push_left_in,
-				R.anim.push_left_out);
+		startUIByAnimation(context, intent);
 	}
 
 	public static void showProfile(Activity context, UserModel user) {
 		Intent intent = new Intent(context, UITabProfile.class);
 		intent.putExtra("data", user);
-		context.startActivity(intent);
-		context.overridePendingTransition(R.anim.push_left_in,
-				R.anim.push_left_out);
+		startUIByAnimation(context, intent);
 	}
 
-	public static void showTimeline(Context context, String id) {
+	public static void showTimeline(Activity context, String id) {
 		Intent intent = new Intent(context, UITimeline.class);
 		intent.putExtra("id", id);
-		context.startActivity(intent);
+		startUIByAnimation(context, intent);
 	}
 
-	public static void showPublicTimeline(Context context) {
-		// TODO
-	}
-
-	public static void showFavorites(Context context, String id) {
+	public static void showFavorites(Activity context, String id) {
 		Intent intent = new Intent(context, UIFavorites.class);
 		intent.putExtra("id", id);
-		context.startActivity(intent);
+		startUIByAnimation(context, intent);
 	}
 
-	public static void showThread(Context context, String id) {
+	public static void showThread(Activity context, String id) {
 		Intent intent = new Intent(context, UIThread.class);
 		intent.putExtra("id", id);
-		context.startActivity(intent);
+		startUIByAnimation(context, intent);
 	}
 
-	public static void showFriends(Context context, String id) {
+	public static void showFriends(Activity context, String id) {
 		Intent intent = new Intent(context, UIUserList.class);
 		intent.putExtra("type", UserModel.TYPE_FRIENDS);
 		intent.putExtra("id", id);
-		context.startActivity(intent);
+		startUIByAnimation(context, intent);
 	}
 
-	public static void showFollowers(Context context, String id) {
+	public static void showFollowers(Activity context, String id) {
 		Intent intent = new Intent(context, UIUserList.class);
 		intent.putExtra("type", UserModel.TYPE_FOLLOWERS);
 		intent.putExtra("id", id);
-		context.startActivity(intent);
+		startUIByAnimation(context, intent);
 	}
 
 }

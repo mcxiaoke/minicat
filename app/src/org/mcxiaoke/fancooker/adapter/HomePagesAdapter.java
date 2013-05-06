@@ -7,9 +7,9 @@ import org.mcxiaoke.fancooker.fragments.AbstractListFragment;
 import org.mcxiaoke.fancooker.fragments.ConversationListFragment;
 import org.mcxiaoke.fancooker.fragments.HomeTimelineFragment;
 import org.mcxiaoke.fancooker.fragments.MentionTimelineFragment;
+import org.mcxiaoke.fancooker.fragments.PublicTimelineFragment;
 
 import android.app.FragmentManager;
-
 
 public class HomePagesAdapter extends FragmentPagerAdapter {
 
@@ -38,6 +38,6 @@ public class HomePagesAdapter extends FragmentPagerAdapter {
 	private void addFragments() {
 		fragments.add(HomeTimelineFragment.newInstance(true));
 		fragments.add(MentionTimelineFragment.newInstance(true));
-		fragments.add(ConversationListFragment.newInstance(true));
+		fragments.add(PublicTimelineFragment.newInstance());
 	}
 }

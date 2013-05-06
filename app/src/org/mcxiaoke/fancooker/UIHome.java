@@ -6,7 +6,6 @@ import org.mcxiaoke.fancooker.controller.SimpleDialogListener;
 import org.mcxiaoke.fancooker.controller.UIController;
 import org.mcxiaoke.fancooker.dialog.ConfirmDialog;
 import org.mcxiaoke.fancooker.fragments.ConversationListFragment;
-import org.mcxiaoke.fancooker.fragments.HomeFragment;
 import org.mcxiaoke.fancooker.fragments.ProfileFragment;
 import org.mcxiaoke.fancooker.menu.MenuCallback;
 import org.mcxiaoke.fancooker.menu.MenuFragment;
@@ -36,7 +35,8 @@ import com.slidingmenu.lib.SlidingMenu;
  * 
  */
 public class UIHome extends UIBaseSupport implements MenuCallback,
-		OnPageChangeListener {
+		OnPageChangeListener, SlidingMenu.OnClosedListener,
+		SlidingMenu.OnOpenedListener {
 
 	public static final String TAG = UIHome.class.getSimpleName();
 
@@ -63,11 +63,13 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 	@Override
 	protected void setActionBar() {
 		ActionBar ab = getActionBar();
-		ab.setDisplayHomeAsUpEnabled(false);
+		ab.setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
 	protected void onMenuHomeClick() {
+		onBackPressed();
+		mSlidingMenu.showContent();
 	}
 
 	@Override
@@ -99,6 +101,8 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 		mSlidingMenu.setFadeDegree(0.35f);
 		mSlidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
 		mSlidingMenu.setMenu(R.layout.menu_frame);
+		mSlidingMenu.setOnOpenedListener(this);
+		mSlidingMenu.setOnClosedListener(this);
 
 		FragmentManager fm = getFragmentManager();
 		mMenuFragment = MenuFragment.newInstance();
@@ -108,6 +112,9 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if (mSlidingMenu.isMenuShowing()) {
+			mSlidingMenu.toggle();
+		}
 		if (AppContext.DEBUG) {
 			Log.d(TAG, "onResume()");
 		}
@@ -162,8 +169,18 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 		return R.menu.home_menu;
 	}
 
+	@Override
 	protected void onHomeLogoClick() {
-		mSlidingMenu.toggle();
+		if (mSlidingMenu.isMenuShowing()) {
+			mSlidingMenu.toggle();
+		} else {
+			FragmentManager fm = getFragmentManager();
+			if (fm.getBackStackEntryCount() > 0) {
+				fm.popBackStack();
+			} else {
+				mSlidingMenu.toggle();
+			}
+		}
 	}
 
 	@Override
@@ -179,6 +196,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 			onMenuLogoutClick();
 			break;
 		default:
+			super.onOptionsItemSelected(item);
 			break;
 		}
 		return true;
@@ -231,19 +249,16 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 		log("fragment=" + fragment);
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		ft.replace(R.id.content_frame, fragment);
+		ft.addToBackStack(null);
 		ft.commit();
-		mSlidingMenu.showContent();
+		mSlidingMenu.toggle();
 	}
 
-	private void showHome() {
-		replaceFramgnt(HomeFragment.newInstance());
-	}
-
-	private void showProfile() {
+	private void showProfileFragment() {
 		replaceFramgnt(ProfileFragment.newInstance(AppContext.getAccount()));
 	}
 
-	private void showMessage() {
+	private void showMessageFragment() {
 		replaceFramgnt(ConversationListFragment.newInstance(false));
 	}
 
@@ -253,13 +268,13 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 		int id = menuItem.getId();
 		switch (id) {
 		case MenuFragment.MENU_ID_HOME:
-			showHome();
+			UIController.showHome(this);
 			break;
 		case MenuFragment.MENU_ID_PROFILE:
-			showProfile();
+			showProfileFragment();
 			break;
 		case MenuFragment.MENU_ID_MESSAGE:
-			showMessage();
+			showMessageFragment();
 			break;
 		case MenuFragment.MENU_ID_TOPIC:
 			UIController.showTopic(this);
@@ -299,6 +314,16 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 		} else {
 			mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
 		}
+	}
+
+	@Override
+	public void onOpened() {
+		getActionBar().setDisplayHomeAsUpEnabled(false);
+	}
+
+	@Override
+	public void onClosed() {
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 }
