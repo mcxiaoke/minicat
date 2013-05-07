@@ -17,15 +17,21 @@
 */
 -->
 
-<!-- Special window zoom animation: this is the element that enters the screen,
-     it starts at 200% and scales down.  Goes with zoom_exit.xml. -->
-<!-- <set xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+     Special window zoom animation: this is the element that enters the screen,
+     it starts at 200% and scales down.  Goes with zoom_exit.xml.
+-->
+<!--
+<set xmlns:android="http://schemas.android.com/apk/res/android"
         android:interpolator="@android:anim/decelerate_interpolator">
     <scale android:fromXScale="0.2" android:toXScale="1.0"
            android:fromYScale="0.2" android:toYScale="1.0"
            android:pivotX="50%p" android:pivotY="50%p"
            android:duration="@android:integer/config_mediumAnimTime" />
-</set> -->
+</set>
+-->
 
-    <alpha xmlns:android="http://schemas.android.com/apk/res/android" android:fromAlpha="0" android:toAlpha="1.0"
-            android:duration="@android:integer/config_mediumAnimTime"/>
+<alpha xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="@android:integer/config_mediumAnimTime"
+    android:fromAlpha="0"
+    android:toAlpha="1.0" />

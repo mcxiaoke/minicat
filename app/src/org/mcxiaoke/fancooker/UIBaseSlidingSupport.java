@@ -39,17 +39,18 @@ public class UIBaseSlidingSupport extends UIBaseSupport implements
 
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
 	}
 
 	protected void setSlidingMenu(final int menuResourceId) {
 		mSlidingMenu = new SlidingMenu(this);
 		mSlidingMenu.setMode(SlidingMenu.LEFT);
-		mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-		mSlidingMenu.setShadowWidth(20);
+		mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+		mSlidingMenu.setShadowWidth(getResources().getDimensionPixelOffset(
+				R.dimen.sliding_shadow));
 		mSlidingMenu.setShadowDrawable(R.drawable.menu_shadow);
-		mSlidingMenu.setBehindOffset(90);
+		mSlidingMenu.setBehindOffset(getResources().getDimensionPixelOffset(
+				R.dimen.sliding_offset));
 		mSlidingMenu.setFadeDegree(0.35f);
 		mSlidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
 		mSlidingMenu.setMenu(menuResourceId);
@@ -93,10 +94,16 @@ public class UIBaseSlidingSupport extends UIBaseSupport implements
 	}
 
 	@Override
-	protected void onHomeLogoClick() {
-		super.onHomeLogoClick();
-		if (isMenuShowing()) {
+	protected void onMenuHomeClick() {
+		toggle();
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (!isMenuShowing()) {
 			toggle();
+		} else {
+			finish();
 		}
 	}
 

@@ -30,7 +30,6 @@ import org.mcxiaoke.fancooker.util.StatusHelper;
 import org.mcxiaoke.fancooker.util.Utils;
 
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -49,6 +48,11 @@ public class UIController {
 		activity.startActivity(intent);
 		activity.overridePendingTransition(R.anim.push_left_in,
 				R.anim.push_left_out);
+	}
+
+	private static void startUIByAnimationBack(Activity activity, Intent intent) {
+		activity.startActivity(intent);
+		activity.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 	}
 
 	public static void showFanfouBlog(Context context) {
@@ -87,7 +91,16 @@ public class UIController {
 	}
 
 	public static void showHome(Activity context) {
-		startUIByAnimation(context, new Intent(context, UIHome.class));
+		Intent intent = new Intent(context, UIHome.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		context.startActivity(intent);
+	}
+
+	public static void backHome(Activity context) {
+		Intent intent = new Intent(context, UIHome.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//		context.startActivity(intent);
+		startUIByAnimationBack(context, intent);
 	}
 
 	public static void showConversation(Activity context, DirectMessageModel dm) {
@@ -223,10 +236,6 @@ public class UIController {
 				.replace(R.id.content_frame,
 						ConversationListFragment.newInstance(false))
 				.addToBackStack(null).commit();
-	}
-
-	public static void showHome(Activity context, String id) {
-		context.getFragmentManager().popBackStack();
 	}
 
 	public static void showProfile(Activity context, String id) {

@@ -82,7 +82,7 @@ abstract class UIBaseSupport extends Activity implements OnClickListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			onHomeLogoClick();
+			onMenuHomeClick();
 			return true;
 		case R.id.menu_write:
 			onMenuWriteClick();
@@ -94,17 +94,12 @@ abstract class UIBaseSupport extends Activity implements OnClickListener {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
-	protected void onHomeLogoClick() {
-		finish();
-	}
-
 	protected void onMenuWriteClick() {
 		UIController.showWrite(mContext);
 	}
 
 	protected void onMenuHomeClick() {
-		UIController.showHome(mContext);
+		UIController.backHome(mContext);
 	}
 
 	@Override

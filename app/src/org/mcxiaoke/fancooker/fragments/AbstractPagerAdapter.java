@@ -1,7 +1,8 @@
 package org.mcxiaoke.fancooker.fragments;
 
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import org.mcxiaoke.fancooker.adapter.FragmentPagerAdapter;
+
+import android.app.FragmentManager;
 
 /**
  * @author mcxiaoke

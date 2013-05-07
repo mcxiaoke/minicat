@@ -54,12 +54,6 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 		setLayout();
 	}
 
-	@Override
-	protected void onMenuHomeClick() {
-		onBackPressed();
-		getSlidingMenu().showContent();
-	}
-
 	protected void setLayout() {
 		setContentView(R.layout.content_frame);
 		mContainer = (ViewGroup) findViewById(R.id.content_frame);
@@ -124,21 +118,24 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 	public void onClick(View v) {
 	}
 
-	private void replaceFramgnt(Fragment fragment) {
+	private Fragment mCurrentFragment;
+
+	private void replaceFragment(Fragment fragment) {
 		log("fragment=" + fragment);
+		mCurrentFragment = fragment;
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ft.replace(R.id.content_frame, fragment);
-		ft.addToBackStack(null);
 		ft.commit();
-		getSlidingMenu().toggle();
+		getSlidingMenu().showContent();
 	}
 
 	private void showProfileFragment() {
-		replaceFramgnt(ProfileFragment.newInstance(AppContext.getAccount()));
+		replaceFragment(ProfileFragment.newInstance(AppContext.getAccount()));
 	}
 
 	private void showMessageFragment() {
-		replaceFramgnt(ConversationListFragment.newInstance(false));
+		replaceFragment(ConversationListFragment.newInstance(false));
 	}
 
 	@Override
@@ -147,7 +144,9 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 		int id = menuItem.getId();
 		switch (id) {
 		case MenuFragment.MENU_ID_HOME:
-			UIController.showHome(this);
+			getFragmentManager().beginTransaction().remove(mCurrentFragment)
+					.commit();
+			getSlidingMenu().showContent();
 			break;
 		case MenuFragment.MENU_ID_PROFILE:
 			showProfileFragment();
@@ -175,6 +174,16 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 		default:
 			break;
 		}
+	}
+
+	@Override
+	protected void onMenuHomeClick() {
+		super.onMenuHomeClick();
+		// if (getFragmentManager().getBackStackEntryCount() > 0) {
+		// onBackPressed();
+		// } else {
+		// super.onMenuHomeClick();
+		// }
 	}
 
 	@Override
