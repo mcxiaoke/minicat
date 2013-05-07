@@ -48,8 +48,10 @@ public class UIConversation extends UIBaseSupport {
 	private ConversationFragment fragment;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		parseIntent();
+		setLayout();
 	}
 
 	private void parseIntent() {
@@ -60,12 +62,6 @@ public class UIConversation extends UIBaseSupport {
 		refresh=intent.getBooleanExtra("refresh", false);
 	}
 
-	@Override
-	protected void initialize() {
-		parseIntent();
-	}
-
-	@Override
 	protected void setLayout() {
 		setContentView(R.layout.ui_conversation);
 

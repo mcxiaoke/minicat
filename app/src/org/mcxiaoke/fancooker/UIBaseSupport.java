@@ -6,7 +6,6 @@ import org.mcxiaoke.fancooker.util.Utils;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.res.Resources;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -34,6 +33,7 @@ import android.view.View.OnClickListener;
  * @version 3.3 2012.02.10
  * @version 3.4 2012.03.09
  * @version 3.5 2012.03.16
+ * @version 4.0 2013.05.07
  * 
  */
 abstract class UIBaseSupport extends Activity implements OnClickListener {
@@ -44,48 +44,25 @@ abstract class UIBaseSupport extends Activity implements OnClickListener {
 
 	protected UIBaseSupport mContext;
 	protected LayoutInflater mInflater;
+	protected Resources mResources;
 
+	protected ActionBar mActionBar;
 	protected DisplayMetrics mDisplayMetrics;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		setTheme(AppContext.themeId);
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		init();
-		initialize();
-		setLayout();
-		setActionBar();
-	}
-
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-	}
-
-	@Override
-	protected void onTitleChanged(CharSequence title, int color) {
-		super.onTitleChanged(title, color);
-	}
-
-	private void init() {
+		setTheme(AppContext.themeId);
+		Utils.initScreenConfig(this);
 		AppContext.setActiveContext(getClass().getCanonicalName(), this);
 		this.mContext = this;
 		this.mInflater = LayoutInflater.from(this);
+		this.mResources = getResources();
+		this.mActionBar = getActionBar();
+		this.mActionBar.setDisplayHomeAsUpEnabled(true);
+		this.mActionBar.setDisplayUseLogoEnabled(true);
 		this.mDisplayMetrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
-		Utils.initScreenConfig(this);
-
-	}
-
-	protected abstract void initialize();
-
-	protected abstract void setLayout();
-
-	protected void setActionBar() {
-		Resources res = getResources();
-		ActionBar ab = getActionBar();
-		ab.setDisplayHomeAsUpEnabled(true);
-		ab.setDisplayUseLogoEnabled(true);
 	}
 
 	protected int getMenuResourceId() {
@@ -107,18 +84,14 @@ abstract class UIBaseSupport extends Activity implements OnClickListener {
 		case android.R.id.home:
 			onHomeLogoClick();
 			return true;
-			// break;
 		case R.id.menu_write:
 			onMenuWriteClick();
 			return true;
-			// break;
 		case R.id.menu_home:
 			onMenuHomeClick();
 			return true;
-			// break;
 		default:
 			return super.onOptionsItemSelected(item);
-			// break;
 		}
 	}
 
@@ -146,37 +119,19 @@ abstract class UIBaseSupport extends Activity implements OnClickListener {
 		super.onPause();
 	}
 
-	protected static final int PAGE_NORMAL = 0;
-	protected static final int PAGE_HOME = 1;
-	protected static final int PAGE_LOGIN = 2;
-	protected static final int PAGE_STATUS = 3;
-	protected static final int PAGE_USER = 4;
-	protected static final int PAGE_TIMELINE = 5;
-	protected static final int PAGE_FRIENDS = 6;
-	protected static final int PAGE_FOLLOWERS = 7;
-	protected static final int PAGE_DRAFTS = 8;
-
-	protected int getPageType() {
-		return PAGE_NORMAL;
-	}
-
-	protected boolean isHomeScreen() {
-		return false;
-	}
-
-	protected int getPixelInt(int dpi) {
+	protected int getPxInt(int dpi) {
 		return (int) (dpi * mDisplayMetrics.density);
 	}
 
-	protected int getPixelInt(float dpi) {
+	protected int getPxInt(float dpi) {
 		return (int) (dpi * mDisplayMetrics.density);
 	}
 
-	protected float getPixel(int dpi) {
+	protected float getPx(int dpi) {
 		return (dpi * mDisplayMetrics.density);
 	}
 
-	protected float getPixel(float dpi) {
+	protected float getPx(float dpi) {
 		return (dpi * mDisplayMetrics.density);
 	}
 

@@ -98,8 +98,10 @@ public class UIStatus extends UIBaseSupport {
 	}
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		parseIntent();
+		setLayout();
 	}
 
 	@Override
@@ -132,12 +134,6 @@ public class UIStatus extends UIBaseSupport {
 
 	}
 
-	@Override
-	protected void initialize() {
-		parseIntent();
-	}
-
-	@Override
 	protected void setLayout() {
 
 		setContentView(R.layout.ui_status);

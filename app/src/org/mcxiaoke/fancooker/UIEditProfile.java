@@ -77,21 +77,13 @@ public class UIEditProfile extends UIBaseSupport {
 	private ImageLoader mLoader;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	}
-
-	private void parseIntent() {
-		user = (UserModel) getIntent().getParcelableExtra("data");
-	}
-
-	@Override
-	protected void initialize() {
-		parseIntent();
 		mLoader = AppContext.getImageLoader();
+		user = (UserModel) getIntent().getParcelableExtra("data");
+		setLayout();
 	}
 
-	@Override
 	protected void setLayout() {
 		setContentView(R.layout.edit_profile);
 

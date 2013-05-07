@@ -39,16 +39,12 @@ public class UIAbout extends UIBaseSupport implements OnClickListener,
 	private TextView mCopyright;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	}
-
-	@Override
-	protected void initialize() {
 		setTitle("关于");
+		setLayout();
 	}
 
-	@Override
 	protected void setLayout() {
 		setContentView(R.layout.about);
 
@@ -67,7 +63,8 @@ public class UIAbout extends UIBaseSupport implements OnClickListener,
 		mTitle.setText("饭否Android客户端");
 		TextPaint t1 = mTitle.getPaint();
 		t1.setFakeBoldText(true);
-		String version = AppContext.versionName + "(Build" + AppContext.versionCode + ")";
+		String version = AppContext.versionName + "(Build"
+				+ AppContext.versionCode + ")";
 		mVersion.setText("版本：" + version);
 		mIntroduction.setText(R.string.introduction_text);
 		mSupport.setText("技术支持");

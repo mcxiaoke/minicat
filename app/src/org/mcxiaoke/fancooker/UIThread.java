@@ -63,18 +63,14 @@ public class UIThread extends UIBaseSupport implements
 	}
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		log("onCreate");
-	}
-
-	@Override
-	protected void initialize() {
 		parseIntent();
 		mStatusAdapter = new StatusThreadAdapter(this, null);
+		setLayout();
 	}
 
-	@Override
 	protected void setLayout() {
 		setContentView(R.layout.list_pull);
 

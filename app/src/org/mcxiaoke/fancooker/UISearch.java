@@ -38,8 +38,10 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
 	private ArrayList<Search> mHotwords = new ArrayList<Search>(20);
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		parseIntent();
+		setLayout();
 	}
 
 	@Override
@@ -56,12 +58,6 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	protected void initialize() {
-		parseIntent();
-	}
-
-	@Override
 	protected void setLayout() {
 		setContentView(R.layout.search);
 

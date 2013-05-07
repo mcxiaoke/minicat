@@ -51,20 +51,14 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 	}
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (AppContext.DEBUG)
-			log("onCreate");
-	}
-
-	@Override
-	protected void initialize() {
 		if (!parseIntent()) {
 			finish();
 		}
+		setLayout();
 	}
 
-	@Override
 	protected void setLayout() {
 		setContentView(R.layout.ui_users);
 		mEditText = (EditText) findViewById(R.id.input);

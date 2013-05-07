@@ -121,18 +121,8 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 	public static final int TYPE_CAMERA = 4;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-	}
-
-	@Override
-	protected int getMenuResourceId() {
-		return R.menu.write_menu;
-	}
-
-	@Override
-	protected void initialize() {
 		enableLocation = OptionHelper.readBoolean(mContext,
 				R.string.option_location_enable, true);
 		mLocationManager = (LocationManager) this
@@ -147,6 +137,13 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 				break;
 			}
 		}
+		setLayout();
+
+	}
+
+	@Override
+	protected int getMenuResourceId() {
+		return R.menu.write_menu;
 	}
 
 	@Override
@@ -331,7 +328,6 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 		mAutoCompleteTextView.setAdapter(mAutoCompleteCursorAdapter);
 	}
 
-	@Override
 	protected void setLayout() {
 
 		setContentView(R.layout.ui_write);
@@ -423,7 +419,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected( MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_send:
 			doSend();

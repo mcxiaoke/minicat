@@ -68,9 +68,9 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
 	private String password;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//TODO when login, clear all alarms and tasks
+		setLayout();
 	}
 
 	@Override
@@ -81,14 +81,11 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
 			dialog.setMessage("正在登录中...");
 			dialog.setIndeterminate(true);
 			return dialog;
-//			break;
 		default:
 			return null;
-//			break;
 		}
 	}
 
-	@Override
 	protected void setLayout() {
 		setContentView(R.layout.ui_login);
 
@@ -197,7 +194,6 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
 		static final int LOGIN_CANCELLED_BY_USER = 3;
 
 		private boolean isCancelled = false;
-//		private ProgressDialog dialog;
 
 		@Override
 		protected ResultInfo doInBackground(Void... params) {
@@ -224,7 +220,8 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
 
 					if (u != null) {
 						AppContext.updateUserInfo(mContext, u);
-						AppContext.updateLoginInfo(mContext, username, password);
+						AppContext
+								.updateLoginInfo(mContext, username, password);
 						if (AppContext.DEBUG) {
 							log("xauth successful! ");
 						}
@@ -255,36 +252,18 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
 		@Override
 		protected void onPreExecute() {
 			showDialog(DIALOG_PROGRESS);
-//			dialog = new ProgressDialog(mContext);
-//			dialog.setMessage("正在登录...");
-//			dialog.setIndeterminate(true);
-//			dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-//
-//				@Override
-//				public void onCancel(DialogInterface dialog) {
-//					isCancelled = true;
-//					cancel(true);
-//				}
-//			});
-//			dialog.show();
 		}
 
 		@Override
 		protected void onProgressUpdate(Integer... values) {
 			if (values.length > 0) {
 				int value = values[0];
-//				if (value == 1) {
-//					dialog.setMessage("正在验证帐号...");
-//				}
 			}
 		}
 
 		@Override
 		protected void onPostExecute(ResultInfo result) {
 			dismissDialog(DIALOG_PROGRESS);
-//			if (dialog != null) {
-//				dialog.dismiss();
-//			}
 			switch (result.code) {
 			case LOGIN_IO_ERROR:
 			case LOGIN_AUTH_FAILED:
@@ -303,15 +282,8 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
 	}
 
 	private void onLoginComplete() {
-		// AlarmHelper.setScheduledTasks(mContext);
 		UIController.showHome(mContext);
 		finish();
-	}
-
-	@Override
-	protected void initialize() {
-		// TODO Auto-generated method stub
-
 	}
 
 }

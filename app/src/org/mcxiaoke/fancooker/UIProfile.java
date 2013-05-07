@@ -43,19 +43,16 @@ public class UIProfile extends UIBaseSupport implements OnPageChangeListener {
 	private String userId;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		parseIntent();
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		setIntent(intent);
-	}
-
-	@Override
-	protected void initialize() {
-		parseIntent();
+		setLayout();
 	}
 
 	private void parseIntent() {
@@ -79,7 +76,6 @@ public class UIProfile extends UIBaseSupport implements OnPageChangeListener {
 		}
 	}
 
-	@Override
 	protected void setLayout() {
 		setContentView(R.layout.ui_profile_viewpager);
 

@@ -41,8 +41,9 @@ public class UIRecords extends UIBaseSupport implements OnItemClickListener {
 	private RecordCursorAdaper mAdapter;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setLayout();
 	}
 
 	@Override
@@ -56,27 +57,27 @@ public class UIRecords extends UIBaseSupport implements OnItemClickListener {
 	public boolean onContextItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case 0:
-			AdapterContextMenuInfo info=(AdapterContextMenuInfo) item.getMenuInfo();
+			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+					.getMenuInfo();
 			deleteRecord(info.position);
 			return true;
 		default:
 			return super.onContextItemSelected(item);
 		}
 	}
-	
-	private void deleteRecord(int position){
-		final Cursor cursor=(Cursor) mAdapter.getItem(position);
-		if(cursor!=null){
-			int id=DataController.parseInt(cursor, BaseColumns._ID);
-			int result=DataController.deleteRecord(mContext, id);
-			if(result>0){
-//				mCursor.requery();
+
+	private void deleteRecord(int position) {
+		final Cursor cursor = (Cursor) mAdapter.getItem(position);
+		if (cursor != null) {
+			int id = DataController.parseInt(cursor, BaseColumns._ID);
+			int result = DataController.deleteRecord(mContext, id);
+			if (result > 0) {
+				// mCursor.requery();
 				Utils.notify(mContext, "删除成功");
 			}
 		}
 	}
 
-	@Override
 	protected void setLayout() {
 		setContentView(R.layout.list_drafts);
 		setListView();
@@ -84,8 +85,8 @@ public class UIRecords extends UIBaseSupport implements OnItemClickListener {
 	}
 
 	private void setListView() {
-		mCursor = managedQuery(RecordColumns.CONTENT_URI, null, null,
-				null, null);
+		mCursor = managedQuery(RecordColumns.CONTENT_URI, null, null, null,
+				null);
 		mAdapter = new RecordCursorAdaper(this, mCursor);
 		mListView = (ListView) findViewById(android.R.id.list);
 		mListView.setAdapter(mAdapter);
@@ -93,14 +94,9 @@ public class UIRecords extends UIBaseSupport implements OnItemClickListener {
 		registerForContextMenu(mListView);
 	}
 
-	@Override
-	protected int getPageType() {
-		return PAGE_DRAFTS;
-	}
-
 	private void onMenuClearClick() {
 		DataController.clear(mContext, RecordColumns.CONTENT_URI);
-//		mCursor.requery();
+		// mCursor.requery();
 		Utils.notify(this, "草稿箱已清空");
 		finish();
 	}
@@ -151,10 +147,6 @@ public class UIRecords extends UIBaseSupport implements OnItemClickListener {
 		startActivity(intent);
 		finish();
 
-	}
-
-	@Override
-	protected void initialize() {
 	}
 
 }

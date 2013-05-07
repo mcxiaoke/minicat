@@ -66,21 +66,18 @@ public class UISearchResults extends UIBaseSupport implements
 	}
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		readHighlightColor();
+		mStatusAdapter = new SearchResultsAdapter(this, highlightColor);
+		api = AppContext.getApi();
+		setLayout();
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
 		setIntent(intent);
 		newSearch();
-	}
-
-	@Override
-	protected void initialize() {
-		readHighlightColor();
-		mStatusAdapter = new SearchResultsAdapter(this, highlightColor);
-		api = AppContext.getApi();
 	}
 
 	private void readHighlightColor() {
@@ -91,7 +88,6 @@ public class UISearchResults extends UIBaseSupport implements
 		a = null;
 	}
 
-	@Override
 	protected void setLayout() {
 
 		setContentView(R.layout.list_pull);

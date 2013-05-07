@@ -36,7 +36,7 @@ public class UITabProfile extends UIBaseSupport implements
 	private boolean self;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		if (savedInstanceState != null) {
@@ -44,17 +44,15 @@ public class UITabProfile extends UIBaseSupport implements
 		} else {
 			mTabHost.setCurrentTabByTag("profile");
 		}
+
+		parseIntent();
+		setLayout();
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		setIntent(intent);
-	}
-
-	@Override
-	protected void setActionBar() {
-		super.setActionBar();
 	}
 
 	@Override
@@ -85,12 +83,6 @@ public class UITabProfile extends UIBaseSupport implements
 		UIController.showEditProfile(mContext, user);
 	}
 
-	@Override
-	protected void initialize() {
-		parseIntent();
-	}
-
-	@Override
 	protected void setLayout() {
 		setContentView(R.layout.fm_tabs);
 		mTabHost = (TabHost) findViewById(android.R.id.tabhost);
@@ -215,8 +207,7 @@ public class UITabProfile extends UIBaseSupport implements
 			}
 		}
 
-		public TabManager(Activity activity, TabHost tabHost,
-				int containerId) {
+		public TabManager(Activity activity, TabHost tabHost, int containerId) {
 			mActivity = activity;
 			mTabHost = tabHost;
 			mContainerId = containerId;
@@ -232,8 +223,8 @@ public class UITabProfile extends UIBaseSupport implements
 			// Check to see if we already have a fragment for this tab, probably
 			// from a previously saved state. If so, deactivate it, because our
 			// initial state is that a tab isn't shown.
-			info.fragment = mActivity.getFragmentManager()
-					.findFragmentByTag(tag);
+			info.fragment = mActivity.getFragmentManager().findFragmentByTag(
+					tag);
 			if (info.fragment != null && !info.fragment.isDetached()) {
 				FragmentTransaction ft = mActivity.getFragmentManager()
 						.beginTransaction();
@@ -268,8 +259,7 @@ public class UITabProfile extends UIBaseSupport implements
 
 				mLastTab = newTab;
 				ft.commit();
-				mActivity.getFragmentManager()
-						.executePendingTransactions();
+				mActivity.getFragmentManager().executePendingTransactions();
 			}
 		}
 	}

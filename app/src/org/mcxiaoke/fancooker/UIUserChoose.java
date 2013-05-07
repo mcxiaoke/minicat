@@ -81,16 +81,10 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
 	}
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (AppContext.DEBUG)
-			log("onCreate");
-
-	}
-
-	@Override
-	protected void initialize() {
 		mUserNames = new ArrayList<String>();
+		setLayout();
 	}
 
 	private void initCheckState() {
@@ -126,7 +120,6 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
 		}
 	}
 
-	@Override
 	protected void setLayout() {
 		setContentView(R.layout.user_choose);
 		mViewStub = (ViewStub) findViewById(R.id.stub);
@@ -142,7 +135,7 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
 		mListView.setOnItemClickListener(this);
 		mListView.setItemsCanFocus(false);
 		mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-		
+
 		mCursorAdapter = new UserChooseCursorAdapter(mContext, null);
 		mCursorAdapter.setFilterQueryProvider(this);
 		mListView.setAdapter(mCursorAdapter);
@@ -326,8 +319,10 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
 		mCursorAdapter.swapCursor(newCursor);
-		if(AppContext.DEBUG){
-			Log.d(TAG, "onLoadFinished() adapter.size="+mCursorAdapter.getCount());
+		if (AppContext.DEBUG) {
+			Log.d(TAG,
+					"onLoadFinished() adapter.size="
+							+ mCursorAdapter.getCount());
 		}
 		initCheckState();
 	}

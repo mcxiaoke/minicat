@@ -39,17 +39,13 @@ abstract class UIBaseTimeline extends UIBaseSupport implements SwipeListener {
 	protected abstract BaseTimlineFragment getFragment(String userId);
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-	}
-
-	@Override
-	protected void initialize() {
 		parseIntent();
+		setLayout();
+
 	}
 
-	@Override
 	protected void setLayout() {
 		setContentView(R.layout.ui_container);
 		setFragment();
