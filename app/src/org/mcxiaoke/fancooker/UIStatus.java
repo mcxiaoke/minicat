@@ -262,7 +262,7 @@ public class UIStatus extends UIBaseSupport {
 		}
 
 		contentPhoto.setVisibility(View.VISIBLE);
-		String photoUrl = status.getPhotoImageUrl();
+		String photoUrl = status.getPhotoLargeUrl();
 		contentPhoto.setTag(photoUrl);
 		AppContext.getImageLoader().displayImage(photoUrl, contentPhoto,
 				R.drawable.photo_loading);
