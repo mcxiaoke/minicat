@@ -47,6 +47,11 @@ abstract class UIBaseTimeline extends UIBaseSupport implements SwipeListener {
 	}
 
 	protected void setLayout() {
+		if (userId != null) {
+			setTitle("@" + userId);
+		} else {
+			setTitle("时间线");
+		}
 		setContentView(R.layout.ui_container);
 		setFragment();
 	}

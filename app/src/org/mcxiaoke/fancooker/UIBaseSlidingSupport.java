@@ -20,7 +20,7 @@ import android.view.MenuItem;
  * 
  */
 public class UIBaseSlidingSupport extends UIBaseSupport implements
-		SlidingMenu.OnClosedListener, SlidingMenu.OnOpenedListener,
+		SlidingMenu.OnCloseListener, SlidingMenu.OnOpenListener,
 		MenuCallback {
 	private SlidingMenu mSlidingMenu;
 
@@ -32,9 +32,9 @@ public class UIBaseSlidingSupport extends UIBaseSupport implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (isMenuShowing()) {
-			toggle();
-		}
+//		if (isMenuShowing()) {
+//			getSlidingMenu().showContent(false);
+//		}
 	}
 
 	@Override
@@ -54,8 +54,8 @@ public class UIBaseSlidingSupport extends UIBaseSupport implements
 		mSlidingMenu.setFadeDegree(0.35f);
 		mSlidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
 		mSlidingMenu.setMenu(menuResourceId);
-		mSlidingMenu.setOnOpenedListener(this);
-		mSlidingMenu.setOnClosedListener(this);
+		mSlidingMenu.setOnOpenListener(this);
+		mSlidingMenu.setOnCloseListener(this);
 	}
 
 	protected SlidingMenu getSlidingMenu() {
@@ -63,7 +63,11 @@ public class UIBaseSlidingSupport extends UIBaseSupport implements
 	}
 
 	protected void toggle() {
-		mSlidingMenu.toggle();
+		toggle(true);
+	}
+	
+	protected void toggle(boolean animate){
+		mSlidingMenu.toggle(animate);
 	}
 
 	protected boolean isMenuShowing() {
@@ -79,12 +83,12 @@ public class UIBaseSlidingSupport extends UIBaseSupport implements
 	}
 
 	@Override
-	public void onOpened() {
+	public void onOpen() {
 		getActionBar().setDisplayHomeAsUpEnabled(false);
 	}
 
 	@Override
-	public void onClosed() {
+	public void onClose() {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
@@ -100,8 +104,8 @@ public class UIBaseSlidingSupport extends UIBaseSupport implements
 
 	@Override
 	public void onBackPressed() {
-		if (!isMenuShowing()) {
-			toggle();
+		if (isMenuShowing()) {
+			getSlidingMenu().showContent();
 		} else {
 			finish();
 		}

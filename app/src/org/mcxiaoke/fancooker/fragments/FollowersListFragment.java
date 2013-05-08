@@ -35,6 +35,13 @@ public class FollowersListFragment extends UserListFragment {
 		}
 		return fragment;
 	}
+	
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+//		getActivity().setTitle("关注者");
+	}
 
 	@Override
 	protected int getType() {

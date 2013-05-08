@@ -2,6 +2,7 @@ package org.mcxiaoke.fancooker.fragments;
 
 import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.adapter.StatusCursorAdapter;
+import org.mcxiaoke.fancooker.controller.UIController;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
 import org.mcxiaoke.fancooker.util.Utils;
 
@@ -35,7 +36,7 @@ public abstract class BaseTimlineFragment extends PullToRefreshListFragment {
 		if (cursor != null) {
 			final StatusModel s = StatusModel.from(cursor);
 			if (s != null) {
-				Utils.goStatusPage(getActivity(), s);
+				UIController.goStatusPage(getActivity(), s);
 			}
 		}
 

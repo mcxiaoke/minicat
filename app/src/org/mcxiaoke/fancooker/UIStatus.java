@@ -137,6 +137,7 @@ public class UIStatus extends UIBaseSupport {
 	protected void setLayout() {
 
 		setContentView(R.layout.ui_status);
+		setTitle("消息");
 
 		findViews();
 		setEmptyView();

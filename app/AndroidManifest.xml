@@ -28,7 +28,7 @@
         android:name=".AppContext"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name">
+        android:label="@string/app_name" >
         <activity
             android:name=".UIStart"
             android:configChanges="keyboardHidden|orientation"
@@ -139,20 +139,6 @@
             android:name=".UIProfile"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name=".UITabProfile"
-            android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data
-                    android:host="user"
-                    android:scheme="fanfouhd" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".UIConversation"

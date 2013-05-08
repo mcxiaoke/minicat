@@ -144,11 +144,12 @@ public class ProfileFragment extends AbstractFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
+		getActivity().setTitle("个人空间");
 		initResources();
 		checkRefresh();
 
 	}
+
 
 	private void parseArguments() {
 		Bundle data = getArguments();

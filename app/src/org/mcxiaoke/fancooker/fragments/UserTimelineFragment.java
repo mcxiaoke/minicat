@@ -57,10 +57,11 @@ public class UserTimelineFragment extends BaseTimlineFragment {
 			userId = args.getString("id");
 		}
 	}
-
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+//		getActivity().setTitle("他的消息");
 	}
 
 	@Override

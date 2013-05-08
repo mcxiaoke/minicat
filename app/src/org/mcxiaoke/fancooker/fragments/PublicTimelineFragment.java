@@ -37,6 +37,14 @@ public class PublicTimelineFragment extends BaseTimlineFragment {
 		}
 		return fragment;
 	}
+	
+	
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+//		getActivity().setTitle("随便看看");
+	}
 
 	@Override
 	protected int getType() {

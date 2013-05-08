@@ -6,6 +6,7 @@ import org.mcxiaoke.fancooker.adapter.StatusThreadAdapter;
 import org.mcxiaoke.fancooker.api.Api;
 import org.mcxiaoke.fancooker.api.ApiException;
 import org.mcxiaoke.fancooker.controller.PopupController;
+import org.mcxiaoke.fancooker.controller.UIController;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
 import org.mcxiaoke.fancooker.util.StringHelper;
 import org.mcxiaoke.fancooker.util.Utils;
@@ -22,6 +23,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
@@ -73,7 +75,7 @@ public class UIThread extends UIBaseSupport implements
 
 	protected void setLayout() {
 		setContentView(R.layout.list_pull);
-
+		setTitle("对话");
 		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_list);
 		mPullToRefreshListView.setOnRefreshListener(this);
 		mList = mPullToRefreshListView.getRefreshableView();
@@ -145,7 +147,7 @@ public class UIThread extends UIBaseSupport implements
 				mStatusAdapter.addData(result);
 			}
 			mPullToRefreshListView.onRefreshComplete();
-			mPullToRefreshListView.setPullToRefreshEnabled(false);
+			mPullToRefreshListView.setMode(Mode.DISABLED);
 			mStatusAdapter.notifyDataSetChanged();
 		}
 
@@ -156,7 +158,7 @@ public class UIThread extends UIBaseSupport implements
 			long id) {
 		final StatusModel s = (StatusModel) parent.getItemAtPosition(position);
 		if (s != null) {
-			Utils.goStatusPage(mContext, s);
+			UIController.goStatusPage(mContext, s);
 		}
 	}
 

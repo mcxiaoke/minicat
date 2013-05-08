@@ -33,6 +33,13 @@ public class FriendsListFragment extends UserListFragment {
 		}
 		return fragment;
 	}
+	
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+//		getActivity().setTitle("关注的人");
+	}
 
 	@Override
 	protected int getType() {

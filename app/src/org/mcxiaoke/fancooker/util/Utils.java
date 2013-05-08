@@ -71,30 +71,6 @@ public final class Utils {
 		imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
 	}
 
-	public static void goStatusPage(Context context, String id) {
-		if (!StringHelper.isEmpty(id)) {
-			Intent intent = new Intent(context, UIStatus.class);
-			intent.putExtra("id", id);
-			context.startActivity(intent);
-		}
-	}
-
-	public static void goStatusPage(Activity context, StatusModel s) {
-		if (s != null) {
-			Intent intent = new Intent(context, UIStatus.class);
-			intent.putExtra("data", s);
-			context.startActivity(intent);
-			context.overridePendingTransition(R.anim.push_left_in,
-					R.anim.push_left_out);
-		}
-	}
-
-	public static void goPhotoViewPage(Context context, String photoUrl) {
-		Intent intent = new Intent(context, UIPhoto.class);
-		intent.putExtra("url", photoUrl);
-		context.startActivity(intent);
-	}
-
 	public static ProgressBar createProgress(Context context) {
 		ProgressBar p = new ProgressBar(context);
 		p.setIndeterminate(true);

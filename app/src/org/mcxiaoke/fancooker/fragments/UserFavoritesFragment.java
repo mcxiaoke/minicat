@@ -52,6 +52,14 @@ public class UserFavoritesFragment extends BaseTimlineFragment {
 			Log.d(TAG, "onCreate() userId=" + userId);
 		}
 	}
+	
+	
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+//		getActivity().setTitle("我的收藏");
+	}
 
 	@Override
 	protected int getType() {

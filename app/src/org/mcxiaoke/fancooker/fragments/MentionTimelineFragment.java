@@ -39,9 +39,11 @@ public class MentionTimelineFragment extends BaseTimlineFragment {
 		return fragment;
 	}
 
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+//		getActivity().setTitle("@我的消息");
 	}
 
 	@Override

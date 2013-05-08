@@ -7,6 +7,7 @@ import org.mcxiaoke.fancooker.api.Api;
 import org.mcxiaoke.fancooker.api.ApiException;
 import org.mcxiaoke.fancooker.api.Paging;
 import org.mcxiaoke.fancooker.controller.PopupController;
+import org.mcxiaoke.fancooker.controller.UIController;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
 import org.mcxiaoke.fancooker.service.FanFouService;
 import org.mcxiaoke.fancooker.util.NetworkHelper;
@@ -276,7 +277,7 @@ public class UISearchResults extends UIBaseSupport implements
 			long id) {
 		final StatusModel s = (StatusModel) parent.getItemAtPosition(position);
 		if (s != null) {
-			Utils.goStatusPage(mContext, s);
+			UIController.goStatusPage(mContext, s);
 		}
 	}
 

@@ -135,9 +135,14 @@ abstract class UIBaseSupport extends Activity implements OnClickListener {
 	}
 
 	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+	}
+
+	@Override
 	public void finish() {
 		super.finish();
-		overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 	}
 
 }

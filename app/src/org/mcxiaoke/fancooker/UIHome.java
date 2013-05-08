@@ -41,6 +41,9 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 	private PagerTabStrip mPagerTabStrip;
 	private HomePagesAdapter mPagesAdapter;
 
+	private int mCurrentIndex;
+	private int mCurrentPage;
+
 	private void log(String message) {
 		Log.d(TAG, message);
 	}
@@ -67,6 +70,7 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 		mPagerTabStrip.setTextColor(Color.WHITE);
 		mPagesAdapter = new HomePagesAdapter(getFragmentManager());
 		mViewPager.setAdapter(mPagesAdapter);
+		setHomeTitle(mCurrentPage);
 
 		setSlidingMenu(R.layout.menu_frame);
 		FragmentManager fm = getFragmentManager();
@@ -132,26 +136,37 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 
 	private void showProfileFragment() {
 		replaceFragment(ProfileFragment.newInstance(AppContext.getAccount()));
+		setTitle("我的空间");
 	}
 
 	private void showMessageFragment() {
 		replaceFragment(ConversationListFragment.newInstance(false));
+		setTitle("收件箱");
 	}
 
 	@Override
 	public void onMenuItemSelected(int position, MenuItemResource menuItem) {
-		log("onMenuItemSelected: " + menuItem);
+		log("onMenuItemSelected: " + menuItem + " position=" + position
+				+ " mCurrentIndex=" + mCurrentIndex);
+		if (position == mCurrentIndex) {
+			getSlidingMenu().toggle();
+			return;
+		}
 		int id = menuItem.getId();
 		switch (id) {
 		case MenuFragment.MENU_ID_HOME:
 			getFragmentManager().beginTransaction().remove(mCurrentFragment)
 					.commit();
 			getSlidingMenu().showContent();
+			mCurrentIndex = position;
+			setHomeTitle(mCurrentPage);
 			break;
 		case MenuFragment.MENU_ID_PROFILE:
+			mCurrentIndex = position;
 			showProfileFragment();
 			break;
 		case MenuFragment.MENU_ID_MESSAGE:
+			mCurrentIndex = position;
 			showMessageFragment();
 			break;
 		case MenuFragment.MENU_ID_TOPIC:
@@ -196,10 +211,28 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 
 	@Override
 	public void onPageSelected(int page) {
+		mCurrentPage = page;
+		setHomeTitle(page);
 		if (page == 0) {
 			setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 		} else {
 			setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+		}
+	}
+
+	private void setHomeTitle(int page) {
+		switch (page) {
+		case 0:
+			setTitle("首页");
+			break;
+		case 1:
+			setTitle("提及");
+			break;
+		case 2:
+			setTitle("随便看看");
+			break;
+		default:
+			break;
 		}
 	}
 

@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 
-
 /**
  * @author mcxiaoke
  * @version 1.0 2012.02.06
@@ -41,6 +40,12 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 			Log.d(TAG, "newInstance() " + fragment);
 		}
 		return fragment;
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		getActivity().setTitle("收件箱");
 	}
 
 	@Override

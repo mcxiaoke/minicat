@@ -43,6 +43,7 @@ public class HomeTimelineFragment extends BaseTimlineFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+//		getActivity().setTitle("我的主页");
 	}
 
 	@Override

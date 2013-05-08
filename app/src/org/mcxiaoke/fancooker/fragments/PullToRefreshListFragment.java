@@ -383,6 +383,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 		@Override
 		public void handleMessage(Message msg) {
 			Bundle data = msg.getData();
+			mFragment.onRefreshComplete();
 			switch (msg.what) {
 			case Constants.RESULT_SUCCESS:
 				mFragment.onSuccess(data);
@@ -393,7 +394,6 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 			default:
 				break;
 			}
-			mFragment.onRefreshComplete();
 		}
 
 	}

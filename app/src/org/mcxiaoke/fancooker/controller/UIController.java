@@ -13,9 +13,10 @@ import org.mcxiaoke.fancooker.UIEditProfile;
 import org.mcxiaoke.fancooker.UIFavorites;
 import org.mcxiaoke.fancooker.UIHome;
 import org.mcxiaoke.fancooker.UILogin;
+import org.mcxiaoke.fancooker.UIPhoto;
 import org.mcxiaoke.fancooker.UIRecords;
 import org.mcxiaoke.fancooker.UISearch;
-import org.mcxiaoke.fancooker.UITabProfile;
+import org.mcxiaoke.fancooker.UIStatus;
 import org.mcxiaoke.fancooker.UIThread;
 import org.mcxiaoke.fancooker.UITimeline;
 import org.mcxiaoke.fancooker.UIUserList;
@@ -23,10 +24,10 @@ import org.mcxiaoke.fancooker.UIWrite;
 import org.mcxiaoke.fancooker.dao.model.DirectMessageModel;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
 import org.mcxiaoke.fancooker.dao.model.UserModel;
-import org.mcxiaoke.fancooker.fragments.ConversationListFragment;
 import org.mcxiaoke.fancooker.service.FanFouService;
 import org.mcxiaoke.fancooker.util.OptionHelper;
 import org.mcxiaoke.fancooker.util.StatusHelper;
+import org.mcxiaoke.fancooker.util.StringHelper;
 import org.mcxiaoke.fancooker.util.Utils;
 
 import android.app.Activity;
@@ -46,13 +47,12 @@ public class UIController {
 
 	private static void startUIByAnimation(Activity activity, Intent intent) {
 		activity.startActivity(intent);
-		activity.overridePendingTransition(R.anim.push_left_in,
-				R.anim.push_left_out);
+		activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
 
 	private static void startUIByAnimationBack(Activity activity, Intent intent) {
 		activity.startActivity(intent);
-		activity.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+		activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
 
 	public static void showFanfouBlog(Context context) {
@@ -68,6 +68,28 @@ public class UIController {
 	}
 
 	public static void showOption(Context context) {
+	}
+
+	public static void goStatusPage(Activity context, String id) {
+		if (!StringHelper.isEmpty(id)) {
+			Intent intent = new Intent(context, UIStatus.class);
+			intent.putExtra("id", id);
+			startUIByAnimation(context, intent);
+		}
+	}
+
+	public static void goStatusPage(Activity context, StatusModel s) {
+		if (s != null) {
+			Intent intent = new Intent(context, UIStatus.class);
+			intent.putExtra("data", s);
+			startUIByAnimation(context, intent);
+		}
+	}
+
+	public static void goPhotoViewPage(Activity context, String photoUrl) {
+		Intent intent = new Intent(context, UIPhoto.class);
+		intent.putExtra("url", photoUrl);
+		startUIByAnimation(context, intent);
 	}
 
 	public static void showEditProfile(Activity context, final UserModel user) {
@@ -99,7 +121,7 @@ public class UIController {
 	public static void backHome(Activity context) {
 		Intent intent = new Intent(context, UIHome.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//		context.startActivity(intent);
+		// context.startActivity(intent);
 		startUIByAnimationBack(context, intent);
 	}
 
@@ -228,25 +250,15 @@ public class UIController {
 		startUIByAnimation(context, intent);
 	}
 
-	public static void showMessage(Activity context, String id) {
-		context.getFragmentManager()
-				.beginTransaction()
-				.setCustomAnimations(android.R.anim.slide_in_left,
-						android.R.anim.slide_out_right)
-				.replace(R.id.content_frame,
-						ConversationListFragment.newInstance(false))
-				.addToBackStack(null).commit();
-	}
-
 	public static void showProfile(Activity context, String id) {
-		Intent intent = new Intent(context, UITabProfile.class);
+		Intent intent = new Intent(context, UITimeline.class);
 		intent.putExtra("id", id);
 		startUIByAnimation(context, intent);
 	}
 
 	public static void showProfile(Activity context, UserModel user) {
-		Intent intent = new Intent(context, UITabProfile.class);
-		intent.putExtra("data", user);
+		Intent intent = new Intent(context, UITimeline.class);
+		intent.putExtra("id", user.getId());
 		startUIByAnimation(context, intent);
 	}
 
