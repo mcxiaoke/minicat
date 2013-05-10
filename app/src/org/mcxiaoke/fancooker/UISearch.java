@@ -44,20 +44,6 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
 		setLayout();
 	}
 
-	@Override
-	protected int getMenuResourceId() {
-		return R.menu.topic_menu;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.menu_search) {
-			onSearchRequested();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
 	protected void setLayout() {
 		setContentView(R.layout.search);
 

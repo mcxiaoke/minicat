@@ -161,11 +161,6 @@ public class UIConversation extends UIBaseSupport {
 		btnSend.setEnabled(true);
 	}
 
-	@Override
-	protected int getMenuResourceId() {
-		return R.menu.simple_menu;
-	}
-
 	private class ResultHandler extends Handler {
 
 		@Override

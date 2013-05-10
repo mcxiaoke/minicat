@@ -122,9 +122,6 @@ public class UIBaseSlidingSupport extends UIBaseSupport implements
 		case R.id.menu_write:
 			onMenuWriteClick();
 			break;
-		case R.id.menu_search:
-			onMenuSearchClick();
-			break;
 		case R.id.menu_logout:
 			onMenuLogoutClick();
 			break;

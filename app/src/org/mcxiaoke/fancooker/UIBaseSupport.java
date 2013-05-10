@@ -87,9 +87,6 @@ abstract class UIBaseSupport extends Activity implements OnClickListener {
 		case R.id.menu_write:
 			onMenuWriteClick();
 			return true;
-		case R.id.menu_home:
-			onMenuHomeClick();
-			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

@@ -8,11 +8,5 @@
         android:showAsAction="always"
         android:title="写消息">
     </item>
-    <item
-        android:id="@+id/menu_home"
-        android:icon="@drawable/ic_menu_home"
-        android:orderInCategory="1"
-        android:title="返回首页">
-    </item>
 
 </menu>

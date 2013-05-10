@@ -3,7 +3,7 @@
     <item
         android:id="@+id/menu_send"
         android:icon="@drawable/ic_send"
-        android:orderInCategory="1"
+        android:orderInCategory="0"
         android:showAsAction="always"
         android:title="发送">
     </item>
