@@ -9,6 +9,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.ListFragment;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,11 @@ import android.widget.TextView;
  * 
  */
 public class MenuFragment extends ListFragment {
+	private static final String TAG = MenuFragment.class.getSimpleName();
+
+	static void debug(String message) {
+		Log.d(TAG, message);
+	}
 
 	private static final int MENU_ID = 1000;
 	public static final int MENU_ID_HOME = MENU_ID + 1;
@@ -41,6 +48,7 @@ public class MenuFragment extends ListFragment {
 	private MenuItemListAdapter mMenuAdapter;
 	private List<MenuItemResource> mMenuItems;
 	private MenuCallback mCallback;
+	private SparseBooleanArray mCheckedState;
 
 	public static MenuFragment newInstance() {
 		return new MenuFragment();
@@ -50,6 +58,7 @@ public class MenuFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mMenuItems = new ArrayList<MenuItemResource>();
+		mCheckedState = new SparseBooleanArray();
 		fillColumns();
 	}
 
@@ -69,6 +78,9 @@ public class MenuFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		mListView = getListView();
+		mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		mListView.setSelector(getResources().getDrawable(
+				R.drawable.list_selector));
 		mListView.setBackgroundColor(0xff333333);
 		mListView.setDivider(getResources().getDrawable(
 				R.drawable.menu_list_divider));
@@ -81,42 +93,85 @@ public class MenuFragment extends ListFragment {
 		super.onListItemClick(l, v, position, id);
 		final MenuItemResource menuItem = (MenuItemResource) l
 				.getItemAtPosition(position);
-		if (menuItem != null && mCallback != null) {
-			mCallback.onMenuItemSelected(position, menuItem);
+		debug("on item click ,position=" + position + " item=" + menuItem);
+		if (menuItem != null) {
+			mCheckedState.clear();
+			mCheckedState.put(position, true);
+			if (menuItem.highlight) {
+				mMenuAdapter.setCurrentPosition(position);
+			}
+			mMenuAdapter.notifyDataSetChanged();
+			if (mCallback != null) {
+				mCallback.onMenuItemSelected(position, menuItem);
+			}
 		}
 	}
 
 	private void fillColumns() {
-		mMenuItems.add(new MenuItemResource(MENU_ID_HOME, "我的首页",
-				R.drawable.ic_item_announce));
-		mMenuItems.add(new MenuItemResource(MENU_ID_PROFILE, "我的空间",
-				R.drawable.ic_item_profile));
-		mMenuItems.add(new MenuItemResource(MENU_ID_MESSAGE, "我的私信",
-				R.drawable.ic_item_feedback));
-		mMenuItems.add(new MenuItemResource(MENU_ID_TOPIC, "热词和搜索",
-				R.drawable.ic_item_topic));
-		mMenuItems.add(new MenuItemResource(MENU_ID_RECORD, "草稿箱",
-				R.drawable.ic_item_record));
-		mMenuItems.add(new MenuItemResource(MENU_ID_DIGEST, "饭否语录",
-				R.drawable.ic_item_digest));
-		mMenuItems.add(new MenuItemResource(MENU_ID_THEME, "主题切换",
-				R.drawable.ic_item_theme));
-		mMenuItems.add(new MenuItemResource(MENU_ID_OPTION, "程序设置",
-				R.drawable.ic_item_option));
-		mMenuItems.add(new MenuItemResource(MENU_ID_ABOUT, "关于饭否",
-				R.drawable.ic_item_info));
+		MenuItemResource home = MenuItemResource.newBuilder().id(MENU_ID_HOME)
+				.text("我的首页").iconId(R.drawable.ic_menu_home).highlight(true)
+				.build();
+
+		MenuItemResource profile = MenuItemResource.newBuilder()
+				.id(MENU_ID_PROFILE).text("我的空间")
+				.iconId(R.drawable.ic_item_profile).highlight(true).build();
+
+		MenuItemResource message = MenuItemResource.newBuilder()
+				.id(MENU_ID_MESSAGE).text("私信收件箱")
+				.iconId(R.drawable.ic_item_feedback).highlight(true).build();
+
+		MenuItemResource topic = MenuItemResource.newBuilder()
+				.id(MENU_ID_TOPIC).text("热词和搜索")
+				.iconId(R.drawable.ic_item_topic).highlight(false).build();
+
+		MenuItemResource drafts = MenuItemResource.newBuilder()
+				.id(MENU_ID_RECORD).text("草稿箱")
+				.iconId(R.drawable.ic_item_record).highlight(false).build();
+
+		MenuItemResource option = MenuItemResource.newBuilder()
+				.id(MENU_ID_OPTION).text("使用设置")
+				.iconId(R.drawable.ic_item_option).highlight(false).build();
+
+		MenuItemResource theme = MenuItemResource.newBuilder()
+				.id(MENU_ID_THEME).text("主题切换")
+				.iconId(R.drawable.ic_item_theme).highlight(false).build();
+
+		MenuItemResource blog = MenuItemResource.newBuilder()
+				.id(MENU_ID_DIGEST).text("饭否语录")
+				.iconId(R.drawable.ic_item_digest).highlight(false).build();
+
+		MenuItemResource about = MenuItemResource.newBuilder()
+				.id(MENU_ID_ABOUT).text("关于饭否").iconId(R.drawable.ic_item_info)
+				.highlight(false).build();
+
+		mMenuItems.add(home);
+		mMenuItems.add(profile);
+		mMenuItems.add(message);
+		mMenuItems.add(topic);
+		mMenuItems.add(drafts);
+		mMenuItems.add(option);
+		mMenuItems.add(theme);
+		mMenuItems.add(blog);
+		mMenuItems.add(about);
 
 	}
 
 	private static class MenuItemListAdapter extends BaseAdapter {
+		private Context context;
 		private LayoutInflater inflater;
 		private List<MenuItemResource> mItems;
+		private int currentPosition;
+
+		public void setCurrentPosition(int position) {
+			this.currentPosition = position;
+		}
 
 		public MenuItemListAdapter(Context context, List<MenuItemResource> data) {
+			this.context = context;
 			this.inflater = LayoutInflater.from(context);
-			mItems = new ArrayList<MenuItemResource>();
+			this.mItems = new ArrayList<MenuItemResource>();
 			if (data != null && data.size() > 0) {
-				mItems.addAll(data);
+				this.mItems.addAll(data);
 			}
 		}
 
@@ -147,8 +202,18 @@ public class MenuFragment extends ListFragment {
 			}
 
 			final MenuItemResource item = mItems.get(position);
-			holder.icon.setImageResource(item.getIconId());
-			holder.text.setText(item.getText());
+			holder.icon.setImageResource(item.iconId);
+			holder.text.setText(item.text);
+
+			debug("getView ,position=" + position + " item=" + item);
+
+			if (position == currentPosition && item.highlight) {
+				holder.text.setTextColor(context.getResources()
+						.getColorStateList(R.color.light_blue_text_color));
+			} else {
+				holder.text.setTextColor(context.getResources()
+						.getColorStateList(R.color.white_text_color));
+			}
 			return convertView;
 		}
 

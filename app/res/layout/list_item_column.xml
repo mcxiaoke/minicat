@@ -4,18 +4,20 @@
     android:layout_height="fill_parent"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="8dp" >
+    android:padding="6dp" >
 
     <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
         android:layout_marginRight="12dp" />
 
     <TextView
         android:id="@+id/text"
         style="?android:attr/textAppearanceInverse"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="16sp" />
 
 </LinearLayout>

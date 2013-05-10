@@ -26,9 +26,10 @@
     <color name="state_text">#ff4a331e</color>
 
     <!-- light theme color -->
-    <color name="light_blue">#ff00ccff</color>
-    <color name="light_blue_dark">#ff0099cc</color>
-    <color name="light_blue_light">#ffeaf8fc</color>
+    
+    <color name="light_blue">#3498DB</color>
+    <color name="light_blue_dark">#2980B9</color>
+    <color name="light_blue_light">#EAF8FC</color>
     <color name="light_popup_background">#ffcfeff7</color>
     <color name="light_popup_divider">#ffb2deff</color>
     <color name="light_list_divider">#99cccccc</color>

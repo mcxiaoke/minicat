@@ -152,14 +152,14 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 			getSlidingMenu().toggle();
 			return;
 		}
-		int id = menuItem.getId();
+		int id = menuItem.id;
 		switch (id) {
 		case MenuFragment.MENU_ID_HOME:
 			getFragmentManager().beginTransaction().remove(mCurrentFragment)
 					.commit();
 			getSlidingMenu().showContent();
-			mCurrentIndex = position;
 			setHomeTitle(mCurrentPage);
+			mCurrentIndex = position;
 			break;
 		case MenuFragment.MENU_ID_PROFILE:
 			mCurrentIndex = position;
