@@ -82,11 +82,7 @@ public class UISearchResults extends UIBaseSupport implements
 	}
 
 	private void readHighlightColor() {
-		TypedArray a = getTheme().obtainStyledAttributes(R.styleable.AppTheme);
-		highlightColor = a.getColor(R.styleable.AppTheme_searchTextColor,
-				Color.BLACK);
-		a.recycle();
-		a = null;
+		highlightColor = getResources().getColor(R.color.holo_red_light);
 	}
 
 	protected void setLayout() {

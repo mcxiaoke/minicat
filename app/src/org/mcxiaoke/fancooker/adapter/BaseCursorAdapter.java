@@ -30,7 +30,6 @@ public abstract class BaseCursorAdapter extends CursorAdapter implements
 	protected LayoutInflater mInflater;
 	protected ImageLoader mImageLoader;
 	protected boolean busy;
-	private int fontSize;
 
 	public BaseCursorAdapter(Context context) {
 		super(context, null, FLAG_REGISTER_CONTENT_OBSERVER);
@@ -46,21 +45,10 @@ public abstract class BaseCursorAdapter extends CursorAdapter implements
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);
 		this.mImageLoader = ImageLoader.getInstance();
-		this.fontSize = OptionHelper.readInt(mContext,
-				R.string.option_fontsize,
-				context.getResources().getInteger(R.integer.defaultFontSize));
 	}
 
 	protected int getLayoutId() {
 		return -1;
-	}
-
-	public int getFontSize() {
-		return fontSize;
-	}
-
-	public void setFontSize(int size) {
-		fontSize = size;
 	}
 
 	@Override

@@ -7,27 +7,27 @@
 
     <ImageButton
         android:id="@+id/action_mention"
-        style="?ActionItemStyle"
+        style="@style/ActionItem"
         android:src="@drawable/ic_mention" />
 
     <ImageButton
         android:id="@+id/action_record"
-        style="?ActionItemStyle"
+        style="@style/ActionItem"
         android:src="@drawable/ic_record" />
 
     <ImageButton
         android:id="@+id/action_location"
-        style="?ActionItemStyle"
+        style="@style/ActionItem"
         android:src="@drawable/ic_location" />
 
     <ImageButton
         android:id="@+id/action_gallery"
-        style="?ActionItemStyle"
+        style="@style/ActionItem"
         android:src="@drawable/ic_gallery" />
 
     <ImageButton
         android:id="@+id/action_camera"
-        style="?ActionItemStyle"
+        style="@style/ActionItem"
         android:src="@drawable/ic_camera" />
 
 </LinearLayout>

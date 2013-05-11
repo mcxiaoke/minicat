@@ -40,7 +40,6 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 	protected boolean busy;
 
 	protected List<StatusModel> mData;
-	protected int fontSize;
 
 	public BaseStatusArrayAdapter(Context context) {
 		this(context, null);
@@ -55,10 +54,6 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);
 		this.mLoader = ImageLoader.getInstance();
-		this.fontSize = OptionHelper.readInt(mContext,
-				R.string.option_fontsize,
-				context.getResources().getInteger(R.integer.defaultFontSize));
-
 		mData = new ArrayList<StatusModel>();
 		if (data != null) {
 			mData.addAll(data);
@@ -138,14 +133,6 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 
 	protected void setStatusContent(ItemView view, String text) {
 		view.setContent(text);
-	}
-
-	public int getFontSize() {
-		return fontSize;
-	}
-
-	public void setFontSize(int size) {
-		fontSize = size;
 	}
 
 	@Override

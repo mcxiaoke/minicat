@@ -6,22 +6,22 @@
 
     <ImageButton
         android:id="@+id/action_reply"
-        style="?ActionItemStyle"
+        style="@style/ActionItem"
         android:src="@drawable/ic_reply" />
 
     <ImageButton
         android:id="@+id/action_retweet"
-        style="?ActionItemStyle"
+        style="@style/ActionItem"
         android:src="@drawable/ic_retweet" />
 
     <ImageButton
         android:id="@+id/action_favorite"
-        style="?ActionItemStyle"
+        style="@style/ActionItem"
         android:src="@drawable/ic_favorite" />
 
     <ImageButton
         android:id="@+id/action_share"
-        style="?ActionItemStyle"
+        style="@style/ActionItem"
         android:src="@drawable/ic_share" />
 
 </LinearLayout>

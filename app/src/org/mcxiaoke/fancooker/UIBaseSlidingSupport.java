@@ -6,22 +6,19 @@ package org.mcxiaoke.fancooker;
 import org.mcxiaoke.fancooker.controller.SimpleDialogListener;
 import org.mcxiaoke.fancooker.dialog.ConfirmDialog;
 import org.mcxiaoke.fancooker.menu.MenuCallback;
-import org.mcxiaoke.fancooker.menu.MenuItemResource;
 
-import com.slidingmenu.lib.SlidingMenu;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.slidingmenu.lib.SlidingMenu;
 
 /**
  * @author mcxiaoke
  * 
  */
-public class UIBaseSlidingSupport extends UIBaseSupport implements
-		SlidingMenu.OnCloseListener, SlidingMenu.OnOpenListener,
-		MenuCallback {
+public abstract class UIBaseSlidingSupport extends UIBaseSupport implements
+		SlidingMenu.OnCloseListener, SlidingMenu.OnOpenListener, MenuCallback {
 	private SlidingMenu mSlidingMenu;
 
 	@Override
@@ -32,9 +29,9 @@ public class UIBaseSlidingSupport extends UIBaseSupport implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-//		if (isMenuShowing()) {
-//			getSlidingMenu().showContent(false);
-//		}
+		// if (isMenuShowing()) {
+		// getSlidingMenu().showContent(false);
+		// }
 	}
 
 	@Override
@@ -65,8 +62,8 @@ public class UIBaseSlidingSupport extends UIBaseSupport implements
 	protected void toggle() {
 		toggle(true);
 	}
-	
-	protected void toggle(boolean animate){
+
+	protected void toggle(boolean animate) {
 		mSlidingMenu.toggle(animate);
 	}
 
@@ -90,11 +87,6 @@ public class UIBaseSlidingSupport extends UIBaseSupport implements
 	@Override
 	public void onClose() {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-	}
-
-	@Override
-	public void onMenuItemSelected(int position, MenuItemResource menuItem) {
-
 	}
 
 	@Override
@@ -130,11 +122,6 @@ public class UIBaseSlidingSupport extends UIBaseSupport implements
 			break;
 		}
 		return true;
-	}
-
-	private void onMenuSearchClick() {
-		Intent intent = new Intent(this, UISearch.class);
-		startActivity(intent);
 	}
 
 	private void onMenuLogoutClick() {

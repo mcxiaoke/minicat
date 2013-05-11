@@ -57,8 +57,6 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter{
 	}
 
 	private void setTextStyle(UserCheckBoxViewHolder holder) {
-		int fontSize = getFontSize();
-		holder.nameText.setTextSize(fontSize);
 		TextPaint tp = holder.nameText.getPaint();
 		tp.setFakeBoldText(true);
 	}

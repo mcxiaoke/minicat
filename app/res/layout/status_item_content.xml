@@ -11,13 +11,15 @@
 
     <ImageView
         android:id="@+id/content_photo"
-        style="@style/StatusPhotoStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/content_text"
         android:layout_centerHorizontal="true" />
-    
+
     <TextView
         android:id="@+id/content_metainfo"
-        style="@style/StatusMetaInfoStyle" android:layout_alignParentRight="true"
-        android:layout_below="@id/content_photo"/>
+        style="@style/StatusMetaInfoStyle"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/content_photo" />
 
 </RelativeLayout>

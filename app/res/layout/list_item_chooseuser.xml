@@ -9,7 +9,10 @@
 
     <ImageView
         android:id="@+id/head"
-        style="@style/Widget.Head" />
+        android:layout_width="@dimen/head_width"
+        android:layout_height="@dimen/head_height"
+        android:layout_gravity="center"
+        android:layout_margin="2dp" />
 
     <RelativeLayout
         android:layout_width="0dp"

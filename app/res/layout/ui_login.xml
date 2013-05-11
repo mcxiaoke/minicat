@@ -6,7 +6,11 @@
 
     <ImageView
         android:id="@+id/login_logo"
-        style="@style/LoginTopLogoStyle" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/login_logo" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,25 +22,28 @@
 
         <EditText
             android:id="@+id/login_username"
-            style="@style/LoginInputStyle"
-            android:hint="@string/login_username_hint" />
+            style="@style/EditText.Login"
+            android:hint="@string/login_username_hint"
+            android:inputType="textEmailAddress" />
 
         <EditText
             android:id="@+id/login_password"
-            style="@style/LoginInputStyle"
+            style="@style/EditText.Login"
             android:hint="@string/login_password_hint"
             android:imeOptions="actionSend"
-            android:inputType="textPassword"
-            android:password="true" />
+            android:inputType="textPassword" />
 
         <Button
             android:id="@+id/button_signin"
-            style="@style/LoginButtonStyle"
+            style="@style/Button.Login"
             android:text="@string/login_button_text" />
     </LinearLayout>
 
     <ImageView
-        style="@style/LoginBottomLogoStyle"
-        android:layout_alignParentBottom="true" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/login_bottom" />
 
 </RelativeLayout>

@@ -8,22 +8,30 @@
 
     <ImageView
         android:id="@+id/ic_favorite"
-        style="@style/Widget.MiniIcon"
-        android:src="@drawable/ic_mini_favorite" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_mini_favorite"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/ic_thread"
-        style="@style/Widget.MiniIcon"
-        android:src="@drawable/ic_mini_thread" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_mini_thread"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/ic_photo"
-        style="@style/Widget.MiniIcon"
-        android:src="@drawable/ic_mini_photo" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_mini_photo"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/ic_lock"
-        style="@style/Widget.MiniIcon"
-        android:src="@drawable/ic_mini_protected" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_mini_protected"
+        android:visibility="gone" />
 
 </LinearLayout>

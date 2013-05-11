@@ -62,11 +62,11 @@ public class UIVersionUpdate extends Activity implements View.OnClickListener {
 
 		mTextView = (TextView) findViewById(R.id.text);
 
-		mButton1 = (Button) findViewById(R.id.button1);
+		mButton1 = (Button) findViewById(R.id.button_ok);
 		mButton1.setText("立即升级");
 		mButton1.setOnClickListener(this);
 
-		mButton2 = (Button) findViewById(R.id.button2);
+		mButton2 = (Button) findViewById(R.id.button_cancel);
 		mButton2.setText("以后再说");
 		mButton2.setOnClickListener(this);
 
@@ -94,13 +94,13 @@ public class UIVersionUpdate extends Activity implements View.OnClickListener {
 	public void onClick(View v) {
 		int id = v.getId();
 		switch (id) {
-		case R.id.button1:
+		case R.id.button_ok:
 			if (mVersionInfo != null) {
 				DownloadService.startDownload(this, mVersionInfo.downloadUrl);
 			}
 			finish();
 			break;
-		case R.id.button2:
+		case R.id.button_cancel:
 			finish();
 			break;
 		default:

@@ -1,7 +1,5 @@
 package org.mcxiaoke.fancooker.util;
 
-import org.mcxiaoke.fancooker.R;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -18,19 +16,6 @@ public final class IntentHelper {
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.addCategory(Intent.CATEGORY_HOME);
 		return intent;
-	}
-
-	public static void sendFeedback(Context context, String content) {
-		final Intent emailIntent = new Intent(Intent.ACTION_SEND);
-		emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		emailIntent.setType("message/rfc822");
-		String subject = "饭否Android客户端意见反馈";
-		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
-		emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, content);
-		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
-				new String[] { context
-						.getString(R.string.config_feedback_email) });
-		context.startActivity(Intent.createChooser(emailIntent, "发送反馈"));
 	}
 
 	public static void logIntent(String tag, Intent intent) {

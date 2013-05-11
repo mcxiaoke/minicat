@@ -1,111 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="MiniIconStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">2dp</item>
-    </style>
-
-    <style name="Widget"></style>
-
-    <style name="Widget.ButtonGroup">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">4dp</item>
-        <item name="android:orientation">horizontal</item>
-    </style>
-
-    <style name="Widget.ButtonGroup.Light">
-        <item name="android:background">@color/holo_blue_light</item>
-    </style>
-
-    <style name="Widget.Button">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:padding">8dp</item>
-        <item name="android:layout_margin">6dp</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
-    </style>
-
-    <style name="Widget.Button.Light">
-        <item name="android:background">@drawable/button_blue</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
-    <style name="Widget.EditProfileInput">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">4dp</item>
-    </style>
-
-    <style name="Widget.EditProfileInput.Light">
-        <item name="android:background">@drawable/input</item>
-    </style>
-
-    <style name="ProfileImageStyle">
-        <item name="android:layout_width">@dimen/head_width</item>
-        <item name="android:layout_height">@dimen/head_height</item>
-        <item name="android:layout_margin">@dimen/head_margin</item>
-    </style>
-
-    <style name="ProfileCountTextStyle">
-        <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">?profileCountTextColor</item>
-    </style>
-
-    <style name="ProfileCountStyle">
-        <item name="android:gravity">center</item>
-        <item name="android:clickable">true</item>
-        <item name="android:descendantFocusability">blocksDescendants</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:background">?profileCountBackground</item>
-    </style>
-
-    <style name="ProfileActionTextStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">0dp</item>
-        <item name="android:textSize">@dimen/text_size_small</item>
-        <item name="android:textColor">?primaryTextColorReverse</item>
-    </style>
-
-    <style name="ProfileItemTitleStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:paddingTop">6dp</item>
-        <item name="android:paddingBottom">6dp</item>
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:background">?profileItemTitleBackground</item>
-        <item name="android:textColor">?primaryTextColor</item>
-    </style>
-
-    <style name="ProfileItemTextStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:paddingTop">6dp</item>
-        <item name="android:paddingBottom">6dp</item>
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:textColor">?primaryTextColor</item>
-    </style>
-
     <style name="StatusTextStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:padding">@dimen/status_text_padding</item>
-        <item name="android:textColor">?primaryTextColor</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="StatusMetaInfoStyle">
@@ -113,130 +14,38 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_size_tiny</item>
         <item name="android:padding">@dimen/status_text_padding</item>
-        <item name="android:textColor">?secondaryTextColor</item>
+        <item name="android:textColor">@color/dark_grey</item>
     </style>
 
-    <style name="StatusPhotoStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">center_horizontal</item>
-    </style>
+    <style name="EditText"></style>
 
-    <style name="LoginTopLogoStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:src">?loginTopLogo</item>
-    </style>
-
-    <style name="LoginBottomLogoStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:src">?loginBottomLogo</item>
-    </style>
-
-    <style name="LoginInputStyle">
-        <item name="android:layout_width">fill_parent</item>
+    <style name="EditText.Login">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
-        <!-- <item name="android:textColor">@color/theme</item> -->
         <item name="android:singleLine">true</item>
-        <item name="android:background">?inputBackground</item>
+        <item name="android:background">@drawable/input</item>
         <item name="android:padding">10dp</item>
         <item name="android:layout_marginBottom">20dp</item>
     </style>
 
-    <style name="LoginButtonStyle">
-        <item name="android:layout_width">fill_parent</item>
+    <style name="Button"></style>
+
+    <style name="Button.Login">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_size_xlarge</item>
         <item name="android:padding">10dp</item>
         <item name="android:layout_marginTop">10dp</item>
-        <item name="android:background">?loginButtonBackground</item>
-        <item name="android:textColor">?primaryTextColorReverse</item>
+        <item name="android:background">@drawable/action_blue</item>
     </style>
 
-    <style name="Widget.ActionItem">
+    <style name="ActionItem">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:padding">@dimen/action_item_padding</item>
-    </style>
-
-    <style name="Widget.ActionItem.Light">
         <item name="android:background">@drawable/action_blue</item>
-    </style>
-
-    <style name="Widget.ActionGroup">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">horizontal</item>
-    </style>
-
-    <style name="WriteInputStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <!-- <item name="android:layout_weight">1</item> -->
-        <item name="android:gravity">left|top</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:singleLine">false</item>
-        <item name="android:background">@null</item>
-        <item name="android:padding">@dimen/write_input_padding</item>
-    </style>
-
-    <style name="WriteInfoCountStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">4dp</item>
-        <item name="android:layout_margin">2dp</item>
-        <item name="android:textSize">@dimen/text_size_small</item>
-        <item name="android:textColor">?writeCountTextColor</item>
-    </style>
-
-    <style name="WriteInfoPhotoStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">4dp</item>
-    </style>
-
-    <style name="IconRemoveStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:src">?iconRemove</item>
-        <item name="android:background">@drawable/action</item>
-    </style>
-
-    <style name="Widget.MiniIcon">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:visibility">gone</item>
-    </style>
-
-    <style name="Widget.ImageButton">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">4dp</item>
-    </style>
-
-    <style name="Widget.ImageButton.Light">
-        <item name="android:background">@drawable/action_blue</item>
-    </style>
-
-    <style name="Widget.FollowState">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:paddingTop">4dp</item>
-        <item name="android:paddingBottom">4dp</item>
-        <item name="android:paddingLeft">12dp</item>
-        <item name="android:paddingRight">12dp</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
-    </style>
-
-    <style name="Widget.FollowState.Light">
-        <item name="android:textColor">@color/black</item>
-        <item name="android:background">@drawable/follow_state_following</item>
     </style>
 
     <style name="Item">
@@ -252,32 +61,13 @@
 
     <style name="Item.TextBoldStyle">
         <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:textColor">?primaryTextColor</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Item.MetaInfoStyle">
-        <item name="android:textColor">?secondaryTextColor</item>
+        <item name="android:textColor">@color/dark_grey</item>
         <item name="android:textSize">@dimen/text_size_tiny</item>
-    </style>
-
-    <style name="Widget.Head">
-        <item name="android:layout_width">@dimen/head_width</item>
-        <item name="android:layout_height">@dimen/head_height</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_margin">2dp</item>
-    </style>
-
-    <style name="Widget.SendGroup">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">horizontal</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:padding">2dp</item>
-    </style>
-
-    <style name="Widget.SendGroup.Light">
-        <item name="android:background">@color/holo_blue_light</item>
     </style>
 
     <style name="Animations" />

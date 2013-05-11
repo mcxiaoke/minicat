@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.mcxiaoke.fancooker"
     android:sharedUserId="org.mcxiaoke.fancooker"
-    android:versionCode="20120605"
+    android:versionCode="20130510"
     android:versionName="2.0" >
 
     <uses-sdk android:minSdkVersion="14" />
@@ -99,11 +99,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UIEditProfile"
-            android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".UIAbout"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name" />
@@ -132,11 +127,6 @@
             android:label="@string/app_name" />
         <activity
             android:name=".UIMyProfile"
-            android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name=".UIProfile"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name" >
         </activity>

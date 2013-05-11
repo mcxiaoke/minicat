@@ -10,7 +10,6 @@ import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.UIAbout;
 import org.mcxiaoke.fancooker.UIConversation;
 import org.mcxiaoke.fancooker.UIDebugMode;
-import org.mcxiaoke.fancooker.UIEditProfile;
 import org.mcxiaoke.fancooker.UIFavorites;
 import org.mcxiaoke.fancooker.UIHome;
 import org.mcxiaoke.fancooker.UILogin;
@@ -93,13 +92,7 @@ public class UIController {
 		startUIByAnimation(context, intent);
 	}
 
-	public static void showEditProfile(Activity context, final UserModel user) {
-		Intent intent = new Intent(context, UIEditProfile.class);
-		intent.putExtra("data", user);
-		startUIByAnimation(context, intent);
-	}
-	
-	public static void showDebug(Activity context){
+	public static void showDebug(Activity context) {
 		startUIByAnimation(context, new Intent(context, UIDebugMode.class));
 	}
 

@@ -18,12 +18,6 @@
     <string name="crash_toast_text">Ooooops ! I crashed, but a report will be sent to
 		fanfou developers to help them fix the issue !</string>
 
-    <!-- about page text -->
-    <string name="support_text">见和建议提交，问题反馈，获取版本更新信息，请关注官方技术支持帐号 @Android客户端</string>
-    <string name="introduction_text">本软件适用于Android
-		1.6以上系统，本软件的下载和使用完全免费，使用过程中产生的流量费用由运营商收取。</string>
-    <string name="contact_text">Website: http://fanfou.com\nEmail: android@fanfou.com</string>
-
     <!-- Color Picker -->
     <string name="dialog_color_picker">Color Picker</string>
     <string name="press_color_to_apply">Press on Color to apply</string>

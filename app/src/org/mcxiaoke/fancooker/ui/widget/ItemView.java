@@ -51,7 +51,7 @@ public class ItemView extends RelativeLayout {
 	}
 
 	public ItemView(Context context, AttributeSet attrs) {
-		this(context, attrs, R.attr.itemViewStyle);
+		this(context, attrs, 0);
 	}
 
 	public ItemView(Context context, AttributeSet attrs, int defStyle) {

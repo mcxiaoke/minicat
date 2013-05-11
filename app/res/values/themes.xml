@@ -8,45 +8,6 @@
 
     <style name="AppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
-
-        <!-- widget style -->
-        <item name="ButtonGroupStyle">@style/Widget.ButtonGroup.Light</item>
-        <item name="SendGroupStyle">@style/Widget.SendGroup.Light</item>
-        <item name="ButtonStyle">@style/Widget.Button.Light</item>
-        <item name="EditProfileInputStyle">@style/Widget.EditProfileInput.Light</item>
-        <item name="ActionItemStyle">@style/Widget.ActionItem.Light</item>
-        <item name="ActionGroupStyle">@style/Widget.ActionGroup</item>
-        <item name="ImageButtonStyle">@style/Widget.ImageButton.Light</item>
-        <item name="FollowStateStyle">@style/Widget.FollowState.Light</item>
-        <item name="searchTextColor">@color/holo_blue_light</item>
-
-        <!-- text color -->
-        <item name="primaryTextColor">@color/black</item>
-        <item name="secondaryTextColor">@color/grey</item>
-        <item name="primaryTextColorReverse">@color/white</item>
-        <item name="secondaryTextColorReverse">@color/light_grey</item>
-
-        <!-- profile color -->
-        <item name="profileItemTitleBackground">@color/light_grey</item>
-        <item name="profileBlockBackground">@color/holo_blue_light</item>
-        <item name="profileCountTextColor">@color/black</item>
-        <item name="profileCountBackground">@drawable/action</item>
-
-        <!-- write color -->
-        <item name="iconRemove">@drawable/ic_remove</item>
-        <item name="writeCountTextColor">@color/holo_blue_light</item>
-
-        <!-- login logo -->
-        <item name="loginTopLogo">@drawable/login_logo</item>
-        <item name="loginBottomLogo">@drawable/login_bottom</item>
-        <item name="loginButtonBackground">@drawable/button_blue</item>
-
-        <!-- Global color and drawable -->
-        <item name="inputBackground">@drawable/input</item>
-        <item name="buttonBackground">@drawable/button_blue</item>
-        <item name="primaryColor">@color/holo_blue_light</item>
-        <item name="secondaryColor">@color/holo_blue_dark</item>
-        <item name="uiBackground">@color/transparent</item>
     </style>
 
     <style name="AppTheme.UIPhoto" parent="@android:style/Theme.Holo.NoActionBar"></style>

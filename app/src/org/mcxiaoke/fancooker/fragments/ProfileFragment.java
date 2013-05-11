@@ -132,7 +132,7 @@ public class ProfileFragment extends AbstractFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.fm_profile, container, false);
+		View root = null;
 		findViews(root);
 		return root;
 	}
@@ -151,7 +151,6 @@ public class ProfileFragment extends AbstractFragment implements
 		checkRefresh();
 
 	}
-
 
 	private void parseArguments() {
 		Bundle data = getArguments();
@@ -175,32 +174,32 @@ public class ProfileFragment extends AbstractFragment implements
 		headerName = (TextView) root.findViewById(R.id.header_name);
 		headerRelation = (TextView) root.findViewById(R.id.header_relation);
 
-		tvStatuses = (TextView) root.findViewById(R.id.count_statuses);
-		tvFavorites = (TextView) root.findViewById(R.id.count_favorites);
-		tvFriends = (TextView) root.findViewById(R.id.count_friends);
-		tvFollowers = (TextView) root.findViewById(R.id.count_followers);
+		// tvStatuses = (TextView) root.findViewById(R.id.count_statuses);
+		// tvFavorites = (TextView) root.findViewById(R.id.count_favorites);
+		// tvFriends = (TextView) root.findViewById(R.id.count_friends);
+		// tvFollowers = (TextView) root.findViewById(R.id.count_followers);
+		//
+		// vStatuses = root.findViewById(R.id.box_statuses);
+		// vFavorites = root.findViewById(R.id.box_favorites);
+		// vFriends = root.findViewById(R.id.box_friends);
+		// vFollowers = root.findViewById(R.id.box_followers);
 
-		vStatuses = root.findViewById(R.id.box_statuses);
-		vFavorites = root.findViewById(R.id.box_favorites);
-		vFriends = root.findViewById(R.id.box_friends);
-		vFollowers = root.findViewById(R.id.box_followers);
-
-		infoTitle = (TextView) root.findViewById(R.id.info_title);
-		Utils.setBoldText(infoTitle);
-		infoContent = (TextView) root.findViewById(R.id.info_content);
-
-		descTitle = (TextView) root.findViewById(R.id.desc_title);
-		Utils.setBoldText(descTitle);
-		descContent = (TextView) root.findViewById(R.id.desc_content);
-
-		stateView = root.findViewById(R.id.state);
+		// infoTitle = (TextView) root.findViewById(R.id.info_title);
+		// Utils.setBoldText(infoTitle);
+		// infoContent = (TextView) root.findViewById(R.id.info_content);
+		//
+		// descTitle = (TextView) root.findViewById(R.id.desc_title);
+		// Utils.setBoldText(descTitle);
+		// descContent = (TextView) root.findViewById(R.id.desc_content);
+		//
+		// stateView = root.findViewById(R.id.state);
 		if (userId.equals(AppContext.getAccount())) {
 			stateView.setVisibility(View.GONE);
 		}
-		actionOthers = (ImageButton) root.findViewById(R.id.action_others);
+		// actionOthers = (ImageButton) root.findViewById(R.id.action_others);
 		registerForContextMenu(actionOthers);
 
-		actionFollow = (Button) root.findViewById(R.id.action_follow);
+		// actionFollow = (Button) root.findViewById(R.id.action_follow);
 		// actionMention = (ImageButton)
 		// root.findViewById(R.id.action_mention);
 		// actionDM = (ImageButton) root.findViewById(R.id.action_dm);
@@ -279,7 +278,6 @@ public class ProfileFragment extends AbstractFragment implements
 		updateInfo();
 		updateDescription();
 
-		
 		updateRelation();
 
 	}
@@ -346,9 +344,9 @@ public class ProfileFragment extends AbstractFragment implements
 	}
 
 	private void updateRelation() {
-		if(TextUtils.isEmpty(relationState)){
+		if (TextUtils.isEmpty(relationState)) {
 			showRelation();
-		}else{
+		} else {
 			headerRelation.setText(relationState);
 		}
 	}
@@ -389,7 +387,7 @@ public class ProfileFragment extends AbstractFragment implements
 				switch (msg.what) {
 				case FanFouService.RESULT_SUCCESS:
 					boolean follow = msg.getData().getBoolean("boolean");
-					relationState=follow ? "正在关注你" : "没有关注你";
+					relationState = follow ? "正在关注你" : "没有关注你";
 					updateRelation();
 					break;
 				case FanFouService.RESULT_ERROR:
@@ -551,55 +549,6 @@ public class ProfileFragment extends AbstractFragment implements
 
 	@Override
 	public void onClick(View v) {
-		if (user == null) {
-			return;
-		}
-		if (AppContext.DEBUG) {
-			Log.d(TAG,
-					"OnClick() view=" + v.getId() + " user.id=" + user.getId()
-							+ " noPermission=" + noPermission);
-		}
-		switch (v.getId()) {
-		case R.id.action_follow:
-			doFollow();
-			break;
-		case R.id.action_others:
-			showOthers();
-			break;
-		case R.id.action_mention:
-			UIController.showWrite(getActivity(), "@" + user.getScreenName()
-					+ " ");
-			break;
-		case R.id.action_dm:
-			UIController.showConversation(getActivity(), user, false);
-			break;
-		case R.id.action_block:
-			break;
-		case R.id.box_statuses:
-			if (hasPermission()) {
-				mOnActionClickListener.onActionClick(2, "timeline");
-				// UIController.showTimeline(getActivity(), user.getId());
-			}
-			break;
-		case R.id.box_favorites:
-			if (hasPermission()) {
-				mOnActionClickListener.onActionClick(0, "favorites");
-				// UIController.showFavorites(getActivity(), user.getId());
-			}
-			break;
-		case R.id.box_friends:
-			if (hasPermission()) {
-				UIController.showFriends(getActivity(), user.getId());
-			}
-			break;
-		case R.id.box_followers:
-			if (hasPermission()) {
-				UIController.showFollowers(getActivity(), user.getId());
-			}
-			break;
-		default:
-			break;
-		}
 	}
 
 	@Override

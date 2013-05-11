@@ -41,7 +41,6 @@ public abstract class UserArrayAdapter extends BaseAdapter implements
 	protected ImageLoader mLoader;
 
 	protected List<UserModel> mData;
-	protected int fontSize;
 	protected boolean busy;
 
 	public UserArrayAdapter(Context context, List<UserModel> data) {
@@ -53,9 +52,6 @@ public abstract class UserArrayAdapter extends BaseAdapter implements
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);
 		this.mLoader = ImageLoader.getInstance();
-		this.fontSize = OptionHelper.readInt(mContext,
-				R.string.option_fontsize,
-				context.getResources().getInteger(R.integer.defaultFontSize));
 		mData = new ArrayList<UserModel>();
 		if (data != null) {
 			mData.addAll(data);
@@ -111,14 +107,6 @@ public abstract class UserArrayAdapter extends BaseAdapter implements
 	protected int getLayoutId() {
 		// return R.layout.list_item_user;
 		return -1;
-	}
-
-	public int getFontSize() {
-		return fontSize;
-	}
-
-	public void setFontSize(int size) {
-		fontSize = size;
 	}
 
 	@Override

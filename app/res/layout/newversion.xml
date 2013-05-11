@@ -38,23 +38,11 @@
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
+    <include
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        layout="@layout/two_button_group"
         android:orientation="horizontal"
-        android:padding="10dp" >
-
-        <Button
-            android:id="@+id/button1"
-            style="?ButtonStyle" />
-
-        <View
-            android:layout_width="10dp"
-            android:layout_height="0dp" />
-
-        <Button
-            android:id="@+id/button2"
-            style="?ButtonStyle" />
-    </LinearLayout>
+        android:padding="10dp" />
 
 </LinearLayout>
