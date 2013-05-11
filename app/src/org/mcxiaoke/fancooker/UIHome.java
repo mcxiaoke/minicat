@@ -66,7 +66,7 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 		mPagerTabStrip = (PagerTabStrip) findViewById(R.id.viewpager_strip);
 		mPagerTabStrip.setDrawFullUnderline(false);
 		mPagerTabStrip.setTabIndicatorColor(getResources().getColor(
-				R.color.light_blue));
+				R.color.holo_blue_light));
 		mPagerTabStrip.setTextColor(Color.WHITE);
 		mPagerTabStrip.setBackgroundColor(Color.DKGRAY);
 		mPagesAdapter = new HomePagesAdapter(getFragmentManager());

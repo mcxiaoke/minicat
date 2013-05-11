@@ -25,16 +25,27 @@
 
     <!-- light theme color -->
 
-    <color name="light_blue">#FF3498DB</color>
-    <color name="light_blue_semi_transparent">#333498DB</color>
-    <color name="light_blue_dark">#2980B9</color>
-    <color name="light_blue_light">#EAF8FC</color>
-    <color name="light_popup_background">#ffcfeff7</color>
-    <color name="light_popup_divider">#ffb2deff</color>
-    <color name="light_list_divider">#99cccccc</color>
-    <color name="light_actionbar_title">#ff000000</color>
-    <color name="light_text_primary">#ff000000</color>
-    <color name="light_text_secondary">#ff222233</color>
+
+    <!-- #FF3498DB -->
+
+
+    <!-- holo style colors -->
+    <!-- background -->
+    <color name="background_holo_dark">#ff000000</color>
+    <color name="background_holo_light">#fff3f3f3</color>
+    <!-- holo blue -->
+    <color name="holo_blue_light">#ff33b5e5</color>
+    <color name="holo_blue_dark">#ff0099cc</color>
+    <color name="holo_blue_bright">#ff00ddff</color>
+    <!-- holo green -->
+    <color name="holo_green_light">#ff99cc00</color>
+    <color name="holo_green_dark">#ff669900</color>
+    <!-- holo red -->
+    <color name="holo_red_light">#ffff4444</color>
+    <color name="holo_red_dark">#ffcc0000</color>
+    <!-- holo orange -->
+    <color name="holo_orange_light">#ffffbb33</color>
+    <color name="holo_orange_dark">#ffff8800</color>
 
     <!-- new card ui colors -->
     <color name="background">#DDDDDD</color>

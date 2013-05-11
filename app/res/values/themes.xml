@@ -18,7 +18,7 @@
         <item name="ActionGroupStyle">@style/Widget.ActionGroup</item>
         <item name="ImageButtonStyle">@style/Widget.ImageButton.Light</item>
         <item name="FollowStateStyle">@style/Widget.FollowState.Light</item>
-        <item name="searchTextColor">@color/light_blue</item>
+        <item name="searchTextColor">@color/holo_blue_light</item>
 
         <!-- text color -->
         <item name="primaryTextColor">@color/black</item>
@@ -28,13 +28,13 @@
 
         <!-- profile color -->
         <item name="profileItemTitleBackground">@color/light_grey</item>
-        <item name="profileBlockBackground">@color/light_blue_light</item>
+        <item name="profileBlockBackground">@color/holo_blue_light</item>
         <item name="profileCountTextColor">@color/black</item>
         <item name="profileCountBackground">@drawable/action</item>
 
         <!-- write color -->
         <item name="iconRemove">@drawable/ic_remove</item>
-        <item name="writeCountTextColor">@color/light_blue</item>
+        <item name="writeCountTextColor">@color/holo_blue_light</item>
 
         <!-- login logo -->
         <item name="loginTopLogo">@drawable/login_logo</item>
@@ -44,8 +44,8 @@
         <!-- Global color and drawable -->
         <item name="inputBackground">@drawable/input</item>
         <item name="buttonBackground">@drawable/button_blue</item>
-        <item name="primaryColor">@color/light_blue</item>
-        <item name="secondaryColor">@color/light_blue_dark</item>
+        <item name="primaryColor">@color/holo_blue_light</item>
+        <item name="secondaryColor">@color/holo_blue_dark</item>
         <item name="uiBackground">@color/transparent</item>
     </style>
 

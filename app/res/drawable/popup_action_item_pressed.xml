@@ -17,6 +17,6 @@
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android" >
     
-    <solid android:color="@color/light_blue_dark"/>
+    <solid android:color="@color/holo_blue_dark"/>
 
 </shape>

@@ -17,7 +17,7 @@
     </style>
 
     <style name="Widget.ButtonGroup.Light">
-        <item name="android:background">@color/light_blue_light</item>
+        <item name="android:background">@color/holo_blue_light</item>
     </style>
 
     <style name="Widget.Button">
@@ -277,7 +277,7 @@
     </style>
 
     <style name="Widget.SendGroup.Light">
-        <item name="android:background">@color/light_blue</item>
+        <item name="android:background">@color/holo_blue_light</item>
     </style>
 
     <style name="Animations" />
