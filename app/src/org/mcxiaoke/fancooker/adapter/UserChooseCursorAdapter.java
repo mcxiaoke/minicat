@@ -8,8 +8,8 @@ import org.mcxiaoke.fancooker.dao.model.UserModel;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.text.TextPaint;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -23,11 +23,11 @@ import android.view.ViewGroup;
  * @version 2.1 2012.02.27
  * 
  */
-public class UserChooseCursorAdapter extends BaseCursorAdapter{
+public class UserChooseCursorAdapter extends BaseCursorAdapter {
 
 	private ArrayList<Boolean> mStates;
-	private HashMap<Integer, Boolean> mStateMap;
-	
+	private SparseBooleanArray mStateMap;
+
 	public UserChooseCursorAdapter(Context context) {
 		super(context, null);
 		initialize();
@@ -37,10 +37,10 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter{
 		super(context, c);
 		initialize();
 	}
-	
+
 	private void initialize() {
 		mStates = new ArrayList<Boolean>();
-		mStateMap = new HashMap<Integer, Boolean>();
+		mStateMap = new SparseBooleanArray();
 	}
 
 	public ArrayList<Boolean> getCheckedStates() {
@@ -49,6 +49,7 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter{
 
 	public void setItemChecked(int position, boolean checked) {
 		mStateMap.put(position, checked);
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -82,7 +83,7 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter{
 		String headUrl = u.getProfileImageUrl();
 		mImageLoader.displayImage(headUrl, holder.headIcon);
 
-		holder.lockIcon.setVisibility(u.isProtect()?View.VISIBLE:View.GONE);
+		holder.lockIcon.setVisibility(u.isProtect() ? View.VISIBLE : View.GONE);
 
 		holder.nameText.setText(u.getScreenName());
 		holder.idText.setText("(" + u.getId() + ")");
@@ -90,11 +91,8 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter{
 		holder.locationText.setText(u.getLocation());
 
 		Boolean b = mStateMap.get(cursor.getPosition());
-		if (b == null || b.equals(Boolean.FALSE)) {
-			holder.checkBox.setChecked(false);
-		} else {
-			holder.checkBox.setChecked(true);
-		}
+		holder.checkBox.setChecked(Boolean.TRUE == b);
+
 	}
 
 }

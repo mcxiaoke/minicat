@@ -287,6 +287,8 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
 			int key = sba.keyAt(i);
 			boolean value = sba.valueAt(i);
 			mCursorAdapter.setItemChecked(key, value);
+			log("onItemClick key= " + key + " value=" + value + " position="
+					+ position);
 			if (value) {
 				final Cursor cursor = (Cursor) mCursorAdapter.getItem(key);
 				final UserModel u = UserModel.from(cursor);
