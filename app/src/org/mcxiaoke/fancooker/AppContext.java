@@ -67,9 +67,6 @@ public class AppContext extends Application {
 	public static String packageName;
 	public static PackageInfo info;
 	public static boolean active;
-
-	public static int themeId;
-
 	private static AccountInfo accountInfo;
 
 	private static SharedPreferences sPreferences;
@@ -95,24 +92,11 @@ public class AppContext extends Application {
 		// .detectAll().penaltyLog().build());
 		// }
 		instance = this;
-
-		themeId = R.style.AppTheme;
-
 		sPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
 		ImageLoader.getInstance().init(getDefaultImageLoaderConfigureation());
-
 		DateTimeHelper.FANFOU_DATE_FORMAT.setTimeZone(TimeZone
 				.getTimeZone("GMT"));
-
 		AlarmHelper.setAlarmsIfNot(this);
-
-		if (DEBUG) {
-			Log.d(TAG, "initialize()");
-
-			Logger.getLogger("org.apache.http.wire").setLevel(
-					java.util.logging.Level.FINE);
-		}
 	}
 
 	private void initAccountInfo() {

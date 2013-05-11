@@ -54,7 +54,6 @@ abstract class UIBaseSupport extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTheme(AppContext.themeId);
 		Utils.initScreenConfig(this);
 		AppContext.setActiveContext(getClass().getCanonicalName(), this);
 		this.mContext = this;

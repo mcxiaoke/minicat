@@ -2,9 +2,7 @@ package org.mcxiaoke.fancooker;
 
 import org.mcxiaoke.fancooker.controller.UIController;
 
-import android.app.Activity;
 import android.os.Bundle;
-
 
 /**
  * @author mcxiaoke
@@ -16,10 +14,10 @@ import android.os.Bundle;
  * @version 1.5 2012.02.27
  * 
  */
-public class UIStart extends Activity {
+public class UIStart extends UIBaseSupport {
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		checkLogin();
 
