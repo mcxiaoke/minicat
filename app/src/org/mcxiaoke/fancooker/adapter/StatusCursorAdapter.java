@@ -91,19 +91,20 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		ItemView view = new ItemView(context);
-		view.setId(R.id.list_item);
+		View root = mInflater.inflate(R.layout.list_item_status, null);
+		ItemView view = (ItemView) root.findViewById(R.id.list_item);
 		if (AppContext.DEBUG) {
 			Log.d(TAG, "newView newView=" + view);
 		}
-		return view;
+		return root;
 	}
 
 	@Override
 	public void bindView(View row, Context context, final Cursor cursor) {
 		final StatusModel s = StatusModel.from(cursor);
-		final ItemView view = (ItemView) row;
-		
+		View root=row;
+		final ItemView view=(ItemView) root.findViewById(R.id.list_item);
+
 		setColor(cursor, view);
 		UIHelper.setMetaInfo(view, s);
 		view.setContent(s.getSimpleText());

@@ -33,8 +33,11 @@
     <dimen name="write_input_margin">6dp</dimen>
     <dimen name="write_input_padding">8dp</dimen>
     <dimen name="write_photo_width">48dp</dimen>
-    
     <dimen name="sliding_shadow">10dp</dimen>
     <dimen name="sliding_offset">80dp</dimen>
+
+    <!-- new card list ui -->
+    <dimen name="card_margin">8dp</dimen>
+    <dimen name="card_divider">8dp</dimen>
 
 </resources>

@@ -31,11 +31,6 @@ public class ConversationCursorAdapter extends BaseMessageCursorAdapter {
 		ItemView view = (ItemView) row;
 
 		final DirectMessageModel dm = DirectMessageModel.from(cursor);
-
-		if (dm.isIncoming()) {
-			row.setBackgroundColor(0x33999999);
-		}
-
 		view.setTitle(dm.getSenderScreenName());
 		view.setMeta(DateTimeHelper.getInterval(dm.getTime()));
 		view.setContent(dm.getText());

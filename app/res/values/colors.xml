@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="refresh_header_bg">#fff4f4f4</color>
     <color name="profile_relation_blue">#ff0d82bd</color>
     <color name="transparent">#00000000</color>
     <color name="red">#ffff0000</color>
@@ -22,12 +21,13 @@
     <color name="black">#ff000000</color>
     <color name="dark_grey">#ff333333</color>
     <color name="grey">#ff999999</color>
-    <color name="light_grey">#ffcccccc</color>
+    <color name="light_grey">#CCCCCC</color>
     <color name="state_text">#ff4a331e</color>
 
     <!-- light theme color -->
-    
-    <color name="light_blue">#3498DB</color>
+
+    <color name="light_blue">#FF3498DB</color>
+    <color name="light_blue_semi_transparent">#333498DB</color>
     <color name="light_blue_dark">#2980B9</color>
     <color name="light_blue_light">#EAF8FC</color>
     <color name="light_popup_background">#ffcfeff7</color>
@@ -37,5 +37,8 @@
     <color name="light_text_primary">#ff000000</color>
     <color name="light_text_secondary">#ff222233</color>
 
+    <!-- new card ui colors -->
+    <color name="background">#DDDDDD</color>
+    <color name="card_background">#FEFEFE</color>
 
 </resources>

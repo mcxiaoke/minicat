@@ -1,10 +1,10 @@
 package org.mcxiaoke.fancooker.fragments;
 
 import org.mcxiaoke.fancooker.AppContext;
+import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.adapter.StatusCursorAdapter;
 import org.mcxiaoke.fancooker.controller.UIController;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
-import org.mcxiaoke.fancooker.util.Utils;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -12,7 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
-
+import android.widget.ListView;
+import android.widget.ScrollView;
 
 /**
  * @author mcxiaoke
@@ -57,6 +58,16 @@ public abstract class BaseTimlineFragment extends PullToRefreshListFragment {
 					+ getActivity());
 		}
 		return new StatusCursorAdapter(getActivity());
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
 	}
 
 }

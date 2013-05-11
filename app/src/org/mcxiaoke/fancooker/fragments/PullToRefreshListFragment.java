@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,11 +25,13 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**
@@ -45,7 +48,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * 
  */
 public abstract class PullToRefreshListFragment extends AbstractListFragment
-		implements OnRefreshListener<ListView>, OnItemLongClickListener,
+		implements OnRefreshListener2<ListView>, OnItemLongClickListener,
 		LoaderCallbacks<Cursor> {
 
 	protected static final int LOADER_ID = 1;
@@ -109,11 +112,24 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	}
 
 	private void setLayout(View root) {
+		int padding = getResources().getDimensionPixelSize(R.dimen.card_margin);
 		mPullToRefreshView = (PullToRefreshListView) root;
 		mPullToRefreshView.setOnRefreshListener(this);
 		mPullToRefreshView.setPullToRefreshOverScrollEnabled(false);
 		mPullToRefreshView.setShowIndicator(false);
+		mPullToRefreshView.setMode(Mode.BOTH);
 		mListView = mPullToRefreshView.getRefreshableView();
+		mListView.setPadding(padding, padding, padding, padding);
+		mListView.setDivider(getResources().getDrawable(
+				R.drawable.list_divider));
+		mListView.setDividerHeight(padding);
+		mListView.setHeaderDividersEnabled(true);
+		mListView.setFooterDividersEnabled(true);
+		mListView.setCacheColorHint(0);
+		mListView.setDrawSelectorOnTop(true);
+//		mListView.setSelector(R.drawable.list_selector);
+		mListView.setScrollBarStyle(ScrollView.SCROLLBARS_OUTSIDE_OVERLAY);
+		mListView.setBackgroundResource(R.drawable.general_background);
 		mListView.setOnItemClickListener(this);
 		mListView.setOnItemLongClickListener(this);
 	}
@@ -154,14 +170,13 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
 	protected abstract int getType();
 
-	@Override
-	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-		if (AppContext.DEBUG) {
-			Log.d(TAG, "onRefresh() isVisible=" + isVisible());
-		}
-		Mode currentMode = refreshView.getCurrentMode();
-		boolean bottom = (Mode.PULL_FROM_END.equals(currentMode));
-		doFetch(bottom);
+	public void onPullDownToRefresh(
+			final PullToRefreshBase<ListView> refreshView) {
+		doFetch(false);
+	}
+
+	public void onPullUpToRefresh(final PullToRefreshBase<ListView> refreshView) {
+		doFetch(true);
 	}
 
 	@Override

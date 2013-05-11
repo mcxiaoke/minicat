@@ -68,6 +68,7 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 		mPagerTabStrip.setTabIndicatorColor(getResources().getColor(
 				R.color.light_blue));
 		mPagerTabStrip.setTextColor(Color.WHITE);
+		mPagerTabStrip.setBackgroundColor(Color.DKGRAY);
 		mPagesAdapter = new HomePagesAdapter(getFragmentManager());
 		mViewPager.setAdapter(mPagesAdapter);
 		setHomeTitle(mCurrentPage);
@@ -185,6 +186,9 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 			break;
 		case MenuFragment.MENU_ID_ABOUT:
 			UIController.showAbout(this);
+			break;
+		case MenuFragment.MENU_ID_DEBUG:
+			UIController.showDebug(this);
 			break;
 		default:
 			break;

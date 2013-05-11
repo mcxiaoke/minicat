@@ -67,8 +67,8 @@ public class ConversationListFragment extends PullToRefreshListFragment {
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		final Cursor c = (Cursor) parent.getItemAtPosition(position);
-		showPopup(getActivity(), view, c);
+//		final Cursor c = (Cursor) parent.getItemAtPosition(position);
+//		showPopup(getActivity(), view, c);
 		return true;
 	}
 

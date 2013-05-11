@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -130,6 +131,7 @@ public class ItemView extends RelativeLayout {
 		}
 
 		setPadding(0, 0, 0, 0);
+		setBackgroundColor(Color.WHITE);
 		
 		mTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTitleTextSize);
 		mTitleTextView.setTextColor(mTitleTextColor);

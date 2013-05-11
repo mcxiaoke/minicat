@@ -3,6 +3,7 @@ package org.mcxiaoke.fancooker.menu;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 
 import android.app.Activity;
@@ -27,6 +28,7 @@ import android.widget.TextView;
  * 
  */
 public class MenuFragment extends ListFragment {
+	private static final boolean DEBUG = AppContext.DEBUG;
 	private static final String TAG = MenuFragment.class.getSimpleName();
 
 	static void debug(String message) {
@@ -43,6 +45,7 @@ public class MenuFragment extends ListFragment {
 	public static final int MENU_ID_THEME = MENU_ID + 7;
 	public static final int MENU_ID_OPTION = MENU_ID + 8;
 	public static final int MENU_ID_ABOUT = MENU_ID + 9;
+	public static final int MENU_ID_DEBUG = MENU_ID + 99;
 
 	private ListView mListView;
 	private MenuItemListAdapter mMenuAdapter;
@@ -117,11 +120,11 @@ public class MenuFragment extends ListFragment {
 				.iconId(R.drawable.ic_item_profile).highlight(true).build();
 
 		MenuItemResource message = MenuItemResource.newBuilder()
-				.id(MENU_ID_MESSAGE).text("私信收件箱")
+				.id(MENU_ID_MESSAGE).text("收件箱")
 				.iconId(R.drawable.ic_item_feedback).highlight(true).build();
 
 		MenuItemResource topic = MenuItemResource.newBuilder()
-				.id(MENU_ID_TOPIC).text("热词和搜索")
+				.id(MENU_ID_TOPIC).text("流行趋势")
 				.iconId(R.drawable.ic_item_topic).highlight(false).build();
 
 		MenuItemResource drafts = MenuItemResource.newBuilder()
@@ -153,6 +156,13 @@ public class MenuFragment extends ListFragment {
 		mMenuItems.add(theme);
 		mMenuItems.add(blog);
 		mMenuItems.add(about);
+
+		if (DEBUG) {
+			MenuItemResource test = MenuItemResource.newBuilder()
+					.id(MENU_ID_DEBUG).text("调试模式")
+					.iconId(R.drawable.ic_item_modify).highlight(false).build();
+			mMenuItems.add(test);
+		}
 
 	}
 

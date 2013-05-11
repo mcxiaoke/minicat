@@ -41,7 +41,7 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 
 	protected List<StatusModel> mData;
 	protected int fontSize;
-	
+
 	public BaseStatusArrayAdapter(Context context) {
 		this(context, null);
 	}
@@ -67,15 +67,13 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		ItemView view = (ItemView) convertView;
-		if (view == null) {
-			view = new ItemView(mContext);
-			view.setId(R.id.list_item);
-			if (AppContext.DEBUG) {
-				Log.d(TAG, "getView newView=" + view);
-			}
+
+		if (convertView == null) {
+			convertView = mInflater.inflate(R.layout.list_item_status, null);
 		}
 
+		final ItemView view = (ItemView) convertView
+				.findViewById(R.id.list_item);
 		final StatusModel s = getData().get(position);
 
 		String headUrl = s.getUserProfileImageUrl();
@@ -83,7 +81,7 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 
 		UIHelper.setMetaInfo(view, s);
 		setStatusContent(view, s.getSimpleText());
-		return view;
+		return convertView;
 	}
 
 	@Override
