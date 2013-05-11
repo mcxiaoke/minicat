@@ -12,7 +12,6 @@ import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Loader;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,7 +29,6 @@ import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
@@ -127,12 +125,10 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 		mListView.setFooterDividersEnabled(true);
 		mListView.setCacheColorHint(0);
 		mListView.setDrawSelectorOnTop(true);
-//		mListView.setSelector(R.drawable.list_selector);
 		mListView.setScrollBarStyle(ScrollView.SCROLLBARS_OUTSIDE_OVERLAY);
 		mListView.setBackgroundResource(R.drawable.general_background);
 		mListView.setOnItemClickListener(this);
 		mListView.setLongClickable(false);
-//		mListView.setOnItemLongClickListener(this);
 	}
 
 	@Override
@@ -242,7 +238,6 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 		}
 		if (!busy) {
 			busy = true;
-			doRefresh();
 			mPullToRefreshView.setRefreshing();
 		}
 	}

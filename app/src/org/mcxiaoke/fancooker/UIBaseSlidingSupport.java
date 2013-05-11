@@ -3,8 +3,6 @@
  */
 package org.mcxiaoke.fancooker;
 
-import org.mcxiaoke.fancooker.controller.SimpleDialogListener;
-import org.mcxiaoke.fancooker.dialog.ConfirmDialog;
 import org.mcxiaoke.fancooker.menu.MenuCallback;
 
 import android.os.Bundle;
@@ -110,34 +108,7 @@ public abstract class UIBaseSlidingSupport extends UIBaseSupport implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.menu_write:
-			onMenuWriteClick();
-			break;
-		case R.id.menu_logout:
-			onMenuLogoutClick();
-			break;
-		default:
-			super.onOptionsItemSelected(item);
-			break;
-		}
-		return true;
-	}
-
-	private void onMenuLogoutClick() {
-		final ConfirmDialog dialog = new ConfirmDialog(this);
-		dialog.setTitle("提示");
-		dialog.setMessage("确定注销当前登录帐号吗？");
-		dialog.setClickListener(new SimpleDialogListener() {
-
-			@Override
-			public void onPositiveClick() {
-				super.onPositiveClick();
-				AppContext.doLogin(mContext);
-				finish();
-			}
-		});
-		dialog.show();
+		return super.onOptionsItemSelected(item);
 	}
 
 }

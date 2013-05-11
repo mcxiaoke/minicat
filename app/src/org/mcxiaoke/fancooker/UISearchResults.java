@@ -6,32 +6,29 @@ import org.mcxiaoke.fancooker.adapter.SearchResultsAdapter;
 import org.mcxiaoke.fancooker.api.Api;
 import org.mcxiaoke.fancooker.api.ApiException;
 import org.mcxiaoke.fancooker.api.Paging;
-import org.mcxiaoke.fancooker.controller.PopupController;
 import org.mcxiaoke.fancooker.controller.UIController;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
 import org.mcxiaoke.fancooker.service.FanFouService;
 import org.mcxiaoke.fancooker.util.NetworkHelper;
-import org.mcxiaoke.fancooker.util.Utils;
 
 import android.app.SearchManager;
 import android.content.Intent;
-import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ScrollView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**
@@ -48,11 +45,10 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * 
  */
 public class UISearchResults extends UIBaseSupport implements
-		OnRefreshListener<ListView>, OnItemClickListener,
-		OnItemLongClickListener {
+		OnRefreshListener2<ListView>, OnItemClickListener {
 	private static final String TAG = UISearchResults.class.getSimpleName();
-	private PullToRefreshListView mPullToRefreshListView;
-	private ListView mList;
+	private PullToRefreshListView mPullToRefreshView;
+	private ListView mListView;
 
 	private SearchResultsAdapter mStatusAdapter;
 
@@ -69,7 +65,7 @@ public class UISearchResults extends UIBaseSupport implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		readHighlightColor();
+		highlightColor = getResources().getColor(R.color.holo_red_light);
 		mStatusAdapter = new SearchResultsAdapter(this, highlightColor);
 		api = AppContext.getApi();
 		setLayout();
@@ -81,20 +77,30 @@ public class UISearchResults extends UIBaseSupport implements
 		newSearch();
 	}
 
-	private void readHighlightColor() {
-		highlightColor = getResources().getColor(R.color.holo_red_light);
-	}
-
 	protected void setLayout() {
-
 		setContentView(R.layout.list_pull);
-		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_list);
-		mPullToRefreshListView.setOnRefreshListener(this);
-		mList = mPullToRefreshListView.getRefreshableView();
-		mList.setOnItemClickListener(this);
-		mList.setOnItemLongClickListener(this);
-		mList.setAdapter(mStatusAdapter);
 
+		int padding = getResources().getDimensionPixelSize(R.dimen.card_margin);
+
+		mPullToRefreshView = (PullToRefreshListView) findViewById(R.id.pull_list);
+		mPullToRefreshView.setPullToRefreshOverScrollEnabled(false);
+		mPullToRefreshView.setShowIndicator(false);
+		mPullToRefreshView.setMode(Mode.BOTH);
+		mPullToRefreshView.setOnRefreshListener(this);
+		mListView = mPullToRefreshView.getRefreshableView();
+		mListView.setPadding(padding, padding, padding, padding);
+		mListView.setDivider(getResources()
+				.getDrawable(R.drawable.list_divider));
+		mListView.setDividerHeight(padding);
+		mListView.setHeaderDividersEnabled(true);
+		mListView.setFooterDividersEnabled(true);
+		mListView.setCacheColorHint(0);
+		mListView.setDrawSelectorOnTop(true);
+		mListView.setScrollBarStyle(ScrollView.SCROLLBARS_OUTSIDE_OVERLAY);
+		mListView.setBackgroundResource(R.drawable.general_background);
+		mListView.setLongClickable(false);
+		mListView.setOnItemClickListener(this);
+		mListView.setAdapter(mStatusAdapter);
 		newSearch();
 	}
 
@@ -103,7 +109,7 @@ public class UISearchResults extends UIBaseSupport implements
 		maxId = null;
 		mStatusAdapter.clear();
 		doSearch(true);
-		mPullToRefreshListView.setRefreshing();
+		mPullToRefreshView.setRefreshing();
 
 	}
 
@@ -121,6 +127,8 @@ public class UISearchResults extends UIBaseSupport implements
 				log("parseIntent() keyword=" + keyword);
 			}
 		}
+
+		setTitle("搜索  \"" + keyword + "\"");
 	}
 
 	private void doSearch(boolean reset) {
@@ -132,7 +140,7 @@ public class UISearchResults extends UIBaseSupport implements
 				maxId = null;
 			}
 			new SearchTask().execute();
-			mPullToRefreshListView.setRefreshing();
+			mPullToRefreshView.setRefreshing();
 		}
 
 	}
@@ -152,8 +160,8 @@ public class UISearchResults extends UIBaseSupport implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (mState != null && mList != null) {
-			mList.onRestoreInstanceState(mState);
+		if (mState != null && mListView != null) {
+			mListView.onRestoreInstanceState(mState);
 			mState = null;
 		}
 	}
@@ -167,8 +175,8 @@ public class UISearchResults extends UIBaseSupport implements
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if (mList != null) {
-			mState = mList.onSaveInstanceState();
+		if (mListView != null) {
+			mState = mListView.onSaveInstanceState();
 			outState.putParcelable(LIST_STATE, mState);
 		}
 	}
@@ -176,6 +184,20 @@ public class UISearchResults extends UIBaseSupport implements
 	@Override
 	protected void onPause() {
 		super.onPause();
+	}
+
+	@Override
+	protected int getMenuResourceId() {
+		return R.menu.menu_search;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menu_search) {
+			onMenuSearchClick();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	private class SearchTask extends AsyncTask<Void, Void, List<StatusModel>> {
@@ -189,7 +211,7 @@ public class UISearchResults extends UIBaseSupport implements
 
 		@Override
 		protected void onPostExecute(List<StatusModel> result) {
-			mPullToRefreshListView.onRefreshComplete();
+			mPullToRefreshView.onRefreshComplete();
 			if (result != null && result.size() > 0) {
 
 				int size = result.size();
@@ -233,48 +255,22 @@ public class UISearchResults extends UIBaseSupport implements
 	}
 
 	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View view,
-			int position, long id) {
-		final StatusModel s = (StatusModel) parent.getItemAtPosition(position);
-		showPopup(view, s);
-		return true;
-	}
-
-	private void showPopup(final View view, final StatusModel s) {
-		if (s == null) {
-			return;
-		}
-		PopupController.showPopup(view, s, mStatusAdapter);
-	}
-
-	@Override
-	public void onClick(View v) {
-	}
-
-	private void goTop() {
-		if (mList != null) {
-			mList.setSelection(0);
-		}
-	}
-
-	@Override
-	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-		boolean fromTop = Mode.PULL_FROM_START.equals(refreshView
-				.getCurrentMode());
-		if (AppContext.DEBUG) {
-			Log.d(TAG, "onRefresh() top=" + fromTop);
-		}
-
-		doSearch(fromTop);
-	}
-
-	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		final StatusModel s = (StatusModel) parent.getItemAtPosition(position);
 		if (s != null) {
 			UIController.goStatusPage(mContext, s);
 		}
+	}
+
+	@Override
+	public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+		doSearch(true);
+	}
+
+	@Override
+	public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+		doSearch(false);
 	}
 
 }

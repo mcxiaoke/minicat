@@ -7,7 +7,6 @@ import org.mcxiaoke.fancooker.fragments.ProfileFragment;
 import org.mcxiaoke.fancooker.menu.MenuCallback;
 import org.mcxiaoke.fancooker.menu.MenuFragment;
 import org.mcxiaoke.fancooker.menu.MenuItemResource;
-import org.mcxiaoke.fancooker.util.NetworkHelper;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -106,11 +105,6 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 	}
 
 	@Override
-	protected int getMenuResourceId() {
-		return R.menu.home_menu;
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		return super.onOptionsItemSelected(item);
 	}
@@ -192,13 +186,13 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 	}
 
 	@Override
+	protected int getMenuResourceId() {
+		return R.menu.menu_home;
+	}
+
+	@Override
 	protected void onMenuHomeClick() {
 		super.onMenuHomeClick();
-		// if (getFragmentManager().getBackStackEntryCount() > 0) {
-		// onBackPressed();
-		// } else {
-		// super.onMenuHomeClick();
-		// }
 	}
 
 	@Override
@@ -214,7 +208,7 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 		mCurrentPage = page;
 		setHomeTitle(page);
 		if (page == 0) {
-			setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+			setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
 		} else {
 			setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
 		}

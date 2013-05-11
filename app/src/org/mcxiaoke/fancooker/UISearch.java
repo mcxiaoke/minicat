@@ -46,6 +46,7 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
 
 	protected void setLayout() {
 		setContentView(R.layout.search);
+		setTitle("流行趋势");
 
 		mListView = (ListView) findViewById(android.R.id.list);
 		mListView.setOnItemClickListener(this);
@@ -158,6 +159,20 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
 		if (s != null) {
 			goSearch(mContext, s.query);
 		}
+	}
+
+	@Override
+	protected int getMenuResourceId() {
+		return R.menu.menu_search;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menu_search) {
+			onMenuSearchClick();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void goSearch(Context context, String query) {

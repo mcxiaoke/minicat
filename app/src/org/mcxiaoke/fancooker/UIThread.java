@@ -5,11 +5,9 @@ import java.util.List;
 import org.mcxiaoke.fancooker.adapter.StatusThreadAdapter;
 import org.mcxiaoke.fancooker.api.Api;
 import org.mcxiaoke.fancooker.api.ApiException;
-import org.mcxiaoke.fancooker.controller.PopupController;
 import org.mcxiaoke.fancooker.controller.UIController;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
 import org.mcxiaoke.fancooker.util.StringHelper;
-import org.mcxiaoke.fancooker.util.Utils;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -19,8 +17,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import android.widget.ScrollView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
@@ -48,11 +46,10 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * 
  */
 public class UIThread extends UIBaseSupport implements
-		OnRefreshListener<ListView>, OnItemClickListener,
-		OnItemLongClickListener {
+		OnRefreshListener<ListView>, OnItemClickListener {
 
-	private PullToRefreshListView mPullToRefreshListView;
-	private ListView mList;
+	private PullToRefreshListView mPullToRefreshView;
+	private ListView mListView;
 
 	protected StatusThreadAdapter mStatusAdapter;
 
@@ -75,13 +72,27 @@ public class UIThread extends UIBaseSupport implements
 
 	protected void setLayout() {
 		setContentView(R.layout.list_pull);
+		int padding = getResources().getDimensionPixelSize(R.dimen.card_margin);
 		setTitle("对话");
-		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_list);
-		mPullToRefreshListView.setOnRefreshListener(this);
-		mList = mPullToRefreshListView.getRefreshableView();
-		mList.setAdapter(mStatusAdapter);
-		mList.setOnItemClickListener(this);
-		mList.setOnItemLongClickListener(this);
+		mPullToRefreshView = (PullToRefreshListView) findViewById(R.id.pull_list);
+		mPullToRefreshView.setPullToRefreshOverScrollEnabled(false);
+		mPullToRefreshView.setShowIndicator(false);
+		mPullToRefreshView.setMode(Mode.PULL_FROM_START);
+		mPullToRefreshView.setOnRefreshListener(this);
+		mListView = mPullToRefreshView.getRefreshableView();
+		mListView.setPadding(padding, padding, padding, padding);
+		mListView.setDivider(getResources()
+				.getDrawable(R.drawable.list_divider));
+		mListView.setDividerHeight(padding);
+		mListView.setHeaderDividersEnabled(true);
+		mListView.setFooterDividersEnabled(true);
+		mListView.setCacheColorHint(0);
+		mListView.setDrawSelectorOnTop(true);
+		mListView.setScrollBarStyle(ScrollView.SCROLLBARS_OUTSIDE_OVERLAY);
+		mListView.setBackgroundResource(R.drawable.general_background);
+		mListView.setLongClickable(false);
+		mListView.setOnItemClickListener(this);
+		mListView.setAdapter(mStatusAdapter);
 
 		if (!TextUtils.isEmpty(id)) {
 			doFetchThreads();
@@ -97,7 +108,7 @@ public class UIThread extends UIBaseSupport implements
 
 	private void doFetchThreads() {
 		new FetchTask().execute();
-		mPullToRefreshListView.setRefreshing();
+		mPullToRefreshView.setRefreshing();
 	}
 
 	@Override
@@ -108,20 +119,6 @@ public class UIThread extends UIBaseSupport implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-	}
-
-	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View view,
-			int position, long id) {
-		final StatusModel s = (StatusModel) parent.getItemAtPosition(position);
-		showPopup(view, s);
-		return true;
-	}
-
-	private void showPopup(final View view, final StatusModel s) {
-		if (s != null) {
-			PopupController.showPopup(view, s, mStatusAdapter);
-		}
 	}
 
 	private class FetchTask extends AsyncTask<Void, Void, List<StatusModel>> {
@@ -146,8 +143,8 @@ public class UIThread extends UIBaseSupport implements
 			if (result != null && result.size() > 0) {
 				mStatusAdapter.addData(result);
 			}
-			mPullToRefreshListView.onRefreshComplete();
-			mPullToRefreshListView.setMode(Mode.DISABLED);
+			mPullToRefreshView.onRefreshComplete();
+			mPullToRefreshView.setMode(Mode.DISABLED);
 			mStatusAdapter.notifyDataSetChanged();
 		}
 

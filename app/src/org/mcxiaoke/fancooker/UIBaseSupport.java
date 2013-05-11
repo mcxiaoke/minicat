@@ -1,6 +1,8 @@
 package org.mcxiaoke.fancooker;
 
+import org.mcxiaoke.fancooker.controller.SimpleDialogListener;
 import org.mcxiaoke.fancooker.controller.UIController;
+import org.mcxiaoke.fancooker.dialog.ConfirmDialog;
 import org.mcxiaoke.fancooker.util.Utils;
 
 import android.app.ActionBar;
@@ -66,7 +68,7 @@ abstract class UIBaseSupport extends Activity implements OnClickListener {
 	}
 
 	protected int getMenuResourceId() {
-		return R.menu.base_menu;
+		return R.menu.menu;
 	}
 
 	@Override
@@ -87,16 +89,44 @@ abstract class UIBaseSupport extends Activity implements OnClickListener {
 		case R.id.menu_write:
 			onMenuWriteClick();
 			return true;
+//		case R.id.menu_search:
+//			onMenuSearchClick();
+//			return true;
+		case R.id.menu_logout:
+			onMenuLogoutClick();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
+
 	protected void onMenuWriteClick() {
 		UIController.showWrite(mContext);
 	}
 
 	protected void onMenuHomeClick() {
-		UIController.backHome(mContext);
+//		UIController.backHome(mContext);
+		finish();
+	}
+
+	protected void onMenuSearchClick() {
+		onSearchRequested();
+	}
+
+	protected void onMenuLogoutClick() {
+		final ConfirmDialog dialog = new ConfirmDialog(this);
+		dialog.setTitle("提示");
+		dialog.setMessage("确定注销当前登录帐号吗？");
+		dialog.setClickListener(new SimpleDialogListener() {
+
+			@Override
+			public void onPositiveClick() {
+				super.onPositiveClick();
+				AppContext.doLogin(mContext);
+				finish();
+			}
+		});
+		dialog.show();
 	}
 
 	@Override
