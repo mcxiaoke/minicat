@@ -134,10 +134,10 @@ public class MenuFragment extends ListFragment {
 		MenuItemResource option = MenuItemResource.newBuilder()
 				.id(MENU_ID_OPTION).text("使用设置")
 				.iconId(R.drawable.ic_item_option).highlight(false).build();
-
-		MenuItemResource theme = MenuItemResource.newBuilder()
-				.id(MENU_ID_THEME).text("主题切换")
-				.iconId(R.drawable.ic_item_theme).highlight(false).build();
+//
+//		MenuItemResource theme = MenuItemResource.newBuilder()
+//				.id(MENU_ID_THEME).text("主题切换")
+//				.iconId(R.drawable.ic_item_theme).highlight(false).build();
 
 		MenuItemResource blog = MenuItemResource.newBuilder()
 				.id(MENU_ID_DIGEST).text("饭否语录")
@@ -153,7 +153,7 @@ public class MenuFragment extends ListFragment {
 		mMenuItems.add(topic);
 		mMenuItems.add(drafts);
 		mMenuItems.add(option);
-		mMenuItems.add(theme);
+//		mMenuItems.add(theme);
 		mMenuItems.add(blog);
 		mMenuItems.add(about);
 

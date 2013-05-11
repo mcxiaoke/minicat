@@ -1,49 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="About"></style>
-
-    <style name="About.Title">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_large</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:gravity">center</item>
-        <item name="android:padding">4dp</item>
-    </style>
-
-    <style name="About.ItemName">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_large</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:padding">4dp</item>
-    </style>
-
-    <style name="About.ItemText">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:padding">4dp</item>
-        <item name="android:textColorLink">@color/profile_relation_blue</item>
-    </style>
-
-    <style name="About.Copyright">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_small</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:padding">4dp</item>
-        <item name="android:gravity">center</item>
-    </style>
-
-    <style name="About.ItemText.Center">
-        <item name="android:gravity">center</item>
-    </style>
-
-    <!-- ===========================below add by mcxiaoke====================== -->
-
     <style name="MiniIconStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
