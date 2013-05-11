@@ -18,7 +18,6 @@
         <item name="ActionGroupStyle">@style/Widget.ActionGroup</item>
         <item name="ImageButtonStyle">@style/Widget.ImageButton.Light</item>
         <item name="FollowStateStyle">@style/Widget.FollowState.Light</item>
-        <item name="itemViewStyle">@style/Widget.ItemView.Light</item>
         <item name="searchTextColor">@color/light_blue</item>
 
         <!-- text color -->
@@ -36,9 +35,6 @@
         <!-- write color -->
         <item name="iconRemove">@drawable/ic_remove</item>
         <item name="writeCountTextColor">@color/light_blue</item>
-
-        <!-- status style -->
-        <item name="statusHeaderBackground">@drawable/header_blue</item>
 
         <!-- login logo -->
         <item name="loginTopLogo">@drawable/login_logo</item>

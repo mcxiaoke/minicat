@@ -68,20 +68,29 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
+		ViewHolder holder;
 		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.list_item_status, null);
+			convertView = new ItemView(mContext);
+			convertView.setId(R.id.list_item);
+			holder = new ViewHolder();
+			holder.view = (ItemView) convertView;
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
 		}
 
-		final ItemView view = (ItemView) convertView
-				.findViewById(R.id.list_item);
 		final StatusModel s = getData().get(position);
 
 		String headUrl = s.getUserProfileImageUrl();
-		UIHelper.setImage(view, mLoader, headUrl, busy);
+		UIHelper.setImage(holder.view, mLoader, headUrl, busy);
 
-		UIHelper.setMetaInfo(view, s);
-		setStatusContent(view, s.getSimpleText());
+		UIHelper.setMetaInfo(holder.view, s);
+		setStatusContent(holder.view, s.getSimpleText());
 		return convertView;
+	}
+
+	static class ViewHolder {
+		public ItemView view;
 	}
 
 	@Override

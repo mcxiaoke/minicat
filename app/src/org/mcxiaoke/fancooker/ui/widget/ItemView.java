@@ -6,7 +6,6 @@ import org.mcxiaoke.fancooker.util.Utils;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -45,6 +44,8 @@ public class ItemView extends RelativeLayout {
 
 	private ViewMode mViewMode;
 
+	private int mPadding;
+
 	private float mTitleTextSize;
 	private float mContentTextSize;
 	private float mMetaTextSize;
@@ -81,48 +82,17 @@ public class ItemView extends RelativeLayout {
 		mViewStub = (ViewStub) findViewById(R.id.stub);
 
 		final Resources res = getResources();
-		final float defaultTitleTextSize = res
-				.getDimension(R.dimen.default_title_text_size);
-		final float defaultContentTextSize = res
-				.getDimension(R.dimen.default_content_text_size);
-		final float defaultMetaTextSize = res
-				.getDimension(R.dimen.default_meta_text_size);
-		final int defaultTitleTextColor = res
-				.getColor(R.color.default_title_text_color);
-		final int defaultContentTextColor = res
-				.getColor(R.color.default_content_text_color);
-		final int defaultMetaTextColor = res
-				.getColor(R.color.default_meta_text_color);
+		mPadding = res.getDimensionPixelSize(R.dimen.card_margin);
+		mTitleTextSize = res.getDimension(R.dimen.default_title_text_size);
+		mContentTextSize = res.getDimension(R.dimen.default_content_text_size);
+		mMetaTextSize = res.getDimension(R.dimen.default_meta_text_size);
+		mTitleTextColor = res.getColor(R.color.default_title_text_color);
+		mContentTextColor = res.getColor(R.color.default_content_text_color);
+		mMetaTextColor = res.getColor(R.color.default_meta_text_color);
 
-		final boolean defaultTitleTextBold = res
-				.getBoolean(R.bool.default_title_text_bold);
-		final boolean defaultShowImage = res
-				.getBoolean(R.bool.default_show_head_image);
-		final int defaultViewMode = res.getInteger(R.integer.default_view_mode);
-
-		TypedArray a = context.obtainStyledAttributes(attrs,
-				R.styleable.ItemView, defStyle, 0);
-		mTitleTextSize = a.getDimension(R.styleable.ItemView_titleTextSize,
-				defaultTitleTextSize);
-		mTitleTextColor = a.getColor(R.styleable.ItemView_titleTextColor,
-				defaultTitleTextColor);
-		mTitleTextBold = a.getBoolean(R.styleable.ItemView_titleTextBold,
-				defaultTitleTextBold);
-
-		mContentTextSize = a.getDimension(R.styleable.ItemView_contentTextSize,
-				defaultContentTextSize);
-		mContentTextColor = a.getColor(R.styleable.ItemView_contentTextColor,
-				defaultContentTextColor);
-
-		mMetaTextSize = a.getDimension(R.styleable.ItemView_metaTextSize,
-				defaultMetaTextSize);
-		mMetaTextColor = a.getColor(R.styleable.ItemView_metaTextColor,
-				defaultMetaTextColor);
-
-		mShowImage = a.getBoolean(R.styleable.ItemView_showImage,
-				defaultShowImage);
-		mViewMode = ViewMode.of(a.getInteger(R.styleable.ItemView_viewMode,
-				defaultViewMode));
+		mTitleTextBold = res.getBoolean(R.bool.default_title_text_bold);
+		mShowImage = res.getBoolean(R.bool.default_show_head_image);
+		mViewMode = ViewMode.StatusMode;
 
 		if (AppContext.DEBUG) {
 			Log.d(VIEW_LOG_TAG, "title text size=" + mTitleTextSize);
@@ -130,9 +100,9 @@ public class ItemView extends RelativeLayout {
 			Log.d(VIEW_LOG_TAG, "meta text size=" + mMetaTextSize);
 		}
 
-		setPadding(0, 0, 0, 0);
+		setPadding(mPadding, mPadding, mPadding, mPadding);
 		setBackgroundColor(Color.WHITE);
-		
+
 		mTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTitleTextSize);
 		mTitleTextView.setTextColor(mTitleTextColor);
 		if (mTitleTextBold) {
@@ -148,21 +118,17 @@ public class ItemView extends RelativeLayout {
 		mImageView.setVisibility(mShowImage ? View.VISIBLE : View.GONE);
 
 		checkViewMode();
-
-		a.recycle();
-		a = null;
 	}
 
 	private void checkViewMode() {
-		if (mViewMode.equals(ViewMode.MessageMode)) {
-			return;
+		if (!ViewMode.MessageMode.equals(mViewMode)) {
+			mIconsView = mViewStub.inflate();
+			// mIconsView = findViewById(R.id.icons);
+			mIconFavorite = (ImageView) findViewById(R.id.ic_favorite);
+			mIconThread = (ImageView) findViewById(R.id.ic_thread);
+			mIconPhoto = (ImageView) findViewById(R.id.ic_photo);
+			mIconLock = (ImageView) findViewById(R.id.ic_lock);
 		}
-		mIconsView = mViewStub.inflate();
-		// mIconsView = findViewById(R.id.icons);
-		mIconFavorite = (ImageView) findViewById(R.id.ic_favorite);
-		mIconThread = (ImageView) findViewById(R.id.ic_thread);
-		mIconPhoto = (ImageView) findViewById(R.id.ic_photo);
-		mIconLock = (ImageView) findViewById(R.id.ic_lock);
 	}
 
 	public void setTitle(CharSequence text) {
