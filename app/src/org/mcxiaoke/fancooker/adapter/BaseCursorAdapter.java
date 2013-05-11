@@ -1,8 +1,6 @@
 package org.mcxiaoke.fancooker.adapter;
 
-import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
-import org.mcxiaoke.fancooker.cache.ImageLoader;
 import org.mcxiaoke.fancooker.util.OptionHelper;
 
 import android.content.Context;
@@ -11,6 +9,8 @@ import android.view.LayoutInflater;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.CursorAdapter;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
  * @author mcxiaoke
@@ -28,7 +28,7 @@ public abstract class BaseCursorAdapter extends CursorAdapter implements
 
 	protected Context mContext;
 	protected LayoutInflater mInflater;
-	protected ImageLoader mLoader;
+	protected ImageLoader mImageLoader;
 	protected boolean busy;
 	private int fontSize;
 
@@ -45,7 +45,7 @@ public abstract class BaseCursorAdapter extends CursorAdapter implements
 	private void initialize(Context context) {
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);
-		this.mLoader = AppContext.getImageLoader();
+		this.mImageLoader = ImageLoader.getInstance();
 		this.fontSize = OptionHelper.readInt(mContext,
 				R.string.option_fontsize,
 				context.getResources().getInteger(R.integer.defaultFontSize));

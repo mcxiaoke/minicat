@@ -1,7 +1,6 @@
 package org.mcxiaoke.fancooker.adapter;
 
 import org.mcxiaoke.fancooker.R;
-import org.mcxiaoke.fancooker.cache.ImageLoader;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
 import org.mcxiaoke.fancooker.dao.model.UserModel;
 import org.mcxiaoke.fancooker.ui.widget.ItemView;
@@ -49,22 +48,6 @@ public class UIHelper {
 		content.append(u.getGender());
 		view.setContent(content.toString());
 		view.showMeta(false);
-	}
-
-	public static void setImage(ItemView view, ImageLoader loader,
-			String headUrl, boolean busy) {
-		if (busy) {
-			Bitmap bitmap = loader.getImage(headUrl, null);
-			if (bitmap != null) {
-				view.setImage(bitmap);
-			} else {
-				view.setImage(R.drawable.ic_head);
-			}
-		} else {
-			ImageView head = view.getImageView();
-			head.setTag(headUrl);
-			loader.displayImage(headUrl, head, R.drawable.ic_head);
-		}
 	}
 
 }

@@ -46,17 +46,6 @@ public class ItemView extends RelativeLayout {
 
 	private int mPadding;
 
-	private float mTitleTextSize;
-	private float mContentTextSize;
-	private float mMetaTextSize;
-
-	private int mTitleTextColor;
-	private int mContentTextColor;
-	private int mMetaTextColor;
-
-	private boolean mTitleTextBold;
-	private boolean mShowImage;
-
 	public ItemView(Context context) {
 		this(context, null);
 	}
@@ -82,40 +71,11 @@ public class ItemView extends RelativeLayout {
 		mViewStub = (ViewStub) findViewById(R.id.stub);
 
 		final Resources res = getResources();
-		mPadding = res.getDimensionPixelSize(R.dimen.card_margin);
-		mTitleTextSize = res.getDimension(R.dimen.default_title_text_size);
-		mContentTextSize = res.getDimension(R.dimen.default_content_text_size);
-		mMetaTextSize = res.getDimension(R.dimen.default_meta_text_size);
-		mTitleTextColor = res.getColor(R.color.default_title_text_color);
-		mContentTextColor = res.getColor(R.color.default_content_text_color);
-		mMetaTextColor = res.getColor(R.color.default_meta_text_color);
-
-		mTitleTextBold = res.getBoolean(R.bool.default_title_text_bold);
-		mShowImage = res.getBoolean(R.bool.default_show_head_image);
+		mPadding = res.getDimensionPixelSize(R.dimen.list_item_padding);
 		mViewMode = ViewMode.StatusMode;
-
-		if (AppContext.DEBUG) {
-			Log.d(VIEW_LOG_TAG, "title text size=" + mTitleTextSize);
-			Log.d(VIEW_LOG_TAG, "content text size=" + mContentTextSize);
-			Log.d(VIEW_LOG_TAG, "meta text size=" + mMetaTextSize);
-		}
 
 		setPadding(mPadding, mPadding, mPadding, mPadding);
 		setBackgroundColor(Color.WHITE);
-
-		mTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTitleTextSize);
-		mTitleTextView.setTextColor(mTitleTextColor);
-		if (mTitleTextBold) {
-			Utils.setBoldText(mTitleTextView);
-		}
-
-		mContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-				mContentTextSize);
-		mContentTextView.setTextColor(mContentTextColor);
-		mMetaTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mMetaTextSize);
-		mMetaTextView.setTextColor(mMetaTextColor);
-
-		mImageView.setVisibility(mShowImage ? View.VISIBLE : View.GONE);
 
 		checkViewMode();
 	}

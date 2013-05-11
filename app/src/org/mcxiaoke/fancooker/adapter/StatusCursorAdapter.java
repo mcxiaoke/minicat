@@ -107,7 +107,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 		view.setContent(s.getSimpleText());
 
 		String headUrl = s.getUserProfileImageUrl();
-		UIHelper.setImage(view, mLoader, headUrl, busy);
+		mImageLoader.displayImage(headUrl, view.getImageView());
 	}
 
 	private void setColor(final Cursor cursor, View row) {

@@ -38,6 +38,7 @@
 
     <!-- new card list ui -->
     <dimen name="card_margin">8dp</dimen>
+    <dimen name="list_item_padding">2dp</dimen>
     <dimen name="card_divider">8dp</dimen>
 
 </resources>

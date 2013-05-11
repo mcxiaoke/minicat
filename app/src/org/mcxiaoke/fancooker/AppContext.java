@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 import org.mcxiaoke.fancooker.api.Api;
 import org.mcxiaoke.fancooker.api.ApiFactory;
 import org.mcxiaoke.fancooker.auth.AccessToken;
-import org.mcxiaoke.fancooker.cache.ImageLoader;
 import org.mcxiaoke.fancooker.config.AccountInfo;
 import org.mcxiaoke.fancooker.config.AccountStore;
 import org.mcxiaoke.fancooker.controller.DataController;
@@ -26,6 +25,10 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 /**
  * @author mcxiaoke
@@ -70,7 +73,6 @@ public class AppContext extends Application {
 	private static AccountInfo accountInfo;
 
 	private static SharedPreferences sPreferences;
-	private static ImageLoader imageLoader;
 
 	private static Api api;
 	private static AppContext instance;
@@ -98,7 +100,7 @@ public class AppContext extends Application {
 
 		sPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-		imageLoader = ImageLoader.getInstance();
+		ImageLoader.getInstance().init(getDefaultImageLoaderConfigureation());
 
 		DateTimeHelper.FANFOU_DATE_FORMAT.setTimeZone(TimeZone
 				.getTimeZone("GMT"));
@@ -242,10 +244,6 @@ public class AppContext extends Application {
 		AppContext.sPreferences = sPreferences;
 	}
 
-	public static ImageLoader getImageLoader() {
-		return imageLoader;
-	}
-
 	public static Api getApi() {
 		return api;
 	}
@@ -315,6 +313,22 @@ public class AppContext extends Application {
 				.append("Android ").append(Build.MODEL).append(" ");
 
 		return sb.toString();
+	}
+
+	private DisplayImageOptions getDefaultDisplayImageOptions() {
+		DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder();
+		builder.cacheInMemory().cacheOnDisc();
+		builder.showStubImage(R.drawable.ic_head);
+		builder.showImageOnFail(R.drawable.ic_head);
+		return builder.build();
+	}
+
+	private ImageLoaderConfiguration getDefaultImageLoaderConfigureation() {
+		ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(
+				this);
+		builder.defaultDisplayImageOptions(getDefaultDisplayImageOptions());
+		builder.denyCacheImageMultipleSizesInMemory();
+		return builder.build();
 	}
 
 	public static enum ApnType {

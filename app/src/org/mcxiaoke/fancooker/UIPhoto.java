@@ -3,12 +3,16 @@ package org.mcxiaoke.fancooker;
 import java.io.File;
 import java.io.IOException;
 
-import org.mcxiaoke.fancooker.cache.ImageLoader;
 import org.mcxiaoke.fancooker.controller.EmptyViewController;
 import org.mcxiaoke.fancooker.ui.imagezoom.ImageViewTouch;
 import org.mcxiaoke.fancooker.util.IOHelper;
 import org.mcxiaoke.fancooker.util.ImageHelper;
 import org.mcxiaoke.fancooker.util.Utils;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -38,7 +42,7 @@ import android.view.View.OnClickListener;
  * @version 5.0 2012.03.27
  * 
  */
-public class UIPhoto extends Activity implements OnClickListener{
+public class UIPhoto extends Activity implements OnClickListener {
 
 	private static final String TAG = UIPhoto.class.getSimpleName();
 	private String url;
@@ -73,11 +77,7 @@ public class UIPhoto extends Activity implements OnClickListener{
 			Log.d(TAG, "mPhotoPath=" + url);
 		}
 
-		if (url.startsWith("http")) {
-			loadFromWeb(url);
-		} else {
-			loadFromLocal(url);
-		}
+		displayImage();
 
 	}
 
@@ -130,43 +130,32 @@ public class UIPhoto extends Activity implements OnClickListener{
 		}
 	}
 
-	private void loadFromLocal(String path) {
-		try {
-			bitmap = ImageHelper.loadFromPath(this, url, 1000, 1000);
-			if (AppContext.DEBUG) {
-				Log.d(TAG, "Bitmap width=" + bitmap.getWidth() + " height="
-						+ bitmap.getHeight());
-			}
-			showContent(bitmap);
-		} catch (IOException e) {
-			if (AppContext.DEBUG) {
-				Log.e(TAG, "" + e);
-			}
-		}
-	}
+	private void displayImage() {
+		final String imageUrl = url;
+		final ImageLoadingListener listener = new ImageLoadingListener() {
 
-	private void loadFromWeb(String url) {
-		final Handler handler = new Handler() {
 			@Override
-			public void handleMessage(Message msg) {
-				switch (msg.what) {
-				case ImageLoader.MESSAGE_FINISH:
-					Bitmap bitmap = (Bitmap) msg.obj;
-					showContent(bitmap);
-					break;
-				case ImageLoader.MESSAGE_ERROR:
-					break;
-				default:
-					break;
-				}
+			public void onLoadingStarted(String imageUri, View view) {
+			}
+
+			@Override
+			public void onLoadingFailed(String imageUri, View view,
+					FailReason failReason) {
+				showContent(null);
+			}
+
+			@Override
+			public void onLoadingComplete(String imageUri, View view,
+					Bitmap loadedImage) {
+				showContent(loadedImage);
+			}
+
+			@Override
+			public void onLoadingCancelled(String imageUri, View view) {
+				showContent(null);
 			}
 		};
-		Bitmap bitmap = AppContext.getImageLoader().getImage(url, handler);
-		if (bitmap == null) {
-			showProgress();
-		} else {
-			showContent(bitmap);
-		}
+		ImageLoader.getInstance().loadImage(imageUrl, listener);
 	}
 
 	private void parseIntent(Intent intent) {

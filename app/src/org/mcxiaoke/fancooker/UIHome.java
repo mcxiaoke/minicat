@@ -92,15 +92,11 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if (!NetworkHelper.isWifi(this)) {
-			AppContext.getImageLoader().clearQueue();
-		}
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		AppContext.getImageLoader().shutdown();
 	}
 
 	@Override

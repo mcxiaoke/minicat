@@ -82,16 +82,7 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter{
 		final UserModel u = UserModel.from(cursor);
 
 		String headUrl = u.getProfileImageUrl();
-		if (busy) {
-			Bitmap bitmap = mLoader.getImage(headUrl, null);
-			if (bitmap != null) {
-				holder.headIcon.setImageBitmap(bitmap);
-			}
-		} else {
-			holder.headIcon.setTag(headUrl);
-			mLoader.displayImage(headUrl, holder.headIcon,
-					R.drawable.ic_head);
-		}
+		mImageLoader.displayImage(headUrl, holder.headIcon);
 
 		holder.lockIcon.setVisibility(u.isProtect()?View.VISIBLE:View.GONE);
 

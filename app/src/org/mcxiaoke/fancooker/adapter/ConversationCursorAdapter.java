@@ -36,7 +36,7 @@ public class ConversationCursorAdapter extends BaseMessageCursorAdapter {
 		view.setContent(dm.getText());
 		
 		String headUrl = dm.getSenderProfileImageUrl();
-		UIHelper.setImage(view, mLoader, headUrl, busy);
+		mImageLoader.displayImage(headUrl, view.getImageView());
 	}
 
 

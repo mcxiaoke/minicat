@@ -30,26 +30,26 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 
 	@Override
 	protected int getLayoutId() {
-//		return R.layout.list_item_user;
+		// return R.layout.list_item_user;
 		return -1;
 	}
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		ItemView view=new ItemView(mContext);
+		ItemView view = new ItemView(mContext);
 		view.setId(R.id.list_item);
 		return view;
 	}
 
 	@Override
 	public void bindView(View row, Context context, Cursor cursor) {
-		ItemView view=(ItemView) row;
+		ItemView view = (ItemView) row;
 		final UserModel u = UserModel.from(cursor);
 
 		UIHelper.setContent(view, u);
 
 		String headUrl = u.getProfileImageUrl();
-		UIHelper.setImage(view, mLoader, headUrl, busy);
+		mImageLoader.displayImage(headUrl, view.getImageView());
 	}
 
 }

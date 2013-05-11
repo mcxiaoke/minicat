@@ -131,7 +131,8 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 		mListView.setScrollBarStyle(ScrollView.SCROLLBARS_OUTSIDE_OVERLAY);
 		mListView.setBackgroundResource(R.drawable.general_background);
 		mListView.setOnItemClickListener(this);
-		mListView.setOnItemLongClickListener(this);
+		mListView.setLongClickable(false);
+//		mListView.setOnItemLongClickListener(this);
 	}
 
 	@Override

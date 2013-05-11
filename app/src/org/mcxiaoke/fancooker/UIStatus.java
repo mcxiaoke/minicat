@@ -15,7 +15,7 @@ import org.mcxiaoke.fancooker.util.Utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,6 +28,10 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 /**
  * @author mcxiaoke
@@ -236,9 +240,7 @@ public class UIStatus extends UIBaseSupport {
 	private void updateHeader() {
 		headerName.setText(status.getUserScreenName());
 		String headerImageUrl = status.getUserProfileImageUrl();
-		headerImage.setTag(headerImageUrl);
-		AppContext.getImageLoader().displayImage(headerImageUrl, headerImage,
-				R.drawable.ic_head);
+		ImageLoader.getInstance().displayImage(headerImageUrl, headerImage);
 
 	}
 
@@ -263,13 +265,39 @@ public class UIStatus extends UIBaseSupport {
 
 		contentPhoto.setVisibility(View.VISIBLE);
 		String photoUrl = status.getPhotoLargeUrl();
-		contentPhoto.setTag(photoUrl);
-		AppContext.getImageLoader().displayImage(photoUrl, contentPhoto,
-				R.drawable.photo_loading);
+		displayPhoto(photoUrl);
 	}
 
 	private void updateThread() {
 		imThread.setVisibility(status.isThread() ? View.VISIBLE : View.GONE);
+	}
+
+	private void displayPhoto(String url) {
+		final ImageLoadingListener listener = new ImageLoadingListener() {
+
+			@Override
+			public void onLoadingStarted(String imageUri, View view) {
+				contentPhoto.setImageResource(R.drawable.photo_loading);
+			}
+
+			@Override
+			public void onLoadingFailed(String imageUri, View view,
+					FailReason failReason) {
+				contentPhoto.setImageResource(R.drawable.photo_error);
+			}
+
+			@Override
+			public void onLoadingComplete(String imageUri, View view,
+					Bitmap loadedImage) {
+				contentPhoto.setImageBitmap(loadedImage);
+			}
+
+			@Override
+			public void onLoadingCancelled(String imageUri, View view) {
+				contentPhoto.setImageResource(R.drawable.photo_error);
+			}
+		};
+		ImageLoader.getInstance().loadImage(url, listener);
 	}
 
 	@Override

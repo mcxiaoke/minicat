@@ -5,13 +5,13 @@ import java.util.List;
 
 import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
-import org.mcxiaoke.fancooker.cache.ImageLoader;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
 import org.mcxiaoke.fancooker.ui.widget.ItemView;
 import org.mcxiaoke.fancooker.util.OptionHelper;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +54,7 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 	private void initialize(Context context, List<StatusModel> data) {
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);
-		this.mLoader = AppContext.getImageLoader();
+		this.mLoader = ImageLoader.getInstance();
 		this.fontSize = OptionHelper.readInt(mContext,
 				R.string.option_fontsize,
 				context.getResources().getInteger(R.integer.defaultFontSize));
@@ -80,12 +80,10 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 		}
 
 		final StatusModel s = getData().get(position);
-
-		String headUrl = s.getUserProfileImageUrl();
-		UIHelper.setImage(holder.view, mLoader, headUrl, busy);
-
 		UIHelper.setMetaInfo(holder.view, s);
 		setStatusContent(holder.view, s.getSimpleText());
+		String headUrl = s.getUserProfileImageUrl();
+		mLoader.displayImage(headUrl, holder.view.getImageView());
 		return convertView;
 	}
 

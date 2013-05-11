@@ -7,7 +7,6 @@ import java.util.Map;
 import org.mcxiaoke.fancooker.api.Api;
 import org.mcxiaoke.fancooker.api.ApiException;
 import org.mcxiaoke.fancooker.api.ResultInfo;
-import org.mcxiaoke.fancooker.cache.ImageLoader;
 import org.mcxiaoke.fancooker.controller.DataController;
 import org.mcxiaoke.fancooker.dao.model.UserModel;
 import org.mcxiaoke.fancooker.ui.widget.TextChangeListener;
@@ -15,6 +14,8 @@ import org.mcxiaoke.fancooker.util.IOHelper;
 import org.mcxiaoke.fancooker.util.ImageHelper;
 import org.mcxiaoke.fancooker.util.StringHelper;
 import org.mcxiaoke.fancooker.util.Utils;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -79,7 +80,7 @@ public class UIEditProfile extends UIBaseSupport {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mLoader = AppContext.getImageLoader();
+		mLoader = ImageLoader.getInstance();
 		user = (UserModel) getIntent().getParcelableExtra("data");
 		setLayout();
 	}
@@ -179,10 +180,7 @@ public class UIEditProfile extends UIBaseSupport {
 			log("updateProfileImagePreview() url=" + user.getProfileImageUrl());
 		}
 		mHeadView.setImageResource(R.drawable.ic_head);
-		mHeadView.invalidate();
-		mHeadView.setTag(user.getProfileImageUrl());
-		mLoader.displayImage(user.getProfileImageUrl(), mHeadView,
-				R.drawable.ic_head);
+		mLoader.displayImage(user.getProfileImageUrl(), mHeadView);
 
 	}
 

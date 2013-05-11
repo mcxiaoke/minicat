@@ -5,10 +5,11 @@ import java.util.List;
 
 import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
-import org.mcxiaoke.fancooker.cache.ImageLoader;
 import org.mcxiaoke.fancooker.dao.model.UserModel;
 import org.mcxiaoke.fancooker.ui.widget.ItemView;
 import org.mcxiaoke.fancooker.util.OptionHelper;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -51,7 +52,7 @@ public abstract class UserArrayAdapter extends BaseAdapter implements
 	private void initialize(Context context, List<UserModel> data) {
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);
-		this.mLoader = AppContext.getImageLoader();
+		this.mLoader = ImageLoader.getInstance();
 		this.fontSize = OptionHelper.readInt(mContext,
 				R.string.option_fontsize,
 				context.getResources().getInteger(R.integer.defaultFontSize));
@@ -73,22 +74,9 @@ public abstract class UserArrayAdapter extends BaseAdapter implements
 		}
 
 		final UserModel u = getData().get(position);
-
-		String headUrl = u.getProfileImageUrl();
-		if (busy) {
-			Bitmap bitmap = mLoader.getImage(headUrl, null);
-			if (bitmap != null) {
-				view.setImage(bitmap);
-			} else {
-				view.setImage(R.drawable.ic_head);
-			}
-		} else {
-			ImageView head = view.getImageView();
-			head.setTag(headUrl);
-			mLoader.displayImage(headUrl, head, R.drawable.ic_head);
-		}
-
 		UIHelper.setContent(view, u);
+		String headUrl = u.getProfileImageUrl();
+		mLoader.displayImage(headUrl, view.getImageView());
 		return convertView;
 	}
 

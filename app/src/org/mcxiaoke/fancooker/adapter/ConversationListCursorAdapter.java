@@ -8,7 +8,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.view.View;
 
-
 /**
  * @author mcxiaoke
  * @version 1.0 2011.06.09
@@ -48,7 +47,7 @@ public class ConversationListCursorAdapter extends BaseMessageCursorAdapter {
 
 		String headUrl = incoming ? dm.getSenderProfileImageUrl() : dm
 				.getRecipientProfileImageUrl();
-		UIHelper.setImage(view, mLoader, headUrl, busy);
+		mImageLoader.displayImage(headUrl, view.getImageView());
 
 	}
 

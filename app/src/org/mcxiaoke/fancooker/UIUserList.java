@@ -128,9 +128,6 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if (!NetworkHelper.isWifi(this)) {
-			AppContext.getImageLoader().clearQueue();
-		}
 	}
 
 	@Override

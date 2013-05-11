@@ -14,6 +14,8 @@ import org.mcxiaoke.fancooker.util.DateTimeHelper;
 import org.mcxiaoke.fancooker.util.StringHelper;
 import org.mcxiaoke.fancooker.util.Utils;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -294,9 +296,7 @@ public class ProfileFragment extends AbstractFragment implements
 		headerName.setText(user.getScreenName());
 
 		String headerImageUrl = user.getProfileImageUrl();
-		headerImage.setTag(headerImageUrl);
-		AppContext.getImageLoader().displayImage(headerImageUrl, headerImage,
-				R.drawable.ic_head);
+		ImageLoader.getInstance().displayImage(headerImageUrl, headerImage);
 
 	}
 

@@ -192,7 +192,6 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
 	@Override
 	protected void onStop() {
 		super.onStop();
-		AppContext.getImageLoader().clearQueue();
 	}
 
 	@Override
