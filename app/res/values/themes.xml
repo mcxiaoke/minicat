@@ -2,12 +2,13 @@
 <resources>
 
     <style name="ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@drawable/actionbar_background</item>
         <item name="android:logo">@drawable/ic_logo</item>
+        <item name="android:background">@drawable/actionbar_background</item>
     </style>
 
     <style name="AppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
+        <item name="android:actionBarItemBackground">@drawable/actionbar_item_background</item>
     </style>
 
     <style name="AppTheme.UIPhoto" parent="@android:style/Theme.Holo.NoActionBar"></style>
