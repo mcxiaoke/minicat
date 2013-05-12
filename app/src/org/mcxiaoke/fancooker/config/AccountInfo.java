@@ -3,7 +3,7 @@
  */
 package org.mcxiaoke.fancooker.config;
 
-import org.mcxiaoke.fancooker.auth.AccessToken;
+import org.oauthsimple.model.OAuthToken;
 
 /**
  * @author mcxiaoke
@@ -19,7 +19,7 @@ public class AccountInfo {
 	private String loginPassword;
 	private String token;
 	private String tokenSecret;
-	private AccessToken accessToken;
+	private OAuthToken accessToken;
 
 	public void setAccountInfo(String account, String screenName) {
 		this.account = account;
@@ -36,7 +36,15 @@ public class AccountInfo {
 	public void setTokenAndSecret(String token, String tokenSecret) {
 		this.token = token;
 		this.tokenSecret = tokenSecret;
-		this.accessToken = new AccessToken(token, tokenSecret);
+		if (isNotEmpty(token) && isNotEmpty(tokenSecret)) {
+			this.accessToken = new OAuthToken(token, tokenSecret);
+		} else {
+			this.accessToken = null;
+		}
+	}
+
+	private static boolean isNotEmpty(String text) {
+		return text != null && text.length() > 0;
 	}
 
 	public void setLoginInfo(String loginName, String loginPassword) {
@@ -92,13 +100,13 @@ public class AccountInfo {
 		return tokenSecret;
 	}
 
-	public AccessToken getAccessToken() {
-		return new AccessToken(token, tokenSecret);
+	public OAuthToken getAccessToken() {
+		return new OAuthToken(token, tokenSecret);
 	}
 
-	public void setAccessToken(AccessToken accessToken) {
+	public void setAccessToken(OAuthToken accessToken) {
 		this.token = accessToken.getToken();
-		this.tokenSecret = accessToken.getTokenSecret();
+		this.tokenSecret = accessToken.getSecret();
 	}
 
 	public boolean isVerified() {

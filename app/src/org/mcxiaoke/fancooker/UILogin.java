@@ -1,12 +1,13 @@
 package org.mcxiaoke.fancooker;
 
+import java.io.Serializable;
+
 import org.mcxiaoke.fancooker.api.Api;
-import org.mcxiaoke.fancooker.api.ResultInfo;
-import org.mcxiaoke.fancooker.auth.AccessToken;
 import org.mcxiaoke.fancooker.controller.UIController;
 import org.mcxiaoke.fancooker.dao.model.UserModel;
 import org.mcxiaoke.fancooker.ui.widget.TextChangeListener;
 import org.mcxiaoke.fancooker.util.Utils;
+import org.oauthsimple.model.OAuthToken;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -203,7 +204,7 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
 					Log.d(TAG, "LoginTask.doInBackground()");
 				}
 				final Api api = AppContext.getApi();
-				AccessToken token = api.getOAuthAccessToken(username, password);
+				OAuthToken token = api.getOAuthAccessToken(username, password);
 				if (AppContext.DEBUG)
 					log("xauth token=" + token);
 
@@ -217,6 +218,8 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
 					AppContext.updateAccessToken(mContext, token);
 
 					final UserModel u = api.verifyCredentials();
+
+					log("verifyCredentials user=" + u);
 
 					if (u != null) {
 						AppContext.updateUserInfo(mContext, u);
@@ -284,6 +287,33 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
 	private void onLoginComplete() {
 		UIController.showHome(mContext);
 		finish();
+	}
+
+	static final class ResultInfo implements Serializable {
+		public static final int CODE_ERROR = -1;
+		public static final int CODE_SUCCESS = 0;
+		public static final int CODE_FAILED = 1;
+		public static final int CODE_CANCELED = 2;;
+
+		private static final long serialVersionUID = 4195237447592568873L;
+		public final int code;
+		public final String message;
+		public final Object content;
+
+		public ResultInfo(int code) {
+			this(code, null, null);
+		}
+
+		public ResultInfo(int code, String message) {
+			this(code, message, null);
+		}
+
+		public ResultInfo(int code, String message, Object content) {
+			this.code = code;
+			this.message = message;
+			this.content = content;
+		}
+
 	}
 
 }

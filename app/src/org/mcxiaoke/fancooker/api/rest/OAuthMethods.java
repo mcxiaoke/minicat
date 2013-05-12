@@ -1,8 +1,7 @@
 package org.mcxiaoke.fancooker.api.rest;
 
 import org.mcxiaoke.fancooker.api.ApiException;
-import org.mcxiaoke.fancooker.auth.AccessToken;
-import org.mcxiaoke.fancooker.auth.RequestToken;
+import org.oauthsimple.model.OAuthToken;
 
 /**
  * @author mcxiaoke
@@ -13,19 +12,14 @@ import org.mcxiaoke.fancooker.auth.RequestToken;
 public interface OAuthMethods {
 
 	public void setAccount(String account);
-	
+
 	public String getAccount();
 
-	public void setAccessToken(AccessToken token);
+	public OAuthToken getOAuthRequestToken() throws ApiException;
 
-	public AccessToken getAccessToken();
-	
-	public RequestToken getOAuthRequestToken() throws ApiException;
-	public RequestToken getOAuthRequestToken(String callback) throws ApiException;
-	public AccessToken getOAuthAccessToken(RequestToken requestToken) throws ApiException;
-	public AccessToken getOAuthAccessToken(RequestToken requestToken,
-			String verifier) throws ApiException;
-	public AccessToken getOAuthAccessToken(String username, String password)
+	public OAuthToken getOAuthAccessToken(String username, String password)
 			throws ApiException;
+
+	public void setAccessToken(OAuthToken token);
 
 }

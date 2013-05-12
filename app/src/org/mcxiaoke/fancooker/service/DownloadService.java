@@ -8,17 +8,17 @@ import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.http.HttpEntity;
 import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.UIVersionUpdate;
-import org.mcxiaoke.fancooker.http.RestClient;
-import org.mcxiaoke.fancooker.http.RestResponse;
 import org.mcxiaoke.fancooker.util.DateTimeHelper;
 import org.mcxiaoke.fancooker.util.IOHelper;
 import org.mcxiaoke.fancooker.util.OptionHelper;
 import org.mcxiaoke.fancooker.util.StringHelper;
 import org.mcxiaoke.fancooker.util.Utils;
+import org.oauthsimple.model.Request;
+import org.oauthsimple.model.Response;
+import org.oauthsimple.model.Verb;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -165,7 +165,7 @@ public class DownloadService extends BaseIntentService {
 				return;
 			}
 		}
-		
+
 		// for debug
 		if (info != null && info.versionCode > AppContext.versionCode) {
 			notifyUpdate(info, this);
@@ -180,13 +180,13 @@ public class DownloadService extends BaseIntentService {
 		final long UPDATE_TIME = 2000;
 		long lastTime = 0;
 		try {
-			RestResponse res = new RestClient().get(url, false);
-			int statusCode = res.statusCode;
+			Request request = new Request(Verb.GET, url);
+			Response response = request.send();
+			int statusCode = response.getCode();
 			if (statusCode == 200) {
-				HttpEntity entity = res.entity;
-				long total = entity.getContentLength();
+				long total = response.getContentLength();
 				long download = 0;
-				is = entity.getContent();
+				is = response.getInputStream();
 				File file = new File(IOHelper.getDownloadDir(this), "fanfou_"
 						+ DateTimeHelper.formatDateFileName(new Date())
 						+ ".apk");
@@ -294,14 +294,14 @@ public class DownloadService extends BaseIntentService {
 
 	public static VersionInfo fetchVersionInfo() {
 		try {
-			RestResponse res = new RestClient().get(UPDATE_VERSION_FILE,
-					false);
-			int statusCode = res.statusCode;
+			Request request = new Request(Verb.GET, UPDATE_VERSION_FILE);
+			Response response = request.send();
+			int statusCode = response.getCode();
 			if (AppContext.DEBUG) {
 				Log.d(TAG, "statusCode=" + statusCode);
 			}
 			if (statusCode == 200) {
-				String content = res.getContent();
+				String content = response.getBody();
 				if (AppContext.DEBUG) {
 					Log.d(TAG, "response=" + content);
 				}

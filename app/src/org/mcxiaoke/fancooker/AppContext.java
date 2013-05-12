@@ -3,11 +3,9 @@ package org.mcxiaoke.fancooker;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.TimeZone;
-import java.util.logging.Logger;
 
 import org.mcxiaoke.fancooker.api.Api;
 import org.mcxiaoke.fancooker.api.ApiFactory;
-import org.mcxiaoke.fancooker.auth.AccessToken;
 import org.mcxiaoke.fancooker.config.AccountInfo;
 import org.mcxiaoke.fancooker.config.AccountStore;
 import org.mcxiaoke.fancooker.controller.DataController;
@@ -15,6 +13,7 @@ import org.mcxiaoke.fancooker.controller.UIController;
 import org.mcxiaoke.fancooker.dao.model.UserModel;
 import org.mcxiaoke.fancooker.util.AlarmHelper;
 import org.mcxiaoke.fancooker.util.DateTimeHelper;
+import org.oauthsimple.model.OAuthToken;
 
 import android.app.Application;
 import android.content.Context;
@@ -59,7 +58,7 @@ public class AppContext extends Application {
 
 	private static final String TAG = "Application";
 
-	public static final boolean DEBUG = BuildConfig.DEBUG;
+	public static final boolean DEBUG = true;
 	private static HashMap<String, WeakReference<Context>> contexts = new HashMap<String, WeakReference<Context>>();
 
 	public static int versionCode;
@@ -188,7 +187,7 @@ public class AppContext extends Application {
 
 	}
 
-	public static void updateAccessToken(Context context, AccessToken token) {
+	public static void updateAccessToken(Context context, OAuthToken token) {
 		accountInfo.setAccessToken(token);
 		api.setAccessToken(token);
 		AccountStore store = new AccountStore(context);
@@ -201,7 +200,7 @@ public class AppContext extends Application {
 
 	public static void updateAccessToken(Context context, String token,
 			String tokenSecret) {
-		updateAccessToken(context, new AccessToken(token, tokenSecret));
+		updateAccessToken(context, new OAuthToken(token, tokenSecret));
 	}
 
 	public static String getAccount() {
@@ -236,7 +235,7 @@ public class AppContext extends Application {
 		AppContext.api = api;
 	}
 
-	public static AccessToken getAccessToken() {
+	public static OAuthToken getAccessToken() {
 		return accountInfo.getAccessToken();
 	}
 

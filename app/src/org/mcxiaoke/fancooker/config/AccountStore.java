@@ -4,14 +4,13 @@
 package org.mcxiaoke.fancooker.config;
 
 import org.mcxiaoke.fancooker.AppContext;
-import org.mcxiaoke.fancooker.auth.AccessToken;
+import org.oauthsimple.model.OAuthToken;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
 import android.util.Log;
-
 
 /**
  * @author mcxiaoke
@@ -60,14 +59,14 @@ public class AccountStore {
 		}
 	}
 
-	public synchronized void saveAccessToken(AccessToken token) {
+	public synchronized void saveAccessToken(OAuthToken token) {
 		if (token == null) {
 			return;
 		}
-		saveAccessToken(token.getToken(), token.getTokenSecret());
+		saveAccessToken(token.getToken(), token.getSecret());
 	}
 
-	public synchronized AccessToken readAccessToken() {
+	public synchronized OAuthToken readAccessToken() {
 		String token = mPreferences.getString(KEY_ACCESS_TOKEN, null);
 		String tokenSecret = mPreferences.getString(KEY_ACCESS_TOKEN_SECRET,
 				null);
@@ -80,7 +79,7 @@ public class AccountStore {
 		if (TextUtils.isEmpty(tokenSecret)) {
 			return null;
 		}
-		return new AccessToken(token, tokenSecret);
+		return new OAuthToken(token, tokenSecret);
 	}
 
 	public synchronized void clearAccessToken() {

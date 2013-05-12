@@ -5,22 +5,15 @@ package org.mcxiaoke.fancooker.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.BitSet;
 import java.util.List;
 
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.protocol.HTTP;
 import org.mcxiaoke.fancooker.AppContext;
-import org.mcxiaoke.fancooker.auth.AccessToken;
-import org.mcxiaoke.fancooker.auth.OAuthProvider;
-import org.mcxiaoke.fancooker.auth.OAuthService;
-import org.mcxiaoke.fancooker.auth.RequestToken;
-import org.mcxiaoke.fancooker.auth.exception.AuthException;
 import org.mcxiaoke.fancooker.dao.model.BaseModel;
 import org.mcxiaoke.fancooker.dao.model.DirectMessageModel;
 import org.mcxiaoke.fancooker.dao.model.Notifications;
@@ -28,12 +21,16 @@ import org.mcxiaoke.fancooker.dao.model.RateLimitStatus;
 import org.mcxiaoke.fancooker.dao.model.Search;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
 import org.mcxiaoke.fancooker.dao.model.UserModel;
-import org.mcxiaoke.fancooker.http.NetHelper;
-import org.mcxiaoke.fancooker.http.RestRequest;
-import org.mcxiaoke.fancooker.http.RestResponse;
+import org.oauthsimple.builder.ServiceBuilder;
+import org.oauthsimple.builder.api.FanfouApi;
+import org.oauthsimple.model.OAuthRequest;
+import org.oauthsimple.model.OAuthToken;
+import org.oauthsimple.model.Response;
+import org.oauthsimple.model.SignatureType;
+import org.oauthsimple.model.Verb;
+import org.oauthsimple.oauth.OAuthService;
 
 import android.util.Log;
-
 
 /**
  * @author mcxiaoke
@@ -43,14 +40,16 @@ import android.util.Log;
  * @version 1.6 2012.03.02
  * 
  */
-class FanFouApi implements Api {
+final class FanFouApi implements Api {
 	private static final String TAG = "API";
 	private static final String API_HOST = "http://api.fanfou.com";
+	private static final String API_KEY = "84d8fa6c95047475c9a14aae1f53f7b2";
+	private static final String API_SECRET = "4623b62a6d6a911533093987406549d0";
+	private static final String CALLBACK_URL = "http://m.fanfou.com";
 
 	private static final boolean DEBUG = AppContext.DEBUG;
 	private OAuthService mOAuthService;
-	private OAuthProvider mOAuthProvider;
-	private AccessToken mAccessToken;
+	private OAuthToken mAccessToken;
 	private ApiParser mParser;
 	private String account;
 
@@ -58,17 +57,26 @@ class FanFouApi implements Api {
 		initialize(null);
 	}
 
-	public FanFouApi(AccessToken token) {
+	public FanFouApi(OAuthToken token) {
 		initialize(token);
 	}
 
-	private void initialize(AccessToken token) {
-		this.mOAuthProvider = new FanFouOAuthProvider();
-		this.mOAuthService = new OAuthService(mOAuthProvider, mAccessToken);
-		this.mParser = new FanFouParser();
+	private void initialize(OAuthToken token) {
+		this.mParser = ApiFactory.getDefaultParser();
+		this.mOAuthService = buildOAuthService(null);
 	}
 
-	private void log(String message) {
+	private OAuthService buildOAuthService(OAuthToken token) {
+		ServiceBuilder builder = new ServiceBuilder().apiKey(API_KEY)
+				.apiSecret(API_SECRET).callback(CALLBACK_URL)
+				.provider(FanfouApi.class).debug().debugStream(os)
+				.signatureType(SignatureType.HEADER_OAUTH);
+		return builder.build();
+	}
+
+	private OutputStream os = new PrintStream(System.out);
+
+	private void debug(String message) {
 		Log.d(TAG, message);
 	}
 
@@ -77,18 +85,18 @@ class FanFouApi implements Api {
 				.toString();
 	}
 
-	private UserModel fetchUser(String url, String id, int type, boolean post)
+	private UserModel fetchUser(String url, String id, int type, Verb verb)
 			throws ApiException {
-		RestRequest.Builder builder = RestRequest.newBuilder();
-		builder.url(makeUrl(url)).id(id).post(post).mode("lite");
-		return mParser.user(fetch(builder.build()), type, account);
+		RequestBuilder builder = RequestBuilder.newBuilder();
+		builder.url(makeUrl(url)).id(id).verb(verb).mode("lite");
+		return mParser.user(fetch(builder), type, account);
 	}
 
-	private UserModel fetchUser(String url, int type, boolean post)
+	private UserModel fetchUser(String url, int type, Verb verb)
 			throws ApiException {
-		RestRequest.Builder builder = RestRequest.newBuilder();
-		builder.url(makeUrl(url)).post(post).mode("lite");
-		return mParser.user(fetch(builder.build()), type, account);
+		RequestBuilder builder = RequestBuilder.newBuilder();
+		builder.url(makeUrl(url)).verb(verb).mode("lite");
+		return mParser.user(fetch(builder), type, account);
 	}
 
 	private List<UserModel> fetchUsers(String url, Paging paging, int type)
@@ -98,53 +106,54 @@ class FanFouApi implements Api {
 
 	private List<UserModel> fetchUsers(String url, String userId,
 			Paging paging, int type) throws ApiException {
-		RestRequest.Builder builder = RestRequest.newBuilder();
+		RequestBuilder builder = RequestBuilder.newBuilder();
 		builder.url(makeUrl(url)).id(userId).mode("lite").format("html");
 		if (paging != null) {
 			builder.paging(paging);
 		}
-		return mParser.users(fetch(builder.build()), type, userId);
+		return mParser.users(fetch(builder), type, userId);
 	}
 
 	private List<StatusModel> fetchTimeline(String url, Paging paging,
 			int type, String owner) throws ApiException {
-		RestRequest.Builder builder = RestRequest.newBuilder();
-		builder.url(makeUrl(url)).mode("lite").format("html");
+		RequestBuilder builder = RequestBuilder.newBuilder();
+		builder.url(makeUrl(url)).mode("lite").format("html").verb(Verb.GET);
 		if (paging != null) {
 			builder.paging(paging);
 		}
-		String response = fetch(builder.build());
+		String response = fetch(builder);
 		return mParser.timeline(response, type, owner);
 	}
 
 	private List<StatusModel> fetchTimeline(String url, Paging paging,
 			String id, int type, String owner) throws ApiException {
-		RestRequest.Builder builder = RestRequest.newBuilder();
-		builder.url(makeUrl(url)).id(id).mode("lite").format("html");
+		RequestBuilder builder = RequestBuilder.newBuilder();
+		builder.url(makeUrl(url)).id(id).mode("lite").format("html")
+				.verb(Verb.POST);
 		if (paging != null) {
 			builder.paging(paging);
 		}
-		String response = fetch(builder.build());
+		String response = fetch(builder);
 		return mParser.timeline(response, type, owner);
 	}
 
-	private StatusModel fetchStatus(String url, int type, boolean post)
+	private StatusModel fetchStatus(String url, int type, Verb verb)
 			throws ApiException {
 		if (DEBUG) {
-			Log.d(TAG, "fetchStatus url=" + url + " type=" + type + " post="
-					+ post);
+			Log.d(TAG, "fetchStatus url=" + url + " type=" + type + " verb="
+					+ verb.name());
 		}
 
-		RestRequest.Builder builder = RestRequest.newBuilder();
-		builder.url(makeUrl(url)).post(post).mode("lite").format("html");
-		return mParser.status(fetch(builder.build()), type, account);
+		RequestBuilder builder = RequestBuilder.newBuilder();
+		builder.url(makeUrl(url)).verb(verb).mode("lite").format("html");
+		return mParser.status(fetch(builder), type, account);
 	}
 
 	private String fetchDirectMessages(String url, Paging paging, int type)
 			throws ApiException {
-		RestRequest.Builder builder = new RestRequest.Builder();
+		RequestBuilder builder = new RequestBuilder();
 		builder.url(makeUrl(url)).paging(paging).mode("lite");
-		return fetch(builder.build());
+		return fetch(builder);
 	}
 
 	@Override
@@ -167,17 +176,6 @@ class FanFouApi implements Api {
 		}
 	}
 
-	@Override
-	public synchronized void setAccessToken(AccessToken token) {
-		this.mAccessToken = token;
-		this.mOAuthService.setAccessToken(token);
-	}
-
-	@Override
-	public AccessToken getAccessToken() {
-		return mAccessToken;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -186,90 +184,27 @@ class FanFouApi implements Api {
 	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/Oauth
 	 */
 	@Override
-	public RequestToken getOAuthRequestToken() throws ApiException {
+	public OAuthToken getOAuthRequestToken() throws ApiException {
 		try {
-			return mOAuthService.getOAuthRequestToken();
-		} catch (IOException e) {
+			return mOAuthService.getRequestToken();
+		} catch (Exception e) {
 			throw new ApiException(ApiException.IO_ERROR, e.getMessage(), e);
-		} catch (AuthException e) {
-			throw new ApiException(ApiException.AUTH_ERROR, e.getMessage(), e);
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see m.fanfou.com/oauth/authorize
-	 * 
-	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/Oauth
-	 */
 	@Override
-	public RequestToken getOAuthRequestToken(String callback)
+	public OAuthToken getOAuthAccessToken(String username, String password)
 			throws ApiException {
 		try {
-			return mOAuthService.getOAuthRequestToken(callback);
-		} catch (IOException e) {
+			return mOAuthService.getAccessToken(username, password);
+		} catch (Exception e) {
 			throw new ApiException(ApiException.IO_ERROR, e.getMessage(), e);
-		} catch (AuthException e) {
-			throw new ApiException(ApiException.AUTH_ERROR, e.getMessage(), e);
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see http://fanfou.com/oauth/access_token
-	 * 
-	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/Oauth
-	 */
 	@Override
-	public AccessToken getOAuthAccessToken(RequestToken requestToken)
-			throws ApiException {
-		try {
-			return mOAuthService.getOAuthAccessToken(requestToken);
-		} catch (IOException e) {
-			throw new ApiException(ApiException.IO_ERROR, e.getMessage(), e);
-		} catch (AuthException e) {
-			throw new ApiException(ApiException.AUTH_ERROR, e.getMessage(), e);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see http://fanfou.com/oauth/access_token
-	 * 
-	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/Oauth
-	 */
-	@Override
-	public AccessToken getOAuthAccessToken(RequestToken requestToken,
-			String verifier) throws ApiException {
-		try {
-			return mOAuthService.getOAuthAccessToken(requestToken, verifier);
-		} catch (IOException e) {
-			throw new ApiException(ApiException.IO_ERROR, e.getMessage(), e);
-		} catch (AuthException e) {
-			throw new ApiException(ApiException.AUTH_ERROR, e.getMessage(), e);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see http://fanfou.com/oauth/access_token
-	 * 
-	 * @see https://github.com/FanfouAPI/FanFouAPIDoc/wiki/Xauth
-	 */
-	@Override
-	public AccessToken getOAuthAccessToken(String username, String password)
-			throws ApiException {
-		try {
-			return mOAuthService.getOAuthAccessToken(username, password);
-		} catch (IOException e) {
-			throw new ApiException(ApiException.IO_ERROR, e.getMessage(), e);
-		} catch (AuthException e) {
-			throw new ApiException(ApiException.AUTH_ERROR, e.getMessage(), e);
-		}
+	public void setAccessToken(OAuthToken token) {
+		this.mAccessToken = token;
 	}
 
 	/*
@@ -281,7 +216,7 @@ class FanFouApi implements Api {
 	@Override
 	public UserModel verifyCredentials() throws ApiException {
 		return fetchUser("/account/verify_credentials", BaseModel.TYPE_NONE,
-				false);
+				Verb.POST);
 	}
 
 	/*
@@ -293,14 +228,14 @@ class FanFouApi implements Api {
 	@Override
 	public UserModel updateProfile(String url, String location,
 			String description, String name) throws ApiException {
-		RestRequest.Builder builder = new RestRequest.Builder();
-		builder.url(makeUrl("/account/update_profile")).post().mode("lite");
+		RequestBuilder builder = new RequestBuilder();
+		builder.url(makeUrl("/account/update_profile")).verb(Verb.POST)
+				.mode("lite");
 		builder.param("description", description);
 		builder.param("name", name);
 		builder.param("location", location);
 		builder.param("url", url);
-		return mParser.user(fetch(builder.build()), BaseModel.TYPE_NONE,
-				account);
+		return mParser.user(fetch(builder), BaseModel.TYPE_NONE, account);
 	}
 
 	/*
@@ -313,11 +248,10 @@ class FanFouApi implements Api {
 	@Override
 	public UserModel updateProfileImage(File image) throws ApiException {
 		checkNotNull(image);
-		RestRequest.Builder builder = new RestRequest.Builder();
-		builder.url(makeUrl("/account/update_profile_image")).post();
-		builder.param("image", image);
-		return mParser.user(fetch(builder.build()), BaseModel.TYPE_NONE,
-				account);
+		RequestBuilder builder = new RequestBuilder();
+		builder.url(makeUrl("/account/update_profile_image")).verb(Verb.POST);
+		builder.file("image", image);
+		return mParser.user(fetch(builder), BaseModel.TYPE_NONE, account);
 	}
 
 	/*
@@ -348,9 +282,9 @@ class FanFouApi implements Api {
 	 */
 	@Override
 	public List<String> blockIDs() throws ApiException {
-		RestRequest.Builder builder = new RestRequest.Builder();
+		RequestBuilder builder = new RequestBuilder();
 		builder.url(makeUrl("/blocks/ids"));
-		String response = fetch(builder.build());
+		String response = fetch(builder);
 		return mParser.strings(response);
 	}
 
@@ -372,7 +306,7 @@ class FanFouApi implements Api {
 	@Override
 	public UserModel isBlocked(String id) throws ApiException {
 		checkNotEmpty(id);
-		return fetchUser("/blocks/exists", id, BaseModel.TYPE_NONE, false);
+		return fetchUser("/blocks/exists", id, BaseModel.TYPE_NONE, Verb.GET);
 	}
 
 	/*
@@ -384,7 +318,7 @@ class FanFouApi implements Api {
 	public UserModel block(String id) throws ApiException {
 		checkNotEmpty(id);
 		String url = String.format("/blocks/create/%s", utf8Encode(id));
-		return fetchUser(url, UserModel.TYPE_BLOCK, true);
+		return fetchUser(url, UserModel.TYPE_BLOCK, Verb.POST);
 	}
 
 	/*
@@ -396,7 +330,7 @@ class FanFouApi implements Api {
 	public UserModel unblock(String id) throws ApiException {
 		checkNotEmpty(id);
 		String url = String.format("/blocks/destroy/%s", utf8Encode(id));
-		return fetchUser(url, UserModel.TYPE_BLOCK, true);
+		return fetchUser(url, UserModel.TYPE_BLOCK, Verb.POST);
 	}
 
 	/*
@@ -452,10 +386,10 @@ class FanFouApi implements Api {
 	public List<DirectMessageModel> getConversation(String id, Paging paging)
 			throws ApiException {
 		checkNotEmpty(id);
-		RestRequest.Builder builder = new RestRequest.Builder();
+		RequestBuilder builder = new RequestBuilder();
 		builder.url(makeUrl("/direct_messages/conversation")).id(id)
 				.paging(paging).mode("lite");
-		String response = fetch(builder.build());
+		String response = fetch(builder);
 		return mParser.directMessageConversation(response, id);
 	}
 
@@ -471,9 +405,10 @@ class FanFouApi implements Api {
 		checkNotEmpty(id);
 		// String url = String
 		// .format("/direct_messages/destroy/%s", id);
-		RestRequest.Builder builder = new RestRequest.Builder();
-		builder.url(makeUrl("/direct_messages/destroy")).post().mode("lite");
-		String response = fetch(builder.build());
+		RequestBuilder builder = new RequestBuilder();
+		builder.url(makeUrl("/direct_messages/destroy")).verb(Verb.POST)
+				.mode("lite");
+		String response = fetch(builder);
 		return mParser.directMessage(response, DirectMessageModel.TYPE_OUTBOX);
 	}
 
@@ -487,12 +422,12 @@ class FanFouApi implements Api {
 			String replyId) throws ApiException {
 		checkNotEmpty(id);
 		checkNotEmpty(text);
-		RestRequest.Builder builder = new RestRequest.Builder();
-		builder.url(makeUrl("/direct_messages/new")).post();
+		RequestBuilder builder = new RequestBuilder();
+		builder.url(makeUrl("/direct_messages/new")).verb(Verb.POST);
 		builder.param("user", id);
 		builder.param("text", text);
 		builder.param("in_reply_to_id", replyId);
-		String response = fetch(builder.build());
+		String response = fetch(builder);
 		return mParser.directMessage(response, DirectMessageModel.TYPE_OUTBOX);
 	}
 
@@ -505,9 +440,9 @@ class FanFouApi implements Api {
 	public List<String> getFriendsIDs(String id, Paging paging)
 			throws ApiException {
 		checkNotEmpty(id);
-		RestRequest.Builder builder = new RestRequest.Builder();
+		RequestBuilder builder = new RequestBuilder();
 		builder.url(makeUrl("/friends/ids")).id(id).paging(paging);
-		return mParser.strings(fetch(builder.build()));
+		return mParser.strings(fetch(builder));
 	}
 
 	/*
@@ -519,9 +454,9 @@ class FanFouApi implements Api {
 	public List<String> getFollowersIDs(String id, Paging paging)
 			throws ApiException {
 		checkNotEmpty(id);
-		RestRequest.Builder builder = new RestRequest.Builder();
+		RequestBuilder builder = new RequestBuilder();
 		builder.url(makeUrl("/followers/ids")).id(id).paging(paging);
-		return mParser.strings(fetch(builder.build()));
+		return mParser.strings(fetch(builder));
 	}
 
 	/*
@@ -556,7 +491,7 @@ class FanFouApi implements Api {
 	public UserModel follow(String id) throws ApiException {
 		checkNotEmpty(id);
 		String url = String.format("/friendships/create/%s", utf8Encode(id));
-		return fetchUser(url, UserModel.TYPE_BLOCK, true);
+		return fetchUser(url, UserModel.TYPE_BLOCK, Verb.POST);
 	}
 
 	/*
@@ -568,7 +503,7 @@ class FanFouApi implements Api {
 	public UserModel unfollow(String id) throws ApiException {
 		checkNotEmpty(id);
 		String url = String.format("/friendships/destroy/%s", utf8Encode(id));
-		return fetchUser(url, UserModel.TYPE_BLOCK, true);
+		return fetchUser(url, UserModel.TYPE_BLOCK, Verb.POST);
 	}
 
 	/*
@@ -578,9 +513,9 @@ class FanFouApi implements Api {
 	 */
 	@Override
 	public List<String> friendshipsRequests(Paging paging) throws ApiException {
-		RestRequest.Builder builder = new RestRequest.Builder();
+		RequestBuilder builder = new RequestBuilder();
 		builder.url(makeUrl("/blocks/ids")).paging(paging);
-		String response = fetch(builder.build());
+		String response = fetch(builder);
 		return mParser.strings(response);
 	}
 
@@ -592,7 +527,8 @@ class FanFouApi implements Api {
 	@Override
 	public UserModel acceptFriendshipsRequest(String id) throws ApiException {
 		checkNotEmpty(id);
-		return fetchUser("/friendships/accept", id, BaseModel.TYPE_NONE, true);
+		return fetchUser("/friendships/accept", id, BaseModel.TYPE_NONE,
+				Verb.POST);
 	}
 
 	/*
@@ -603,7 +539,8 @@ class FanFouApi implements Api {
 	@Override
 	public UserModel denyFriendshipsRequest(String id) throws ApiException {
 		checkNotEmpty(id);
-		return fetchUser("/friendships/deny", id, BaseModel.TYPE_NONE, true);
+		return fetchUser("/friendships/deny", id, BaseModel.TYPE_NONE,
+				Verb.POST);
 	}
 
 	/*
@@ -615,11 +552,11 @@ class FanFouApi implements Api {
 	public boolean isFriends(String userA, String userB) throws ApiException {
 		checkNotEmpty(userA);
 		checkNotEmpty(userB);
-		RestRequest.Builder builder = new RestRequest.Builder();
+		RequestBuilder builder = new RequestBuilder();
 		builder.url(makeUrl("/friendships/exists"));
 		builder.param("user_a", userA);
 		builder.param("user_b", userB);
-		String response = fetch(builder.build());
+		String response = fetch(builder);
 		return response.contains("true");
 	}
 
@@ -633,11 +570,11 @@ class FanFouApi implements Api {
 			throws ApiException {
 		checkNotEmpty(source);
 		checkNotEmpty(target);
-		RestRequest.Builder builder = new RestRequest.Builder();
+		RequestBuilder builder = new RequestBuilder();
 		builder.url(makeUrl("/friendships/exists"));
 		builder.param("source_id", source);
 		builder.param("target_id", target);
-		String response = fetch(builder.build());
+		String response = fetch(builder);
 		return FanFouParser.parseFriendship(response);
 	}
 
@@ -663,12 +600,11 @@ class FanFouApi implements Api {
 	public StatusModel uploadPhoto(File photo, String status, String location)
 			throws ApiException {
 		checkNotNull(photo);
-		RestRequest.Builder builder = new RestRequest.Builder();
-		builder.url(makeUrl("/photos/upload")).post();
+		RequestBuilder builder = new RequestBuilder();
+		builder.url(makeUrl("/photos/upload")).verb(Verb.POST);
 		builder.status(status).location(location);
-		builder.param("photo", photo);
-		builder.format("html").mode("lite");
-		String response = fetch(builder.build());
+		builder.file("photo", photo);
+		String response = fetch(builder);
 		return mParser.status(response, StatusModel.TYPE_HOME, account);
 	}
 
@@ -679,9 +615,9 @@ class FanFouApi implements Api {
 	 */
 	@Override
 	public List<Search> getSavedSearches() throws ApiException {
-		RestRequest.Builder builder = new RestRequest.Builder();
+		RequestBuilder builder = new RequestBuilder();
 		builder.url(makeUrl("/saved_searches/list"));
-		String response = fetch(builder.build());
+		String response = fetch(builder);
 		return mParser.savedSearches(response);
 	}
 
@@ -693,9 +629,9 @@ class FanFouApi implements Api {
 	@Override
 	public Search showSavedSearch(String id) throws ApiException {
 		checkNotEmpty(id);
-		RestRequest.Builder builder = new RestRequest.Builder();
+		RequestBuilder builder = new RequestBuilder();
 		builder.url(makeUrl("/saved_searches/show")).id(id);
-		String response = fetch(builder.build());
+		String response = fetch(builder);
 		return mParser.savedSearch(response);
 	}
 
@@ -707,10 +643,10 @@ class FanFouApi implements Api {
 	@Override
 	public Search createSavedSearch(String query) throws ApiException {
 		checkNotEmpty(query);
-		RestRequest.Builder builder = new RestRequest.Builder();
+		RequestBuilder builder = new RequestBuilder();
 		builder.url(makeUrl("/saved_searches/create")).param("query", query)
-				.post();
-		String response = fetch(builder.build());
+				.verb(Verb.POST);
+		String response = fetch(builder);
 		return mParser.savedSearch(response);
 	}
 
@@ -723,9 +659,9 @@ class FanFouApi implements Api {
 	@Override
 	public Search deleteSavedSearch(String id) throws ApiException {
 		checkNotEmpty(id);
-		RestRequest.Builder builder = new RestRequest.Builder();
-		builder.url(makeUrl("/saved_searches/destroy")).id(id).post();
-		String response = fetch(builder.build());
+		RequestBuilder builder = new RequestBuilder();
+		builder.url(makeUrl("/saved_searches/destroy")).id(id).verb(Verb.POST);
+		String response = fetch(builder);
 		return mParser.savedSearch(response);
 	}
 
@@ -736,9 +672,9 @@ class FanFouApi implements Api {
 	 */
 	@Override
 	public List<Search> getTrends() throws ApiException {
-		RestRequest.Builder builder = new RestRequest.Builder();
+		RequestBuilder builder = new RequestBuilder();
 		builder.url(makeUrl("/trends/list"));
-		String response = fetch(builder.build());
+		String response = fetch(builder);
 		return mParser.trends(response);
 	}
 
@@ -752,13 +688,13 @@ class FanFouApi implements Api {
 	public List<StatusModel> search(String query, Paging paging)
 			throws ApiException {
 		checkNotEmpty(query);
-		RestRequest.Builder builder = new RestRequest.Builder();
+		RequestBuilder builder = new RequestBuilder();
 		builder.url(makeUrl("/search/public_timeline")).param("q", query);
 		if (paging != null) {
 			builder.paging(paging);
 		}
 		builder.mode("lite").format("html");
-		String response = fetch(builder.build());
+		String response = fetch(builder);
 		return mParser.timeline(response, StatusModel.TYPE_SEARCH, account);
 	}
 
@@ -771,13 +707,13 @@ class FanFouApi implements Api {
 	public List<StatusModel> searchUserTimeline(String query, String id,
 			Paging paging) throws ApiException {
 		checkNotEmpty(query);
-		RestRequest.Builder builder = new RestRequest.Builder();
+		RequestBuilder builder = new RequestBuilder();
 		builder.url(makeUrl("/search/user_timeline")).id(id).param("q", query);
 		if (paging != null) {
 			builder.paging(paging);
 		}
 		builder.mode("lite").format("html");
-		String response = fetch(builder.build());
+		String response = fetch(builder);
 		return mParser.timeline(response, StatusModel.TYPE_SEARCH, account);
 	}
 
@@ -790,13 +726,13 @@ class FanFouApi implements Api {
 	public List<UserModel> searchUsers(String query, Paging paging)
 			throws ApiException {
 		checkNotEmpty(query);
-		RestRequest.Builder builder = new RestRequest.Builder();
+		RequestBuilder builder = new RequestBuilder();
 		builder.url(makeUrl("/search/users")).param("q", query);
 		if (paging != null) {
 			builder.paging(paging);
 		}
 		builder.mode("lite").format("html");
-		String response = fetch(builder.build());
+		String response = fetch(builder);
 		return mParser.users(response, UserModel.TYPE_SEARCH, account);
 	}
 
@@ -809,7 +745,7 @@ class FanFouApi implements Api {
 	public StatusModel showStatus(String id) throws ApiException {
 		checkNotEmpty(id);
 		String url = String.format("/statuses/show/%s", id);
-		return fetchStatus(url, BaseModel.TYPE_NONE, false);
+		return fetchStatus(url, BaseModel.TYPE_NONE, Verb.GET);
 	}
 
 	/*
@@ -821,7 +757,7 @@ class FanFouApi implements Api {
 	public StatusModel deleteStatus(String id) throws ApiException {
 		checkNotEmpty(id);
 		String url = String.format("/statuses/destroy/%s", id);
-		return fetchStatus(url, BaseModel.TYPE_NONE, true);
+		return fetchStatus(url, BaseModel.TYPE_NONE, Verb.POST);
 	}
 
 	/*
@@ -845,14 +781,14 @@ class FanFouApi implements Api {
 	public StatusModel updateStatus(String status, String replyId,
 			String repostId, String location) throws ApiException {
 		checkNotEmpty(status);
-		RestRequest.Builder builder = new RestRequest.Builder();
-		builder.url(makeUrl("/statuses/update")).post();
+		RequestBuilder builder = new RequestBuilder();
+		builder.url(makeUrl("/statuses/update")).verb(Verb.POST);
 		builder.status(status).location(location);
 		builder.format("html").mode("lite");
 		builder.param("in_reply_to_status_id", replyId);
 		builder.param("repost_status_id", repostId);
 		builder.param("location", location);
-		String response = fetch(builder.build());
+		String response = fetch(builder);
 		return mParser.status(response, StatusModel.TYPE_HOME, account);
 	}
 
@@ -940,7 +876,7 @@ class FanFouApi implements Api {
 	public UserModel ignoreUserRecommendation(String id) throws ApiException {
 		checkNotEmpty(id);
 		return fetchUser("/users/cancel_recommendation", id,
-				BaseModel.TYPE_NONE, false);
+				BaseModel.TYPE_NONE, Verb.GET);
 	}
 
 	/*
@@ -952,14 +888,13 @@ class FanFouApi implements Api {
 	public List<UserModel> getUsersByTag(String tag, Paging paging)
 			throws ApiException {
 		checkNotEmpty(tag);
-		RestRequest.Builder builder = RestRequest.newBuilder();
+		RequestBuilder builder = RequestBuilder.newBuilder();
 		builder.url(makeUrl("/users/tagged")).param("tag", tag).mode("lite")
 				.format("html");
 		if (paging != null) {
 			builder.paging(paging);
 		}
-		return mParser.users(fetch(builder.build()), BaseModel.TYPE_NONE,
-				account);
+		return mParser.users(fetch(builder), BaseModel.TYPE_NONE, account);
 	}
 
 	/*
@@ -970,9 +905,9 @@ class FanFouApi implements Api {
 	@Override
 	public List<String> getUserTags(String id) throws ApiException {
 		checkNotEmpty(id);
-		RestRequest.Builder builder = RestRequest.newBuilder();
+		RequestBuilder builder = RequestBuilder.newBuilder();
 		builder.url(makeUrl("/users/tag_list")).id(id);
-		String response = fetch(builder.build());
+		String response = fetch(builder);
 		return mParser.strings(response);
 	}
 
@@ -998,7 +933,7 @@ class FanFouApi implements Api {
 	public UserModel showUser(String id) throws ApiException {
 		checkNotEmpty(id);
 		String url = String.format("/users/show/%s", utf8Encode(id));
-		return fetchUser(url, UserModel.TYPE_BLOCK, false);
+		return fetchUser(url, UserModel.TYPE_BLOCK, Verb.GET);
 
 	}
 
@@ -1024,7 +959,7 @@ class FanFouApi implements Api {
 	public StatusModel favorite(String id) throws ApiException {
 		checkNotEmpty(id);
 		String url = String.format("/favorites/create/%s", id);
-		return fetchStatus(url, BaseModel.TYPE_NONE, true);
+		return fetchStatus(url, BaseModel.TYPE_NONE, Verb.POST);
 	}
 
 	/*
@@ -1036,7 +971,7 @@ class FanFouApi implements Api {
 	public StatusModel unfavorite(String id) throws ApiException {
 		checkNotEmpty(id);
 		String url = String.format("/favorites/destroy/%s", id);
-		return fetchStatus(url, BaseModel.TYPE_NONE, true);
+		return fetchStatus(url, BaseModel.TYPE_NONE, Verb.POST);
 	}
 
 	private String utf8Encode(String text) {
@@ -1047,39 +982,30 @@ class FanFouApi implements Api {
 		}
 	}
 
-	/*******************************************************************************
-	 ******************************************************************************* 
-	 ******************************************************************************* 
-	 ******************************************************************************* 
-	 * 
-	 * Http Client for internal use.
-	 * 
-	 */
-
 	/**
 	 * @param request
 	 * @return
 	 * @throws ApiException
 	 */
-	private String fetch(final RestRequest nr) throws ApiException {
+	private String fetch(final RequestBuilder builder) throws ApiException {
+		OAuthRequest request = builder.build();
 		try {
 
-			if (mOAuthService != null) {
-				mOAuthService.authorize(nr.request, nr.getParams());
+			if (mOAuthService != null && mAccessToken != null) {
+				mOAuthService.signRequest(mAccessToken, request);
 			}
-			HttpResponse response = execute(nr.request);
-			RestResponse res = new RestResponse(response);
 
-			int statusCode = res.statusCode;
+			Response response = request.send();
+			int statusCode = response.getCode();
+			String body = response.getBody();
 			if (DEBUG) {
-				log("fetch() url=" + nr.url + " post=" + nr.post
-						+ " statusCode=" + statusCode);
+				debug("fetch() statusCode=" + statusCode + " builder info="
+						+ builder + " builder=" + builder);
 			}
 			if (statusCode == 200) {
-				return res.getContent();
+				return body;
 			}
-			throw new ApiException(statusCode, FanFouParser.error(res
-					.getContent()));
+			throw new ApiException(statusCode, FanFouParser.error(body));
 		} catch (IOException e) {
 			if (DEBUG) {
 				Log.e(TAG, e.toString());
@@ -1087,30 +1013,6 @@ class FanFouApi implements Api {
 			throw new ApiException(ApiException.IO_ERROR, e.getMessage(),
 					e.getCause());
 		}
-	}
-
-	private HttpResponse execute(HttpUriRequest request) throws IOException {
-		final HttpClient client = NetHelper.getHttpClient();
-		if (AppContext.DEBUG) {
-			Log.d(TAG, "[Request] " + request.getRequestLine().toString()
-					+ " --" + System.currentTimeMillis());
-			Header[] headers = request.getAllHeaders();
-			for (Header header : headers) {
-				Log.d(TAG, "[Request Header] " + header.getName() + ":"
-						+ header.getValue());
-			}
-		}
-		HttpResponse response = client.execute(request);
-		if (AppContext.DEBUG) {
-			Log.d(TAG, "[Response] " + response.getStatusLine().toString()
-					+ " --" + System.currentTimeMillis());
-			Header[] headers = response.getAllHeaders();
-			for (Header header : headers) {
-				Log.d(TAG, "[Response Header] " + header.getName() + ":"
-						+ header.getValue());
-			}
-		}
-		return response;
 	}
 
 }
