@@ -3,7 +3,7 @@
 
     <style name="ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@drawable/actionbar_background</item>
-        <item name="android:logo">@drawable/i_logo</item>
+        <item name="android:logo">@drawable/ic_logo</item>
     </style>
 
     <style name="AppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
