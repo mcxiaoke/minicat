@@ -51,4 +51,7 @@
     <color name="background">#DDDDDD</color>
     <color name="card_background">#FEFEFE</color>
 
+    <!-- PagerSlidingTabStrip -->
+    <color name="pager_sliding_tab_pressed">#6633B5E5</color>
+
 </resources>
