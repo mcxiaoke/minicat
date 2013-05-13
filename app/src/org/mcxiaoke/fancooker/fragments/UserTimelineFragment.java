@@ -1,6 +1,7 @@
 package org.mcxiaoke.fancooker.fragments;
 
 import org.mcxiaoke.fancooker.AppContext;
+import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.api.Paging;
 import org.mcxiaoke.fancooker.controller.DataController;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
@@ -11,6 +12,9 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ListView;
 
 
 /**
@@ -60,6 +64,9 @@ public class UserTimelineFragment extends BaseTimlineFragment {
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
+//		ListView listView=getListView();
+//		View view=LayoutInflater.from(getActivity()).inflate(R.layout.list_profile_header, null);
+//		listView.addHeaderView(view, null, false);
 		super.onActivityCreated(savedInstanceState);
 //		getActivity().setTitle("他的消息");
 	}

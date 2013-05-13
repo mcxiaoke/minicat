@@ -63,7 +63,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
 	private boolean refreshOnStart;
 
-	private boolean busy;
+	volatile boolean busy;
 
 	public PullToRefreshListFragment() {
 		super();
@@ -245,7 +245,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	@Override
 	public void startRefresh() {
 		if (AppContext.DEBUG) {
-			Log.d(TAG, "startRefresh() isVisible=" + isVisible());
+			Log.d(TAG, "startRefresh() busy=" +busy);
 		}
 		if (!busy) {
 			busy = true;
@@ -255,10 +255,10 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	}
 
 	private void onSuccess(Bundle data) {
-		if (AppContext.DEBUG) {
-			Log.d(TAG, "onSuccess(data)");
-		}
 		int count = data.getInt("count");
+		if (AppContext.DEBUG) {
+			Log.d(TAG, "onSuccess(data) count="+count);
+		}
 		if (count > 0) {
 			updateUI();
 		}
@@ -371,12 +371,11 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
 		getAdapter().swapCursor(newCursor);
-		checkRefresh();
 		if (AppContext.DEBUG) {
 			Log.d(TAG, "onLoadFinished() adapter=" + mAdapter.getCount()
 					+ " class=" + this.getClass().getSimpleName());
 		}
-
+		checkRefresh();
 	}
 
 	protected void checkRefresh() {
@@ -406,6 +405,10 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 		@Override
 		public void handleMessage(Message msg) {
 			Bundle data = msg.getData();
+			if (AppContext.DEBUG) {
+				Log.d(TAG, "handleMessage() data="+data+" msg="+msg);
+			}
+			mFragment.busy=false;
 			mFragment.getBaseSupport().hideProgressIndicator();
 			mFragment.onRefreshComplete();
 			switch (msg.what) {
