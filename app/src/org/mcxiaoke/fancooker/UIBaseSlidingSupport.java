@@ -15,7 +15,7 @@ import com.slidingmenu.lib.SlidingMenu;
  * @author mcxiaoke
  * 
  */
-public abstract class UIBaseSlidingSupport extends UIBaseSupport implements
+abstract class UIBaseSlidingSupport extends UIBaseSupport implements
 		SlidingMenu.OnCloseListener, SlidingMenu.OnOpenListener, MenuCallback {
 	private SlidingMenu mSlidingMenu;
 

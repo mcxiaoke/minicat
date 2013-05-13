@@ -1,7 +1,9 @@
 package org.mcxiaoke.fancooker.fragments;
 
-import android.app.Fragment;
+import org.mcxiaoke.fancooker.UIBaseSupport;
 
+import android.app.Activity;
+import android.app.Fragment;
 
 /**
  * @author mcxiaoke
@@ -9,8 +11,21 @@ import android.app.Fragment;
  * 
  */
 public abstract class AbstractFragment extends Fragment {
-	
+
+	private UIBaseSupport mBaseSupport;
+
+	protected final UIBaseSupport getBaseSupport() {
+		return mBaseSupport;
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		mBaseSupport = (UIBaseSupport) activity;
+		super.onAttach(activity);
+	}
+
 	public abstract String getTitle();
+
 	public abstract void updateUI();
 
 }

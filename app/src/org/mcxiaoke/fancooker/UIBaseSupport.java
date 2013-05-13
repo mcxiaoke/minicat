@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 
 /**
@@ -38,7 +39,7 @@ import android.view.View.OnClickListener;
  * @version 4.0 2013.05.07
  * 
  */
-abstract class UIBaseSupport extends Activity implements OnClickListener {
+public abstract class UIBaseSupport extends Activity implements OnClickListener {
 
 	public static final int STATE_INIT = 0;
 	public static final int STATE_NORMAL = 1;
@@ -50,9 +51,11 @@ abstract class UIBaseSupport extends Activity implements OnClickListener {
 
 	protected ActionBar mActionBar;
 	protected DisplayMetrics mDisplayMetrics;
+	private boolean mRefreshing;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 		Utils.initScreenConfig(this);
 		AppContext.setActiveContext(getClass().getCanonicalName(), this);
@@ -80,6 +83,11 @@ abstract class UIBaseSupport extends Activity implements OnClickListener {
 	}
 
 	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
@@ -88,12 +96,9 @@ abstract class UIBaseSupport extends Activity implements OnClickListener {
 		case R.id.menu_write:
 			onMenuWriteClick();
 			return true;
-//		case R.id.menu_search:
-//			onMenuSearchClick();
+//		case R.id.menu_refresh:
+//			onMenuRefreshClick();
 //			return true;
-		case R.id.menu_logout:
-			onMenuLogoutClick();
-			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -104,8 +109,11 @@ abstract class UIBaseSupport extends Activity implements OnClickListener {
 	}
 
 	protected void onMenuHomeClick() {
-//		UIController.backHome(mContext);
 		finish();
+	}
+
+	protected void onMenuRefreshClick() {
+		showProgressIndicator();
 	}
 
 	protected void onMenuSearchClick() {
@@ -126,6 +134,22 @@ abstract class UIBaseSupport extends Activity implements OnClickListener {
 			}
 		});
 		dialog.show();
+	}
+
+	public void showProgressIndicator() {
+		if (!mRefreshing) {
+			mRefreshing = true;
+			setProgressBarIndeterminateVisibility(true);
+//			invalidateOptionsMenu();
+		}
+	}
+
+	public void hideProgressIndicator() {
+		if (mRefreshing) {
+			mRefreshing = false;
+			setProgressBarIndeterminateVisibility(false);
+//			invalidateOptionsMenu();
+		}
 	}
 
 	@Override

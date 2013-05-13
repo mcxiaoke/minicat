@@ -1,7 +1,6 @@
 package org.mcxiaoke.fancooker.fragments;
 
 import org.mcxiaoke.fancooker.AppContext;
-import org.mcxiaoke.fancooker.R;
 import org.mcxiaoke.fancooker.adapter.StatusCursorAdapter;
 import org.mcxiaoke.fancooker.controller.UIController;
 import org.mcxiaoke.fancooker.dao.model.StatusModel;
@@ -12,8 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
-import android.widget.ListView;
-import android.widget.ScrollView;
 
 /**
  * @author mcxiaoke

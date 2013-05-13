@@ -81,6 +81,16 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	}
 
 	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		return null;
+	}
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (AppContext.DEBUG) {
@@ -118,8 +128,8 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 		mPullToRefreshView.setMode(Mode.BOTH);
 		mListView = mPullToRefreshView.getRefreshableView();
 		mListView.setPadding(padding, padding, padding, padding);
-		mListView.setDivider(getResources().getDrawable(
-				R.drawable.list_divider));
+		mListView.setDivider(getResources()
+				.getDrawable(R.drawable.list_divider));
 		mListView.setDividerHeight(padding);
 		mListView.setHeaderDividersEnabled(true);
 		mListView.setFooterDividersEnabled(true);
@@ -170,6 +180,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	public void onPullDownToRefresh(
 			final PullToRefreshBase<ListView> refreshView) {
 		doFetch(false);
+		getBaseSupport().showProgressIndicator();
 	}
 
 	public void onPullUpToRefresh(final PullToRefreshBase<ListView> refreshView) {
@@ -238,7 +249,8 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 		}
 		if (!busy) {
 			busy = true;
-			mPullToRefreshView.setRefreshing();
+			doRefresh();
+			getBaseSupport().showProgressIndicator();
 		}
 	}
 
@@ -368,7 +380,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 	}
 
 	protected void checkRefresh() {
-		if (refreshOnStart && mAdapter.isEmpty()) {
+		if (refreshOnStart || mAdapter.isEmpty()) {
 			startRefresh();
 		}
 	}
@@ -394,6 +406,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 		@Override
 		public void handleMessage(Message msg) {
 			Bundle data = msg.getData();
+			mFragment.getBaseSupport().hideProgressIndicator();
 			mFragment.onRefreshComplete();
 			switch (msg.what) {
 			case Constants.RESULT_SUCCESS:

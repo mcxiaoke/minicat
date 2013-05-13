@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
+import org.mcxiaoke.fancooker.UIHome;
 
 import android.app.Activity;
 import android.content.Context;
@@ -44,7 +45,8 @@ public class MenuFragment extends ListFragment {
 	public static final int MENU_ID_DIGEST = MENU_ID + 6;
 	public static final int MENU_ID_THEME = MENU_ID + 7;
 	public static final int MENU_ID_OPTION = MENU_ID + 8;
-	public static final int MENU_ID_ABOUT = MENU_ID + 9;
+	public static final int MENU_ID_LOGOUT = MENU_ID + 9;
+	public static final int MENU_ID_ABOUT = MENU_ID + 10;
 	public static final int MENU_ID_DEBUG = MENU_ID + 99;
 
 	private ListView mListView;
@@ -52,6 +54,7 @@ public class MenuFragment extends ListFragment {
 	private List<MenuItemResource> mMenuItems;
 	private MenuCallback mCallback;
 	private SparseBooleanArray mCheckedState;
+	private UIHome mUiHome;
 
 	public static MenuFragment newInstance() {
 		return new MenuFragment();
@@ -69,6 +72,7 @@ public class MenuFragment extends ListFragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		mCallback = (MenuCallback) activity;
+		mUiHome = (UIHome) activity;
 	}
 
 	@Override
@@ -134,10 +138,14 @@ public class MenuFragment extends ListFragment {
 		MenuItemResource option = MenuItemResource.newBuilder()
 				.id(MENU_ID_OPTION).text("使用设置")
 				.iconId(R.drawable.ic_item_option).highlight(false).build();
-//
-//		MenuItemResource theme = MenuItemResource.newBuilder()
-//				.id(MENU_ID_THEME).text("主题切换")
-//				.iconId(R.drawable.ic_item_theme).highlight(false).build();
+
+		MenuItemResource logout = MenuItemResource.newBuilder()
+				.id(MENU_ID_LOGOUT).text("切换帐号")
+				.iconId(R.drawable.ic_item_logout).highlight(false).build();
+		//
+		// MenuItemResource theme = MenuItemResource.newBuilder()
+		// .id(MENU_ID_THEME).text("主题切换")
+		// .iconId(R.drawable.ic_item_theme).highlight(false).build();
 
 		MenuItemResource blog = MenuItemResource.newBuilder()
 				.id(MENU_ID_DIGEST).text("饭否语录")
@@ -153,7 +161,8 @@ public class MenuFragment extends ListFragment {
 		mMenuItems.add(topic);
 		mMenuItems.add(drafts);
 		mMenuItems.add(option);
-//		mMenuItems.add(theme);
+		mMenuItems.add(logout);
+		// mMenuItems.add(theme);
 		mMenuItems.add(blog);
 		mMenuItems.add(about);
 

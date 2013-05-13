@@ -71,7 +71,6 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 		mPagesAdapter = new HomePagesAdapter(getFragmentManager());
 		mViewPager.setAdapter(mPagesAdapter);
 		setHomeTitle(mCurrentPage);
-
 		setSlidingMenu(R.layout.menu_frame);
 		FragmentManager fm = getFragmentManager();
 		mMenuFragment = MenuFragment.newInstance();
@@ -174,6 +173,9 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 		case MenuFragment.MENU_ID_OPTION:
 			UIController.showOption(this);
 			break;
+		case MenuFragment.MENU_ID_LOGOUT:
+			onMenuLogoutClick();
+			break;
 		case MenuFragment.MENU_ID_ABOUT:
 			UIController.showAbout(this);
 			break;
@@ -186,13 +188,13 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 	}
 
 	@Override
-	protected int getMenuResourceId() {
-		return R.menu.menu_home;
+	protected void onMenuHomeClick() {
+		super.onMenuHomeClick();
 	}
 
 	@Override
-	protected void onMenuHomeClick() {
-		super.onMenuHomeClick();
+	protected void onMenuRefreshClick() {
+		super.onMenuRefreshClick();
 	}
 
 	@Override

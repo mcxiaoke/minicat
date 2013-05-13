@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
+        <style name="ProgressBarStyle" parent="@android:style/Widget.Holo.ProgressBar">
+        <item name="android:minHeight">32dp</item>
+        <item name="android:maxHeight">32dp</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:maxWidth">48dp</item>
+    </style>
 
     <style name="ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:logo">@drawable/ic_logo</item>
         <item name="android:background">@drawable/actionbar_background</item>
+        <item name="android:indeterminateProgressStyle">@style/ProgressBarStyle</item>
     </style>
 
     <style name="AppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
