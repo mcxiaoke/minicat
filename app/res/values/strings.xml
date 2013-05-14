@@ -82,15 +82,15 @@
     <string name="page_title_photo">Photo</string>
     <string name="page_title_draft">Draft Box</string>
     <string name="page_title_modify">Edit Profile</string>
-    
+
     <!-- messages text -->
     <string name="msg_dm_content_has_been_copied"></string>
     <string name="msg_dm_please_select_recipient"></string>
-    
     <string name="msg_dialog_choose_head"></string>
     <string name="msg_dialog_profile_is_updating"></string>
     <string name="msg_profile_update_failed"></string>
     <string name="msg_profile_update_success"></string>
     <string name="msg_dm_content_cannot_be_null"></string>
+    <string name="expand">Expand</string>
 
 </resources>

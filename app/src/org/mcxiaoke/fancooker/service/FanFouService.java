@@ -99,7 +99,7 @@ public final class FanFouService extends IntentService {
 	private String id;
 
 	public FanFouService() {
-		super("FetchService");
+		super("FanFouService");
 	}
 
 	@Override

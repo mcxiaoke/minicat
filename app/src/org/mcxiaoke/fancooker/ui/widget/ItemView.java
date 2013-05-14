@@ -1,8 +1,6 @@
 package org.mcxiaoke.fancooker.ui.widget;
 
-import org.mcxiaoke.fancooker.AppContext;
 import org.mcxiaoke.fancooker.R;
-import org.mcxiaoke.fancooker.util.Utils;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -10,8 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewStub;

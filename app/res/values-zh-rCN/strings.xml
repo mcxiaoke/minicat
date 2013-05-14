@@ -84,5 +84,6 @@
     <string name="page_title_photo">照片</string>
     <string name="page_title_draft">草稿箱</string>
     <string name="page_title_modify">编辑资料</string>
+    <string name="expand">展开</string>
 
 </resources>

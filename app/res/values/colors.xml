@@ -35,6 +35,7 @@
     <color name="background_holo_light">#fff3f3f3</color>
     <!-- holo blue -->
     <color name="holo_blue_light">#ff33b5e5</color>
+    <color name="holo_blue_light_alpha_33">#3333b5e5</color>
     <color name="holo_blue_dark">#ff0099cc</color>
     <color name="holo_blue_bright">#ff00ddff</color>
     <!-- holo green -->

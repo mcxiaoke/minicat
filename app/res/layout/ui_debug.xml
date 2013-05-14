@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
-    <LinearLayout
+    <org.mcxiaoke.fancooker.ui.widget.ProfileHeaderView
+        android:id="@+id/profile"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/debug_background"
-        android:orientation="horizontal" >
-    </LinearLayout>
+        android:layout_height="wrap_content" />
 
-</LinearLayout>
+</FrameLayout>
