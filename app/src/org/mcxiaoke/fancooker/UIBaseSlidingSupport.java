@@ -5,11 +5,11 @@ package org.mcxiaoke.fancooker;
 
 import org.mcxiaoke.fancooker.menu.MenuCallback;
 
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.slidingmenu.lib.SlidingMenu;
 
 /**
  * @author mcxiaoke

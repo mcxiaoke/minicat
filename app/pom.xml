@@ -6,7 +6,7 @@
     <artifactId>app</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>apk</packaging>
-    <name>MoguFan Project App</name>
+    <name>fanfouapp</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -21,20 +21,29 @@
 
     <repositories>
         <repository>
+            <id>maven-github</id>
+            <name>maven-github</name>
+       <url>https://raw.github.com/mcxiaoke/mavenrepo/master/repository/</url>
+        </repository>
+        <repository>
             <id>maven-workpc</id>
             <name>maven-workpc</name>
             <url>file:///home/mcxiaoke/project/mavenrepo/repository</url>
-<!--            <url>https://raw.github.com/mcxiaoke/mavenrepo/master/repository/</url>-->
+        </repository>
+        <repository>
+            <id>maven-homepc</id>
+            <name>maven-homepc</name>
+            <url>file:///D:/github/mavenrepo/repository</url>
         </repository>
     </repositories>
 
     <dependencies>
 
         <dependency>
-            <groupId>org.mcxiaoke.android.mogufan</groupId>
-            <artifactId>lib-slidingmenu</artifactId>
+            <groupId>com.jeremyfeinstein.slidingmenu</groupId>
+            <artifactId>SlidingMenu</artifactId>
             <type>apklib</type>
-            <version>1.3.5</version>
+            <version>1.3-SNAPSHOT</version>
         </dependency>
 
         <dependency>

@@ -8,6 +8,8 @@ import org.mcxiaoke.fancooker.menu.MenuCallback;
 import org.mcxiaoke.fancooker.menu.MenuFragment;
 import org.mcxiaoke.fancooker.menu.MenuItemResource;
 
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -22,7 +24,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.slidingmenu.lib.SlidingMenu;
 
 /**
  * @author mcxiaoke
