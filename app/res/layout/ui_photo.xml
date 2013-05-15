@@ -5,7 +5,7 @@
     android:background="@android:color/black"
     android:orientation="vertical" >
 
-    <org.mcxiaoke.fancooker.ui.imagezoom.ImageViewTouch
+    <com.mcxiaoke.fanfouapp.ui.imagezoom.ImageViewTouch
         android:id="@+id/photo"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

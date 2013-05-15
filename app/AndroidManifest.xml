@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="org.mcxiaoke.fancooker"
-          android:sharedUserId="org.mcxiaoke.fancooker"
-          android:versionCode="20130510"
-          android:versionName="2.0">
+          package="com.mcxiaoke.fanfouapp"
+          android:sharedUserId="com.mcxiaoke.fanfouapp"
+          android:versionCode="20130515"
+          android:versionName="1.0">
 
     <uses-sdk android:minSdkVersion="14"/>
 
@@ -25,13 +25,13 @@
     <uses-permission android:name="android.permission.READ_LOGS"/>
 
     <application
-            android:name=".AppContext"
+            android:name=".app.AppContext"
             android:hardwareAccelerated="true"
             android:icon="@drawable/ic_launcher"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
         <activity
-                android:name=".UIStart"
+                android:name=".app.UIStart"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name">
             <intent-filter>
@@ -41,19 +41,19 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".UILogin"
+                android:name=".app.UILogin"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name"/>
         <activity
-                android:name=".UIRecords"
+                android:name=".app.UIRecords"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name"/>
         <activity
-                android:name=".UIVersionUpdate"
+                android:name=".app.UIVersionUpdate"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name"/>
         <activity
-                android:name=".UIHome"
+                android:name=".app.UIHome"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name"
                 android:launchMode="singleTask">
@@ -62,22 +62,22 @@
                     android:value=".UISearchResults"/>
         </activity>
         <activity
-                android:name=".UIUserList"
+                android:name=".app.UIUserList"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name">
         </activity>
         <activity
-                android:name=".UIFavorites"
+                android:name=".app.UIFavorites"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name">
         </activity>
         <activity
-                android:name=".UITimeline"
+                android:name=".app.UITimeline"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name">
         </activity>
         <activity
-                android:name=".UISearch"
+                android:name=".app.UISearch"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name">
             <meta-data
@@ -91,35 +91,35 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".UIAbout"
+                android:name=".app.UIAbout"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name"/>
         <activity
-                android:name=".UIPhoto"
+                android:name=".app.UIPhoto"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.UIPhoto"/>
         <activity
-                android:name=".UIStatus"
+                android:name=".app.UIStatus"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name">
         </activity>
         <activity
-                android:name=".UIUserChoose"
+                android:name=".app.UIUserChoose"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name"
                 android:windowSoftInputMode="stateHidden"/>
         <activity
-                android:name=".UIThread"
+                android:name=".app.UIThread"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name"/>
         <activity
-                android:name=".UIConversation"
+                android:name=".app.UIConversation"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name"
                 android:windowSoftInputMode="adjustResize"/>
         <activity
-                android:name=".UIWrite"
+                android:name=".app.UIWrite"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name"
                 android:launchMode="singleTask"
@@ -155,12 +155,12 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".UIDebugMode"
+                android:name=".app.UIDebugMode"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name">
         </activity>
         <activity
-                android:name=".UISearchResults"
+                android:name=".app.UISearchResults"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name"
                 android:launchMode="singleTop">
@@ -184,7 +184,7 @@
 
         <provider
                 android:name=".dao.DataProvider"
-                android:authorities="org.mcxiaoke.fancooker.provider"
+                android:authorities="com.mcxiaoke.fanfouapp.provider"
                 android:exported="false"/>
 
         <service

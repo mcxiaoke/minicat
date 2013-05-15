@@ -88,7 +88,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <org.mcxiaoke.fancooker.ui.widget.ItemTextView
+        <com.mcxiaoke.fanfouapp.ui.widget.ItemTextView
             android:id="@+id/item_view_1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
             android:layout_height="fill_parent"
             android:background="#33999999" />
 
-        <org.mcxiaoke.fancooker.ui.widget.ItemTextView
+        <com.mcxiaoke.fanfouapp.ui.widget.ItemTextView
             android:id="@+id/item_view_2"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -112,7 +112,7 @@
             android:layout_height="fill_parent"
             android:background="#33999999" />
 
-        <org.mcxiaoke.fancooker.ui.widget.ItemTextView
+        <com.mcxiaoke.fanfouapp.ui.widget.ItemTextView
             android:id="@+id/item_view_3"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
