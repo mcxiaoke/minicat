@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mcxiaoke.fanfouapp</groupId>
-    <artifactId>app</artifactId>
+    <artifactId>fanfouapp</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>apk</packaging>
     <name>fanfouapp</name>
@@ -24,6 +24,12 @@
             <id>maven-github</id>
             <name>maven-github</name>
        <url>https://raw.github.com/mcxiaoke/mavenrepo/master/repository/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
         <repository>
             <id>maven-workpc</id>
@@ -102,7 +108,37 @@
 
     <build>
         <sourceDirectory>src</sourceDirectory>
+        <finalName>${project.artifactId}-${project.version}-unaligned</finalName>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.12</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
@@ -111,10 +147,58 @@
                     <sdk>
                         <platform>${android.platform}</platform>
                     </sdk>
+                    <sign>
+                        <debug>false</debug>
+                    </sign>
                     <undeployBeforeDeploy>true</undeployBeforeDeploy>
+                    <extractDuplicates>true</extractDuplicates>
+                    <zipalign>
+                        <inputApk>${project.build.directory}/${project.build.finalName}.apk</inputApk>
+                        <outputApk>${project.build.directory}/${project.groupId}-${project.version}.apk</outputApk>
+                        <verbose>false</verbose>
+                        <skip>false</skip>
+                    </zipalign>
                 </configuration>
                 <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>zipalign</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
-        </plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jarsigner-plugin</artifactId>
+                <version>1.2</version>
+                <configuration>
+                    <archive>${project.build.directory}/${project.groupId}-${project.version}.apk
+                    </archive>
+                    <alias>mcxiaoke</alias>
+                    <keypass>${keypass}</keypass>
+                    <storepass>${keypass}</storepass>
+                    <keystore>mcxiaoke.keystore</keystore>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.8.1</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+</plugins>
     </build>
 </project>
