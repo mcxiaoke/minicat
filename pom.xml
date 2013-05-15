@@ -9,12 +9,7 @@
     <name>MoguFan Project</name>
     <description>A New Holo Style Fanfou Android App.</description>
     <url>https://github.com/mcxiaoke/mogufan</url>
-    <!--	<parent>
-            <groupId>org.sonatype.oss</groupId>
-            <artifactId>oss-parent</artifactId>
-            <version>1</version>
-        </parent>
-    -->
+
     <licenses>
         <license>
             <name>Apache License Version 2.0</name>
@@ -36,7 +31,6 @@
         </developer>
     </developers>
     <modules>
-        <module>contrib/slidingmenu</module>
         <module>app</module>
     </modules>
     <properties>

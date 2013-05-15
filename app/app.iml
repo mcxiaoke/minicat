@@ -22,7 +22,8 @@
       <excludeFolder url="file://$MODULE_DIR$/target/generated-sources/combined-assets" />
       <excludeFolder url="file://$MODULE_DIR$/target/generated-sources/combined-resources" />
       <excludeFolder url="file://$MODULE_DIR$/target/generated-sources/extracted-dependencies" />
-      <excludeFolder url="file://$MODULE_DIR$/target/idea-classes" />
+      <excludeFolder url="file://$MODULE_DIR$/target/libs" />
+      <excludeFolder url="file://$MODULE_DIR$/target/maven-archiver" />
       <excludeFolder url="file://$MODULE_DIR$/target/maven-status" />
       <excludeFolder url="file://$MODULE_DIR$/target/unpack" />
     </content>
@@ -37,8 +38,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="lib-slidingmenu" />
-    <orderEntry type="library" name="Maven: com.google.android:support-v4:r11" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.android:android:4.1.1.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: commons-logging:commons-logging:1.1.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.httpcomponents:httpclient:4.0.1" level="project" />
@@ -48,11 +47,12 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: xerces:xmlParserAPIs:2.6.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: xpp3:xpp3:1.1.4c" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20080701" level="project" />
+    <orderEntry type="library" name="Maven: com.google.android:support-v4:r11" level="project" />
     <orderEntry type="library" name="Maven: com.nostra13.universalimageloader:universal-image-loader:1.8.4" level="project" />
     <orderEntry type="library" name="Maven: com.mcxiaoke.oauthsimple:oauthsimple:2.0.2-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.squareup.mimecraft:mimecraft:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.8.2" level="project" />
-    <orderEntry type="module" module-name="~apklib-com.actionbarsherlock_actionbarsherlock_4.2.0" />
+    <orderEntry type="module" module-name="~apklib-org.mcxiaoke.android.mogufan_lib-slidingmenu_1.3.5" />
     <orderEntry type="module" module-name="~apklib-com.github.chrisbanes.pulltorefresh_library_2.1.1" />
     <orderEntry type="module" module-name="~apklib-com.viewpagerindicator_library_2.4.1" />
   </component>

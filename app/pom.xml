@@ -23,7 +23,8 @@
         <repository>
             <id>maven-github</id>
             <name>maven-github</name>
-            <url>https://raw.github.com/mcxiaoke/mavenrepo/master/repository/</url>
+            <url>file:///home/mcxiaoke/project/mavenrepo/repository</url>
+<!--            <url>https://raw.github.com/mcxiaoke/mavenrepo/master/repository/</url>-->
         </repository>
     </repositories>
 
