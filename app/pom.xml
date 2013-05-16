@@ -116,7 +116,7 @@
                     <sdk>
                         <platform>${android.platform}</platform>
                     </sdk>
-                    <undeployBeforeDeploy>false</undeployBeforeDeploy>
+                    <undeployBeforeDeploy>true</undeployBeforeDeploy>
                     <extractDuplicates>true</extractDuplicates>
                 </configuration>
             </plugin>
