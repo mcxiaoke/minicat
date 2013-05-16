@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.mcxiaoke.fanfouapp</groupId>
+    <groupId>com.mcxiaoke.fanfouapp</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
@@ -44,19 +44,6 @@
     </properties>
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>com.google.android</groupId>
-                <artifactId>android</artifactId>
-                <version>${android.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.google.android</groupId>
-                <artifactId>support-v4</artifactId>
-                <version>${android.support.version}</version>
-                <type>jar</type>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
     <build>
