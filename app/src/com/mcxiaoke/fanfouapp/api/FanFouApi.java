@@ -28,8 +28,8 @@ import java.util.List;
 final class FanFouApi implements Api {
 	private static final String TAG = "API";
 	private static final String API_HOST = "http://api.fanfou.com";
-	private static final String API_KEY = "84d8fa6c95047475c9a14aae1f53f7b2";
-	private static final String API_SECRET = "4623b62a6d6a911533093987406549d0";
+	private static final String API_KEY = "c403d5a51bde9cce58fe31f4cec06b0a";
+	private static final String API_SECRET = "5da0bcda353f7d2fe8e3de01e3c97741";
 	private static final String CALLBACK_URL = "http://m.fanfou.com";
 
 	private static final boolean DEBUG = AppContext.DEBUG;
