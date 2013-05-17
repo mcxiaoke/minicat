@@ -135,9 +135,11 @@ public class UIController {
 		startUIByAnimation(context, intent);
 	}
 
-	public static void showWrite(Activity context) {
-		Intent intent = new Intent(context, UIWrite.class);
-		startUIByAnimation(context, intent);
+	public static void showWrite(Activity activity) {
+		Intent intent = new Intent(activity, UIWrite.class);
+//		startUIByAnimation(context, intent);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.footer_appear, R.anim.keep);
 	}
 
 	public static void showWrite(Activity context, String text, File file) {

@@ -187,7 +187,8 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
     }
 
     protected int getMenuResourceId() {
-        return R.menu.menu_home;
+//        return R.menu.menu_home;
+        return R.menu.menu;
     }
 
     @Override

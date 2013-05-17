@@ -48,7 +48,7 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
     }
 
     protected int getMenuResourceId() {
-        return 0;
+        return -1;
 //		return R.menu.menu;
     }
 
@@ -92,7 +92,7 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
 
     protected void onMenuHomeClick() {
         finish();
-        overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+        overridePendingTransition(R.anim.push_right_in, R.anim.keep);
     }
 
     protected void onMenuRefreshClick() {
