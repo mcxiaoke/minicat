@@ -6,7 +6,7 @@
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
-    <name>fanfouapp project</name>
+    <name>parent</name>
     <description>A New Holo Style Fanfou Android App.</description>
     <url>https://github.com/mcxiaoke/fanfouapp</url>
 
