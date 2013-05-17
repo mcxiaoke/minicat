@@ -252,7 +252,7 @@ public class DataController {
 
 	public static Loader<Cursor> getUserTimelineCursorLoader(Context context,
 			String userId) {
-		String where = IBaseColumns.TYPE + " =? AND " + StatusColumns.OWNER
+		String where = IBaseColumns.TYPE + " =? AND " + StatusColumns.USER_ID
 				+ " =? ";
 		String[] whereArgs = new String[] {
 				String.valueOf(StatusModel.TYPE_USER), userId };

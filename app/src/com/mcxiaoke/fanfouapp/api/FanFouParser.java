@@ -325,7 +325,7 @@ final class FanFouParser implements ApiParser {
 		if (DEBUG) {
 			Log.d(TAG,
 					" status() id=" + model.getId() + " userId="
-							+ model.getUserId() + "type=" + model.getType()
+							+ model.getUserId() + " type=" + model.getType()
 							+ " owner=" + model.getOwner() + " account="
 							+ model.getAccount());
 		}

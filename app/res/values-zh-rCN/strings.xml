@@ -2,7 +2,7 @@
 <resources>
 
     <!-- common string -->
-    <string name="app_name">电饭煲</string>
+    <string name="app_name">圈圈饭</string>
     <string name="app_description">饭否Android客户端</string>
     <string name="app_version">版本：</string>
     <string name="app_support">技术支持：</string>

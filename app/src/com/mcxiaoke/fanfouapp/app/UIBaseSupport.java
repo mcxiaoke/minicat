@@ -66,7 +66,8 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
 	}
 
 	protected int getMenuResourceId() {
-		return R.menu.menu;
+        return 0;
+//		return R.menu.menu;
 	}
 
 	@Override

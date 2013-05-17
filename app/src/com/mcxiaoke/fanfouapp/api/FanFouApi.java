@@ -114,7 +114,7 @@ final class FanFouApi implements Api {
 			String id, int type, String owner) throws ApiException {
 		RequestBuilder builder = RequestBuilder.newBuilder();
 		builder.url(makeUrl(url)).id(id).mode("lite").format("html")
-				.verb(Verb.POST);
+				.verb(Verb.GET);
 		if (paging != null) {
 			builder.paging(paging);
 		}
