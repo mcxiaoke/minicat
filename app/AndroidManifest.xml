@@ -75,6 +75,15 @@
                 android:name=".app.UITimeline"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+
+                <data
+                        android:host="@string/intent_host_profile"
+                        android:scheme="@string/intent_scheme"/>
+            </intent-filter>
         </activity>
         <activity
                 android:name=".app.UISearch"
@@ -173,8 +182,8 @@
                 <category android:name="android.intent.category.DEFAULT"/>
 
                 <data
-                        android:host="search"
-                        android:scheme="fanfouhd"/>
+                        android:host="@string/intent_host_search"
+                        android:scheme="@string/intent_scheme"/>
             </intent-filter>
 
             <meta-data

@@ -50,7 +50,7 @@ public class StatusHelper {
 		}
 	};
 
-	private static final String SCHEME_USER = "fanfouhd://user/";
+	private static final String SCHEME_USER = "fanfouapp://profile/";
 
 	public static void linkifyUsers(TextView view) {
 		Linkify.addLinks(view, PATTERN_USER, SCHEME_USER, MATCH_FILTER_USER,
@@ -67,7 +67,7 @@ public class StatusHelper {
 		}
 	};
 
-	private static final String SCHEME_SEARCH = "fanfouhd://search/";
+	private static final String SCHEME_SEARCH = "fanfouapp://search/";
 
 	public static void linkifyTags(TextView view) {
 		Linkify.addLinks(view, PATTERN_SEARCH, SCHEME_SEARCH, null,
