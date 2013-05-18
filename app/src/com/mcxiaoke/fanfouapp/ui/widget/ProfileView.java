@@ -104,6 +104,7 @@ public class ProfileView extends FrameLayout implements
 
         vStatuses = findViewById(R.id.button1);
         vFavorites = findViewById(R.id.button2);
+
         vFriends = findViewById(R.id.button3);
         vFollowers = findViewById(R.id.button4);
         vPhotos = findViewById(R.id.button5);
@@ -200,20 +201,20 @@ public class ProfileView extends FrameLayout implements
         headerState.setText(follow ? "正在关注你" : "没有关注你");
     }
 
+    public void setExpanded(boolean expanded) {
+        if (expanded == mExpanded) {
+            return;
+        }
+        mExpanded = expanded;
+        headerIntro.setMaxLines(mExpanded ? Integer.MAX_VALUE : 2);
+    }
+
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.header) {
-            headerIntro.setMaxLines(mExpanded ? 2 : Integer.MAX_VALUE);
-            mExpanded = !mExpanded;
-        } else if (id == R.id.header_intro) {
-            headerIntro.setMaxLines(mExpanded ? 2 : Integer.MAX_VALUE);
-            mExpanded = !mExpanded;
-
-        } else if (id == R.id.header_expand) {
-            headerIntro.setMaxLines(mExpanded ? 2 : Integer.MAX_VALUE);
-            mExpanded = !mExpanded;
+            setExpanded(!mExpanded);
         }
     }
 

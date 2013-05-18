@@ -116,6 +116,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
         mPullToRefreshView.setShowIndicator(false);
         mPullToRefreshView.setMode(Mode.BOTH);
         mListView = mPullToRefreshView.getRefreshableView();
+//        mListView.setSelector(getResources().getDrawable(R.drawable.list_selector));
         mListView.setPadding(padding, padding, padding, padding);
         mListView.setDivider(getResources()
                 .getDrawable(R.drawable.list_divider));

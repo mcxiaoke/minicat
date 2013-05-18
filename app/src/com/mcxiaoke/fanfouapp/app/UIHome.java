@@ -17,7 +17,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.mcxiaoke.fanfouapp.adapter.HomePagesAdapter;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.fragments.ConversationListFragment;
-import com.mcxiaoke.fanfouapp.fragments.ProfileFragment;
+import com.mcxiaoke.fanfouapp.fragments.UserTimelineFragment;
 import com.mcxiaoke.fanfouapp.menu.MenuCallback;
 import com.mcxiaoke.fanfouapp.menu.MenuFragment;
 import com.mcxiaoke.fanfouapp.menu.MenuItemResource;
@@ -124,7 +124,7 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
     }
 
     private void showProfileFragment() {
-        replaceFragment(ProfileFragment.newInstance(AppContext.getAccount()));
+        replaceFragment(UserTimelineFragment.newInstance(AppContext.getAccount()));
         setTitle("我的空间");
     }
 

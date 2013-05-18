@@ -86,20 +86,6 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".app.UIProfile"
-                android:configChanges="keyboardHidden|orientation"
-                android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-
-                <data
-                        android:host="@string/intent_host_profile"
-                        android:scheme="@string/intent_scheme"/>
-            </intent-filter>
-        </activity>
-        <activity
                 android:name=".app.UISearch"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name">

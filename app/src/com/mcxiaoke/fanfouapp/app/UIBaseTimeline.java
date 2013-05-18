@@ -6,21 +6,28 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import com.mcxiaoke.fanfouapp.fragments.BaseTimlineFragment;
-import com.mcxiaoke.fanfouapp.ui.widget.GestureManager.SwipeListener;
+import android.view.ViewGroup;
 import com.mcxiaoke.fanfouapp.R;
+import com.mcxiaoke.fanfouapp.controller.EmptyViewController;
+import com.mcxiaoke.fanfouapp.dao.model.UserModel;
+import com.mcxiaoke.fanfouapp.fragments.BaseTimlineFragment;
 
 /**
  * @author mcxiaoke
  * @version 5.2 2012.03.19
  */
-abstract class UIBaseTimeline extends UIBaseSupport implements SwipeListener {
+abstract class UIBaseTimeline extends UIBaseSupport {
 
     private static final String TAG = UIBaseTimeline.class.getSimpleName();
 
     private BaseTimlineFragment mFragment;
 
     private String userId;
+    private UserModel user;
+
+    private ViewGroup vContent;
+    private ViewGroup vEmpty;
+    private EmptyViewController emptyController;
 
     protected abstract int getType();
 
@@ -29,18 +36,44 @@ abstract class UIBaseTimeline extends UIBaseSupport implements SwipeListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        parseIntent();
+        if (checkIntent()) {
+            finish();
+            return;
+        }
         setLayout();
 
     }
 
-    protected void setLayout() {
-        if (userId != null) {
-            setTitle("@" + userId);
-        } else {
-            setTitle("时间线");
+
+    private void showEmptyView(String text) {
+        vContent.setVisibility(View.GONE);
+        emptyController.showEmpty(text);
+    }
+
+    private void showProgress() {
+        vContent.setVisibility(View.GONE);
+        emptyController.showProgress();
+        if (AppContext.DEBUG) {
+            Log.d(TAG, "showProgress userId=" + userId);
         }
+    }
+
+    private void showContent() {
+        emptyController.hideProgress();
+        vContent.setVisibility(View.VISIBLE);
+        if (AppContext.DEBUG) {
+            Log.d(TAG, "showContent userId=" + userId);
+        }
+    }
+
+    protected void setLayout() {
         setContentView(R.layout.ui_container);
+        vContent = (ViewGroup) findViewById(R.id.container);
+        vEmpty = (ViewGroup) findViewById(android.R.id.empty);
+        emptyController = new EmptyViewController(vEmpty);
+        if (!TextUtils.isEmpty(userId)) {
+            setTitle("@" + userId);
+        }
         setFragment();
     }
 
@@ -52,40 +85,33 @@ abstract class UIBaseTimeline extends UIBaseSupport implements SwipeListener {
         mFragment = getFragment(userId);
         android.app.FragmentTransaction transaction = getFragmentManager()
                 .beginTransaction();
-        transaction.add(R.id.container, mFragment);
+        transaction.replace(R.id.container, mFragment);
         transaction.commit();
     }
 
-    private void parseIntent() {
+    private boolean checkIntent() {
         Intent intent = getIntent();
         String action = intent.getAction();
         if (action == null) {
-            userId = intent.getStringExtra("id");
+            user = intent.getParcelableExtra("data");
+            if (user != null) {
+                userId = user.getId();
+            } else {
+                userId = intent.getStringExtra("id");
+            }
         } else if (action.equals(Intent.ACTION_VIEW)) {
             Uri data = intent.getData();
             if (data != null) {
                 userId = data.getLastPathSegment();
             }
         }
-        if (TextUtils.isEmpty(userId)) {
-            userId = AppContext.getAccount();
-        }
+
+        return TextUtils.isEmpty(userId);
 
     }
 
     @Override
     public void onClick(View v) {
-    }
-
-    @Override
-    public boolean onSwipeLeft() {
-        finish();
-        return true;
-    }
-
-    @Override
-    public boolean onSwipeRight() {
-        return true;
     }
 
 }
