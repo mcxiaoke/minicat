@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:clickable="true"
-    android:padding="@dimen/profile_header_padding" >
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:padding="@dimen/card_margin" android:background="@drawable/selector_white">
 
     <ImageView
-        android:id="@+id/header_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:padding="4dp"
-        android:src="@drawable/ic_head" />
+            android:id="@+id/header_image"
+            android:layout_width="@dimen/head_width"
+            android:layout_height="@dimen/head_height"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:padding="4dp"
+            android:src="@drawable/ic_head"/>
 
     <TextView
-        android:id="@+id/header_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/header_image"
-        android:padding="@dimen/profile_header_text_padding"
-        android:textSize="@dimen/text_size_large" />
+            android:id="@+id/header_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/header_image"
+            android:padding="@dimen/profile_header_text_padding"
+            android:textSize="@dimen/text_size_large"/>
 
     <TextView
-        android:id="@+id/header_relation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/header_name"
-        android:layout_toRightOf="@id/header_image"
-        android:padding="@dimen/profile_header_text_padding"
-        android:textSize="@dimen/text_size_tiny"
-        android:visibility="gone" />
+            android:id="@+id/header_relation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/header_name"
+            android:layout_toRightOf="@id/header_image"
+            android:padding="@dimen/profile_header_text_padding"
+            android:textSize="@dimen/text_size_tiny"
+            android:visibility="gone"/>
 
 </RelativeLayout>

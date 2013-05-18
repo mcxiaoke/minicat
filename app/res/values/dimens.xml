@@ -36,6 +36,7 @@
     <dimen name="sliding_shadow">10dp</dimen>
     <dimen name="sliding_offset">80dp</dimen>
 
+    <dimen name="image_frame_padding">4dp</dimen>
     <!-- new card list ui -->
     <dimen name="card_margin">8dp</dimen>
     <dimen name="list_item_padding">2dp</dimen>
