@@ -98,6 +98,7 @@ public class ProfileView extends FrameLayout implements
         headerImage = (ImageView) findViewById(R.id.header_icon);
         headerName = (TextView) findViewById(R.id.header_name);
         headerState = (TextView) findViewById(R.id.header_state);
+        headerState.setText("正在关注你");
         headerLock = (ImageView) findViewById(R.id.header_lock);
         headerIntro = (TextView) findViewById(R.id.header_intro);
         headerExpand = (TextView) findViewById(R.id.header_expand);
@@ -198,7 +199,7 @@ public class ProfileView extends FrameLayout implements
     }
 
     public void setFollowState(boolean follow) {
-        headerState.setText(follow ? "正在关注你" : "没有关注你");
+        headerState.setVisibility(follow ? View.VISIBLE : View.GONE);
     }
 
     public void setExpanded(boolean expanded) {

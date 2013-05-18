@@ -19,10 +19,4 @@ public abstract class AbstractListFragment extends AbstractFragment implements
 
 	public abstract ListView getListView();
 
-	public abstract void startRefresh();
-	
-	@Override
-	public void updateUI() {
-	}
-
 }

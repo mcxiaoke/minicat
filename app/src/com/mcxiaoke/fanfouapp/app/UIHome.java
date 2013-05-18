@@ -10,18 +10,20 @@ import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.adapter.HomePagesAdapter;
 import com.mcxiaoke.fanfouapp.controller.UIController;
+import com.mcxiaoke.fanfouapp.fragments.AbstractFragment;
 import com.mcxiaoke.fanfouapp.fragments.ConversationListFragment;
 import com.mcxiaoke.fanfouapp.fragments.UserTimelineFragment;
 import com.mcxiaoke.fanfouapp.menu.MenuCallback;
 import com.mcxiaoke.fanfouapp.menu.MenuFragment;
 import com.mcxiaoke.fanfouapp.menu.MenuItemResource;
-import com.mcxiaoke.fanfouapp.R;
 
 
 /**
@@ -70,6 +72,7 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
         mPagesAdapter = new HomePagesAdapter(getFragmentManager());
         mViewPager.setAdapter(mPagesAdapter);
         setHomeTitle(mCurrentPage);
+        mCurrentFragment = mPagesAdapter.getItem(mCurrentPage);
         setSlidingMenu(R.layout.menu_frame);
         FragmentManager fm = getFragmentManager();
         mMenuFragment = MenuFragment.newInstance();
@@ -111,9 +114,9 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
     public void onClick(View v) {
     }
 
-    private Fragment mCurrentFragment;
+    private AbstractFragment mCurrentFragment;
 
-    private void replaceFragment(Fragment fragment) {
+    private void replaceFragment(AbstractFragment fragment) {
         log("fragment=" + fragment);
         mCurrentFragment = fragment;
         FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -134,6 +137,27 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+        // Get the SearchView and set the searchable configuration
+//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        // Assumes current activity is the searchable activity
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+//        searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
+    }
+
+    @Override
+    protected void startRefresh() {
+        log("start refresh, current fragment=" + mCurrentFragment);
+            if (mCurrentFragment != null) {
+                mCurrentFragment.startRefresh();
+            } else {
+            hideProgressIndicator();
+        }
+    }
+
+    @Override
     public void onMenuItemSelected(int position, MenuItemResource menuItem) {
         log("onMenuItemSelected: " + menuItem + " position=" + position
                 + " mCurrentIndex=" + mCurrentIndex);
@@ -148,6 +172,7 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
                         .commit();
                 getSlidingMenu().showContent();
                 setHomeTitle(mCurrentPage);
+                mCurrentFragment = mPagesAdapter.getItem(mCurrentPage);
                 mCurrentIndex = position;
                 break;
             case MenuFragment.MENU_ID_PROFILE:
@@ -187,8 +212,8 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
     }
 
     protected int getMenuResourceId() {
-//        return R.menu.menu_home;
-        return R.menu.menu;
+        return R.menu.menu_home;
+//        return R.menu.menu;
     }
 
     @Override
@@ -213,6 +238,7 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
     public void onPageSelected(int page) {
         mCurrentPage = page;
         setHomeTitle(page);
+        mCurrentFragment = mPagesAdapter.getItem(mCurrentPage);
         if (page == 0) {
             setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
         } else {

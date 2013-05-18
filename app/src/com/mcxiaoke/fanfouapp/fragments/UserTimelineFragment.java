@@ -133,7 +133,6 @@ public class UserTimelineFragment extends BaseTimlineFragment implements
             hideProfileHeader();
         } else {
             showProfileHeader(user);
-            updateUI();
         }
     }
 
@@ -157,6 +156,7 @@ public class UserTimelineFragment extends BaseTimlineFragment implements
         }
         vProfile.setContent(user);
         vProfile.setVisibility(View.VISIBLE);
+        updatePermission();
         refreshFollowState();
         if (AppContext.DEBUG) {
             Log.d(TAG, "showProfileHeader userId=" + userId);

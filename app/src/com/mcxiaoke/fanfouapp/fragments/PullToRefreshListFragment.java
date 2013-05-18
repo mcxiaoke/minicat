@@ -240,7 +240,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
         if (!busy) {
             busy = true;
             doRefresh();
-            getBaseSupport().showProgressIndicator();
+//            getBaseSupport().showProgressIndicator();
         }
     }
 
@@ -248,9 +248,6 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
         int count = data.getInt("count");
         if (AppContext.DEBUG) {
             Log.d(TAG, "onSuccess(data) count=" + count);
-        }
-        if (count > 0) {
-            updateUI();
         }
     }
 

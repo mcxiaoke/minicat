@@ -25,6 +25,6 @@ public abstract class AbstractFragment extends Fragment {
 
 	public abstract String getTitle();
 
-	public abstract void updateUI();
+    public abstract void startRefresh();
 
 }

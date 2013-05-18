@@ -5,13 +5,17 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.controller.SimpleDialogListener;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dialog.ConfirmDialog;
 import com.mcxiaoke.fanfouapp.util.Utils;
-import com.mcxiaoke.fanfouapp.R;
 
 /**
  * @author mcxiaoke
@@ -30,6 +34,7 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
     protected ActionBar mActionBar;
     protected DisplayMetrics mDisplayMetrics;
     private boolean mRefreshing;
+    private MenuItem mRefreshMenuItem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +54,7 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
 
     protected int getMenuResourceId() {
         return -1;
-//		return R.menu.menu;
+//        return R.menu.menu_home;
     }
 
     @Override
@@ -57,12 +62,17 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
         int id = getMenuResourceId();
         if (id > 0) {
             getMenuInflater().inflate(id, menu);
+            mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
         }
+
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        if (mRefreshMenuItem != null) {
+            mRefreshMenuItem.setVisible(!mRefreshing);
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -96,6 +106,7 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
     }
 
     protected void onMenuRefreshClick() {
+        startRefresh();
         showProgressIndicator();
     }
 
@@ -119,11 +130,15 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
         dialog.show();
     }
 
+    protected void startRefresh() {
+
+    }
+
     public void showProgressIndicator() {
         if (!mRefreshing) {
             mRefreshing = true;
             setProgressBarIndeterminateVisibility(true);
-//			invalidateOptionsMenu();
+            invalidateOptionsMenu();
         }
     }
 
@@ -131,7 +146,7 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
         if (mRefreshing) {
             mRefreshing = false;
             setProgressBarIndeterminateVisibility(false);
-//			invalidateOptionsMenu();
+            invalidateOptionsMenu();
         }
     }
 
