@@ -59,14 +59,13 @@ abstract class UIBaseTimeline extends UIBaseSupport implements SwipeListener {
     private void parseIntent() {
         Intent intent = getIntent();
         String action = intent.getAction();
-        if (action.equals(Intent.ACTION_VIEW)) {
+        if (action == null) {
+            userId = intent.getStringExtra("id");
+        } else if (action.equals(Intent.ACTION_VIEW)) {
             Uri data = intent.getData();
             if (data != null) {
                 userId = data.getLastPathSegment();
             }
-        } else {
-            userId = intent.getStringExtra("id");
-
         }
         if (TextUtils.isEmpty(userId)) {
             userId = AppContext.getAccount();

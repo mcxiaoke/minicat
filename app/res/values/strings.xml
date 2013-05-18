@@ -92,7 +92,7 @@
     <string name="msg_profile_update_failed"></string>
     <string name="msg_profile_update_success"></string>
     <string name="msg_dm_content_cannot_be_null"></string>
-    <string name="expand">Expand</string>
+    <string name="expand">Click To Expand</string>
 
 
     <string name="intent_scheme">fanfouapp</string>

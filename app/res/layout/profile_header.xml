@@ -1,128 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/card_margin" android:background="@color/white">
 
-    <RelativeLayout
-        android:id="@+id/info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp" >
+    <ImageView
+            android:id="@+id/header_icon"
+            android:layout_width="@dimen/head_width"
+            android:layout_height="@dimen/head_height"
+            android:layout_marginRight="@dimen/card_margin"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_head"/>
 
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="@dimen/head_height"
-            android:layout_height="@dimen/head_width"
-            android:layout_marginRight="5dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_head" />
-
-        <TextView
-            android:id="@+id/name"
+    <TextView
+            android:id="@+id/header_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@id/icon"
+            android:layout_toRightOf="@id/header_icon"
             android:ellipsize="marquee"
             android:singleLine="true"
-            android:text="巫猫子"
-            android:textSize="@dimen/text_size_medium" />
+            android:text="巫猫子" android:textStyle="bold"
+            android:textSize="@dimen/text_size_medium"/>
 
-        <TextView
-            android:id="@+id/state"
+    <TextView
+            android:id="@+id/header_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/name"
+            android:layout_alignBaseline="@id/header_name"
             android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/name"
-            android:background="@drawable/button_blue"
-            android:text="正在关注"
+            android:layout_toRightOf="@id/header_name"
+            android:background="@color/holo_blue_light"
+            android:text="正在关注" android:clickable="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_tiny" />
+            android:textSize="@dimen/text_size_tiny" android:padding="2dp"/>
 
-        <ImageView
-            android:id="@+id/lock"
+    <ImageView
+            android:id="@+id/header_lock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_alignTop="@id/name"
+            android:layout_alignTop="@id/header_name"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_mini_protected" />
+            android:src="@drawable/ic_mini_protected"/>
 
-        <TextView
-            android:id="@+id/intro"
+    <TextView
+            android:id="@+id/header_intro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/name"
+            android:layout_below="@id/header_name"
             android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
-            android:layout_toRightOf="@id/icon"
+            android:layout_toRightOf="@id/header_icon"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="这是一个很简短的 介绍，飘来飘去，飘来飘去，但是你可以点击展开查看完整的介绍"
             android:textColor="@color/grey"
-            android:textSize="@dimen/text_size_small" />
+            android:textSize="@dimen/text_size_small"/>
 
-        <TextView
-            android:id="@+id/expand"
-            android:layout_width="wrap_content"
+    <TextView
+            android:id="@+id/header_expand"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/intro"
-            android:layout_below="@id/intro"
+            android:layout_alignLeft="@id/header_intro"
+            android:layout_below="@id/header_intro"
             android:text="@string/expand"
             android:textColor="@color/holo_blue_light"
-            android:textSize="@dimen/text_size_small" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginTop="6dp"
-        android:background="#33999999" />
-
-    <LinearLayout
-        android:id="@+id/items"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <com.mcxiaoke.fanfouapp.ui.widget.ItemTextView
-            android:id="@+id/item_view_1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/list_selector" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"
-            android:background="#33999999" />
-
-        <com.mcxiaoke.fanfouapp.ui.widget.ItemTextView
-            android:id="@+id/item_view_2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/list_selector" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"
-            android:background="#33999999" />
-
-        <com.mcxiaoke.fanfouapp.ui.widget.ItemTextView
-            android:id="@+id/item_view_3"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/list_selector" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#33999999" />
-
-</merge>
+            android:textSize="@dimen/text_size_small"/>
+</RelativeLayout>

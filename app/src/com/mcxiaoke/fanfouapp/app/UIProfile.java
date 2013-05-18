@@ -45,13 +45,13 @@ public class UIProfile extends UIBaseSupport implements OnPageChangeListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		parseIntent();
+        setLayout();
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		setIntent(intent);
-		setLayout();
 	}
 
 	private void parseIntent() {
@@ -76,7 +76,7 @@ public class UIProfile extends UIBaseSupport implements OnPageChangeListener {
 	}
 
 	protected void setLayout() {
-//		setContentView(R.layout.ui_profile_viewpager);
+		setContentView(R.layout.viewpager);
 
 		mPagesAdapter = new PagesAdapter(getFragmentManager(), userId);
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -84,8 +84,8 @@ public class UIProfile extends UIBaseSupport implements OnPageChangeListener {
 		mViewPager.setCurrentItem(1);
 
 //		mIndicator = (TitlePageIndicator) findViewById(R.id.indicator);
-		mIndicator.setViewPager(mViewPager);
-		mIndicator.setOnPageChangeListener(this);
+//		mIndicator.setViewPager(mViewPager);
+//		mIndicator.setOnPageChangeListener(this);
 	}
 
 	@Override

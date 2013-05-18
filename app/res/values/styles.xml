@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="ProfileButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/card_margin</item>
+        <item name="android:background">@drawable/list_selector</item>
+    </style>
+
+    <style name="ProfileButtonTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_color_selectable</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:duplicateParentState">true</item>
+    </style>
+
     <style name="StatusTextStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -71,7 +86,7 @@
         <item name="android:textSize">@dimen/text_size_tiny</item>
     </style>
 
-    <style name="Animations" />
+    <style name="Animations"/>
 
     <style name="Animations.Move">
         <item name="@android:windowEnterAnimation">@anim/move_left_to_right</item>

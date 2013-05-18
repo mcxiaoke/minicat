@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content" android:background="@color/white">
+
+    <include layout="@layout/profile_header"/>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/card_margin"
+            android:background="@color/background"/>
+
+    <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button1">
+
+        <TextView android:id="@+id/text_left1"
+                  android:text="Statuses Count" android:layout_alignParentLeft="true"
+                  android:layout_alignParentTop="true"
+                  style="@style/ProfileButtonTextStyle"/>
+        <TextView android:id="@+id/text_right1" android:layout_alignParentRight="true"
+                  android:layout_alignParentTop="true"
+                  style="@style/ProfileButtonTextStyle"/>
+    </RelativeLayout>
+
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/background"/>
+
+    <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button2">
+
+        <TextView android:id="@+id/text_left2"
+                  android:text="Statuses Count" android:layout_alignParentLeft="true"
+                  style="@style/ProfileButtonTextStyle"/>
+        <TextView android:id="@+id/text_right2" android:layout_alignParentRight="true"
+                  style="@style/ProfileButtonTextStyle"/>
+    </RelativeLayout>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/background"/>
+
+
+    <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button3">
+
+
+        <TextView android:id="@+id/text_left3"
+                  android:text="Statuses Count" android:layout_alignParentLeft="true"
+                  style="@style/ProfileButtonTextStyle"/>
+        <TextView android:id="@+id/text_right3" android:layout_alignParentRight="true"
+                  style="@style/ProfileButtonTextStyle"/>
+    </RelativeLayout>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/background"/>
+
+
+    <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button4">
+
+        <TextView android:id="@+id/text_left4"
+                  android:text="Statuses Count" android:layout_alignParentLeft="true"
+                  style="@style/ProfileButtonTextStyle"/>
+        <TextView android:id="@+id/text_right4" android:layout_alignParentRight="true"
+                  style="@style/ProfileButtonTextStyle"/>
+    </RelativeLayout>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/background"/>
+
+
+    <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button5">
+
+        <TextView android:id="@+id/text_left5"
+                  android:text="Statuses Count" android:layout_alignParentLeft="true"
+                  style="@style/ProfileButtonTextStyle"/>
+        <TextView android:id="@+id/text_right5" android:layout_alignParentRight="true"
+                  style="@style/ProfileButtonTextStyle"/>
+    </RelativeLayout>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/card_margin"
+            android:background="@color/background" android:visibility="gone"/>
+
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:id="@+id/description" android:text="Description" android:visibility="gone"
+              android:textSize="@dimen/text_size_medium" android:padding="@dimen/card_margin"/>
+
+</LinearLayout>
+
