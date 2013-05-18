@@ -7,43 +7,51 @@ import com.mcxiaoke.fanfouapp.util.DateTimeHelper;
 
 /**
  * @author mcxiaoke
- * @version 1.0 2012.02.22
  * @version 2.0 2012.03.28
- * 
  */
 public class UIHelper {
-	public static String getDateString(long date) {
-		return DateTimeHelper.getInterval(date);
-	}
+    public static String getDateString(long date) {
+        return DateTimeHelper.getInterval(date);
+    }
 
-	public static void setItemTextSize(final ItemView view, int fontSize) {
-		view.setContentTextSize(fontSize);
-		view.setTitleTextSize(fontSize + 2);
-		view.setMetaTextSize(fontSize - 2);
-	}
+    public static void setItemTextSize(final ItemView view, int fontSize) {
+        view.setContentTextSize(fontSize);
+        view.setTitleTextSize(fontSize + 2);
+        view.setMetaTextSize(fontSize - 2, fontSize - 2);
+    }
 
-	public static void setMetaInfo(final ItemView view, final StatusModel s) {
-		view.showIconThread(s.isThread());
-		view.showIconFavorite(s.isFavorited());
-		view.showIconPhoto(s.isPhoto());
-		view.setTitle(s.getUserScreenName());
+    public static void setMetaInfo(final ItemView view, final StatusModel s) {
+        view.showIconThread(s.isThread());
+        view.showIconFavorite(s.isFavorited());
+        view.showIconPhoto(s.isPhoto());
+        view.showIconRetweet(s.isRetweeted());
+        boolean lock = s.getUser() != null && s.getUser().isProtect();
+        view.showIconLock(lock);
+        view.setTitle(s.getUserScreenName());
 
-		StringBuilder meta = new StringBuilder();
-		meta.append(getDateString(s.getTime()));
-		meta.append(" 通过");
-		meta.append(s.getSource());
-		view.setMeta(meta.toString());
-	}
+        StringBuilder metaA = new StringBuilder();
+        if (s.isRetweeted()) {
+            metaA.append("由");
+            metaA.append(s.getUserScreenName());
+            metaA.append("转发");
+        }
 
-	public static void setContent(final ItemView view, final UserModel u) {
-		view.showIconLock(u.isProtect());
-		view.setTitle(u.getScreenName());
-		StringBuilder content = new StringBuilder();
-		content.append(u.getLocation());
-		content.append(" ");
-		content.append(u.getGender());
-		view.setContent(content.toString());
-		view.showMeta(false);
-	}
+        StringBuilder metaB = new StringBuilder();
+        metaB.append(getDateString(s.getTime()));
+        metaB.append(" 通过");
+        metaB.append(s.getSource());
+        view.setMeta(metaA.toString(), metaB.toString());
+    }
+
+    public static void setContent(final ItemView view, final UserModel u) {
+        view.showIconLock(u.isProtect());
+        view.setTitle(u.getScreenName());
+        StringBuilder content = new StringBuilder();
+        content.append(u.getLocation());
+        content.append(" ");
+        content.append(u.getGender());
+        view.setContent(content.toString());
+        view.showMeta(false, false);
+    }
 
 }

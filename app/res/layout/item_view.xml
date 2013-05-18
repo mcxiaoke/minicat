@@ -41,10 +41,20 @@
             android:layout_alignLeft="@id/title"
             android:layout_below="@id/title"
             android:padding="2dp"
-            android:textSize="@dimen/text_size_small"/>
+            android:textSize="@dimen/text_size_medium"/>
 
     <TextView
-            android:id="@+id/meta"
+            android:id="@+id/meta_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/text"
+            android:layout_below="@id/text"
+            android:padding="4dp"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text_size_tiny"/>
+
+    <TextView
+            android:id="@+id/meta_b"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

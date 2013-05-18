@@ -1,37 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/icons"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="4dp" >
+              android:id="@+id/icons"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:padding="4dp">
 
     <ImageView
-        android:id="@+id/ic_favorite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_mini_favorite"
-        android:visibility="gone" />
+            android:id="@+id/ic_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_mini_favorite"
+            android:visibility="gone"/>
 
     <ImageView
-        android:id="@+id/ic_thread"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_mini_thread"
-        android:visibility="gone" />
+            android:id="@+id/ic_retweet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_mini_retweet"
+            android:visibility="gone"/>
 
     <ImageView
-        android:id="@+id/ic_photo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_mini_photo"
-        android:visibility="gone" />
+            android:id="@+id/ic_lock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_mini_protected"
+            android:visibility="gone"/>
+
 
     <ImageView
-        android:id="@+id/ic_lock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_mini_protected"
-        android:visibility="gone" />
+            android:id="@+id/ic_thread"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_mini_thread"
+            android:visibility="gone"/>
+
+
+    <ImageView
+            android:id="@+id/ic_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_mini_photo"
+            android:visibility="gone"/>
 
 </LinearLayout>
