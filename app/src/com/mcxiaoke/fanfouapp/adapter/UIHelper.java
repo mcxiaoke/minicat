@@ -29,25 +29,28 @@ public class UIHelper {
         view.showIconLock(lock);
         view.setTitle(s.getUserScreenName());
 
-        StringBuilder metaA = new StringBuilder();
-        if (s.isRetweeted()) {
-            metaA.append("由");
-            String userName = s.getUserScreenName();
-            if (userName.length() > 10) {
-                userName = userName.substring(0, 9);
-            }
-            metaA.append(userName);
-            metaA.append("转发");
-        }
-
         StringBuilder metaB = new StringBuilder();
         metaB.append(getDateString(s.getTime()));
         metaB.append(" 通过");
         String source = s.getSource();
-        if (source.length() > 14) {
-            source = source.substring(0, 13);
+        if (source.length() > 16) {
+            source = source.substring(0, 15);
         }
         metaB.append(source);
+
+        StringBuilder metaA = new StringBuilder();
+//        if (s.isRetweeted()) {
+//            if (metaB.length() < 10) {
+//                metaA.append("由");
+//                String userName = s.getUserScreenName();
+//                if (userName.length() > 10) {
+//                    userName = userName.substring(0, 9);
+//                }
+//                metaA.append(userName);
+//                metaA.append("转发");
+//            }
+//        }
+
         view.setMeta(metaA.toString(), metaB.toString());
     }
 
