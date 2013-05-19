@@ -31,12 +31,12 @@ public class UIController {
 
     private static void startUIByAnimation(Activity activity, Intent intent) {
         activity.startActivity(intent);
-        activity.overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+        activity.overridePendingTransition(R.anim.slide_in_from_right, android.R.anim.fade_out);
     }
 
     private static void startUIByAnimationBack(Activity activity, Intent intent) {
         activity.startActivity(intent);
-        activity.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+        activity.overridePendingTransition(android.R.anim.fade_in, R.anim.slide_out_to_right);
     }
 
     public static void showFanfouBlog(Context context) {
@@ -135,7 +135,7 @@ public class UIController {
 
     public static void showWrite(Activity activity) {
         Intent intent = new Intent(activity, UIWrite.class);
-		startUIByAnimation(activity, intent);
+        startUIByAnimation(activity, intent);
 //        activity.startActivity(intent);
 //        activity.overridePendingTransition(R.anim.footer_appear, R.anim.keep);
     }

@@ -102,7 +102,14 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
 
     protected void onMenuHomeClick() {
         finish();
-        overridePendingTransition(R.anim.push_right_in, R.anim.keep);
+        overridePendingTransition(R.anim.fade_in, R.anim.slide_out_to_right);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.fade_in, R.anim.slide_out_to_right);
     }
 
     protected void onMenuRefreshClick() {
@@ -180,12 +187,6 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
 
     @Override
     public void onClick(View v) {
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
     }
 
     @Override
