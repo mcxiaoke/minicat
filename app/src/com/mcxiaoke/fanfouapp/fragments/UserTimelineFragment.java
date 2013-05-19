@@ -156,10 +156,21 @@ public class UserTimelineFragment extends BaseTimlineFragment implements
         }
         vProfile.setContent(user);
         vProfile.setVisibility(View.VISIBLE);
+        updateTitle(user);
         updatePermission();
         refreshFollowState();
+
         if (AppContext.DEBUG) {
             Log.d(TAG, "showProfileHeader userId=" + userId);
+        }
+    }
+
+    private void updateTitle(UserModel user) {
+        if (user != null) {
+            Activity activity = getActivity();
+            if (activity != null) {
+                activity.getActionBar().setTitle("@" + user.getScreenName());
+            }
         }
     }
 

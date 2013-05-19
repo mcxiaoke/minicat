@@ -71,9 +71,6 @@ abstract class UIBaseTimeline extends UIBaseSupport {
         vContent = (ViewGroup) findViewById(R.id.container);
         vEmpty = (ViewGroup) findViewById(android.R.id.empty);
         emptyController = new EmptyViewController(vEmpty);
-        if (!TextUtils.isEmpty(userId)) {
-            setTitle("@" + userId);
-        }
         setFragment();
     }
 
