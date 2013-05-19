@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/root"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+                android:id="@+id/root"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:background="@color/white">
 
     <ImageView
-        android:id="@+id/login_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/login_logo" />
+            android:id="@+id/login_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/login_logo"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/login_logo"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="20dp" >
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_logo"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="20dp">
 
         <EditText
-            android:id="@+id/login_username"
-            style="@style/EditText.Login"
-            android:hint="@string/login_username_hint"
-            android:inputType="textEmailAddress" />
+                android:id="@+id/login_username"
+                style="@style/EditText.Login"
+                android:hint="@string/login_username_hint"
+                android:inputType="textEmailAddress"/>
 
         <EditText
-            android:id="@+id/login_password"
-            style="@style/EditText.Login"
-            android:hint="@string/login_password_hint"
-            android:imeOptions="actionSend"
-            android:inputType="textPassword" />
+                android:id="@+id/login_password"
+                style="@style/EditText.Login"
+                android:hint="@string/login_password_hint"
+                android:imeOptions="actionSend"
+                android:inputType="textPassword"/>
 
         <Button
-            android:id="@+id/button_signin"
-            style="@style/Button.Login"
-            android:text="@string/login_button_text" />
+                android:id="@+id/button_signin"
+                style="@style/Button.Login"
+                android:text="@string/login_button_text"/>
     </LinearLayout>
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/login_bottom" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/login_bottom"/>
 
 </RelativeLayout>
