@@ -97,6 +97,7 @@ public class UISearchResults extends UIBaseSupport implements
 		mListView.setDrawSelectorOnTop(true);
 		mListView.setScrollBarStyle(ScrollView.SCROLLBARS_OUTSIDE_OVERLAY);
 		mListView.setBackgroundResource(R.drawable.general_background);
+        mListView.setSelector(getResources().getDrawable(R.drawable.list_selector));
 		mListView.setLongClickable(false);
 		mListView.setOnItemClickListener(this);
 		mListView.setAdapter(mStatusAdapter);

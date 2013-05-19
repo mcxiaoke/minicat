@@ -26,6 +26,7 @@ import com.mcxiaoke.fanfouapp.service.FanFouService;
 import com.mcxiaoke.fanfouapp.task.BetterAsyncTask;
 import com.mcxiaoke.fanfouapp.util.DateTimeHelper;
 import com.mcxiaoke.fanfouapp.util.IOHelper;
+import com.mcxiaoke.fanfouapp.util.ImageHelper;
 import com.mcxiaoke.fanfouapp.util.IntentHelper;
 import com.mcxiaoke.fanfouapp.util.StatusHelper;
 import com.mcxiaoke.fanfouapp.util.Utils;
@@ -271,7 +272,7 @@ public class UIStatus extends UIBaseSupport {
             @Override
             public void onLoadingComplete(String imageUri, View view,
                                           Bitmap loadedImage) {
-                contentPhoto.setImageBitmap(loadedImage);
+                contentPhoto.setImageBitmap(ImageHelper.getRoundedCornerBitmap(loadedImage, getResources().getDimensionPixelSize(R.dimen.image_round_corner)));
             }
 
             @Override
