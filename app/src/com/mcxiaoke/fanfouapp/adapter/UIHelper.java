@@ -32,14 +32,22 @@ public class UIHelper {
         StringBuilder metaA = new StringBuilder();
         if (s.isRetweeted()) {
             metaA.append("由");
-            metaA.append(s.getUserScreenName());
+            String userName = s.getUserScreenName();
+            if (userName.length() > 10) {
+                userName = userName.substring(0, 9);
+            }
+            metaA.append(userName);
             metaA.append("转发");
         }
 
         StringBuilder metaB = new StringBuilder();
         metaB.append(getDateString(s.getTime()));
         metaB.append(" 通过");
-        metaB.append(s.getSource());
+        String source = s.getSource();
+        if (source.length() > 14) {
+            source = source.substring(0, 13);
+        }
+        metaB.append(source);
         view.setMeta(metaA.toString(), metaB.toString());
     }
 

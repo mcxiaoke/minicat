@@ -4,9 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
@@ -38,7 +36,7 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
     private Fragment mMenuFragment;
 
     private ViewPager mViewPager;
-    private PagerTabStrip mPagerTabStrip;
+//    private PagerTabStrip mPagerTabStrip;
     private HomePagesAdapter mPagesAdapter;
 
     private int mCurrentIndex;
@@ -63,12 +61,12 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setOnPageChangeListener(this);
-        mPagerTabStrip = (PagerTabStrip) findViewById(R.id.viewpager_strip);
-        mPagerTabStrip.setDrawFullUnderline(false);
-        mPagerTabStrip.setTabIndicatorColor(getResources().getColor(
-                R.color.holo_blue_light));
-        mPagerTabStrip.setTextColor(Color.WHITE);
-        mPagerTabStrip.setBackgroundColor(Color.DKGRAY);
+//        mPagerTabStrip = (PagerTabStrip) findViewById(R.id.viewpager_strip);
+//        mPagerTabStrip.setDrawFullUnderline(false);
+//        mPagerTabStrip.setTabIndicatorColor(getResources().getColor(
+//                R.color.holo_blue_light));
+//        mPagerTabStrip.setTextColor(Color.WHITE);
+//        mPagerTabStrip.setBackgroundColor(Color.DKGRAY);
         mPagesAdapter = new HomePagesAdapter(getFragmentManager());
         mViewPager.setAdapter(mPagesAdapter);
         setHomeTitle(mCurrentPage);
