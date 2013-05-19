@@ -3,7 +3,7 @@
     android:id="@+id/actions"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal" >
+    android:orientation="horizontal" android:background="@color/holo_blue_light">
 
     <ImageButton
         android:id="@+id/action_mention"
@@ -14,11 +14,6 @@
         android:id="@+id/action_record"
         style="@style/ActionItem"
         android:src="@drawable/ic_record" />
-
-    <ImageButton
-        android:id="@+id/action_location"
-        style="@style/ActionItem"
-        android:src="@drawable/ic_location" />
 
     <ImageButton
         android:id="@+id/action_gallery"

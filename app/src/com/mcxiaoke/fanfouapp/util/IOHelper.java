@@ -166,12 +166,22 @@ public final class IOHelper {
         }
     }
 
-    public static void copyFile(File src, File dest) throws IOException {
-        FileChannel srcChannel = new FileInputStream(src).getChannel();
-        FileChannel destChannel = new FileOutputStream(dest).getChannel();
-        srcChannel.transferTo(0, srcChannel.size(), destChannel);
-        srcChannel.close();
-        destChannel.close();
+    public static boolean copyFile(File src, File dest) {
+        try {
+            FileChannel srcChannel = new FileInputStream(src).getChannel();
+            FileChannel destChannel = new FileOutputStream(dest).getChannel();
+            srcChannel.transferTo(0, srcChannel.size(), destChannel);
+            srcChannel.close();
+            destChannel.close();
+            return true;
+        } catch (Exception ex) {
+
+        } finally {
+
+        }
+        return false;
+
+
     }
 
     public static void copyToClipBoard(Context context, String content) {

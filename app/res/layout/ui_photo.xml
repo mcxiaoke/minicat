@@ -13,14 +13,6 @@
         android:scaleType="fitCenter"
         android:visibility="gone" />
 
-    <ImageView
-        android:id="@+id/close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:padding="10dp"
-        android:src="@drawable/ic_close" />
-
     <include layout="@layout/empty_layout" />
 
 </RelativeLayout>

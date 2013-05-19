@@ -1,8 +1,11 @@
 package com.mcxiaoke.fanfouapp.app;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
@@ -13,25 +16,31 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Selection;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.adapter.AtTokenizer;
 import com.mcxiaoke.fanfouapp.adapter.AutoCompleteCursorAdapter;
 import com.mcxiaoke.fanfouapp.controller.DataController;
-import com.mcxiaoke.fanfouapp.controller.SimpleDialogListener;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.RecordColumns;
 import com.mcxiaoke.fanfouapp.dao.model.RecordModel;
-import com.mcxiaoke.fanfouapp.dialog.ConfirmDialog;
 import com.mcxiaoke.fanfouapp.service.Constants;
 import com.mcxiaoke.fanfouapp.service.PostStatusService;
 import com.mcxiaoke.fanfouapp.ui.widget.MyAutoCompleteTextView;
 import com.mcxiaoke.fanfouapp.ui.widget.TextChangeListener;
-import com.mcxiaoke.fanfouapp.util.*;
-import com.mcxiaoke.fanfouapp.R;
+import com.mcxiaoke.fanfouapp.util.IOHelper;
+import com.mcxiaoke.fanfouapp.util.ImageHelper;
+import com.mcxiaoke.fanfouapp.util.OptionHelper;
+import com.mcxiaoke.fanfouapp.util.StringHelper;
+import com.mcxiaoke.fanfouapp.util.Utils;
 
 import java.io.File;
 
@@ -57,14 +66,12 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
     private MyAutoCompleteTextView mAutoCompleteTextView;
     private AutoCompleteCursorAdapter mAutoCompleteCursorAdapter;
 
-    private View vPhoto;
+    private ViewGroup vPhoto;
     private ImageView vPhotoPreview;
-    private ImageButton vPhotoRemove;
-    private TextView tCount;
+    private TextView tvWriteInfo;
 
     private ImageButton actionMention;
     private ImageButton actionRecord;
-    private ImageButton actionLocation;
     private ImageButton actionGallery;
     private ImageButton actionCamera;
 
@@ -86,6 +93,9 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
     private int type;
     private int size;
 
+    private ColorStateList mNormalTextColor;
+    private ColorStateList mAlertTextColor;
+
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_REPLY = 1;
     public static final int TYPE_REPOST = 2;
@@ -102,6 +112,8 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
         mLocationMonitor = new LocationMonitor();
         size = new Float(getResources().getDimension(R.dimen.write_photo_width))
                 .intValue();
+        mNormalTextColor = getResources().getColorStateList(R.color.light_blue_text_color);
+        mAlertTextColor = getResources().getColorStateList(R.color.alert_red_text_color);
         for (String provider : mLocationManager.getProviders(true)) {
             if (LocationManager.NETWORK_PROVIDER.equals(provider)
                     || LocationManager.GPS_PROVIDER.equals(provider)) {
@@ -185,9 +197,16 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
         vPhoto.setVisibility(View.GONE);
     }
 
-    private void showCount(int count) {
-        int num = 140 - count;
-        tCount.setText(String.valueOf(num));
+    private void showInfo(int count) {
+        log("show count =" + count);
+        if (count <= 140) {
+            tvWriteInfo.setTextColor(mNormalTextColor);
+            tvWriteInfo.setText(String.valueOf(count));
+        } else {
+            tvWriteInfo.setTextColor(mAlertTextColor);
+            tvWriteInfo.setText(String.valueOf(140 - count));
+        }
+
     }
 
     private void parsePhoto(Uri uri) {
@@ -244,12 +263,6 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
                     parsePhoto(uri);
                     updateUI();
                 }
-            } else if (action.equals(Constants.ACTION_SEND_FROM_GALLERY)) {
-                type = TYPE_GALLERY;
-                pickPhotoFromGallery();
-            } else if (action.equals(Constants.ACTION_SEND_FROM_CAMERA)) {
-                type = TYPE_CAMERA;
-                pickPhotoFromCamera();
             }
             if (AppContext.DEBUG) {
                 log("intent type=" + type);
@@ -267,7 +280,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
             }
         }
 
-        showCount(mAutoCompleteTextView.getText().length());
+        showInfo(mAutoCompleteTextView.getText().length());
 
         if (photoUri != null) {
             showPhoto();
@@ -290,7 +303,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
                                       int count) {
                 content = s.toString().trim();
                 wordsCount = content.length();
-                showCount(wordsCount);
+                showInfo(wordsCount);
             }
         });
 
@@ -302,8 +315,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 
     @Override
     protected void onMenuHomeClick() {
-        finish();
-        overridePendingTransition(R.anim.keep, R.anim.footer_disappear);
+        goBack();
     }
 
     protected void setLayout() {
@@ -312,24 +324,45 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 
         actionMention = (ImageButton) findViewById(R.id.action_mention);
         actionRecord = (ImageButton) findViewById(R.id.action_record);
-        actionLocation = (ImageButton) findViewById(R.id.action_location);
         actionGallery = (ImageButton) findViewById(R.id.action_gallery);
         actionCamera = (ImageButton) findViewById(R.id.action_camera);
 
         actionMention.setOnClickListener(this);
         actionRecord.setOnClickListener(this);
-        actionLocation.setOnClickListener(this);
         actionGallery.setOnClickListener(this);
         actionCamera.setOnClickListener(this);
 
-        actionLocation.setImageLevel(enableLocation ? 1 : 0);
+        vPhoto = (ViewGroup) findViewById(R.id.photo);
+        final GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                return super.onSingleTapUp(e);
+            }
 
-        vPhoto = findViewById(R.id.photo);
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                float distanceX = e2.getX() - e1.getX();
+
+                ViewConfiguration.get(mContext).getScaledMinimumFlingVelocity();
+                if (distanceX > 500) {
+                    removePhoto();
+                    return true;
+                }
+                return super.onFling(e1, e2, velocityX, velocityY);
+            }
+        };
+        final GestureDetector detector = new GestureDetector(this, simpleOnGestureListener);
+        vPhoto.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                detector.onTouchEvent(event);
+                return true;
+            }
+        });
         vPhotoPreview = (ImageView) findViewById(R.id.photo_show);
-        vPhotoRemove = (ImageButton) findViewById(R.id.photo_remove);
-        vPhotoRemove.setOnClickListener(this);
+        vPhotoPreview.setOnClickListener(this);
 
-        tCount = (TextView) findViewById(R.id.count);
+        tvWriteInfo = (TextView) findViewById(R.id.write_info);
 
         setTitle("写消息");
 
@@ -361,9 +394,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
             log("onBackPressed content=" + content);
         }
         if (StringHelper.isEmpty(content)) {
-            finish();
-            overridePendingTransition(R.anim.keep, R.anim.footer_disappear);
-//			super.onBackPressed();
+            goBack();
         } else {
             checkSave();
         }
@@ -380,17 +411,14 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
             case R.id.action_record:
                 UIController.showRecords(mContext);
                 break;
-            case R.id.action_location:
-                toggleLocation();
-                break;
             case R.id.action_gallery:
                 pickPhotoFromGallery();
                 break;
             case R.id.action_camera:
                 pickPhotoFromCamera();
                 break;
-            case R.id.photo_remove:
-                removePhoto();
+            case R.id.photo_show:
+                showRemoveDialog();
                 break;
             default:
                 break;
@@ -411,27 +439,38 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
         return super.onOptionsItemSelected(item);
     }
 
+    private void goBack() {
+        super.onBackPressed();
+//        finish();
+//        overridePendingTransition(R.anim.keep, R.anim.footer_disappear);
+    }
+
     private void checkSave() {
-
-        final ConfirmDialog dialog = new ConfirmDialog(this);
-        dialog.setMessage("要保存未发送内容为草稿吗？");
-        dialog.setTitle("保存草稿");
-        dialog.setClickListener(new SimpleDialogListener() {
-
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("保存草稿");
+        builder.setMessage("要保存未发送内容为草稿吗？");
+        builder.setPositiveButton("保存", new DialogInterface.OnClickListener() {
             @Override
-            public void onPositiveClick() {
-                super.onPositiveClick();
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
                 doSaveRecord();
-                finish();
-                overridePendingTransition(R.anim.keep, R.anim.footer_disappear);
-            }
-
-            @Override
-            public void onNegativeClick() {
-                super.onNegativeClick();
-                finish();
+                goBack();
             }
         });
+        /*builder.setNeutralButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });*/
+        builder.setNegativeButton("不保存", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                goBack();
+            }
+        });
+        AlertDialog dialog = builder.create();
         dialog.show();
     }
 
@@ -448,6 +487,27 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
         hidePhoto();
         photo = null;
         photoUri = null;
+    }
+
+    private void showRemoveDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("移除照片");
+        builder.setMessage("是否要移除该照片？");
+        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                removePhoto();
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void pickPhotoFromCamera() {
@@ -470,15 +530,6 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
         // startActivityForResult(intent, REQUEST_PHOTO_LIBRARY);
         startActivityForResult(Intent.createChooser(intent, "选择照片"),
                 REQUEST_PHOTO_LIBRARY);
-    }
-
-    private void toggleLocation() {
-        enableLocation = !enableLocation;
-        OptionHelper.saveBoolean(mContext, R.string.option_location_enable,
-                enableLocation);
-        if (AppContext.DEBUG)
-            log("location enable status=" + enableLocation);
-        actionLocation.setImageLevel(enableLocation ? 1 : 0);
     }
 
     private void pickMentions() {

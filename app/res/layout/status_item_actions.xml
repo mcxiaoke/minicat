@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal" >
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal" android:background="@color/holo_blue_light">
 
     <ImageButton
-        android:id="@+id/action_reply"
-        style="@style/ActionItem"
-        android:src="@drawable/ic_reply" />
+            android:id="@+id/action_reply"
+            style="@style/ActionItem"
+            android:src="@drawable/ic_reply"/>
 
     <ImageButton
-        android:id="@+id/action_retweet"
-        style="@style/ActionItem"
-        android:src="@drawable/ic_retweet" />
+            android:id="@+id/action_retweet"
+            style="@style/ActionItem"
+            android:src="@drawable/ic_retweet"/>
 
     <ImageButton
-        android:id="@+id/action_favorite"
-        style="@style/ActionItem"
-        android:src="@drawable/ic_favorite" />
+            android:id="@+id/action_favorite"
+            style="@style/ActionItem"
+            android:src="@drawable/ic_favorite"/>
 
     <ImageButton
-        android:id="@+id/action_share"
-        style="@style/ActionItem"
-        android:src="@drawable/ic_share" />
+            android:id="@+id/action_share"
+            style="@style/ActionItem"
+            android:src="@drawable/ic_share"/>
 
 </LinearLayout>

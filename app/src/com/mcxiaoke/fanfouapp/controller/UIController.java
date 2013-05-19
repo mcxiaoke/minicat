@@ -135,9 +135,9 @@ public class UIController {
 
     public static void showWrite(Activity activity) {
         Intent intent = new Intent(activity, UIWrite.class);
-//		startUIByAnimation(context, intent);
-        activity.startActivity(intent);
-        activity.overridePendingTransition(R.anim.footer_appear, R.anim.keep);
+		startUIByAnimation(activity, intent);
+//        activity.startActivity(intent);
+//        activity.overridePendingTransition(R.anim.footer_appear, R.anim.keep);
     }
 
     public static void showWrite(Activity context, String text, File file) {
@@ -264,6 +264,14 @@ public class UIController {
         intent.putExtra("type", UserModel.TYPE_FOLLOWERS);
         intent.putExtra("id", id);
         startUIByAnimation(context, intent);
+    }
+
+
+    public static void showPhoto(Activity context, String url) {
+        Intent intent = new Intent(context, UIPhoto.class);
+        intent.putExtra("url", url);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_enter);
     }
 
 }

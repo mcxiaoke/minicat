@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
@@ -73,7 +72,7 @@ public class UIThread extends UIBaseSupport implements
         mListView.setFooterDividersEnabled(true);
         mListView.setCacheColorHint(0);
         mListView.setDrawSelectorOnTop(true);
-        mListView.setScrollBarStyle(ScrollView.SCROLLBARS_OUTSIDE_OVERLAY);
+        mListView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         mListView.setBackgroundResource(R.drawable.general_background);
         mListView.setLongClickable(false);
         mListView.setOnItemClickListener(this);

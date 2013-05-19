@@ -1,42 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/root"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:scrollbars="none" >
+            android:id="@+id/root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="none" android:background="@color/background">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/content"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" >
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
 
-            <com.mcxiaoke.fanfouapp.ui.widget.MyAutoCompleteTextView
-                android:id="@+id/input"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:gravity="top|left"
-                android:padding="8dp"
-                android:singleLine="false"
-                android:textSize="@dimen/text_size_medium" />
+            <LinearLayout android:id="@+id/content" android:layout_alignParentTop="true"
+                          android:layout_width="match_parent"
+                          android:layout_height="match_parent"
+                          android:orientation="horizontal" android:layout_weight="1" android:background="@color/white">
 
-            <include
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                layout="@layout/write_info" />
+                <com.mcxiaoke.fanfouapp.ui.widget.MyAutoCompleteTextView
+                        android:id="@+id/input" android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@null"
+                        android:gravity="top|left"
+                        android:padding="8dp"
+                        android:singleLine="false"
+                        android:textSize="@dimen/text_size_medium"/>
+
+                <include layout="@layout/write_photo"/>
+
+            </LinearLayout>
+
+            <TextView
+                    android:id="@+id/write_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_above="@id/actions" android:padding="@dimen/card_margin"
+                    android:textSize="@dimen/text_size_small"/>
+
         </RelativeLayout>
 
-        <include layout="@layout/write_actions" />
 
-        <!-- <include layout="@layout/write_photo" /> -->
+        <include layout="@layout/write_actions" android:layout_alignParentBottom="true"/>
+
     </LinearLayout>
 
 </ScrollView>

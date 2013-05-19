@@ -111,7 +111,7 @@ public class UIStatus extends UIBaseSupport {
     private void parseIntent() {
         Intent intent = getIntent();
         statusId = intent.getStringExtra("id");
-        status = (StatusModel) intent.getParcelableExtra("data");
+        status = intent.getParcelableExtra("data");
 
         if (status != null) {
             statusId = status.getId();
@@ -350,10 +350,7 @@ public class UIStatus extends UIBaseSupport {
             if (AppContext.DEBUG) {
                 Log.d(TAG, "goPhotoViewer() url=" + photoUrl);
             }
-            Intent intent = new Intent(mContext, UIPhoto.class);
-            intent.putExtra("url", photoUrl);
-            mContext.startActivity(intent);
-            overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_enter);
+            UIController.showPhoto(mContext, photoUrl);
         }
     }
 
