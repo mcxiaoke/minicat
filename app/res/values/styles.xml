@@ -4,16 +4,39 @@
     <style name="ProfileButtonStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">@dimen/card_margin</item>
-        <item name="android:background">@drawable/list_selector</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">@dimen/profile_row_padding</item>
+        <item name="android:background">@drawable/selector_list_light</item>
+    </style>
+
+    <style name="ProfileItemStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">@dimen/profile_item_padding</item>
+        <item name="android:background">@drawable/selector_list_light</item>
+        <item name="android:gravity">center_horizontal</item>
     </style>
 
     <style name="ProfileButtonTextStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/text_color_selectable</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/text_color_selectable_primary_light</item>
         <item name="android:textSize">@dimen/text_size_large</item>
-        <item name="android:duplicateParentState">true</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:padding">1dp</item>
+    </style>
+
+    <style name="ProfileButtonTextMetaStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/text_color_selectable_secondary_light</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:padding">1dp</item>
     </style>
 
     <style name="StatusTextStyle">

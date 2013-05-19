@@ -21,7 +21,7 @@
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" android:showDividers="middle"
+                    android:orientation="vertical" android:showDividers="none"
                     android:divider="?android:dividerHorizontal">
 
                 <include

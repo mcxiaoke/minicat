@@ -56,7 +56,7 @@ public class UIThread extends UIBaseSupport implements
 
     protected void setLayout() {
         setContentView(R.layout.list_pull);
-        int padding = getResources().getDimensionPixelSize(R.dimen.card_margin);
+        int dividerHeight = getResources().getDimensionPixelSize(R.dimen.list_divider_height);
         setTitle("对话");
         mPullToRefreshView = (PullToRefreshListView) findViewById(R.id.pull_list);
         mPullToRefreshView.setPullToRefreshOverScrollEnabled(false);
@@ -64,16 +64,13 @@ public class UIThread extends UIBaseSupport implements
         mPullToRefreshView.setMode(Mode.PULL_FROM_START);
         mPullToRefreshView.setOnRefreshListener(this);
         mListView = mPullToRefreshView.getRefreshableView();
-        mListView.setPadding(padding, padding, padding, padding);
         mListView.setDivider(getResources()
                 .getDrawable(R.drawable.list_divider));
-        mListView.setDividerHeight(padding);
+        mListView.setDividerHeight(dividerHeight);
         mListView.setHeaderDividersEnabled(true);
         mListView.setFooterDividersEnabled(true);
         mListView.setCacheColorHint(0);
-        mListView.setDrawSelectorOnTop(true);
         mListView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-        mListView.setBackgroundResource(R.drawable.general_background);
         mListView.setLongClickable(false);
         mListView.setOnItemClickListener(this);
         mListView.setAdapter(mStatusAdapter);

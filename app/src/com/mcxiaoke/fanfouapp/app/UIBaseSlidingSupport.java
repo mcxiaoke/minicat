@@ -42,7 +42,7 @@ abstract class UIBaseSlidingSupport extends UIBaseSupport implements
 		mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 		mSlidingMenu.setShadowWidth(getResources().getDimensionPixelOffset(
 				R.dimen.sliding_shadow));
-		mSlidingMenu.setShadowDrawable(R.drawable.menu_shadow);
+		mSlidingMenu.setShadowDrawable(R.drawable.sliding_menu_shadow);
 		mSlidingMenu.setBehindOffset(getResources().getDimensionPixelOffset(
 				R.dimen.sliding_offset));
 		mSlidingMenu.setFadeDegree(0.35f);

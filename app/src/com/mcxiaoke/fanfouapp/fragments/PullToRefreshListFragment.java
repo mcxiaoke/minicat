@@ -109,24 +109,23 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     }
 
     private void setLayout(View root) {
-        int padding = getResources().getDimensionPixelSize(R.dimen.card_margin);
+//        int padding = getResources().getDimensionPixelSize(R.dimen.card_margin);
+        int dividerHeight = getResources().getDimensionPixelSize(R.dimen.list_divider_height);
         mPullToRefreshView = (PullToRefreshListView) root;
         mPullToRefreshView.setOnRefreshListener(this);
         mPullToRefreshView.setPullToRefreshOverScrollEnabled(false);
         mPullToRefreshView.setShowIndicator(false);
         mPullToRefreshView.setMode(Mode.BOTH);
         mListView = mPullToRefreshView.getRefreshableView();
-        mListView.setSelector(getResources().getDrawable(R.drawable.list_selector));
-        mListView.setPadding(padding, padding, padding, padding);
+        mListView.setSelector(getResources().getDrawable(R.drawable.selector_list_light));
+//        mListView.setPadding(padding, padding, padding, padding);
         mListView.setDivider(getResources()
                 .getDrawable(R.drawable.list_divider));
-        mListView.setDividerHeight(padding);
+        mListView.setDividerHeight(dividerHeight);
         mListView.setHeaderDividersEnabled(true);
         mListView.setFooterDividersEnabled(true);
         mListView.setCacheColorHint(0);
-        mListView.setDrawSelectorOnTop(true);
         mListView.setScrollBarStyle(ScrollView.SCROLLBARS_OUTSIDE_OVERLAY);
-        mListView.setBackgroundResource(R.drawable.general_background);
         mListView.setOnItemClickListener(this);
         mListView.setLongClickable(false);
     }

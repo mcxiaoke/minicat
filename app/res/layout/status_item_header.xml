@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:padding="@dimen/card_margin" android:background="@drawable/selector_white">
+                android:padding="@dimen/card_margin" android:background="@drawable/selector_header_light">
 
     <ImageView
             android:id="@+id/header_image"
@@ -18,8 +18,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@id/header_image"
-            android:padding="@dimen/profile_header_text_padding"
-            android:textSize="@dimen/text_size_large"/>
+            android:padding="@dimen/profile_header_text_padding" android:textColor="@color/black"
+            android:textSize="@dimen/text_size_large" android:duplicateParentState="true"/>
 
     <TextView
             android:id="@+id/header_relation"
@@ -28,7 +28,14 @@
             android:layout_below="@id/header_name"
             android:layout_toRightOf="@id/header_image"
             android:padding="@dimen/profile_header_text_padding"
-            android:textSize="@dimen/text_size_tiny"
-            android:visibility="gone"/>
+            android:textSize="@dimen/text_size_tiny" android:textColor="@color/black"
+            android:visibility="gone" android:duplicateParentState="true"/>
+
+    <ImageView
+            android:id="@+id/header_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true" android:src="@drawable/icon_more_detail"
+            android:layout_alignParentRight="true" android:layout_margin="@dimen/image_frame_padding"/>
 
 </RelativeLayout>

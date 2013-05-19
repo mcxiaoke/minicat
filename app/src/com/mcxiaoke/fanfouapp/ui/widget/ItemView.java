@@ -3,7 +3,6 @@ package com.mcxiaoke.fanfouapp.ui.widget;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -69,9 +68,6 @@ public class ItemView extends RelativeLayout {
         final Resources res = getResources();
         mPadding = res.getDimensionPixelSize(R.dimen.list_item_padding);
         mViewMode = ViewMode.StatusMode;
-
-        setPadding(mPadding, mPadding, mPadding, mPadding);
-        setBackgroundColor(Color.WHITE);
 
         checkViewMode();
     }

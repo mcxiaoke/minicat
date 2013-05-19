@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:textColor="@color/holo_blue_dark"
+        android:textColor="@color/theme_blue_light"
         android:textSize="@dimen/text_size_large" />
 
 </RelativeLayout>

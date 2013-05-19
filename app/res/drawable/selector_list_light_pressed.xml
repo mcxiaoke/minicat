@@ -15,8 +15,8 @@
      limitations under the License.
 -->
 
-<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <solid android:color="@color/background" />
+    <solid android:color="@color/selector_list_color_light_pressed"/>
 
 </shape>

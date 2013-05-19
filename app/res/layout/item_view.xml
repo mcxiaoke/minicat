@@ -22,7 +22,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignWithParentIfMissing="true"
             android:layout_toRightOf="@id/image"
-            android:padding="4dp"
+            android:padding="4dp" android:textColor="@color/text_color_selectable_primary_light"
             android:textSize="@dimen/text_size_medium"
             android:textStyle="bold"/>
 
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/title"
             android:layout_below="@id/title"
-            android:padding="2dp"
+            android:padding="2dp" android:textColor="@color/text_color_selectable_primary_light"
             android:textSize="@dimen/text_size_medium"/>
 
     <TextView
@@ -49,8 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/text"
             android:layout_below="@id/text"
-            android:padding="4dp"
-            android:textColor="@color/grey"
+            android:padding="4dp" android:textColor="@color/text_color_selectable_secondary_light"
             android:textSize="@dimen/text_size_tiny"/>
 
     <TextView
@@ -60,7 +59,7 @@
             android:layout_alignParentRight="true"
             android:layout_below="@id/text"
             android:padding="4dp"
-            android:textColor="@color/grey"
+            android:textColor="@color/text_color_selectable_secondary_light"
             android:textSize="@dimen/text_size_tiny"/>
 
 </merge>

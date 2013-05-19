@@ -32,7 +32,7 @@
             android:layout_alignBaseline="@id/header_name"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/header_name"
-            android:background="@color/holo_blue_light"
+            android:background="@color/theme_blue_light"
             android:text="正在关注" android:clickable="false"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_tiny" android:padding="2dp" android:visibility="gone"/>
@@ -59,13 +59,13 @@
             android:textColor="@color/grey"
             android:textSize="@dimen/text_size_small"/>
 
-    <TextView
+<!--    <TextView
             android:id="@+id/header_expand"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/header_intro"
             android:layout_below="@id/header_intro"
             android:text="@string/expand"
-            android:textColor="@color/holo_blue_light"
-            android:textSize="@dimen/text_size_small"/>
+            android:textColor="@color/theme_blue_light"
+            android:textSize="@dimen/text_size_small"/>-->
 </RelativeLayout>

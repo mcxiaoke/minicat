@@ -15,8 +15,8 @@
      limitations under the License.
 -->
 
-<shape xmlns:android="http://schemas.android.com/apk/res/android" >
-    
-    <solid android:color="@color/holo_blue_light"/>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <solid android:color="@color/sliding_menu_background_color"/>
 
 </shape>

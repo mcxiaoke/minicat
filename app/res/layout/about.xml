@@ -3,7 +3,7 @@
     android:id="@+id/root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/general_card_background"
+    android:background="@color/solid_white"
     android:fillViewport="true"
     android:padding="@dimen/card_margin"
     android:scrollbars="none" >

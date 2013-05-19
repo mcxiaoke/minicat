@@ -79,7 +79,7 @@ public class UISearchResults extends UIBaseSupport implements
 	protected void setLayout() {
 		setContentView(R.layout.list_pull);
 
-		int padding = getResources().getDimensionPixelSize(R.dimen.card_margin);
+		int dividerHeight = getResources().getDimensionPixelSize(R.dimen.list_divider_height);
 
 		mPullToRefreshView = (PullToRefreshListView) findViewById(R.id.pull_list);
 		mPullToRefreshView.setPullToRefreshOverScrollEnabled(false);
@@ -87,17 +87,14 @@ public class UISearchResults extends UIBaseSupport implements
 		mPullToRefreshView.setMode(Mode.BOTH);
 		mPullToRefreshView.setOnRefreshListener(this);
 		mListView = mPullToRefreshView.getRefreshableView();
-		mListView.setPadding(padding, padding, padding, padding);
 		mListView.setDivider(getResources()
 				.getDrawable(R.drawable.list_divider));
-		mListView.setDividerHeight(padding);
+		mListView.setDividerHeight(dividerHeight);
 		mListView.setHeaderDividersEnabled(true);
 		mListView.setFooterDividersEnabled(true);
 		mListView.setCacheColorHint(0);
-		mListView.setDrawSelectorOnTop(true);
 		mListView.setScrollBarStyle(ScrollView.SCROLLBARS_OUTSIDE_OVERLAY);
-		mListView.setBackgroundResource(R.drawable.general_background);
-        mListView.setSelector(getResources().getDrawable(R.drawable.list_selector));
+        mListView.setSelector(getResources().getDrawable(R.drawable.selector_list_light));
 		mListView.setLongClickable(false);
 		mListView.setOnItemClickListener(this);
 		mListView.setAdapter(mStatusAdapter);

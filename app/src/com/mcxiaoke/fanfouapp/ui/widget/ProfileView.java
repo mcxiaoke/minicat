@@ -28,44 +28,47 @@ public class ProfileView extends FrameLayout implements
 
     private ViewGroup header;
     private ImageView headerImage;
-
     private TextView headerName;
-
     private TextView headerState;
-
     private ImageView headerLock;
-
     private TextView headerIntro;
-    private TextView headerExpand;
+
+    private View vExtras;
+    private TextView btnFollowState;
+
+    private View vFollowingItem;
+    private View vFollowersItem;
+    private View vStatusesItem;
+
+    private TextView tvFollowingItemTitle;
+    private TextView tvFollowersItemTitle;
+    private TextView tvStatusesItemTitle;
+
+    private TextView tvFollowingItemValue;
+    private TextView tvFollowersItemValue;
+    private TextView tvStatusesItemValue;
 
 
-    private TextView tvStatusesLeft;
+    private View vStatusesRow;
+    private View vFavoritesRow;
+    private View vFollowingRow;
+    private View vFollowersRow;
+    private View vPhotosRow;
 
-    private TextView tvFavoritesLeft;
+    private TextView tvStatusesRowTitle;
+    private TextView tvFavoritesRowTitle;
+    private TextView tvFollowingRowTitle;
+    private TextView tvFollowersRowTitle;
+    private TextView tvPhotosRowTitle;
 
-    private TextView tvFriendsLeft;
+    private TextView tvStatusesRowValue;
+    private TextView tvFavoritesRowValue;
+    private TextView tvFollowingRowValue;
+    private TextView tvFollowersRowValue;
+    private TextView tvPhotosRowValue;
 
-    private TextView tvFollowersLeft;
 
-    private TextView tvPhotosLeft;
-
-    private TextView tvStatusesRight;
-
-    private TextView tvFavoritesRight;
-
-    private TextView tvFriendsRight;
-
-    private TextView tvFollowersRight;
-
-    private TextView tvPhotosRight;
-
-    private View vStatuses;
-    private View vFavorites;
-    private View vFriends;
-    private View vFollowers;
-    private View vPhotos;
-
-//    private TextView tvDescription;
+    private TextView tvInfo;
 
     private boolean mExpanded;
 
@@ -101,93 +104,143 @@ public class ProfileView extends FrameLayout implements
         headerState.setText("正在关注你");
         headerLock = (ImageView) findViewById(R.id.header_lock);
         headerIntro = (TextView) findViewById(R.id.header_intro);
-        headerExpand = (TextView) findViewById(R.id.header_expand);
 
-        vStatuses = findViewById(R.id.button1);
-        vFavorites = findViewById(R.id.button2);
+        vExtras = findViewById(R.id.extras);
+        btnFollowState = (TextView) findViewById(R.id.btn_state);
 
-        vFriends = findViewById(R.id.button3);
-        vFollowers = findViewById(R.id.button4);
-        vPhotos = findViewById(R.id.button5);
+        vFollowingItem = findViewById(R.id.item1);
+        vFollowersItem = findViewById(R.id.item2);
+        vStatusesItem = findViewById(R.id.item3);
 
-        tvStatusesLeft = (TextView) findViewById(R.id.text_left1);
-        tvFavoritesLeft = (TextView) findViewById(R.id.text_left2);
-        tvFriendsLeft = (TextView) findViewById(R.id.text_left3);
-        tvFollowersLeft = (TextView) findViewById(R.id.text_left4);
-        tvPhotosLeft = (TextView) findViewById(R.id.text_left5);
+        tvFollowingItemTitle = (TextView) findViewById(R.id.text_title1);
+        tvFollowersItemTitle = (TextView) findViewById(R.id.text_title2);
+        tvStatusesItemTitle = (TextView) findViewById(R.id.text_title3);
 
-        tvStatusesLeft.setText("消息");
-        tvFavoritesLeft.setText("收藏");
-        tvFriendsLeft.setText("关注");
-        tvFollowersLeft.setText("被关注");
-        tvPhotosLeft.setText("查看相册");
+        tvFollowingItemValue = (TextView) findViewById(R.id.text_value1);
+        tvFollowersItemValue = (TextView) findViewById(R.id.text_value2);
+        tvStatusesItemValue = (TextView) findViewById(R.id.text_value3);
 
-        tvStatusesRight = (TextView) findViewById(R.id.text_right1);
-        tvFavoritesRight = (TextView) findViewById(R.id.text_right2);
-        tvFriendsRight = (TextView) findViewById(R.id.text_right3);
-        tvFollowersRight = (TextView) findViewById(R.id.text_right4);
-        tvPhotosRight = (TextView) findViewById(R.id.text_right5);
+        tvFollowingItemValue.setText("关注");
+        tvFollowersItemValue.setText("被关注");
+        tvStatusesItemValue.setText("消息");
 
-//        tvDescription = (TextView) root.findViewById(R.id.description);
+        vPhotosRow = findViewById(R.id.button1);
+        vFavoritesRow = findViewById(R.id.button2);
+        vFollowingRow = findViewById(R.id.button3);
+        vFollowersRow = findViewById(R.id.button4);
+        vStatusesRow = findViewById(R.id.button5);
+
+        tvPhotosRowTitle = (TextView) findViewById(R.id.text_left1);
+        tvFavoritesRowTitle = (TextView) findViewById(R.id.text_left2);
+        tvFollowingRowTitle = (TextView) findViewById(R.id.text_left3);
+        tvFollowersRowTitle = (TextView) findViewById(R.id.text_left4);
+        tvStatusesRowTitle = (TextView) findViewById(R.id.text_left5);
+
+        tvPhotosRowValue = (TextView) findViewById(R.id.text_right1);
+        tvFavoritesRowValue = (TextView) findViewById(R.id.text_right2);
+        tvFollowingRowValue = (TextView) findViewById(R.id.text_right3);
+        tvFollowersRowValue = (TextView) findViewById(R.id.text_right4);
+        tvStatusesRowValue = (TextView) findViewById(R.id.text_right5);
+
+        tvPhotosRowTitle.setText("查看相册");
+        tvStatusesRowTitle.setText("消息");
+        tvFavoritesRowTitle.setText("收藏");
+        tvFollowingRowTitle.setText("关注");
+        tvFollowersRowTitle.setText("被关注");
+
+        tvPhotosRowValue.setText("");
+
+        tvInfo = (TextView) findViewById(R.id.info);
 
     }
 
     private void setListeners() {
 
-        header.setOnClickListener(this);
-//        headerLock.setOnClickListener(this);
-//        headerExpand.setOnClickListener(this);
+//        header.setOnClickListener(this);
+        btnFollowState.setOnClickListener(this);
 
-        vStatuses.setOnClickListener(this);
-        vFavorites.setOnClickListener(this);
-        vFriends.setOnClickListener(this);
-        vFollowers.setOnClickListener(this);
-        vPhotos.setOnClickListener(this);
+        vFollowingItem.setOnClickListener(this);
+        vFollowersItem.setOnClickListener(this);
+        vStatusesItem.setOnClickListener(this);
+
+        vPhotosRow.setOnClickListener(this);
+        vStatusesRow.setOnClickListener(this);
+        vFavoritesRow.setOnClickListener(this);
+        vFollowingRow.setOnClickListener(this);
+        vFollowersRow.setOnClickListener(this);
     }
 
     private void updateHeader(final UserModel user) {
         headerName.setText(user.getScreenName());
         headerLock.setVisibility(user.isProtect() ? View.VISIBLE : View.INVISIBLE);
-        headerIntro.setText(user.getDescription());
         String headerImageUrl = user.getProfileImageUrl();
         ImageLoader.getInstance().displayImage(headerImageUrl, headerImage);
     }
 
+    private void updateExtras(final UserModel user) {
+        btnFollowState.setText(user.isFollowing() ? "正在关注" : "添加关注");
+    }
+
     private void updateStatistics(final UserModel user) {
-        tvStatusesRight.setText("" + user.getStatusesCount());
-        tvFavoritesRight.setText("" + user.getFavouritesCount());
-        tvFriendsRight.setText("" + user.getFriendsCount());
-        tvFollowersRight.setText("" + user.getFollowersCount());
+        tvFollowingItemTitle.setText("" + user.getFriendsCount());
+        tvFollowersItemTitle.setText("" + user.getFollowersCount());
+        tvStatusesItemTitle.setText("" + user.getStatusesCount());
+
+        tvStatusesRowValue.setText("" + user.getStatusesCount());
+        tvFavoritesRowValue.setText("" + user.getFavouritesCount());
+        tvFollowingRowValue.setText("" + user.getFriendsCount());
+        tvFollowersRowValue.setText("" + user.getFollowersCount());
     }
 
     private void updateDescription(final UserModel user) {
+        String gender = user.getGender();
+        String birthday = user.getBirthday();
+        String location = user.getLocation();
+        String url = user.getUrl();
+        String time = DateTimeHelper.formatDateOnly(user.getTime());
+        String description = user.getDescription();
+
+        //TODO 如果有填写网址，MENU菜单里添加打开 个人网站 选项
+        // TODO 个人页面需要发消息，发私信选项
+        //TODO 添加箭头
+
+
+        StringBuilder simpleBuilder = new StringBuilder();
+        simpleBuilder.append("性别：").append(StringHelper.isEmpty(gender) ? "未知" : gender).append("\n");
+
+        if (!StringHelper.isEmpty(location)) {
+            simpleBuilder.append("位置：").append(location).append("\n");
+        } else if (!StringHelper.isEmpty(birthday)) {
+            simpleBuilder.append("生日：").append(birthday).append("\n");
+        } else {
+            simpleBuilder.append("注册时间：")
+                    .append(time).append("\n");
+        }
 
         StringBuffer sb = new StringBuffer();
 
         sb.append("自述：").append("\n");
-        sb.append(user.getDescription()).append("\n\n");
+        sb.append(StringHelper.isEmpty(description) ? "这家伙很懒，什么都没写" : description).append("\n\n");
 
-        if (!StringHelper.isEmpty(user.getGender())) {
-            sb.append("性别：").append(user.getGender()).append("\n");
+        if (!StringHelper.isEmpty(gender)) {
+            sb.append("性别：").append(gender).append("\n");
         }
-        if (!StringHelper.isEmpty(user.getBirthday())) {
-            sb.append("生日：").append(user.getBirthday()).append("\n");
+        if (!StringHelper.isEmpty(birthday)) {
+            sb.append("生日：").append(birthday).append("\n");
         }
-        if (!StringHelper.isEmpty(user.getLocation())) {
-            sb.append("位置：").append(user.getLocation()).append("\n");
+        if (!StringHelper.isEmpty(location)) {
+            sb.append("位置：").append(location).append("\n");
         }
 
-        if (!StringHelper.isEmpty(user.getUrl())) {
-            sb.append("网站：").append(user.getUrl()).append("\n");
+        if (!StringHelper.isEmpty(url)) {
+            sb.append("网站：").append(url).append("\n");
         }
 
         sb.append("注册时间：")
-                .append(DateTimeHelper.formatDateOnly(user.getTime())).append("\n");
+                .append(time).append("\n");
 
-
-        headerIntro.setText(sb.toString());
-
-//        tvDescription.setText(sb.toString());
+        headerIntro.setText(simpleBuilder.toString());
+        tvInfo.setText(sb.toString());
 
     }
 
