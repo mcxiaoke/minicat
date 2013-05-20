@@ -66,8 +66,10 @@ public class ItemView extends RelativeLayout {
         mViewStub = (ViewStub) findViewById(R.id.stub);
 
         final Resources res = getResources();
-        mPadding = res.getDimensionPixelSize(R.dimen.list_item_padding);
+        mPadding = res.getDimensionPixelSize(R.dimen.list_card_padding);
         mViewMode = ViewMode.StatusMode;
+
+        setPadding(mPadding, mPadding, mPadding, mPadding);
 
         checkViewMode();
     }
@@ -79,7 +81,7 @@ public class ItemView extends RelativeLayout {
             mIconFavorite = (ImageView) findViewById(R.id.ic_favorite);
             mIconThread = (ImageView) findViewById(R.id.ic_thread);
             mIconPhoto = (ImageView) findViewById(R.id.ic_photo);
-            mIconRetweet= (ImageView) findViewById(R.id.ic_retweet);
+            mIconRetweet = (ImageView) findViewById(R.id.ic_retweet);
             mIconLock = (ImageView) findViewById(R.id.ic_lock);
         }
     }

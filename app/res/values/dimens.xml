@@ -46,4 +46,9 @@
     <dimen name="list_item_padding">2dp</dimen>
     <dimen name="card_divider">8dp</dimen>
 
+
+    <dimen name="list_padding">6dp</dimen>
+    <dimen name="list_card_padding">6dp</dimen>
+    <dimen name="list_card_divider_height">6dp</dimen>
+
 </resources>
