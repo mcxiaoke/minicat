@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="activity_animation_duration">220</integer>
+    <integer name="activity_animation_startoffset">150</integer>
+</resources>
