@@ -4,15 +4,15 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.controller.EmptyViewController;
 import com.mcxiaoke.fanfouapp.ui.imagezoom.ImageViewTouch;
@@ -40,9 +40,11 @@ public class UIPhoto extends Activity implements OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState);
-        getActionBar().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
-        getActionBar().hide();
+        getActionBar().setBackgroundDrawable(new ColorDrawable(0x66333333));
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setTitle("查看图片");
         initialize();
         setLayout();
     }
@@ -83,24 +85,6 @@ public class UIPhoto extends Activity implements OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.photo) {
             toggleActionBar();
-        }
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        getMenuInflater().inflate(R.menu.menu_photo, menu);
-    }
-
-    @Override
-    public boolean onContextItemSelected(android.view.MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_save:
-                doSave();
-                return true;
-            default:
-                return super.onContextItemSelected(item);
         }
     }
 
@@ -175,11 +159,29 @@ public class UIPhoto extends Activity implements OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ImageLoader.getInstance().clearDiscCache();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_photo, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.menu_save:
+                doSave();
+                break;
+        }
+        return true;
     }
 
     private void doSave() {
-        File file = new File(url);
+        File file = ImageLoader.getInstance().getDiscCache().get(url);
         File dest = new File(IOHelper.getPhotoDir(this), file.getName());
         if (file.exists() || IOHelper.copyFile(file, dest)) {
             Utils.notify(this, "照片已保存到 " + dest.getAbsolutePath());
