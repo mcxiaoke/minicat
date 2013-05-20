@@ -4,5 +4,6 @@
                                                           android:id="@+id/pull_list"
                                                           android:layout_width="match_parent"
                                                           android:layout_height="match_parent"
-                                                          android:background="@color/background_color_light_primary"
-                                                          ptr:ptrAnimationStyle="flip"/>
+                                                          ptr:ptrAnimationStyle="flip"
+                                                          ptr:ptrHeaderBackground="@color/list_background_color"
+                                                          android:background="@color/list_background_color"/>

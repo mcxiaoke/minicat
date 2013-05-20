@@ -70,8 +70,9 @@
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name" android:screenOrientation="portrait">
         </activity>
+
         <activity
-                android:name=".app.UITimeline"
+                android:name=".app.UIProfile"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name" android:screenOrientation="portrait">
             <intent-filter>
@@ -83,6 +84,12 @@
                         android:host="@string/intent_host_profile"
                         android:scheme="@string/intent_scheme"/>
             </intent-filter>
+        </activity>
+
+        <activity
+                android:name=".app.UITimeline"
+                android:configChanges="keyboardHidden|orientation"
+                android:label="@string/app_name" android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".app.UISearch"

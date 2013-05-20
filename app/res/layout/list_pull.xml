@@ -3,7 +3,7 @@
               android:id="@+id/root"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical" android:background="@color/background_color_light_primary">
+              android:orientation="vertical">
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
             xmlns:ptr="http://schemas.android.com/apk/res-auto"
@@ -11,6 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             ptr:ptrAnimationStyle="flip"
-            ptr:ptrMode="both"/>
+            ptr:ptrMode="both" ptr:ptrHeaderBackground="@color/list_background_color"
+            android:background="@color/list_background_color"/>
 
 </LinearLayout>

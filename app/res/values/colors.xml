@@ -83,7 +83,7 @@
     <color name="background_color_light_secondary">#FFEEEEEE</color>
 
     <color name="list_background_color">#FFC0C0C0</color>
-    <color name="list_card_background_color">#FFFEFEFE</color>
+    <color name="list_card_background_color">#FFF3F3F3</color>
 
 
 </resources>

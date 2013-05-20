@@ -235,13 +235,13 @@ public class UIController {
     }
 
     public static void showProfile(Activity context, String id) {
-        Intent intent = new Intent(context, UITimeline.class);
+        Intent intent = new Intent(context, UIProfile.class);
         intent.putExtra("id", id);
         startUIByAnimation(context, intent);
     }
 
     public static void showProfile(Activity context, UserModel user) {
-        Intent intent = new Intent(context, UITimeline.class);
+        Intent intent = new Intent(context, UIProfile.class);
         intent.putExtra("id", user.getId());
         startUIByAnimation(context, intent);
     }

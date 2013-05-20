@@ -20,6 +20,7 @@ import com.mcxiaoke.fanfouapp.adapter.StatusThreadAdapter;
 import com.mcxiaoke.fanfouapp.api.Api;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
+import com.mcxiaoke.fanfouapp.ui.UIHelper;
 
 import java.util.List;
 
@@ -56,23 +57,18 @@ public class UIThread extends UIBaseSupport implements
 
     protected void setLayout() {
         setContentView(R.layout.list_pull);
-        int dividerHeight = getResources().getDimensionPixelSize(R.dimen.list_divider_height);
         setTitle("对话");
+
         mPullToRefreshView = (PullToRefreshListView) findViewById(R.id.pull_list);
+        mPullToRefreshView.setBackgroundColor(UIHelper.getCardUIBackgroundColor(getResources()));
         mPullToRefreshView.setPullToRefreshOverScrollEnabled(false);
         mPullToRefreshView.setShowIndicator(false);
         mPullToRefreshView.setMode(Mode.PULL_FROM_START);
         mPullToRefreshView.setOnRefreshListener(this);
         mListView = mPullToRefreshView.getRefreshableView();
-        mListView.setDivider(getResources()
-                .getDrawable(R.drawable.list_divider));
-        mListView.setDividerHeight(dividerHeight);
-        mListView.setHeaderDividersEnabled(true);
-        mListView.setFooterDividersEnabled(true);
-        mListView.setCacheColorHint(0);
-        mListView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         mListView.setLongClickable(false);
         mListView.setOnItemClickListener(this);
+        UIHelper.setListViewCardUI(mListView);
         mListView.setAdapter(mStatusAdapter);
 
         if (!TextUtils.isEmpty(id)) {

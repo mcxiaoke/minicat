@@ -5,7 +5,10 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:padding">@dimen/profile_row_padding</item>
+        <item name="android:paddingLeft">@dimen/profile_row_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/profile_row_horizontal_padding</item>
+        <item name="android:paddingTop">@dimen/profile_row_vertical_padding</item>
+        <item name="android:paddingBottom">@dimen/profile_row_vertical_padding</item>
         <item name="android:background">@drawable/selector_list_light</item>
     </style>
 
@@ -34,7 +37,7 @@
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:textColor">@color/text_color_selectable_secondary_light</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:singleLine">true</item>
         <item name="android:padding">1dp</item>
     </style>

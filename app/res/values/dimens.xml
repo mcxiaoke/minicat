@@ -41,7 +41,8 @@
     <!-- new card list ui -->
     <dimen name="card_margin">6dp</dimen>
     <dimen name="profile_item_padding">2dp</dimen>
-    <dimen name="profile_row_padding">8dp</dimen>
+    <dimen name="profile_row_vertical_padding">8dp</dimen>
+    <dimen name="profile_row_horizontal_padding">20dp</dimen>
     <dimen name="list_divider_height">1dp</dimen>
     <dimen name="list_item_padding">2dp</dimen>
     <dimen name="card_divider">8dp</dimen>

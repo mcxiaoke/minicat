@@ -2,23 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content" android:background="@color/white">
+              android:layout_height="match_parent" android:background="@drawable/list_card_background"
+              android:padding="@dimen/list_card_padding">
 
     <include layout="@layout/profile_header"/>
 
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider_color"/>
-
     <RelativeLayout android:orientation="horizontal" android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:padding="@dimen/profile_row_padding"
+                    android:layout_height="wrap_content" android:padding="@dimen/list_card_padding"
                     android:id="@+id/extras">
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:layout_alignParentLeft="true" android:layout_centerVertical="true" android:text="Following"
                   android:background="@drawable/selector_green" android:textColor="@color/solid_white"
-                  android:padding="@dimen/profile_item_padding" android:id="@+id/btn_state"/>
+                  android:padding="@dimen/list_card_padding" android:id="@+id/btn_state"/>
 
 
     </RelativeLayout>
@@ -26,7 +22,7 @@
     <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/divider_color"/>
+            android:background="@color/list_background_color"/>
 
 
     <LinearLayout android:orientation="horizontal" android:layout_width="match_parent"
@@ -46,7 +42,7 @@
         <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/divider_color"/>
+                android:background="@color/list_background_color"/>
 
         <LinearLayout style="@style/ProfileItemStyle" android:id="@+id/item2">
 
@@ -60,7 +56,7 @@
         <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/divider_color"/>
+                android:background="@color/list_background_color"/>
 
         <LinearLayout style="@style/ProfileItemStyle" android:id="@+id/item3">
 
@@ -76,8 +72,7 @@
 
     <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider_color"/>
+            android:layout_height="@dimen/list_card_padding" android:background="@color/list_background_color"/>
 
     <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button1">
 
@@ -94,7 +89,7 @@
     <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/divider_color"/>
+            android:background="@color/list_background_color"/>
 
     <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button2">
 
@@ -108,7 +103,7 @@
     <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/divider_color"/>
+            android:background="@color/list_background_color"/>
 
 
     <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button3">
@@ -124,7 +119,7 @@
     <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/divider_color"/>
+            android:background="@color/list_background_color"/>
 
 
     <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button4">
@@ -139,7 +134,7 @@
     <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/divider_color"/>
+            android:background="@color/list_background_color"/>
 
 
     <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button5">
@@ -153,8 +148,7 @@
 
     <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider_color"/>
+            android:layout_height="@dimen/list_card_padding" android:background="@color/list_background_color"/>
 
     <TextView
             android:id="@+id/info"
@@ -163,13 +157,8 @@
             android:layout_alignLeft="@id/header_intro"
             android:layout_below="@id/header_intro"
             android:textColor="@color/text_color_primary_light"
-            android:textSize="@dimen/text_size_medium" android:padding="@dimen/profile_item_padding"
+            android:textSize="@dimen/text_size_medium" android:padding="@dimen/list_card_padding"
             android:text="show use description here." android:autoLink="web"/>
-
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider_color"/>
 
 </LinearLayout>
 

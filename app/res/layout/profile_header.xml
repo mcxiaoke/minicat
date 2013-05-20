@@ -3,7 +3,7 @@
                 android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/card_margin" android:background="@color/white">
+                android:padding="@dimen/list_card_padding">
 
     <ImageView
             android:id="@+id/header_icon"
@@ -59,13 +59,13 @@
             android:textColor="@color/grey"
             android:textSize="@dimen/text_size_small"/>
 
-<!--    <TextView
-            android:id="@+id/header_expand"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/header_intro"
-            android:layout_below="@id/header_intro"
-            android:text="@string/expand"
-            android:textColor="@color/theme_blue_light"
-            android:textSize="@dimen/text_size_small"/>-->
+    <!--    <TextView
+                android:id="@+id/header_expand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/header_intro"
+                android:layout_below="@id/header_intro"
+                android:text="@string/expand"
+                android:textColor="@color/theme_blue_light"
+                android:textSize="@dimen/text_size_small"/>-->
 </RelativeLayout>
