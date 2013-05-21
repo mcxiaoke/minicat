@@ -110,7 +110,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     }
 
     private void setLayout(View root) {
-        mPullToRefreshView = (PullToRefreshListView) root;
+        mPullToRefreshView = (PullToRefreshListView) root.findViewById(R.id.pull_list);
         mPullToRefreshView.setOnRefreshListener(this);
         mPullToRefreshView.setPullToRefreshOverScrollEnabled(false);
         mPullToRefreshView.setShowIndicator(false);

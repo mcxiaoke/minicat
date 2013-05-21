@@ -21,14 +21,15 @@ public final class UIHelper {
 
     /**
      * // save index and top position
-     int index = mList.getFirstVisiblePosition();
-     View v = mList.getChildAt(0);
-     int top = (v == null) ? 0 : v.getTop();
-
-     // ...
-
-     // restore
-     mList.setSelectionFromTop(index, top);
+     * int index = mList.getFirstVisiblePosition();
+     * View v = mList.getChildAt(0);
+     * int top = (v == null) ? 0 : v.getTop();
+     * <p/>
+     * // ...
+     * <p/>
+     * // restore
+     * mList.setSelectionFromTop(index, top);
+     *
      * @param listView
      */
 
@@ -46,6 +47,17 @@ public final class UIHelper {
         listView.setFooterDividersEnabled(true);
         listView.setCacheColorHint(0);
         listView.setBackgroundResource(R.drawable.list_card_background);
+        listView.setScrollBarStyle(ScrollView.SCROLLBARS_OUTSIDE_OVERLAY);
+    }
+
+    public static void setListView(ListView listView) {
+        Resources res = listView.getResources();
+        int padding = res.getDimensionPixelSize(R.dimen.list_card_padding);
+        listView.setSelector(res.getDrawable(R.drawable.selector_list_light));
+        listView.setPadding(padding, padding, padding, padding);
+        listView.setHeaderDividersEnabled(true);
+        listView.setFooterDividersEnabled(true);
+        listView.setCacheColorHint(0);
         listView.setScrollBarStyle(ScrollView.SCROLLBARS_OUTSIDE_OVERLAY);
     }
 

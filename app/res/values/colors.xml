@@ -32,8 +32,8 @@
     <color name="grey_ffe3e3e3">#ffe3e3e3</color>
     <!-- holo style colors -->
     <!-- background -->
-<!--    <color name="background_holo_dark">#ff000000</color>
-    <color name="background_holo_light">#fff3f3f3</color>-->
+    <!--    <color name="background_holo_dark">#ff000000</color>
+        <color name="background_holo_light">#fff3f3f3</color>-->
     <!-- holo blue -->
     <!--    <color name="holo_blue_light">#ffFF45A3E5</color>
         <color name="holo_blue_light_alpha_33">#3333b5e5</color>
@@ -50,8 +50,8 @@
     <color name="holo_orange_dark">#ffff8800</color>
 
     <!-- new card ui colors -->
-<!--    <color name="background">#DDDDDD</color>
-    <color name="card_background">#FEFEFE</color>-->
+    <!--    <color name="background">#DDDDDD</color>
+        <color name="card_background">#FEFEFE</color>-->
 
     <!-- PagerSlidingTabStrip -->
     <color name="pager_sliding_tab_pressed">#6633B5E5</color>
@@ -84,6 +84,11 @@
 
     <color name="list_background_color">#FFC0C0C0</color>
     <color name="list_card_background_color">#FFF3F3F3</color>
+
+
+    <color name="text_color_primary_dark">#FFEEFFEE</color>
+    <color name="text_color_secondary_dark">#FF334433</color>
+    <color name="text_color_pressed_dark">#FF000000</color>
 
 
 </resources>

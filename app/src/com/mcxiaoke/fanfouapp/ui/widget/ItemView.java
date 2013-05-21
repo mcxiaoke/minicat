@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewStub;
@@ -153,16 +154,16 @@ public class ItemView extends RelativeLayout {
     }
 
     public void setTitleTextSize(float size) {
-        mTitleTextView.setTextSize(size);
+        mTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,size);
     }
 
     public void setContentTextSize(float size) {
-        mContentTextView.setTextSize(size);
+        mContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,size);
     }
 
     public void setMetaTextSize(float sizeA, float sizeB) {
-        mMetaATextView.setTextSize(sizeA);
-        mMetaBTextView.setTextSize(sizeB);
+        mMetaATextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,sizeA);
+        mMetaBTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,sizeB);
     }
 
     public void setTitleTextColor(int color) {
@@ -171,6 +172,10 @@ public class ItemView extends RelativeLayout {
 
     public void setContentTextColor(int color) {
         mContentTextView.setTextColor(color);
+    }
+
+    public void setContentMaxLines(int maxLines) {
+        mContentTextView.setMaxLines(maxLines);
     }
 
     public void setMetaTextColor(int colorA, int colorB) {

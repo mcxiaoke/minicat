@@ -3,7 +3,7 @@
        android:id="@+id/root"
        android:layout_width="fill_parent"
        android:layout_height="fill_parent"
-       android:orientation="horizontal" >
+       android:orientation="horizontal">
 
     <ImageView
             android:id="@+id/image"
@@ -24,7 +24,7 @@
             android:layout_toRightOf="@id/image"
             android:padding="4dp" android:textColor="@color/text_color_selectable_primary_light"
             android:textSize="@dimen/text_size_medium"
-            android:textStyle="bold"/>
+            android:textStyle="bold" android:singleLine="true"/>
 
     <ViewStub
             android:id="@+id/stub"
@@ -50,7 +50,7 @@
             android:layout_alignLeft="@id/text"
             android:layout_below="@id/text"
             android:padding="4dp" android:textColor="@color/text_color_selectable_secondary_light"
-            android:textSize="@dimen/text_size_tiny"/>
+            android:textSize="@dimen/text_size_tiny" android:singleLine="true"/>
 
     <TextView
             android:id="@+id/meta_b"
@@ -60,6 +60,6 @@
             android:layout_below="@id/text"
             android:padding="4dp"
             android:textColor="@color/text_color_selectable_secondary_light"
-            android:textSize="@dimen/text_size_tiny"/>
+            android:textSize="@dimen/text_size_tiny" android:singleLine="true"/>
 
 </merge>

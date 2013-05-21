@@ -1,7 +1,6 @@
 package com.mcxiaoke.fanfouapp.adapter;
 
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
-import com.mcxiaoke.fanfouapp.dao.model.UserModel;
 import com.mcxiaoke.fanfouapp.ui.widget.ItemView;
 import com.mcxiaoke.fanfouapp.util.DateTimeHelper;
 
@@ -52,17 +51,6 @@ public class UIHelper {
 //        }
 
         view.setMeta(metaA.toString(), metaB.toString());
-    }
-
-    public static void setContent(final ItemView view, final UserModel u) {
-        view.showIconLock(u.isProtect());
-        view.setTitle(u.getScreenName());
-        StringBuilder content = new StringBuilder();
-        content.append(u.getLocation());
-        content.append(" ");
-        content.append(u.getGender());
-        view.setContent(content.toString());
-        view.showMeta(false, false);
     }
 
 }

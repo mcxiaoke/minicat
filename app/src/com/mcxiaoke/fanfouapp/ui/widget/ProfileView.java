@@ -22,6 +22,20 @@ import com.nostra13.universalimageloader.core.ImageLoader;
  */
 public class ProfileView extends FrameLayout implements
         OnClickListener {
+    public static final int TYPE_TOP_STATUSES = 0;
+    public static final int TYPE_TOP_FOLLOWING = 1;
+    public static final int TYPE_TOP_FOLLOWERS = 2;
+
+    public static final int TYPE_PHOTOS = 5;
+    public static final int TYPE_FAVORATIES = 6;
+    public static final int TYPE_STATUSES = 7;
+    public static final int TYPE_FOLLOWING = 8;
+    public static final int TYPE_FOLLOWERS = 9;
+
+    public interface ProfileClickListener {
+        public void onProfileItemClick(int type);
+    }
+
     private static final String TAG = ProfileView.class.getSimpleName();
 
     private ScrollView vContent;
@@ -71,6 +85,8 @@ public class ProfileView extends FrameLayout implements
     private TextView tvInfo;
 
     private boolean mExpanded;
+
+    private ProfileClickListener mClickListener;
 
 
     public ProfileView(Context context) {
@@ -124,29 +140,29 @@ public class ProfileView extends FrameLayout implements
         tvFollowersItemValue.setText("被关注");
         tvStatusesItemValue.setText("消息");
 
-        vPhotosRow = findViewById(R.id.button1);
+        vStatusesRow = findViewById(R.id.button1);
         vFavoritesRow = findViewById(R.id.button2);
         vFollowingRow = findViewById(R.id.button3);
         vFollowersRow = findViewById(R.id.button4);
-        vStatusesRow = findViewById(R.id.button5);
+        vPhotosRow = findViewById(R.id.button5);
 
-        tvPhotosRowTitle = (TextView) findViewById(R.id.text_left1);
+        tvStatusesRowTitle = (TextView) findViewById(R.id.text_left1);
         tvFavoritesRowTitle = (TextView) findViewById(R.id.text_left2);
         tvFollowingRowTitle = (TextView) findViewById(R.id.text_left3);
         tvFollowersRowTitle = (TextView) findViewById(R.id.text_left4);
-        tvStatusesRowTitle = (TextView) findViewById(R.id.text_left5);
+        tvPhotosRowTitle = (TextView) findViewById(R.id.text_left5);
 
-        tvPhotosRowValue = (TextView) findViewById(R.id.text_right1);
+        tvStatusesRowValue = (TextView) findViewById(R.id.text_right1);
         tvFavoritesRowValue = (TextView) findViewById(R.id.text_right2);
         tvFollowingRowValue = (TextView) findViewById(R.id.text_right3);
         tvFollowersRowValue = (TextView) findViewById(R.id.text_right4);
-        tvStatusesRowValue = (TextView) findViewById(R.id.text_right5);
+        tvPhotosRowValue = (TextView) findViewById(R.id.text_right5);
 
-        tvPhotosRowTitle.setText("查看相册");
         tvStatusesRowTitle.setText("消息");
         tvFavoritesRowTitle.setText("收藏");
         tvFollowingRowTitle.setText("关注");
         tvFollowersRowTitle.setText("被关注");
+        tvPhotosRowTitle.setText("查看相册");
 
         tvPhotosRowValue.setText("");
 
@@ -163,11 +179,11 @@ public class ProfileView extends FrameLayout implements
         vFollowersItem.setOnClickListener(this);
         vStatusesItem.setOnClickListener(this);
 
-        vPhotosRow.setOnClickListener(this);
         vStatusesRow.setOnClickListener(this);
         vFavoritesRow.setOnClickListener(this);
         vFollowingRow.setOnClickListener(this);
         vFollowersRow.setOnClickListener(this);
+        vPhotosRow.setOnClickListener(this);
     }
 
     private void updateHeader(final UserModel user) {
@@ -244,6 +260,16 @@ public class ProfileView extends FrameLayout implements
 
     }
 
+    public void setProfileClickListener(ProfileClickListener listener) {
+        this.mClickListener = listener;
+    }
+
+    private void onProfileItemClick(int type) {
+        if (mClickListener != null) {
+            mClickListener.onProfileItemClick(type);
+        }
+    }
+
 
     public void setContent(final UserModel user) {
         updateHeader(user);
@@ -267,8 +293,22 @@ public class ProfileView extends FrameLayout implements
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.header) {
-            setExpanded(!mExpanded);
+        if (v == vFollowingItem) {
+            onProfileItemClick(TYPE_TOP_FOLLOWING);
+        } else if (v == vFollowersItem) {
+            onProfileItemClick(TYPE_TOP_FOLLOWERS);
+        } else if (v == vStatusesItem) {
+            onProfileItemClick(TYPE_TOP_STATUSES);
+        } else if (v == vPhotosRow) {
+            onProfileItemClick(TYPE_PHOTOS);
+        } else if (v == vFollowingRow) {
+            onProfileItemClick(TYPE_FOLLOWING);
+        } else if (v == vFollowersRow) {
+            onProfileItemClick(TYPE_FOLLOWERS);
+        } else if (v == vStatusesRow) {
+            onProfileItemClick(TYPE_STATUSES);
+        } else if (v == vFavoritesRow) {
+            onProfileItemClick(TYPE_FAVORATIES);
         }
     }
 

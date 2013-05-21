@@ -252,18 +252,20 @@ public class UIController {
         startUIByAnimation(context, intent);
     }
 
-    public static void showFriends(Activity context, String id) {
+    private static void showUserList(Activity context, String id, String name, boolean following) {
         Intent intent = new Intent(context, UIUserList.class);
-        intent.putExtra("type", UserModel.TYPE_FRIENDS);
+        intent.putExtra("type", following ? UserModel.TYPE_FRIENDS : UserModel.TYPE_FOLLOWERS);
         intent.putExtra("id", id);
+        intent.putExtra("name", name);
         startUIByAnimation(context, intent);
     }
 
-    public static void showFollowers(Activity context, String id) {
-        Intent intent = new Intent(context, UIUserList.class);
-        intent.putExtra("type", UserModel.TYPE_FOLLOWERS);
-        intent.putExtra("id", id);
-        startUIByAnimation(context, intent);
+    public static void showFollowing(Activity context, String id, String name) {
+        showUserList(context, id, name, true);
+    }
+
+    public static void showFollowers(Activity context, String id, String name) {
+        showUserList(context, id, name, false);
     }
 
 

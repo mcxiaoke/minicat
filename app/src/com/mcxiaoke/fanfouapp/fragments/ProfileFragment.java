@@ -26,7 +26,7 @@ import com.mcxiaoke.fanfouapp.util.Utils;
  * Date: 13-5-20
  * Time: 下午10:59
  */
-public class ProfileFragment extends AbstractFragment {
+public class ProfileFragment extends AbstractFragment implements ProfileView.ProfileClickListener {
     private static final String TAG = ProfileFragment.class.getSimpleName();
 
     public static ProfileFragment newInstance(String userId) {
@@ -65,6 +65,7 @@ public class ProfileFragment extends AbstractFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         vProfile = (ProfileView) getView().findViewById(R.id.profile);
+        vProfile.setProfileClickListener(this);
     }
 
 
@@ -103,6 +104,61 @@ public class ProfileFragment extends AbstractFragment {
         return null;
     }
 
+    @Override
+    public void onProfileItemClick(int type) {
+        if (type == ProfileView.TYPE_TOP_FOLLOWING) {
+            onTopFollowingClick();
+        } else if (type == ProfileView.TYPE_TOP_FOLLOWERS) {
+            onTopFollowersClick();
+        } else if (type == ProfileView.TYPE_TOP_STATUSES) {
+            onTopStatusesClick();
+        } else if (type == ProfileView.TYPE_PHOTOS) {
+            onItemPhotosClick();
+        } else if (type == ProfileView.TYPE_FOLLOWING) {
+            onItemFollowingClick();
+        } else if (type == ProfileView.TYPE_FOLLOWERS) {
+            onItemFollowersClick();
+        } else if (type == ProfileView.TYPE_STATUSES) {
+            onItemStatusesClick();
+        } else if (type == ProfileView.TYPE_FAVORATIES) {
+            onItemFavoratiesClick();
+        }
+    }
+
+
+    private void onTopFollowingClick() {
+        UIController.showFollowing(getActivity(), user.getId(), user.getScreenName());
+    }
+
+
+    private void onTopFollowersClick() {
+        UIController.showFollowers(getActivity(), user.getId(), user.getScreenName());
+    }
+
+
+    private void onTopStatusesClick() {
+
+    }
+
+
+    private void onItemPhotosClick() {
+
+    }
+
+    private void onItemFollowingClick() {
+
+    }
+
+    private void onItemFollowersClick() {
+
+    }
+
+    private void onItemFavoratiesClick() {
+    }
+
+    private void onItemStatusesClick() {
+
+    }
 
     private void refreshProfile() {
         if (user == null) {
