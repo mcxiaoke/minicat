@@ -51,13 +51,13 @@
 
     </RelativeLayout>
 
-    <Button android:layout_gravity="center_vertical" android:gravity="center" style="?android:borderlessButtonStyle"
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:paddingLeft="10dp" android:paddingRight="10dp"
-            android:singleLine="true"
-            android:text="Follow" android:layout_margin="0dp"
-            android:textColor="@color/text_color_selectable_primary_light"
-            android:background="@drawable/follow_state_notfollowing"
-            android:textSize="@dimen/text_size_small"/>
+    <TextView android:clickable="true" android:layout_gravity="center_vertical" android:gravity="center"
+              android:id="@+id/button"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content" android:paddingLeft="10dp" android:paddingRight="10dp"
+              android:singleLine="true"
+              android:text="Follow" android:layout_margin="0dp"
+              android:textColor="@color/text_color_selectable_primary_light"
+              android:background="@drawable/button_follow_off"
+              android:textSize="@dimen/text_size_small"/>
 </LinearLayout>
