@@ -55,7 +55,7 @@ public class UISearchResults extends UIBaseSupport implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        highlightColor = getResources().getColor(R.color.holo_red_light);
+        highlightColor = getResources().getColor(R.color.search_text_highlight);
         mStatusAdapter = new SearchResultsAdapter(this, highlightColor);
         api = AppContext.getApi();
         setLayout();

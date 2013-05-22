@@ -13,7 +13,7 @@
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:layout_alignParentLeft="true" android:layout_centerVertical="true" android:text="Following"
-                  android:background="@drawable/selector_green" android:textColor="@color/solid_white"
+                  android:background="@drawable/button_green" android:textColor="@color/solid_white"
                   android:padding="@dimen/list_card_padding" android:id="@+id/btn_state"/>
 
 

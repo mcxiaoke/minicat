@@ -1,79 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <color name="profile_relation_blue">#ff0d82bd</color>
-    <color name="transparent">#00000000</color>
-    <color name="red">#ffff0000</color>
-    <color name="blue">#ff0000ff</color>
-    <color name="link_color">#ff236ed8</color>
-    <color name="sky_blue">#ff58caff</color>
-    <color name="self_color">#2222cfcf</color>
-    <color name="mentioned_color">#22aa8822</color>
-    <color name="name_color">#ff333333</color>
-    <color name="content_color">#ff333333</color>
-    <color name="metainfo_color">#ff999999</color>
-
-    <!-- ==added by version 2.0 below=== -->
-    <!-- common colors -->
-    <color name="yellow">#fffdff66</color>
-    <color name="white">#ffffffff</color>
-    <color name="black">#ff000000</color>
-    <color name="dark_grey">#ff333333</color>
-    <color name="grey">#ff999999</color>
-    <color name="light_grey">#CCCCCC</color>
-    <color name="state_text">#ff4a331e</color>
-
-    <!-- light theme color -->
-
-
-    <!-- #FF3498DB -->
-
-
-    <color name="grey_ffe3e3e3">#ffe3e3e3</color>
-    <!-- holo style colors -->
-    <!-- background -->
-    <!--    <color name="background_holo_dark">#ff000000</color>
-        <color name="background_holo_light">#fff3f3f3</color>-->
-    <!-- holo blue -->
-    <!--    <color name="holo_blue_light">#ffFF45A3E5</color>
-        <color name="holo_blue_light_alpha_33">#3333b5e5</color>
-        <color name="actionbar_item_selector_blue_pressed">#ff0099cc</color>
-        <color name="holo_blue_bright">#ff00ddff</color>-->
     <!-- holo green -->
-    <color name="holo_green_light">#ff99cc00</color>
-    <color name="holo_green_dark">#ff669900</color>
+    <!--<color name="holo_green_light">#ff99cc00</color>-->
+    <!--<color name="holo_green_dark">#ff669900</color>-->
     <!-- holo red -->
-    <color name="holo_red_light">#ffff4444</color>
-    <color name="holo_red_dark">#ffcc0000</color>
+    <!--<color name="holo_red_light">#ffff4444</color>-->
+    <!--<color name="holo_red_dark">#ffcc0000</color>-->
     <!-- holo orange -->
-    <color name="holo_orange_light">#ffffbb33</color>
-    <color name="holo_orange_dark">#ffff8800</color>
+    <!--<color name="holo_orange_light">#ffffbb33</color>-->
+    <!--<color name="holo_orange_dark">#ffff8800</color>-->
 
-    <!-- new card ui colors -->
-    <!--    <color name="background">#DDDDDD</color>
-        <color name="card_background">#FEFEFE</color>-->
 
-    <!-- PagerSlidingTabStrip -->
-    <color name="pager_sliding_tab_pressed">#6633B5E5</color>
+    <!--    <color name="holo_blue_light_light">#ffFF45A3E5</color>
+        <color name="holo_blue_light_dark">#ff0099cc</color>
+        <color name="holo_blue_bright">#ff00ddff</color>-->
 
     <!-- Common Color -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
     <color name="solid_white">#FFFFFFFF</color>
     <color name="solid_black">#FF000000</color>
     <color name="solid_gray">#FF999999</color>
     <color name="soft_black">#FF333333</color>
     <color name="soft_white">#FFCCCCCC</color>
+    <color name="dark_grey">#FF333333</color>
+    <color name="grey">#FF666666</color>
+    <color name="light_grey">#FF999999</color>
+
+
+    <!-- Colors for all theme-->
+    <color name="alert_text_highlight">#FFCC0000</color>
+    <color name="search_text_highlight">#FFFF4444</color>
+    <color name="sliding_menu_background_color">#FF333333</color>
+    <color name="selector_sliding_menu_color_pressed">#66666666</color>
 
     <!--Light Theme Colors-->
     <color name="theme_blue_light">#FF45A3E5</color>
     <color name="theme_blue_light_pressed">#FF0099CC</color>
 
-    <color name="divider_color">#66999999</color>
+    <color name="divider_color_light">#66999999</color>
 
     <color name="selector_list_color_light_pressed">#FF45A3E5</color>
     <color name="selector_header_color_light_default">#FFEEEEEE</color>
     <color name="selector_header_color_light_pressed">#99CCCCCC</color>
-    <color name="sliding_menu_background_color">#FF333333</color>
-    <color name="selector_sliding_menu_color_pressed">#66666666</color>
+
 
     <color name="text_color_primary_light">#FF223322</color>
     <color name="text_color_secondary_light">#FF889988</color>
@@ -84,6 +54,9 @@
 
     <color name="list_background_color">#FFC0C0C0</color>
     <color name="list_card_background_color">#FFF3F3F3</color>
+
+
+    <!--Dark Theme Colors-->
 
 
     <color name="text_color_primary_dark">#FFEEFFEE</color>

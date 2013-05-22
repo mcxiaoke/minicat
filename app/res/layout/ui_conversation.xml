@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
-            android:background="@drawable/action_blue"
+            android:background="@drawable/button_blue"
             android:padding="6dp"
             android:src="@drawable/ic_send" />
     </LinearLayout>

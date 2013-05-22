@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.mcxiaoke.fanfouapp.app.AppContext;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
-import com.mcxiaoke.fanfouapp.util.OptionHelper;
-import com.mcxiaoke.fanfouapp.R;
 
 import java.util.List;
 
@@ -50,17 +48,17 @@ public class StatusArrayAdapter extends BaseStatusArrayAdapter {
 	private void init(Context context, boolean colored) {
 		this.colored = colored;
 		if (colored) {
-			mMentionedBgColor = OptionHelper.readInt(mContext,
-					R.string.option_color_highlight_mention, context
-							.getResources().getColor(R.color.mentioned_color));
-			mSelfBgColor = OptionHelper.readInt(mContext,
-					R.string.option_color_highlight_self, context
-							.getResources().getColor(R.color.self_color));
-			if (AppContext.DEBUG) {
-				log("init mMentionedBgColor="
-						+ Integer.toHexString(mMentionedBgColor));
-				log("init mSelfBgColor=" + Integer.toHexString(mSelfBgColor));
-			}
+//			mMentionedBgColor = OptionHelper.readInt(mContext,
+//					R.string.option_color_highlight_mention, context
+//							.getResources().getColor(R.color.mentioned_color));
+//			mSelfBgColor = OptionHelper.readInt(mContext,
+//					R.string.option_color_highlight_self, context
+//							.getResources().getColor(R.color.self_color));
+//			if (AppContext.DEBUG) {
+//				log("init mMentionedBgColor="
+//						+ Integer.toHexString(mMentionedBgColor));
+//				log("init mSelfBgColor=" + Integer.toHexString(mSelfBgColor));
+//			}
 		}
 	}
 

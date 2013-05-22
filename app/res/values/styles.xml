@@ -79,7 +79,7 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:padding">8dp</item>
         <item name="android:layout_marginTop">10dp</item>
-        <item name="android:background">@drawable/action_blue</item>
+        <item name="android:background">@drawable/button_blue</item>
     </style>
 
     <style name="ActionItem">
@@ -87,7 +87,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:padding">@dimen/action_item_padding</item>
-        <item name="android:background">@drawable/action</item>
+        <item name="android:background">@drawable/button_blue</item>
     </style>
 
     <style name="Item">
