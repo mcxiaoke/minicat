@@ -11,72 +11,71 @@ import java.io.InputStream;
 
 /**
  * @author mcxiaoke
- * @version 1.0 2011.08.26
- * @version 1.1 2011.10.26
  * @version 1.2 2011.11.17
- * 
  */
 public class UIAbout extends UIBaseSupport {
-	private static final String LICENSE_FILE_NAME = "apache-license-2.0.txt";
+    private static final String LICENSE_FILE_NAME = "apache-license-2.0.txt";
 
-	private TextView mTextView;
+    private TextView mTextView;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setTitle("关于");
-		setLayout();
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setTitle("关于");
+        setLayout();
+    }
 
-	protected void setLayout() {
-		setContentView(R.layout.about);
-		mTextView = (TextView) findViewById(R.id.about_text);
+    protected void setLayout() {
+        setContentView(R.layout.about);
+        setProgressBarIndeterminateVisibility(false);
 
-		StringBuilder builder = new StringBuilder();
-		builder.append("Introduction\n    MoguFan is a simple Holo style fanfou app, created by mcxiaoke.\n\n\n");
-		builder.append(loadLicenseText());
-		mTextView.setText(builder);
+        mTextView = (TextView) findViewById(R.id.about_text);
 
-	}
+        StringBuilder builder = new StringBuilder();
+        builder.append("Introduction\n    MoguFan is a simple Holo style fanfou app, created by mcxiaoke.\n\n\n");
+        builder.append(loadLicenseText());
+        mTextView.setText(builder);
 
-	private String loadLicenseText() {
-		StringBuilder builder = new StringBuilder();
-		AssetManager am = getAssets();
-		InputStream is = null;
-		try {
-			is = am.open(LICENSE_FILE_NAME);
-			return convertStreamToString(is);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			IOHelper.closeStream(is);
-		}
-		return builder.toString();
-	}
+    }
 
-	private static String convertStreamToString(java.io.InputStream is) {
-		java.util.Scanner s = new java.util.Scanner(is, "UTF-8")
-				.useDelimiter("\\A");
-		return s.hasNext() ? s.next() : "";
-	}
+    private String loadLicenseText() {
+        StringBuilder builder = new StringBuilder();
+        AssetManager am = getAssets();
+        InputStream is = null;
+        try {
+            is = am.open(LICENSE_FILE_NAME);
+            return convertStreamToString(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            IOHelper.closeStream(is);
+        }
+        return builder.toString();
+    }
 
-	@Override
-	protected int getMenuResourceId() {
-		return 0;
-	}
+    private static String convertStreamToString(java.io.InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is, "UTF-8")
+                .useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
+    }
 
-	// private void linkifySupport(final TextView textView) {
-	// textView.setMovementMethod(LinkMovementMethod.getInstance());
-	// Spannable span = (Spannable) textView.getText();
-	// String text = textView.getText().toString();
-	// String spanText = "@Android客户端";
-	// int start = text.indexOf(spanText);
-	// if (start > 0) {
-	// int end = start + spanText.length();
-	// span.setSpan(new Linkify.URLSpanNoUnderline(
-	// "fanfouhd://user/androidsupport"), start, end,
-	// Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-	// }
-	// }
+    @Override
+    protected int getMenuResourceId() {
+        return 0;
+    }
+
+    // private void linkifySupport(final TextView textView) {
+    // textView.setMovementMethod(LinkMovementMethod.getInstance());
+    // Spannable span = (Spannable) textView.getText();
+    // String text = textView.getText().toString();
+    // String spanText = "@Android客户端";
+    // int start = text.indexOf(spanText);
+    // if (start > 0) {
+    // int end = start + spanText.length();
+    // span.setSpan(new Linkify.URLSpanNoUnderline(
+    // "fanfouhd://user/androidsupport"), start, end,
+    // Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    // }
+    // }
 
 }

@@ -4,6 +4,7 @@
 package com.mcxiaoke.fanfouapp.controller;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -274,6 +275,14 @@ public class UIController {
         intent.putExtra("url", url);
         context.startActivity(intent);
         context.overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_enter);
+    }
+
+
+    public static void showSearchResults(Activity context, String query) {
+        Intent intent = new Intent(context, UISearchResults.class);
+        intent.setAction(Intent.ACTION_SEARCH);
+        intent.putExtra(SearchManager.QUERY, query);
+        context.startActivity(intent);
     }
 
 }

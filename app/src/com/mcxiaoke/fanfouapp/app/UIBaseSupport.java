@@ -15,13 +15,19 @@ import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.controller.SimpleDialogListener;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dialog.ConfirmDialog;
-import com.mcxiaoke.fanfouapp.util.Utils;
+import com.mcxiaoke.fanfouapp.util.LogUtil;
 
 /**
  * @author mcxiaoke
  * @version 4.0 2013.05.07
  */
 public abstract class UIBaseSupport extends Activity implements OnClickListener {
+    private static final boolean DEBUG = AppContext.DEBUG;
+    private static final String TAG = UIBaseSupport.class.getSimpleName();
+
+    private static void debug(String message) {
+        LogUtil.d(TAG, message);
+    }
 
     public static final int STATE_INIT = 0;
     public static final int STATE_NORMAL = 1;
@@ -38,9 +44,11 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
-        Utils.initScreenConfig(this);
+        debug("onCreate()");
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        // 这句话必须在setContentView调用之后才有效
+        //setProgressBarIndeterminateVisibility(false);
         AppContext.setActiveContext(getClass().getCanonicalName(), this);
         this.mContext = this;
         this.mInflater = LayoutInflater.from(this);
@@ -59,17 +67,18 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        debug("onCreateOptionsMenu() mRefreshing=" + mRefreshing);
         int id = getMenuResourceId();
         if (id > 0) {
             getMenuInflater().inflate(id, menu);
             mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
         }
-
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        debug("onPrepareOptionsMenu() mRefreshing=" + mRefreshing);
         if (mRefreshMenuItem != null) {
             mRefreshMenuItem.setVisible(!mRefreshing);
         }
@@ -78,6 +87,7 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        debug("onOptionsItemSelected() item=" + item);
         switch (item.getItemId()) {
             case android.R.id.home:
                 onMenuHomeClick();
@@ -113,8 +123,8 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
     }
 
     protected void onMenuRefreshClick() {
+        debug("onMenuRefreshClick()");
         startRefresh();
-        showProgressIndicator();
     }
 
     protected void onMenuSearchClick() {
@@ -138,10 +148,11 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
     }
 
     protected void startRefresh() {
-
+        debug("startRefresh()");
     }
 
     public void showProgressIndicator() {
+        debug("showProgressIndicator() mRefreshing=" + mRefreshing);
         if (!mRefreshing) {
             mRefreshing = true;
             setProgressBarIndeterminateVisibility(true);
@@ -150,6 +161,7 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
     }
 
     public void hideProgressIndicator() {
+        debug("hideProgressIndicator() mRefreshing=" + mRefreshing);
         if (mRefreshing) {
             mRefreshing = false;
             setProgressBarIndeterminateVisibility(false);
@@ -160,6 +172,7 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
     @Override
     protected void onResume() {
         super.onResume();
+        debug("onResume()");
         AppContext.active = true;
     }
 
@@ -167,22 +180,6 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
     protected void onPause() {
         AppContext.active = false;
         super.onPause();
-    }
-
-    protected int getPxInt(int dpi) {
-        return (int) (dpi * mDisplayMetrics.density);
-    }
-
-    protected int getPxInt(float dpi) {
-        return (int) (dpi * mDisplayMetrics.density);
-    }
-
-    protected float getPx(int dpi) {
-        return (dpi * mDisplayMetrics.density);
-    }
-
-    protected float getPx(float dpi) {
-        return (dpi * mDisplayMetrics.density);
     }
 
     @Override

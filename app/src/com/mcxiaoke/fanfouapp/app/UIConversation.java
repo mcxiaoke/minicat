@@ -64,6 +64,7 @@ public class UIConversation extends UIBaseSupport {
 
 	protected void setLayout() {
 		setContentView(R.layout.ui_conversation);
+        setProgressBarIndeterminateVisibility(false);
 
 		mEditText = (EditText) findViewById(R.id.input);
 		mEditText.addTextChangedListener(new TextChangeListener() {

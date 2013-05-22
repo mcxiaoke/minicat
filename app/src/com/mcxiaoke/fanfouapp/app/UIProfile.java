@@ -29,6 +29,8 @@ public class UIProfile extends UIBaseSupport {
 
     private void setLayout() {
         setContentView(R.layout.ui_profile);
+        setProgressBarIndeterminateVisibility(false);
+
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.container, ProfileFragment.newInstance(userId));
         ft.commit();

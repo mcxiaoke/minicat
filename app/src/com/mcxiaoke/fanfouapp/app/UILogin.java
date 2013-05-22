@@ -77,6 +77,7 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
 
     protected void setLayout() {
         setContentView(R.layout.ui_login);
+        setProgressBarIndeterminateVisibility(false);
 
         if (DEBUG) {
             Log.d(TAG, "setLayout()");

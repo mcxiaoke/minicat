@@ -45,6 +45,8 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 
     protected void setLayout() {
         setContentView(R.layout.ui_users);
+        setProgressBarIndeterminateVisibility(false);
+
         setActionBarTitle();
 //        mEditText = (EditText) findViewById(R.id.input);
 //        mEditText.addTextChangedListener(new MyTextWatcher(this));

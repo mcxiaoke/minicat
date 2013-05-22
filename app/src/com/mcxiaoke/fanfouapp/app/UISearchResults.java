@@ -69,6 +69,7 @@ public class UISearchResults extends UIBaseSupport implements
 
     protected void setLayout() {
         setContentView(R.layout.list_pull);
+        setProgressBarIndeterminateVisibility(false);
 
         mPullToRefreshView = (PullToRefreshListView) findViewById(R.id.pull_list);
         mPullToRefreshView.setPullToRefreshOverScrollEnabled(false);

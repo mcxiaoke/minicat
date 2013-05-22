@@ -59,6 +59,8 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 
     protected void setLayout() {
         setContentView(R.layout.content_frame);
+        setProgressBarIndeterminateVisibility(false);
+
         mContainer = (ViewGroup) findViewById(R.id.content_frame);
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -150,9 +152,9 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
     @Override
     protected void startRefresh() {
         log("start refresh, current fragment=" + mCurrentFragment);
-            if (mCurrentFragment != null) {
-                mCurrentFragment.startRefresh();
-            } else {
+        if (mCurrentFragment != null) {
+            mCurrentFragment.startRefresh();
+        } else {
             hideProgressIndicator();
         }
     }

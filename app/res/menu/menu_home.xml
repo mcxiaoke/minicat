@@ -13,7 +13,7 @@
     <item
             android:id="@+id/menu_refresh"
             android:icon="@drawable/ic_refresh"
-            android:orderInCategory="1"
+            android:orderInCategory="0"
             android:showAsAction="always"
             android:title="刷新">
     </item>
@@ -21,7 +21,7 @@
     <item
             android:id="@+id/menu_write"
             android:icon="@drawable/ic_edit"
-            android:orderInCategory="2"
+            android:orderInCategory="1"
             android:showAsAction="always"
             android:title="写消息">
     </item>

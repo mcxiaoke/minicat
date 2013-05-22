@@ -321,6 +321,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
     protected void setLayout() {
 
         setContentView(R.layout.ui_write);
+        setProgressBarIndeterminateVisibility(false);
 
         actionMention = (ImageButton) findViewById(R.id.action_mention);
         actionRecord = (ImageButton) findViewById(R.id.action_record);

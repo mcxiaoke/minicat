@@ -57,6 +57,8 @@ public class UIThread extends UIBaseSupport implements
 
     protected void setLayout() {
         setContentView(R.layout.list_pull);
+        setProgressBarIndeterminateVisibility(false);
+
         setTitle("对话");
 
         mPullToRefreshView = (PullToRefreshListView) findViewById(R.id.pull_list);
@@ -72,7 +74,7 @@ public class UIThread extends UIBaseSupport implements
         mListView.setAdapter(mStatusAdapter);
 
         if (!TextUtils.isEmpty(id)) {
-            doFetchThreads();
+            startRefresh();
         } else {
             finish();
         }
@@ -83,10 +85,11 @@ public class UIThread extends UIBaseSupport implements
         id = intent.getStringExtra("id");
     }
 
-    private void doFetchThreads() {
+    @Override
+    protected void startRefresh() {
+        super.startRefresh();
         new FetchTask().execute();
         showProgressIndicator();
-        mPullToRefreshView.setRefreshing();
     }
 
     @Override
@@ -142,9 +145,9 @@ public class UIThread extends UIBaseSupport implements
             if (result != null && result.size() > 0) {
                 mStatusAdapter.addData(result);
             }
-            hideProgressIndicator();
-            mPullToRefreshView.onRefreshComplete();
             mPullToRefreshView.setMode(Mode.DISABLED);
+            mPullToRefreshView.onRefreshComplete();
+            hideProgressIndicator();
             mStatusAdapter.notifyDataSetChanged();
         }
 

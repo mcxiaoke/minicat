@@ -80,10 +80,6 @@ public class UIStatus extends UIBaseSupport {
 
     private static final String TAG = UIStatus.class.getSimpleName();
 
-    private void log(String message) {
-        Log.d(TAG, message);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,6 +120,8 @@ public class UIStatus extends UIBaseSupport {
     protected void setLayout() {
 
         setContentView(R.layout.ui_status);
+        setProgressBarIndeterminateVisibility(false);
+
         setTitle("消息");
 
         findViews();

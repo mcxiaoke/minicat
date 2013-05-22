@@ -48,8 +48,8 @@
     <dimen name="card_divider">8dp</dimen>
 
 
-    <dimen name="list_padding">6dp</dimen>
-    <dimen name="list_card_padding">6dp</dimen>
-    <dimen name="list_card_divider_height">6dp</dimen>
+    <dimen name="list_padding">8dp</dimen>
+    <dimen name="list_card_padding">8dp</dimen>
+    <dimen name="list_card_divider_height">8dp</dimen>
 
 </resources>

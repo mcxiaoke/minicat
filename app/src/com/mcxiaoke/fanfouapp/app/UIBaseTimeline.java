@@ -68,6 +68,8 @@ abstract class UIBaseTimeline extends UIBaseSupport {
 
     protected void setLayout() {
         setContentView(R.layout.ui_container);
+        setProgressBarIndeterminateVisibility(false);
+
         vContent = (ViewGroup) findViewById(R.id.container);
         vEmpty = (ViewGroup) findViewById(android.R.id.empty);
         emptyController = new EmptyViewController(vEmpty);

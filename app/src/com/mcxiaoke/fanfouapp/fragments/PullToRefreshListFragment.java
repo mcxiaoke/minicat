@@ -165,6 +165,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
     public void onPullUpToRefresh(final PullToRefreshBase<ListView> refreshView) {
         doFetch(true);
+        getBaseSupport().showProgressIndicator();
     }
 
     @Override
@@ -230,7 +231,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
         if (!busy) {
             busy = true;
             doRefresh();
-//            getBaseSupport().showProgressIndicator();
+            getBaseSupport().showProgressIndicator();
         }
     }
 
@@ -392,8 +393,8 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
             }
             mFragment.mDataLoaded = true;
             mFragment.busy = false;
-            mFragment.getBaseSupport().hideProgressIndicator();
             mFragment.onRefreshComplete();
+            mFragment.getBaseSupport().hideProgressIndicator();
             switch (msg.what) {
                 case Constants.RESULT_SUCCESS:
                     mFragment.onSuccess(data);
