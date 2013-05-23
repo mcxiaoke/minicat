@@ -394,7 +394,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
         if (AppContext.DEBUG) {
             log("onBackPressed content=" + content);
         }
-        if (StringHelper.isEmpty(content)) {
+        if (StringHelper.isEmpty(content) || this.content.trim().equals(text.trim())) {
             goBack();
         } else {
             checkSave();
@@ -458,12 +458,6 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
                 goBack();
             }
         });
-        /*builder.setNeutralButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });*/
         builder.setNegativeButton("不保存", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
