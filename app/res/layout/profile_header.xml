@@ -3,13 +3,13 @@
                 android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/list_card_padding">
+                android:padding="@dimen/list_padding">
 
     <ImageView
             android:id="@+id/header_icon"
             android:layout_width="@dimen/head_width"
             android:layout_height="@dimen/head_height"
-            android:layout_marginRight="@dimen/card_margin"
+            android:layout_marginRight="@dimen/list_padding"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:src="@drawable/ic_head"/>
@@ -24,18 +24,6 @@
             android:singleLine="true"
             android:text="巫猫子" android:textStyle="bold"
             android:textSize="@dimen/text_size_medium"/>
-
-    <TextView
-            android:id="@+id/header_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/header_name"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/header_name"
-            android:background="@color/theme_blue_light"
-            android:text="正在关注" android:clickable="false"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_tiny" android:padding="2dp" android:visibility="gone"/>
 
     <ImageView
             android:id="@+id/header_lock"

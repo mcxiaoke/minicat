@@ -247,6 +247,18 @@ public class UIController {
         startUIByAnimation(context, intent);
     }
 
+    public static void showTimeline(Activity context, UserModel user) {
+        Intent intent = new Intent(context, UITimeline.class);
+        intent.putExtra("data", user);
+        startUIByAnimation(context, intent);
+    }
+
+    public static void showFavorites(Activity context, UserModel user) {
+        Intent intent = new Intent(context, UIFavorites.class);
+        intent.putExtra("data", user);
+        startUIByAnimation(context, intent);
+    }
+
     public static void showThread(Activity context, String id) {
         Intent intent = new Intent(context, UIThread.class);
         intent.putExtra("id", id);

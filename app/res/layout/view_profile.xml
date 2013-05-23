@@ -8,13 +8,23 @@
     <include layout="@layout/profile_header"/>
 
     <RelativeLayout android:orientation="horizontal" android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:padding="@dimen/list_card_padding"
+                    android:layout_height="wrap_content" android:padding="@dimen/list_padding"
                     android:id="@+id/extras">
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:layout_alignParentLeft="true" android:layout_centerVertical="true" android:text="Following"
                   android:background="@drawable/button_green" android:textColor="@color/solid_white"
-                  android:padding="@dimen/list_card_padding" android:id="@+id/btn_state"/>
+                  android:padding="@dimen/list_padding" android:id="@+id/btn_state"/>
+
+
+        <TextView
+                android:id="@+id/header_state"
+                android:layout_width="wrap_content" android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_height="wrap_content"
+                android:text="正在关注你"
+                android:textColor="@color/text_color_secondary_light"
+                android:textSize="@dimen/text_size_tiny" android:visibility="gone"/>
 
 
     </RelativeLayout>

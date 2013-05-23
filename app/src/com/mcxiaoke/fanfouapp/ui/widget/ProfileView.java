@@ -201,10 +201,6 @@ public class ProfileView extends FrameLayout implements
         ImageLoader.getInstance().displayImage(headerImageUrl, headerImage);
     }
 
-    private void updateExtras(final UserModel user) {
-        btnFollowState.setText(user.isFollowing() ? "正在关注" : "添加关注");
-    }
-
     private void updateStatistics(final UserModel user) {
         tvFollowingItemTitle.setText("" + user.getFriendsCount());
         tvFollowersItemTitle.setText("" + user.getFollowersCount());
@@ -216,7 +212,7 @@ public class ProfileView extends FrameLayout implements
         tvFollowersRowValue.setText("" + user.getFollowersCount());
     }
 
-    private void updateFollowState(boolean following) {
+    public void updateFollowState(boolean following) {
         btnFollowState.setVisibility(View.VISIBLE);
         btnFollowState.setBackgroundResource(following ? R.drawable.button_follow_on : R.drawable.button_follow_off);
         btnFollowState.setTextColor(following ? mFollowOnColor : mFollowOffColor);

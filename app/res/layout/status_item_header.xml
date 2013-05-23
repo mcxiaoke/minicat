@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:padding="@dimen/card_margin" android:background="@drawable/selector_header_light">
+                android:padding="@dimen/list_padding" android:background="@drawable/selector_header_light">
 
     <ImageView
             android:id="@+id/header_image"

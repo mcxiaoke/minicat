@@ -1,22 +1,27 @@
 package com.mcxiaoke.fanfouapp.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.app.AppContext;
 import com.mcxiaoke.fanfouapp.controller.CacheController;
-import com.mcxiaoke.fanfouapp.controller.SimpleDialogListener;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
-import com.mcxiaoke.fanfouapp.dialog.ConfirmDialog;
 import com.mcxiaoke.fanfouapp.service.FanFouService;
 import com.mcxiaoke.fanfouapp.ui.widget.ProfileView;
+import com.mcxiaoke.fanfouapp.util.IntentHelper;
 import com.mcxiaoke.fanfouapp.util.Utils;
 
 /**
@@ -39,6 +44,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
 
     private String userId;
     private UserModel user;
+    private boolean isFollowing;
 
     private boolean noPermission = false;
     private ProfileView vProfile;
@@ -72,7 +78,54 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
+        setMenuVisibility(true);
         refreshProfile();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_profile, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_write:
+                showWrite();
+                break;
+            case R.id.menu_dm:
+                showDM();
+                break;
+            case R.id.menu_web:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    private void showWrite() {
+        if (user != null && getActivity() != null) {
+            UIController.showWrite(getActivity(), "@" + user.getScreenName() + " ");
+        }
+    }
+
+    private void showDM() {
+        if (user != null && getActivity() != null) {
+            UIController.showConversation(getActivity(), user, false);
+        }
+    }
+
+    private void showWebPage() {
+        if (user != null && getActivity() != null) {
+            String url = "http://fanfou.com/" + user.getId();
+            IntentHelper.startWebIntent(getActivity(), url);
+        }
     }
 
     @Override
@@ -112,6 +165,8 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
             onTopFollowersClick();
         } else if (type == ProfileView.TYPE_TOP_STATUSES) {
             onTopStatusesClick();
+        } else if (type == ProfileView.TYPE_FOLLOW_STATE) {
+            onFollowStateClick();
         } else if (type == ProfileView.TYPE_PHOTOS) {
             onItemPhotosClick();
         } else if (type == ProfileView.TYPE_FOLLOWING) {
@@ -127,37 +182,53 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
 
 
     private void onTopFollowingClick() {
-        UIController.showFollowing(getActivity(), user.getId(), user.getScreenName());
+        if (hasPermission()) {
+            UIController.showFollowing(getActivity(), user.getId(), user.getScreenName());
+        }
     }
 
 
     private void onTopFollowersClick() {
-        UIController.showFollowers(getActivity(), user.getId(), user.getScreenName());
+        if (hasPermission()) {
+            UIController.showFollowers(getActivity(), user.getId(), user.getScreenName());
+        }
     }
 
 
     private void onTopStatusesClick() {
+        if (hasPermission()) {
+            UIController.showTimeline(getActivity(), user);
+        }
+    }
 
+    private void onFollowStateClick() {
+        doFollow();
     }
 
 
     private void onItemPhotosClick() {
-
+        if (hasPermission()) {
+            Toast.makeText(getActivity(), "暂未实现", Toast.LENGTH_SHORT).show();
+            //TODO show photos ui
+        }
     }
 
     private void onItemFollowingClick() {
-
+        onTopFollowingClick();
     }
 
     private void onItemFollowersClick() {
-
+        onTopFollowersClick();
     }
 
     private void onItemFavoratiesClick() {
+        if (hasPermission()) {
+            UIController.showFavorites(getActivity(), user);
+        }
     }
 
     private void onItemStatusesClick() {
-
+        onTopStatusesClick();
     }
 
     private void refreshProfile() {
@@ -186,6 +257,8 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
             return;
         }
 
+        isFollowing = user.isFollowing();
+
         if (AppContext.DEBUG) {
             Log.d(TAG, "updateUI() userid=" + userId);
             Log.d(TAG, "updateUI() user.following=" + user.isFollowing());
@@ -194,6 +267,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
         vProfile.setVisibility(View.VISIBLE);
         updateTitle(user);
         updatePermission();
+
         refreshFollowState();
 
         if (AppContext.DEBUG) {
@@ -272,6 +346,13 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
                 AppContext.getAccount(), handler);
     }
 
+    private void updateFollowButton(boolean following) {
+        user.setFollowing(following);
+        isFollowing = following;
+        updatePermission();
+        vProfile.updateFollowState(following);
+    }
+
     private void doFollow() {
         if (user == null) {
             return;
@@ -294,7 +375,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
                         if (AppContext.DEBUG) {
                             Log.d(TAG, "follow success");
                         }
-                        user.setFollowing(true);
+                        updateFollowButton(true);
                         Utils.notify(getActivity(), "关注成功");
                         break;
                     case FanFouService.RESULT_ERROR:
@@ -322,7 +403,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
                         if (AppContext.DEBUG) {
                             Log.d(TAG, "unfollow success");
                         }
-                        user.setFollowing(false);
+                        updateFollowButton(false);
                         Utils.notify(getActivity(), "已取消关注");
                         break;
                     case FanFouService.RESULT_ERROR:
@@ -339,18 +420,25 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
             }
         };
 
-        final ConfirmDialog dialog = new ConfirmDialog(getActivity());
-        dialog.setTitle("提示");
-        dialog.setMessage("要取消关注" + user.getScreenName() + "吗？");
-        dialog.setClickListener(new SimpleDialogListener() {
-
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setCancelable(true);
+        builder.setTitle("取消关注");
+        builder.setMessage("要取消关注" + user.getScreenName() + "吗？");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
-            public void onPositiveClick() {
-                super.onPositiveClick();
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
                 FanFouService.unFollow(getActivity(), user.getId(), handler);
             }
         });
-        dialog.show();
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.create().show();
     }
 
     private boolean hasPermission() {
@@ -359,15 +447,6 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
             return false;
         }
         return true;
-    }
-
-
-    private void doSendDirectMessage() {
-        UIController.showConversation(getActivity(), user, false);
-    }
-
-    private void doRefreshProfile() {
-        fetchUser();
     }
 
 

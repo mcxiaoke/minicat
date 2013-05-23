@@ -109,6 +109,10 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_write) {
+            onMenuWriteClick();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
