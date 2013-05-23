@@ -34,9 +34,9 @@ public class UserViewHolder {
         title.setText(u.getScreenName());
         text.setText(u.getDescription());
         button.setText(u.isFollowing() ? "正在关注" : "添加关注");
-        button.setTextColor(u.isFollowing() ? res.getColorStateList(R.color.text_color_selectable_primary_light_inverse) : res.getColorStateList(R.color.text_color_selectable_primary_light));
+        button.setTextColor(u.isFollowing() ? res.getColor(R.color.text_color_primary_dark) : res.getColor(R.color.text_color_primary_light));
         button.setBackgroundResource(u.isFollowing() ? R.drawable.button_follow_on : R.drawable.button_follow_off);
-        button.setOnClickListener(new View.OnClickListener(){
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
             }

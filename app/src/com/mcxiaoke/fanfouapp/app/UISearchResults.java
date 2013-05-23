@@ -89,7 +89,7 @@ public class UISearchResults extends UIBaseSupport implements
         maxId = null;
         mStatusAdapter.clear();
         doSearch(true);
-        mPullToRefreshView.setRefreshing();
+        showProgressIndicator();
 
     }
 
@@ -192,6 +192,7 @@ public class UISearchResults extends UIBaseSupport implements
         @Override
         protected void onPostExecute(List<StatusModel> result) {
             mPullToRefreshView.onRefreshComplete();
+            hideProgressIndicator();
             if (result != null && result.size() > 0) {
 
                 int size = result.size();

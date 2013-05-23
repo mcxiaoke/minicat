@@ -6,5 +6,6 @@
             android:id="@+id/pull_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            ptr:ptrAnimationStyle="flip" android:background="@color/list_background_color"/>
+            ptr:ptrAnimationStyle="flip" android:background="@color/list_background_color"
+            ptr:ptrHeaderBackground="@color/list_background_color"/>
 </FrameLayout>

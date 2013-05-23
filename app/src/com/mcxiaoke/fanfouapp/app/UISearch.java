@@ -165,7 +165,8 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
 
     @Override
     protected int getMenuResourceId() {
-        return R.menu.menu_search;
+//        return R.menu.menu_search;
+        return -1;
     }
 
     @Override

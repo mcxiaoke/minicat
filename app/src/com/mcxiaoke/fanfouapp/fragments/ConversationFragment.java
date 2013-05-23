@@ -56,7 +56,7 @@ public class ConversationFragment extends PullToRefreshListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getListView().setStackFromBottom(true);
+//        getListView().setStackFromBottom(true);
         getListView().setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
     }
 

@@ -5,14 +5,13 @@
               android:id="@+id/root"
               android:layout_width="match_parent"
               android:layout_height="wrap_content" android:orientation="horizontal"
-              android:padding="@dimen/list_card_padding">
+              android:paddingTop="@dimen/list_padding" android:paddingBottom="@dimen/list_padding">
     <ImageView android:layout_gravity="center_vertical"
                android:id="@+id/image"
                android:layout_width="@dimen/head_width"
                android:layout_height="@dimen/head_height"
-               android:layout_alignParentLeft="true"
+               android:layout_alignParentLeft="true" android:layout_marginRight="@dimen/list_padding"
                android:layout_alignParentTop="true"
-               android:layout_marginRight="@dimen/list_card_padding"
                android:src="@drawable/ic_head"
                android:visibility="visible"/>
 
@@ -46,7 +45,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_below="@id/title"
                 android:text="content" android:singleLine="true" android:maxLines="1"
-                android:padding="2dp" android:textColor="@color/text_color_selectable_secondary_light"
+                android:padding="2dp" android:textColor="@color/text_color_secondary_light"
                 android:textSize="@dimen/text_size_small" android:ellipsize="end"/>
 
     </RelativeLayout>
@@ -54,7 +53,7 @@
     <TextView android:clickable="true" android:layout_gravity="center_vertical" android:gravity="center"
               android:id="@+id/button"
               android:layout_width="wrap_content"
-              android:layout_height="wrap_content" android:paddingLeft="10dp" android:paddingRight="10dp"
+              android:layout_height="wrap_content" android:paddingLeft="@dimen/list_padding"
               android:singleLine="true"
               android:text="Follow" android:layout_margin="0dp"
               android:textColor="@color/text_color_selectable_primary_light"

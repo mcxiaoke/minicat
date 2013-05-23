@@ -26,6 +26,8 @@ public class ProfileView extends FrameLayout implements
     public static final int TYPE_TOP_FOLLOWING = 1;
     public static final int TYPE_TOP_FOLLOWERS = 2;
 
+    public static final int TYPE_FOLLOW_STATE = 4;
+
     public static final int TYPE_PHOTOS = 5;
     public static final int TYPE_FAVORATIES = 6;
     public static final int TYPE_STATUSES = 7;
@@ -88,6 +90,9 @@ public class ProfileView extends FrameLayout implements
 
     private ProfileClickListener mClickListener;
 
+    private int mFollowOnColor;
+    private int mFollowOffColor;
+
 
     public ProfileView(Context context) {
         super(context);
@@ -105,6 +110,9 @@ public class ProfileView extends FrameLayout implements
     }
 
     private void initialize(Context context) {
+        mFollowOnColor = getResources().getColor(R.color.text_color_primary_dark);
+        mFollowOffColor = getResources().getColor(R.color.text_color_primary_light);
+
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.view_profile, this);
         findViews();
@@ -208,6 +216,13 @@ public class ProfileView extends FrameLayout implements
         tvFollowersRowValue.setText("" + user.getFollowersCount());
     }
 
+    private void updateFollowState(boolean following) {
+        btnFollowState.setVisibility(View.VISIBLE);
+        btnFollowState.setBackgroundResource(following ? R.drawable.button_follow_on : R.drawable.button_follow_off);
+        btnFollowState.setTextColor(following ? mFollowOnColor : mFollowOffColor);
+        btnFollowState.setText(following ? "正在关注" : "添加关注");
+    }
+
     private void updateDescription(final UserModel user) {
         String gender = user.getGender();
         String birthday = user.getBirthday();
@@ -272,7 +287,13 @@ public class ProfileView extends FrameLayout implements
 
 
     public void setContent(final UserModel user) {
+        if (user == null) {
+            setVisibility(View.INVISIBLE);
+            return;
+        }
+        setVisibility(View.VISIBLE);
         updateHeader(user);
+        updateFollowState(user.isFollowing());
         updateStatistics(user);
         updateDescription(user);
     }
@@ -299,6 +320,8 @@ public class ProfileView extends FrameLayout implements
             onProfileItemClick(TYPE_TOP_FOLLOWERS);
         } else if (v == vStatusesItem) {
             onProfileItemClick(TYPE_TOP_STATUSES);
+        } else if (v == btnFollowState) {
+            onProfileItemClick(TYPE_FOLLOW_STATE);
         } else if (v == vPhotosRow) {
             onProfileItemClick(TYPE_PHOTOS);
         } else if (v == vFollowingRow) {

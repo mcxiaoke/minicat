@@ -17,11 +17,9 @@
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <solid android:color="@color/theme_blue_light"/>
-
     <gradient
             android:startColor="@color/theme_blue_light"
             android:endColor="@color/theme_blue_light"
-            android:angle="270"/>
+            android:angle="90"/>
 
 </shape>
