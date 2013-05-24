@@ -33,7 +33,7 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-        <repository>
+<!--        <repository>
             <id>maven-workpc</id>
             <name>maven-workpc</name>
             <url>file:///home/mcxiaoke/project/mavenrepo/repository</url>
@@ -42,7 +42,7 @@
             <id>maven-homepc</id>
             <name>maven-homepc</name>
             <url>file:///D:/github/mavenrepo/repository</url>
-        </repository>
+        </repository>-->
     </repositories>
 
     <dependencies>
