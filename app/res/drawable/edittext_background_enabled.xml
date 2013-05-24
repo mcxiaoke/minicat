@@ -22,7 +22,7 @@
             android:width="1dp"
             android:color="@color/soft_white"/>
     <corners
-            android:radius="3dp"/>
+            android:radius="2dp"/>
     <padding
             android:left="10dp"
             android:top="10dp"

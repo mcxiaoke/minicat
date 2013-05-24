@@ -394,7 +394,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
         if (AppContext.DEBUG) {
             log("onBackPressed content=" + content);
         }
-        if (StringHelper.isEmpty(content) || this.content.trim().equals(text.trim())) {
+        if (StringHelper.isEmpty(content) || this.content.trim().equals(text == null ? null : text.trim())) {
             goBack();
         } else {
             checkSave();

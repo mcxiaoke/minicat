@@ -33,16 +33,16 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-<!--        <repository>
-            <id>maven-workpc</id>
-            <name>maven-workpc</name>
-            <url>file:///home/mcxiaoke/project/mavenrepo/repository</url>
-        </repository>
-        <repository>
-            <id>maven-homepc</id>
-            <name>maven-homepc</name>
-            <url>file:///D:/github/mavenrepo/repository</url>
-        </repository>-->
+        <!--        <repository>
+                    <id>maven-workpc</id>
+                    <name>maven-workpc</name>
+                    <url>file:///home/mcxiaoke/project/mavenrepo/repository</url>
+                </repository>
+                <repository>
+                    <id>maven-homepc</id>
+                    <name>maven-homepc</name>
+                    <url>file:///D:/github/mavenrepo/repository</url>
+                </repository>-->
     </repositories>
 
     <dependencies>
@@ -177,7 +177,9 @@
                             <verbose>true</verbose>
                             <alias>${sign.alias}</alias>
                             <keystore>${sign.keystore}</keystore>
+                            <!--suppress MavenModelInspection -->
                             <keypass>${keypass}</keypass>
+                            <!--suppress MavenModelInspection -->
                             <storepass>${keypass}</storepass>
                         </configuration>
                         <executions>
@@ -218,6 +220,8 @@
                             </zipalign>
                             <manifest>
                                 <debuggable>false</debuggable>
+                                <versionName>${project.version}</versionName>
+                                <versionCodeAutoIncrement>true</versionCodeAutoIncrement>
                             </manifest>
                         </configuration>
                         <extensions>true</extensions>
