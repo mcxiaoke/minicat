@@ -4,17 +4,20 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.adapter.HomePagesAdapter;
 import com.mcxiaoke.fanfouapp.controller.UIController;
@@ -29,8 +32,8 @@ import com.mcxiaoke.fanfouapp.menu.MenuItemResource;
 /**
  * @author mcxiaoke
  */
-public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
-        OnPageChangeListener {
+public class UIHome extends UIBaseSupport implements MenuCallback,
+        OnPageChangeListener, DrawerLayout.DrawerListener {
 
     public static final String TAG = UIHome.class.getSimpleName();
 
@@ -40,6 +43,12 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
     private ViewPager mViewPager;
     private PagerTabStrip mPagerTabStrip;
     private HomePagesAdapter mPagesAdapter;
+
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
+    private ViewGroup mDrawFrame;
 
     private int mCurrentIndex;
     private int mCurrentPage;
@@ -58,10 +67,44 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
     }
 
     protected void setLayout() {
-        setContentView(R.layout.content_frame);
+        setContentView(R.layout.ui_home);
         setProgressBarIndeterminateVisibility(false);
 
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+        setTitle(R.string.page_title_home);
+        mTitle = mDrawerTitle = getTitle();
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                getActionBar().setTitle(mTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                getActionBar().setTitle(mDrawerTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                super.onDrawerStateChanged(newState);
+            }
+        };
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+
         mContainer = (ViewGroup) findViewById(R.id.content_frame);
+        mDrawFrame = (ViewGroup) findViewById(R.id.left_drawer);
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setOnPageChangeListener(this);
@@ -70,20 +113,41 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
         mPagerTabStrip.setTabIndicatorColor(getResources().getColor(
                 R.color.theme_blue_light));
         mPagerTabStrip.setTextColor(Color.WHITE);
-//        mPagerTabStrip.setBackgroundColor(Color.DKGRAY);
         mPagesAdapter = new HomePagesAdapter(getFragmentManager());
         mViewPager.setAdapter(mPagesAdapter);
         setHomeTitle(mCurrentPage);
         mCurrentFragment = mPagesAdapter.getItem(mCurrentPage);
-        setSlidingMenu(R.layout.menu_frame);
+//        setSlidingMenu(R.layout.menu_frame);
         FragmentManager fm = getFragmentManager();
         mMenuFragment = MenuFragment.newInstance();
-        fm.beginTransaction().replace(R.id.menu_frame, mMenuFragment).commit();
+        fm.beginTransaction().replace(R.id.left_drawer, mMenuFragment).commit();
+    }
+
+    /**
+     * When using the ActionBarDrawerToggle, you must call it during
+     * onPostCreate() and onConfigurationChanged()...
+     */
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        if (mDrawerLayout.isDrawerOpen(mDrawFrame)) {
+            mDrawerLayout.closeDrawer(Gravity.LEFT);
+        }
     }
 
     @Override
@@ -108,7 +172,21 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawFrame);
+        menu.findItem(R.id.menu_refresh).setVisible(!drawerOpen);
+        menu.findItem(R.id.menu_write).setVisible(!drawerOpen);
+        if (drawerOpen) {
+            return true;
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
         if (item.getItemId() == R.id.menu_write) {
             onMenuWriteClick();
             return true;
@@ -120,6 +198,12 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
     public void onClick(View v) {
     }
 
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        getActionBar().setTitle(mTitle);
+    }
+
     private AbstractFragment mCurrentFragment;
 
     private void replaceFragment(AbstractFragment fragment) {
@@ -129,7 +213,8 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
         ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.replace(R.id.content_frame, fragment);
         ft.commit();
-        getSlidingMenu().showContent();
+//        getSlidingMenu().showContent();
+        mDrawerLayout.closeDrawer(Gravity.LEFT);
     }
 
     private void showProfileFragment() {
@@ -168,7 +253,8 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
         log("onMenuItemSelected: " + menuItem + " position=" + position
                 + " mCurrentIndex=" + mCurrentIndex);
         if (position == mCurrentIndex) {
-            getSlidingMenu().toggle();
+            mDrawerLayout.closeDrawer(Gravity.LEFT);
+//            getSlidingMenu().toggle();
             return;
         }
         int id = menuItem.id;
@@ -176,7 +262,8 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
             case MenuFragment.MENU_ID_HOME:
                 getFragmentManager().beginTransaction().remove(mCurrentFragment)
                         .commit();
-                getSlidingMenu().showContent();
+                mDrawerLayout.closeDrawer(Gravity.LEFT);
+//                getSlidingMenu().showContent();
                 setHomeTitle(mCurrentPage);
                 mCurrentFragment = mPagesAdapter.getItem(mCurrentPage);
                 mCurrentIndex = position;
@@ -246,10 +333,30 @@ public class UIHome extends UIBaseSlidingSupport implements MenuCallback,
         setHomeTitle(page);
         mCurrentFragment = mPagesAdapter.getItem(mCurrentPage);
         if (page == 0) {
-            setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+//            setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
         } else {
-            setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+//            setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
         }
+    }
+
+    @Override
+    public void onDrawerClosed(View drawerView) {
+        getActionBar().setTitle(mTitle);
+        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+    }
+
+    @Override
+    public void onDrawerOpened(View drawerView) {
+        getActionBar().setTitle(mDrawerTitle);
+        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+    }
+
+    @Override
+    public void onDrawerSlide(View drawerView, float slideOffset) {
+    }
+
+    @Override
+    public void onDrawerStateChanged(int newState) {
     }
 
     private void setHomeTitle(int page) {

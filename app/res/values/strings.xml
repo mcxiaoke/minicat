@@ -100,4 +100,7 @@
     <string name="intent_host_search">search</string>
     <string name="intent_host_statuses">statuses</string>
 
+    <string name="drawer_open">菜单打开</string>
+    <string name="drawer_close">菜单关闭</string>
+
 </resources>
