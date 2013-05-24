@@ -7,6 +7,8 @@
     <dimen name="icon_width">40dp</dimen>
     <dimen name="head_width">48dp</dimen>
     <dimen name="head_height">48dp</dimen>
+    <dimen name="head_width2">56dp</dimen>
+    <dimen name="head_height2">56dp</dimen>
     <dimen name="head_margin">4dp</dimen>
     <dimen name="photo_preview_height">160dp</dimen>
     <dimen name="widget_margin">8dp</dimen>

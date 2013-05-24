@@ -38,6 +38,7 @@ public class ConversationListCursorAdapter extends BaseMessageCursorAdapter {
             builder.append("我：").append(dm.getText());
             view.setContent(builder.toString());
         }
+        UIHelper.setImageClick(view, incoming ? dm.getSenderId() : dm.getRecipientId());
 
         String headUrl = incoming ? dm.getSenderProfileImageUrl() : dm
                 .getRecipientProfileImageUrl();

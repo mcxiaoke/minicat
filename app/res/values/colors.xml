@@ -19,6 +19,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
     <color name="solid_white">#FFFFFFFF</color>
+    <color name="solid_white_semitransparent">#66FFFFFF</color>
     <color name="solid_black">#FF000000</color>
     <color name="solid_gray">#FF999999</color>
     <color name="soft_black">#FF333333</color>
@@ -42,6 +43,7 @@
 
     <!--Light Theme Colors-->
     <color name="theme_blue_light">#FF33B5E5</color>
+    <color name="theme_blue_light_semitransparent">#6633B5E5</color>
     <color name="theme_blue_light_pressed">#FF0099CC</color>
 
     <color name="divider_color_light">#66999999</color>

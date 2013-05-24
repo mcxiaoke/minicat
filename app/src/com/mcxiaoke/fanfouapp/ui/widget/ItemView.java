@@ -19,6 +19,11 @@ import com.mcxiaoke.fanfouapp.R;
  * @version 1.1 2012.03.29
  */
 public class ItemView extends RelativeLayout {
+
+    public interface OnImageClickListener {
+        public void onImageClick(ImageView view);
+    }
+
     private ImageView mImageView;
     private TextView mTitleTextView;
     private TextView mContentTextView;
@@ -40,6 +45,8 @@ public class ItemView extends RelativeLayout {
     private ViewMode mViewMode;
 
     private int mPadding;
+
+    private OnImageClickListener mListener;
 
     public ItemView(Context context) {
         this(context, null);
@@ -73,6 +80,15 @@ public class ItemView extends RelativeLayout {
         setPadding(mPadding, mPadding, mPadding, mPadding);
 
         checkViewMode();
+
+        mImageView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onImageClick(mImageView);
+                }
+            }
+        });
     }
 
     private void checkViewMode() {
@@ -85,6 +101,10 @@ public class ItemView extends RelativeLayout {
             mIconRetweet = (ImageView) findViewById(R.id.ic_retweet);
             mIconLock = (ImageView) findViewById(R.id.ic_lock);
         }
+    }
+
+    public void setOnImageClickListener(OnImageClickListener listener) {
+        this.mListener = listener;
     }
 
     public void setTitle(CharSequence text) {
@@ -154,16 +174,16 @@ public class ItemView extends RelativeLayout {
     }
 
     public void setTitleTextSize(float size) {
-        mTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,size);
+        mTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
     }
 
     public void setContentTextSize(float size) {
-        mContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,size);
+        mContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
     }
 
     public void setMetaTextSize(float sizeA, float sizeB) {
-        mMetaATextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,sizeA);
-        mMetaBTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,sizeB);
+        mMetaATextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, sizeA);
+        mMetaBTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, sizeB);
     }
 
     public void setTitleTextColor(int color) {

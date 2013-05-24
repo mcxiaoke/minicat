@@ -1,5 +1,8 @@
 package com.mcxiaoke.fanfouapp.adapter;
 
+import android.app.Activity;
+import android.widget.ImageView;
+import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 import com.mcxiaoke.fanfouapp.ui.widget.ItemView;
 import com.mcxiaoke.fanfouapp.util.DateTimeHelper;
@@ -17,6 +20,15 @@ public class UIHelper {
         view.setContentTextSize(fontSize);
         view.setTitleTextSize(fontSize + 2);
         view.setMetaTextSize(fontSize - 2, fontSize - 2);
+    }
+
+    public static void setImageClick(final ItemView view, final String userId) {
+        view.setOnImageClickListener(new ItemView.OnImageClickListener() {
+            @Override
+            public void onImageClick(ImageView view) {
+                UIController.showProfile((Activity) view.getContext(), userId);
+            }
+        });
     }
 
     public static void setMetaInfo(final ItemView view, final StatusModel s) {

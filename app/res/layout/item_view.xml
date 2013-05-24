@@ -7,13 +7,13 @@
 
     <ImageView
             android:id="@+id/image"
-            android:layout_width="@dimen/head_width"
-            android:layout_height="@dimen/head_height"
+            android:layout_width="@dimen/head_width2"
+            android:layout_height="@dimen/head_height2"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_margin="@dimen/head_margin"
+            android:padding="@dimen/head_margin"
             android:src="@drawable/ic_head"
-            android:visibility="visible"/>
+            android:visibility="visible" android:background="@drawable/head_image_frame"/>
 
     <TextView
             android:id="@+id/title"
