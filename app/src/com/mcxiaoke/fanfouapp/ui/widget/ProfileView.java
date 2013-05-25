@@ -125,7 +125,7 @@ public class ProfileView extends FrameLayout implements
         headerImage = (ImageView) findViewById(R.id.header_icon);
         headerName = (TextView) findViewById(R.id.header_name);
         headerState = (TextView) findViewById(R.id.header_state);
-        headerState.setText("正在关注你");
+        headerState.setText("(正在关注你)");
         headerLock = (ImageView) findViewById(R.id.header_lock);
         headerIntro = (TextView) findViewById(R.id.header_intro);
 

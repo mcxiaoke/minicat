@@ -14,11 +14,6 @@ import com.mcxiaoke.fanfouapp.R;
  */
 public final class UIHelper {
 
-    public static int getCardUIBackgroundColor(Resources res) {
-        return res.getColor(R.color.list_background_color);
-    }
-
-
     /**
      * // save index and top position
      * int index = mList.getFirstVisiblePosition();
@@ -35,26 +30,20 @@ public final class UIHelper {
 
     public static void setListViewCardUI(ListView listView) {
         Resources res = listView.getResources();
-        int padding = res.getDimensionPixelSize(R.dimen.list_card_padding);
-        int dividerHeight = res.getDimensionPixelSize(R.dimen.list_card_divider_height);
-        int backgroundColor = res.getColor(R.color.list_background_color);
+        int dividerHeight = res.getDimensionPixelSize(R.dimen.list_divider_height);
         listView.setSelector(res.getDrawable(R.drawable.selector_list_light));
-        listView.setPadding(padding, padding, padding, padding);
         listView.setDivider(res
-                .getDrawable(R.drawable.list_card_divider));
+                .getDrawable(R.drawable.list_divider));
         listView.setDividerHeight(dividerHeight);
         listView.setHeaderDividersEnabled(true);
         listView.setFooterDividersEnabled(true);
         listView.setCacheColorHint(0);
-        listView.setBackgroundResource(R.drawable.list_card_background);
         listView.setScrollBarStyle(ScrollView.SCROLLBARS_OUTSIDE_OVERLAY);
     }
 
     public static void setListView(ListView listView) {
         Resources res = listView.getResources();
-        int padding = res.getDimensionPixelSize(R.dimen.list_card_padding);
         listView.setSelector(res.getDrawable(R.drawable.selector_list_light));
-        listView.setPadding(padding, padding, padding, padding);
         listView.setHeaderDividersEnabled(true);
         listView.setFooterDividersEnabled(true);
         listView.setCacheColorHint(0);

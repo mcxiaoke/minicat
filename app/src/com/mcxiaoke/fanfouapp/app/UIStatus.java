@@ -265,6 +265,7 @@ public class UIStatus extends UIBaseSupport {
             public void onLoadingFailed(String imageUri, View view,
                                         FailReason failReason) {
                 contentPhoto.setImageResource(R.drawable.photo_error);
+                contentPhoto.setClickable(false);
             }
 
             @Override

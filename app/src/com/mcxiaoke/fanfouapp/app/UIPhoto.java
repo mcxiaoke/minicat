@@ -118,7 +118,7 @@ public class UIPhoto extends Activity implements OnClickListener {
             @Override
             public void onLoadingFailed(String imageUri, View view,
                                         FailReason failReason) {
-                showEmptyText(failReason.toString());
+                showEmptyText(failReason.getType().toString() + ":" + failReason.getCause().getMessage());
             }
 
             @Override
@@ -161,9 +161,10 @@ public class UIPhoto extends Activity implements OnClickListener {
         super.onDestroy();
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_photo, menu);
+        getMenuInflater().inflate(R.menu.menu_photo, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -182,8 +183,8 @@ public class UIPhoto extends Activity implements OnClickListener {
 
     private void doSave() {
         File file = ImageLoader.getInstance().getDiscCache().get(url);
-        File dest = new File(IOHelper.getPhotoDir(this), file.getName());
-        if (file.exists() || IOHelper.copyFile(file, dest)) {
+        File dest = new File(IOHelper.getPictureDir(this), file.getName()+".jpg");
+        if (dest.exists() || IOHelper.copyFile(file, dest)) {
             Utils.notify(this, "照片已保存到 " + dest.getAbsolutePath());
         }
     }

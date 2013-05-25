@@ -74,10 +74,10 @@ public class ItemView extends RelativeLayout {
         mViewStub = (ViewStub) findViewById(R.id.stub);
 
         final Resources res = getResources();
-        mPadding = res.getDimensionPixelSize(R.dimen.list_card_padding);
+        mPadding = res.getDimensionPixelSize(R.dimen.list_padding);
         mViewMode = ViewMode.StatusMode;
 
-        setPadding(mPadding, mPadding, mPadding, mPadding);
+        setPadding(mPadding, mPadding, mPadding, 0);
 
         checkViewMode();
 

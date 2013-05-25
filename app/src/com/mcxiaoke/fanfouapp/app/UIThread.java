@@ -62,7 +62,6 @@ public class UIThread extends UIBaseSupport implements
         setTitle("对话");
 
         mPullToRefreshView = (PullToRefreshListView) findViewById(R.id.pull_list);
-        mPullToRefreshView.setBackgroundColor(UIHelper.getCardUIBackgroundColor(getResources()));
         mPullToRefreshView.setPullToRefreshOverScrollEnabled(false);
         mPullToRefreshView.setShowIndicator(false);
         mPullToRefreshView.setMode(Mode.PULL_FROM_START);

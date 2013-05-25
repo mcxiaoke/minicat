@@ -25,6 +25,16 @@
             android:text="巫猫子" android:textStyle="bold"
             android:textSize="@dimen/text_size_medium"/>
 
+    <TextView
+            android:id="@+id/header_state"
+            android:layout_width="wrap_content" android:layout_alignParentRight="true"
+            android:layout_toRightOf="@id/header_name"
+            android:layout_alignTop="@id/header_name" android:layout_marginLeft="4dp" android:padding="2dp"
+            android:layout_height="wrap_content"
+            android:text="(正在关注你)"
+            android:textColor="@color/text_color_secondary_light"
+            android:textSize="@dimen/text_size_tiny" android:visibility="gone"/>
+
     <ImageView
             android:id="@+id/header_lock"
             android:layout_width="wrap_content"
@@ -47,13 +57,15 @@
             android:textColor="@color/text_color_secondary_light"
             android:textSize="@dimen/text_size_small"/>
 
-    <!--    <TextView
-                android:id="@+id/header_expand"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@id/header_intro"
-                android:layout_below="@id/header_intro"
-                android:text="@string/expand"
-                android:textColor="@color/theme_blue_light"
-                android:textSize="@dimen/text_size_small"/>-->
+    <RelativeLayout android:orientation="horizontal" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:layout_marginTop="@dimen/list_padding"
+                    android:id="@+id/extras" android:layout_below="@id/header_intro">
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:layout_alignParentLeft="true" android:layout_centerVertical="true" android:text="Following"
+                  android:background="@drawable/button_green" android:textColor="@color/solid_white"
+                  android:padding="@dimen/list_padding" android:id="@+id/btn_state"/>
+
+
+    </RelativeLayout>
 </RelativeLayout>

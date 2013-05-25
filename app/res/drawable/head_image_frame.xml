@@ -4,6 +4,6 @@
     <item android:drawable="@drawable/head_image_frame_pressed" android:state_pressed="true"/>
     <item android:drawable="@drawable/head_image_frame_pressed" android:state_selected="true"/>
     <item android:drawable="@drawable/head_image_frame_pressed" android:state_focused="true"/>
-    <item android:drawable="@drawable/head_image_frame_enabled"/>
+    <item android:drawable="@android:color/transparent"/>
 
 </selector>

@@ -22,6 +22,7 @@ import com.mcxiaoke.fanfouapp.dao.model.UserModel;
 import com.mcxiaoke.fanfouapp.service.FanFouService;
 import com.mcxiaoke.fanfouapp.ui.widget.ProfileView;
 import com.mcxiaoke.fanfouapp.util.IntentHelper;
+import com.mcxiaoke.fanfouapp.util.LogUtil;
 import com.mcxiaoke.fanfouapp.util.Utils;
 
 /**
@@ -357,6 +358,8 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
         if (user == null) {
             return;
         }
+
+        LogUtil.v(TAG, "doFollow following=" + user.isFollowing());
 
         if (user.isFollowing()) {
             unfollow();

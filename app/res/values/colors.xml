@@ -50,8 +50,8 @@
 
     <color name="selector_list_color_light_pressed">#FF33B5E5</color>
 
-    <color name="selector_header_color_light_default">#FFDDDDDD</color>
-    <color name="selector_header_color_light_pressed">#99AAAAAA</color>
+    <color name="selector_header_color_light_default">#FFEEEEEE</color>
+    <color name="selector_header_color_light_pressed">#99CCCCCC</color>
 
 
     <color name="text_color_primary_light">#FF222222</color>
@@ -61,8 +61,7 @@
     <color name="background_color_light_primary">#FFFFFFFF</color>
     <color name="background_color_light_secondary">#FFEEEEEE</color>
 
-    <color name="list_background_color">#FFAFAFAF</color>
-    <color name="ui_background_color">#FFF0F0F0</color>
+    <color name="ui_background_color">#FFFEFEFE</color>
 
 
     <!--Dark Theme Colors-->

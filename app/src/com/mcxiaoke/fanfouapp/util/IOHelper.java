@@ -90,6 +90,23 @@ public final class IOHelper {
         return photoDir;
     }
 
+    public static File getPictureDir(Context context) {
+        File photoDir;
+        if (Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+            photoDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            if (!photoDir.exists()) {
+                photoDir.mkdirs();
+            }
+        } else {
+            photoDir = context.getCacheDir();
+        }
+        if (!photoDir.exists()) {
+            photoDir.mkdirs();
+        }
+        return photoDir;
+    }
+
     public static String getRealPathFromURI(Context context, Uri contentUri) {
         // get path from uri like content://media//
         Cursor cursor = context.getContentResolver().query(contentUri,
