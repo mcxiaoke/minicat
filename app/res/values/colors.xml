@@ -1,25 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- holo green -->
-    <!--<color name="holo_green_light">#ff99cc00</color>-->
-    <!--<color name="holo_green_dark">#ff669900</color>-->
-    <!-- holo red -->
-    <!--<color name="holo_red_light">#ffff4444</color>-->
-    <!--<color name="holo_red_dark">#ffcc0000</color>-->
-    <!-- holo orange -->
-    <!--<color name="holo_orange_light">#ffffbb33</color>-->
-    <!--<color name="holo_orange_dark">#ffff8800</color>-->
-
-
-    <!--    <color name="holo_blue_light_light">#ffFF45A3E5</color>
-        <color name="holo_blue_light_dark">#ff0099cc</color>
-        <color name="holo_blue_bright">#ff00ddff</color>-->
 
     <!-- Common Color -->
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
     <color name="solid_white">#FFFFFFFF</color>
-    <color name="solid_white_semitransparent">#66FFFFFF</color>
     <color name="solid_black">#FF000000</color>
     <color name="solid_gray">#FF999999</color>
     <color name="soft_black">#FF333333</color>
@@ -27,12 +12,6 @@
     <color name="dark_grey">#FF333333</color>
     <color name="grey">#FF666666</color>
     <color name="light_grey">#FF999999</color>
-
-    <color name="green_1">#FF365D2C</color>
-    <color name="green_2">#FF5B9A49</color>
-    <color name="green_3">#FF3CC316</color>
-    <color name="green_4">#FF365D2C</color>
-
 
     <!-- Colors for all theme-->
     <color name="alert_text_highlight">#FFCC0000</color>
@@ -51,17 +30,15 @@
 
     <color name="actionbar_bg_color">#FF33B5E5</color>
     <color name="actionbar_bg_color_bottom">#FF28A5C0</color>
-
-    <!--    <color name="actionbar_bg_color">#FFF4842D</color>
-        <color name="actionbar_bg_color_bottom">#FFD27127</color>-->
+    <color name="actionbar_item_bg_pressed">#66CCCCCC</color>
 
     <color name="selector_list_color_light_pressed">#FF33B5E5</color>
 
-    <color name="selector_header_color_light_default">#FFDDDDDD</color>
+    <color name="selector_header_color_light_default">#FFE0E0E0</color>
     <color name="selector_header_color_light_pressed">#6633B5E5</color>
 
-    <color name="selector_drawer_menu_color_checked">#FFDDDDDD</color>
-    <color name="selector_drawer_menu_color_pressed">#6633B5E5</color>
+    <color name="selector_drawer_menu_color_checked">#FFE0E0E0</color>
+    <color name="selector_drawer_menu_color_pressed">#8033B5E5</color>
 
     <color name="drawer_dim_background">#C0000000</color>
 
@@ -71,10 +48,9 @@
     <color name="text_color_pressed_light">#FFFFFFFF</color>
 
     <color name="ui_background_color_primary">#FFF9F9F9</color>
-    <color name="ui_background_color_secondary">#FFDDDDDD</color>
+    <color name="ui_background_color_secondary">#FFE0E0E0</color>
 
     <!--Dark Theme Colors-->
-
 
     <color name="text_color_primary_dark">#FFEEFFEE</color>
     <color name="text_color_secondary_dark">#FF334433</color>
@@ -83,25 +59,28 @@
     <color name="pager_sliding_tab_background">#FFE0E0E0</color>
     <color name="pager_sliding_tab_pressed">#6633B5E5</color>
 
-
-    <!-- Colors from google play app -->
+    <!-- Theme colors -->
+    <color name="holo_primary">#ff33b5e5</color>
+    <color name="holo_primary_disabled">#8033b5e5</color>
+    <color name="holo_secondary">#ff28a5c0</color>
+    <!-- below from google play app -->
     <color name="apps_primary">#ffb2cb39</color>
-    <color name="books_primary">#ff3f9fe0</color>
-    <color name="movies_primary">#ffc74b46</color>
-    <color name="music_primary">#fff4842d</color>
-    <color name="magazines_primary">#ff5161bc</color>
-    <color name="multi_primary">#ff585858</color>
     <color name="apps_primary_disabled">#80b2cb39</color>
-    <color name="books_primary_disabled">#803f9fe0</color>
-    <color name="movies_primary_disabled">#80c74b46</color>
-    <color name="music_primary_disabled">#80f4842d</color>
-    <color name="magazines_primary_disabled">#805161bc</color>
-    <color name="multi_primary_disabled">#80585858</color>
     <color name="apps_secondary">#ff96aa39</color>
+    <color name="books_primary">#ff3f9fe0</color>
+    <color name="books_primary_disabled">#803f9fe0</color>
     <color name="books_secondary">#ff3687bf</color>
+    <color name="movies_primary">#ffc74b46</color>
+    <color name="movies_primary_disabled">#80c74b46</color>
     <color name="movies_secondary">#ff943c39</color>
+    <color name="music_primary">#fff4842d</color>
+    <color name="music_primary_disabled">#80f4842d</color>
     <color name="music_secondary">#ffd77428</color>
+    <color name="magazines_primary">#ff5161bc</color>
+    <color name="magazines_primary_disabled">#805161bc</color>
     <color name="magazines_secondary">#ff384c9e</color>
+    <color name="multi_primary">#ff585858</color>
+    <color name="multi_primary_disabled">#80585858</color>
     <color name="multi_secondary">#ff4d4d4d</color>
 
 </resources>
