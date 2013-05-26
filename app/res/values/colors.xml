@@ -47,7 +47,7 @@
     <color name="text_color_secondary_light">#FF666666</color>
     <color name="text_color_pressed_light">#FFFFFFFF</color>
 
-    <color name="ui_background_color_primary">#FFF2F2F2</color>
+    <color name="ui_background_color_primary">#FFF6F6F6</color>
     <color name="ui_background_color_secondary">#FFE0E0E0</color>
 
     <!--Dark Theme Colors-->
@@ -56,7 +56,7 @@
     <color name="text_color_secondary_dark">#FF334433</color>
     <color name="text_color_pressed_dark">#FF000000</color>
 
-    <color name="pager_sliding_tab_background">#FFF2F2F2</color>
+    <color name="pager_sliding_tab_background">#FFF6F6F6</color>
     <color name="pager_sliding_tab_pressed">#6633B5E5</color>
 
     <color name="list_item_status_self_highlight">#16999999</color>
