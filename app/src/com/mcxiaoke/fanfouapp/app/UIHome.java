@@ -375,10 +375,10 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     private void setHomeTitle(int page) {
         switch (page) {
             case 0:
-                setTitle("首页");
+                setTitle("关注的消息");
                 break;
             case 1:
-                setTitle("提及");
+                setTitle("提到我的");
                 break;
             case 2:
                 setTitle("随便看看");

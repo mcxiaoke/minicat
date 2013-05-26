@@ -64,8 +64,8 @@
     <string name="menu_feedback">反馈</string>
 
     <!-- page titles -->
-    <string name="page_title_home">首页</string>
-    <string name="page_title_mention">提及</string>
+    <string name="page_title_home">关注的消息</string>
+    <string name="page_title_mention">提到我的</string>
     <string name="page_title_public">随便看看</string>
     <string name="page_title_more">栏目</string>
     <string name="page_title_about">关于</string>
@@ -78,7 +78,7 @@
     <string name="page_title_option">选项</string>
     <string name="page_title_trends">热词</string>
     <string name="page_title_write">写消息</string>
-    <string name="page_title_conversation_list">私信</string>
+    <string name="page_title_conversation_list">收件箱</string>
     <string name="page_title_conversation">聊天</string>
     <string name="page_title_thread">对话线索</string>
     <string name="page_title_photo">照片</string>

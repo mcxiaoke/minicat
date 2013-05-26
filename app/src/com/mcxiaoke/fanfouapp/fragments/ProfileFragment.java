@@ -159,7 +159,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
 
     @Override
     public String getTitle() {
-        return null;
+        return "我的资料啊";
     }
 
     @Override

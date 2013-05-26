@@ -43,7 +43,7 @@ public class FriendsListFragment extends UserListFragment {
 
     @Override
     public String getTitle() {
-        return "关注 ";
+        return "关注的人";
     }
 
 }
