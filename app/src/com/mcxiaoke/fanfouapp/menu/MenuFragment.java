@@ -41,8 +41,8 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
     public static final int MENU_ID_RECORD = MENU_ID + 5;
     public static final int MENU_ID_DIGEST = MENU_ID + 6;
     public static final int MENU_ID_THEME = MENU_ID + 7;
-    public static final int MENU_ID_OPTION = MENU_ID + 8;
-    public static final int MENU_ID_LOGOUT = MENU_ID + 9;
+    public static final int MENU_ID_LOGOUT = MENU_ID + 8;
+    public static final int MENU_ID_OPTION = MENU_ID + 9;
     public static final int MENU_ID_ABOUT = MENU_ID + 10;
     public static final int MENU_ID_DEBUG = MENU_ID + 99;
 
@@ -141,14 +141,14 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
 /*        MenuItemResource drafts = MenuItemResource.newBuilder()
                 .id(MENU_ID_RECORD).text("草稿箱")
                 .iconId(R.drawable.ic_item_record).highlight(false).build();*/
+        MenuItemResource logout = MenuItemResource.newBuilder()
+                .id(MENU_ID_LOGOUT).text("切换帐号")
+                .iconId(R.drawable.ic_item_logout).highlight(false).build();
 
         MenuItemResource option = MenuItemResource.newBuilder()
                 .id(MENU_ID_OPTION).text("设置")
                 .iconId(R.drawable.ic_item_option).highlight(false).build();
 
-        MenuItemResource logout = MenuItemResource.newBuilder()
-                .id(MENU_ID_LOGOUT).text("切换帐号")
-                .iconId(R.drawable.ic_item_logout).highlight(false).build();
         //
         // MenuItemResource theme = MenuItemResource.newBuilder()
         // .id(MENU_ID_THEME).text("主题切换")
@@ -167,8 +167,8 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
         mMenuItems.add(message);
         mMenuItems.add(topic);
 //        mMenuItems.add(drafts);
-        mMenuItems.add(option);
         mMenuItems.add(logout);
+        mMenuItems.add(option);
         // mMenuItems.add(theme);
 //        mMenuItems.add(blog);
         mMenuItems.add(about);
