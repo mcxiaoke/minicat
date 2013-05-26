@@ -75,6 +75,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         setTitle(R.string.page_title_home);
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.setScrimColor(getResources().getColor(R.color.drawer_dim_background));
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
 
@@ -109,10 +110,11 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setOnPageChangeListener(this);
         mPagerTabStrip = (PagerTabStrip) findViewById(R.id.viewpager_strip);
+        mPagerTabStrip.setBackgroundColor(getResources().getColor(R.color.ui_background_color_secondary));
         mPagerTabStrip.setDrawFullUnderline(false);
         mPagerTabStrip.setTabIndicatorColor(getResources().getColor(
                 R.color.theme_blue_light));
-        mPagerTabStrip.setTextColor(Color.WHITE);
+        mPagerTabStrip.setTextColor(Color.BLACK);
         mPagesAdapter = new HomePagesAdapter(getFragmentManager());
         mViewPager.setAdapter(mPagesAdapter);
         setHomeTitle(mCurrentPage);

@@ -22,6 +22,8 @@
     <dimen name="text_size_medium">16sp</dimen>
     <dimen name="text_size_large">18sp</dimen>
     <dimen name="text_size_xlarge">20sp</dimen>
+    <dimen name="text_size_xxlarge">22sp</dimen>
+    <dimen name="text_size_xxxlarge">24sp</dimen>
     <dimen name="profile_header_name_text_size">20sp</dimen>
     <dimen name="profile_header_relation_text_size">14sp</dimen>
     <dimen name="profile_header_padding">6dp</dimen>
@@ -51,5 +53,8 @@
 
 
     <dimen name="list_padding">8dp</dimen>
+
+    <dimen name="status_header_padding">12dp</dimen>
+    <dimen name="menu_list_item_padding">18dp</dimen>
 
 </resources>

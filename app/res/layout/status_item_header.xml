@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:padding="@dimen/list_padding" android:background="@drawable/selector_header_light">
+                android:padding="@dimen/status_header_padding" android:background="@drawable/selector_header_light">
 
     <ImageView
             android:id="@+id/header_image"
@@ -16,7 +16,7 @@
             android:id="@+id/header_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_alignParentTop="true" android:layout_marginLeft="@dimen/list_padding"
             android:layout_toRightOf="@id/header_image"
             android:padding="@dimen/profile_header_text_padding" android:textColor="@color/black"
             android:textSize="@dimen/text_size_large" android:duplicateParentState="true"/>

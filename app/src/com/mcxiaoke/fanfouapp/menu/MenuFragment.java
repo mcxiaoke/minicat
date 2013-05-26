@@ -1,7 +1,7 @@
 package com.mcxiaoke.fanfouapp.menu;
 
 import android.app.Activity;
-import android.app.ListFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,13 +9,14 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.app.AppContext;
 import com.mcxiaoke.fanfouapp.app.UIHome;
-import com.mcxiaoke.fanfouapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.List;
  * @author mcxiaoke
  * @version 2.1 2012.04.24
  */
-public class MenuFragment extends ListFragment {
+public class MenuFragment extends Fragment implements AdapterView.OnItemClickListener {
     private static final boolean DEBUG = AppContext.DEBUG;
     private static final String TAG = MenuFragment.class.getSimpleName();
 
@@ -74,29 +75,39 @@ public class MenuFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return inflater.inflate(R.layout.fm_menu, null, false);
+//        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mListView = (ListView) getView().findViewById(android.R.id.list);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getView().setBackgroundResource(R.drawable.sliding_menu_background);
-        mListView = getListView();
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListView.setSelector(getResources().getDrawable(
-                R.drawable.selector_sliding_menu));
-        mListView.setDivider(getResources().getDrawable(
-                R.drawable.sliding_menu_list_divider));
+                R.drawable.selector_drawer_menu));
+
+//        mListView.setDivider(getResources().getDrawable(
+//                R.drawable.sliding_menu_list_divider));
         mMenuAdapter = new MenuItemListAdapter(getActivity(), mMenuItems);
-        setListAdapter(mMenuAdapter);
+        mListView.setOnItemClickListener(this);
+        mListView.setDrawSelectorOnTop(true);
+        mListView.setAdapter(mMenuAdapter);
+        mListView.setItemChecked(0, true);
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        final MenuItemResource menuItem = (MenuItemResource) l
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        final MenuItemResource menuItem = (MenuItemResource) parent
                 .getItemAtPosition(position);
         debug("on item click ,position=" + position + " item=" + menuItem);
+        ListView listView = (ListView) parent;
+        listView.setItemChecked(position, true);
         if (menuItem != null) {
             mCheckedState.clear();
             mCheckedState.put(position, true);
@@ -112,24 +123,24 @@ public class MenuFragment extends ListFragment {
 
     private void fillColumns() {
         MenuItemResource home = MenuItemResource.newBuilder().id(MENU_ID_HOME)
-                .text("我的首页").iconId(R.drawable.ic_menu_home).highlight(true)
+                .text("首页").iconId(R.drawable.ic_menu_home).highlight(true)
                 .build();
 
         MenuItemResource profile = MenuItemResource.newBuilder()
-                .id(MENU_ID_PROFILE).text("我的空间")
+                .id(MENU_ID_PROFILE).text("我的资料")
                 .iconId(R.drawable.ic_item_profile).highlight(true).build();
 
         MenuItemResource message = MenuItemResource.newBuilder()
-                .id(MENU_ID_MESSAGE).text("收件箱")
+                .id(MENU_ID_MESSAGE).text("私信收件箱")
                 .iconId(R.drawable.ic_item_feedback).highlight(true).build();
 
         MenuItemResource topic = MenuItemResource.newBuilder()
-                .id(MENU_ID_TOPIC).text("流行趋势")
+                .id(MENU_ID_TOPIC).text("热词和搜索")
                 .iconId(R.drawable.ic_item_topic).highlight(false).build();
 
-        MenuItemResource drafts = MenuItemResource.newBuilder()
+/*        MenuItemResource drafts = MenuItemResource.newBuilder()
                 .id(MENU_ID_RECORD).text("草稿箱")
-                .iconId(R.drawable.ic_item_record).highlight(false).build();
+                .iconId(R.drawable.ic_item_record).highlight(false).build();*/
 
         MenuItemResource option = MenuItemResource.newBuilder()
                 .id(MENU_ID_OPTION).text("使用设置")
@@ -143,9 +154,9 @@ public class MenuFragment extends ListFragment {
         // .id(MENU_ID_THEME).text("主题切换")
         // .iconId(R.drawable.ic_item_theme).highlight(false).build();
 
-        MenuItemResource blog = MenuItemResource.newBuilder()
+/*        MenuItemResource blog = MenuItemResource.newBuilder()
                 .id(MENU_ID_DIGEST).text("饭否语录")
-                .iconId(R.drawable.ic_item_digest).highlight(false).build();
+                .iconId(R.drawable.ic_item_digest).highlight(false).build();*/
 
         MenuItemResource about = MenuItemResource.newBuilder()
                 .id(MENU_ID_ABOUT).text("关于饭否").iconId(R.drawable.ic_item_info)
@@ -155,18 +166,18 @@ public class MenuFragment extends ListFragment {
         mMenuItems.add(profile);
         mMenuItems.add(message);
         mMenuItems.add(topic);
-        mMenuItems.add(drafts);
+//        mMenuItems.add(drafts);
         mMenuItems.add(option);
         mMenuItems.add(logout);
         // mMenuItems.add(theme);
-        mMenuItems.add(blog);
+//        mMenuItems.add(blog);
         mMenuItems.add(about);
 
         if (DEBUG) {
             MenuItemResource test = MenuItemResource.newBuilder()
                     .id(MENU_ID_DEBUG).text("调试模式")
                     .iconId(R.drawable.ic_item_modify).highlight(false).build();
-            mMenuItems.add(test);
+//            mMenuItems.add(test);
         }
 
     }
@@ -209,7 +220,7 @@ public class MenuFragment extends ListFragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.list_item_column, null);
+                convertView = inflater.inflate(R.layout.list_item_menu, null);
                 holder = new ViewHolder(convertView);
                 convertView.setTag(holder);
             } else {
@@ -218,16 +229,19 @@ public class MenuFragment extends ListFragment {
 
             final MenuItemResource item = mItems.get(position);
             holder.icon.setImageResource(item.iconId);
+            holder.icon.setVisibility(View.GONE);
             holder.text.setText(item.text);
 
             debug("getView ,position=" + position + " item=" + item);
 
             if (position == currentPosition && item.highlight) {
-                holder.text.setTextColor(context.getResources()
-                        .getColorStateList(R.color.light_blue_text_color));
+                convertView.setBackgroundResource(R.drawable.selector_drawer_menu_light_checked);
+//                holder.text.setTextColor(context.getResources()
+//                        .getColorStateList(R.color.light_blue_text_color));
             } else {
-                holder.text.setTextColor(context.getResources()
-                        .getColorStateList(R.color.white_text_color));
+                convertView.setBackground(null);
+//                holder.text.setTextColor(context.getResources()
+//                        .getColorStateList(R.color.white_text_color));
             }
             return convertView;
         }

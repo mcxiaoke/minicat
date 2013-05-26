@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent" android:background="@color/ui_background_color"
+              android:layout_height="match_parent" android:background="@color/ui_background_color_primary"
               android:showDividers="middle" android:divider="?android:dividerHorizontal">
 
     <include layout="@layout/profile_header"/>
