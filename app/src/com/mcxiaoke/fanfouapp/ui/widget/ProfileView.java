@@ -125,7 +125,6 @@ public class ProfileView extends FrameLayout implements
         headerImage = (ImageView) findViewById(R.id.header_icon);
         headerName = (TextView) findViewById(R.id.header_name);
         headerState = (TextView) findViewById(R.id.header_state);
-        headerState.setText("(正在关注你)");
         headerLock = (ImageView) findViewById(R.id.header_lock);
         headerIntro = (TextView) findViewById(R.id.header_intro);
 
@@ -227,11 +226,6 @@ public class ProfileView extends FrameLayout implements
         String time = DateTimeHelper.formatDateOnly(user.getTime());
         String description = user.getDescription();
 
-        //TODO 如果有填写网址，MENU菜单里添加打开 个人网站 选项
-        // TODO 个人页面需要发消息，发私信选项
-        //TODO 添加箭头
-
-
         StringBuilder simpleBuilder = new StringBuilder();
         simpleBuilder.append("性别：").append(StringHelper.isEmpty(gender) ? "未知" : gender).append("\n");
 
@@ -295,7 +289,7 @@ public class ProfileView extends FrameLayout implements
     }
 
     public void setFollowState(boolean follow) {
-        headerState.setVisibility(follow ? View.VISIBLE : View.GONE);
+        headerState.setText(follow ? R.string.profile_state_on : R.string.profile_state_off);
     }
 
     public void setExpanded(boolean expanded) {

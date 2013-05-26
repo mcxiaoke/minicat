@@ -103,4 +103,7 @@
     <string name="drawer_open">菜单打开</string>
     <string name="drawer_close">菜单关闭</string>
 
+    <string name="profile_state_on">(正在关注你)</string>
+    <string name="profile_state_off">(没有关注你)</string>
+
 </resources>

@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:text="(正在关注你)"
             android:textColor="@color/text_color_secondary_light"
-            android:textSize="@dimen/text_size_tiny" android:visibility="gone"/>
+            android:textSize="@dimen/text_size_tiny"/>
 
     <ImageView
             android:id="@+id/header_lock"
@@ -42,7 +42,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@id/header_name"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_mini_protected" android:visibility="gone"/>
+            android:src="@drawable/ic_mini_protected" android:visibility="invisible"/>
 
     <TextView
             android:id="@+id/header_intro"
