@@ -49,6 +49,12 @@
 
     <color name="divider_color_light">#66999999</color>
 
+    <color name="actionbar_bg_color">#FF33B5E5</color>
+    <color name="actionbar_bg_color_bottom">#FF28A5C0</color>
+
+    <!--    <color name="actionbar_bg_color">#FFF4842D</color>
+        <color name="actionbar_bg_color_bottom">#FFD27127</color>-->
+
     <color name="selector_list_color_light_pressed">#FF33B5E5</color>
 
     <color name="selector_header_color_light_default">#FFDDDDDD</color>
@@ -77,5 +83,25 @@
     <color name="pager_sliding_tab_background">#FFE0E0E0</color>
     <color name="pager_sliding_tab_pressed">#6633B5E5</color>
 
+
+    <!-- Colors from google play app -->
+    <color name="apps_primary">#ffb2cb39</color>
+    <color name="books_primary">#ff3f9fe0</color>
+    <color name="movies_primary">#ffc74b46</color>
+    <color name="music_primary">#fff4842d</color>
+    <color name="magazines_primary">#ff5161bc</color>
+    <color name="multi_primary">#ff585858</color>
+    <color name="apps_primary_disabled">#80b2cb39</color>
+    <color name="books_primary_disabled">#803f9fe0</color>
+    <color name="movies_primary_disabled">#80c74b46</color>
+    <color name="music_primary_disabled">#80f4842d</color>
+    <color name="magazines_primary_disabled">#805161bc</color>
+    <color name="multi_primary_disabled">#80585858</color>
+    <color name="apps_secondary">#ff96aa39</color>
+    <color name="books_secondary">#ff3687bf</color>
+    <color name="movies_secondary">#ff943c39</color>
+    <color name="music_secondary">#ffd77428</color>
+    <color name="magazines_secondary">#ff384c9e</color>
+    <color name="multi_secondary">#ff4d4d4d</color>
 
 </resources>
