@@ -17,12 +17,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.adapter.HomePagesAdapter;
 import com.mcxiaoke.fanfouapp.controller.UIController;
-import com.mcxiaoke.fanfouapp.fragments.AbstractFragment;
-import com.mcxiaoke.fanfouapp.fragments.ConversationListFragment;
-import com.mcxiaoke.fanfouapp.fragments.ProfileFragment;
+import com.mcxiaoke.fanfouapp.fragment.AbstractFragment;
+import com.mcxiaoke.fanfouapp.fragment.ConversationListFragment;
+import com.mcxiaoke.fanfouapp.fragment.ProfileFragment;
 import com.mcxiaoke.fanfouapp.menu.MenuCallback;
 import com.mcxiaoke.fanfouapp.menu.MenuFragment;
 import com.mcxiaoke.fanfouapp.menu.MenuItemResource;
@@ -332,20 +334,64 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         super.onMenuRefreshClick();
     }
 
-    @Override
-    public void onPageScrollStateChanged(int page) {
+    boolean mIndicatorShowing;
+
+    private void showIndicator(int state) {
+        if (state == ViewPager.SCROLL_STATE_IDLE) {
+            if (mIndicatorShowing) {
+                Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+                animation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        mPagerIndicator.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+                });
+                mPagerIndicator.startAnimation(animation);
+            }
+        } else if (state == ViewPager.SCROLL_STATE_DRAGGING) {
+            if (!mIndicatorShowing) {
+                Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+                animation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        mPagerIndicator.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+                });
+                mPagerIndicator.startAnimation(animation);
+            }
+        }
     }
 
     @Override
-    public void onPageScrolled(int arg0, float arg1, int arg2) {
+    public void onPageScrollStateChanged(int state) {
     }
 
     @Override
-    public void onPageSelected(int page) {
-        mCurrentPage = page;
-        setHomeTitle(page);
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        mCurrentPage = position;
+        setHomeTitle(position);
         mCurrentFragment = mPagesAdapter.getItem(mCurrentPage);
-        if (page == 0) {
+        if (position == 0) {
 //            setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
         } else {
 //            setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);

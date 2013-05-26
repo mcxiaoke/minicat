@@ -7,10 +7,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
-import com.mcxiaoke.fanfouapp.fragments.FollowersListFragment;
-import com.mcxiaoke.fanfouapp.fragments.FriendsListFragment;
-import com.mcxiaoke.fanfouapp.fragments.OnInitCompleteListener;
-import com.mcxiaoke.fanfouapp.fragments.UserListFragment;
+import com.mcxiaoke.fanfouapp.fragment.FollowersListFragment;
+import com.mcxiaoke.fanfouapp.fragment.FriendsListFragment;
+import com.mcxiaoke.fanfouapp.fragment.OnInitCompleteListener;
+import com.mcxiaoke.fanfouapp.fragment.UserListFragment;
 import com.mcxiaoke.fanfouapp.ui.widget.TextChangeListener;
 
 /**

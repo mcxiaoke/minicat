@@ -25,7 +25,7 @@
                     android:layout_height="@dimen/pager_sliding_tab_height" app:shouldExpand="true"
                     app:indicatorColor="@color/theme_blue_light"
                     app:underlineColor="@color/divider_color_light"
-                    app:dividerColor="@color/divider_color_light"
+                    app:dividerColor="@color/divider_color_light" android:textSize="@dimen/text_size_small"
                     />
 
             <android.support.v4.view.ViewPager

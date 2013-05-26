@@ -2,8 +2,8 @@ package com.mcxiaoke.fanfouapp.app;
 
 import android.os.Bundle;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
-import com.mcxiaoke.fanfouapp.fragments.BaseTimlineFragment;
-import com.mcxiaoke.fanfouapp.fragments.UserTimelineFragment;
+import com.mcxiaoke.fanfouapp.fragment.BaseTimlineFragment;
+import com.mcxiaoke.fanfouapp.fragment.UserTimelineFragment;
 
 /**
  * @author mcxiaoke

@@ -43,7 +43,7 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
     private MenuItem mRefreshMenuItem;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         debug("onCreate()");
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);

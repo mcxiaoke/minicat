@@ -32,7 +32,7 @@ import android.view.ViewGroup;
  * 
  * <p>
  * This version of the pager is best for use when there are a handful of
- * typically more static fragments to be paged through, such as a set of tabs.
+ * typically more static fragment to be paged through, such as a set of tabs.
  * The fragment of each page the user visits will be kept in memory, though its
  * view hierarchy may be destroyed when not visible. This can result in using a
  * significant amount of memory since fragment instances can hold on to an
@@ -48,7 +48,7 @@ import android.view.ViewGroup;
  * {@link #getCount()} to have a working adapter.
  * 
  * <p>
- * Here is an example implementation of a pager containing fragments of lists:
+ * Here is an example implementation of a pager containing fragment of lists:
  * 
  * {@sample
  * development/samples/Support13Demos/src/com/example/android/supportv13/app/

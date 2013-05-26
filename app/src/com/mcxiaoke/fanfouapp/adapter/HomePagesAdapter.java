@@ -1,10 +1,10 @@
 package com.mcxiaoke.fanfouapp.adapter;
 
 import android.app.FragmentManager;
-import com.mcxiaoke.fanfouapp.fragments.AbstractListFragment;
-import com.mcxiaoke.fanfouapp.fragments.HomeTimelineFragment;
-import com.mcxiaoke.fanfouapp.fragments.MentionTimelineFragment;
-import com.mcxiaoke.fanfouapp.fragments.PublicTimelineFragment;
+import com.mcxiaoke.fanfouapp.fragment.AbstractListFragment;
+import com.mcxiaoke.fanfouapp.fragment.HomeTimelineFragment;
+import com.mcxiaoke.fanfouapp.fragment.MentionTimelineFragment;
+import com.mcxiaoke.fanfouapp.fragment.PublicTimelineFragment;
 
 import java.util.ArrayList;
 import java.util.List;

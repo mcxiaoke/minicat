@@ -1,8 +1,8 @@
 package com.mcxiaoke.fanfouapp.app;
 
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
-import com.mcxiaoke.fanfouapp.fragments.BaseTimlineFragment;
-import com.mcxiaoke.fanfouapp.fragments.UserFavoritesFragment;
+import com.mcxiaoke.fanfouapp.fragment.BaseTimlineFragment;
+import com.mcxiaoke.fanfouapp.fragment.UserFavoritesFragment;
 
 /**
  * @author mcxiaoke

@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
-import com.mcxiaoke.fanfouapp.fragments.ProfileFragment;
+import com.mcxiaoke.fanfouapp.fragment.ProfileFragment;
 
 /**
  * @author mcxiaoke

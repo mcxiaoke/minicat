@@ -11,7 +11,7 @@ import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.controller.CacheController;
 import com.mcxiaoke.fanfouapp.controller.EmptyViewController;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
-import com.mcxiaoke.fanfouapp.fragments.BaseTimlineFragment;
+import com.mcxiaoke.fanfouapp.fragment.BaseTimlineFragment;
 
 /**
  * @author mcxiaoke

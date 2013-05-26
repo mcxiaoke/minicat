@@ -17,6 +17,7 @@ import com.mcxiaoke.fanfouapp.app.UIDebugMode;
 import com.mcxiaoke.fanfouapp.app.UIFavorites;
 import com.mcxiaoke.fanfouapp.app.UIHome;
 import com.mcxiaoke.fanfouapp.app.UILogin;
+import com.mcxiaoke.fanfouapp.app.UIOptions;
 import com.mcxiaoke.fanfouapp.app.UIPhoto;
 import com.mcxiaoke.fanfouapp.app.UIProfile;
 import com.mcxiaoke.fanfouapp.app.UIRecords;
@@ -66,7 +67,9 @@ public class UIController {
         startUIByAnimation(context, intent);
     }
 
-    public static void showOption(Context context) {
+    public static void showOption(Activity context) {
+        Intent intent = new Intent(context, UIOptions.class);
+        startUIByAnimation(context, intent);
     }
 
     public static void goStatusPage(Activity context, String id) {
