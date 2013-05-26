@@ -145,9 +145,9 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     @Override
     protected void onResume() {
         super.onResume();
-        if (mDrawerLayout.isDrawerOpen(mDrawFrame)) {
-            mDrawerLayout.closeDrawer(Gravity.LEFT);
-        }
+//        if (mDrawerLayout.isDrawerOpen(mDrawFrame)) {
+//            mDrawerLayout.closeDrawer(Gravity.LEFT);
+//        }
     }
 
     @Override
@@ -173,12 +173,12 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawFrame);
-        menu.findItem(R.id.menu_refresh).setVisible(!drawerOpen);
-        menu.findItem(R.id.menu_write).setVisible(!drawerOpen);
-        if (drawerOpen) {
-            return true;
-        }
+//        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawFrame);
+//        menu.findItem(R.id.menu_refresh).setVisible(!drawerOpen);
+//        menu.findItem(R.id.menu_write).setVisible(!drawerOpen);
+//        if (drawerOpen) {
+//            return true;
+//        }
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -206,11 +206,14 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 
     private AbstractFragment mCurrentFragment;
 
-    private void replaceFragment(AbstractFragment fragment) {
-        log("fragment=" + fragment);
+    private void switchContent(AbstractFragment fragment) {
+        log("switchContent fragment=" + fragment);
         mCurrentFragment = fragment;
+        // hide profile menus
+        mCurrentFragment.setMenuVisibility(false);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out);
+//        ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.replace(R.id.content_frame, fragment);
         ft.commit();
 //        getSlidingMenu().showContent();
@@ -218,12 +221,12 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     }
 
     private void showProfileFragment() {
-        replaceFragment(ProfileFragment.newInstance(AppContext.getAccount()));
+        switchContent(ProfileFragment.newInstance(AppContext.getAccount(), false));
         setTitle("我的空间");
     }
 
     private void showMessageFragment() {
-        replaceFragment(ConversationListFragment.newInstance(false));
+        switchContent(ConversationListFragment.newInstance(false));
         setTitle("收件箱");
     }
 
@@ -311,7 +314,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 
     @Override
     protected void onMenuHomeClick() {
-        super.onMenuHomeClick();
+//        super.onMenuHomeClick();
     }
 
     @Override

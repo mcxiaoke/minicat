@@ -32,7 +32,7 @@ public class UIProfile extends UIBaseSupport {
         setProgressBarIndeterminateVisibility(false);
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.container, ProfileFragment.newInstance(userId));
+        ft.replace(R.id.container, ProfileFragment.newInstance(userId,true));
         ft.commit();
     }
 

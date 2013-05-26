@@ -35,25 +35,27 @@ import com.mcxiaoke.fanfouapp.util.Utils;
 public class ProfileFragment extends AbstractFragment implements ProfileView.ProfileClickListener {
     private static final String TAG = ProfileFragment.class.getSimpleName();
 
-    public static ProfileFragment newInstance(String userId) {
+    public static ProfileFragment newInstance(String userId, boolean useMenu) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
         args.putString("id", userId);
+        args.putBoolean("menu", useMenu);
         fragment.setArguments(args);
         return fragment;
     }
 
+    private boolean useMenu;
     private String userId;
     private UserModel user;
-    private boolean isFollowing;
 
-    private boolean noPermission = false;
+    private boolean noPermission;
     private ProfileView vProfile;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle data = getArguments();
+        useMenu = data.getBoolean("menu");
         user = data.getParcelable("data");
         if (user == null) {
             userId = data.getString("id");
@@ -79,8 +81,9 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
-        setMenuVisibility(true);
+        if (useMenu) {
+            setHasOptionsMenu(true);
+        }
         refreshProfile();
     }
 
@@ -100,6 +103,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
                 showDM();
                 break;
             case R.id.menu_web:
+                showWebPage();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -258,8 +262,6 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
             return;
         }
 
-        isFollowing = user.isFollowing();
-
         if (AppContext.DEBUG) {
             Log.d(TAG, "updateUI() userid=" + userId);
             Log.d(TAG, "updateUI() user.following=" + user.isFollowing());
@@ -349,7 +351,6 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
 
     private void updateFollowButton(boolean following) {
         user.setFollowing(following);
-        isFollowing = following;
         updatePermission();
         vProfile.updateFollowState(following);
     }
