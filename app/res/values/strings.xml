@@ -106,4 +106,10 @@
     <string name="profile_state_on">(正在关注你)</string>
     <string name="profile_state_off">(没有关注你)</string>
 
+
+    <!-- Options -->
+    <string name="option_refresh_on_start_key">option_refresh_on_start_key</string>
+    <string name="option_refresh_on_start_title">启动时刷新</string>
+    <string name="option_refresh_on_start_summary">启动时刷新时间线</string>
+
 </resources>

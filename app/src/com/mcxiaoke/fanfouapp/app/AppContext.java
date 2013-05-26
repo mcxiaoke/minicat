@@ -16,7 +16,6 @@ import com.mcxiaoke.fanfouapp.config.AccountStore;
 import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
-import com.mcxiaoke.fanfouapp.util.AlarmHelper;
 import com.mcxiaoke.fanfouapp.util.DateTimeHelper;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -75,7 +74,7 @@ public class AppContext extends Application {
         ImageLoader.getInstance().init(getDefaultImageLoaderConfigureation());
         DateTimeHelper.FANFOU_DATE_FORMAT.setTimeZone(TimeZone
                 .getTimeZone("GMT"));
-        AlarmHelper.setAlarmsIfNot(this);
+//        AlarmHelper.setAlarmsIfNot(this);
     }
 
     private void initAccountInfo() {

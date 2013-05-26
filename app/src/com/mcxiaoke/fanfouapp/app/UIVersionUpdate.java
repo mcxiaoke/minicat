@@ -9,10 +9,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.service.DownloadService;
 import com.mcxiaoke.fanfouapp.service.VersionInfo;
-import com.mcxiaoke.fanfouapp.util.Utils;
-import com.mcxiaoke.fanfouapp.R;
 
 /**
  * @author mcxiaoke
@@ -42,7 +41,7 @@ public class UIVersionUpdate extends Activity implements View.OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Utils.initScreenConfig(this);
+//		Utils.initScreenConfig(this);
 		parseIntent(getIntent());
 		setLayout();
 		updateUI();

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <bool name="option_refresh_on_start_default_value">true</bool>
+</resources>

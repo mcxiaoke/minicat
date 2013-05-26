@@ -189,9 +189,6 @@
                 android:name=".service.PostMessageService"
                 android:label="@string/app_name"/>
         <service
-                android:name=".service.NotificationService"
-                android:label="@string/app_name"/>
-        <service
                 android:name=".service.AutoCompleteService"
                 android:label="@string/app_name"/>
         <service

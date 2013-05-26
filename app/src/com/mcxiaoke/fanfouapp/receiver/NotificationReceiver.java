@@ -14,7 +14,6 @@ import com.mcxiaoke.fanfouapp.app.UIStatus;
 import com.mcxiaoke.fanfouapp.dao.model.BaseModel;
 import com.mcxiaoke.fanfouapp.dao.model.DirectMessageModel;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
-import com.mcxiaoke.fanfouapp.util.AlarmHelper;
 import com.mcxiaoke.fanfouapp.R;
 
 /**
@@ -185,7 +184,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 		notification.setLatestEventInfo(context, title, message, contentIntent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
-		AlarmHelper.setNotificationType(context, notification);
+//		AlarmHelper.setNotificationType(context, notification);
 		nm.notify(notificationId, notification);
 	}
 

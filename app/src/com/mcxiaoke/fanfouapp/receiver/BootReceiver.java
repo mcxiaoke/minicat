@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import com.mcxiaoke.fanfouapp.service.AutoCompleteService;
 import com.mcxiaoke.fanfouapp.service.DownloadService;
-import com.mcxiaoke.fanfouapp.service.NotificationService;
 
 
 /**
@@ -21,7 +20,7 @@ public class BootReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 
-		NotificationService.set(context);
+//		NotificationService.set(context);
 		AutoCompleteService.set(context);
 		DownloadService.set(context);
 	}

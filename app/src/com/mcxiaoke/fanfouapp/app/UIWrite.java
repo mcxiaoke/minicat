@@ -38,7 +38,6 @@ import com.mcxiaoke.fanfouapp.ui.widget.MyAutoCompleteTextView;
 import com.mcxiaoke.fanfouapp.ui.widget.TextChangeListener;
 import com.mcxiaoke.fanfouapp.util.IOHelper;
 import com.mcxiaoke.fanfouapp.util.ImageHelper;
-import com.mcxiaoke.fanfouapp.util.OptionHelper;
 import com.mcxiaoke.fanfouapp.util.StringHelper;
 import com.mcxiaoke.fanfouapp.util.Utils;
 
@@ -105,8 +104,8 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        enableLocation = OptionHelper.readBoolean(mContext,
-                R.string.option_location_enable, true);
+//        enableLocation = OptionHelper.readBoolean(mContext,
+//                R.string.option_location_enable, true);
         mLocationManager = (LocationManager) this
                 .getSystemService(LOCATION_SERVICE);
         mLocationMonitor = new LocationMonitor();

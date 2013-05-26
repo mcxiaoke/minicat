@@ -101,19 +101,6 @@ public class DownloadService extends BaseIntentService {
 		}
 	}
 
-	public static void setIfNot(Context context) {
-		boolean set = OptionHelper.readBoolean(context,
-				R.string.option_set_auto_update, false);
-		if (AppContext.DEBUG) {
-			Log.d(TAG, "setIfNot flag=" + set);
-		}
-		if (!set) {
-			OptionHelper.saveBoolean(context, R.string.option_set_auto_update,
-					true);
-			set(context);
-		}
-	}
-
 	private final static PendingIntent getPendingIntent(Context context) {
 		Intent intent = new Intent(context, DownloadService.class);
 		intent.putExtra("type", TYPE_CHECK);

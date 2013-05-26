@@ -10,16 +10,30 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
-import com.mcxiaoke.fanfouapp.app.*;
+import com.mcxiaoke.fanfouapp.R;
+import com.mcxiaoke.fanfouapp.app.UIAbout;
+import com.mcxiaoke.fanfouapp.app.UIConversation;
+import com.mcxiaoke.fanfouapp.app.UIDebugMode;
+import com.mcxiaoke.fanfouapp.app.UIFavorites;
+import com.mcxiaoke.fanfouapp.app.UIHome;
+import com.mcxiaoke.fanfouapp.app.UILogin;
+import com.mcxiaoke.fanfouapp.app.UIPhoto;
+import com.mcxiaoke.fanfouapp.app.UIProfile;
+import com.mcxiaoke.fanfouapp.app.UIRecords;
+import com.mcxiaoke.fanfouapp.app.UISearch;
+import com.mcxiaoke.fanfouapp.app.UISearchResults;
+import com.mcxiaoke.fanfouapp.app.UIStatus;
+import com.mcxiaoke.fanfouapp.app.UIThread;
+import com.mcxiaoke.fanfouapp.app.UITimeline;
+import com.mcxiaoke.fanfouapp.app.UIUserList;
+import com.mcxiaoke.fanfouapp.app.UIWrite;
 import com.mcxiaoke.fanfouapp.dao.model.DirectMessageModel;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
 import com.mcxiaoke.fanfouapp.service.FanFouService;
-import com.mcxiaoke.fanfouapp.util.OptionHelper;
 import com.mcxiaoke.fanfouapp.util.StatusHelper;
 import com.mcxiaoke.fanfouapp.util.StringHelper;
 import com.mcxiaoke.fanfouapp.util.Utils;
-import com.mcxiaoke.fanfouapp.R;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -208,8 +222,7 @@ public class UIController {
 
         if (status != null) {
             StringBuilder sb = new StringBuilder();
-            boolean replyToAll = OptionHelper.readBoolean(context,
-                    R.string.option_reply_to_all_default, true);
+            boolean replyToAll = true;
             if (replyToAll) {
                 ArrayList<String> names = StatusHelper.getMentions(status);
                 for (String name : names) {
