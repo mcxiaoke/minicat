@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.PagerTabStrip;
@@ -27,6 +26,7 @@ import com.mcxiaoke.fanfouapp.fragments.ProfileFragment;
 import com.mcxiaoke.fanfouapp.menu.MenuCallback;
 import com.mcxiaoke.fanfouapp.menu.MenuFragment;
 import com.mcxiaoke.fanfouapp.menu.MenuItemResource;
+import com.mcxiaoke.fanfouapp.ui.widget.PagerSlidingTabStrip;
 
 
 /**
@@ -41,6 +41,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     private Fragment mMenuFragment;
 
     private ViewPager mViewPager;
+    private PagerSlidingTabStrip mPagerIndicator;
     private PagerTabStrip mPagerTabStrip;
     private HomePagesAdapter mPagesAdapter;
 
@@ -108,15 +109,22 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         mDrawFrame = (ViewGroup) findViewById(R.id.left_drawer);
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mViewPager.setOnPageChangeListener(this);
-        mPagerTabStrip = (PagerTabStrip) findViewById(R.id.viewpager_strip);
-        mPagerTabStrip.setBackgroundColor(getResources().getColor(R.color.ui_background_color_secondary));
-        mPagerTabStrip.setDrawFullUnderline(false);
-        mPagerTabStrip.setTabIndicatorColor(getResources().getColor(
-                R.color.theme_blue_light));
-        mPagerTabStrip.setTextColor(Color.BLACK);
+//        mViewPager.setOnPageChangeListener(this);
+
         mPagesAdapter = new HomePagesAdapter(getFragmentManager());
         mViewPager.setAdapter(mPagesAdapter);
+
+//        mPagerTabStrip = (PagerTabStrip) findViewById(R.id.viewpager_strip);
+//        mPagerTabStrip.setBackgroundColor(getResources().getColor(R.color.ui_background_color_secondary));
+//        mPagerTabStrip.setDrawFullUnderline(false);
+//        mPagerTabStrip.setTabIndicatorColor(getResources().getColor(
+//                R.color.theme_blue_light));
+//        mPagerTabStrip.setTextColor(Color.BLACK);
+
+        mPagerIndicator = (PagerSlidingTabStrip) findViewById(R.id.indicator);
+        mPagerIndicator.setViewPager(mViewPager);
+        mPagerIndicator.setOnPageChangeListener(this);
+
         setHomeTitle(mCurrentPage);
         mCurrentFragment = mPagesAdapter.getItem(mCurrentPage);
 //        setSlidingMenu(R.layout.menu_frame);
@@ -210,21 +218,21 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 
     private void switchContent(AbstractFragment fragment) {
         log("switchContent fragment=" + fragment);
-        mCurrentFragment = fragment;
-        // hide profile menus
-        mCurrentFragment.setMenuVisibility(false);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out);
 //        ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.replace(R.id.content_frame, fragment);
         ft.commit();
 //        getSlidingMenu().showContent();
+        mCurrentFragment = fragment;
+        // hide profile menus
+        mCurrentFragment.setMenuVisibility(false);
         mDrawerLayout.closeDrawer(Gravity.LEFT);
     }
 
     private void showProfileFragment() {
         switchContent(ProfileFragment.newInstance(AppContext.getAccount(), false));
-        setTitle("我的空间");
+        setTitle("我的资料");
     }
 
     private void showMessageFragment() {

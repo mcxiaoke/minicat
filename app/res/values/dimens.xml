@@ -55,6 +55,9 @@
     <dimen name="list_padding">8dp</dimen>
 
     <dimen name="status_header_padding">12dp</dimen>
-    <dimen name="menu_list_item_padding">18dp</dimen>
+    <dimen name="list_item_padding_medium">12dp</dimen>
+    <dimen name="list_item_padding_large">16dp</dimen>
+
+    <dimen name="pager_sliding_tab_height">48dp</dimen>
 
 </resources>

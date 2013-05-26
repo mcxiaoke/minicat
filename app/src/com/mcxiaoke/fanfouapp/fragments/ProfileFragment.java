@@ -279,7 +279,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
     }
 
     private void updateTitle(UserModel user) {
-        if (user != null) {
+        if (user != null && useMenu) {
             Activity activity = getActivity();
             if (activity != null) {
                 activity.getActionBar().setTitle("@" + user.getScreenName());

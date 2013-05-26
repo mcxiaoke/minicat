@@ -290,6 +290,7 @@ public class ProfileView extends FrameLayout implements
 
     public void setFollowState(boolean follow) {
         headerState.setText(follow ? R.string.profile_state_on : R.string.profile_state_off);
+        headerState.setVisibility(View.VISIBLE);
     }
 
     public void setExpanded(boolean expanded) {

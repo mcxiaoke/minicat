@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:text="(正在关注你)"
             android:textColor="@color/text_color_secondary_light"
-            android:textSize="@dimen/text_size_tiny"/>
+            android:textSize="@dimen/text_size_tiny" android:visibility="gone"/>
 
     <ImageView
             android:id="@+id/header_lock"

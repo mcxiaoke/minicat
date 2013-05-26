@@ -52,20 +52,20 @@
     <color name="selector_list_color_light_pressed">#FF33B5E5</color>
 
     <color name="selector_header_color_light_default">#FFDDDDDD</color>
-    <color name="selector_header_color_light_pressed">#66999999</color>
+    <color name="selector_header_color_light_pressed">#6633B5E5</color>
 
     <color name="selector_drawer_menu_color_checked">#FFDDDDDD</color>
-    <color name="selector_drawer_menu_color_pressed">#66999999</color>
+    <color name="selector_drawer_menu_color_pressed">#6633B5E5</color>
 
-    <color name="drawer_dim_background">#CC000000</color>
+    <color name="drawer_dim_background">#C0000000</color>
 
 
     <color name="text_color_primary_light">#FF222222</color>
     <color name="text_color_secondary_light">#FF666666</color>
     <color name="text_color_pressed_light">#FFFFFFFF</color>
 
-    <color name="ui_background_color_primary">#FFFEFEFE</color>
-    <color name="ui_background_color_secondary">#FFDFDFDF</color>
+    <color name="ui_background_color_primary">#FFF9F9F9</color>
+    <color name="ui_background_color_secondary">#FFDDDDDD</color>
 
     <!--Dark Theme Colors-->
 
@@ -73,6 +73,9 @@
     <color name="text_color_primary_dark">#FFEEFFEE</color>
     <color name="text_color_secondary_dark">#FF334433</color>
     <color name="text_color_pressed_dark">#FF000000</color>
+
+    <color name="pager_sliding_tab_background">#FFE0E0E0</color>
+    <color name="pager_sliding_tab_pressed">#6633B5E5</color>
 
 
 </resources>

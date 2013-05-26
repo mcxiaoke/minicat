@@ -15,13 +15,12 @@
      limitations under the License.
 -->
 
-<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
 
     <gradient
-        android:angle="270"
-        android:endColor="@color/dark_grey"
-        android:gradientRadius="0.8"
-        android:startColor="@color/dark_grey" >
+            android:angle="270"
+            android:endColor="@color/pager_sliding_tab_background"
+            android:startColor="@color/pager_sliding_tab_background">
     </gradient>
 
 </shape>

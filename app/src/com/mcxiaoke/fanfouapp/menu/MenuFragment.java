@@ -131,7 +131,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
                 .iconId(R.drawable.ic_item_profile).highlight(true).build();
 
         MenuItemResource message = MenuItemResource.newBuilder()
-                .id(MENU_ID_MESSAGE).text("私信收件箱")
+                .id(MENU_ID_MESSAGE).text("收件箱")
                 .iconId(R.drawable.ic_item_feedback).highlight(true).build();
 
         MenuItemResource topic = MenuItemResource.newBuilder()
@@ -239,7 +239,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
 //                holder.text.setTextColor(context.getResources()
 //                        .getColorStateList(R.color.light_blue_text_color));
             } else {
-                convertView.setBackground(null);
+                convertView.setBackgroundColor(0);
 //                holder.text.setTextColor(context.getResources()
 //                        .getColorStateList(R.color.white_text_color));
             }

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:padding="12dp" >
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/list_item_padding_medium">
 
     <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:textColor="@color/theme_blue_light"
-        android:textSize="@dimen/text_size_large" />
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:textColor="@color/text_color_selectable_primary_light"
+            android:textSize="@dimen/text_size_xlarge"/>
 
 </RelativeLayout>
