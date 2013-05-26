@@ -33,7 +33,7 @@ import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.RecordColumns;
 import com.mcxiaoke.fanfouapp.dao.model.RecordModel;
 import com.mcxiaoke.fanfouapp.service.Constants;
-import com.mcxiaoke.fanfouapp.service.PostStatusService;
+import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.ui.widget.MyAutoCompleteTextView;
 import com.mcxiaoke.fanfouapp.ui.widget.TextChangeListener;
 import com.mcxiaoke.fanfouapp.util.IOHelper;
@@ -555,8 +555,9 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
     }
 
     private void startSendService() {
-        Intent i = new Intent(mContext, PostStatusService.class);
-        i.putExtra("type", type);
+        Intent i = new Intent(mContext, SyncService.class);
+        i.putExtra("type", SyncService.STATUS_UPDATE);
+        i.putExtra("contentType", type);
         i.putExtra("text", content);
         i.putExtra("data", photo);
         i.putExtra("location", mLocationString);

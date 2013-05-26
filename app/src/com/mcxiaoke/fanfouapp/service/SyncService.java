@@ -1,10 +1,14 @@
 package com.mcxiaoke.fanfouapp.service;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -20,18 +24,24 @@ import com.mcxiaoke.fanfouapp.api.Api;
 import com.mcxiaoke.fanfouapp.api.ApiException;
 import com.mcxiaoke.fanfouapp.api.Paging;
 import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.app.UIRecords;
+import com.mcxiaoke.fanfouapp.app.UIWrite;
 import com.mcxiaoke.fanfouapp.controller.CacheController;
 import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.dao.model.BaseModel;
 import com.mcxiaoke.fanfouapp.dao.model.DirectMessageModel;
 import com.mcxiaoke.fanfouapp.dao.model.IBaseColumns;
+import com.mcxiaoke.fanfouapp.dao.model.RecordModel;
 import com.mcxiaoke.fanfouapp.dao.model.StatusColumns;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 import com.mcxiaoke.fanfouapp.dao.model.UserColumns;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
 import com.mcxiaoke.fanfouapp.util.Assert;
+import com.mcxiaoke.fanfouapp.util.ImageHelper;
+import com.mcxiaoke.fanfouapp.util.LogUtil;
 import com.mcxiaoke.fanfouapp.util.NetworkHelper;
 
+import java.io.File;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -43,6 +53,10 @@ import java.util.concurrent.Executors;
 public final class SyncService extends Service implements Handler.Callback {
     private static final String TAG = SyncService.class.getSimpleName();
     private static final boolean DEBUG = AppContext.DEBUG;
+
+    private static void debug(String message) {
+        LogUtil.v(TAG, message);
+    }
 
     public static final int MAX_TIMELINE_COUNT = 60;
     public static final int DEFAULT_TIMELINE_COUNT = 20;
@@ -57,6 +71,8 @@ public final class SyncService extends Service implements Handler.Callback {
     public static final int STATUS_DELETE = -102;
     public static final int STATUS_FAVORITE = -103;
     public static final int STATUS_UNFAVORITE = -104;
+
+    public static final int STATUS_UPDATE = -150;
 
     public static final int USER_SHOW = -201;
     public static final int USER_FOLLOW = -202;
@@ -77,14 +93,53 @@ public final class SyncService extends Service implements Handler.Callback {
     private static final int MSG_POST_DATA = 2;
     private static final int MSG_CMD_OTHERS = 3;
 
+    public static final int NOTIFICATION_STATUS_UPDATE_ONGOING = 1001;
+    public static final int NOTIFICATION_STATUS_UPDATE_FAILED = 1002;
+    public static final int NOTIFICATION_DM_SEND = 1005;
+    public static final int NOTIFICATION_DOWNLOAD = 1006;
+
     static class Commmand {
         public Messenger messenger;
         public String id;
         public int type;
         public Paging paging;
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("Commmand{");
+            sb.append("id='").append(id).append('\'');
+            sb.append(", messenger=").append(messenger);
+            sb.append(", type=").append(type);
+            sb.append(", paging=").append(paging);
+            sb.append('}');
+            return sb.toString();
+        }
     }
 
-    private Api api;
+    static class UpdateCommand extends Commmand {
+        public String text;
+        public String location;
+        public String replyId;
+        public String repostId;
+        public int updateType;
+        public File photo;
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("UpdateCommand{");
+            sb.append("location='").append(location).append('\'');
+            sb.append(", text='").append(text).append('\'');
+            sb.append(", replyId='").append(replyId).append('\'');
+            sb.append(", repostId='").append(repostId).append('\'');
+            sb.append(", updateType=").append(updateType);
+            sb.append(", photo=").append(photo);
+            sb.append('}');
+            return sb.toString();
+        }
+    }
+
+    private NotificationManager mNotificationManager;
+    private Api mApi;
 
     private Handler mUiHandler;
     private Handler mCommandHandler;
@@ -97,7 +152,8 @@ public final class SyncService extends Service implements Handler.Callback {
     public void onCreate() {
         super.onCreate();
         mService = this;
-        api = AppContext.getApi();
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mApi = AppContext.getApi();
         mUiHandler = new Handler(Looper.getMainLooper());
         mHandlerThread = new HandlerThread(TAG);
         mHandlerThread.start();
@@ -113,6 +169,7 @@ public final class SyncService extends Service implements Handler.Callback {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int type = intent.getIntExtra("type", BaseModel.TYPE_NONE);
+        debug("onStartCommand type=" + type);
         switch (type) {
             case StatusModel.TYPE_HOME:
             case StatusModel.TYPE_MENTIONS:
@@ -163,6 +220,14 @@ public final class SyncService extends Service implements Handler.Callback {
                 mCommandHandler.sendMessage(message);
             }
             break;
+            case STATUS_UPDATE: {
+                Message message = Message.obtain();
+                message.what = MSG_POST_DATA;
+                message.arg1 = type;
+                message.obj = intent;
+                mCommandHandler.sendMessage(message);
+            }
+            break;
             case BaseModel.TYPE_NONE:
                 break;
             default:
@@ -176,6 +241,7 @@ public final class SyncService extends Service implements Handler.Callback {
     public boolean handleMessage(Message msg) {
         int what = msg.what;
         Intent intent = (Intent) msg.obj;
+        debug("handleMessage what=" + what);
         switch (what) {
             case MSG_SYNC_DATA:
                 handleSyncDataCommands(intent);
@@ -206,6 +272,7 @@ public final class SyncService extends Service implements Handler.Callback {
         cmd.id = intent.getStringExtra("id");
         cmd.type = intent.getIntExtra("type", BaseModel.TYPE_NONE);
         cmd.paging = intent.getParcelableExtra("paging");
+        debug("handleMessage cmd=" + cmd);
         switch (cmd.type) {
             case BaseModel.TYPE_NONE:
                 break;
@@ -241,7 +308,23 @@ public final class SyncService extends Service implements Handler.Callback {
     }
 
     private void handlePostDataCommands(Intent intent) {
-
+        int type = intent.getIntExtra("type", BaseModel.TYPE_NONE);
+        switch (type) {
+            case STATUS_UPDATE: {
+                UpdateCommand cmd = new UpdateCommand();
+                cmd.messenger = intent.getParcelableExtra("messenger");
+                cmd.type = type;
+                cmd.updateType = intent.getIntExtra("contentType", UIWrite.TYPE_NORMAL);
+                cmd.text = intent.getStringExtra("text");
+                cmd.photo = (File) intent.getSerializableExtra("data");
+                cmd.replyId = intent.getStringExtra("id");
+                cmd.repostId = intent.getStringExtra("id");
+                cmd.location = intent.getStringExtra("location");
+                debug("handlePostDataCommands cmd=" + cmd);
+                statusUpdate(cmd);
+            }
+            break;
+        }
 
     }
 
@@ -250,6 +333,7 @@ public final class SyncService extends Service implements Handler.Callback {
         cmd.messenger = intent.getParcelableExtra("messenger");
         cmd.id = intent.getStringExtra("id");
         cmd.type = intent.getIntExtra("type", BaseModel.TYPE_NONE);
+        debug("handleExecOpCommands cmd=" + cmd);
         switch (cmd.type) {
             case STATUS_SHOW:
                 showStatus(cmd);
@@ -291,6 +375,7 @@ public final class SyncService extends Service implements Handler.Callback {
         cmd.messenger = intent.getParcelableExtra("messenger");
         cmd.id = intent.getStringExtra("id");
         cmd.type = intent.getIntExtra("type", BaseModel.TYPE_NONE);
+        debug("handleOthersCommands cmd=" + cmd);
         switch (cmd.type) {
             case FRIENDSHIPS_EXISTS:
                 isFriends(cmd, intent);
@@ -332,7 +417,7 @@ public final class SyncService extends Service implements Handler.Callback {
                     // 删除消息
                     // 404 说明消息不存在
                     // 403 说明不是你的消息，无权限删除
-                    dm = api.deleteDirectMessage(id);
+                    dm = mApi.deleteDirectMessage(id);
                     if (dm == null) {
                         sendSuccessMessage(cmd);
                     } else {
@@ -362,7 +447,7 @@ public final class SyncService extends Service implements Handler.Callback {
             public void run() {
                 UserModel u = null;
                 try {
-                    u = block ? api.block(id) : api.unblock(id);
+                    u = block ? mApi.block(id) : mApi.unblock(id);
                     if (u == null) {
                         sendSuccessMessage(cmd);
                     } else {
@@ -409,7 +494,7 @@ public final class SyncService extends Service implements Handler.Callback {
             @Override
             public void run() {
                 try {
-                    UserModel u = follow ? api.follow(id) : api.unfollow(id);
+                    UserModel u = follow ? mApi.follow(id) : mApi.unfollow(id);
                     if (u != null) {
                         u.setType(UserModel.TYPE_FRIENDS);
                         DataController.updateUserModel(mService, u);
@@ -438,7 +523,7 @@ public final class SyncService extends Service implements Handler.Callback {
             @Override
             public void run() {
                 try {
-                    UserModel u = api.showUser(id);
+                    UserModel u = mApi.showUser(id);
                     if (u == null) {
                         sendSuccessMessage(cmd);
                     } else {
@@ -490,7 +575,7 @@ public final class SyncService extends Service implements Handler.Callback {
             public void run() {
                 StatusModel s = null;
                 try {
-                    s = favorite ? api.favorite(id) : api.unfavorite(id);
+                    s = favorite ? mApi.favorite(id) : mApi.unfavorite(id);
                     if (s == null) {
                         sendSuccessMessage(cmd);
                     } else {
@@ -533,7 +618,7 @@ public final class SyncService extends Service implements Handler.Callback {
             public void run() {
                 StatusModel s = null;
                 try {
-                    s = api.deleteStatus(id);
+                    s = mApi.deleteStatus(id);
                     if (s == null) {
                         sendSuccessMessage(cmd);
                     } else {
@@ -572,7 +657,7 @@ public final class SyncService extends Service implements Handler.Callback {
             public void run() {
                 StatusModel s = null;
                 try {
-                    s = api.showStatus(id);
+                    s = mApi.showStatus(id);
                     if (s == null) {
                         sendSuccessMessage(cmd);
                     } else {
@@ -608,6 +693,74 @@ public final class SyncService extends Service implements Handler.Callback {
         context.startService(intent);
     }
 
+    private void statusUpdate(final UpdateCommand cmd) {
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                doStatusUpdate(cmd);
+            }
+        };
+        mExecutor.submit(runnable);
+    }
+
+
+    private boolean doStatusUpdate(final UpdateCommand cmd) {
+        showSendingNotification();
+        boolean res = false;
+        File file = cmd.photo;
+        String text = cmd.text;
+        int updateType = cmd.updateType;
+        String location = cmd.location;
+        String replyId = cmd.replyId;
+        String repostId = cmd.repostId;
+
+        debug("doStatusUpdate() cmd=" + cmd);
+        try {
+            StatusModel result = null;
+            if (file == null || !file.exists()) {
+                if (updateType == UIWrite.TYPE_REPLY) {
+                    result = mApi.updateStatus(text, replyId, null, location);
+                } else {
+                    result = mApi.updateStatus(text, null, repostId, location);
+                }
+            } else {
+                int quality = NetworkHelper.isWifi(this) ? ImageHelper.IMAGE_QUALITY_HIGH : ImageHelper.IMAGE_QUALITY_MEDIUM;
+
+                File photo = ImageHelper.prepareUploadFile(this, file,
+                        quality);
+                if (photo != null && photo.length() > 0) {
+                    if (AppContext.DEBUG)
+                        debug("photo file=" + file.getName() + " size="
+                                + photo.length() / 1024 + " quality=" + quality);
+                    result = mApi.uploadPhoto(photo, text, location);
+                    photo.delete();
+                }
+
+            }
+            mNotificationManager.cancel(NOTIFICATION_STATUS_UPDATE_ONGOING);
+            if (result != null) {
+                sendSuccessBroadcast(result);
+                res = true;
+            }
+        } catch (ApiException e) {
+            if (DEBUG) {
+                Log.e(TAG, e.toString());
+                e.printStackTrace();
+            }
+            if (e.statusCode >= 500) {
+                showFailedNotification(cmd, "消息未发送，已保存到草稿箱",
+                        getString(R.string.msg_server_error));
+            } else {
+                showFailedNotification(cmd, "消息未发送，已保存到草稿箱",
+                        getString(R.string.msg_connection_error));
+            }
+
+        } finally {
+            mNotificationManager.cancel(NOTIFICATION_STATUS_UPDATE_ONGOING);
+        }
+        return res;
+    }
+
     private void isFriends(final Commmand cmd, Intent intent) {
         final String userA = intent.getStringExtra("user_a");
         final String userB = intent.getStringExtra("user_b");
@@ -616,7 +769,7 @@ public final class SyncService extends Service implements Handler.Callback {
             public void run() {
                 boolean result = false;
                 try {
-                    result = api.isFriends(userA, userB);
+                    result = mApi.isFriends(userA, userB);
                 } catch (ApiException e) {
                     if (AppContext.DEBUG) {
                         Log.e(TAG, "doDetectFriendships:" + e.getMessage());
@@ -648,9 +801,9 @@ public final class SyncService extends Service implements Handler.Callback {
                 try {
                     List<UserModel> users = null;
                     if (cmd.type == UserModel.TYPE_FRIENDS) {
-                        users = api.getFriends(id, p);
+                        users = mApi.getFriends(id, p);
                     } else if (cmd.type == UserModel.TYPE_FOLLOWERS) {
-                        users = api.getFollowers(id, p);
+                        users = mApi.getFollowers(id, p);
                     }
                     if (users != null && users.size() > 0) {
 
@@ -703,7 +856,7 @@ public final class SyncService extends Service implements Handler.Callback {
             @Override
             public void run() {
                 try {
-                    List<DirectMessageModel> messages = api.getConversation(id, p);
+                    List<DirectMessageModel> messages = mApi.getConversation(id, p);
                     if (messages != null && messages.size() > 0) {
 
                         if (AppContext.DEBUG) {
@@ -741,7 +894,7 @@ public final class SyncService extends Service implements Handler.Callback {
             @Override
             public void run() {
                 try {
-                    List<DirectMessageModel> messages = api.getConversationList(p);
+                    List<DirectMessageModel> messages = mApi.getConversationList(p);
                     if (messages != null && messages.size() > 0) {
                         int nums = DataController.store(mService, messages);
                         sendIntMessage(cmd, nums);
@@ -820,8 +973,8 @@ public final class SyncService extends Service implements Handler.Callback {
                 }
 
                 try {
-                    List<DirectMessageModel> messages = in ? api
-                            .getDirectMessagesInbox(p) : api.getDirectMessagesOutbox(p);
+                    List<DirectMessageModel> messages = in ? mApi
+                            .getDirectMessagesInbox(p) : mApi.getDirectMessagesOutbox(p);
                     if (messages != null && messages.size() > 0) {
                         int nums = DataController.store(mService, messages);
                         sendIntMessage(cmd, nums);
@@ -873,26 +1026,26 @@ public final class SyncService extends Service implements Handler.Callback {
                 try {
                     switch (type) {
                         case StatusModel.TYPE_HOME:
-                            statuses = api.getHomeTimeline(p);
+                            statuses = mApi.getHomeTimeline(p);
                             break;
                         case StatusModel.TYPE_MENTIONS:
-                            statuses = api.getMentions(p);
+                            statuses = mApi.getMentions(p);
                             break;
                         case StatusModel.TYPE_PUBLIC:
                             p.count = DEFAULT_TIMELINE_COUNT;
-                            statuses = api.getPublicTimeline();
+                            statuses = mApi.getPublicTimeline();
                             break;
                         case StatusModel.TYPE_FAVORITES:
-                            statuses = api.getFavorites(id, p);
+                            statuses = mApi.getFavorites(id, p);
                             break;
                         case StatusModel.TYPE_USER:
-                            statuses = api.getUserTimeline(id, p);
+                            statuses = mApi.getUserTimeline(id, p);
                             break;
                         case StatusModel.TYPE_CONTEXT:
-                            statuses = api.getContextTimeline(id);
+                            statuses = mApi.getContextTimeline(id);
                             break;
                         case StatusModel.TYPE_PHOTO:
-                            statuses = api.getPhotosTimeline(id, p);
+                            statuses = mApi.getPhotosTimeline(id, p);
                             break;
                         default:
                             break;
@@ -1032,6 +1185,57 @@ public final class SyncService extends Service implements Handler.Callback {
                 e.printStackTrace();
             }
         }
+    }
+
+    private int showSendingNotification() {
+        int id = NOTIFICATION_STATUS_UPDATE_ONGOING;
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                new Intent(), 0);
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setSmallIcon(R.drawable.ic_stat_notify);
+        builder.setTicker("饭否消息正在发送...");
+        builder.setWhen(System.currentTimeMillis());
+        builder.setContentTitle("饭否消息");
+        builder.setContentText("正在发送...");
+        builder.setContentIntent(contentIntent);
+        Notification notification = builder.build();
+        notification.flags |= Notification.FLAG_ONGOING_EVENT;
+        mNotificationManager.notify(id, notification);
+        return id;
+    }
+
+    private int showFailedNotification(UpdateCommand cmd, String title, String message) {
+        doSaveRecords(cmd);
+        int id = NOTIFICATION_STATUS_UPDATE_FAILED;
+        Intent intent = new Intent(this, UIRecords.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setSmallIcon(R.drawable.ic_stat_notify);
+        builder.setTicker(title);
+        builder.setWhen(System.currentTimeMillis());
+        builder.setContentTitle(title);
+        builder.setContentText(message);
+        builder.setContentIntent(contentIntent);
+        Notification notification = builder.build();
+        notification.flags |= Notification.FLAG_ONGOING_EVENT;
+        mNotificationManager.notify(id, notification);
+        return id;
+    }
+
+    private void doSaveRecords(UpdateCommand cmd) {
+        RecordModel rm = new RecordModel();
+        rm.setText(cmd.text);
+        rm.setFile(cmd.photo == null ? "" : cmd.photo.getPath());
+        rm.setReply(cmd.replyId);
+        Uri resultUri = DataController.store(this, rm);
+    }
+
+    private void sendSuccessBroadcast(StatusModel status) {
+        Intent intent = new Intent(Constants.ACTION_STATUS_SENT);
+        intent.putExtra("data", status);
+        intent.setPackage(getPackageName());
+        sendOrderedBroadcast(intent, null);
     }
 
 }
