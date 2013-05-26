@@ -787,7 +787,7 @@ public final class SyncService extends Service implements Handler.Callback {
 
     private void getUsers(final Commmand cmd) {
         final String id = cmd.id;
-        final Paging p = cmd.paging;
+        final Paging p = cmd.paging == null ? new Paging() : cmd.paging;
 
         if (NetworkHelper.isWifi(this)) {
             p.count = MAX_USERS_COUNT;
@@ -844,8 +844,7 @@ public final class SyncService extends Service implements Handler.Callback {
 
     private void getConversation(final Commmand cmd) {
         final String id = cmd.id;
-        final Paging p = cmd.paging;
-        Assert.notNull(p);
+        final Paging p = cmd.paging == null ? new Paging() : cmd.paging;
         if (NetworkHelper.isWifi(this)) {
             p.count = MAX_TIMELINE_COUNT;
         } else {
@@ -882,8 +881,7 @@ public final class SyncService extends Service implements Handler.Callback {
 
     private void getConversationList(final Commmand cmd) {
 
-        final Paging p = cmd.paging;
-        Assert.notNull(p);
+        final Paging p = cmd.paging == null ? new Paging() : cmd.paging;
         if (NetworkHelper.isWifi(this)) {
             p.count = MAX_TIMELINE_COUNT;
         } else {
@@ -964,7 +962,10 @@ public final class SyncService extends Service implements Handler.Callback {
             @Override
             public void run() {
                 Paging p = cmd.paging;
-                Assert.notNull(p);
+
+                if (p == null) {
+                    p = new Paging();
+                }
 
                 if (NetworkHelper.isWifi(mService)) {
                     p.count = MAX_TIMELINE_COUNT;
@@ -1002,16 +1003,13 @@ public final class SyncService extends Service implements Handler.Callback {
 
     private void getTimeline(final Commmand cmd) {
         final int type = cmd.type;
+        final Paging p = cmd.paging == null ? new Paging() : cmd.paging;
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 List<StatusModel> statuses = null;
 
                 String id = cmd.id;
-                Paging p = cmd.paging;
-                if (p == null) {
-                    p = new Paging();
-                }
                 if (NetworkHelper.isWifi(mService)) {
                     p.count = MAX_TIMELINE_COUNT;
                 } else {
