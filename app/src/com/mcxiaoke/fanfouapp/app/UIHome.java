@@ -28,6 +28,7 @@ import com.mcxiaoke.fanfouapp.fragment.ProfileFragment;
 import com.mcxiaoke.fanfouapp.menu.MenuCallback;
 import com.mcxiaoke.fanfouapp.menu.MenuFragment;
 import com.mcxiaoke.fanfouapp.menu.MenuItemResource;
+import com.mcxiaoke.fanfouapp.preference.PreferenceHelper;
 import com.mcxiaoke.fanfouapp.ui.widget.PagerSlidingTabStrip;
 
 
@@ -56,6 +57,8 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     private int mCurrentIndex;
     private int mCurrentPage;
 
+    private boolean useActionBarRefreshButton;
+
     private void log(String message) {
         Log.d(TAG, message);
     }
@@ -72,6 +75,8 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     protected void setLayout() {
         setContentView(R.layout.ui_home);
         setProgressBarIndeterminateVisibility(false);
+
+        useActionBarRefreshButton = PreferenceHelper.getInstance(this).isActionBarRefreshButtonEnabled();
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
@@ -191,7 +196,9 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 //        if (drawerOpen) {
 //            return true;
 //        }
-        return super.onPrepareOptionsMenu(menu);
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.menu_refresh).setVisible(useActionBarRefreshButton);
+        return true;
     }
 
     @Override

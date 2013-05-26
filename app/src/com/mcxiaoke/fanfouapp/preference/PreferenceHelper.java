@@ -38,4 +38,20 @@ public class PreferenceHelper {
         String key = mAppContext.getString(R.string.option_refresh_on_start_key);
         return mPreferences.getBoolean(key, defaultValue);
     }
+
+    public void setRefreshOnStart(boolean value) {
+        String key = mAppContext.getString(R.string.option_refresh_on_start_key);
+        mPreferences.edit().putBoolean(key, value).commit();
+    }
+
+    public boolean isActionBarRefreshButtonEnabled() {
+        boolean defaultValue = mAppContext.getResources().getBoolean(R.bool.option_actionbar_refresh_button_default_value);
+        String key = mAppContext.getResources().getString(R.string.option_actionbar_refresh_button_key);
+        return mPreferences.getBoolean(key, defaultValue);
+    }
+
+    public void setActionBarRefreshButtonEnabled(boolean value) {
+        String key = mAppContext.getResources().getString(R.string.option_actionbar_refresh_button_key);
+        mPreferences.edit().putBoolean(key, value).commit();
+    }
 }

@@ -6,4 +6,9 @@
                       android:title="@string/option_refresh_on_start_title"
                       android:summary="@string/option_refresh_on_start_summary"
                       android:defaultValue="@bool/option_refresh_on_start_default_value"/>
+
+    <SwitchPreference android:key="@string/option_actionbar_refresh_button_key"
+                      android:title="@string/option_actionbar_refresh_button_title"
+                      android:summary="@string/option_actionbar_refresh_button_summary"
+                      android:defaultValue="@bool/option_actionbar_refresh_button_default_value"/>
 </PreferenceScreen>

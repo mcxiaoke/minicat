@@ -112,4 +112,8 @@
     <string name="option_refresh_on_start_title">启动时刷新</string>
     <string name="option_refresh_on_start_summary">启动时刷新时间线</string>
 
+    <string name="option_actionbar_refresh_button_key">option_actionbar_refresh_button_key</string>
+    <string name="option_actionbar_refresh_button_title">标题栏刷新</string>
+    <string name="option_actionbar_refresh_button_summary">显示标题栏的刷新按钮</string>
+
 </resources>

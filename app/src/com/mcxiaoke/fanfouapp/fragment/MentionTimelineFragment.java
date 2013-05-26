@@ -78,4 +78,8 @@ public class MentionTimelineFragment extends BaseTimlineFragment {
         return "提到我的";
     }
 
+    @Override
+    protected boolean isColored() {
+        return false;
+    }
 }

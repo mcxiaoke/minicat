@@ -31,20 +31,15 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 
     }
 
-    public StatusCursorAdapter(Context context) {
+    public StatusCursorAdapter(Context context, boolean colored) {
         super(context, null);
-        initialize(context, false);
+        initialize(context, colored);
     }
 
-    public StatusCursorAdapter(Context context, Cursor c) {
-        super(context, c);
-        initialize(context, false);
-    }
-
-    private void initialize(Context context, boolean colored) {
+    public void initialize(Context context, boolean colored) {
         this.colored = colored;
         mMentionedBgColor = mContext.getResources().getColor(R.color.holo_primary_transparent);
-        mSelfBgColor = mContext.getResources().getColor(R.color.holo_primary_transparent);
+        mSelfBgColor = mContext.getResources().getColor(R.color.list_item_status_self_highlight);
     }
 
     @Override
@@ -93,6 +88,9 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
     }
 
     private void setColor(final Cursor cursor, View row) {
+        if (!colored) {
+            return;
+        }
         int itemType = getItemViewType(cursor.getPosition());
         switch (itemType) {
             case MENTION:
