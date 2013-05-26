@@ -159,7 +159,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
                 .iconId(R.drawable.ic_item_digest).highlight(false).build();*/
 
         MenuItemResource about = MenuItemResource.newBuilder()
-                .id(MENU_ID_ABOUT).text("关于饭否").iconId(R.drawable.ic_item_info)
+                .id(MENU_ID_ABOUT).text("关于").iconId(R.drawable.ic_item_info)
                 .highlight(false).build();
 
         mMenuItems.add(home);

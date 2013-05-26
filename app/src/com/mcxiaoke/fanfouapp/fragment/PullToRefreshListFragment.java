@@ -22,6 +22,7 @@ import com.mcxiaoke.fanfouapp.adapter.BaseCursorAdapter;
 import com.mcxiaoke.fanfouapp.app.AppContext;
 import com.mcxiaoke.fanfouapp.controller.PopupController;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
+import com.mcxiaoke.fanfouapp.preference.PreferenceHelper;
 import com.mcxiaoke.fanfouapp.service.Constants;
 import com.mcxiaoke.fanfouapp.ui.UIHelper;
 import com.mcxiaoke.fanfouapp.util.Utils;
@@ -46,8 +47,6 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     private Parcelable mParcelable;
 
     private BaseCursorAdapter mAdapter;
-
-    private boolean refreshOnStart;
 
     boolean mDataLoaded;
 
@@ -87,10 +86,6 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
         Bundle args = getArguments();
         if (args != null) {
-            refreshOnStart = args.getBoolean("refresh");
-            if (AppContext.DEBUG) {
-                Log.d(TAG, "refreshOnStart=" + refreshOnStart);
-            }
             parseArguments(args);
         }
 
@@ -358,6 +353,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     }
 
     protected void checkRefresh() {
+        boolean refreshOnStart= PreferenceHelper.getInstance(getActivity()).isRefreshOnStart();
         if (AppContext.DEBUG) {
             Log.d(TAG, "checkRefresh() mDataLoaded=" + mDataLoaded
                     + " refreshOnStart=" + refreshOnStart + " adapter.count=" + mAdapter.getCount());
