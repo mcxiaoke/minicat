@@ -8,7 +8,7 @@ import com.mcxiaoke.fanfouapp.api.Paging;
 import com.mcxiaoke.fanfouapp.app.AppContext;
 import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
-import com.mcxiaoke.fanfouapp.service.FanFouService;
+import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.util.Utils;
 
 
@@ -69,7 +69,7 @@ public class MentionTimelineFragment extends BaseTimlineFragment {
         if (AppContext.DEBUG) {
             Log.d(TAG, "doFetch() doGetMore=" + doGetMore + " Paging=" + p);
         }
-        FanFouService.getTimeline(getActivity(), StatusModel.TYPE_MENTIONS,
+        SyncService.getTimeline(getActivity(), StatusModel.TYPE_MENTIONS,
                 handler, p);
     }
 

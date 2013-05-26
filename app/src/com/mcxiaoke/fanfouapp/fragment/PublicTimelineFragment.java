@@ -7,7 +7,7 @@ import android.util.Log;
 import com.mcxiaoke.fanfouapp.app.AppContext;
 import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
-import com.mcxiaoke.fanfouapp.service.FanFouService;
+import com.mcxiaoke.fanfouapp.service.SyncService;
 
 
 /**
@@ -57,7 +57,7 @@ public class PublicTimelineFragment extends BaseTimlineFragment {
             Log.d(TAG, "doFetch() doGetMore=" + doGetMore);
         }
         final ResultHandler handler = new ResultHandler(this);
-        FanFouService.getPublicTimeline(getActivity(), handler);
+        SyncService.getPublicTimeline(getActivity(), handler);
     }
 
     @Override

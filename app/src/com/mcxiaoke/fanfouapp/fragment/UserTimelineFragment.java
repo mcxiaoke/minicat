@@ -16,7 +16,7 @@ import com.mcxiaoke.fanfouapp.api.Paging;
 import com.mcxiaoke.fanfouapp.app.AppContext;
 import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
-import com.mcxiaoke.fanfouapp.service.FanFouService;
+import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.util.Utils;
 
 /**
@@ -86,7 +86,7 @@ public class UserTimelineFragment extends BaseTimlineFragment implements
             Log.d(TAG, "doFetch() userId=" + userId + " doGetMore=" + doGetMore
                     + " paging=" + p + " type=" + getType());
         }
-        FanFouService.getTimeline(getActivity(), getType(), handler, userId, p);
+        SyncService.getTimeline(getActivity(), getType(), handler, userId, p);
     }
 
     @Override

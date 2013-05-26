@@ -13,7 +13,7 @@ import com.mcxiaoke.fanfouapp.app.AppContext;
 import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.DirectMessageModel;
-import com.mcxiaoke.fanfouapp.service.FanFouService;
+import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.util.Utils;
 
 /**
@@ -83,7 +83,7 @@ public class ConversationListFragment extends PullToRefreshListFragment {
         } else {
             p.sinceId = Utils.getSinceId(cursor);
         }
-        FanFouService.getConversationList(getActivity(), handler, p);
+        SyncService.getConversationList(getActivity(), handler, p);
     }
 
     @Override

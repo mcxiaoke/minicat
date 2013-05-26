@@ -22,7 +22,7 @@ import com.mcxiaoke.fanfouapp.controller.SimpleDialogListener;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 import com.mcxiaoke.fanfouapp.dialog.ConfirmDialog;
-import com.mcxiaoke.fanfouapp.service.FanFouService;
+import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.task.BetterAsyncTask;
 import com.mcxiaoke.fanfouapp.util.DateTimeHelper;
 import com.mcxiaoke.fanfouapp.util.IOHelper;
@@ -358,11 +358,11 @@ public class UIStatus extends UIBaseSupport {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case FanFouService.RESULT_SUCCESS:
+                    case SyncService.RESULT_SUCCESS:
                         StatusModel result = msg.getData().getParcelable("data");
                         onFetchStatusComplete(result);
                         break;
-                    case FanFouService.RESULT_ERROR:
+                    case SyncService.RESULT_ERROR:
                         String errorMessage = msg.getData().getString(
                                 "error_message");
                         onFetchStatusError(errorMessage);
@@ -375,7 +375,7 @@ public class UIStatus extends UIBaseSupport {
         if (AppContext.DEBUG) {
             Log.d(TAG, "fetchStatus");
         }
-        FanFouService.showStatus(mContext, statusId, handler);
+        SyncService.showStatus(mContext, statusId, handler);
     }
 
     private void onDeleteComplete() {
@@ -393,10 +393,10 @@ public class UIStatus extends UIBaseSupport {
             public void handleMessage(Message msg) {
                 int what = msg.what;
                 switch (what) {
-                    case FanFouService.RESULT_SUCCESS:
+                    case SyncService.RESULT_SUCCESS:
                         onDeleteComplete();
                         break;
-                    case FanFouService.RESULT_ERROR:
+                    case SyncService.RESULT_ERROR:
                         int code = msg.getData().getInt("error_code");
                         String message = msg.getData().getString("error_message");
                         onDeleteError(message);
@@ -414,7 +414,7 @@ public class UIStatus extends UIBaseSupport {
             @Override
             public void onPositiveClick() {
                 super.onPositiveClick();
-                FanFouService.deleteStatus(mContext, status.getId(), handler);
+                SyncService.deleteStatus(mContext, status.getId(), handler);
             }
         });
         dialog.show();
@@ -438,11 +438,11 @@ public class UIStatus extends UIBaseSupport {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case FanFouService.RESULT_SUCCESS:
+                    case SyncService.RESULT_SUCCESS:
                         boolean favorited = msg.getData().getBoolean("boolean");
                         onFavoriteComplete(favorited);
                         break;
-                    case FanFouService.RESULT_ERROR:
+                    case SyncService.RESULT_ERROR:
                         onFavoriteError(null);
                         break;
                     default:
@@ -452,9 +452,9 @@ public class UIStatus extends UIBaseSupport {
         };
         updateFavoriteAction(!status.isFavorited());
         if (status.isFavorited()) {
-            FanFouService.unfavorite(mContext, status.getId(), handler);
+            SyncService.unfavorite(mContext, status.getId(), handler);
         } else {
-            FanFouService.favorite(mContext, status.getId(), handler);
+            SyncService.favorite(mContext, status.getId(), handler);
         }
     }
 

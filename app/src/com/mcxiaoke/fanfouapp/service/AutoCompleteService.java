@@ -75,7 +75,7 @@ public class AutoCompleteService extends WakefulIntentService {
         }
         Api api = AppContext.getApi();
         Paging p = new Paging();
-        p.count = FanFouService.MAX_USERS_COUNT;
+        p.count = SyncService.MAX_USERS_COUNT;
         p.page = 1;
         boolean more = true;
         while (more) {
@@ -96,7 +96,7 @@ public class AutoCompleteService extends WakefulIntentService {
                     log("doFetchAutoComplete page==" + p.page + " size=" + size
                             + " insert rows=" + insertedNums);
                 }
-                if (size < FanFouService.MAX_USERS_COUNT || p.page >= 20) {
+                if (size < SyncService.MAX_USERS_COUNT || p.page >= 20) {
                     more = false;
                 }
             } else {

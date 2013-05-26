@@ -31,7 +31,7 @@ import com.mcxiaoke.fanfouapp.app.UIWrite;
 import com.mcxiaoke.fanfouapp.dao.model.DirectMessageModel;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
-import com.mcxiaoke.fanfouapp.service.FanFouService;
+import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.util.StatusHelper;
 import com.mcxiaoke.fanfouapp.util.StringHelper;
 import com.mcxiaoke.fanfouapp.util.Utils;
@@ -173,12 +173,12 @@ public class UIController {
 
     public static void doFavorite(final Context context, String id) {
         final Handler handler = getFavoriteHandler(context);
-        FanFouService.favorite(context, id, handler);
+        SyncService.favorite(context, id, handler);
     }
 
     public static void doUnFavorite(final Context context, String id) {
         final Handler handler = getFavoriteHandler(context);
-        FanFouService.unfavorite(context, id, handler);
+        SyncService.unfavorite(context, id, handler);
     }
 
     private static Handler getFavoriteHandler(final Context context) {
@@ -187,11 +187,11 @@ public class UIController {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case FanFouService.RESULT_SUCCESS:
+                    case SyncService.RESULT_SUCCESS:
                         boolean favorited = msg.getData().getBoolean("boolean");
                         Utils.notify(context, favorited ? "收藏成功" : "取消收藏成功");
                         break;
-                    case FanFouService.RESULT_ERROR:
+                    case SyncService.RESULT_ERROR:
                         break;
                     default:
                         break;

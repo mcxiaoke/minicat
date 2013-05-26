@@ -19,7 +19,7 @@ import com.mcxiaoke.fanfouapp.app.AppContext;
 import com.mcxiaoke.fanfouapp.controller.CacheController;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
-import com.mcxiaoke.fanfouapp.service.FanFouService;
+import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.ui.widget.ProfileView;
 import com.mcxiaoke.fanfouapp.util.IntentHelper;
 import com.mcxiaoke.fanfouapp.util.LogUtil;
@@ -304,7 +304,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case FanFouService.RESULT_SUCCESS:
+                    case SyncService.RESULT_SUCCESS:
                         UserModel result = msg.getData().getParcelable("data");
                         if (AppContext.DEBUG) {
                             Log.d(TAG, "fetchUser result=" + result);
@@ -313,7 +313,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
                             showProfileHeader(result);
                         }
                         break;
-                    case FanFouService.RESULT_ERROR:
+                    case SyncService.RESULT_ERROR:
                         String errorMessage = msg.getData().getString(
                                 "error_message");
                         showEmptyView(errorMessage);
@@ -324,7 +324,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
             }
         };
 
-        FanFouService.showUser(getActivity(), userId, handler);
+        SyncService.showUser(getActivity(), userId, handler);
     }
 
     private void refreshFollowState() {
@@ -334,18 +334,18 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case FanFouService.RESULT_SUCCESS:
+                    case SyncService.RESULT_SUCCESS:
                         boolean follow = msg.getData().getBoolean("boolean");
                         updateState(follow);
                         break;
-                    case FanFouService.RESULT_ERROR:
+                    case SyncService.RESULT_ERROR:
                         break;
                     default:
                         break;
                 }
             }
         };
-        FanFouService.showRelation(getActivity(), user.getId(),
+        SyncService.showRelation(getActivity(), user.getId(),
                 AppContext.getAccount(), handler);
     }
 
@@ -375,14 +375,14 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case FanFouService.RESULT_SUCCESS:
+                    case SyncService.RESULT_SUCCESS:
                         if (AppContext.DEBUG) {
                             Log.d(TAG, "follow success");
                         }
                         updateFollowButton(true);
                         Utils.notify(getActivity(), "关注成功");
                         break;
-                    case FanFouService.RESULT_ERROR:
+                    case SyncService.RESULT_ERROR:
                         if (AppContext.DEBUG) {
                             Log.d(TAG, "follow error");
                         }
@@ -395,7 +395,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
                 }
             }
         };
-        FanFouService.follow(getActivity(), user.getId(), handler);
+        SyncService.follow(getActivity(), user.getId(), handler);
     }
 
     private void unfollow() {
@@ -403,14 +403,14 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case FanFouService.RESULT_SUCCESS:
+                    case SyncService.RESULT_SUCCESS:
                         if (AppContext.DEBUG) {
                             Log.d(TAG, "unfollow success");
                         }
                         updateFollowButton(false);
                         Utils.notify(getActivity(), "已取消关注");
                         break;
-                    case FanFouService.RESULT_ERROR:
+                    case SyncService.RESULT_ERROR:
                         if (AppContext.DEBUG) {
                             Log.d(TAG, "unfollow error");
                         }
@@ -432,7 +432,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                FanFouService.unFollow(getActivity(), user.getId(), handler);
+                SyncService.unFollow(getActivity(), user.getId(), handler);
             }
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {

@@ -13,7 +13,7 @@ import com.mcxiaoke.fanfouapp.dialog.ConfirmDialog;
 import com.mcxiaoke.fanfouapp.quickaction.ActionItem;
 import com.mcxiaoke.fanfouapp.quickaction.QuickAction;
 import com.mcxiaoke.fanfouapp.quickaction.QuickAction.OnActionItemClickListener;
-import com.mcxiaoke.fanfouapp.service.FanFouService;
+import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.util.Utils;
 import com.mcxiaoke.fanfouapp.R;
 
@@ -98,7 +98,7 @@ public class PopupController {
 			@Override
 			public void onPositiveClick() {
 				super.onPositiveClick();
-				FanFouService.deleteStatus(context, id, handler);
+				SyncService.deleteStatus(context, id, handler);
 			}
 		});
 		dialog.show();
@@ -112,11 +112,11 @@ public class PopupController {
 			public void handleMessage(Message msg) {
 				int what = msg.what;
 				switch (what) {
-				case FanFouService.RESULT_SUCCESS:
+				case SyncService.RESULT_SUCCESS:
 					context.finish();
 					cursor.requery();
 					break;
-				case FanFouService.RESULT_ERROR:
+				case SyncService.RESULT_ERROR:
 					int code = msg.getData().getInt("error_code");
 					if (code == 404) {
 						cursor.requery();
@@ -141,11 +141,11 @@ public class PopupController {
 			public void handleMessage(Message msg) {
 				int what = msg.what;
 				switch (what) {
-				case FanFouService.RESULT_SUCCESS:
+				case SyncService.RESULT_SUCCESS:
 					context.finish();
 					adapter.remove(status);
 					break;
-				case FanFouService.RESULT_ERROR:
+				case SyncService.RESULT_ERROR:
 					int code = msg.getData().getInt("error_code");
 					String message = msg.getData().getString("error_message");
 					Utils.notify(context, message);

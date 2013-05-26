@@ -12,19 +12,24 @@ import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.widget.*;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FilterQueryProvider;
+import android.widget.ListView;
+import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.adapter.UserChooseCursorAdapter;
 import com.mcxiaoke.fanfouapp.api.Paging;
 import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.controller.EmptyViewController;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
 import com.mcxiaoke.fanfouapp.service.Constants;
-import com.mcxiaoke.fanfouapp.service.FanFouService;
+import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.ui.widget.TextChangeListener;
 import com.mcxiaoke.fanfouapp.util.StringHelper;
 import com.mcxiaoke.fanfouapp.util.Utils;
-import com.mcxiaoke.fanfouapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -164,7 +169,7 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
 	private void doRetrieve(boolean isGetMore) {
 		Paging paging = new Paging();
 		paging.page = page;
-		FanFouService.getUsers(mContext, AppContext.getAccount(),
+        SyncService.getUsers(mContext, AppContext.getAccount(),
 				UserModel.TYPE_FRIENDS, paging, new ResultHandler());
 	}
 

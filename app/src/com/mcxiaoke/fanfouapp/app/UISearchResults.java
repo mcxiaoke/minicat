@@ -24,7 +24,7 @@ import com.mcxiaoke.fanfouapp.api.ApiException;
 import com.mcxiaoke.fanfouapp.api.Paging;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
-import com.mcxiaoke.fanfouapp.service.FanFouService;
+import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.ui.UIHelper;
 import com.mcxiaoke.fanfouapp.util.NetworkHelper;
 
@@ -219,9 +219,9 @@ public class UISearchResults extends UIBaseSupport implements
             p.maxId = maxId;
 
             if (NetworkHelper.isWifi(mContext)) {
-                p.count = FanFouService.MAX_TIMELINE_COUNT;
+                p.count = SyncService.MAX_TIMELINE_COUNT;
             } else {
-                p.count = FanFouService.DEFAULT_TIMELINE_COUNT;
+                p.count = SyncService.DEFAULT_TIMELINE_COUNT;
             }
 
             try {

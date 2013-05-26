@@ -28,7 +28,7 @@ import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
 import com.mcxiaoke.fanfouapp.service.Constants;
-import com.mcxiaoke.fanfouapp.service.FanFouService;
+import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.ui.UIHelper;
 import com.mcxiaoke.fanfouapp.util.Utils;
 
@@ -199,7 +199,7 @@ public abstract class UserListFragment extends AbstractListFragment
         p.page = page;
 
         final ResultHandler handler = new ResultHandler(this);
-        FanFouService.getUsers(getActivity(), userId, getType(), p, handler);
+        SyncService.getUsers(getActivity(), userId, getType(), p, handler);
     }
 
     @Override

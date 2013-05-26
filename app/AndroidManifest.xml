@@ -198,8 +198,9 @@
         <service
                 android:name=".service.QueueService"
                 android:label="@string/app_name"/>
+
         <service
-                android:name=".service.FanFouService"
+                android:name=".service.SyncService"
                 android:label="@string/app_name"/>
 
         <receiver android:name=".receiver.BootReceiver">
