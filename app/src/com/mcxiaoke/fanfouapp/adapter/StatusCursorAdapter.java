@@ -43,19 +43,8 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 
     private void initialize(Context context, boolean colored) {
         this.colored = colored;
-        if (colored) {
-//			mMentionedBgColor = OptionHelper.readInt(mContext,
-//					R.string.option_color_highlight_mention, context
-//							.getResources().getColor(R.color.mentioned_color));
-//			mSelfBgColor = OptionHelper.readInt(mContext,
-//					R.string.option_color_highlight_self, context
-//							.getResources().getColor(R.color.self_color));
-//			if (AppContext.DEBUG) {
-//				log("init mMentionedBgColor="
-//						+ Integer.toHexString(mMentionedBgColor));
-//				log("init mSelfBgColor=" + Integer.toHexString(mSelfBgColor));
-//			}
-        }
+        mMentionedBgColor = mContext.getResources().getColor(R.color.holo_primary_transparent);
+        mSelfBgColor = mContext.getResources().getColor(R.color.holo_primary_transparent);
     }
 
     @Override
@@ -104,20 +93,18 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
     }
 
     private void setColor(final Cursor cursor, View row) {
-        if (colored) {
-            int itemType = getItemViewType(cursor.getPosition());
-            switch (itemType) {
-                case MENTION:
-                    row.setBackgroundColor(mMentionedBgColor);
-                    break;
-                case SELF:
-                    row.setBackgroundColor(mSelfBgColor);
-                    break;
-                case NONE:
-                    break;
-                default:
-                    break;
-            }
+        int itemType = getItemViewType(cursor.getPosition());
+        switch (itemType) {
+            case MENTION:
+                row.setBackgroundColor(mMentionedBgColor);
+                break;
+            case SELF:
+                row.setBackgroundColor(mSelfBgColor);
+                break;
+            case NONE:
+                break;
+            default:
+                break;
         }
     }
 

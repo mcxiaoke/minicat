@@ -2,6 +2,8 @@ package com.mcxiaoke.fanfouapp.app;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -12,9 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import com.mcxiaoke.fanfouapp.R;
-import com.mcxiaoke.fanfouapp.controller.SimpleDialogListener;
 import com.mcxiaoke.fanfouapp.controller.UIController;
-import com.mcxiaoke.fanfouapp.dialog.ConfirmDialog;
 import com.mcxiaoke.fanfouapp.util.LogUtil;
 
 /**
@@ -132,19 +132,24 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
     }
 
     protected void onMenuLogoutClick() {
-        final ConfirmDialog dialog = new ConfirmDialog(this);
-        dialog.setTitle("提示");
-        dialog.setMessage("确定注销当前登录帐号吗？");
-        dialog.setClickListener(new SimpleDialogListener() {
-
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("@" + AppContext.getScreenName());
+        builder.setMessage("确定注销当前登录帐号吗？");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
-            public void onPositiveClick() {
-                super.onPositiveClick();
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
                 AppContext.doLogin(mContext);
                 finish();
             }
         });
-        dialog.show();
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 
     protected void startRefresh() {

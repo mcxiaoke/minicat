@@ -135,7 +135,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
                 .iconId(R.drawable.ic_item_feedback).highlight(true).build();
 
         MenuItemResource topic = MenuItemResource.newBuilder()
-                .id(MENU_ID_TOPIC).text("热词和搜索")
+                .id(MENU_ID_TOPIC).text("热门话题")
                 .iconId(R.drawable.ic_item_topic).highlight(false).build();
 
 /*        MenuItemResource drafts = MenuItemResource.newBuilder()
@@ -143,7 +143,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
                 .iconId(R.drawable.ic_item_record).highlight(false).build();*/
 
         MenuItemResource option = MenuItemResource.newBuilder()
-                .id(MENU_ID_OPTION).text("使用设置")
+                .id(MENU_ID_OPTION).text("设置")
                 .iconId(R.drawable.ic_item_option).highlight(false).build();
 
         MenuItemResource logout = MenuItemResource.newBuilder()

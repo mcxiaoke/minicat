@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import com.mcxiaoke.fanfouapp.R;
+import com.mcxiaoke.fanfouapp.controller.CacheController;
 import com.mcxiaoke.fanfouapp.controller.EmptyViewController;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
 import com.mcxiaoke.fanfouapp.fragments.BaseTimlineFragment;
@@ -105,12 +106,26 @@ abstract class UIBaseTimeline extends UIBaseSupport {
             }
         }
 
-        return TextUtils.isEmpty(userId);
+        if (TextUtils.isEmpty(userId)) {
+            return true;
+        }
+
+        if (user == null) {
+            user = CacheController.getUser(userId);
+        }
+
+        if (user != null) {
+            getActionBar().setTitle(user.getScreenName() + "的" + getTitleSuffix());
+        }
+
+        return false;
 
     }
 
     @Override
     public void onClick(View v) {
     }
+
+    protected abstract String getTitleSuffix();
 
 }

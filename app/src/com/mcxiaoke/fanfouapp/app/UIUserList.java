@@ -57,7 +57,14 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
     private void setActionBarTitle() {
         if (screenName != null) {
             StringBuilder builder = new StringBuilder();
-            builder.append(screenName).append("的").append(type == UserModel.TYPE_FOLLOWERS ? "关注者" : "关注");
+            if (type == UserModel.TYPE_FOLLOWERS) {
+                builder.append("关注");
+                builder.append(screenName);
+                builder.append("的人");
+            } else {
+                builder.append(screenName);
+                builder.append("关注的人");
+            }
             getActionBar().setTitle(builder.toString());
         }
     }

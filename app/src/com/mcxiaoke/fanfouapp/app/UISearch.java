@@ -44,10 +44,11 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
         setContentView(R.layout.search);
         setProgressBarIndeterminateVisibility(false);
 
-        setTitle("流行趋势");
+        setTitle("热门话题");
 
         mListView = (ListView) findViewById(android.R.id.list);
         mListView.setOnItemClickListener(this);
+        mListView.setSelector(getResources().getDrawable(R.drawable.selector_list_light));
         mAdapter = new SearchAdapter(this, mHotwords);
         mListView.setAdapter(mAdapter);
 

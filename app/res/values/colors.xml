@@ -62,25 +62,37 @@
     <!-- Theme colors -->
     <color name="holo_primary">#ff33b5e5</color>
     <color name="holo_primary_disabled">#8033b5e5</color>
+    <color name="holo_primary_transparent">#1633b5e5</color>
     <color name="holo_secondary">#ff28a5c0</color>
     <!-- below from google play app -->
     <color name="apps_primary">#ffb2cb39</color>
     <color name="apps_primary_disabled">#80b2cb39</color>
+    <color name="apps_primary_transparent">#20b2cb39</color>
     <color name="apps_secondary">#ff96aa39</color>
+
     <color name="books_primary">#ff3f9fe0</color>
     <color name="books_primary_disabled">#803f9fe0</color>
+    <color name="books_primary_transparent">#203f9fe0</color>
     <color name="books_secondary">#ff3687bf</color>
+
     <color name="movies_primary">#ffc74b46</color>
     <color name="movies_primary_disabled">#80c74b46</color>
+    <color name="movies_primary_transparent">#20c74b46</color>
     <color name="movies_secondary">#ff943c39</color>
+
     <color name="music_primary">#fff4842d</color>
     <color name="music_primary_disabled">#80f4842d</color>
+    <color name="music_primary_transparent">#20f4842d</color>
     <color name="music_secondary">#ffd77428</color>
+
     <color name="magazines_primary">#ff5161bc</color>
     <color name="magazines_primary_disabled">#805161bc</color>
+    <color name="magazines_primary_transparent">#205161bc</color>
     <color name="magazines_secondary">#ff384c9e</color>
+
     <color name="multi_primary">#ff585858</color>
     <color name="multi_primary_disabled">#80585858</color>
+    <color name="multi_primary_transparent">#20585858</color>
     <color name="multi_secondary">#ff4d4d4d</color>
 
 </resources>
