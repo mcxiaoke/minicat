@@ -79,9 +79,9 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
         final ItemView view = (ItemView) root.findViewById(R.id.list_item);
 
         setColor(cursor, view);
+        UIHelper.setContent(view,s);
         UIHelper.setMetaInfo(view, s);
         UIHelper.setImageClick(view, s.getUserId());
-        view.setContent(s.getSimpleText());
 
         String headUrl = s.getUserProfileImageUrl();
         mImageLoader.displayImage(headUrl, view.getImageView());

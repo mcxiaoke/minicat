@@ -2,6 +2,7 @@ package com.mcxiaoke.fanfouapp.adapter;
 
 import android.app.Activity;
 import android.widget.ImageView;
+import android.widget.TextView;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 import com.mcxiaoke.fanfouapp.ui.widget.ItemView;
@@ -29,6 +30,14 @@ public class UIHelper {
                 UIController.showProfile((Activity) view.getContext(), userId);
             }
         });
+    }
+
+    public static void setContent(final ItemView view, final StatusModel s) {
+        TextView textView = view.getContentTextView();
+//        textView.setAutoLinkMask(Linkify.WEB_URLS);
+        String text = s.getSimpleText();
+        textView.setText(text, TextView.BufferType.SPANNABLE);
+//        StatusHelper.removeUnderlines((Spannable) textView.getText());
     }
 
     public static void setMetaInfo(final ItemView view, final StatusModel s) {

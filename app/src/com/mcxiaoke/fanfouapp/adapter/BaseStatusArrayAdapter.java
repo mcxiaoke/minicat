@@ -64,9 +64,9 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
         }
 
         final StatusModel s = getData().get(position);
+        UIHelper.setContent(holder.view, s);
         UIHelper.setMetaInfo(holder.view, s);
         UIHelper.setImageClick(holder.view, s.getUserId());
-        setStatusContent(holder.view, s.getSimpleText());
         String headUrl = s.getUserProfileImageUrl();
         mLoader.displayImage(headUrl, holder.view.getImageView());
         return convertView;
@@ -119,10 +119,6 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
     public void add(StatusModel status) {
         mData.add(status);
         notifyDataSetChanged();
-    }
-
-    protected void setStatusContent(ItemView view, String text) {
-        view.setContent(text);
     }
 
     @Override
