@@ -9,7 +9,6 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
-import com.mcxiaoke.fanfouapp.ui.widget.ItemView;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -40,11 +39,6 @@ public class SearchResultsAdapter extends BaseStatusArrayAdapter {
 	public SearchResultsAdapter(Context context, int highlightColor) {
 		super(context, null);
 		this.mHighlightColor = highlightColor;
-	}
-
-	@Override
-	protected void setStatusContent(final ItemView view, String text) {
-		view.setContent(buildHighlightSpan(text));
 	}
 
 	private SpannableStringBuilder buildHighlightSpan(String text) {

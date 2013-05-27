@@ -1,66 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-       android:id="@+id/root"
-       android:layout_width="fill_parent"
-       android:layout_height="fill_parent"
-       android:orientation="horizontal" android:paddingTop="@dimen/list_item_padding_status"
-       android:paddingBottom="@dimen/list_item_padding_status">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/row" style="@style/ListRow">
 
-    <ImageView
-            android:id="@+id/image"
-            android:layout_width="@dimen/head_width2"
-            android:layout_height="@dimen/head_height2"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:padding="@dimen/image_frame_padding"
-            android:src="@drawable/ic_head"
-            android:visibility="visible" android:background="@drawable/head_image_frame"/>
-
-    <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignWithParentIfMissing="true"
-            android:layout_toRightOf="@id/image"
-            android:padding="4dp" android:textColor="@color/text_color_selectable_primary_light"
-            android:textSize="@dimen/text_size_medium" android:singleLine="true" android:typeface="serif"
-            android:shadowDy="0.1" android:shadowRadius="0.1" android:shadowColor="@color/soft_black"/>
+    <RelativeLayout android:id="@+id/avatar" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/standard_spacing">
+        <ImageView
+                android:id="@+id/image"
+                android:layout_width="@dimen/head_width"
+                android:layout_height="@dimen/head_height"
+                android:src="@drawable/ic_head"/>
+    </RelativeLayout>
 
 
     <TextView
-            android:id="@+id/meta_b"
+            android:id="@+id/user_name" android:textStyle="bold" android:text="UserID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:gravity="center_vertical"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/avatar" android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_size_medium" android:singleLine="true"/>
+
+    <TextView android:id="@+id/user_id" android:textSize="@dimen/text_size_small"
+              android:textColor="@color/text_color_selectable_secondary_light"
+              android:gravity="center_vertical" android:layout_width="wrap_content"
+              android:layout_height="wrap_content" android:layout_marginLeft="2.0dip"
+              android:singleLine="true" android:layout_toRightOf="@id/user_name" android:layout_toLeftOf="@+id/stub"
+              android:text="\@ScreenName"/>
+
+    <LinearLayout android:id="@+id/stub" android:layout_alignTop="@id/user_id" android:layout_alignBottom="@id/user_id"
+                  android:layout_alignParentRight="true" android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal" android:gravity="center_vertical"
+                  android:paddingLeft="4dp" android:paddingRight="4dp">
+
+        <ImageView
+                android:id="@+id/ic_favorite" android:layout_marginRight="4.0dip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_activity_fave"
+                android:visibility="gone"/>
+
+        <ImageView
+                android:id="@+id/ic_retweet" android:layout_marginRight="4.0dip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_tweet_attr_summary"
+                android:visibility="gone"/>
+
+        <ImageView
+                android:id="@+id/ic_lock" android:layout_marginRight="4.0dip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_mini_protected"
+                android:visibility="gone"/>
+
+        <ImageView android:id="@+id/ic_geo" android:visibility="gone" android:layout_width="wrap_content"
+                   android:layout_height="wrap_content" android:layout_marginRight="4.0dip"
+                   android:src="@drawable/ic_tweet_attr_geo"/>
+
+
+        <ImageView
+                android:id="@+id/ic_thread" android:layout_marginRight="4.0dip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_tweet_attr_convo"
+                android:visibility="gone"/>
+
+
+        <ImageView
+                android:id="@+id/ic_photo" android:layout_marginRight="4.0dip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_tweet_attr_photo"
+                android:visibility="gone"/>
+
+
+        <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:gravity="center_vertical"
+                android:textColor="@color/text_color_selectable_secondary_light"
+                android:textSize="@dimen/text_size_small" android:singleLine="true"/>
+
+    </LinearLayout>
+
+
+    <TextView
+            android:id="@+id/text" android:text="this is a status content."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/avatar"
+            android:layout_alignLeft="@id/user_name"
+            android:layout_below="@id/user_id" android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_size_medium"
+            android:typeface="serif" android:lineSpacingMultiplier="1.2"/>
+
+    <TextView
+            android:id="@+id/meta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/text_color_selectable_secondary_light"
+            android:layout_alignLeft="@id/text" android:text="test"
+            android:layout_below="@id/text" android:textColor="@color/text_color_selectable_secondary_light"
             android:textSize="@dimen/text_size_small" android:singleLine="true"/>
 
-    <ViewStub
-            android:id="@+id/stub"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/meta_b"
-            android:layout_alignParentTop="true"
-            android:layout="@layout/item_view_icons"/>
-
-    <TextView
-            android:id="@+id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/title"
-            android:layout_below="@id/title"
-            android:padding="2dp" android:textColor="@color/text_color_selectable_primary_light"
-            android:textSize="@dimen/text_size_medium" android:lineSpacingExtra="@dimen/status_text_line_spacing"
-            android:typeface="serif"/>
-
-    <TextView
-            android:id="@+id/meta_a"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/text"
-            android:layout_below="@id/text" android:textColor="@color/text_color_selectable_secondary_light"
-            android:textSize="@dimen/text_size_small" android:singleLine="true" android:visibility="gone"/>
-
-</merge>
+</RelativeLayout>

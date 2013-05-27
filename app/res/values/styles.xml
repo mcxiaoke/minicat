@@ -31,7 +31,7 @@
         <!--        <item name="android:shadowDx">0</item>
                 <item name="android:shadowDy">1</item>
                 <item name="android:shadowRadius">1</item>-->
-        <item name="android:textColor">@color/text_color_selectable_primary_light</item>
+        <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:singleLine">true</item>
         <item name="android:padding">1dp</item>
@@ -52,7 +52,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_size_large</item>
-        <item name="android:padding">@dimen/status_text_padding</item>
+        <item name="android:padding">@dimen/list_padding</item>
         <item name="android:textColor">@color/text_color_primary_light</item>
         <item name="android:typeface">serif</item>
         <item name="android:lineSpacingExtra">@dimen/status_text_line_spacing</item>
@@ -62,9 +62,9 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_size_small</item>
-        <item name="android:padding">@dimen/status_text_padding</item>
+        <item name="android:padding">@dimen/list_padding</item>
         <item name="android:typeface">serif</item>
-        <item name="android:textColor">@color/text_color_secondary_light</item>
+        <item name="android:textColor">@color/text_secondary</item>
     </style>
 
     <style name="EditText"></style>
@@ -95,7 +95,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:padding">@dimen/action_item_padding</item>
+        <item name="android:padding">@dimen/list_padding</item>
         <item name="android:background">@drawable/button_blue</item>
     </style>
 
@@ -119,6 +119,17 @@
     <style name="Item.MetaInfoStyle">
         <item name="android:textColor">@color/dark_grey</item>
         <item name="android:textSize">@dimen/text_size_tiny</item>
+    </style>
+
+
+    <style name="ListRow">
+        <item name="android:textColor">@color/list_item_text</item>
+        <!--<item name="android:background">@drawable/list_row_background</item>-->
+        <item name="android:background">@null</item>
+        <item name="android:padding">@dimen/list_row_padding</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/list_row_preferred_height</item>
     </style>
 
     <style name="Animations"/>

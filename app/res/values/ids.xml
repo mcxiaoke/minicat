@@ -7,7 +7,13 @@
     <item name="list_footer" type="id"/>
     <item name="list_footer_text" type="id"/>
     <item name="list_footer_progress" type="id"/>
-    
+
     <item name="list_item" type="id"></item>
+
+<!--    <item name="title" type="id"/>
+    <item name="name" type="id"/>
+    <item name="stub" type="id"/>
+    <item name="image" type="id"/>
+    <item name="text" type="id"/>-->
 
 </resources>

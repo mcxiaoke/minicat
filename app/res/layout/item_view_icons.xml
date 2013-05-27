@@ -3,7 +3,7 @@
               android:id="@+id/icons"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:orientation="horizontal"
+              android:orientation="horizontal" android:gravity="center_vertical"
               android:paddingLeft="4dp" android:paddingRight="4dp">
 
     <ImageView
@@ -42,5 +42,13 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_mini_photo"
             android:visibility="gone"/>
+
+
+    <TextView
+            android:id="@+id/meta_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:gravity="center_vertical"
+            android:textColor="@color/text_color_selectable_secondary_light"
+            android:textSize="@dimen/text_size_small" android:singleLine="true"/>
 
 </LinearLayout>

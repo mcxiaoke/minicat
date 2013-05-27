@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true" android:layout_marginLeft="@dimen/list_padding"
             android:layout_toRightOf="@id/header_image"
-            android:padding="@dimen/profile_header_text_padding" android:textColor="@color/text_color_primary_light"
+            android:padding="@dimen/list_padding" android:textColor="@color/text_color_primary_light"
             android:textSize="@dimen/text_size_medium" android:duplicateParentState="true"/>
 
     <TextView
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/header_name"
             android:layout_toRightOf="@id/header_image"
-            android:padding="@dimen/profile_header_text_padding"
+            android:padding="@dimen/list_padding"
             android:textSize="@dimen/text_size_tiny" android:textColor="@color/text_color_primary_light"
             android:visibility="gone" android:duplicateParentState="true"/>
 

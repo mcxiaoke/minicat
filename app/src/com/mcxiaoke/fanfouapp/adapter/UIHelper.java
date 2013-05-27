@@ -34,10 +34,8 @@ public class UIHelper {
 
     public static void setContent(final ItemView view, final StatusModel s) {
         TextView textView = view.getContentTextView();
-//        textView.setAutoLinkMask(Linkify.WEB_URLS);
         String text = s.getSimpleText();
         textView.setText(text, TextView.BufferType.SPANNABLE);
-//        StatusHelper.removeUnderlines((Spannable) textView.getText());
     }
 
     public static void setMetaInfo(final ItemView view, final StatusModel s) {
@@ -47,31 +45,18 @@ public class UIHelper {
         view.showIconRetweet(s.isRetweeted());
         boolean lock = s.getUser() != null && s.getUser().isProtect();
         view.showIconLock(lock);
-        view.setTitle(s.getUserScreenName());
+        view.setUserName(s.getUserScreenName());
+        view.setUserId("@" + s.getUserId());
+        view.setTime(getDateString(s.getTime()));
 
-        StringBuilder metaB = new StringBuilder();
-        metaB.append(getDateString(s.getTime()));
-//        metaB.append(" 通过");
-//        String source = s.getSource();
-//        if (source.length() > 16) {
-//            source = source.substring(0, 15);
-//        }
-//        metaB.append(source);
-
-        StringBuilder metaA = new StringBuilder();
-//        if (s.isRetweeted()) {
-//            if (metaB.length() < 10) {
-//                metaA.append("由");
-//                String userName = s.getUserScreenName();
-//                if (userName.length() > 10) {
-//                    userName = userName.substring(0, 9);
-//                }
-//                metaA.append(userName);
-//                metaA.append("转发");
-//            }
-//        }
-
-        view.setMeta(metaA.toString(), metaB.toString());
+        StringBuilder meta = new StringBuilder();
+        meta.append(" 通过");
+        String source = s.getSource();
+        if (source.length() > 16) {
+            source = source.substring(0, 15);
+        }
+        meta.append(source);
+        view.setMeta(meta.toString());
     }
 
 }

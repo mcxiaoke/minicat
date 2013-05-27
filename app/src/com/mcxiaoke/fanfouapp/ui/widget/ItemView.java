@@ -8,8 +8,8 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewStub;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.mcxiaoke.fanfouapp.R;
@@ -25,12 +25,13 @@ public class ItemView extends RelativeLayout {
     }
 
     private ImageView mImageView;
-    private TextView mTitleTextView;
+    private TextView mUserNameTextView;
+    private TextView mUserIdTextView;
     private TextView mContentTextView;
-    private TextView mMetaATextView;
-    private TextView mMetaBTextView;
+    private TextView mTimeTextView;
+    private TextView mMetaTextView;
 
-    private ViewStub mViewStub;
+    private LinearLayout mViewStub;
     private View mIconsView;
 
     private ImageView mIconFavorite;
@@ -43,8 +44,6 @@ public class ItemView extends RelativeLayout {
     private LayoutInflater mInflater;
 
     private ViewMode mViewMode;
-
-    private int mPadding;
 
     private OnImageClickListener mListener;
 
@@ -66,19 +65,22 @@ public class ItemView extends RelativeLayout {
         mInflater = LayoutInflater.from(mContext);
         mInflater.inflate(R.layout.item_view, this, true);
         mImageView = (ImageView) findViewById(R.id.image);
-        mTitleTextView = (TextView) findViewById(R.id.title);
+        mUserNameTextView = (TextView) findViewById(R.id.user_name);
+        mUserIdTextView = (TextView) findViewById(R.id.user_id);
         mContentTextView = (TextView) findViewById(R.id.text);
-        mMetaATextView = (TextView) findViewById(R.id.meta_a);
-        mMetaBTextView = (TextView) findViewById(R.id.meta_b);
+        mTimeTextView = (TextView) findViewById(R.id.time);
+        mMetaTextView = (TextView) findViewById(R.id.meta);
 
-        mViewStub = (ViewStub) findViewById(R.id.stub);
+        mViewStub = (LinearLayout) findViewById(R.id.stub);
+        mIconsView = findViewById(R.id.icons);
+        mIconFavorite = (ImageView) findViewById(R.id.ic_favorite);
+        mIconThread = (ImageView) findViewById(R.id.ic_thread);
+        mIconPhoto = (ImageView) findViewById(R.id.ic_photo);
+        mIconRetweet = (ImageView) findViewById(R.id.ic_retweet);
+        mIconLock = (ImageView) findViewById(R.id.ic_lock);
 
         final Resources res = getResources();
-        mPadding = res.getDimensionPixelSize(R.dimen.list_padding);
         mViewMode = ViewMode.StatusMode;
-
-        setPadding(mPadding, mPadding, mPadding, 0);
-
         checkViewMode();
 
         mImageView.setOnClickListener(new OnClickListener() {
@@ -92,14 +94,8 @@ public class ItemView extends RelativeLayout {
     }
 
     private void checkViewMode() {
-        if (!ViewMode.MessageMode.equals(mViewMode)) {
-            mIconsView = mViewStub.inflate();
-            // mIconsView = findViewById(R.id.icons);
-            mIconFavorite = (ImageView) findViewById(R.id.ic_favorite);
-            mIconThread = (ImageView) findViewById(R.id.ic_thread);
-            mIconPhoto = (ImageView) findViewById(R.id.ic_photo);
-            mIconRetweet = (ImageView) findViewById(R.id.ic_retweet);
-            mIconLock = (ImageView) findViewById(R.id.ic_lock);
+        if (ViewMode.MessageMode.equals(mViewMode)) {
+
         }
     }
 
@@ -107,17 +103,24 @@ public class ItemView extends RelativeLayout {
         this.mListener = listener;
     }
 
-    public void setTitle(CharSequence text) {
-        mTitleTextView.setText(text);
+    public void setUserName(CharSequence text) {
+        mUserNameTextView.setText(text);
+    }
+
+    public void setUserId(CharSequence text) {
+        mUserIdTextView.setText(text);
     }
 
     public void setContent(CharSequence text) {
         mContentTextView.setText(text);
     }
 
-    public void setMeta(CharSequence textA, CharSequence textB) {
-        mMetaATextView.setText(textA);
-        mMetaBTextView.setText(textB);
+    public void setTime(CharSequence text) {
+        mTimeTextView.setText(text);
+    }
+
+    public void setMeta(CharSequence text) {
+        mMetaTextView.setText(text);
     }
 
     public void setImage(Bitmap bitmap) {
@@ -161,7 +164,7 @@ public class ItemView extends RelativeLayout {
     }
 
     public void showTitle(boolean show) {
-        mTitleTextView.setVisibility(show ? View.VISIBLE : View.GONE);
+        mUserNameTextView.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     public void showContent(boolean show) {
@@ -169,12 +172,12 @@ public class ItemView extends RelativeLayout {
     }
 
     public void showMeta(boolean showA, boolean showB) {
-        mMetaATextView.setVisibility(showA ? View.VISIBLE : View.GONE);
-        mMetaBTextView.setVisibility(showB ? View.VISIBLE : View.GONE);
+        mTimeTextView.setVisibility(showA ? View.VISIBLE : View.GONE);
+        mMetaTextView.setVisibility(showB ? View.VISIBLE : View.GONE);
     }
 
     public void setTitleTextSize(float size) {
-        mTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+        mUserNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
     }
 
     public void setContentTextSize(float size) {
@@ -182,12 +185,12 @@ public class ItemView extends RelativeLayout {
     }
 
     public void setMetaTextSize(float sizeA, float sizeB) {
-        mMetaATextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, sizeA);
-        mMetaBTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, sizeB);
+        mTimeTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, sizeA);
+        mMetaTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, sizeB);
     }
 
-    public void setTitleTextColor(int color) {
-        mTitleTextView.setTextColor(color);
+    public void setUserNameTextColor(int color) {
+        mUserNameTextView.setTextColor(color);
     }
 
     public void setContentTextColor(int color) {
@@ -198,29 +201,16 @@ public class ItemView extends RelativeLayout {
         mContentTextView.setMaxLines(maxLines);
     }
 
-    public void setMetaTextColor(int colorA, int colorB) {
-        mMetaATextView.setTextColor(colorA);
-        mMetaBTextView.setTextColor(colorB);
+    public void setMetaTextColor(int color) {
+        mMetaTextView.setTextColor(color);
     }
 
     public ImageView getImageView() {
         return mImageView;
     }
 
-    public TextView getTitleTextView() {
-        return mTitleTextView;
-    }
-
     public TextView getContentTextView() {
         return mContentTextView;
-    }
-
-    public TextView getMetaATextView() {
-        return mMetaATextView;
-    }
-
-    public TextView getMetaBTextView() {
-        return mMetaBTextView;
     }
 
     public enum ViewMode {

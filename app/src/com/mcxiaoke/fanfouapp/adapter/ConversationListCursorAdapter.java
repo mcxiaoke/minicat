@@ -25,15 +25,17 @@ public class ConversationListCursorAdapter extends BaseMessageCursorAdapter {
 
         final DirectMessageModel dm = DirectMessageModel.from(cursor);
 
-        view.setMeta("", DateTimeHelper.getInterval(dm.getTime()));
+        view.setMeta(DateTimeHelper.getInterval(dm.getTime()));
 
         boolean incoming = dm.isIncoming();
 
         if (incoming) {
-            view.setTitle(dm.getSenderScreenName());
+            view.setUserName(dm.getSenderScreenName());
+            view.setUserId("@" + dm.getSenderId());
             view.setContent(dm.getText());
         } else {
-            view.setTitle(dm.getRecipientScreenName());
+            view.setUserName(dm.getRecipientScreenName());
+            view.setUserId("@" + dm.getRecipientId());
             StringBuilder builder = new StringBuilder();
             builder.append("我：").append(dm.getText());
             view.setContent(builder.toString());

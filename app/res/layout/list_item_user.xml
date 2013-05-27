@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_alignWithParentIfMissing="true"
-                android:layout_toRightOf="@id/image" android:textColor="@color/text_color_selectable_primary_light"
+                android:layout_toRightOf="@id/image" android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_size_medium" android:text="title"
                 android:textStyle="bold" android:singleLine="true"/>
 
@@ -56,7 +56,7 @@
               android:layout_height="wrap_content" android:paddingLeft="@dimen/list_padding"
               android:singleLine="true"
               android:text="Follow" android:layout_margin="0dp"
-              android:textColor="@color/text_color_selectable_primary_light"
+              android:textColor="@color/text_primary"
               android:background="@drawable/button_follow_off"
               android:textSize="@dimen/text_size_small"/>
 </LinearLayout>

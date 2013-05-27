@@ -109,7 +109,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
         mLocationManager = (LocationManager) this
                 .getSystemService(LOCATION_SERVICE);
         mLocationMonitor = new LocationMonitor();
-        size = new Float(getResources().getDimension(R.dimen.write_photo_width))
+        size = new Float(getResources().getDimension(R.dimen.write_image_preview_width))
                 .intValue();
         mNormalTextColor = getResources().getColorStateList(R.color.light_blue_text_color);
         mAlertTextColor = getResources().getColorStateList(R.color.alert_red_text_color);

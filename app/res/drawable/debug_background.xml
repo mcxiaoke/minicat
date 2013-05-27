@@ -5,7 +5,7 @@
     <solid android:color="@color/soft_white" />
 
     <stroke
-        android:width="@dimen/card_margin"
+        android:width="@dimen/list_padding"
         android:color="@color/solid_white" />
 
 </shape>

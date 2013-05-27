@@ -24,33 +24,15 @@
     <dimen name="text_size_xlarge">20sp</dimen>
     <dimen name="text_size_xxlarge">22sp</dimen>
     <dimen name="text_size_xxxlarge">24sp</dimen>
-    <dimen name="profile_header_name_text_size">20sp</dimen>
-    <dimen name="profile_header_relation_text_size">14sp</dimen>
-    <dimen name="profile_header_padding">6dp</dimen>
-    <dimen name="profile_header_text_padding">2dp</dimen>
-    <dimen name="scrollbarSize">3dp</dimen>
-    <dimen name="dividerWidth">1dp</dimen>
-    <dimen name="status_text_padding">10dp</dimen>
-    <dimen name="status_photo_padding">10dp</dimen>
-    <dimen name="action_item_height">48dp</dimen>
-    <dimen name="action_item_padding">8dp</dimen>
-    <dimen name="write_input_margin">6dp</dimen>
-    <dimen name="write_input_padding">8dp</dimen>
-    <dimen name="write_photo_width">72dp</dimen>
-    <dimen name="sliding_shadow">10dp</dimen>
-    <dimen name="sliding_offset">80dp</dimen>
 
     <dimen name="image_round_corner">4dp</dimen>
     <dimen name="image_frame_padding">2dp</dimen>
-    <!-- new card list ui -->
-    <dimen name="card_margin">6dp</dimen>
+
     <dimen name="profile_item_padding">2dp</dimen>
     <dimen name="profile_row_vertical_padding">8dp</dimen>
     <dimen name="profile_row_horizontal_padding">20dp</dimen>
     <dimen name="list_divider_height">1dp</dimen>
     <dimen name="list_item_padding">2dp</dimen>
-    <dimen name="card_divider">8dp</dimen>
-
 
     <dimen name="list_padding">8dp</dimen>
 
@@ -62,5 +44,9 @@
 
     <dimen name="status_text_line_spacing">5sp</dimen>
     <dimen name="list_item_padding_status">10dp</dimen>
+    <dimen name="list_row_preferred_height">48dp</dimen>
+    <dimen name="list_row_padding">10dp</dimen>
+    <dimen name="standard_spacing">5dp</dimen>
+    <dimen name="write_image_preview_width">96dp</dimen>
 
 </resources>

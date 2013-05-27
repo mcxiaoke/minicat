@@ -43,12 +43,12 @@
     <color name="drawer_dim_background">#C0000000</color>
 
 
-    <color name="text_color_primary_light">#FF222233</color>
-    <color name="text_color_secondary_light">#FF999999</color>
+    <color name="text_color_primary_light">#FF222222</color>
+    <color name="text_secondary">#FF888888</color>
     <color name="text_color_pressed_light">#FFFFFFFF</color>
 
     <color name="ui_background_color_primary">#FFF6F6F6</color>
-    <color name="ui_background_color_secondary">#FFE0E0E0</color>
+    <color name="ui_background_color_secondary">#FFFFFFFF</color>
 
     <!--Dark Theme Colors-->
 

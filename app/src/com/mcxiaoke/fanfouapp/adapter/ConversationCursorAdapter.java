@@ -29,8 +29,9 @@ public class ConversationCursorAdapter extends BaseMessageCursorAdapter {
         ItemView view = (ItemView) row;
 
         final DirectMessageModel dm = DirectMessageModel.from(cursor);
-        view.setTitle(dm.getSenderScreenName());
-        view.setMeta("", DateTimeHelper.getInterval(dm.getTime()));
+        view.setUserName(dm.getSenderScreenName());
+        view.setUserId("@" + dm.getSenderId());
+        view.setTime(DateTimeHelper.getInterval(dm.getTime()));
         view.setContent(dm.getText());
         UIHelper.setImageClick(view, dm.getSenderId());
         String headUrl = dm.getSenderProfileImageUrl();
