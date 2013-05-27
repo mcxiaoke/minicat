@@ -69,7 +69,7 @@ public class UIThread extends UIBaseSupport implements
         mListView = mPullToRefreshView.getRefreshableView();
         mListView.setLongClickable(false);
         mListView.setOnItemClickListener(this);
-        UIHelper.setListViewCardUI(mListView);
+        UIHelper.setListView(mListView);
         mListView.setAdapter(mStatusAdapter);
 
         if (!TextUtils.isEmpty(id)) {

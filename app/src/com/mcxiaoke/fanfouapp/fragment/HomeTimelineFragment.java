@@ -72,7 +72,7 @@ public class HomeTimelineFragment extends BaseTimlineFragment {
 
     @Override
     public String getTitle() {
-        return "关注的消息";
+        return "主页";
     }
 
 }

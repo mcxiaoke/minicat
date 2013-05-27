@@ -26,7 +26,7 @@
     <color name="theme_blue_light_pressed">#FF0099CC</color>
     <color name="theme_blue_light_highlight">#FF28A5C0</color>
 
-    <color name="divider_color_light">#66AAAAAA</color>
+    <color name="divider_color_light">#20999999</color>
 
     <color name="actionbar_bg_color">#FF33B5E5</color>
     <color name="actionbar_bg_color_bottom">#FF28A5C0</color>
@@ -43,8 +43,8 @@
     <color name="drawer_dim_background">#C0000000</color>
 
 
-    <color name="text_color_primary_light">#FF222222</color>
-    <color name="text_color_secondary_light">#FF666666</color>
+    <color name="text_color_primary_light">#FF222233</color>
+    <color name="text_color_secondary_light">#FF999999</color>
     <color name="text_color_pressed_light">#FFFFFFFF</color>
 
     <color name="ui_background_color_primary">#FFF6F6F6</color>
@@ -56,7 +56,7 @@
     <color name="text_color_secondary_dark">#FF334433</color>
     <color name="text_color_pressed_dark">#FF000000</color>
 
-    <color name="pager_sliding_tab_background">#FFF6F6F6</color>
+    <color name="pager_sliding_tab_background">#FFF2F2F2</color>
     <color name="pager_sliding_tab_pressed">#6633B5E5</color>
 
     <color name="list_item_status_self_highlight">#16999999</color>

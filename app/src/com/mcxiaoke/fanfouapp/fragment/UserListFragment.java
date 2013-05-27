@@ -373,8 +373,7 @@ public abstract class UserListFragment extends AbstractListFragment
     public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
         getAdapter().swapCursor(newCursor);
         if (AppContext.DEBUG) {
-            Log.d(TAG, "onLoadFinished() adapter=" + mAdapter.getCount()
-                    + " class=" + this.getClass().getSimpleName());
+            Log.d(TAG, "onLoadFinished() adapter=" + mAdapter.getCount());
         }
         checkRefresh();
     }

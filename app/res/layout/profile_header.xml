@@ -3,7 +3,7 @@
                 android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/list_padding" android:background="@color/ui_background_color_secondary">
+                android:padding="@dimen/list_padding">
 
     <ImageView
             android:id="@+id/header_icon"
@@ -22,7 +22,7 @@
             android:layout_toRightOf="@id/header_icon"
             android:ellipsize="marquee"
             android:singleLine="true"
-            android:text="巫猫子" android:textStyle="bold"
+            android:text="巫猫子"
             android:textSize="@dimen/text_size_medium"/>
 
     <TextView
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:text="(正在关注你)"
             android:textColor="@color/text_color_secondary_light"
-            android:textSize="@dimen/text_size_tiny" android:visibility="gone"/>
+            android:textSize="@dimen/text_size_small" android:visibility="gone"/>
 
     <ImageView
             android:id="@+id/header_lock"
@@ -55,7 +55,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="@color/text_color_secondary_light"
-            android:textSize="@dimen/text_size_small"/>
+            android:textSize="@dimen/text_size_medium"/>
 
     <RelativeLayout android:orientation="horizontal" android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:layout_marginTop="@dimen/list_padding"

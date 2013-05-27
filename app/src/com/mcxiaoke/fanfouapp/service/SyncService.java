@@ -168,6 +168,10 @@ public final class SyncService extends Service implements Handler.Callback {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent == null) {
+            debug("onStartCommand() intent is null.");
+            return START_NOT_STICKY;
+        }
         int type = intent.getIntExtra("type", BaseModel.TYPE_NONE);
         debug("onStartCommand type=" + type);
         switch (type) {
@@ -234,7 +238,7 @@ public final class SyncService extends Service implements Handler.Callback {
                 break;
         }
 
-        return super.onStartCommand(intent, flags, startId);
+        return START_NOT_STICKY;
     }
 
     @Override

@@ -53,15 +53,18 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:padding">@dimen/status_text_padding</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/text_color_primary_light</item>
+        <item name="android:typeface">serif</item>
+        <item name="android:lineSpacingExtra">@dimen/status_text_line_spacing</item>
     </style>
 
     <style name="StatusMetaInfoStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_size_tiny</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:padding">@dimen/status_text_padding</item>
-        <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:typeface">serif</item>
+        <item name="android:textColor">@color/text_color_secondary_light</item>
     </style>
 
     <style name="EditText"></style>

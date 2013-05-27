@@ -196,8 +196,10 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 //        if (drawerOpen) {
 //            return true;
 //        }
-        super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.menu_refresh).setVisible(useActionBarRefreshButton);
+//        return super.onPrepareOptionsMenu(menu);
+        if (mRefreshMenuItem != null) {
+            mRefreshMenuItem.setVisible(useActionBarRefreshButton && (!mRefreshing));
+        }
         return true;
     }
 
@@ -428,7 +430,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     private void setHomeTitle(int page) {
         switch (page) {
             case 0:
-                setTitle("关注的消息");
+                setTitle("主页");
                 break;
             case 1:
                 setTitle("提到我的");

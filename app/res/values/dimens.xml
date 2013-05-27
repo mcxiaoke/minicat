@@ -60,4 +60,7 @@
 
     <dimen name="pager_sliding_tab_height">48dp</dimen>
 
+    <dimen name="status_text_line_spacing">5sp</dimen>
+    <dimen name="list_item_padding_status">10dp</dimen>
+
 </resources>

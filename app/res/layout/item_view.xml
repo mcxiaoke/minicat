@@ -3,7 +3,8 @@
        android:id="@+id/root"
        android:layout_width="fill_parent"
        android:layout_height="fill_parent"
-       android:orientation="horizontal">
+       android:orientation="horizontal" android:paddingTop="@dimen/list_item_padding_status"
+       android:paddingBottom="@dimen/list_item_padding_status">
 
     <ImageView
             android:id="@+id/image"
@@ -11,7 +12,7 @@
             android:layout_height="@dimen/head_height2"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:padding="@dimen/head_margin"
+            android:padding="@dimen/image_frame_padding"
             android:src="@drawable/ic_head"
             android:visibility="visible" android:background="@drawable/head_image_frame"/>
 
@@ -23,14 +24,24 @@
             android:layout_alignWithParentIfMissing="true"
             android:layout_toRightOf="@id/image"
             android:padding="4dp" android:textColor="@color/text_color_selectable_primary_light"
-            android:textSize="@dimen/text_size_medium"
-            android:textStyle="bold" android:singleLine="true"/>
+            android:textSize="@dimen/text_size_medium" android:singleLine="true" android:typeface="serif"
+            android:shadowDy="0.1" android:shadowRadius="0.1" android:shadowColor="@color/soft_black"/>
+
+
+    <TextView
+            android:id="@+id/meta_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/text_color_selectable_secondary_light"
+            android:textSize="@dimen/text_size_small" android:singleLine="true"/>
 
     <ViewStub
             android:id="@+id/stub"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@id/meta_b"
             android:layout_alignParentTop="true"
             android:layout="@layout/item_view_icons"/>
 
@@ -41,25 +52,15 @@
             android:layout_alignLeft="@id/title"
             android:layout_below="@id/title"
             android:padding="2dp" android:textColor="@color/text_color_selectable_primary_light"
-            android:textSize="@dimen/text_size_medium"/>
+            android:textSize="@dimen/text_size_medium" android:lineSpacingExtra="@dimen/status_text_line_spacing"
+            android:typeface="serif"/>
 
     <TextView
             android:id="@+id/meta_a"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/text"
-            android:layout_below="@id/text"
-            android:padding="4dp" android:textColor="@color/text_color_selectable_secondary_light"
-            android:textSize="@dimen/text_size_tiny" android:singleLine="true"/>
-
-    <TextView
-            android:id="@+id/meta_b"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/text"
-            android:padding="4dp"
-            android:textColor="@color/text_color_selectable_secondary_light"
-            android:textSize="@dimen/text_size_tiny" android:singleLine="true"/>
+            android:layout_below="@id/text" android:textColor="@color/text_color_selectable_secondary_light"
+            android:textSize="@dimen/text_size_small" android:singleLine="true" android:visibility="gone"/>
 
 </merge>

@@ -39,8 +39,8 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
 
     protected ActionBar mActionBar;
     protected DisplayMetrics mDisplayMetrics;
-    private boolean mRefreshing;
-    private MenuItem mRefreshMenuItem;
+    protected boolean mRefreshing;
+    protected MenuItem mRefreshMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +79,6 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         debug("onPrepareOptionsMenu() mRefreshing=" + mRefreshing);
-        if (mRefreshMenuItem != null) {
-            mRefreshMenuItem.setVisible(!mRefreshing);
-        }
         return super.onPrepareOptionsMenu(menu);
     }
 

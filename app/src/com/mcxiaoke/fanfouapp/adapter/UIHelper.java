@@ -42,12 +42,12 @@ public class UIHelper {
 
         StringBuilder metaB = new StringBuilder();
         metaB.append(getDateString(s.getTime()));
-        metaB.append(" 通过");
-        String source = s.getSource();
-        if (source.length() > 16) {
-            source = source.substring(0, 15);
-        }
-        metaB.append(source);
+//        metaB.append(" 通过");
+//        String source = s.getSource();
+//        if (source.length() > 16) {
+//            source = source.substring(0, 15);
+//        }
+//        metaB.append(source);
 
         StringBuilder metaA = new StringBuilder();
 //        if (s.isRetweeted()) {

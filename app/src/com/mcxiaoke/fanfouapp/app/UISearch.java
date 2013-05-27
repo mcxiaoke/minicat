@@ -48,6 +48,9 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
 
         mListView = (ListView) findViewById(android.R.id.list);
         mListView.setOnItemClickListener(this);
+        int dividerHeight=getResources().getDimensionPixelSize(R.dimen.list_divider_height);
+        mListView.setDivider(getResources().getDrawable(R.drawable.divider));
+        mListView.setDividerHeight(dividerHeight);
         mListView.setSelector(getResources().getDrawable(R.drawable.selector_list_light));
         mAdapter = new SearchAdapter(this, mHotwords);
         mListView.setAdapter(mAdapter);

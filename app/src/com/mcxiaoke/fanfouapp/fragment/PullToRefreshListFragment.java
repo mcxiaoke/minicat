@@ -113,7 +113,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
         mListView = mPullToRefreshView.getRefreshableView();
         mListView.setOnItemClickListener(this);
         mListView.setLongClickable(false);
-        UIHelper.setListViewCardUI(mListView);
+        UIHelper.setListView(mListView);
     }
 
     @Override
@@ -346,14 +346,13 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
         getAdapter().swapCursor(newCursor);
         if (AppContext.DEBUG) {
-            Log.d(TAG, "onLoadFinished() adapter=" + mAdapter.getCount()
-                    + " class=" + this.getClass().getSimpleName());
+            Log.d(TAG, "onLoadFinished() adapter=" + mAdapter.getCount());
         }
         checkRefresh();
     }
 
     protected void checkRefresh() {
-        boolean refreshOnStart= PreferenceHelper.getInstance(getActivity()).isRefreshOnStart();
+        boolean refreshOnStart = PreferenceHelper.getInstance(getActivity()).isRefreshOnStart();
         if (AppContext.DEBUG) {
             Log.d(TAG, "checkRefresh() mDataLoaded=" + mDataLoaded
                     + " refreshOnStart=" + refreshOnStart + " adapter.count=" + mAdapter.getCount());

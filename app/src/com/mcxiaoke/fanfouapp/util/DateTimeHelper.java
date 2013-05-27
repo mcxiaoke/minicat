@@ -63,15 +63,13 @@ public class DateTimeHelper {
         if (seconds < 3) {
             return "刚刚";
         } else if (seconds < MIN) {
-            return seconds + "秒钟前";
+            return seconds + "秒钟";
         } else if (seconds < HOUR) {
-            return seconds / MIN + "分钟前";
+            return seconds / MIN + "分钟";
         } else if (seconds < DAY) {
-            return seconds / HOUR + "小时前";
-        } else if (seconds < MONTH) {
-            return seconds / DAY + "天前";
+            return seconds / HOUR + "小时";
         } else if (seconds < YEAR) {
-            return seconds / DAY + "天前";
+            return seconds / DAY + "天";
         } else {
 //            return formatDate(time);
             return "很久以前";

@@ -77,7 +77,7 @@ public class UISearchResults extends UIBaseSupport implements
         mPullToRefreshView.setMode(Mode.BOTH);
         mPullToRefreshView.setOnRefreshListener(this);
         mListView = mPullToRefreshView.getRefreshableView();
-        UIHelper.setListViewCardUI(mListView);
+        UIHelper.setListView(mListView);
         mListView.setLongClickable(false);
         mListView.setOnItemClickListener(this);
         mListView.setAdapter(mStatusAdapter);

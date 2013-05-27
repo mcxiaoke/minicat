@@ -18,6 +18,7 @@
 
     <style name="AppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <item name="android:windowBackground">@null</item>
+        <item name="android:typeface">serif</item>
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
         <item name="android:actionBarItemBackground">@drawable/actionbar_item_selector</item>
     </style>

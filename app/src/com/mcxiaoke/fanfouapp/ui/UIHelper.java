@@ -28,22 +28,13 @@ public final class UIHelper {
      * @param listView
      */
 
-    public static void setListViewCardUI(ListView listView) {
+    public static void setListView(ListView listView) {
         Resources res = listView.getResources();
         int dividerHeight = res.getDimensionPixelSize(R.dimen.list_divider_height);
         listView.setSelector(res.getDrawable(R.drawable.selector_list_light));
         listView.setDivider(res
-                .getDrawable(R.drawable.list_divider));
+                .getDrawable(R.drawable.divider));
         listView.setDividerHeight(dividerHeight);
-        listView.setHeaderDividersEnabled(true);
-        listView.setFooterDividersEnabled(true);
-        listView.setCacheColorHint(0);
-        listView.setScrollBarStyle(ScrollView.SCROLLBARS_OUTSIDE_OVERLAY);
-    }
-
-    public static void setListView(ListView listView) {
-        Resources res = listView.getResources();
-        listView.setSelector(res.getDrawable(R.drawable.selector_list_light));
         listView.setHeaderDividersEnabled(true);
         listView.setFooterDividersEnabled(true);
         listView.setCacheColorHint(0);

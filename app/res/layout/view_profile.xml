@@ -2,22 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent" android:background="@color/ui_background_color_primary"
-              android:showDividers="middle" android:divider="?android:dividerHorizontal">
+              android:layout_height="match_parent" android:background="@color/ui_background_color_primary">
 
     <include layout="@layout/profile_header"/>
 
 
-
-    <!--    <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/divider_color_light"/>-->
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/divider"/>
 
 
     <LinearLayout android:orientation="horizontal" android:layout_width="match_parent"
-                  android:layout_height="wrap_content" android:showDividers="middle"
-                  android:divider="?android:dividerVertical">
+                  android:layout_height="wrap_content">
 
         <LinearLayout style="@style/ProfileItemStyle" android:id="@+id/item1">
 
@@ -30,10 +27,10 @@
                       style="@style/ProfileButtonTextMetaStyle"/>
         </LinearLayout>
 
-        <!--        <View
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/divider_color_light"/>-->
+        <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/divider"/>
 
         <LinearLayout style="@style/ProfileItemStyle" android:id="@+id/item2">
 
@@ -44,10 +41,10 @@
                       style="@style/ProfileButtonTextMetaStyle"/>
         </LinearLayout>
 
-        <!--        <View
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/divider_color_light"/>-->
+        <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/divider"/>
 
         <LinearLayout style="@style/ProfileItemStyle" android:id="@+id/item3">
 
@@ -60,10 +57,9 @@
         </LinearLayout>
 
     </LinearLayout>
-    <!--
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp" android:background="@color/divider_color_light"/>-->
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp" android:background="@drawable/divider"/>
 
     <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button1">
 
@@ -77,10 +73,10 @@
     </RelativeLayout>
 
 
-    <!--    <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/divider_color_light"/>-->
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/divider"/>
 
     <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button2">
 
@@ -91,10 +87,10 @@
                   style="@style/ProfileButtonTextStyle"/>
     </RelativeLayout>
 
-    <!--    <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/divider_color_light"/>-->
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/divider"/>
 
 
     <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button3">
@@ -107,10 +103,10 @@
                   style="@style/ProfileButtonTextStyle"/>
     </RelativeLayout>
 
-    <!--    <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/divider_color_light"/>-->
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/divider"/>
 
 
     <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button4">
@@ -122,10 +118,10 @@
                   style="@style/ProfileButtonTextStyle"/>
     </RelativeLayout>
 
-    <!--    <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/divider_color_light"/>-->
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/divider"/>
 
 
     <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button5">
@@ -137,9 +133,9 @@
                   style="@style/ProfileButtonTextStyle"/>
     </RelativeLayout>
 
-    <!--    <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp" android:background="@color/divider_color_light"/>-->
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp" android:background="@drawable/divider"/>
 
     <TextView
             android:id="@+id/info"

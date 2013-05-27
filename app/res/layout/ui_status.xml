@@ -29,6 +29,10 @@
                         android:layout_height="wrap_content"
                         layout="@layout/status_item_header"/>
 
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp" android:background="@drawable/divider"/>
+
                 <include
                         android:id="@+id/content"
                         android:layout_width="match_parent"
