@@ -59,12 +59,13 @@
     <color name="pager_sliding_tab_background">#FFF2F2F2</color>
     <color name="pager_sliding_tab_pressed">#6633B5E5</color>
 
-    <color name="list_item_status_self_highlight">#16999999</color>
+    <color name="list_item_status_self_highlight">#2033b5e5</color>
+    <color name="list_item_status_mention_highlight">#20b2cb39</color>
 
     <!-- Theme colors -->
     <color name="holo_primary">#ff33b5e5</color>
     <color name="holo_primary_disabled">#8033b5e5</color>
-    <color name="holo_primary_transparent">#1633b5e5</color>
+    <color name="holo_primary_transparent">#2033b5e5</color>
     <color name="holo_secondary">#ff28a5c0</color>
     <!-- below from google play app -->
     <color name="apps_primary">#ffb2cb39</color>

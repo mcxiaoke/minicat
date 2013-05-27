@@ -32,7 +32,6 @@ public class UIAbout extends UIBaseSupport {
         mTextView = (TextView) findViewById(R.id.about_text);
 
         StringBuilder builder = new StringBuilder();
-        builder.append("Introduction\n    MoguFan is a simple Holo style fanfou app, created by mcxiaoke.\n\n\n");
         builder.append(loadLicenseText());
         mTextView.setText(builder);
 

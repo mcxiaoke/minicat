@@ -79,6 +79,8 @@ public class ItemView extends RelativeLayout {
         mIconRetweet = (ImageView) findViewById(R.id.ic_retweet);
         mIconLock = (ImageView) findViewById(R.id.ic_lock);
 
+        mMetaTextView.setVisibility(View.GONE);
+
         final Resources res = getResources();
         mViewMode = ViewMode.StatusMode;
         checkViewMode();

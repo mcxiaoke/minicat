@@ -49,6 +49,7 @@ public class UIStatus extends UIBaseSupport {
 
     private ImageView headerImage;
     private TextView headerName;
+    private TextView headerId;
 
     private TextView contentText;
     private ImageView contentPhoto;
@@ -136,7 +137,8 @@ public class UIStatus extends UIBaseSupport {
 
         vHeader = findViewById(R.id.header);
         headerImage = (ImageView) findViewById(R.id.header_image);
-        headerName = (TextView) findViewById(R.id.header_name);
+        headerName = (TextView) findViewById(R.id.user_name);
+        headerId = (TextView) findViewById(R.id.user_id);
         TextPaint tp = headerName.getPaint();
         tp.setFakeBoldText(true);
 
@@ -220,6 +222,7 @@ public class UIStatus extends UIBaseSupport {
 
     private void updateHeader() {
         headerName.setText(status.getUserScreenName());
+        headerId.setText("@" + status.getUserId());
         String headerImageUrl = status.getUserProfileImageUrl();
         ImageLoader.getInstance().displayImage(headerImageUrl, headerImage);
 

@@ -17,8 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.adapter.HomePagesAdapter;
 import com.mcxiaoke.fanfouapp.controller.UIController;
@@ -29,7 +27,7 @@ import com.mcxiaoke.fanfouapp.menu.MenuCallback;
 import com.mcxiaoke.fanfouapp.menu.MenuFragment;
 import com.mcxiaoke.fanfouapp.menu.MenuItemResource;
 import com.mcxiaoke.fanfouapp.preference.PreferenceHelper;
-import com.mcxiaoke.fanfouapp.ui.widget.PagerSlidingTabStrip;
+import com.viewpagerindicator.PageIndicator;
 
 
 /**
@@ -44,7 +42,8 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     private Fragment mMenuFragment;
 
     private ViewPager mViewPager;
-    private PagerSlidingTabStrip mPagerIndicator;
+    private PageIndicator mPagerIndicator;
+    //    private PagerSlidingTabStrip mPagerIndicator;
     private PagerTabStrip mPagerTabStrip;
     private HomePagesAdapter mPagesAdapter;
 
@@ -120,6 +119,9 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 
         mPagesAdapter = new HomePagesAdapter(getFragmentManager());
         mViewPager.setAdapter(mPagesAdapter);
+        mViewPager.setOnPageChangeListener(this);
+//        mPagerIndicator = (PageIndicator) findViewById(R.id.indicator);
+//        mPagerIndicator.setViewPager(mViewPager);
 
 //        mPagerTabStrip = (PagerTabStrip) findViewById(R.id.viewpager_strip);
 //        mPagerTabStrip.setBackgroundColor(getResources().getColor(R.color.ui_background_color_secondary));
@@ -128,9 +130,9 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 //                R.color.theme_blue_light));
 //        mPagerTabStrip.setTextColor(Color.BLACK);
 
-        mPagerIndicator = (PagerSlidingTabStrip) findViewById(R.id.indicator);
-        mPagerIndicator.setViewPager(mViewPager);
-        mPagerIndicator.setOnPageChangeListener(this);
+//        mPagerIndicator = (PagerSlidingTabStrip) findViewById(R.id.indicator);
+//        mPagerIndicator.setViewPager(mViewPager);
+//        mPagerIndicator.setOnPageChangeListener(this);
 
         setHomeTitle(mCurrentPage);
         mCurrentFragment = mPagesAdapter.getItem(mCurrentPage);
@@ -343,49 +345,6 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         super.onMenuRefreshClick();
     }
 
-    boolean mIndicatorShowing;
-
-    private void showIndicator(int state) {
-        if (state == ViewPager.SCROLL_STATE_IDLE) {
-            if (mIndicatorShowing) {
-                Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_out);
-                animation.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        mPagerIndicator.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
-                });
-                mPagerIndicator.startAnimation(animation);
-            }
-        } else if (state == ViewPager.SCROLL_STATE_DRAGGING) {
-            if (!mIndicatorShowing) {
-                Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-                animation.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        mPagerIndicator.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
-                });
-                mPagerIndicator.startAnimation(animation);
-            }
-        }
-    }
 
     @Override
     public void onPageScrollStateChanged(int state) {

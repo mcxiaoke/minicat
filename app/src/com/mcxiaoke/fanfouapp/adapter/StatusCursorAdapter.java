@@ -38,7 +38,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 
     public void initialize(Context context, boolean colored) {
         this.colored = colored;
-        mMentionedBgColor = mContext.getResources().getColor(R.color.holo_primary_transparent);
+        mMentionedBgColor = mContext.getResources().getColor(R.color.list_item_status_mention_highlight);
         mSelfBgColor = mContext.getResources().getColor(R.color.list_item_status_self_highlight);
     }
 

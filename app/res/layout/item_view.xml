@@ -13,7 +13,7 @@
 
 
     <TextView
-            android:id="@+id/user_name" android:textStyle="bold" android:text="UserID"
+            android:id="@+id/user_name" android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:gravity="center_vertical"
             android:layout_alignParentTop="true"
@@ -24,8 +24,7 @@
               android:textColor="@color/text_color_selectable_secondary_light"
               android:gravity="center_vertical" android:layout_width="wrap_content"
               android:layout_height="wrap_content" android:layout_marginLeft="2.0dip"
-              android:singleLine="true" android:layout_toRightOf="@id/user_name" android:layout_toLeftOf="@+id/stub"
-              android:text="\@ScreenName"/>
+              android:singleLine="true" android:layout_toRightOf="@id/user_name" android:layout_toLeftOf="@+id/stub"/>
 
     <LinearLayout android:id="@+id/stub" android:layout_alignTop="@id/user_id" android:layout_alignBottom="@id/user_id"
                   android:layout_alignParentRight="true" android:layout_width="wrap_content"
