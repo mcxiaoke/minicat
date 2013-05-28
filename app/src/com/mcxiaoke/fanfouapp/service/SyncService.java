@@ -755,10 +755,12 @@ public final class SyncService extends Service implements Handler.Callback {
                 showFailedNotification(cmd, "消息未发送，已保存到草稿箱",
                         getString(R.string.msg_server_error));
             } else {
-                showFailedNotification(cmd, "消息未发送，已保存到草稿箱",
-                        getString(R.string.msg_connection_error));
+                showFailedNotification(cmd, "消息未发送，已保存到草稿箱", e.getMessage());
             }
 
+        } catch (Exception e) {
+            showFailedNotification(cmd, "消息未发送，已保存到草稿箱",
+                    getString(R.string.msg_unkonow_error));
         } finally {
             mNotificationManager.cancel(NOTIFICATION_STATUS_UPDATE_ONGOING);
         }
@@ -1220,7 +1222,7 @@ public final class SyncService extends Service implements Handler.Callback {
         builder.setContentText(message);
         builder.setContentIntent(contentIntent);
         Notification notification = builder.build();
-        notification.flags |= Notification.FLAG_ONGOING_EVENT;
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
         mNotificationManager.notify(id, notification);
         return id;
     }
@@ -1240,4 +1242,9 @@ public final class SyncService extends Service implements Handler.Callback {
         sendOrderedBroadcast(intent, null);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mNotificationManager.cancelAll();
+    }
 }

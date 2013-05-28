@@ -11,6 +11,7 @@
     <string name="loading">载入中...</string>
 
     <!-- error message -->
+    <string name="msg_unkonow_error">请求失败，请稍后重试.</string>
     <string name="msg_connection_error">现在无法连接服务器，请稍后重试</string>
     <string name="msg_server_error">服务器异常，请稍后重试</string>
 

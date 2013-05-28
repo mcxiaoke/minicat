@@ -11,6 +11,7 @@
     <string name="loading">Loading...</string>
 
     <!-- error message -->
+    <string name="msg_unkonow_error">unkown error, please try again later.</string>
     <string name="msg_connection_error">connection error, please try again later.</string>
     <string name="msg_server_error">api server error, please try again later.</string>
 
