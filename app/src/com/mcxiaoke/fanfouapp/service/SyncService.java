@@ -878,7 +878,7 @@ public final class SyncService extends Service implements Handler.Callback {
         intent.putExtra("type", DirectMessageModel.TYPE_CONVERSATION);
         intent.putExtra("messenger", new Messenger(handler));
         intent.putExtra("id", userId);
-        intent.putExtra("data", paging);
+        intent.putExtra("paging", paging);
         context.startService(intent);
     }
 
@@ -899,7 +899,7 @@ public final class SyncService extends Service implements Handler.Callback {
         Intent intent = new Intent(context, SyncService.class);
         intent.putExtra("type", type);
         intent.putExtra("messenger", new Messenger(handler));
-        intent.putExtra("data", paging);
+        intent.putExtra("paging", paging);
         context.startService(intent);
     }
 
@@ -909,7 +909,7 @@ public final class SyncService extends Service implements Handler.Callback {
         intent.putExtra("type", DirectMessageModel.TYPE_CONVERSATION);
         intent.putExtra("id", userId);
         intent.putExtra("messenger", messenger);
-        intent.putExtra("data", paging);
+        intent.putExtra("paging", paging);
         context.startService(intent);
     }
 
@@ -1061,7 +1061,7 @@ public final class SyncService extends Service implements Handler.Callback {
         intent.putExtra("type", type);
         intent.putExtra("id", userId);
         intent.putExtra("messenger", new Messenger(handler));
-        intent.putExtra("data", paging);
+        intent.putExtra("paging", paging);
         if (AppContext.DEBUG) {
             Log.d(TAG, "getTimeline() type=" + type + " paging=" + paging
                     + " userId=" + userId);
@@ -1083,7 +1083,7 @@ public final class SyncService extends Service implements Handler.Callback {
         Intent intent = new Intent(context, SyncService.class);
         intent.putExtra("type", type);
         intent.putExtra("messenger", new Messenger(handler));
-        intent.putExtra("data", paging);
+        intent.putExtra("paging", paging);
         intent.putExtra("id", userId);
         context.startService(intent);
     }
