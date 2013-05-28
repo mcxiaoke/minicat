@@ -7,12 +7,10 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.Window;
 import com.mcxiaoke.fanfouapp.R;
-import com.mcxiaoke.fanfouapp.ui.widget.HorizontalTextGroupView;
 
 public class UIDebugMode extends Activity {
 
     private ViewGroup mContainer;
-    private HorizontalTextGroupView mTextGroupView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

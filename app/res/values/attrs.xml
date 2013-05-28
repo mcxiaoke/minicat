@@ -16,4 +16,9 @@
         <attr name="textAllCaps" format="boolean"/>
     </declare-styleable>
 
+    <declare-styleable name="StaggeredGridView">
+        <attr name="drawSelectorOnTop" format="boolean"/>
+        <attr name="numColumns" format="integer"/>
+    </declare-styleable>
+
 </resources>

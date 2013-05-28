@@ -13,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.app.AppContext;
 import com.mcxiaoke.fanfouapp.controller.CacheController;
@@ -213,8 +212,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
 
     private void onItemPhotosClick() {
         if (hasPermission()) {
-            Toast.makeText(getActivity(), "暂未实现", Toast.LENGTH_SHORT).show();
-            //TODO show photos ui
+            UIController.showAlbum(getActivity(), user);
         }
     }
 
@@ -261,6 +259,8 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
         if (user == null) {
             return;
         }
+
+        this.userId = user.getId();
 
         if (AppContext.DEBUG) {
             Log.d(TAG, "updateUI() userid=" + userId);

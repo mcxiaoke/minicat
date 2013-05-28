@@ -19,6 +19,7 @@ import com.mcxiaoke.fanfouapp.app.UIHome;
 import com.mcxiaoke.fanfouapp.app.UILogin;
 import com.mcxiaoke.fanfouapp.app.UIOptions;
 import com.mcxiaoke.fanfouapp.app.UIPhoto;
+import com.mcxiaoke.fanfouapp.app.UIPhotos;
 import com.mcxiaoke.fanfouapp.app.UIProfile;
 import com.mcxiaoke.fanfouapp.app.UIRecords;
 import com.mcxiaoke.fanfouapp.app.UISearch;
@@ -304,6 +305,13 @@ public class UIController {
         intent.putExtra("url", url);
         context.startActivity(intent);
         context.overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_enter);
+    }
+
+    public static void showAlbum(Activity context, UserModel user) {
+        Intent intent = new Intent(context, UIPhotos.class);
+        intent.putExtra("user", user);
+//        context.startActivity(intent);
+        startUIByAnimation(context, intent);
     }
 
 

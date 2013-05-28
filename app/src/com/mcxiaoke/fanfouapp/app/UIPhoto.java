@@ -44,7 +44,7 @@ public class UIPhoto extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         getActionBar().setBackgroundDrawable(new ColorDrawable(0x66333333));
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle("查看图片");
+        getActionBar().setTitle("查看照片");
         initialize();
         setLayout();
     }
@@ -183,7 +183,7 @@ public class UIPhoto extends Activity implements OnClickListener {
 
     private void doSave() {
         File file = ImageLoader.getInstance().getDiscCache().get(url);
-        File dest = new File(IOHelper.getPictureDir(this), file.getName()+".jpg");
+        File dest = new File(IOHelper.getPictureDir(this), file.getName() + ".jpg");
         if (dest.exists() || IOHelper.copyFile(file, dest)) {
             Utils.notify(this, "照片已保存到 " + dest.getAbsolutePath());
         }
