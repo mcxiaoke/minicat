@@ -9,15 +9,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.Parcelable;
-import android.os.RemoteException;
+import android.os.*;
 import android.util.Log;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.api.Api;
@@ -25,21 +17,11 @@ import com.mcxiaoke.fanfouapp.api.ApiException;
 import com.mcxiaoke.fanfouapp.api.Paging;
 import com.mcxiaoke.fanfouapp.app.AppContext;
 import com.mcxiaoke.fanfouapp.app.UIRecords;
-import com.mcxiaoke.fanfouapp.app.UIWrite;
 import com.mcxiaoke.fanfouapp.controller.CacheController;
 import com.mcxiaoke.fanfouapp.controller.DataController;
-import com.mcxiaoke.fanfouapp.dao.model.BaseModel;
-import com.mcxiaoke.fanfouapp.dao.model.DirectMessageModel;
-import com.mcxiaoke.fanfouapp.dao.model.IBaseColumns;
-import com.mcxiaoke.fanfouapp.dao.model.RecordModel;
-import com.mcxiaoke.fanfouapp.dao.model.StatusColumns;
-import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
-import com.mcxiaoke.fanfouapp.dao.model.UserColumns;
-import com.mcxiaoke.fanfouapp.dao.model.UserModel;
-import com.mcxiaoke.fanfouapp.util.Assert;
-import com.mcxiaoke.fanfouapp.util.ImageHelper;
-import com.mcxiaoke.fanfouapp.util.LogUtil;
-import com.mcxiaoke.fanfouapp.util.NetworkHelper;
+import com.mcxiaoke.fanfouapp.dao.model.*;
+import com.mcxiaoke.fanfouapp.dao.model.StatusUpdateInfo;
+import com.mcxiaoke.fanfouapp.util.*;
 
 import java.io.File;
 import java.util.List;
@@ -111,28 +93,6 @@ public final class SyncService extends Service implements Handler.Callback {
             sb.append(", messenger=").append(messenger);
             sb.append(", type=").append(type);
             sb.append(", paging=").append(paging);
-            sb.append('}');
-            return sb.toString();
-        }
-    }
-
-    static class UpdateCommand extends Commmand {
-        public String text;
-        public String location;
-        public String replyId;
-        public String repostId;
-        public int updateType;
-        public File photo;
-
-        @Override
-        public String toString() {
-            final StringBuilder sb = new StringBuilder("UpdateCommand{");
-            sb.append("location='").append(location).append('\'');
-            sb.append(", text='").append(text).append('\'');
-            sb.append(", replyId='").append(replyId).append('\'');
-            sb.append(", repostId='").append(repostId).append('\'');
-            sb.append(", updateType=").append(updateType);
-            sb.append(", photo=").append(photo);
             sb.append('}');
             return sb.toString();
         }
@@ -315,17 +275,11 @@ public final class SyncService extends Service implements Handler.Callback {
         int type = intent.getIntExtra("type", BaseModel.TYPE_NONE);
         switch (type) {
             case STATUS_UPDATE: {
-                UpdateCommand cmd = new UpdateCommand();
-                cmd.messenger = intent.getParcelableExtra("messenger");
-                cmd.type = type;
-                cmd.updateType = intent.getIntExtra("contentType", UIWrite.TYPE_NORMAL);
-                cmd.text = intent.getStringExtra("text");
-                cmd.photo = (File) intent.getSerializableExtra("data");
-                cmd.replyId = intent.getStringExtra("id");
-                cmd.repostId = intent.getStringExtra("id");
-                cmd.location = intent.getStringExtra("location");
-                debug("handlePostDataCommands cmd=" + cmd);
-                statusUpdate(cmd);
+                StatusUpdateInfo info = intent.getParcelableExtra(StatusUpdateInfo.TAG);
+                if (info != null) {
+                    statusUpdate(info);
+                    debug("handlePostDataCommands info=" + info);
+                }
             }
             break;
         }
@@ -697,49 +651,44 @@ public final class SyncService extends Service implements Handler.Callback {
         context.startService(intent);
     }
 
-    private void statusUpdate(final UpdateCommand cmd) {
+    private void statusUpdate(final StatusUpdateInfo info) {
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                doStatusUpdate(cmd);
+                doStatusUpdate(info);
             }
         };
         mExecutor.submit(runnable);
     }
 
 
-    private boolean doStatusUpdate(final UpdateCommand cmd) {
+    private boolean doStatusUpdate(final StatusUpdateInfo info) {
         showSendingNotification();
         boolean res = false;
-        File file = cmd.photo;
-        String text = cmd.text;
-        int updateType = cmd.updateType;
-        String location = cmd.location;
-        String replyId = cmd.replyId;
-        String repostId = cmd.repostId;
 
-        debug("doStatusUpdate() cmd=" + cmd);
+        debug("doStatusUpdate() info=" + info);
         try {
             StatusModel result = null;
-            if (file == null || !file.exists()) {
-                if (updateType == UIWrite.TYPE_REPLY) {
-                    result = mApi.updateStatus(text, replyId, null, location);
+            if (StringHelper.isEmpty(info.fileName) || new File(info.fileName).length() == 0) {
+                if (info.type == StatusUpdateInfo.TYPE_REPLY) {
+                    result = mApi.updateStatus(info.text, info.reply, null, info.location);
                 } else {
-                    result = mApi.updateStatus(text, null, repostId, location);
+                    result = mApi.updateStatus(info.text, null, info.repost, info.location);
                 }
             } else {
+                File file = new File(info.fileName);
                 int quality = NetworkHelper.isWifi(this) ? ImageHelper.IMAGE_QUALITY_HIGH : ImageHelper.IMAGE_QUALITY_MEDIUM;
 
                 File photo = ImageHelper.prepareUploadFile(this, file,
                         quality);
                 if (photo != null && photo.length() > 0) {
-                    if (AppContext.DEBUG)
-                        debug("photo file=" + file.getName() + " size="
+                    if (DEBUG) {
+                        debug("doStatusUpdate() photo file=" + file.getName() + " size="
                                 + photo.length() / 1024 + " quality=" + quality);
-                    result = mApi.uploadPhoto(photo, text, location);
+                    }
+                    result = mApi.uploadPhoto(photo, info.text, info.location);
                     photo.delete();
                 }
-
             }
             mNotificationManager.cancel(NOTIFICATION_STATUS_UPDATE_ONGOING);
             if (result != null) {
@@ -748,18 +697,19 @@ public final class SyncService extends Service implements Handler.Callback {
             }
         } catch (ApiException e) {
             if (DEBUG) {
-                Log.e(TAG, e.toString());
+                debug(e.toString());
                 e.printStackTrace();
             }
             if (e.statusCode >= 500) {
-                showFailedNotification(cmd, "消息未发送，已保存到草稿箱",
+                showFailedNotification(info, "消息未发送，已保存到草稿箱",
                         getString(R.string.msg_server_error));
             } else {
-                showFailedNotification(cmd, "消息未发送，已保存到草稿箱", e.getMessage());
+                showFailedNotification(info, "消息未发送，已保存到草稿箱", e.getMessage());
             }
 
         } catch (Exception e) {
-            showFailedNotification(cmd, "消息未发送，已保存到草稿箱",
+            debug(e.toString());
+            showFailedNotification(info, "消息未发送，已保存到草稿箱",
                     getString(R.string.msg_unkonow_error));
         } finally {
             mNotificationManager.cancel(NOTIFICATION_STATUS_UPDATE_ONGOING);
@@ -1208,8 +1158,8 @@ public final class SyncService extends Service implements Handler.Callback {
         return id;
     }
 
-    private int showFailedNotification(UpdateCommand cmd, String title, String message) {
-        doSaveRecords(cmd);
+    private int showFailedNotification(StatusUpdateInfo info, String title, String message) {
+        doSaveRecords(info);
         int id = NOTIFICATION_STATUS_UPDATE_FAILED;
         Intent intent = new Intent(this, UIRecords.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
@@ -1227,12 +1177,8 @@ public final class SyncService extends Service implements Handler.Callback {
         return id;
     }
 
-    private void doSaveRecords(UpdateCommand cmd) {
-        RecordModel rm = new RecordModel();
-        rm.setText(cmd.text);
-        rm.setFile(cmd.photo == null ? "" : cmd.photo.getPath());
-        rm.setReply(cmd.replyId);
-        Uri resultUri = DataController.store(this, rm);
+    private void doSaveRecords(StatusUpdateInfo info) {
+        Uri resultUri = DataController.store(this, info);
     }
 
     private void sendSuccessBroadcast(StatusModel status) {

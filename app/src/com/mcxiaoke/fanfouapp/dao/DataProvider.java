@@ -98,8 +98,8 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
 				DirectMessageColumns.TABLE_NAME + "/id/*", MESSAGE_ID);
 
 		// record
-		sUriMatcher.addURI(AUTHORITY, RecordColumns.TABLE_NAME, RECORDS);
-		sUriMatcher.addURI(AUTHORITY, RecordColumns.TABLE_NAME + "/#",
+		sUriMatcher.addURI(AUTHORITY, StatusUpdateInfoColumns.TABLE_NAME, RECORDS);
+		sUriMatcher.addURI(AUTHORITY, StatusUpdateInfoColumns.TABLE_NAME + "/#",
 				RECORD_ID);
 
 	}
@@ -126,9 +126,9 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
 		case MESSAGE_ID:
 			return DirectMessageColumns.CONTENT_ITEM_TYPE;
 		case RECORDS:
-			return RecordColumns.CONTENT_TYPE;
+			return StatusUpdateInfoColumns.CONTENT_TYPE;
 		case RECORD_ID:
-			return RecordColumns.CONTENT_ITEM_TYPE;
+			return StatusUpdateInfoColumns.CONTENT_ITEM_TYPE;
 		default:
 			throw new IllegalArgumentException("getType() Unknown URI " + uri);
 		}
@@ -289,7 +289,7 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
 
 	private int deleteRecordById(Uri uri) {
 		String id = uri.getPathSegments().get(1);
-		String table = RecordColumns.TABLE_NAME;
+		String table = StatusUpdateInfoColumns.TABLE_NAME;
 		String where = BaseColumns._ID + " = " + id;
 		return dbHelper.getWritableDatabase().delete(table, where, null);
 	}

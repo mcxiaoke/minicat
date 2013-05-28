@@ -46,10 +46,10 @@ public class RecordModel implements Model{
 		RecordModel rm=new RecordModel();
 		
 		rm.id=DataController.parseInt(cursor, BaseColumns._ID);
-		rm.type=DataController.parseInt(cursor, RecordColumns.TYPE);
-		rm.text=DataController.parseString(cursor, RecordColumns.TEXT);
-		rm.reply=DataController.parseString(cursor, RecordColumns.REPLY);
-		rm.file=DataController.parseString(cursor, RecordColumns.FILE);
+		rm.type=DataController.parseInt(cursor, StatusUpdateInfoColumns.TYPE);
+		rm.text=DataController.parseString(cursor, StatusUpdateInfoColumns.TEXT);
+		rm.reply=DataController.parseString(cursor, StatusUpdateInfoColumns.REPLY);
+		rm.file=DataController.parseString(cursor, StatusUpdateInfoColumns.FILE);
 		
 		return rm;
 		
@@ -60,10 +60,10 @@ public class RecordModel implements Model{
 	@Override
 	public ContentValues values() {
 		ContentValues cv=new ContentValues();
-		cv.put(RecordColumns.TYPE, type);
-		cv.put(RecordColumns.TEXT, text);
-		cv.put(RecordColumns.REPLY, reply);
-		cv.put(RecordColumns.FILE, file);
+		cv.put(StatusUpdateInfoColumns.TYPE, type);
+		cv.put(StatusUpdateInfoColumns.TEXT, text);
+		cv.put(StatusUpdateInfoColumns.REPLY, reply);
+		cv.put(StatusUpdateInfoColumns.FILE, file);
 		return cv;
 	}
 
@@ -138,12 +138,12 @@ public class RecordModel implements Model{
 	@Override
 	public Uri getContentUri() {
 		// TODO Auto-generated method stub
-		return RecordColumns.CONTENT_URI;
+		return StatusUpdateInfoColumns.CONTENT_URI;
 	}
 
 	@Override
 	public String getTable() {
-		return RecordColumns.TABLE_NAME;
+		return StatusUpdateInfoColumns.TABLE_NAME;
 	}
 
 }

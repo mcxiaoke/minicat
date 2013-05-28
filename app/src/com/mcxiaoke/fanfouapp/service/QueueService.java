@@ -8,7 +8,7 @@ import com.mcxiaoke.fanfouapp.api.Api;
 import com.mcxiaoke.fanfouapp.api.ApiException;
 import com.mcxiaoke.fanfouapp.app.AppContext;
 import com.mcxiaoke.fanfouapp.controller.DataController;
-import com.mcxiaoke.fanfouapp.dao.model.RecordColumns;
+import com.mcxiaoke.fanfouapp.dao.model.StatusUpdateInfoColumns;
 import com.mcxiaoke.fanfouapp.dao.model.RecordModel;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 import com.mcxiaoke.fanfouapp.util.ImageHelper;
@@ -100,7 +100,7 @@ public class QueueService extends BaseIntentService {
 	private void sendQueue() {
 		BlockingQueue<RecordModel> queue = new LinkedBlockingQueue<RecordModel>();
 		boolean running = true;
-		Cursor cursor = getContentResolver().query(RecordColumns.CONTENT_URI,
+		Cursor cursor = getContentResolver().query(StatusUpdateInfoColumns.CONTENT_URI,
 				null, null, null, null);
 		if (cursor != null && cursor.moveToFirst()) {
 			while (!cursor.isAfterLast()) {

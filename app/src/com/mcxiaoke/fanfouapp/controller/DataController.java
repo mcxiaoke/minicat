@@ -66,7 +66,7 @@ public class DataController {
 		cr.delete(StatusColumns.CONTENT_URI, null, null);
 		cr.delete(UserColumns.CONTENT_URI, null, null);
 		cr.delete(DirectMessageColumns.CONTENT_URI, null, null);
-		cr.delete(RecordColumns.CONTENT_URI, null, null);
+		cr.delete(StatusUpdateInfoColumns.CONTENT_URI, null, null);
 	}
 
 	public static void clear(Context context, Uri uri) {
@@ -189,7 +189,7 @@ public class DataController {
 	}
 
 	public static int deleteRecord(Context context, long id) {
-		Uri uri = ContentUris.withAppendedId(RecordColumns.CONTENT_URI, id);
+		Uri uri = ContentUris.withAppendedId(StatusUpdateInfoColumns.CONTENT_URI, id);
 		return context.getContentResolver().delete(uri, null, null);
 	}
 

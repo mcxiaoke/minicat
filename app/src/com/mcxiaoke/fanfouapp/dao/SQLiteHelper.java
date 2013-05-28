@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.mcxiaoke.fanfouapp.dao.model.DirectMessageColumns;
-import com.mcxiaoke.fanfouapp.dao.model.RecordColumns;
+import com.mcxiaoke.fanfouapp.dao.model.StatusUpdateInfoColumns;
 import com.mcxiaoke.fanfouapp.dao.model.StatusColumns;
 import com.mcxiaoke.fanfouapp.dao.model.UserColumns;
 
@@ -35,7 +35,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		db.execSQL(StatusColumns.CREATE_TABLE);
 		db.execSQL(UserColumns.CREATE_TABLE);
 		db.execSQL(DirectMessageColumns.CREATE_TABLE);
-		db.execSQL(RecordColumns.CREATE_TABLE);
+		db.execSQL(StatusUpdateInfoColumns.CREATE_TABLE);
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + StatusColumns.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + UserColumns.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + DirectMessageColumns.TABLE_NAME);
-		db.execSQL("DROP TABLE IF EXISTS " + RecordColumns.TABLE_NAME);
+		db.execSQL("DROP TABLE IF EXISTS " + StatusUpdateInfoColumns.TABLE_NAME);
 		onCreate(db);
 
 	}

@@ -30,6 +30,7 @@ import com.mcxiaoke.fanfouapp.app.UIUserList;
 import com.mcxiaoke.fanfouapp.app.UIWrite;
 import com.mcxiaoke.fanfouapp.dao.model.DirectMessageModel;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
+import com.mcxiaoke.fanfouapp.dao.model.StatusUpdateInfo;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
 import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.util.StatusHelper;
@@ -208,7 +209,7 @@ public class UIController {
                 .append(status.getSimpleText());
         intent.putExtra("text", builder.toString());
         intent.putExtra("id", status.getId());
-        intent.putExtra("type", UIWrite.TYPE_REPOST);
+        intent.putExtra("type", StatusUpdateInfo.TYPE_REPOST);
         startUIByAnimation(context, intent);
     }
 
@@ -238,7 +239,7 @@ public class UIController {
             Intent intent = new Intent(context, UIWrite.class);
             intent.putExtra("id", status.getId());
             intent.putExtra("text", sb.toString());
-            intent.putExtra("type", UIWrite.TYPE_REPLY);
+            intent.putExtra("type", StatusUpdateInfo.TYPE_REPLY);
             startUIByAnimation(context, intent);
         } else {
             showWrite(context);

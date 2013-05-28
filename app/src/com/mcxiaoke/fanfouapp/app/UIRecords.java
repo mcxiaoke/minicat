@@ -15,7 +15,7 @@ import android.widget.ListView;
 import com.mcxiaoke.fanfouapp.adapter.RecordCursorAdaper;
 import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.controller.SimpleDialogListener;
-import com.mcxiaoke.fanfouapp.dao.model.RecordColumns;
+import com.mcxiaoke.fanfouapp.dao.model.StatusUpdateInfoColumns;
 import com.mcxiaoke.fanfouapp.dao.model.RecordModel;
 import com.mcxiaoke.fanfouapp.dialog.ConfirmDialog;
 import com.mcxiaoke.fanfouapp.service.QueueService;
@@ -82,7 +82,7 @@ public class UIRecords extends UIBaseSupport implements OnItemClickListener {
     }
 
     private void setListView() {
-        mCursor = managedQuery(RecordColumns.CONTENT_URI, null, null, null,
+        mCursor = managedQuery(StatusUpdateInfoColumns.CONTENT_URI, null, null, null,
                 null);
         mAdapter = new RecordCursorAdaper(this, mCursor);
         mListView = (ListView) findViewById(android.R.id.list);
@@ -92,7 +92,7 @@ public class UIRecords extends UIBaseSupport implements OnItemClickListener {
     }
 
     private void onMenuClearClick() {
-        DataController.clear(mContext, RecordColumns.CONTENT_URI);
+        DataController.clear(mContext, StatusUpdateInfoColumns.CONTENT_URI);
         // mCursor.requery();
         Utils.notify(this, "草稿箱已清空");
         finish();

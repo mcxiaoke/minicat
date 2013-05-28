@@ -30,7 +30,8 @@ import com.mcxiaoke.fanfouapp.adapter.AtTokenizer;
 import com.mcxiaoke.fanfouapp.adapter.AutoCompleteCursorAdapter;
 import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.controller.UIController;
-import com.mcxiaoke.fanfouapp.dao.model.RecordColumns;
+import com.mcxiaoke.fanfouapp.dao.model.StatusUpdateInfo;
+import com.mcxiaoke.fanfouapp.dao.model.StatusUpdateInfoColumns;
 import com.mcxiaoke.fanfouapp.dao.model.RecordModel;
 import com.mcxiaoke.fanfouapp.service.Constants;
 import com.mcxiaoke.fanfouapp.service.SyncService;
@@ -94,12 +95,6 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 
     private ColorStateList mNormalTextColor;
     private ColorStateList mAlertTextColor;
-
-    public static final int TYPE_NORMAL = 0;
-    public static final int TYPE_REPLY = 1;
-    public static final int TYPE_REPOST = 2;
-    public static final int TYPE_GALLERY = 3;
-    public static final int TYPE_CAMERA = 4;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -240,12 +235,12 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
     }
 
     private void parseIntent() {
-        type = TYPE_NORMAL;
+        type = StatusUpdateInfo.TYPE_NONE;
         Intent intent = getIntent();
         if (intent != null) {
             String action = intent.getAction();
             if (action == null) {
-                type = intent.getIntExtra("type", TYPE_NORMAL);
+                type = intent.getIntExtra("type", StatusUpdateInfo.TYPE_NONE);
                 text = intent.getStringExtra("text");
                 inReplyToStatusId = intent.getStringExtra("id");
                 File file = (File) intent.getSerializableExtra("data");
@@ -273,7 +268,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
     private void updateUI() {
         if (!StringHelper.isEmpty(text)) {
             mAutoCompleteTextView.setText(text);
-            if (type != TYPE_REPOST) {
+            if (type != StatusUpdateInfo.TYPE_REPOST) {
                 Selection.setSelection(mAutoCompleteTextView.getText(),
                         mAutoCompleteTextView.getText().length());
             }
@@ -474,7 +469,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
         rm.setText(content);
         rm.setFile(photo == null ? "" : photo.toString());
         rm.setReply(inReplyToStatusId);
-        getContentResolver().insert(RecordColumns.CONTENT_URI, rm.values());
+        getContentResolver().insert(StatusUpdateInfoColumns.CONTENT_URI, rm.values());
     }
 
     private void removePhoto() {
@@ -556,12 +551,16 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 
     private void startSendService() {
         Intent i = new Intent(mContext, SyncService.class);
+        StatusUpdateInfo info = new StatusUpdateInfo();
+        info.type = type;
+        info.userId=AppContext.getAccount();
+        info.text = content;
+        info.fileName = photo == null ? null : photo.toString();
+        info.location = mLocationString;
+        info.reply = inReplyToStatusId;
+        info.repost = inReplyToStatusId;
         i.putExtra("type", SyncService.STATUS_UPDATE);
-        i.putExtra("contentType", type);
-        i.putExtra("text", content);
-        i.putExtra("data", photo);
-        i.putExtra("location", mLocationString);
-        i.putExtra("id", inReplyToStatusId);
+        i.putExtra(StatusUpdateInfo.TAG, info);
         if (AppContext.DEBUG) {
             log("intent=" + i);
         }
