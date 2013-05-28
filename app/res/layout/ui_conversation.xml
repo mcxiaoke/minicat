@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/theme_blue_light"
+            android:background="@color/holo_primary"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="2dp">

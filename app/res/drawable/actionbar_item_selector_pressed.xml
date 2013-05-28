@@ -16,5 +16,5 @@
 -->
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android" >
-    <solid android:color="@color/actionbar_item_bg_pressed" />
+    <solid android:color="@color/actionbar_item_pressed" />
 </shape>

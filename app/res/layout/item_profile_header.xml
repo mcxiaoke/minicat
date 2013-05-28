@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true" android:layout_marginLeft="@dimen/list_padding"
             android:layout_toRightOf="@id/header_image" android:singleLine="true"
-            android:layout_marginTop="@dimen/profile_item_padding" android:textColor="@color/text_color_primary_light"
+            android:layout_marginTop="@dimen/profile_item_padding" android:textColor="@color/text_primary"
             android:textSize="@dimen/text_size_medium" android:duplicateParentState="true"/>
 
     <TextView android:id="@+id/header_id" android:textSize="@dimen/text_size_small"

@@ -6,7 +6,7 @@
 
     <stroke
             android:width="@dimen/image_frame_padding"
-            android:color="@color/ui_background_color_primary"/>
+            android:color="@color/background_primary"/>
 
     <corners android:radius="@dimen/image_frame_padding"/>
 

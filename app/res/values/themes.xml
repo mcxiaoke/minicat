@@ -11,8 +11,8 @@
     <style name="ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:logo">@drawable/ic_logo</item>
         <item name="android:textColor">@color/solid_white</item>
-        <item name="android:background">@drawable/actionbar_background_blue</item>
-        <item name="android:backgroundSplit">@drawable/actionbar_background_blue</item>
+        <item name="android:background">@drawable/actionbar_background</item>
+        <item name="android:backgroundSplit">@drawable/actionbar_background</item>
         <item name="android:indeterminateProgressStyle">@style/ProgressBarStyle</item>
     </style>
 

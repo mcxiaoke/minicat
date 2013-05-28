@@ -3,7 +3,7 @@
     style="?android:attr/buttonBarStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/theme_blue_light"
+    android:background="@color/holo_primary"
     android:orientation="horizontal" >
 
     <Button

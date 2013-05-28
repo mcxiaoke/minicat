@@ -31,7 +31,7 @@ public final class UIHelper {
     public static void setListView(ListView listView) {
         Resources res = listView.getResources();
         int dividerHeight = res.getDimensionPixelSize(R.dimen.list_divider_height);
-        listView.setSelector(res.getDrawable(R.drawable.selector_list_light));
+        listView.setSelector(res.getDrawable(R.drawable.selector));
         listView.setDivider(res
                 .getDrawable(R.drawable.divider));
         listView.setDividerHeight(dividerHeight);

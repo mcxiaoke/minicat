@@ -15,12 +15,23 @@
      limitations under the License.
 -->
 
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <gradient
-            android:angle="270"
-            android:endColor="@color/pager_sliding_tab_background"
-            android:startColor="@color/pager_sliding_tab_background">
-    </gradient>
+    <item>
+        <shape>
+            <solid android:color="@color/holo_secondary"/>
+        </shape>
+    </item>
 
-</shape>
+    <item android:bottom="2dp">
+        <shape>
+
+            <gradient
+                    android:startColor="@color/holo_primary"
+                    android:endColor="@color/holo_primary"
+                    android:angle="270"/>
+        </shape>
+    </item>
+
+</layer-list>
+

@@ -6,7 +6,7 @@
 
     <stroke
             android:width="@dimen/image_frame_padding"
-            android:color="@color/theme_blue_light_semitransparent"/>
+            android:color="@color/holo_primary_disabled"/>
 
     <corners android:radius="@dimen/image_frame_padding"/>
 

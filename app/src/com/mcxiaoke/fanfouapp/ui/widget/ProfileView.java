@@ -90,8 +90,8 @@ public class ProfileView extends FrameLayout implements
     }
 
     private void initialize(Context context) {
-        mFollowOnColor = getResources().getColor(R.color.text_color_primary_dark);
-        mFollowOffColor = getResources().getColor(R.color.text_color_primary_light);
+        mFollowOnColor = getResources().getColor(R.color.solid_white);
+        mFollowOffColor = getResources().getColor(R.color.text_primary);
 
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.view_profile, this);

@@ -17,11 +17,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:gravity="center_vertical"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@id/avatar" android:textColor="@color/text_primary"
+            android:layout_toRightOf="@id/avatar" android:textColor="@color/text_primary_selectable"
             android:textSize="@dimen/text_size_medium" android:singleLine="true"/>
 
     <TextView android:id="@+id/user_id" android:textSize="@dimen/text_size_small"
-              android:textColor="@color/text_color_selectable_secondary_light"
+              android:textColor="@color/text_secondary_selectable"
               android:gravity="center_vertical" android:layout_width="wrap_content"
               android:layout_height="wrap_content" android:layout_marginLeft="2.0dip"
               android:singleLine="true" android:layout_toRightOf="@id/user_name" android:layout_toLeftOf="@+id/stub"/>
@@ -78,7 +78,7 @@
                 android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:gravity="center_vertical"
-                android:textColor="@color/text_color_selectable_secondary_light"
+                android:textColor="@color/text_secondary_selectable"
                 android:textSize="@dimen/text_size_small" android:singleLine="true"/>
 
     </LinearLayout>
@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/avatar"
             android:layout_alignLeft="@id/user_name"
-            android:layout_below="@id/user_id" android:textColor="@color/text_primary"
+            android:layout_below="@id/user_id" android:textColor="@color/text_primary_selectable"
             android:textSize="@dimen/text_size_medium"
             android:typeface="serif" android:lineSpacingMultiplier="1.2"/>
 
@@ -99,7 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/text" android:text="test"
-            android:layout_below="@id/text" android:textColor="@color/text_color_selectable_secondary_light"
+            android:layout_below="@id/text" android:textColor="@color/text_secondary_selectable"
             android:textSize="@dimen/text_size_small" android:singleLine="true"/>
 
 </RelativeLayout>

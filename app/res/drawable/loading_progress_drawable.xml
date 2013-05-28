@@ -21,22 +21,22 @@
         android:toDegrees="360">
 
     <shape
-        android:shape="ring"
-        android:innerRadiusRatio="4"
-        android:thicknessRatio="5.333"
-        android:useLevel="false">
+            android:shape="ring"
+            android:innerRadiusRatio="4"
+            android:thicknessRatio="5.333"
+            android:useLevel="false">
 
         <size
-            android:width="18dp"
-            android:height="18dp" />
+                android:width="18dp"
+                android:height="18dp"/>
 
         <gradient
-            android:type="sweep"
-            android:useLevel="false"
-            android:startColor="#006688cc"
-            android:centerColor="#886688cc"
-            android:endColor="#ff6688cc"
-            android:centerY="0.50" />
+                android:type="sweep"
+                android:useLevel="false"
+                android:startColor="#006688cc"
+                android:centerColor="#886688cc"
+                android:endColor="#ff6688cc"
+                android:centerY="0.50"/>
 
     </shape>
 

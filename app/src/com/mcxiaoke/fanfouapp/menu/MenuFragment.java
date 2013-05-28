@@ -241,7 +241,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
             } else {
                 convertView.setBackgroundColor(0);
 //                holder.text.setTextColor(context.getResources()
-//                        .getColorStateList(R.color.white_text_color));
+//                        .getColorStateList(R.color.text_white));
             }
             return convertView;
         }

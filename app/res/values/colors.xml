@@ -21,16 +21,10 @@
     <color name="image_frame_color">#11000000</color>
 
     <!--Light Theme Colors-->
-    <color name="theme_blue_light">#FF33B5E5</color>
-    <color name="theme_blue_light_semitransparent">#6633B5E5</color>
-    <color name="theme_blue_light_pressed">#FF0099CC</color>
-    <color name="theme_blue_light_highlight">#FF28A5C0</color>
 
     <color name="divider_color_light">#20999999</color>
 
-    <color name="actionbar_bg_color">#FF33B5E5</color>
-    <color name="actionbar_bg_color_bottom">#FF28A5C0</color>
-    <color name="actionbar_item_bg_pressed">#66CCCCCC</color>
+    <color name="actionbar_item_pressed">#66CCCCCC</color>
 
     <color name="selector_list_color_light_pressed">#FF33B5E5</color>
 
@@ -43,21 +37,11 @@
     <color name="drawer_dim_background">#C0000000</color>
 
 
-    <color name="text_color_primary_light">#FF222222</color>
+    <color name="text_primary">#FF222222</color>
     <color name="text_secondary">#FF888888</color>
-    <color name="text_color_pressed_light">#FFFFFFFF</color>
 
-    <color name="ui_background_color_primary">#FFF6F6F6</color>
-    <color name="ui_background_color_secondary">#FFEEEEEE</color>
-
-    <!--Dark Theme Colors-->
-
-    <color name="text_color_primary_dark">#FFEEFFEE</color>
-    <color name="text_color_secondary_dark">#FF334433</color>
-    <color name="text_color_pressed_dark">#FF000000</color>
-
-    <color name="pager_sliding_tab_background">#FFF2F2F2</color>
-    <color name="pager_sliding_tab_pressed">#6633B5E5</color>
+    <color name="background_primary">#FFF6F6F6</color>
+    <color name="background_secondary">#FFEEEEEE</color>
 
     <color name="list_item_status_self_highlight">#2033b5e5</color>
     <color name="list_item_status_mention_highlight">#20b2cb39</color>
