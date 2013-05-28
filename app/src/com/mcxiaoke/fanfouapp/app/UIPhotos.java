@@ -31,6 +31,7 @@ public class UIPhotos extends UIBaseSupport {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        System.gc();
     }
 
 

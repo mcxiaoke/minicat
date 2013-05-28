@@ -119,8 +119,16 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
         mEmptyViewController.showProgress();
     }
 
-    private void showContent() {
+    private void showContent(int size) {
         mEmptyViewController.hideProgress();
+        if (size < 10) {
+//            mGridView.setNumColumns(1);
+//            mGridView.setPadding(mGridViewPaddingMax, mGridViewPaddingMax, mGridViewPaddingMax, mGridViewPaddingMax);
+        } else {
+//            mGridView.setVerticalSpacing(mGridViewPaddingMin);
+//            mGridView.setHorizontalSpacing(mGridViewPaddingMin);
+//            mGridView.setNumColumns(3);
+        }
         mGridView.setVisibility(View.VISIBLE);
     }
 
@@ -177,7 +185,8 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
                 showEmpty("");
             } else {
                 if (statusModels != null && statusModels.size() > 0) {
-                    showContent();
+                    int size = statusModels.size();
+                    showContent(size);
                     mArrayAdapter.addAll(statusModels);
                     mArrayAdapter.notifyDataSetChanged();
                 } else {
@@ -189,9 +198,11 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
     }
 
     static class GridViewAdapter extends ArrayAdapter<StatusModel> {
+        private Picasso picasso;
 
         public GridViewAdapter(Context context, int textViewResourceId, List<StatusModel> objects) {
             super(context, textViewResourceId, objects);
+            picasso = new Picasso.Builder(context).build();
         }
 
         @Override
@@ -214,7 +225,7 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
 
             StatusModel status = getItem(position);
             holder.text.setText(status.getSimpleText());
-            Picasso.with(getContext()).load(status.getPhotoImageUrl()).placeholder(R.drawable.photo_placeholder).into(holder.image);
+            picasso.load(status.getPhotoImageUrl()).placeholder(R.drawable.photo_placeholder).into(holder.image);
             return convertView;
         }
 

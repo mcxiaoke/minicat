@@ -48,6 +48,6 @@
     <dimen name="list_row_padding">10dp</dimen>
     <dimen name="standard_spacing">5dp</dimen>
     <dimen name="write_image_preview_width">96dp</dimen>
-    <dimen name="photo_grid_min_width">100dp</dimen>
+    <dimen name="photo_grid_min_width">96dp</dimen>
 
 </resources>

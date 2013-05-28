@@ -108,9 +108,9 @@ public class ProfileView extends FrameLayout implements
         headerState = (TextView) findViewById(R.id.header_state);
         headerLock = (ImageView) findViewById(R.id.header_lock);
 
-        vFollowingItem = findViewById(R.id.item1);
-        vFollowersItem = findViewById(R.id.item2);
-        vStatusesItem = findViewById(R.id.item3);
+        vStatusesItem = findViewById(R.id.item1);
+        vFollowingItem = findViewById(R.id.item2);
+        vFollowersItem = findViewById(R.id.item3);
 
         tvStatusesItemTitle = (TextView) findViewById(R.id.text_title1);
         tvFollowingItemTitle = (TextView) findViewById(R.id.text_title2);
@@ -120,9 +120,9 @@ public class ProfileView extends FrameLayout implements
         tvFollowingItemValue = (TextView) findViewById(R.id.text_value2);
         tvFollowersItemValue = (TextView) findViewById(R.id.text_value3);
 
+        tvStatusesItemValue.setText("消息");
         tvFollowingItemValue.setText("正在关注");
         tvFollowersItemValue.setText("被关注");
-        tvStatusesItemValue.setText("消息");
 
         tvPhotosRowTitle = (TextView) findViewById(R.id.text_left);
         tvFavoritesRowTitle = (TextView) findViewById(R.id.text_right);

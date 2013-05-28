@@ -27,6 +27,7 @@ import com.mcxiaoke.fanfouapp.menu.MenuCallback;
 import com.mcxiaoke.fanfouapp.menu.MenuFragment;
 import com.mcxiaoke.fanfouapp.menu.MenuItemResource;
 import com.mcxiaoke.fanfouapp.preference.PreferenceHelper;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 import com.viewpagerindicator.PageIndicator;
 
@@ -184,6 +185,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ImageLoader.getInstance().clearMemoryCache();
     }
 
     @Override

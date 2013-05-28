@@ -4,10 +4,12 @@
              android:layout_height="match_parent" android:id="@+id/root"
              android:background="@color/background_primary">
 
-    <GridView android:numColumns="3"
+    <GridView android:numColumns="auto_fit" android:stretchMode="columnWidth" android:clipChildren="true"
+              android:columnWidth="@dimen/photo_grid_min_width" android:padding="1dp"
               android:id="@+id/gridview" android:verticalSpacing="0dp" android:horizontalSpacing="0dp"
               android:layout_width="match_parent"
-              android:layout_height="match_parent" android:gravity="center" android:scrollbars="none"/>
+              android:layout_height="match_parent" android:gravity="center" android:scrollbars="none"
+              android:scrollingCache="true" android:alwaysDrawnWithCache="true"/>
 
     <include layout="@layout/empty_layout"/>
 

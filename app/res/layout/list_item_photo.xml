@@ -4,10 +4,10 @@
               android:layout_height="match_parent"
               android:padding="@dimen/list_item_padding" android:orientation="vertical">
 
-    <com.mcxiaoke.fanfouapp.ui.widget.ScaleImageView
+    <ImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:scaleType="centerCrop"
+            android:layout_height="wrap_content" android:scaleType="fitXY"
             android:minHeight="@dimen/photo_grid_min_width" android:minWidth="@dimen/photo_grid_min_width"/>
 
     <TextView android:id="@+id/text" android:layout_width="match_parent" android:layout_height="wrap_content"
