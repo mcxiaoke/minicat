@@ -1,14 +1,13 @@
 package com.mcxiaoke.fanfouapp.app;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.Build;
-import android.preference.PreferenceManager;
 import android.util.Log;
+import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.api.Api;
 import com.mcxiaoke.fanfouapp.api.ApiFactory;
 import com.mcxiaoke.fanfouapp.config.AccountInfo;
@@ -16,18 +15,18 @@ import com.mcxiaoke.fanfouapp.config.AccountStore;
 import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
-import com.mcxiaoke.fanfouapp.util.DateTimeHelper;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.mcxiaoke.fanfouapp.R;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.umeng.analytics.MobclickAgent;
 import org.oauthsimple.model.OAuthToken;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.TimeZone;
+
+import static com.mcxiaoke.fanfouapp.util.DateTimeHelper.FANFOU_DATE_FORMAT;
+import static java.util.TimeZone.getTimeZone;
 
 /**
  * @author mcxiaoke
@@ -39,7 +38,7 @@ public class AppContext extends Application {
     private static final String TAG = "Application";
 
     public static final boolean DEBUG = true;
-    private static HashMap<String, WeakReference<Context>> contexts = new HashMap<String, WeakReference<Context>>();
+    private static HashMap<String, WeakReference<Activity>> contexts = new HashMap<String, WeakReference<Activity>>();
 
     public static int versionCode;
     public static String versionName;
@@ -48,12 +47,12 @@ public class AppContext extends Application {
     public static boolean active;
     private static AccountInfo accountInfo;
 
-    private static SharedPreferences sPreferences;
-
     private static Api api;
     private static AppContext instance;
 
-    private volatile static boolean disConnected;
+    public AppContext getInstance() {
+        return instance;
+    }
 
     @Override
     public void onCreate() {
@@ -64,19 +63,11 @@ public class AppContext extends Application {
     }
 
     private void initialize() {
-        // if (DEBUG) {
-        // StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-        // .detectAll().penaltyLog().build());
-        // StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-        // .detectAll().penaltyLog().build());
-        // }
         instance = this;
         MobclickAgent.setDebugMode(DEBUG);
-        sPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         ImageLoader.getInstance().init(getDefaultImageLoaderConfigureation());
-        DateTimeHelper.FANFOU_DATE_FORMAT.setTimeZone(TimeZone
-                .getTimeZone("GMT"));
-//        AlarmHelper.setAlarmsIfNot(this);
+        FANFOU_DATE_FORMAT.setTimeZone(
+                getTimeZone("GMT"));
     }
 
     private void initAccountInfo() {
@@ -106,19 +97,18 @@ public class AppContext extends Application {
                         + " versionName: " + versionName);
             }
         } catch (NameNotFoundException e) {
+            throw new RuntimeException(e);
         }
 
     }
 
     public static void doLogin(Context context) {
-        // AlarmHelper.unsetScheduledTasks(context);
         clearAccountInfo(context);
         DataController.clearDatabase(context);
 
         if (DEBUG) {
             Log.d(TAG, "doLogin()");
         }
-        // App.getImageLoader().clearQueue();
         UIController.showLogin(context);
     }
 
@@ -179,104 +169,44 @@ public class AppContext extends Application {
         }
     }
 
-    public static void updateAccessToken(Context context, String token,
-                                         String tokenSecret) {
-        updateAccessToken(context, new OAuthToken(token, tokenSecret));
-    }
-
     public static String getAccount() {
         return accountInfo.getAccount();
-    }
-
-    public static void setAccount(String account) {
-        accountInfo.setAccount(account);
     }
 
     public static String getScreenName() {
         return accountInfo.getScreenName();
     }
 
-    public static void setScreenName(String screenName) {
-        accountInfo.setScreenName(screenName);
-    }
-
-    public static SharedPreferences getPreferences() {
-        return sPreferences;
-    }
-
-    public static void setPreferences(SharedPreferences sPreferences) {
-        AppContext.sPreferences = sPreferences;
-    }
-
     public static Api getApi() {
         return api;
-    }
-
-    public static void setApi(Api api) {
-        AppContext.api = api;
-    }
-
-    public static OAuthToken getAccessToken() {
-        return accountInfo.getAccessToken();
-    }
-
-    public static boolean isDisconnected() {
-        return disConnected;
-    }
-
-    public static void setDisconnected(boolean state) {
-        disConnected = state;
     }
 
     public static AppContext getApp() {
         return instance;
     }
 
-    public static AccountInfo getAccountInfo() {
-        return accountInfo;
-    }
-
     public static boolean isVerified() {
         return accountInfo.isVerified();
     }
 
-    public static synchronized void setActiveContext(String className,
-                                                     Context context) {
-        WeakReference<Context> reference = new WeakReference<Context>(context);
-        contexts.put(className, reference);
+    public static synchronized void setActiveContext(Activity context) {
+        WeakReference<Activity> reference = new WeakReference<Activity>(context);
+        contexts.put(context.getClass().getSimpleName(), reference);
     }
 
-    public static synchronized void removeActiveContext(String className) {
-        contexts.remove(className);
-    }
-
-    public static synchronized Context getActiveContext(String className) {
-        WeakReference<Context> reference = contexts.get(className);
+    public static synchronized Activity getActiveContext(String className) {
+        WeakReference<Activity> reference = contexts.get(className);
         if (reference == null) {
             return null;
         }
 
-        final Context context = reference.get();
+        final Activity context = reference.get();
 
         if (context == null) {
             contexts.remove(className);
         }
 
         return context;
-    }
-
-    private static String userAgent;
-
-    public static String getUserAgent() {
-        if (userAgent == null) {
-
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append(info.packageName).append(" ").append(info.versionName)
-                .append("(").append(info.versionCode).append("").append("/")
-                .append("Android ").append(Build.MODEL).append(" ");
-
-        return sb.toString();
     }
 
     private DisplayImageOptions getDefaultDisplayImageOptions() {
@@ -294,10 +224,6 @@ public class AppContext extends Application {
         builder.defaultDisplayImageOptions(getDefaultDisplayImageOptions());
         builder.denyCacheImageMultipleSizesInMemory();
         return builder.build();
-    }
-
-    public static enum ApnType {
-        WIFI, NET, WAP, CTWAP;
     }
 
 }

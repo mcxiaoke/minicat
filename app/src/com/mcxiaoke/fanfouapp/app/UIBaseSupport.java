@@ -50,7 +50,7 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         // 这句话必须在setContentView调用之后才有效
         //setProgressBarIndeterminateVisibility(false);
-        AppContext.setActiveContext(getClass().getCanonicalName(), this);
+        AppContext.setActiveContext(this);
         this.mContext = this;
         this.mInflater = LayoutInflater.from(this);
         this.mResources = getResources();
@@ -185,6 +185,11 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
         super.onPause();
         MobclickAgent.onPause(this);
         AppContext.active = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
