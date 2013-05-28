@@ -4,6 +4,7 @@
     <style name="ProfileButtonStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:paddingLeft">@dimen/profile_row_horizontal_padding</item>
         <item name="android:paddingRight">@dimen/profile_row_horizontal_padding</item>
@@ -22,22 +23,32 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
 
-    <style name="ProfileButtonTextStyle">
+    <style name="ProfileItemTextStyle">
         <item name="android:duplicateParentState">true</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:shadowColor">@color/solid_black</item>
-        <!--        <item name="android:shadowDx">0</item>
-                <item name="android:shadowDy">1</item>
-                <item name="android:shadowRadius">1</item>-->
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:singleLine">true</item>
-        <item name="android:padding">1dp</item>
+        <item name="android:padding">@dimen/profile_item_padding</item>
     </style>
 
-    <style name="ProfileButtonTextMetaStyle">
+    <style name="ProfileButtonTextStyle">
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/selector_list_light</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:padding">@dimen/status_header_padding</item>
+    </style>
+
+    <style name="ProfileItemTextMetaStyle">
         <item name="android:duplicateParentState">true</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">0dp</item>

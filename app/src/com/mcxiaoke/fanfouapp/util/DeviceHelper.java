@@ -25,14 +25,6 @@ import java.util.UUID;
  */
 public final class DeviceHelper {
 
-	public synchronized static String uuid(Context context) {
-		String uuid = OptionHelper.readString("uuid", null);
-		if (uuid == null) {
-			uuid = generateUUID();
-			OptionHelper.saveString("uuid", uuid);
-		}
-		return uuid;
-	}
 
 	private static String generateUUID() {
 		String uuid = Settings.Secure.getString(AppContext.getApp()

@@ -24,12 +24,7 @@ import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 import com.mcxiaoke.fanfouapp.dialog.ConfirmDialog;
 import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.task.BetterAsyncTask;
-import com.mcxiaoke.fanfouapp.util.DateTimeHelper;
-import com.mcxiaoke.fanfouapp.util.IOHelper;
-import com.mcxiaoke.fanfouapp.util.ImageHelper;
-import com.mcxiaoke.fanfouapp.util.IntentHelper;
-import com.mcxiaoke.fanfouapp.util.StatusHelper;
-import com.mcxiaoke.fanfouapp.util.Utils;
+import com.mcxiaoke.fanfouapp.util.*;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
@@ -137,8 +132,8 @@ public class UIStatus extends UIBaseSupport {
 
         vHeader = findViewById(R.id.header);
         headerImage = (ImageView) findViewById(R.id.header_image);
-        headerName = (TextView) findViewById(R.id.user_name);
-        headerId = (TextView) findViewById(R.id.user_id);
+        headerName = (TextView) findViewById(R.id.header_name);
+        headerId = (TextView) findViewById(R.id.header_id);
         TextPaint tp = headerName.getPaint();
         tp.setFakeBoldText(true);
 

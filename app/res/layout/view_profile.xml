@@ -4,8 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent" android:background="@color/ui_background_color_primary">
 
-    <include layout="@layout/profile_header"/>
-
+    <include layout="@layout/item_profile_header"/>
 
     <View
             android:layout_width="match_parent"
@@ -21,10 +20,10 @@
             <TextView android:id="@+id/text_title1"
                       android:text="990" android:layout_alignParentLeft="true"
                       android:layout_alignParentTop="true"
-                      style="@style/ProfileButtonTextStyle"/>
+                      style="@style/ProfileItemTextStyle"/>
             <TextView android:id="@+id/text_value1" android:layout_alignParentRight="true" android:text="Statuses Count"
                       android:layout_alignParentTop="true"
-                      style="@style/ProfileButtonTextMetaStyle"/>
+                      style="@style/ProfileItemTextMetaStyle"/>
         </LinearLayout>
 
         <View
@@ -36,9 +35,9 @@
 
             <TextView android:id="@+id/text_title2"
                       android:text="1234" android:layout_alignParentLeft="true"
-                      style="@style/ProfileButtonTextStyle"/>
+                      style="@style/ProfileItemTextStyle"/>
             <TextView android:id="@+id/text_value2" android:layout_alignParentRight="true" android:text="Statuses Count"
-                      style="@style/ProfileButtonTextMetaStyle"/>
+                      style="@style/ProfileItemTextMetaStyle"/>
         </LinearLayout>
 
         <View
@@ -51,87 +50,33 @@
 
             <TextView android:id="@+id/text_title3"
                       android:text="5678" android:layout_alignParentLeft="true"
-                      style="@style/ProfileButtonTextStyle"/>
+                      style="@style/ProfileItemTextStyle"/>
             <TextView android:id="@+id/text_value3" android:layout_alignParentRight="true" android:text="Statuses Count"
-                      style="@style/ProfileButtonTextMetaStyle"/>
+                      style="@style/ProfileItemTextMetaStyle"/>
         </LinearLayout>
 
     </LinearLayout>
+
     <View
             android:layout_width="match_parent"
             android:layout_height="1dp" android:background="@drawable/divider"/>
 
-    <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button1">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:orientation="horizontal">
 
-        <TextView android:id="@+id/text_left1"
-                  android:text="Statuses Count" android:layout_alignParentLeft="true"
-                  android:layout_alignParentTop="true"
-                  style="@style/ProfileButtonTextStyle"/>
-        <TextView android:id="@+id/text_right1" android:layout_alignParentRight="true"
-                  android:layout_alignParentTop="true" android:text="1234"
-                  style="@style/ProfileButtonTextStyle"/>
-    </RelativeLayout>
+        <TextView android:id="@+id/text_left"
+                  android:text="Left" style="@style/ProfileButtonTextStyle"/>
 
+        <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/divider"/>
 
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/divider"/>
+        <TextView android:id="@+id/text_right"
+                  android:text="Right" style="@style/ProfileButtonTextStyle"/>
 
-    <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button2">
+    </LinearLayout>
 
-        <TextView android:id="@+id/text_left2"
-                  android:text="Statuses Count" android:layout_alignParentLeft="true"
-                  style="@style/ProfileButtonTextStyle"/>
-        <TextView android:id="@+id/text_right2" android:layout_alignParentRight="true" android:text="1234"
-                  style="@style/ProfileButtonTextStyle"/>
-    </RelativeLayout>
-
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/divider"/>
-
-
-    <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button3">
-
-
-        <TextView android:id="@+id/text_left3"
-                  android:text="Statuses Count" android:layout_alignParentLeft="true"
-                  style="@style/ProfileButtonTextStyle"/>
-        <TextView android:id="@+id/text_right3" android:layout_alignParentRight="true" android:text="1234"
-                  style="@style/ProfileButtonTextStyle"/>
-    </RelativeLayout>
-
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/divider"/>
-
-
-    <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button4">
-
-        <TextView android:id="@+id/text_left4"
-                  android:text="Statuses Count" android:layout_alignParentLeft="true"
-                  style="@style/ProfileButtonTextStyle"/>
-        <TextView android:id="@+id/text_right4" android:layout_alignParentRight="true" android:text="1234"
-                  style="@style/ProfileButtonTextStyle"/>
-    </RelativeLayout>
-
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/divider"/>
-
-
-    <RelativeLayout style="@style/ProfileButtonStyle" android:id="@+id/button5">
-
-        <TextView android:id="@+id/text_left5"
-                  android:text="Statuses Count" android:layout_alignParentLeft="true"
-                  style="@style/ProfileButtonTextStyle"/>
-        <TextView android:id="@+id/text_right5" android:layout_alignParentRight="true" android:text="1234"
-                  style="@style/ProfileButtonTextStyle"/>
-    </RelativeLayout>
 
     <View
             android:layout_width="match_parent"
@@ -141,11 +86,11 @@
             android:id="@+id/info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/header_intro"
-            android:layout_below="@id/header_intro"
+            android:layout_alignLeft="@+id/header_intro"
+            android:layout_below="@+id/header_intro"
             android:textColor="@color/text_color_primary_light"
             android:textSize="@dimen/text_size_medium" android:padding="@dimen/list_padding"
-            android:text="show use description here." android:autoLink="web"/>
+            android:text="show use description here." android:autoLink="web" android:lineSpacingMultiplier="1.2"/>
 
 </LinearLayout>
 

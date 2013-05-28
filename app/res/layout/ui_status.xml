@@ -27,7 +27,7 @@
                         android:id="@+id/header"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        layout="@layout/status_item_header"/>
+                        layout="@layout/item_profile_header"/>
 
                 <View
                         android:layout_width="match_parent"

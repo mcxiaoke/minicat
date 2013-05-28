@@ -48,7 +48,7 @@
     <color name="text_color_pressed_light">#FFFFFFFF</color>
 
     <color name="ui_background_color_primary">#FFF6F6F6</color>
-    <color name="ui_background_color_secondary">#FFFFFFFF</color>
+    <color name="ui_background_color_secondary">#FFEEEEEE</color>
 
     <!--Dark Theme Colors-->
 

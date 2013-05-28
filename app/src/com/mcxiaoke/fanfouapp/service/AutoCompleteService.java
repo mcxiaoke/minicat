@@ -12,6 +12,7 @@ import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.dao.model.UserColumns;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
 import com.mcxiaoke.fanfouapp.util.DateTimeHelper;
+import com.mcxiaoke.fanfouapp.util.NetworkHelper;
 
 import java.util.Calendar;
 import java.util.List;
@@ -70,7 +71,7 @@ public class AutoCompleteService extends WakefulIntentService {
     }
 
     private void doFetchAutoComplete() {
-        if (AppContext.isDisconnected() || !AppContext.isVerified()) {
+        if (NetworkHelper.isConnected(this) || !AppContext.isVerified()) {
             return;
         }
         Api api = AppContext.getApi();

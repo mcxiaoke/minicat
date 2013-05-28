@@ -23,7 +23,6 @@ public abstract class BetterAsyncTask<Params, Progress, Result> extends
 	public BetterAsyncTask(Context context) {
 		super();
 		this.callerId = context.getClass().getCanonicalName();
-		AppContext.setActiveContext(callerId, context);
 	}
 
 	@Override
