@@ -19,8 +19,12 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
+
+    <meta-data android:value="4f4c9e7052701536b3000091" android:name="UMENG_APPKEY"/>
+    <meta-data android:value="GooglePlay" android:name="UMENG_CHANNEL"/>
 
     <application
             android:name=".app.AppContext"

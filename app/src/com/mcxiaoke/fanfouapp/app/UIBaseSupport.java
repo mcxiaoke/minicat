@@ -16,6 +16,7 @@ import android.view.Window;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.util.LogUtil;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * @author mcxiaoke
@@ -174,14 +175,16 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
     @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onResume(this);
         debug("onResume()");
         AppContext.active = true;
     }
 
     @Override
     protected void onPause() {
-        AppContext.active = false;
         super.onPause();
+        MobclickAgent.onPause(this);
+        AppContext.active = false;
     }
 
     @Override

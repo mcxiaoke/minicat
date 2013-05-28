@@ -22,6 +22,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.mcxiaoke.fanfouapp.R;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.umeng.analytics.MobclickAgent;
 import org.oauthsimple.model.OAuthToken;
 
 import java.lang.ref.WeakReference;
@@ -70,6 +71,7 @@ public class AppContext extends Application {
         // .detectAll().penaltyLog().build());
         // }
         instance = this;
+        MobclickAgent.setDebugMode(DEBUG);
         sPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         ImageLoader.getInstance().init(getDefaultImageLoaderConfigureation());
         DateTimeHelper.FANFOU_DATE_FORMAT.setTimeZone(TimeZone
