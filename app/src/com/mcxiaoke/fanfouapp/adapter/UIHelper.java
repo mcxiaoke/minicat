@@ -42,7 +42,7 @@ public class UIHelper {
         view.showIconThread(s.isThread());
         view.showIconFavorite(s.isFavorited());
         view.showIconPhoto(s.isPhoto());
-        view.showIconRetweet(s.isRetweeted());
+//        view.showIconRetweet(s.isRetweeted());
         boolean lock = s.getUser() != null && s.getUser().isProtect();
         view.showIconLock(lock);
         view.setUserName(s.getUserScreenName());
