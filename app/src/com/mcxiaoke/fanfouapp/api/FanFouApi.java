@@ -9,7 +9,11 @@ import com.mcxiaoke.fanfouapp.dao.model.*;
 import org.apache.http.protocol.HTTP;
 import org.oauthsimple.builder.ServiceBuilder;
 import org.oauthsimple.builder.api.FanfouApi;
-import org.oauthsimple.model.*;
+import org.oauthsimple.http.OAuthRequest;
+import org.oauthsimple.http.Response;
+import org.oauthsimple.http.Verb;
+import org.oauthsimple.model.OAuthToken;
+import org.oauthsimple.model.SignatureType;
 import org.oauthsimple.oauth.OAuthService;
 
 import java.io.*;
@@ -964,7 +968,7 @@ final class FanFouApi implements Api {
     }
 
     /**
-     * @param request
+     * @param builder
      * @return
      * @throws ApiException
      */
