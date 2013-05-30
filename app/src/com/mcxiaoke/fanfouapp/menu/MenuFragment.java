@@ -9,6 +9,8 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -47,6 +49,8 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
     public static final int MENU_ID_DEBUG = MENU_ID + 99;
 
     private ListView mListView;
+    private TextView mFooterTextView1;
+    private TextView mFooterTextView2;
     private MenuItemListAdapter mMenuAdapter;
     private List<MenuItemResource> mMenuItems;
     private MenuCallback mCallback;
@@ -76,13 +80,14 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fm_menu, null, false);
-//        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mListView = (ListView) getView().findViewById(android.R.id.list);
+        mFooterTextView1 = (TextView) getView().findViewById(android.R.id.text1);
+        mFooterTextView2 = (TextView) getView().findViewById(android.R.id.text2);
     }
 
     @Override
@@ -99,6 +104,26 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
         mListView.setDrawSelectorOnTop(true);
         mListView.setAdapter(mMenuAdapter);
         mListView.setItemChecked(0, true);
+        mFooterTextView1.setText(AppContext.versionName + " Build " + AppContext.versionCode + (AppContext.DEBUG ? " Debug" : ""));
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Animation fadeOut = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out_long);
+        mFooterTextView2.startAnimation(fadeOut);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mFooterTextView2.clearAnimation();
     }
 
     @Override
@@ -171,7 +196,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
         mMenuItems.add(option);
         // mMenuItems.add(theme);
 //        mMenuItems.add(blog);
-        mMenuItems.add(about);
+//        mMenuItems.add(about);
 
         if (DEBUG) {
             MenuItemResource test = MenuItemResource.newBuilder()

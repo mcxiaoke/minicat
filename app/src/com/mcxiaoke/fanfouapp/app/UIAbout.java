@@ -32,7 +32,6 @@ public class UIAbout extends UIBaseSupport {
         mTextView = (TextView) findViewById(R.id.about_text);
 
         StringBuilder builder = new StringBuilder();
-        builder.append(loadLicenseText());
         mTextView.setText(builder);
 
     }
@@ -62,19 +61,5 @@ public class UIAbout extends UIBaseSupport {
     protected int getMenuResourceId() {
         return 0;
     }
-
-    // private void linkifySupport(final TextView textView) {
-    // textView.setMovementMethod(LinkMovementMethod.getInstance());
-    // Spannable span = (Spannable) textView.getText();
-    // String text = textView.getText().toString();
-    // String spanText = "@Android客户端";
-    // int start = text.indexOf(spanText);
-    // if (start > 0) {
-    // int end = start + spanText.length();
-    // span.setSpan(new Linkify.URLSpanNoUnderline(
-    // "fanfouhd://user/androidsupport"), start, end,
-    // Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-    // }
-    // }
 
 }

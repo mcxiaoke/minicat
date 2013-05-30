@@ -27,6 +27,7 @@ import com.mcxiaoke.fanfouapp.menu.MenuCallback;
 import com.mcxiaoke.fanfouapp.menu.MenuFragment;
 import com.mcxiaoke.fanfouapp.menu.MenuItemResource;
 import com.mcxiaoke.fanfouapp.preference.PreferenceHelper;
+import com.mcxiaoke.fanfouapp.service.AutoCompleteService;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 import com.viewpagerindicator.PageIndicator;
@@ -72,6 +73,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
             log("onCreate()");
         }
         setLayout();
+        AutoCompleteService.set(this);
     }
 
     protected void setLayout() {
@@ -83,7 +85,8 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
         setTitle(R.string.page_title_home);
-        mTitle = mDrawerTitle = getTitle();
+        mDrawerTitle = "@" + AppContext.getScreenName();
+        mTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setScrimColor(getResources().getColor(R.color.drawer_dim_background));
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
@@ -92,13 +95,13 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
             @Override
             public void onDrawerClosed(View drawerView) {
                 getActionBar().setTitle(mTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                invalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
-//                getActionBar().setTitle(mDrawerTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                getActionBar().setTitle(mDrawerTitle);
+                invalidateOptionsMenu();
             }
 
             @Override

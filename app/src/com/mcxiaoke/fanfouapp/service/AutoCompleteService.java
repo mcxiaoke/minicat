@@ -37,7 +37,7 @@ public class AutoCompleteService extends WakefulIntentService {
         c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
                 c.get(Calendar.DAY_OF_MONTH), 20, 0);
         c.add(Calendar.MINUTE, 30);
-        long interval = 7 * 24 * 3600 * 1000;
+        long interval = 3 * 24 * 3600 * 1000;
         AlarmManager am = (AlarmManager) context
                 .getSystemService(Context.ALARM_SERVICE);
         am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
