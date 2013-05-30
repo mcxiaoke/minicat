@@ -6,15 +6,18 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.util.Log;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.api.Api;
 import com.mcxiaoke.fanfouapp.api.ApiFactory;
 import com.mcxiaoke.fanfouapp.config.AccountInfo;
 import com.mcxiaoke.fanfouapp.config.AccountStore;
+import com.mcxiaoke.fanfouapp.config.AppConfig;
 import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
+import com.mcxiaoke.fanfouapp.util.LogUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -207,6 +210,21 @@ public class AppContext extends Application {
         }
 
         return context;
+    }
+
+    private static boolean checkDebuggable(Context ctx) {
+        boolean debuggable = false;
+        try {
+            PackageInfo pinfo = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), PackageManager.GET_SIGNATURES);
+            Signature signatures[] = pinfo.signatures;
+            LogUtil.e(new String(signatures[0].toChars()));
+            if (!AppConfig.SIGNATURE.equals(signatures[0].toCharsString())) {
+                debuggable = false;
+            }
+        } catch (NameNotFoundException e) {
+        }
+
+        return debuggable;
     }
 
     private DisplayImageOptions getDefaultDisplayImageOptions() {
