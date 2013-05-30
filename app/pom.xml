@@ -122,7 +122,7 @@
 
     <!-- default option for debug-->
     <build>
-        <!--<sourceDirectory>src</sourceDirectory>-->
+        <sourceDirectory>src</sourceDirectory>
         <!--<finalName>${project.artifactId}-${project.version}-unaligned</finalName>-->
         <plugins>
             <plugin>

@@ -16,14 +16,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.api.Api;
+import com.mcxiaoke.fanfouapp.api.ApiException;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
 import com.mcxiaoke.fanfouapp.ui.widget.TextChangeListener;
 import com.mcxiaoke.fanfouapp.util.Utils;
-import com.mcxiaoke.fanfouapp.R;
 import org.oauthsimple.model.OAuthToken;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -58,7 +60,7 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(false);
-        getActionBar().setTitle("登录饭否");
+        getActionBar().setTitle("圈圈");
         setLayout();
     }
 
@@ -231,12 +233,14 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
                             "username or password is incorrect, XAuth failed.");
                 }
 
-            } catch (Exception e) {
+            } catch (IOException e) {
                 if (AppContext.DEBUG) {
                     e.printStackTrace();
                 }
                 AppContext.clearAccountInfo(mContext);
-                return new ResultInfo(LOGIN_IO_ERROR, e.getMessage());
+                return new ResultInfo(LOGIN_IO_ERROR, e.toString());
+            } catch (ApiException e) {
+                return new ResultInfo(LOGIN_IO_ERROR, e.toString());
             } finally {
             }
         }

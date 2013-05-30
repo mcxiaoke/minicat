@@ -84,7 +84,7 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
         mArrayAdapter = new GridViewAdapter(getActivity(), R.id.text, mData);
         mGridView.setOnItemClickListener(this);
         mGridView.setAdapter(mArrayAdapter);
-        getActivity().getActionBar().setTitle(user.getScreenName() + "的照片集");
+        getActivity().getActionBar().setTitle(user.getScreenName() + "的相册");
         startRefresh();
     }
 

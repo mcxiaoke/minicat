@@ -59,7 +59,7 @@
         <activity
                 android:name=".app.UIHome"
                 android:configChanges="keyboardHidden|orientation"
-                android:label="@string/app_name"
+                android:label="@string/app_name" android:theme="@style/AppTheme.WhiteBg"
                 android:launchMode="singleTask" android:screenOrientation="portrait">
             <meta-data
                     android:name="android.app.default_searchable"
@@ -117,7 +117,7 @@
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name" android:screenOrientation="portrait"/>
         <activity
-                android:name=".app.UIPhoto"
+                android:name=".app.UIPhoto" android:theme="@style/AppTheme.Dark"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name" android:screenOrientation="portrait"/>
         <activity

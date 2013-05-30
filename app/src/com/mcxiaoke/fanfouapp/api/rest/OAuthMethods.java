@@ -3,6 +3,8 @@ package com.mcxiaoke.fanfouapp.api.rest;
 import com.mcxiaoke.fanfouapp.api.ApiException;
 import org.oauthsimple.model.OAuthToken;
 
+import java.io.IOException;
+
 /**
  * @author mcxiaoke
  * @version 1.0 2012-2-23 上午10:16:46
@@ -18,7 +20,7 @@ public interface OAuthMethods {
 	public OAuthToken getOAuthRequestToken() throws ApiException;
 
 	public OAuthToken getOAuthAccessToken(String username, String password)
-			throws ApiException;
+			throws IOException,ApiException;
 
 	public void setAccessToken(OAuthToken token);
 

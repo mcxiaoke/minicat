@@ -50,6 +50,9 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
     private boolean noPermission;
     private ProfileView vProfile;
 
+    private MenuItem followMemu;
+    private MenuItem unfollowMenu;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +63,9 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
             userId = data.getString("id");
         } else {
             userId = user.getId();
+        }
+        if (useMenu) {
+            setHasOptionsMenu(true);
         }
     }
 
@@ -80,23 +86,21 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (useMenu) {
-            setHasOptionsMenu(true);
-        }
         refreshProfile();
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_profile, menu);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_write:
                 showWrite();
+                break;
+            case R.id.menu_follow:
+                follow();
+                break;
+            case R.id.menu_unfollow:
+                unfollow();
                 break;
             case R.id.menu_dm:
                 showDM();
@@ -105,12 +109,34 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
                 showWebPage();
                 break;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_profile, menu);
+        followMemu = menu.findItem(R.id.menu_follow);
+        unfollowMenu = menu.findItem(R.id.menu_unfollow);
+    }
+
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+        checkMenuAction(menu);
+    }
+
+    private void checkMenuAction(Menu menu) {
+        boolean following = user.isFollowing();
+        LogUtil.v(TAG, "checkMenuAction() following=" + following);
+        if (followMemu != null) {
+            followMemu.setVisible(!following);
+        }
+
+        if (unfollowMenu != null) {
+            unfollowMenu.setVisible(following);
+        }
     }
 
     private void showWrite() {
@@ -271,6 +297,8 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
         updateTitle(user);
         updatePermission();
 
+        getBaseSupport().invalidateOptionsMenu();
+
         refreshFollowState();
 
         if (AppContext.DEBUG) {
@@ -351,8 +379,13 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
 
     private void updateFollowButton(boolean following) {
         user.setFollowing(following);
+        following = user.isFollowing();
+
+        LogUtil.v(TAG, "updateFollowButton following=" + following);
+        LogUtil.v(TAG, "updateFollowButton user.isFollowing()=" + user.isFollowing());
         updatePermission();
         vProfile.updateFollowState(following);
+        getBaseSupport().invalidateOptionsMenu();
     }
 
     private void doFollow() {

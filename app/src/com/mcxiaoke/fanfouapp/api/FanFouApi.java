@@ -20,6 +20,7 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.util.BitSet;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author mcxiaoke
@@ -179,7 +180,7 @@ final class FanFouApi implements Api {
 
     @Override
     public OAuthToken getOAuthAccessToken(String username, String password)
-            throws ApiException {
+            throws IOException, ApiException {
         try {
             return mOAuthService.getAccessToken(username, password);
         } catch (Exception e) {
@@ -974,6 +975,8 @@ final class FanFouApi implements Api {
      */
     private String fetch(final RequestBuilder builder) throws ApiException {
         OAuthRequest request = builder.build();
+        request.setConnectTimeout(5, TimeUnit.SECONDS);
+        request.setReadTimeout(10, TimeUnit.SECONDS);
         try {
 
             if (mOAuthService != null && mAccessToken != null) {
