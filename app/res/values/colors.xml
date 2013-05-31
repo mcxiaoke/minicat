@@ -36,12 +36,17 @@
 
     <color name="drawer_dim_background">#C0000000</color>
 
+    <color name="state_off_default">#33666666</color>
+    <color name="state_off_pressed">#66666666</color>
+    <color name="state_on_default">#CC269926</color>
+    <color name="state_on_pressed">#FF269926</color>
+
 
     <color name="text_primary">#FF222222</color>
     <color name="text_secondary">#FF888888</color>
 
-    <color name="background_primary">#FFF6F6F6</color>
-    <color name="background_secondary">#FFEEEEEE</color>
+    <color name="background_primary">#FFF9F9F9</color>
+    <color name="background_secondary">#FFEFEFEF</color>
 
     <color name="list_item_status_self_highlight">#2033b5e5</color>
     <color name="list_item_status_mention_highlight">#20b2cb39</color>

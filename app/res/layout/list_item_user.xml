@@ -50,13 +50,13 @@
 
     </RelativeLayout>
 
-    <TextView android:clickable="true" android:layout_gravity="center_vertical" android:gravity="center"
+    <TextView android:layout_gravity="center_vertical" android:gravity="center"
               android:id="@+id/button"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content" android:paddingLeft="@dimen/list_padding"
               android:singleLine="true"
               android:text="Follow" android:layout_margin="0dp"
-              android:textColor="@color/text_primary_selectable"
-              android:background="@drawable/button_follow_off"
-              android:textSize="@dimen/text_size_small"/>
+              android:textColor="@color/text_secondary_selectable"
+              android:background="@drawable/state_off"
+              android:textSize="@dimen/text_size_small" android:duplicateParentState="true"/>
 </LinearLayout>

@@ -24,8 +24,6 @@ import org.oauthsimple.oauth.OAuthService;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
@@ -1013,12 +1011,6 @@ final class FanFouApi implements Api {
             throw new ApiException(ApiException.IO_ERROR, e.getMessage(),
                     e);
         } catch (IOException e) {
-            if (DEBUG) {
-                Log.e(TAG, e.toString());
-            }
-            throw new ApiException(ApiException.IO_ERROR, e.getMessage(),
-                    e);
-        } catch (Exception e) {
             if (DEBUG) {
                 Log.e(TAG, e.toString());
             }

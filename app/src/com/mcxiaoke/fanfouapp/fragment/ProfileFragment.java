@@ -295,11 +295,15 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
         vProfile.setContent(user);
         vProfile.setVisibility(View.VISIBLE);
         updateTitle(user);
-        updatePermission();
 
         getBaseSupport().invalidateOptionsMenu();
 
-        refreshFollowState();
+        if (userId.equals(AppContext.getAccount())) {
+            vProfile.hideFollowState();
+        } else {
+            updatePermission();
+            refreshFollowState();
+        }
 
         if (AppContext.DEBUG) {
             Log.d(TAG, "showProfileHeader userId=" + userId);

@@ -48,6 +48,7 @@ public class ProfileView extends FrameLayout implements
     private TextView headerId;
     private TextView headerState;
     private ImageView headerLock;
+    private TextView headerFollow;
 
     private View vFollowingItem;
     private View vFollowersItem;
@@ -107,6 +108,7 @@ public class ProfileView extends FrameLayout implements
         headerId = (TextView) findViewById(R.id.header_id);
         headerState = (TextView) findViewById(R.id.header_state);
         headerLock = (ImageView) findViewById(R.id.header_lock);
+        headerFollow = (TextView) findViewById(R.id.header_follow);
 
         vStatusesItem = findViewById(R.id.item1);
         vFollowingItem = findViewById(R.id.item2);
@@ -135,6 +137,7 @@ public class ProfileView extends FrameLayout implements
     }
 
     private void setListeners() {
+        headerFollow.setOnClickListener(this);
 
         vFollowingItem.setOnClickListener(this);
         vFollowersItem.setOnClickListener(this);
@@ -159,10 +162,16 @@ public class ProfileView extends FrameLayout implements
     }
 
     public void updateFollowState(boolean following) {
-//        btnFollowState.setVisibility(View.VISIBLE);
-//        btnFollowState.setBackgroundResource(following ? R.drawable.button_follow_on : R.drawable.button_follow_off);
-//        btnFollowState.setTextColor(following ? mFollowOnColor : mFollowOffColor);
-//        btnFollowState.setText(following ? "正在关注" : "添加关注");
+        headerFollow.setVisibility(View.VISIBLE);
+        headerFollow.setBackgroundResource(following ? R.drawable.state_on : R.drawable.state_off);
+        headerFollow.setTextColor(following ? mFollowOnColor : mFollowOffColor);
+        headerFollow.setText(following ? "正在关注" : "添加关注");
+    }
+
+    public void hideFollowState() {
+        headerFollow.setVisibility(View.GONE);
+        headerState.setVisibility(View.GONE);
+
     }
 
     private void updateDescription(final UserModel user) {
@@ -230,8 +239,9 @@ public class ProfileView extends FrameLayout implements
 
     @Override
     public void onClick(View v) {
-        int id = v.getId();
-        if (v == vFollowingItem) {
+        if (v == headerFollow) {
+            onProfileItemClick(TYPE_FOLLOW_STATE);
+        } else if (v == vFollowingItem) {
             onProfileItemClick(TYPE_TOP_FOLLOWING);
         } else if (v == vFollowersItem) {
             onProfileItemClick(TYPE_TOP_FOLLOWERS);
