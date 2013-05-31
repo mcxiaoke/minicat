@@ -18,7 +18,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.mcxiaoke.fanfouapp.R;
-import com.mcxiaoke.fanfouapp.adapter.SearchResultsAdapter;
+import com.mcxiaoke.fanfouapp.adapter.SearchResultsArrayAdapter;
 import com.mcxiaoke.fanfouapp.api.Api;
 import com.mcxiaoke.fanfouapp.api.ApiException;
 import com.mcxiaoke.fanfouapp.api.Paging;
@@ -40,7 +40,7 @@ public class UISearchResults extends UIBaseSupport implements
     private PullToRefreshListView mPullToRefreshView;
     private ListView mListView;
 
-    private SearchResultsAdapter mStatusAdapter;
+    private SearchResultsArrayAdapter mStatusAdapter;
 
     private String keyword;
     private String maxId;
@@ -56,7 +56,7 @@ public class UISearchResults extends UIBaseSupport implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         highlightColor = getResources().getColor(R.color.search_text_highlight);
-        mStatusAdapter = new SearchResultsAdapter(this, highlightColor);
+        mStatusAdapter = new SearchResultsArrayAdapter(this, highlightColor);
         api = AppContext.getApi();
         setLayout();
     }

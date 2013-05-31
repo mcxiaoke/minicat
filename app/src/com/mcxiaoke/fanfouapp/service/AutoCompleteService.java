@@ -42,6 +42,9 @@ public class AutoCompleteService extends WakefulIntentService {
                 .getSystemService(Context.ALARM_SERVICE);
         am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
                 interval, getPendingIntent(context));
+
+        Intent intent = new Intent(context, AutoCompleteService.class);
+        context.startService(intent);
         if (AppContext.DEBUG) {
             Log.d(TAG,
                     "set repeat interval=3day first time="
@@ -71,7 +74,7 @@ public class AutoCompleteService extends WakefulIntentService {
     }
 
     private void doFetchAutoComplete() {
-        if (NetworkHelper.isConnected(this) || !AppContext.isVerified()) {
+        if (NetworkHelper.isNotConnected(this) || !AppContext.isVerified()) {
             return;
         }
         Api api = AppContext.getApi();
