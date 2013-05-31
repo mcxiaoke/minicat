@@ -42,6 +42,10 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
         mSelfBgColor = mContext.getResources().getColor(R.color.list_item_status_self_highlight);
     }
 
+    public void setColored(boolean colored) {
+        this.colored = colored;
+    }
+
     @Override
     public int getItemViewType(int position) {
         final Cursor cursor = (Cursor) getItem(position);
@@ -79,7 +83,7 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
         final ItemView view = (ItemView) root.findViewById(R.id.list_item);
 
         setColor(cursor, view);
-        UIHelper.setContent(view,s);
+        UIHelper.setContent(view, s);
         UIHelper.setMetaInfo(view, s);
         UIHelper.setImageClick(view, s.getUserId());
 

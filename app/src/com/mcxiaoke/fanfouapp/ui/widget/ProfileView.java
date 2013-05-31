@@ -29,7 +29,7 @@ public class ProfileView extends FrameLayout implements
     public static final int TYPE_FOLLOW_STATE = 4;
 
     public static final int TYPE_PHOTOS = 5;
-    public static final int TYPE_FAVORATIES = 6;
+    public static final int TYPE_TOP_FAVORATIES = 6;
     public static final int TYPE_STATUSES = 7;
     public static final int TYPE_FOLLOWING = 8;
     public static final int TYPE_FOLLOWERS = 9;
@@ -53,17 +53,17 @@ public class ProfileView extends FrameLayout implements
     private View vFollowingItem;
     private View vFollowersItem;
     private View vStatusesItem;
+    private View vFavoritesItem;
 
     private TextView tvFollowingItemTitle;
     private TextView tvFollowersItemTitle;
     private TextView tvStatusesItemTitle;
+    private TextView tvFavoritesRowTitle;
 
     private TextView tvFollowingItemValue;
     private TextView tvFollowersItemValue;
     private TextView tvStatusesItemValue;
-
-    private TextView tvFavoritesRowTitle;
-    private TextView tvPhotosRowTitle;
+    private TextView tvFavoritesRowValue;
 
     private TextView tvInfo;
 
@@ -110,41 +110,39 @@ public class ProfileView extends FrameLayout implements
         headerLock = (ImageView) findViewById(R.id.header_lock);
         headerFollow = (TextView) findViewById(R.id.header_follow);
 
-        vStatusesItem = findViewById(R.id.item1);
-        vFollowingItem = findViewById(R.id.item2);
-        vFollowersItem = findViewById(R.id.item3);
+        vFollowingItem = findViewById(R.id.item1);
+        vFollowersItem = findViewById(R.id.item2);
+        vStatusesItem = findViewById(R.id.item3);
+        vFavoritesItem = findViewById(R.id.item4);
 
-        tvStatusesItemTitle = (TextView) findViewById(R.id.text_title1);
-        tvFollowingItemTitle = (TextView) findViewById(R.id.text_title2);
-        tvFollowersItemTitle = (TextView) findViewById(R.id.text_title3);
+        tvFollowingItemTitle = (TextView) findViewById(R.id.text_title1);
+        tvFollowersItemTitle = (TextView) findViewById(R.id.text_title2);
+        tvStatusesItemTitle = (TextView) findViewById(R.id.text_title3);
+        tvFavoritesRowTitle = (TextView) findViewById(R.id.text_title4);
 
-        tvStatusesItemValue = (TextView) findViewById(R.id.text_value1);
-        tvFollowingItemValue = (TextView) findViewById(R.id.text_value2);
-        tvFollowersItemValue = (TextView) findViewById(R.id.text_value3);
+        tvFollowingItemValue = (TextView) findViewById(R.id.text_value1);
+        tvFollowersItemValue = (TextView) findViewById(R.id.text_value2);
+        tvStatusesItemValue = (TextView) findViewById(R.id.text_value3);
+        tvFavoritesRowValue = (TextView) findViewById(R.id.text_value4);
 
-        tvStatusesItemValue.setText("消息");
         tvFollowingItemValue.setText("正在关注");
         tvFollowersItemValue.setText("被关注");
-
-        tvPhotosRowTitle = (TextView) findViewById(R.id.text_left);
-        tvFavoritesRowTitle = (TextView) findViewById(R.id.text_right);
-
-        tvPhotosRowTitle.setText("查看相册");
-        tvFavoritesRowTitle.setText("查看收藏");
+        tvStatusesItemValue.setText("消息");
+        tvFavoritesRowValue.setText("收藏");
 
         tvInfo = (TextView) findViewById(R.id.info);
 
     }
 
     private void setListeners() {
+        headerImage.setOnClickListener(this);
         headerFollow.setOnClickListener(this);
 
         vFollowingItem.setOnClickListener(this);
         vFollowersItem.setOnClickListener(this);
         vStatusesItem.setOnClickListener(this);
+        vFavoritesItem.setOnClickListener(this);
 
-        tvFavoritesRowTitle.setOnClickListener(this);
-        tvPhotosRowTitle.setOnClickListener(this);
     }
 
     private void updateHeader(final UserModel user) {
@@ -159,6 +157,7 @@ public class ProfileView extends FrameLayout implements
         tvFollowingItemTitle.setText("" + user.getFriendsCount());
         tvFollowersItemTitle.setText("" + user.getFollowersCount());
         tvStatusesItemTitle.setText("" + user.getStatusesCount());
+        tvFavoritesRowTitle.setText("" + user.getFavouritesCount());
     }
 
     public void updateFollowState(boolean following) {
@@ -182,7 +181,7 @@ public class ProfileView extends FrameLayout implements
         String time = DateTimeHelper.formatDateOnly(user.getTime());
         String description = user.getDescription();
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         sb.append("自述：").append("\n");
         sb.append(StringHelper.isEmpty(description) ? "这家伙很懒，什么都没写" : description).append("\n\n");
@@ -247,10 +246,10 @@ public class ProfileView extends FrameLayout implements
             onProfileItemClick(TYPE_TOP_FOLLOWERS);
         } else if (v == vStatusesItem) {
             onProfileItemClick(TYPE_TOP_STATUSES);
-        } else if (v == tvPhotosRowTitle) {
+        } else if (v == vFavoritesItem) {
+            onProfileItemClick(TYPE_TOP_FAVORATIES);
+        } else if (v == headerImage) {
             onProfileItemClick(TYPE_PHOTOS);
-        } else if (v == tvFavoritesRowTitle) {
-            onProfileItemClick(TYPE_FAVORATIES);
         }
     }
 

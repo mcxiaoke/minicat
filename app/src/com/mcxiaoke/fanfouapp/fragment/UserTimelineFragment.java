@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import com.mcxiaoke.fanfouapp.adapter.StatusCursorAdapter;
 import com.mcxiaoke.fanfouapp.api.Paging;
 import com.mcxiaoke.fanfouapp.app.AppContext;
 import com.mcxiaoke.fanfouapp.controller.DataController;
@@ -69,6 +70,7 @@ public class UserTimelineFragment extends BaseTimlineFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        ((StatusCursorAdapter) getAdapter()).setColored(false);
     }
 
     @Override

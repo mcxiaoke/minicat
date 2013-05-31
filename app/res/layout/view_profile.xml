@@ -40,40 +40,41 @@
                       style="@style/ProfileItemTextMetaStyle"/>
         </LinearLayout>
 
-        <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/divider"/>
-
-        <LinearLayout style="@style/ProfileItemStyle" android:id="@+id/item3">
-
-
-            <TextView android:id="@+id/text_title3"
-                      android:text="5678" android:layout_alignParentLeft="true"
-                      style="@style/ProfileItemTextStyle"/>
-            <TextView android:id="@+id/text_value3" android:layout_alignParentRight="true" android:text="Statuses Count"
-                      style="@style/ProfileItemTextMetaStyle"/>
-        </LinearLayout>
-
     </LinearLayout>
 
     <View
             android:layout_width="match_parent"
-            android:layout_height="1dp" android:background="@drawable/divider"/>
+            android:layout_height="1dp"
+            android:background="@drawable/divider"/>
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:orientation="horizontal">
 
-        <TextView android:id="@+id/text_left"
-                  android:text="Left" style="@style/ProfileButtonTextStyle"/>
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+
+        <LinearLayout style="@style/ProfileItemStyle" android:id="@+id/item3">
+
+            <TextView android:id="@+id/text_title3"
+                      android:text="990" android:layout_alignParentLeft="true"
+                      android:layout_alignParentTop="true"
+                      style="@style/ProfileItemTextStyle"/>
+            <TextView android:id="@+id/text_value3" android:layout_alignParentRight="true" android:text="Statuses Count"
+                      android:layout_alignParentTop="true"
+                      style="@style/ProfileItemTextMetaStyle"/>
+        </LinearLayout>
 
         <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/divider"/>
 
-        <TextView android:id="@+id/text_right"
-                  android:text="Right" style="@style/ProfileButtonTextStyle"/>
+        <LinearLayout style="@style/ProfileItemStyle" android:id="@+id/item4">
+
+            <TextView android:id="@+id/text_title4"
+                      android:text="1234" android:layout_alignParentLeft="true"
+                      style="@style/ProfileItemTextStyle"/>
+            <TextView android:id="@+id/text_value4" android:layout_alignParentRight="true" android:text="Statuses Count"
+                      style="@style/ProfileItemTextMetaStyle"/>
+        </LinearLayout>
 
     </LinearLayout>
 

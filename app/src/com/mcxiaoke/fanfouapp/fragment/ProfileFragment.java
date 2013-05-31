@@ -205,7 +205,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
             onItemFollowersClick();
         } else if (type == ProfileView.TYPE_STATUSES) {
             onItemStatusesClick();
-        } else if (type == ProfileView.TYPE_FAVORATIES) {
+        } else if (type == ProfileView.TYPE_TOP_FAVORATIES) {
             onItemFavoratiesClick();
         }
     }

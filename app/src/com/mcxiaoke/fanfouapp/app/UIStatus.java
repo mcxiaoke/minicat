@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -24,7 +23,12 @@ import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 import com.mcxiaoke.fanfouapp.dialog.ConfirmDialog;
 import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.task.BetterAsyncTask;
-import com.mcxiaoke.fanfouapp.util.*;
+import com.mcxiaoke.fanfouapp.util.DateTimeHelper;
+import com.mcxiaoke.fanfouapp.util.IOHelper;
+import com.mcxiaoke.fanfouapp.util.ImageHelper;
+import com.mcxiaoke.fanfouapp.util.IntentHelper;
+import com.mcxiaoke.fanfouapp.util.StatusHelper;
+import com.mcxiaoke.fanfouapp.util.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
@@ -45,6 +49,7 @@ public class UIStatus extends UIBaseSupport {
     private ImageView headerImage;
     private TextView headerName;
     private TextView headerId;
+    private TextView headerFollow;
 
     private TextView contentText;
     private ImageView contentPhoto;
@@ -134,8 +139,8 @@ public class UIStatus extends UIBaseSupport {
         headerImage = (ImageView) findViewById(R.id.header_image);
         headerName = (TextView) findViewById(R.id.header_name);
         headerId = (TextView) findViewById(R.id.header_id);
-        TextPaint tp = headerName.getPaint();
-        tp.setFakeBoldText(true);
+        headerFollow = (TextView) findViewById(R.id.header_follow);
+        headerFollow.setVisibility(View.GONE);
 
         contentText = (TextView) findViewById(R.id.content_text);
         contentPhoto = (ImageView) findViewById(R.id.content_photo);

@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/header_image" android:layout_marginTop="@dimen/status_header_padding"
-            android:layout_alignParentLeft="true" android:text="Following"
+            android:layout_alignParentLeft="true"
             android:padding="@dimen/list_padding" android:singleLine="true"
             android:textSize="@dimen/text_size_small" android:textColor="@color/text_white"
             android:background="@drawable/state_on"/>
