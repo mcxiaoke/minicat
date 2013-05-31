@@ -40,7 +40,7 @@ public class AppContext extends Application {
 
     private static final String TAG = "Application";
 
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
     private static HashMap<String, WeakReference<Activity>> contexts = new HashMap<String, WeakReference<Activity>>();
 
     public static int versionCode;
@@ -84,7 +84,7 @@ public class AppContext extends Application {
         }
 
         if (DEBUG) {
-            Log.d(TAG, "initAccountInfo() accountInfo: " + accountInfo);
+            Log.v(TAG, "initAccountInfo() accountInfo: " + accountInfo);
         }
     }
 
@@ -96,7 +96,7 @@ public class AppContext extends Application {
             versionCode = info.versionCode;
             versionName = info.versionName;
             if (DEBUG) {
-                Log.d(TAG, "initAppInfo() versionCode: " + versionCode
+                Log.v(TAG, "initAppInfo() versionCode: " + versionCode
                         + " versionName: " + versionName);
             }
         } catch (NameNotFoundException e) {
@@ -110,7 +110,7 @@ public class AppContext extends Application {
         DataController.clearDatabase(context);
 
         if (DEBUG) {
-            Log.d(TAG, "doLogin()");
+            Log.v(TAG, "doLogin()");
         }
         UIController.showLogin(context);
     }
@@ -123,7 +123,7 @@ public class AppContext extends Application {
         store.clear();
 
         if (DEBUG) {
-            Log.d(TAG, "clearAccountInfo()");
+            Log.v(TAG, "clearAccountInfo()");
         }
     }
 
@@ -135,8 +135,8 @@ public class AppContext extends Application {
         AccountStore store = new AccountStore(context);
         store.saveLoginInfo(loginName, loginPassword);
         if (DEBUG) {
-            Log.d("App", "loginPassword loginName: " + loginName);
-            Log.d("App", "loginPassword loginPassword: " + loginPassword);
+            Log.v("App", "loginPassword loginName: " + loginName);
+            Log.v("App", "loginPassword loginPassword: " + loginPassword);
         }
 
     }
@@ -155,8 +155,8 @@ public class AppContext extends Application {
         AccountStore store = new AccountStore(context);
         store.saveUserInfo(account, screenName, profileImage);
         if (DEBUG) {
-            Log.d("App", "updateUserInfo UserModel: " + u);
-            Log.d("App", "updateUserInfo accountInfo: " + accountInfo);
+            Log.v("App", "updateUserInfo UserModel: " + u);
+            Log.v("App", "updateUserInfo accountInfo: " + accountInfo);
         }
 
     }
@@ -167,8 +167,8 @@ public class AppContext extends Application {
         AccountStore store = new AccountStore(context);
         store.saveAccessToken(token);
         if (DEBUG) {
-            Log.d("App", "updateAccessToken AccessToken: " + token);
-            Log.d("App", "updateAccessToken accountInfo: " + accountInfo);
+            Log.v("App", "updateAccessToken AccessToken: " + token);
+            Log.v("App", "updateAccessToken accountInfo: " + accountInfo);
         }
     }
 

@@ -11,7 +11,6 @@ import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +27,7 @@ import com.mcxiaoke.fanfouapp.menu.MenuFragment;
 import com.mcxiaoke.fanfouapp.menu.MenuItemResource;
 import com.mcxiaoke.fanfouapp.preference.PreferenceHelper;
 import com.mcxiaoke.fanfouapp.service.AutoCompleteService;
+import com.mcxiaoke.fanfouapp.util.LogUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 import com.viewpagerindicator.PageIndicator;
@@ -62,7 +62,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     private boolean useActionBarRefreshButton;
 
     private void log(String message) {
-        Log.d(TAG, message);
+        LogUtil.v(TAG, message);
     }
 
     @Override

@@ -13,7 +13,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mcxiaoke.fanfouapp.R;
-import com.mcxiaoke.fanfouapp.api.ApiException;
 import com.mcxiaoke.fanfouapp.api.Paging;
 import com.mcxiaoke.fanfouapp.app.AppContext;
 import com.mcxiaoke.fanfouapp.controller.EmptyViewController;
@@ -153,6 +152,7 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
     private class LoadDataTask extends AsyncTask<Void, Void, List<StatusModel>> {
 
         private volatile boolean mCancelled;
+        private Exception mException;
 
         public LoadDataTask() {
             mCancelled = false;
@@ -171,8 +171,9 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
                 Paging paging = new Paging();
                 paging.count = 60;
                 statusModels = AppContext.getApi().getPhotosTimeline(id, paging);
-            } catch (ApiException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
+                mException = e;
             }
             return statusModels;
         }
@@ -190,7 +191,11 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
                     mArrayAdapter.addAll(statusModels);
                     mArrayAdapter.notifyDataSetChanged();
                 } else {
-                    showEmpty("没有数据");
+                    if (mException != null) {
+                        showEmpty("无法获取数据");
+                    } else {
+                        showEmpty("没有数据");
+                    }
                 }
             }
 

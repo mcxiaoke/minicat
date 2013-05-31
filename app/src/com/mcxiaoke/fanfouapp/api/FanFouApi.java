@@ -5,7 +5,13 @@ package com.mcxiaoke.fanfouapp.api;
 
 import android.util.Log;
 import com.mcxiaoke.fanfouapp.app.AppContext;
-import com.mcxiaoke.fanfouapp.dao.model.*;
+import com.mcxiaoke.fanfouapp.dao.model.BaseModel;
+import com.mcxiaoke.fanfouapp.dao.model.DirectMessageModel;
+import com.mcxiaoke.fanfouapp.dao.model.Notifications;
+import com.mcxiaoke.fanfouapp.dao.model.RateLimitStatus;
+import com.mcxiaoke.fanfouapp.dao.model.Search;
+import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
+import com.mcxiaoke.fanfouapp.dao.model.UserModel;
 import org.apache.http.protocol.HTTP;
 import org.oauthsimple.builder.ServiceBuilder;
 import org.oauthsimple.builder.api.FanfouApi;
@@ -16,8 +22,13 @@ import org.oauthsimple.model.OAuthToken;
 import org.oauthsimple.model.SignatureType;
 import org.oauthsimple.oauth.OAuthService;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 import java.util.BitSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -55,12 +66,13 @@ final class FanFouApi implements Api {
     private OAuthService buildOAuthService(OAuthToken token) {
         ServiceBuilder builder = new ServiceBuilder().apiKey(API_KEY)
                 .apiSecret(API_SECRET).callback(CALLBACK_URL)
-                .provider(FanfouApi.class).debug().debugStream(os)
+                .provider(FanfouApi.class)
                 .signatureType(SignatureType.HEADER_OAUTH);
+        if (DEBUG) {
+            builder.debug();
+        }
         return builder.build();
     }
-
-    private OutputStream os = new PrintStream(System.out);
 
     private void debug(String message) {
         Log.d(TAG, message);
@@ -994,12 +1006,24 @@ final class FanFouApi implements Api {
                 return body;
             }
             throw new ApiException(statusCode, FanFouParser.error(body));
+        } catch (UnknownHostException e) {
+            if (DEBUG) {
+                Log.e(TAG, e.toString());
+            }
+            throw new ApiException(ApiException.IO_ERROR, e.getMessage(),
+                    e);
         } catch (IOException e) {
             if (DEBUG) {
                 Log.e(TAG, e.toString());
             }
             throw new ApiException(ApiException.IO_ERROR, e.getMessage(),
-                    e.getCause());
+                    e);
+        } catch (Exception e) {
+            if (DEBUG) {
+                Log.e(TAG, e.toString());
+            }
+            throw new ApiException(ApiException.IO_ERROR, e.getMessage(),
+                    e);
         }
     }
 

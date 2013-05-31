@@ -28,6 +28,10 @@ public final class NetworkHelper {
         return info != null && info.isConnectedOrConnecting();
     }
 
+    public static boolean isNotConnected(Context context) {
+        return !isConnected(context);
+    }
+
     public static boolean isWifi(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);

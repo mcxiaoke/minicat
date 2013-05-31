@@ -241,6 +241,8 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
                 return new ResultInfo(LOGIN_IO_ERROR, e.toString());
             } catch (ApiException e) {
                 return new ResultInfo(LOGIN_IO_ERROR, e.toString());
+            } catch (Exception e) {
+                return new ResultInfo(LOGIN_IO_ERROR, e.toString());
             } finally {
             }
         }

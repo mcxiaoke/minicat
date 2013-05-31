@@ -25,6 +25,7 @@ import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 import com.mcxiaoke.fanfouapp.preference.PreferenceHelper;
 import com.mcxiaoke.fanfouapp.service.Constants;
 import com.mcxiaoke.fanfouapp.ui.UIHelper;
+import com.mcxiaoke.fanfouapp.util.NetworkHelper;
 import com.mcxiaoke.fanfouapp.util.Utils;
 import com.mcxiaoke.fanfouapp.R;
 
@@ -55,7 +56,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     public PullToRefreshListFragment() {
         super();
         if (AppContext.DEBUG) {
-            Log.d(TAG, "PullToRefreshListFragment() id=" + this);
+            Log.v(TAG, "PullToRefreshListFragment() id=" + this);
         }
     }
 
@@ -63,7 +64,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (AppContext.DEBUG) {
-            Log.d(TAG, "onAttach() isVisible=" + isVisible());
+            Log.v(TAG, "onAttach() isVisible=" + isVisible());
         }
     }
 
@@ -81,7 +82,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (AppContext.DEBUG) {
-            Log.d(TAG, "onCreate() isVisible=" + isVisible());
+            Log.v(TAG, "onCreate() isVisible=" + isVisible());
         }
 
         Bundle args = getArguments();
@@ -97,7 +98,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (AppContext.DEBUG) {
-            Log.d(TAG, "onCreateView() isVisible=" + isVisible());
+            Log.v(TAG, "onCreateView() isVisible=" + isVisible());
         }
         View v = inflater.inflate(R.layout.fm_pull_list, container, false);
         setLayout(v);
@@ -120,7 +121,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (AppContext.DEBUG) {
-            Log.d(TAG, "onActivityCreated() isVisible=" + isVisible());
+            Log.v(TAG, "onActivityCreated() isVisible=" + isVisible());
         }
 
         parseArguments(getArguments());
@@ -139,7 +140,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (AppContext.DEBUG) {
-            Log.d(TAG, "onHiddenChanged() hidden=" + hidden + " isVisible="
+            Log.v(TAG, "onHiddenChanged() hidden=" + hidden + " isVisible="
                     + isVisible());
         }
     }
@@ -154,11 +155,19 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
     public void onPullDownToRefresh(
             final PullToRefreshBase<ListView> refreshView) {
+        if (NetworkHelper.isNotConnected(getActivity())) {
+            mPullToRefreshView.onRefreshComplete();
+            return;
+        }
         doFetch(false);
         getBaseSupport().showProgressIndicator();
     }
 
     public void onPullUpToRefresh(final PullToRefreshBase<ListView> refreshView) {
+        if (NetworkHelper.isNotConnected(getActivity())) {
+            mPullToRefreshView.onRefreshComplete();
+            return;
+        }
         doFetch(true);
         getBaseSupport().showProgressIndicator();
     }
@@ -171,14 +180,14 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
     protected void doRefresh() {
         if (AppContext.DEBUG) {
-            Log.d(TAG, "doRefresh()");
+            Log.v(TAG, "doRefresh()");
         }
         doFetch(false);
     }
 
     protected void doGetMore() {
         if (AppContext.DEBUG) {
-            Log.d(TAG, "doGetMore()");
+            Log.v(TAG, "doGetMore()");
         }
         doFetch(true);
     }
@@ -221,7 +230,10 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     @Override
     public void startRefresh() {
         if (AppContext.DEBUG) {
-            Log.d(TAG, "startRefresh() busy=" + busy);
+            Log.v(TAG, "startRefresh() busy=" + busy);
+        }
+        if (NetworkHelper.isNotConnected(getActivity())) {
+            return;
         }
         if (!busy) {
             busy = true;
@@ -233,13 +245,13 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     private void onSuccess(Bundle data) {
         int count = data.getInt("count");
         if (AppContext.DEBUG) {
-            Log.d(TAG, "onSuccess(data) count=" + count);
+            Log.v(TAG, "onSuccess(data) count=" + count);
         }
     }
 
     private void onError(Bundle data) {
         if (AppContext.DEBUG) {
-            Log.d(TAG, "onSuccess()");
+            Log.v(TAG, "onSuccess()");
         }
         String errorMessage = data.getString("error_message");
         int errorCode = data.getInt("error_code");
@@ -267,7 +279,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (AppContext.DEBUG) {
-            Log.d(TAG, "onViewCreated() isVisible=" + isVisible());
+            Log.v(TAG, "onViewCreated() isVisible=" + isVisible());
         }
     }
 
@@ -275,7 +287,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     public void onStart() {
         super.onStart();
         if (AppContext.DEBUG) {
-            Log.d(TAG, "onStart() isVisible=" + isVisible());
+            Log.v(TAG, "onStart() isVisible=" + isVisible());
         }
     }
 
@@ -297,7 +309,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
             mParcelable = null;
         }
         if (AppContext.DEBUG) {
-            Log.d(TAG, "onResume() isVisible=" + isVisible());
+            Log.v(TAG, "onResume() isVisible=" + isVisible());
         }
     }
 
@@ -305,7 +317,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     public void onPause() {
         super.onPause();
         if (AppContext.DEBUG) {
-            Log.d(TAG, "onPause() isVisible=" + isVisible());
+            Log.v(TAG, "onPause() isVisible=" + isVisible());
         }
     }
 
@@ -313,7 +325,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     public void onStop() {
         super.onStop();
         if (AppContext.DEBUG) {
-            Log.d(TAG, "onStop() isVisible=" + isVisible());
+            Log.v(TAG, "onStop() isVisible=" + isVisible());
         }
     }
 
@@ -321,7 +333,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     public void onDestroyView() {
         super.onDestroyView();
         if (AppContext.DEBUG) {
-            Log.d(TAG, "onDestroyView()");
+            Log.v(TAG, "onDestroyView()");
         }
     }
 
@@ -330,7 +342,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
         super.onDestroy();
         mDataLoaded = false;
         if (AppContext.DEBUG) {
-            Log.d(TAG, "onDestroy()");
+            Log.v(TAG, "onDestroy()");
         }
     }
 
@@ -338,7 +350,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     public void onDetach() {
         super.onDetach();
         if (AppContext.DEBUG) {
-            Log.d(TAG, "onDetach() isVisible=" + isVisible());
+            Log.v(TAG, "onDetach() isVisible=" + isVisible());
         }
     }
 
@@ -346,7 +358,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     public void onLoadFinished(Loader<Cursor> loader, Cursor newCursor) {
         getAdapter().swapCursor(newCursor);
         if (AppContext.DEBUG) {
-            Log.d(TAG, "onLoadFinished() adapter=" + mAdapter.getCount());
+            Log.v(TAG, "onLoadFinished() adapter=" + mAdapter.getCount());
         }
         checkRefresh();
     }
@@ -354,7 +366,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     protected void checkRefresh() {
         boolean refreshOnStart = PreferenceHelper.getInstance(getActivity()).isRefreshOnStart();
         if (AppContext.DEBUG) {
-            Log.d(TAG, "checkRefresh() mDataLoaded=" + mDataLoaded
+            Log.v(TAG, "checkRefresh() mDataLoaded=" + mDataLoaded
                     + " refreshOnStart=" + refreshOnStart + " adapter.count=" + mAdapter.getCount());
         }
         if (!mDataLoaded && (refreshOnStart || mAdapter.isEmpty())) {
@@ -365,7 +377,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         if (AppContext.DEBUG) {
-            Log.d(TAG, "onLoaderReset()");
+            Log.v(TAG, "onLoaderReset()");
         }
         getAdapter().swapCursor(null);
     }
@@ -384,7 +396,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
         public void handleMessage(Message msg) {
             Bundle data = msg.getData();
             if (AppContext.DEBUG) {
-                Log.d(TAG, "handleMessage() data=" + data + " msg=" + msg);
+                Log.v(TAG, "handleMessage() data=" + data + " msg=" + msg);
             }
             mFragment.mDataLoaded = true;
             mFragment.busy = false;

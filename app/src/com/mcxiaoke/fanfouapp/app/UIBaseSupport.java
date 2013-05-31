@@ -27,7 +27,7 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
     private static final String TAG = UIBaseSupport.class.getSimpleName();
 
     private static void debug(String message) {
-        LogUtil.d(TAG, message);
+        LogUtil.v(TAG, message);
     }
 
     public static final int STATE_INIT = 0;

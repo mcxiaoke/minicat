@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +18,7 @@ import android.widget.TextView;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.app.AppContext;
 import com.mcxiaoke.fanfouapp.app.UIHome;
+import com.mcxiaoke.fanfouapp.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
     private static final String TAG = MenuFragment.class.getSimpleName();
 
     static void debug(String message) {
-        Log.d(TAG, message);
+        LogUtil.v(TAG, message);
     }
 
     private static final int MENU_ID = 1000;
@@ -256,8 +256,6 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
             holder.icon.setImageResource(item.iconId);
             holder.icon.setVisibility(View.GONE);
             holder.text.setText(item.text);
-
-            debug("getView ,position=" + position + " item=" + item);
 
             if (position == currentPosition && item.highlight) {
                 convertView.setBackgroundResource(R.drawable.selector_drawer_menu_light_checked);
