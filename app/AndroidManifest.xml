@@ -200,9 +200,6 @@
         <service
                 android:name=".service.AutoCompleteService"
                 android:label="@string/app_name"/>
-        <service
-                android:name=".service.QueueService"
-                android:label="@string/app_name"/>
 
         <service
                 android:name=".service.SyncService"

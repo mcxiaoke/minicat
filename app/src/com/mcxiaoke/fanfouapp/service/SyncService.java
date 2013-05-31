@@ -8,8 +8,17 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
-import android.os.*;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.Parcelable;
+import android.os.RemoteException;
 import android.util.Log;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.api.Api;
@@ -19,11 +28,23 @@ import com.mcxiaoke.fanfouapp.app.AppContext;
 import com.mcxiaoke.fanfouapp.app.UIRecords;
 import com.mcxiaoke.fanfouapp.controller.CacheController;
 import com.mcxiaoke.fanfouapp.controller.DataController;
-import com.mcxiaoke.fanfouapp.dao.model.*;
+import com.mcxiaoke.fanfouapp.dao.model.BaseModel;
+import com.mcxiaoke.fanfouapp.dao.model.DirectMessageModel;
+import com.mcxiaoke.fanfouapp.dao.model.IBaseColumns;
+import com.mcxiaoke.fanfouapp.dao.model.StatusColumns;
+import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 import com.mcxiaoke.fanfouapp.dao.model.StatusUpdateInfo;
-import com.mcxiaoke.fanfouapp.util.*;
+import com.mcxiaoke.fanfouapp.dao.model.StatusUpdateInfoColumns;
+import com.mcxiaoke.fanfouapp.dao.model.UserColumns;
+import com.mcxiaoke.fanfouapp.dao.model.UserModel;
+import com.mcxiaoke.fanfouapp.util.Assert;
+import com.mcxiaoke.fanfouapp.util.ImageHelper;
+import com.mcxiaoke.fanfouapp.util.LogUtil;
+import com.mcxiaoke.fanfouapp.util.NetworkHelper;
+import com.mcxiaoke.fanfouapp.util.StringHelper;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -69,6 +90,8 @@ public final class SyncService extends Service implements Handler.Callback {
     public static final int FRIENDSHIPS_REQUESTS = -403;
     public static final int FRIENDSHIPS_ACCEPT = -404;
     public static final int FRIENDSHIPS_DENY = -405;
+
+    public static final int DRAFTS_SEND = -501;
 
     private static final int MSG_SYNC_DATA = 0;
     private static final int MSG_EXEC_IDOP = 1;
@@ -184,7 +207,8 @@ public final class SyncService extends Service implements Handler.Callback {
                 mCommandHandler.sendMessage(message);
             }
             break;
-            case STATUS_UPDATE: {
+            case STATUS_UPDATE:
+            case DRAFTS_SEND: {
                 Message message = Message.obtain();
                 message.what = MSG_POST_DATA;
                 message.arg1 = type;
@@ -280,6 +304,10 @@ public final class SyncService extends Service implements Handler.Callback {
                     statusUpdate(info);
                     debug("handlePostDataCommands info=" + info);
                 }
+            }
+            break;
+            case DRAFTS_SEND: {
+                doSendAllDrafts();
             }
             break;
         }
@@ -655,15 +683,16 @@ public final class SyncService extends Service implements Handler.Callback {
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                doStatusUpdate(info);
+                doStatusUpdate(info, false);
             }
         };
         mExecutor.submit(runnable);
     }
 
 
-    private boolean doStatusUpdate(final StatusUpdateInfo info) {
+    private boolean doStatusUpdate(final StatusUpdateInfo info, boolean needDeleteDraft) {
         showSendingNotification();
+        isSending = true;
         boolean res = false;
 
         debug("doStatusUpdate() info=" + info);
@@ -690,6 +719,9 @@ public final class SyncService extends Service implements Handler.Callback {
                     photo.delete();
                 }
             }
+            if (needDeleteDraft) {
+                DataController.deleteRecord(this, info.id);
+            }
             mNotificationManager.cancel(NOTIFICATION_STATUS_UPDATE_ONGOING);
             if (result != null) {
                 sendSuccessBroadcast(result);
@@ -714,7 +746,38 @@ public final class SyncService extends Service implements Handler.Callback {
         } finally {
             mNotificationManager.cancel(NOTIFICATION_STATUS_UPDATE_ONGOING);
         }
+        isSending = false;
         return res;
+    }
+
+    private volatile boolean isSending = false;
+
+    private void doSendAllDrafts() {
+        if (isSending) {
+            return;
+        }
+        isSending = true;
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                List<StatusUpdateInfo> infos = new ArrayList<StatusUpdateInfo>();
+                Cursor cursor = getContentResolver().query(StatusUpdateInfoColumns.CONTENT_URI,
+                        null, null, null, null);
+                if (cursor != null) {
+                    while (cursor.moveToNext()) {
+                        infos.add(StatusUpdateInfo.from(cursor));
+                    }
+                }
+                if (infos != null && infos.size() > 0) {
+                    for (StatusUpdateInfo info : infos) {
+                        doStatusUpdate(info, true);
+
+                    }
+                }
+            }
+        };
+        mExecutor.submit(runnable);
+
     }
 
     private void isFriends(final Commmand cmd, Intent intent) {

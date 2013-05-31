@@ -1,29 +1,27 @@
 package com.mcxiaoke.fanfouapp.app;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.adapter.RecordCursorAdaper;
 import com.mcxiaoke.fanfouapp.controller.DataController;
-import com.mcxiaoke.fanfouapp.controller.SimpleDialogListener;
+import com.mcxiaoke.fanfouapp.dao.model.StatusUpdateInfo;
 import com.mcxiaoke.fanfouapp.dao.model.StatusUpdateInfoColumns;
-import com.mcxiaoke.fanfouapp.dao.model.RecordModel;
-import com.mcxiaoke.fanfouapp.dialog.ConfirmDialog;
-import com.mcxiaoke.fanfouapp.service.QueueService;
-import com.mcxiaoke.fanfouapp.util.StringHelper;
+import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.util.Utils;
-import com.mcxiaoke.fanfouapp.R;
-
-import java.io.File;
 
 /**
  * @author mcxiaoke
@@ -45,7 +43,8 @@ public class UIRecords extends UIBaseSupport implements OnItemClickListener {
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add(0, 0, 0, "删除草稿");
+        menu.add(0, 0, 0, "删除此条草稿");
+        menu.add(0, 1, 0, "清空草稿箱");
     }
 
     @Override
@@ -55,6 +54,9 @@ public class UIRecords extends UIBaseSupport implements OnItemClickListener {
                 AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
                         .getMenuInfo();
                 deleteRecord(info.position);
+                return true;
+            case 1:
+                onMenuClearClick();
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -67,7 +69,7 @@ public class UIRecords extends UIBaseSupport implements OnItemClickListener {
             int id = DataController.parseInt(cursor, BaseColumns._ID);
             int result = DataController.deleteRecord(mContext, id);
             if (result > 0) {
-                // mCursor.requery();
+//                mCursor.requery();
                 Utils.notify(mContext, "删除成功");
             }
         }
@@ -93,29 +95,33 @@ public class UIRecords extends UIBaseSupport implements OnItemClickListener {
 
     private void onMenuClearClick() {
         DataController.clear(mContext, StatusUpdateInfoColumns.CONTENT_URI);
-        // mCursor.requery();
         Utils.notify(this, "草稿箱已清空");
-        finish();
     }
 
-    private void startTaskQueueService() {
-        QueueService.start(this);
+    private void startSendService() {
+        Intent i = new Intent(mContext, SyncService.class);
+        i.putExtra("type", SyncService.DRAFTS_SEND);
+        startService(i);
     }
 
     private void doSendAll() {
-        final ConfirmDialog dialog = new ConfirmDialog(this);
-        dialog.setTitle("提示");
-        dialog.setMessage("确定发送所有草稿吗？");
-        dialog.setClickListener(new SimpleDialogListener() {
-
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("提示");
+        builder.setMessage("确定发送所有草稿吗？");
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
-            public void onPositiveClick() {
-                super.onPositiveClick();
-                startTaskQueueService();
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startSendService();
                 onMenuHomeClick();
             }
         });
-        dialog.show();
+        builder.create().show();
     }
 
     @Override
@@ -123,27 +129,38 @@ public class UIRecords extends UIBaseSupport implements OnItemClickListener {
                             long id) {
         final Cursor cursor = (Cursor) parent.getItemAtPosition(position);
         if (cursor != null) {
-            final RecordModel record = RecordModel.from(cursor);
+            final StatusUpdateInfo record = StatusUpdateInfo.from(cursor);
             showWrite(record);
         }
     }
 
-    private void showWrite(final RecordModel record) {
-        if (record == null) {
+    private void showWrite(final StatusUpdateInfo info) {
+        if (info == null) {
             return;
         }
 
         Intent intent = new Intent(this, UIWrite.class);
-        intent.putExtra("type", record.getType());
-        intent.putExtra("text", record.getText());
-        intent.putExtra("record_id", record.getId());
-        intent.putExtra("id", record.getReply());
-        if (!StringHelper.isEmpty(record.getFile())) {
-            intent.putExtra("data", new File(record.getFile()));
-        }
+        intent.putExtra(StatusUpdateInfo.TAG, info);
         startActivity(intent);
         finish();
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_drafts, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (R.id.menu_clearall == item.getItemId()) {
+            onMenuClearClick();
+            return true;
+        } else if (R.id.menu_sendall == item.getItemId()) {
+            doSendAll();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

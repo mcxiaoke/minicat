@@ -51,7 +51,6 @@ final class RequestBuilder {
     }
 
     public RequestBuilder paging(Paging p) {
-        Assert.notNull(p);
         this.count(p.count);
         this.page(p.page);
         this.sinceId(p.sinceId);
@@ -65,12 +64,16 @@ final class RequestBuilder {
     }
 
     public RequestBuilder format(String format) {
-        this.params.add(new Parameter("format", format));
+        if (!TextUtils.isEmpty(format)) {
+            this.params.add(new Parameter("format", format));
+        }
         return this;
     }
 
     public RequestBuilder mode(String mode) {
-        this.params.add(new Parameter("mode", mode));
+        if (!TextUtils.isEmpty(mode)) {
+            this.params.add(new Parameter("mode", mode));
+        }
         return this;
     }
 
@@ -88,7 +91,9 @@ final class RequestBuilder {
     }
 
     public RequestBuilder location(String location) {
-        this.params.add(new Parameter("location", location));
+        if (!TextUtils.isEmpty(location)) {
+            this.params.add(new Parameter("location", location));
+        }
         return this;
     }
 

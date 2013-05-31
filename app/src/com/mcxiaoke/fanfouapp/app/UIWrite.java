@@ -32,7 +32,6 @@ import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.StatusUpdateInfo;
 import com.mcxiaoke.fanfouapp.dao.model.StatusUpdateInfoColumns;
-import com.mcxiaoke.fanfouapp.dao.model.RecordModel;
 import com.mcxiaoke.fanfouapp.service.Constants;
 import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.ui.widget.MyAutoCompleteTextView;
@@ -88,6 +87,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 
     private boolean enableLocation;
 
+    private StatusUpdateInfo info;
     private String inReplyToStatusId;
     private String text;
     private int type;
@@ -240,14 +240,27 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
         if (intent != null) {
             String action = intent.getAction();
             if (action == null) {
-                type = intent.getIntExtra("type", StatusUpdateInfo.TYPE_NONE);
-                text = intent.getStringExtra("text");
-                inReplyToStatusId = intent.getStringExtra("id");
-                File file = (File) intent.getSerializableExtra("data");
+                File file = null;
+                info = intent.getParcelableExtra(StatusUpdateInfo.TAG);
+                if (info != null) {
+                    type = info.type;
+                    text = info.text;
+                    inReplyToStatusId = info.reply;
+                    if (info.fileName != null) {
+                        file = new File(info.fileName);
+                    }
+                    deleteRecord(info.id);
+                } else {
+                    type = intent.getIntExtra("type", StatusUpdateInfo.TYPE_NONE);
+                    text = intent.getStringExtra("text");
+                    inReplyToStatusId = intent.getStringExtra("id");
+                    file = (File) intent.getSerializableExtra("data");
+                }
+
                 long draftId = intent.getIntExtra("record_id", -1);
                 parsePhoto(file);
                 updateUI();
-                deleteRecord(draftId);
+
             } else if (action.equals(Intent.ACTION_SEND)
                     || action.equals(Constants.ACTION_SEND)) {
                 Bundle extras = intent.getExtras();
@@ -464,11 +477,12 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
     }
 
     private void doSaveRecord() {
-        RecordModel rm = new RecordModel();
-        rm.setType(type);
-        rm.setText(content);
-        rm.setFile(photo == null ? "" : photo.toString());
-        rm.setReply(inReplyToStatusId);
+        StatusUpdateInfo rm = new StatusUpdateInfo();
+        rm.type = type;
+        rm.text = content;
+        rm.fileName = (photo == null ? null : photo.toString());
+        rm.reply = inReplyToStatusId;
+        rm.repost = inReplyToStatusId;
         getContentResolver().insert(StatusUpdateInfoColumns.CONTENT_URI, rm.values());
     }
 
@@ -553,7 +567,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
         Intent i = new Intent(mContext, SyncService.class);
         StatusUpdateInfo info = new StatusUpdateInfo();
         info.type = type;
-        info.userId=AppContext.getAccount();
+        info.userId = AppContext.getAccount();
         info.text = content;
         info.fileName = photo == null ? null : photo.toString();
         info.location = mLocationString;

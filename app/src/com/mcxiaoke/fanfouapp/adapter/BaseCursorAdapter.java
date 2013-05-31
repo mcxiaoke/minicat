@@ -28,12 +28,12 @@ public abstract class BaseCursorAdapter extends CursorAdapter implements
 	protected boolean busy;
 
 	public BaseCursorAdapter(Context context) {
-		super(context, null, FLAG_REGISTER_CONTENT_OBSERVER);
+		super(context, null, true);
 		initialize(context);
 	}
 
 	public BaseCursorAdapter(Context context, Cursor c) {
-		super(context, c, FLAG_REGISTER_CONTENT_OBSERVER);
+		super(context, c, true);
 		initialize(context);
 	}
 

@@ -3,6 +3,7 @@
  */
 package com.mcxiaoke.fanfouapp.api;
 
+import android.text.TextUtils;
 import android.util.Log;
 import com.mcxiaoke.fanfouapp.app.AppContext;
 import com.mcxiaoke.fanfouapp.dao.model.BaseModel;
@@ -24,6 +25,7 @@ import org.oauthsimple.oauth.OAuthService;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
@@ -67,7 +69,7 @@ final class FanFouApi implements Api {
                 .provider(FanfouApi.class)
                 .signatureType(SignatureType.HEADER_OAUTH);
         if (DEBUG) {
-            builder.debug();
+            builder.debug().debugStream(new PrintStream(System.out));
         }
         return builder.build();
     }
@@ -598,7 +600,10 @@ final class FanFouApi implements Api {
         checkNotNull(photo);
         RequestBuilder builder = new RequestBuilder();
         builder.url(makeUrl("/photos/upload")).verb(Verb.POST);
-        builder.status(status).location(location);
+        builder.status(status);
+        if (!TextUtils.isEmpty(location)) {
+            builder.location(location);
+        }
         builder.file("photo", photo);
         String response = fetch(builder);
         return mParser.status(response, StatusModel.TYPE_HOME, account);
@@ -779,7 +784,10 @@ final class FanFouApi implements Api {
         checkNotEmpty(status);
         RequestBuilder builder = new RequestBuilder();
         builder.url(makeUrl("/statuses/update")).verb(Verb.POST);
-        builder.status(status).location(location);
+        builder.status(status);
+        if (!TextUtils.isEmpty(location)) {
+            builder.location(location);
+        }
         builder.format("html").mode("lite");
         builder.param("in_reply_to_status_id", replyId);
         builder.param("repost_status_id", repostId);
@@ -1006,12 +1014,14 @@ final class FanFouApi implements Api {
             throw new ApiException(statusCode, FanFouParser.error(body));
         } catch (UnknownHostException e) {
             if (DEBUG) {
+                e.printStackTrace();
                 Log.e(TAG, e.toString());
             }
             throw new ApiException(ApiException.IO_ERROR, e.getMessage(),
                     e);
         } catch (IOException e) {
             if (DEBUG) {
+                e.printStackTrace();
                 Log.e(TAG, e.toString());
             }
             throw new ApiException(ApiException.IO_ERROR, e.getMessage(),

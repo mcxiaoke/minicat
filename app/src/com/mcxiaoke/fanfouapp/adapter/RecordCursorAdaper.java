@@ -8,63 +8,61 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mcxiaoke.fanfouapp.app.AppContext;
-import com.mcxiaoke.fanfouapp.dao.model.RecordModel;
+import com.mcxiaoke.fanfouapp.dao.model.StatusUpdateInfo;
 import com.mcxiaoke.fanfouapp.util.StringHelper;
 import com.mcxiaoke.fanfouapp.R;
 
 /**
  * @author mcxiaoke
- * @version 1.0 2011.10.27
  * @version 2.0 2012.02.22
- * 
  */
 public class RecordCursorAdaper extends BaseCursorAdapter {
-	private static final String TAG = RecordCursorAdaper.class.getSimpleName();
+    private static final String TAG = RecordCursorAdaper.class.getSimpleName();
 
-	@Override
-	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		View view = mInflater.inflate(getLayoutId(), null);
-		ViewHolder holder = new ViewHolder(view);
-		view.setTag(holder);
-		bindView(view, context, cursor);
-		return view;
-	}
+    @Override
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        View view = mInflater.inflate(getLayoutId(), null);
+        ViewHolder holder = new ViewHolder(view);
+        view.setTag(holder);
+        bindView(view, context, cursor);
+        return view;
+    }
 
-	@Override
-	public void bindView(View view, Context context, Cursor cursor) {
-		View row = view;
-		final RecordModel record = RecordModel.from(cursor);
-		final ViewHolder holder = (ViewHolder) row.getTag();
-		holder.text.setText(record.getText());
-		// holder.date.setText(DateTimeHelper.formatDate(d.createdAt));
-		if (AppContext.DEBUG) {
-			Log.d(TAG, "bindView filePath=" + record.getFile());
-		}
-		holder.icon
-				.setVisibility(StringHelper.isEmpty(record.getFile()) ? View.GONE
-						: View.VISIBLE);
-	}
+    @Override
+    public void bindView(View view, Context context, Cursor cursor) {
+        View row = view;
+        final StatusUpdateInfo record = StatusUpdateInfo.from(cursor);
+        final ViewHolder holder = (ViewHolder) row.getTag();
+        holder.text.setText(record.text);
+        // holder.date.setText(DateTimeHelper.formatDate(d.createdAt));
+        if (AppContext.DEBUG) {
+            Log.d(TAG, "bindView filePath=" + record.fileName);
+        }
+        holder.icon
+                .setVisibility(StringHelper.isEmpty(record.fileName) ? View.GONE
+                        : View.VISIBLE);
+    }
 
-	public RecordCursorAdaper(Context context, Cursor c) {
-		super(context, c);
-	}
+    public RecordCursorAdaper(Context context, Cursor c) {
+        super(context, c);
+    }
 
-	@Override
-	protected int getLayoutId() {
-		return R.layout.list_item_draft;
-	}
+    @Override
+    protected int getLayoutId() {
+        return R.layout.list_item_draft;
+    }
 
-	private static class ViewHolder {
-		TextView text = null;
-		// TextView date = null;
-		ImageView icon = null;
+    private static class ViewHolder {
+        TextView text = null;
+        // TextView date = null;
+        ImageView icon = null;
 
-		ViewHolder(View base) {
-			this.text = (TextView) base.findViewById(R.id.text);
-			// this.date = (TextView) base.findViewById(R.id.date);
-			this.icon = (ImageView) base.findViewById(R.id.icon);
+        ViewHolder(View base) {
+            this.text = (TextView) base.findViewById(R.id.text);
+            // this.date = (TextView) base.findViewById(R.id.date);
+            this.icon = (ImageView) base.findViewById(R.id.icon);
 
-		}
-	}
+        }
+    }
 
 }
