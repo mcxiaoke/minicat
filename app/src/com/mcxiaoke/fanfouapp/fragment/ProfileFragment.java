@@ -128,14 +128,24 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
     }
 
     private void checkMenuAction(Menu menu) {
-        boolean following = user.isFollowing();
-        LogUtil.v(TAG, "checkMenuAction() following=" + following);
-        if (followMemu != null) {
-            followMemu.setVisible(!following);
-        }
+        if (user != null) {
+            boolean following = user.isFollowing();
+            LogUtil.v(TAG, "checkMenuAction() following=" + following);
+            if (followMemu != null) {
+                followMemu.setVisible(!following);
+            }
 
-        if (unfollowMenu != null) {
-            unfollowMenu.setVisible(following);
+            if (unfollowMenu != null) {
+                unfollowMenu.setVisible(following);
+            }
+        } else {
+            if (followMemu != null) {
+                followMemu.setVisible(false);
+            }
+
+            if (unfollowMenu != null) {
+                unfollowMenu.setVisible(false);
+            }
         }
     }
 
