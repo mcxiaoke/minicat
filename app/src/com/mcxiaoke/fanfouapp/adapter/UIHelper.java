@@ -36,6 +36,7 @@ public class UIHelper {
         TextView textView = view.getContentTextView();
         String text = s.getSimpleText();
         textView.setText(text, TextView.BufferType.SPANNABLE);
+//        StatusHelper.setItemStatus(textView,text);
     }
 
     public static void setMetaInfo(final ItemView view, final StatusModel s) {

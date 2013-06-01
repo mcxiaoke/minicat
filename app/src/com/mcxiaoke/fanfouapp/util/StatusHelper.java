@@ -2,12 +2,16 @@ package com.mcxiaoke.fanfouapp.util;
 
 import android.text.Html;
 import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
+import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.app.AppContext;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 
@@ -119,6 +123,24 @@ public class StatusHelper {
         linkifyTags(textView);
         removeUnderlines((Spannable) textView.getText());
         userNameIdMap.clear();
+    }
+
+
+    public static void setItemStatus(final TextView textView, final String text) {
+        SpannableStringBuilder spannable = new SpannableStringBuilder(text);
+        Matcher m = PATTERN_USER.matcher(spannable);
+        while (m.find()) {
+            int start = m.start();
+            int end = m.end();
+            spannable.setSpan(new ForegroundColorSpan(textView.getResources().getColor(R.color.holo_primary)), start,
+                    end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//            spannable.setSpan(new StyleSpan(Typeface.BOLD), start, end,
+//                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        Linkify.addLinks(spannable, Linkify.WEB_URLS);
+        removeUnderlines(spannable);
+        textView.setText(spannable);
     }
 
     public static void removeUnderlines(Spannable s) {
