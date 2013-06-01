@@ -22,6 +22,7 @@ import com.mcxiaoke.fanfouapp.api.ApiException;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
 import com.mcxiaoke.fanfouapp.ui.widget.TextChangeListener;
+import com.mcxiaoke.fanfouapp.util.UmengHelper;
 import com.mcxiaoke.fanfouapp.util.Utils;
 import org.oauthsimple.model.OAuthToken;
 
@@ -219,16 +220,20 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
                         if (AppContext.DEBUG) {
                             log("xauth successful! ");
                         }
+
+                        UmengHelper.onLoginEvent(mContext, u.getId());
                         return new ResultInfo(LOGIN_AUTH_SUCCESS);
                     } else {
                         if (AppContext.DEBUG) {
                             log("xauth failed.");
                         }
                         AppContext.clearAccountInfo(mContext);
+                        UmengHelper.onLoginError(mContext, username, 0, "verifyCredentials user is null", "");
                         return new ResultInfo(LOGIN_AUTH_FAILED,
                                 "XAuth successful, but verifyAccount failed. ");
                     }
                 } else {
+                    UmengHelper.onLoginError(mContext, username, 0, "xauth token is null", "");
                     return new ResultInfo(LOGIN_AUTH_FAILED,
                             "username or password is incorrect, XAuth failed.");
                 }
@@ -238,10 +243,13 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
                     e.printStackTrace();
                 }
                 AppContext.clearAccountInfo(mContext);
+                UmengHelper.onLoginError(mContext, username, -1, e.getMessage(), e.toString());
                 return new ResultInfo(LOGIN_IO_ERROR, e.toString());
             } catch (ApiException e) {
+                UmengHelper.onLoginError(mContext, username, e.statusCode, e.errorMessage, e.getCause() + "");
                 return new ResultInfo(LOGIN_IO_ERROR, e.toString());
             } catch (Exception e) {
+                UmengHelper.onLoginError(mContext, username, 0, e.getMessage(), e.toString());
                 return new ResultInfo(LOGIN_IO_ERROR, e.toString());
             } finally {
             }

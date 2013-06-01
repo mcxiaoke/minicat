@@ -42,6 +42,7 @@ import com.mcxiaoke.fanfouapp.util.ImageHelper;
 import com.mcxiaoke.fanfouapp.util.LogUtil;
 import com.mcxiaoke.fanfouapp.util.NetworkHelper;
 import com.mcxiaoke.fanfouapp.util.StringHelper;
+import com.mcxiaoke.fanfouapp.util.UmengHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -696,6 +697,7 @@ public final class SyncService extends Service implements Handler.Callback {
         boolean res = false;
 
         debug("doStatusUpdate() info=" + info);
+        boolean photoUpload = false;
         try {
             StatusModel result = null;
             if (StringHelper.isEmpty(info.fileName) || new File(info.fileName).length() == 0) {
@@ -715,6 +717,7 @@ public final class SyncService extends Service implements Handler.Callback {
                         debug("doStatusUpdate() photo file=" + file.getName() + " size="
                                 + photo.length() / 1024 + " quality=" + quality);
                     }
+                    photoUpload = true;
                     result = mApi.uploadPhoto(photo, info.text, info.location);
                     photo.delete();
                 }
@@ -725,6 +728,12 @@ public final class SyncService extends Service implements Handler.Callback {
             mNotificationManager.cancel(NOTIFICATION_STATUS_UPDATE_ONGOING);
             if (result != null) {
                 sendSuccessBroadcast(result);
+                if (photoUpload) {
+                    UmengHelper.onPhotoUploadEvent(this, AppContext.getAccount(), info.text, info.fileName, result.getId());
+                } else {
+
+                    UmengHelper.onStatusUpdateEvent(this, AppContext.getAccount(), info.text, result.getId());
+                }
                 res = true;
             }
         } catch (ApiException e) {
@@ -739,10 +748,13 @@ public final class SyncService extends Service implements Handler.Callback {
                 showFailedNotification(info, "消息未发送，已保存到草稿箱", e.getMessage());
             }
 
+            UmengHelper.onStatusUpdateError(this, AppContext.getAccount(), e.statusCode, e.errorMessage, e.getCause() + "");
+
         } catch (Exception e) {
             debug(e.toString());
             showFailedNotification(info, "消息未发送，已保存到草稿箱",
                     getString(R.string.msg_unkonow_error));
+            UmengHelper.onStatusUpdateError(this, AppContext.getAccount(), 0, e.getMessage(), e.getCause() + "");
         } finally {
             mNotificationManager.cancel(NOTIFICATION_STATUS_UPDATE_ONGOING);
         }

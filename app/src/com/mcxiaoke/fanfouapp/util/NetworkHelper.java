@@ -39,4 +39,15 @@ public final class NetworkHelper {
         return info != null && info.getType() == ConnectivityManager.TYPE_WIFI;
     }
 
+    public static String getNetworkInfo(Context context) {
+        if (context == null)
+            return "";
+        StringBuilder builder = new StringBuilder();
+        ConnectivityManager connectivity = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = connectivity.getActiveNetworkInfo();
+        builder.append(info == null ? "" : info.toString());
+        return builder.toString();
+    }
+
 }
