@@ -19,6 +19,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.Parcelable;
 import android.os.RemoteException;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.api.Api;
@@ -302,8 +303,8 @@ public final class SyncService extends Service implements Handler.Callback {
             case STATUS_UPDATE: {
                 StatusUpdateInfo info = intent.getParcelableExtra(StatusUpdateInfo.TAG);
                 if (info != null) {
-                    statusUpdate(info);
                     debug("handlePostDataCommands info=" + info);
+                    statusUpdate(info);
                 }
             }
             break;
@@ -681,13 +682,14 @@ public final class SyncService extends Service implements Handler.Callback {
     }
 
     private void statusUpdate(final StatusUpdateInfo info) {
+        debug("statusUpdate() info=" + info);
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 doStatusUpdate(info, false);
             }
         };
-        mExecutor.submit(runnable);
+        mExecutor.execute(runnable);
     }
 
 
@@ -1220,7 +1222,7 @@ public final class SyncService extends Service implements Handler.Callback {
         int id = NOTIFICATION_STATUS_UPDATE_ONGOING;
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(), 0);
-        Notification.Builder builder = new Notification.Builder(this);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setSmallIcon(R.drawable.ic_stat_notify);
         builder.setTicker("饭否消息正在发送...");
         builder.setWhen(System.currentTimeMillis());
@@ -1239,7 +1241,7 @@ public final class SyncService extends Service implements Handler.Callback {
         Intent intent = new Intent(this, UIRecords.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Notification.Builder builder = new Notification.Builder(this);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setSmallIcon(R.drawable.ic_stat_notify);
         builder.setTicker(title);
         builder.setWhen(System.currentTimeMillis());

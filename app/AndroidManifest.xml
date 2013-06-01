@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.mcxiaoke.fanfouapp"
           android:sharedUserId="com.mcxiaoke.fanfouapp"
-          android:versionCode="2013060103"
-          android:versionName="1.0.2">
+          android:versionCode="2013060104"
+          android:versionName="1.0.3">
 
     <uses-sdk android:minSdkVersion="14"/>
 
