@@ -102,6 +102,7 @@ public final class SyncService extends Service implements Handler.Callback {
 
     public static final int NOTIFICATION_STATUS_UPDATE_ONGOING = 1001;
     public static final int NOTIFICATION_STATUS_UPDATE_FAILED = 1002;
+    public static final int NOTIFICATION_STATUS_UPDATE_SUCCESS = 1003;
     public static final int NOTIFICATION_DM_SEND = 1005;
     public static final int NOTIFICATION_DOWNLOAD = 1006;
 
@@ -729,6 +730,7 @@ public final class SyncService extends Service implements Handler.Callback {
             }
             mNotificationManager.cancel(NOTIFICATION_STATUS_UPDATE_ONGOING);
             if (result != null) {
+                cancelNotificationDeply(showSuccessNotification());
                 sendSuccessBroadcast(result);
                 if (photoUpload) {
                     UmengHelper.onPhotoUploadEvent(this, AppContext.getAccount(), info.text, info.fileName, result.getId());
@@ -1223,14 +1225,32 @@ public final class SyncService extends Service implements Handler.Callback {
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(), 0);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setSmallIcon(R.drawable.ic_stat_notify);
+        builder.setSmallIcon(R.drawable.ic_stat_app);
         builder.setTicker("饭否消息正在发送...");
         builder.setWhen(System.currentTimeMillis());
         builder.setContentTitle("饭否消息");
         builder.setContentText("正在发送...");
+        builder.setOngoing(true);
         builder.setContentIntent(contentIntent);
         Notification notification = builder.build();
-        notification.flags |= Notification.FLAG_ONGOING_EVENT;
+        mNotificationManager.notify(id, notification);
+        return id;
+    }
+
+    private int showSuccessNotification() {
+        int id = NOTIFICATION_STATUS_UPDATE_ONGOING;
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                new Intent(), 0);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setSmallIcon(R.drawable.ic_stat_app);
+        builder.setTicker("消息已成功发送");
+        builder.setWhen(System.currentTimeMillis());
+        builder.setContentTitle("饭否消息");
+        builder.setContentText("消息已成功发送");
+//        builder.setContentIntent(contentIntent);
+        builder.setAutoCancel(true);
+        builder.setOnlyAlertOnce(true);
+        Notification notification = builder.build();
         mNotificationManager.notify(id, notification);
         return id;
     }
@@ -1242,16 +1262,28 @@ public final class SyncService extends Service implements Handler.Callback {
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setSmallIcon(R.drawable.ic_stat_notify);
+        builder.setSmallIcon(R.drawable.ic_stat_app);
         builder.setTicker(title);
         builder.setWhen(System.currentTimeMillis());
         builder.setContentTitle(title);
         builder.setContentText(message);
         builder.setContentIntent(contentIntent);
+        builder.setAutoCancel(true);
         Notification notification = builder.build();
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
         mNotificationManager.notify(id, notification);
         return id;
+    }
+
+    private static final long CANCEL_DEPLAY_TIME = 400L;
+
+    private void cancelNotificationDeply(final int notificationId) {
+        final Runnable cancelRunnable = new Runnable() {
+            @Override
+            public void run() {
+                mNotificationManager.cancel(notificationId);
+            }
+        };
+        mUiHandler.postDelayed(cancelRunnable, CANCEL_DEPLAY_TIME);
     }
 
     private void doSaveRecords(StatusUpdateInfo info) {

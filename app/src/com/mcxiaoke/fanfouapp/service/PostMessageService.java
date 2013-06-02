@@ -101,7 +101,7 @@ public class PostMessageService extends BaseIntentService {
 
     private int showSendingNotification() {
         int id = 10;
-        Notification notification = new Notification(R.drawable.ic_stat_notify,
+        Notification notification = new Notification(R.drawable.ic_stat_app,
                 "饭否私信正在发送...", System.currentTimeMillis());
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(), 0);

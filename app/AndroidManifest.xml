@@ -21,6 +21,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
             android:name=".app.AppContext"
@@ -193,17 +194,19 @@
 
         <service
                 android:name=".service.DownloadService"
-                android:label="@string/app_name"/>
+                android:label="@string/app_name" android:exported="false"/>
         <service
                 android:name=".service.PostMessageService"
-                android:label="@string/app_name"/>
+                android:label="@string/app_name" android:exported="false"/>
         <service
                 android:name=".service.AutoCompleteService"
-                android:label="@string/app_name"/>
+                android:label="@string/app_name" android:exported="false"/>
 
         <service
                 android:name=".service.SyncService"
-                android:label="@string/app_name"/>
+                android:label="@string/app_name" android:exported="false"/>
+
+        <receiver android:name=".receiver.OnBootReceiver" android:label="@string/app_name" android:exported="false"/>
 
     </application>
 

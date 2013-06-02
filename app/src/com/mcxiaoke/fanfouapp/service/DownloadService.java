@@ -301,7 +301,7 @@ public class DownloadService extends BaseIntentService {
 		String versionInfo = info.versionName;
 		NotificationManager nm = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notification = new Notification(R.drawable.ic_stat_notify,
+		Notification notification = new Notification(R.drawable.ic_stat_app,
 				"饭否客户端有新版本：" + versionInfo, System.currentTimeMillis());
 
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
