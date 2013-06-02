@@ -1,6 +1,8 @@
 package com.mcxiaoke.fanfouapp.app;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -17,10 +19,8 @@ import android.widget.TextView;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.controller.CacheController;
 import com.mcxiaoke.fanfouapp.controller.EmptyViewController;
-import com.mcxiaoke.fanfouapp.controller.SimpleDialogListener;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
-import com.mcxiaoke.fanfouapp.dialog.ConfirmDialog;
 import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.task.BetterAsyncTask;
 import com.mcxiaoke.fanfouapp.util.DateTimeHelper;
@@ -382,6 +382,7 @@ public class UIStatus extends UIBaseSupport {
     }
 
     private void onDeleteComplete() {
+        Utils.notify(mContext, "删除成功");
         finish();
     }
 
@@ -410,18 +411,23 @@ public class UIStatus extends UIBaseSupport {
             }
 
         };
-        final ConfirmDialog dialog = new ConfirmDialog(this);
-        dialog.setMessage("确定要删除这条消息吗？");
-        dialog.setClickListener(new SimpleDialogListener() {
-
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("删除消息");
+        builder.setMessage("确定要删除这条消息吗？");
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
-            public void onPositiveClick() {
-                super.onPositiveClick();
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
                 SyncService.deleteStatus(mContext, status.getId(), handler);
             }
         });
-        dialog.show();
-
+        builder.create().show();
     }
 
     private void onFavoriteComplete(boolean favorited) {
