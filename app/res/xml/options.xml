@@ -2,15 +2,20 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <SwitchPreference android:key="@string/option_refresh_on_start_key"
-                      android:title="@string/option_refresh_on_start_title"
-                      android:summary="@string/option_refresh_on_start_summary"
-                      android:defaultValue="@bool/option_refresh_on_start_default_value"/>
+    <CheckBoxPreference android:key="@string/option_push_notification_key"
+                        android:title="@string/option_push_notification_title"
+                        android:summary="@string/option_push_notification_summary"
+                        android:defaultValue="@bool/option_push_notification_default_value"/>
 
-    <SwitchPreference android:key="@string/option_actionbar_refresh_button_key"
-                      android:title="@string/option_actionbar_refresh_button_title"
-                      android:summary="@string/option_actionbar_refresh_button_summary"
-                      android:defaultValue="@bool/option_actionbar_refresh_button_default_value"/>
+    <CheckBoxPreference android:key="@string/option_refresh_on_start_key"
+                        android:title="@string/option_refresh_on_start_title"
+                        android:summary="@string/option_refresh_on_start_summary"
+                        android:defaultValue="@bool/option_refresh_on_start_default_value"/>
+
+    <CheckBoxPreference android:key="@string/option_actionbar_refresh_button_key"
+                        android:title="@string/option_actionbar_refresh_button_title"
+                        android:summary="@string/option_actionbar_refresh_button_summary"
+                        android:defaultValue="@bool/option_actionbar_refresh_button_default_value"/>
 
     <!--    <Preference android:key="@string/option_project_page_key" android:title="@string/option_project_page_title"
                     android:summary="@string/option_project_page_summary">

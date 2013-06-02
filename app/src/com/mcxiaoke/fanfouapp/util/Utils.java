@@ -72,7 +72,7 @@ public final class Utils {
             final DirectMessageModel dm = DirectMessageModel.from(c);
             if (dm != null) {
                 if (AppContext.DEBUG) {
-                    Log.d(TAG, "getDmSinceId() id=" + dm.getId());
+                    Log.d(TAG, "getDmSinceId() dm=" + dm);
                 }
                 return dm.getId();
             }

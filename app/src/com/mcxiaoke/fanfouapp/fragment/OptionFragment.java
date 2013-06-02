@@ -1,8 +1,10 @@
 package com.mcxiaoke.fanfouapp.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import com.mcxiaoke.fanfouapp.R;
+import com.mcxiaoke.fanfouapp.push.PushService;
 
 /**
  * Project: fanfouapp
@@ -11,7 +13,7 @@ import com.mcxiaoke.fanfouapp.R;
  * Date: 13-5-26
  * Time: 下午8:04
  */
-public class OptionFragment extends PreferenceFragment {
+public class OptionFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static OptionFragment newInstance() {
         OptionFragment fragment = new OptionFragment();
@@ -33,7 +35,26 @@ public class OptionFragment extends PreferenceFragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (getString(R.string.option_push_notification_key).equals(key)) {
+            PushService.check(getActivity());
+        }
     }
 }

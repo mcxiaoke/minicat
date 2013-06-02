@@ -33,6 +33,17 @@ public class PreferenceHelper {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(mAppContext);
     }
 
+    public boolean isPushNotificationEnabled() {
+        boolean defaultValue = mAppContext.getResources().getBoolean(R.bool.option_push_notification_default_value);
+        String key = mAppContext.getResources().getString(R.string.option_push_notification_key);
+        return mPreferences.getBoolean(key, defaultValue);
+    }
+
+    public void setPushNotificationEnabled(boolean value) {
+        String key = mAppContext.getResources().getString(R.string.option_push_notification_key);
+        mPreferences.edit().putBoolean(key, value).commit();
+    }
+
     public boolean isRefreshOnStart() {
         boolean defaultValue = mAppContext.getResources().getBoolean(R.bool.option_refresh_on_start_default_value);
         String key = mAppContext.getString(R.string.option_refresh_on_start_key);
