@@ -109,9 +109,13 @@
 
 
     <!-- Options -->
+    <string name="option_push_notification_key">option_push_notification_key</string>
+    <string name="option_push_notification_title">消息通知</string>
+    <string name="option_push_notification_summary">私信和@通知</string>
+
     <string name="option_refresh_on_start_key">option_refresh_on_start_key</string>
     <string name="option_refresh_on_start_title">立即刷新</string>
-    <string name="option_refresh_on_start_summary">开启界面时刷新数据</string>
+    <string name="option_refresh_on_start_summary">开启界面时更新内容</string>
 
     <string name="option_actionbar_refresh_button_key">option_actionbar_refresh_button_key</string>
     <string name="option_actionbar_refresh_button_title">标题栏按钮</string>

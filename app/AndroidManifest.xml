@@ -36,7 +36,7 @@
         <activity
                 android:name=".app.UIStart"
                 android:configChanges="keyboardHidden|orientation"
-                android:label="@string/app_name" android:excludeFromRecents="true" android:screenOrientation="portrait">
+                android:label="@string/app_name" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -123,7 +123,11 @@
         <activity
                 android:name=".app.UIStatus"
                 android:configChanges="keyboardHidden|orientation"
-                android:label="@string/app_name" android:screenOrientation="portrait">
+                android:label="@string/app_name" android:screenOrientation="portrait"
+                android:parentActivityName=".app.UIHome">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".app.UIHome"/>
         </activity>
         <activity
                 android:name=".app.UIUserChoose"
@@ -202,11 +206,22 @@
                 android:name=".service.AutoCompleteService"
                 android:label="@string/app_name" android:exported="false"/>
 
+        <service android:name=".push.PushService" android:exported="false" android:label="@string/app_name"/>
         <service
                 android:name=".service.SyncService"
                 android:label="@string/app_name" android:exported="false"/>
 
-        <receiver android:name=".receiver.OnBootReceiver" android:label="@string/app_name" android:exported="false"/>
+        <receiver android:name=".receiver.PushReceiver" android:label="@string/app_name" android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.mcxiaoke.fanfouapp.PushService.ACTION_CHECK"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.mcxiaoke.fanfouapp.PushService.ACTION_ALARM"/>
+            </intent-filter>
+        </receiver>
 
     </application>
 
