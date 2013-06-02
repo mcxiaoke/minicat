@@ -18,6 +18,7 @@ import android.widget.ListView;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.adapter.RecordCursorAdaper;
 import com.mcxiaoke.fanfouapp.controller.DataController;
+import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.StatusUpdateInfo;
 import com.mcxiaoke.fanfouapp.dao.model.StatusUpdateInfoColumns;
 import com.mcxiaoke.fanfouapp.service.SyncService;
@@ -140,9 +141,7 @@ public class UIRecords extends UIBaseSupport implements OnItemClickListener {
             return;
         }
 
-        Intent intent = new Intent(this, UIWrite.class);
-        intent.putExtra(StatusUpdateInfo.TAG, info);
-        startActivity(intent);
+        UIController.goBackToWrite(this, info);
         finish();
 
     }

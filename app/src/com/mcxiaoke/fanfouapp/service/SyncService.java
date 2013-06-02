@@ -100,11 +100,7 @@ public final class SyncService extends Service implements Handler.Callback {
     private static final int MSG_POST_DATA = 2;
     private static final int MSG_CMD_OTHERS = 3;
 
-    public static final int NOTIFICATION_STATUS_UPDATE_ONGOING = 1001;
-    public static final int NOTIFICATION_STATUS_UPDATE_FAILED = 1002;
-    public static final int NOTIFICATION_STATUS_UPDATE_SUCCESS = 1003;
-    public static final int NOTIFICATION_DM_SEND = 1005;
-    public static final int NOTIFICATION_DOWNLOAD = 1006;
+    public static final int NOTIFICATION_ID = 1001;
 
     static class Commmand {
         public Messenger messenger;
@@ -687,7 +683,15 @@ public final class SyncService extends Service implements Handler.Callback {
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                doStatusUpdate(info, false);
+                boolean success = doStatusUpdate(info, false);
+                if (success) {
+                    mUiHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            showSuccessNotification();
+                        }
+                    }, 500);
+                }
             }
         };
         mExecutor.execute(runnable);
@@ -728,9 +732,8 @@ public final class SyncService extends Service implements Handler.Callback {
             if (needDeleteDraft) {
                 DataController.deleteRecord(this, info.id);
             }
-            mNotificationManager.cancel(NOTIFICATION_STATUS_UPDATE_ONGOING);
+//            mNotificationManager.cancel(NOTIFICATION_STATUS_UPDATE_ONGOING);
             if (result != null) {
-                cancelNotificationDeply(showSuccessNotification());
                 sendSuccessBroadcast(result);
                 if (photoUpload) {
                     UmengHelper.onPhotoUploadEvent(this, AppContext.getAccount(), info.text, info.fileName, result.getId());
@@ -760,7 +763,7 @@ public final class SyncService extends Service implements Handler.Callback {
                     getString(R.string.msg_unkonow_error));
             UmengHelper.onStatusUpdateError(this, AppContext.getAccount(), 0, e.getMessage(), e.getCause() + "");
         } finally {
-            mNotificationManager.cancel(NOTIFICATION_STATUS_UPDATE_ONGOING);
+//            mNotificationManager.cancel(NOTIFICATION_STATUS_UPDATE_ONGOING);
         }
         isSending = false;
         return res;
@@ -1221,7 +1224,7 @@ public final class SyncService extends Service implements Handler.Callback {
     }
 
     private int showSendingNotification() {
-        int id = NOTIFICATION_STATUS_UPDATE_ONGOING;
+        int id = NOTIFICATION_ID;
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(), 0);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
@@ -1238,7 +1241,7 @@ public final class SyncService extends Service implements Handler.Callback {
     }
 
     private int showSuccessNotification() {
-        int id = NOTIFICATION_STATUS_UPDATE_ONGOING;
+        int id = NOTIFICATION_ID;
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(), 0);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
@@ -1247,17 +1250,18 @@ public final class SyncService extends Service implements Handler.Callback {
         builder.setWhen(System.currentTimeMillis());
         builder.setContentTitle("饭否消息");
         builder.setContentText("消息已成功发送");
-//        builder.setContentIntent(contentIntent);
+        builder.setContentIntent(contentIntent);
         builder.setAutoCancel(true);
         builder.setOnlyAlertOnce(true);
         Notification notification = builder.build();
         mNotificationManager.notify(id, notification);
+        cancelNotificationDeply(id);
         return id;
     }
 
     private int showFailedNotification(StatusUpdateInfo info, String title, String message) {
         doSaveRecords(info);
-        int id = NOTIFICATION_STATUS_UPDATE_FAILED;
+        int id = NOTIFICATION_ID;
         Intent intent = new Intent(this, UIRecords.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -1269,21 +1273,23 @@ public final class SyncService extends Service implements Handler.Callback {
         builder.setContentText(message);
         builder.setContentIntent(contentIntent);
         builder.setAutoCancel(true);
+        builder.setOnlyAlertOnce(true);
         Notification notification = builder.build();
         mNotificationManager.notify(id, notification);
         return id;
     }
 
-    private static final long CANCEL_DEPLAY_TIME = 400L;
+    private static final long CANCEL_DEPLAY_TIME = 2000L;
 
     private void cancelNotificationDeply(final int notificationId) {
-        final Runnable cancelRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mNotificationManager.cancel(notificationId);
-            }
-        };
-        mUiHandler.postDelayed(cancelRunnable, CANCEL_DEPLAY_TIME);
+        mNotificationManager.cancel(notificationId);
+//        final Runnable cancelRunnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                mNotificationManager.cancel(notificationId);
+//            }
+//        };
+//        mUiHandler.postDelayed(cancelRunnable, CANCEL_DEPLAY_TIME);
     }
 
     private void doSaveRecords(StatusUpdateInfo info) {

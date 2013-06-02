@@ -160,6 +160,12 @@ public class UIController {
 //        activity.overridePendingTransition(R.anim.footer_appear, R.anim.keep);
     }
 
+    public static void goBackToWrite(Activity activity, StatusUpdateInfo info) {
+        Intent intent = new Intent(activity, UIWrite.class);
+        intent.putExtra(StatusUpdateInfo.TAG, info);
+        startUIByAnimationBack(activity, intent);
+    }
+
     public static void showWrite(Activity context, String text, File file) {
         Intent intent = new Intent(context, UIWrite.class);
         intent.putExtra("text", text);
