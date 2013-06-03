@@ -1146,7 +1146,7 @@ public class StaggeredGridView extends ViewGroup {
     /**
      * Should be called with mPopulating set to true
      *
-     * @param fromPosition Position to start filling from
+     * @param fromPosition Position to check filling from
      * @param overhang     the number of extra pixels to fill beyond the current top edge
      * @return the max overhang beyond the beginning of the view of any added items at the top
      */
@@ -1356,7 +1356,7 @@ public class StaggeredGridView extends ViewGroup {
     /**
      * Should be called with mPopulating set to true
      *
-     * @param fromPosition Position to start filling from
+     * @param fromPosition Position to check filling from
      * @param overhang     the number of extra pixels to fill beyond the current bottom edge
      * @return the max overhang beyond the end of the view of any added items at the bottom
      */

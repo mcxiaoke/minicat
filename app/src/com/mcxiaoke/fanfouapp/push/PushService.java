@@ -15,7 +15,8 @@ import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.dao.model.DirectMessageModel;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 import com.mcxiaoke.fanfouapp.preference.PreferenceHelper;
-import com.mcxiaoke.fanfouapp.service.WakefulIntentService;
+import com.mcxiaoke.fanfouapp.service.BaseIntentService;
+import com.mcxiaoke.fanfouapp.util.DateTimeHelper;
 import com.mcxiaoke.fanfouapp.util.LogUtil;
 import com.mcxiaoke.fanfouapp.util.NetworkHelper;
 import com.mcxiaoke.fanfouapp.util.Utils;
@@ -24,6 +25,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -34,14 +36,13 @@ import java.util.List;
  * Date: 13-6-2
  * Time: 下午6:04
  */
-public class PushService extends WakefulIntentService {
+public class PushService extends BaseIntentService {
     private static final String TAG = PushService.class.getSimpleName();
     private static boolean DEBUG = AppContext.DEBUG;
 
     public static final String ACTION_ALARM = "com.mcxiaoke.fanfouapp.PushService.ACTION_ALARM";
     public static final String ACTION_CHECK = "com.mcxiaoke.fanfouapp.PushService.ACTION_CHECK";
     public static final String ACTION_NOTIFY = "com.mcxiaoke.fanfouapp.PushService.ACTION_NOTIFY";
-    private static final long PUSH_CHECK_INTERVAL = 1000L * 60 * 5; // five minutes
 
     public static final int NOTIFICATION_TYPE_TIMELINE = -101;
     public static final int NOTIFICATION_TYPE_DIRECTMESSAGE = -102;
@@ -57,35 +58,40 @@ public class PushService extends WakefulIntentService {
 
     public static void start(Context context) {
         Intent intent = new Intent(context, PushService.class);
-//        context.startService(intent);
-        runOnWake(context,intent);
+        context.startService(intent);
     }
 
     public static void check(Context context) {
         boolean enablePushNotifications = PreferenceHelper.getInstance(context).isPushNotificationEnabled();
         if (enablePushNotifications) {
-            setAlarm(context);
+            set(context);
         } else {
-            cancelAlarm(context);
+            cancel(context);
         }
     }
 
-    private static PendingIntent getPendingIntent(Context context) {
-        Intent broadcast = new Intent(ACTION_CHECK);
-        PendingIntent pi = PendingIntent.getBroadcast(context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
-        return pi;
-    }
-
-    private static void setAlarm(Context context) {
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-        long fiveMinutesLater = System.currentTimeMillis() + PUSH_CHECK_INTERVAL;
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, fiveMinutesLater, PUSH_CHECK_INTERVAL, getPendingIntent(context));
+    private static void set(Context context) {
+        Calendar calendar = Calendar.getInstance();
         if (DEBUG) {
-            debug("setAlarm()");
+            debug("setAlarm() now time is " + DateTimeHelper.formatDate(calendar.getTime()));
+        }
+        int hours = calendar.get(Calendar.HOUR_OF_DAY);
+        if (hours < 7) {
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+            calendar.set(Calendar.HOUR_OF_DAY, 7);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+        } else {
+            calendar.add(Calendar.MINUTE, 5);
+        }
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), getPendingIntent(context));
+        if (DEBUG) {
+            debug("setAlarm() next time is " + DateTimeHelper.formatDate(calendar.getTime()));
         }
     }
 
-    private static void cancelAlarm(Context context) {
+    public static void cancel(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         alarmManager.cancel(getPendingIntent(context));
         if (DEBUG) {
@@ -93,17 +99,30 @@ public class PushService extends WakefulIntentService {
         }
     }
 
+
+    private static PendingIntent getPendingIntent(Context context) {
+        Intent broadcast = new Intent(ACTION_CHECK);
+        PendingIntent pi = PendingIntent.getBroadcast(context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
+        return pi;
+    }
+
     @Override
+    protected void onHandleIntent(Intent intent) {
+        super.onHandleIntent(intent);
+        doWakefulWork(intent);
+    }
+
     protected void doWakefulWork(Intent intent) {
         if (NetworkHelper.isConnected(this)) {
             debug("doWakefulWork()");
             long now = System.currentTimeMillis();
-            saveDebugInfo("doWakefulWork start.");
+            saveDebugInfo("doWakefulWork check.");
             checkMentions();
             checkDirectMessages();
             long ms = System.currentTimeMillis() - now;
             saveDebugInfo("doWakefulWork end, time is " + ms + "ms.");
         }
+        check(this);
     }
 
 

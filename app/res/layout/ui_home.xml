@@ -43,7 +43,7 @@
     </FrameLayout>
 
 
-    <!-- android:layout_gravity="start" tells DrawerLayout to treat
+    <!-- android:layout_gravity="check" tells DrawerLayout to treat
          this as a sliding drawer on the left side for left-to-right
          languages and on the right side for right-to-left languages.
          The drawer is given a fixed width in dp and extends the full height of

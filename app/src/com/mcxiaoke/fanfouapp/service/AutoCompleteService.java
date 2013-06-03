@@ -1,9 +1,9 @@
 package com.mcxiaoke.fanfouapp.service;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import com.mcxiaoke.fanfouapp.api.Api;
 import com.mcxiaoke.fanfouapp.api.Paging;
@@ -11,10 +11,8 @@ import com.mcxiaoke.fanfouapp.app.AppContext;
 import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.dao.model.UserColumns;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
-import com.mcxiaoke.fanfouapp.util.DateTimeHelper;
 import com.mcxiaoke.fanfouapp.util.NetworkHelper;
 
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -32,40 +30,19 @@ public class AutoCompleteService extends BaseIntentService {
         super("AutoCompleteService");
     }
 
-    public static void set(Context context) {
-        Calendar c = Calendar.getInstance();
-        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
-                c.get(Calendar.DAY_OF_MONTH), 20, 0);
-        c.add(Calendar.MINUTE, 30);
-        long interval = 3 * 24 * 3600 * 1000;
-        AlarmManager am = (AlarmManager) context
-                .getSystemService(Context.ALARM_SERVICE);
-        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
-                interval, getPendingIntent(context));
 
-        Intent intent = new Intent(context, AutoCompleteService.class);
-        context.startService(intent);
-        if (AppContext.DEBUG) {
-            Log.d(TAG,
-                    "set repeat interval=3day first time="
-                            + DateTimeHelper.formatDate(c.getTime()));
+    private static final String KEY_LAST_AUTO_COMPLETE_TIME = "auto_complete_last_sync_time";
+    private static final long SYNC_INTERVAL = 1000 * 3600 * 3;
+
+    public static void check(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        long lastSync = sp.getLong(KEY_LAST_AUTO_COMPLETE_TIME, 0);
+        long now = System.currentTimeMillis();
+        if (now - lastSync > SYNC_INTERVAL) {
+            Intent intent = new Intent(context, AutoCompleteService.class);
+            context.startService(intent);
+            sp.edit().putLong(KEY_LAST_AUTO_COMPLETE_TIME, now);
         }
-    }
-
-    public static void unset(Context context) {
-        AlarmManager am = (AlarmManager) context
-                .getSystemService(Context.ALARM_SERVICE);
-        am.cancel(getPendingIntent(context));
-        if (AppContext.DEBUG) {
-            Log.d(TAG, "unset");
-        }
-    }
-
-    private final static PendingIntent getPendingIntent(Context context) {
-        Intent intent = new Intent(context, AutoCompleteService.class);
-        PendingIntent pi = PendingIntent.getService(context, 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        return pi;
     }
 
     @Override

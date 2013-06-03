@@ -153,7 +153,7 @@ public class MultiTouchController<T> {
 	private PositionAndScale mCurrXform = new PositionAndScale();
 
 	/**
-	 * Drag/pinch start time and time to ignore spurious events until (to smooth
+	 * Drag/pinch check time and time to ignore spurious events until (to smooth
 	 * over event noise)
 	 */
 	private long mSettleStartTime, mSettleEndTime;
@@ -162,7 +162,7 @@ public class MultiTouchController<T> {
 	private float startPosX, startPosY;
 
 	/**
-	 * Conversion between scale and width, and object angle and start pinch
+	 * Conversion between scale and width, and object angle and check pinch
 	 * angle
 	 */
 	private float startScaleOverPinchDiam, startAngleMinusPinchAngle;
@@ -398,7 +398,7 @@ public class MultiTouchController<T> {
 		// Get selected object's current position and scale
 		objectCanvas.getPositionAndScale(selectedObject, mCurrXform);
 
-		// Figure out the object coords of the drag start point's screen coords.
+		// Figure out the object coords of the drag check point's screen coords.
 		// All stretching should be around this point in object-coord-space.
 		// Also figure out out ratio between object scale factor and multitouch
 		// diameter at beginning of drag; same for angle and optional
@@ -924,7 +924,7 @@ public class MultiTouchController<T> {
 
 		/**
 		 * See if there is a draggable object at the current point. Returns the
-		 * object at the point, or null if nothing to drag. To start a
+		 * object at the point, or null if nothing to drag. To check a
 		 * multitouch drag/stretch operation, this routine must return some
 		 * non-null reference to an object. This object is passed into the other
 		 * methods in this interface when they are called.

@@ -136,7 +136,7 @@ public class LocationManager {
 				// Hack to filter out 0.0,0.0 locations
 				return;
 			}
-			// If GPS is available before start camera, we won't get status
+			// If GPS is available before check camera, we won't get status
 			// update so update GPS indicator when we receive data.
 			if (mListener != null
 					&& mRecordLocation

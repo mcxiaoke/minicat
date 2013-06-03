@@ -134,7 +134,7 @@ public class StatusHelper {
             int end = m.end();
             spannable.setSpan(new ForegroundColorSpan(textView.getResources().getColor(R.color.holo_primary)), start,
                     end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//            spannable.setSpan(new StyleSpan(Typeface.BOLD), start, end,
+//            spannable.setSpan(new StyleSpan(Typeface.BOLD), check, end,
 //                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
