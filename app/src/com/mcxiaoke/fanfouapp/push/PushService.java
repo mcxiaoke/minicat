@@ -132,9 +132,6 @@ public class PushService extends BaseIntentService {
         if (!TextUtils.isEmpty(sinceId)) {
             Api api = AppContext.getApi();
             Paging p = new Paging();
-            if (DEBUG) {
-                sinceId = null;
-            }
             p.sinceId = sinceId;
             try {
                 List<StatusModel> ss = api.getMentions(p);
@@ -156,9 +153,6 @@ public class PushService extends BaseIntentService {
         if (!TextUtils.isEmpty(sinceId)) {
             Api api = AppContext.getApi();
             Paging p = new Paging();
-            if (DEBUG) {
-                sinceId = null;
-            }
             p.sinceId = sinceId;
             try {
                 List<DirectMessageModel> dms = api.getDirectMessagesInbox(p);
