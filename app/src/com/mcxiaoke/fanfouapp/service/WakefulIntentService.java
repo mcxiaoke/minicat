@@ -1,67 +1,49 @@
-/***
-  Copyright (c) 2009-11 CommonsWare, LLC
-  
-  Licensed under the Apache License, Version 2.0 (the "License"); you may
-  not use this file except in compliance with the License. You may obtain
-  a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
- */
-
 package com.mcxiaoke.fanfouapp.service;
 
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
 
-abstract public class WakefulIntentService extends IntentService {
-	abstract protected void doWakefulWork(Intent intent);
+/**
+ * Project: fanfouapp
+ * Package: com.mcxiaoke.fanfouapp.service
+ * User: mcxiaoke
+ * Date: 13-6-3
+ * Time: 下午9:34
+ */
+public abstract class WakefulIntentService extends BaseIntentService {
 
-	static final String NAME = Constants.PACKAGE_NAME+".service.WakefulIntentService";
-	private static volatile PowerManager.WakeLock lockStatic = null;
+    private static PowerManager.WakeLock sWakeLock;
+    private static final Object LOCK = WakefulIntentService.class;
 
-	synchronized private static PowerManager.WakeLock getLock(Context context) {
-		if (lockStatic == null) {
-			PowerManager mgr = (PowerManager) context
-					.getSystemService(Context.POWER_SERVICE);
+    public static void runOnWake(Context context, Intent intent) {
+        synchronized (LOCK) {
+            if (sWakeLock == null) {
+                PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                sWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "WakefulIntentService");
+            }
+        }
+        sWakeLock.acquire();
+        intent.setClassName(context, WakefulIntentService.class.getName());
+        context.startService(intent);
+    }
 
-			lockStatic = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, NAME);
-			lockStatic.setReferenceCounted(true);
-		}
-		return (lockStatic);
-	}
+    public WakefulIntentService(String name) {
+        super(name);
+    }
 
-	public static void sendWakefulWork(Context ctxt, Intent i) {
-		getLock(ctxt.getApplicationContext()).acquire();
-		ctxt.startService(i);
-	}
+    @Override
+    public final void onHandleIntent(Intent intent) {
+        try {
+            doWakefulWork(intent);
+        } finally {
+            synchronized (LOCK) {
+                sWakeLock.release();
+            }
+        }
+    }
 
-	public static void sendWakefulWork(Context ctxt, Class<?> clsService) {
-		sendWakefulWork(ctxt, new Intent(ctxt, clsService));
-	}
+    protected abstract void doWakefulWork(Intent intent);
 
-	public WakefulIntentService(String name) {
-		super(name);
-	}
 
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		getLock(this.getApplicationContext()).acquire();
-		super.onStartCommand(intent, flags, startId);
-		return (START_NOT_STICKY);
-	}
-
-	@Override
-	final protected void onHandleIntent(Intent intent) {
-		try {
-			doWakefulWork(intent);
-		} finally {
-			getLock(this.getApplicationContext()).release();
-		}
-	}
 }

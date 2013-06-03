@@ -1,31 +1,30 @@
 package com.mcxiaoke.fanfouapp.push;
 
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.support.v4.app.NotificationCompat;
+import android.os.Environment;
 import android.text.TextUtils;
-import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.api.Api;
 import com.mcxiaoke.fanfouapp.api.Paging;
 import com.mcxiaoke.fanfouapp.app.AppContext;
-import com.mcxiaoke.fanfouapp.app.UIHome;
-import com.mcxiaoke.fanfouapp.app.UIStatus;
 import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.dao.model.DirectMessageModel;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 import com.mcxiaoke.fanfouapp.preference.PreferenceHelper;
 import com.mcxiaoke.fanfouapp.service.WakefulIntentService;
-import com.mcxiaoke.fanfouapp.util.DateTimeHelper;
 import com.mcxiaoke.fanfouapp.util.LogUtil;
 import com.mcxiaoke.fanfouapp.util.NetworkHelper;
 import com.mcxiaoke.fanfouapp.util.Utils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,6 +43,12 @@ public class PushService extends WakefulIntentService {
     public static final String ACTION_NOTIFY = "com.mcxiaoke.fanfouapp.PushService.ACTION_NOTIFY";
     private static final long PUSH_CHECK_INTERVAL = 1000L * 60 * 5; // five minutes
 
+    public static final int NOTIFICATION_TYPE_TIMELINE = -101;
+    public static final int NOTIFICATION_TYPE_DIRECTMESSAGE = -102;
+
+    public static final String EXTRA_TYPE = "com.mcxiaoke.fanfouapp.PushService.EXTRA_TYPE";
+    public static final String EXTRA_DATA = "com.mcxiaoke.fanfouapp.PushService.EXTRA_DATA";
+
     private NotificationManager mNotificationManager;
 
     private static void debug(String message) {
@@ -51,7 +56,9 @@ public class PushService extends WakefulIntentService {
     }
 
     public static void start(Context context) {
-        sendWakefulWork(context, PushService.class);
+        Intent intent = new Intent(context, PushService.class);
+//        context.startService(intent);
+        runOnWake(context,intent);
     }
 
     public static void check(Context context) {
@@ -90,10 +97,13 @@ public class PushService extends WakefulIntentService {
     protected void doWakefulWork(Intent intent) {
         if (NetworkHelper.isConnected(this)) {
             debug("doWakefulWork()");
+            long now = System.currentTimeMillis();
+            saveDebugInfo("doWakefulWork start.");
             checkMentions();
             checkDirectMessages();
+            long ms = System.currentTimeMillis() - now;
+            saveDebugInfo("doWakefulWork end, time is " + ms + "ms.");
         }
-
     }
 
 
@@ -169,47 +179,18 @@ public class PushService extends WakefulIntentService {
         }
     }
 
-    private static final int NOTIFICATION_STATUS_ID = 1234;
-    private static final int NOTIFICATION_DM_ID = 2234;
-
-    private void showMentionNotification(final StatusModel sm) {
-        debug("showMentionNotification() sm=" + sm);
-        Intent intent = new Intent(this, UIStatus.class);
-        intent.setAction("DUMMY_ACTION" + System.currentTimeMillis());
-        intent.putExtra("data", sm);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        String ticker = "来自@" + sm.getUserScreenName() + "的新消息";
-        String title = sm.getUserScreenName();
-        String text = sm.getSimpleText();
-        String subText = DateTimeHelper.getInterval(sm.getTime());
-        showNotification(NOTIFICATION_STATUS_ID, R.drawable.ic_stat_mention, pi, ticker, title, text, subText);
+    private void showMentionNotification(StatusModel st) {
+        Intent intent = new Intent(ACTION_NOTIFY);
+        intent.putExtra(EXTRA_TYPE, NOTIFICATION_TYPE_TIMELINE);
+        intent.putExtra(EXTRA_DATA, st);
+        sendBroadcast(intent);
     }
 
-    private void showDMNotification(final DirectMessageModel dm) {
-        debug("showDMNotification() dm=" + dm);
-        Intent intent = new Intent(this, UIHome.class);
-        intent.setAction("DUMMY_ACTION" + System.currentTimeMillis());
-        intent.putExtra("data", dm);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        String ticker = "来自@" + dm.getSenderScreenName() + "的新私信";
-        String title = dm.getSenderScreenName();
-        String text = dm.getText();
-        String subText = DateTimeHelper.getInterval(dm.getTime());
-        showNotification(NOTIFICATION_DM_ID, R.drawable.ic_stat_dm, pi, ticker, title, text, subText);
-    }
-
-    private void showNotification(int id, int iconId, PendingIntent pi, String ticker, String title, String text, String subText) {
-        debug("showNotification() id=" + id + " ticker=" + ticker);
-        NotificationCompat.Builder nb = new NotificationCompat.Builder(this);
-        nb.setWhen(System.currentTimeMillis());
-        nb.setSmallIcon(iconId);
-        nb.setTicker(ticker).setContentTitle(title).setContentText(text);
-        nb.setSubText(subText);
-        nb.setLights(Color.GREEN, 200, 200);
-        nb.setDefaults(Notification.DEFAULT_ALL);
-        nb.setAutoCancel(true).setOnlyAlertOnce(true);
-        nb.setContentIntent(pi);
-        mNotificationManager.notify(id, nb.build());
+    private void showDMNotification(DirectMessageModel dm) {
+        Intent intent = new Intent(ACTION_NOTIFY);
+        intent.putExtra(EXTRA_TYPE, NOTIFICATION_TYPE_DIRECTMESSAGE);
+        intent.putExtra(EXTRA_DATA, dm);
+        sendBroadcast(intent);
     }
 
     public PushService() {
@@ -228,5 +209,22 @@ public class PushService extends WakefulIntentService {
     public void onDestroy() {
         super.onDestroy();
         debug("onDestroy()");
+    }
+
+    private void saveDebugInfo(String message) {
+        try {
+            File file = new File(Environment.getExternalStorageDirectory(), "circleapp.log");
+            FileWriter fw = new FileWriter(file, true);
+            fw.write("" + new Date() + " - " + message + "\n");
+            fw.flush();
+            fw.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+
+        }
+
     }
 }

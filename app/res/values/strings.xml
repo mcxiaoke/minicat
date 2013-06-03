@@ -110,8 +110,8 @@
 
     <!-- Options -->
     <string name="option_push_notification_key">option_push_notification_key</string>
-    <string name="option_push_notification_title">消息通知</string>
-    <string name="option_push_notification_summary">私信和@通知</string>
+    <string name="option_push_notification_title">消息提醒</string>
+    <string name="option_push_notification_summary">新私信和@消息提醒</string>
 
     <string name="option_refresh_on_start_key">option_refresh_on_start_key</string>
     <string name="option_refresh_on_start_title">立即刷新</string>
