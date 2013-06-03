@@ -360,7 +360,7 @@ public abstract class StringUtils {
 	 * @param str
 	 *            the original string (or StringBuilder)
 	 * @param index
-	 *            the index in the original string to start matching against
+	 *            the index in the original string to check matching against
 	 * @param substring
 	 *            the substring to match at the given index
 	 */
@@ -632,7 +632,7 @@ public abstract class StringUtils {
 	 * folder separation (i.e. "/" separators).
 	 * 
 	 * @param path
-	 *            the path to start from (usually a full file path)
+	 *            the path to check from (usually a full file path)
 	 * @param relativePath
 	 *            the relative path to apply (relative to the full file path
 	 *            above)

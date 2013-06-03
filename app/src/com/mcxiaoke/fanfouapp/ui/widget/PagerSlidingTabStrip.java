@@ -362,7 +362,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         float lineLeft = currentTab.getLeft();
         float lineRight = currentTab.getRight();
 
-        // if there is an offset, start interpolating left and right coordinates between current and next tab
+        // if there is an offset, check interpolating left and right coordinates between current and next tab
         if (currentPositionOffset > 0f && currentPosition < tabCount - 1) {
 
             View nextTab = tabsContainer.getChildAt(currentPosition + 1);

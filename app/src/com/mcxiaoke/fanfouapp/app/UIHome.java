@@ -74,7 +74,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
             log("onCreate()");
         }
         setLayout();
-        AutoCompleteService.set(this);
+        PushService.cancel(this);
     }
 
     protected void setLayout() {
@@ -190,6 +190,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     protected void onDestroy() {
         super.onDestroy();
         PushService.check(this);
+        AutoCompleteService.check(this);
         ImageLoader.getInstance().clearMemoryCache();
     }
 
@@ -275,7 +276,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 
     @Override
     protected void startRefresh() {
-        log("start refresh, current fragment=" + mCurrentFragment);
+        log("check refresh, current fragment=" + mCurrentFragment);
         if (mCurrentFragment != null) {
             mCurrentFragment.startRefresh();
         } else {
