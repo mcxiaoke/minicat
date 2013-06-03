@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author mcxiaoke
@@ -99,8 +100,11 @@ public final class SyncService extends Service implements Handler.Callback {
     private static final int MSG_EXEC_IDOP = 1;
     private static final int MSG_POST_DATA = 2;
     private static final int MSG_CMD_OTHERS = 3;
+    private static final int MSG_STOP_CHECK = 4;
 
     public static final int NOTIFICATION_ID = 1001;
+
+    private static final long STOP_SELF_CHECK_INTERVAL = 1000 * 30;
 
     static class Commmand {
         public Messenger messenger;
@@ -130,9 +134,14 @@ public final class SyncService extends Service implements Handler.Callback {
 
     private SyncService mService;
 
+    private AtomicInteger mCounter = new AtomicInteger();
+
+    private volatile boolean mIdle = true;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        debug("onCreate()");
         mService = this;
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mApi = AppContext.getApi();
@@ -140,7 +149,8 @@ public final class SyncService extends Service implements Handler.Callback {
         mHandlerThread = new HandlerThread(TAG);
         mHandlerThread.start();
         mCommandHandler = new Handler(mHandlerThread.getLooper(), this);
-        mExecutor = Executors.newCachedThreadPool();
+        ensureExecutor();
+        sendStopCheckMessage();
     }
 
     @Override
@@ -226,6 +236,7 @@ public final class SyncService extends Service implements Handler.Callback {
 
     @Override
     public boolean handleMessage(Message msg) {
+        mIdle = false;
         int what = msg.what;
         Intent intent = (Intent) msg.obj;
         debug("handleMessage what=" + what);
@@ -242,6 +253,9 @@ public final class SyncService extends Service implements Handler.Callback {
             case MSG_CMD_OTHERS:
                 handleOthersCommands(intent);
                 break;
+            case MSG_STOP_CHECK:
+                handleStopCheck();
+                break;
             default:
                 break;
         }
@@ -251,6 +265,12 @@ public final class SyncService extends Service implements Handler.Callback {
 
 
         return true;
+    }
+
+    private void sendStopCheckMessage() {
+        Message message = Message.obtain();
+        message.what = MSG_STOP_CHECK;
+        mCommandHandler.sendMessageDelayed(message, STOP_SELF_CHECK_INTERVAL);
     }
 
     private void handleSyncDataCommands(Intent intent) {
@@ -383,6 +403,18 @@ public final class SyncService extends Service implements Handler.Callback {
 
     }
 
+    private void handleStopCheck() {
+        int taskCount = mCounter.get();
+        if (DEBUG) {
+            debug("handleStopCheck() taskCount=" + taskCount);
+        }
+        if (taskCount == 0) {
+            stopSelf();
+        } else {
+            sendStopCheckMessage();
+        }
+    }
+
     public static void deleteDirectMessage(Context context, String id,
                                            final Handler handler) {
         Intent intent = new Intent(context, SyncService.class);
@@ -420,7 +452,7 @@ public final class SyncService extends Service implements Handler.Callback {
                 }
             }
         };
-        mExecutor.submit(runnable);
+        execute(runnable);
 
     }
 
@@ -448,7 +480,7 @@ public final class SyncService extends Service implements Handler.Callback {
                 }
             }
         };
-        mExecutor.submit(runnable);
+        execute(runnable);
 
     }
 
@@ -491,9 +523,10 @@ public final class SyncService extends Service implements Handler.Callback {
                     }
                     sendErrorMessage(cmd, e);
                 }
+                mIdle = true;
             }
         };
-        mExecutor.submit(runnable);
+        execute(runnable);
 
     }
 
@@ -521,9 +554,10 @@ public final class SyncService extends Service implements Handler.Callback {
                     }
                     sendErrorMessage(cmd, e);
                 }
+                mIdle = true;
             }
         };
-        mExecutor.submit(runnable);
+        execute(runnable);
 
     }
 
@@ -581,9 +615,10 @@ public final class SyncService extends Service implements Handler.Callback {
                     }
                     sendErrorMessage(cmd, e);
                 }
+                mIdle = true;
             }
         };
-        mExecutor.submit(runnable);
+        execute(runnable);
 
     }
 
@@ -619,9 +654,10 @@ public final class SyncService extends Service implements Handler.Callback {
                     }
                     sendErrorMessage(cmd, e);
                 }
+                mIdle = true;
             }
         };
-        mExecutor.submit(runnable);
+        execute(runnable);
 
     }
 
@@ -658,9 +694,10 @@ public final class SyncService extends Service implements Handler.Callback {
                     }
                     sendErrorMessage(cmd, e);
                 }
+                mIdle = true;
             }
         };
-        mExecutor.submit(runnable);
+        execute(runnable);
 
 
     }
@@ -692,9 +729,10 @@ public final class SyncService extends Service implements Handler.Callback {
                         }
                     }, 500);
                 }
+                mIdle = true;
             }
         };
-        mExecutor.execute(runnable);
+        execute(runnable);
     }
 
 
@@ -793,9 +831,10 @@ public final class SyncService extends Service implements Handler.Callback {
 
                     }
                 }
+                mIdle = true;
             }
         };
-        mExecutor.submit(runnable);
+        execute(runnable);
 
     }
 
@@ -819,7 +858,7 @@ public final class SyncService extends Service implements Handler.Callback {
                 sendSuccessMessage(cmd, data);
             }
         };
-        mExecutor.submit(runnable);
+        execute(runnable);
 
     }
 
@@ -876,7 +915,7 @@ public final class SyncService extends Service implements Handler.Callback {
                 }
             }
         };
-        mExecutor.submit(runnable);
+        execute(runnable);
 
     }
 
@@ -913,7 +952,7 @@ public final class SyncService extends Service implements Handler.Callback {
                 }
             }
         };
-        mExecutor.submit(runnable);
+        execute(runnable);
 
     }
 
@@ -944,7 +983,7 @@ public final class SyncService extends Service implements Handler.Callback {
                 }
             }
         };
-        mExecutor.submit(runnable);
+        execute(runnable);
 
     }
 
@@ -1027,7 +1066,7 @@ public final class SyncService extends Service implements Handler.Callback {
                 }
             }
         };
-        mExecutor.submit(runnable);
+        execute(runnable);
 
     }
 
@@ -1115,9 +1154,10 @@ public final class SyncService extends Service implements Handler.Callback {
                     }
                     sendErrorMessage(cmd, e);
                 }
+                mIdle = true;
             }
         };
-        mExecutor.submit(runnable);
+        execute(runnable);
 
     }
 
@@ -1168,6 +1208,19 @@ public final class SyncService extends Service implements Handler.Callback {
         intent.putExtra("paging", paging);
         intent.putExtra("id", userId);
         context.startService(intent);
+    }
+
+    private void execute(Runnable runnable) {
+        if (runnable != null) {
+            ensureExecutor();
+            mExecutor.submit(new MyRunnable(runnable, mCounter));
+        }
+    }
+
+    private void ensureExecutor() {
+        if (mExecutor == null) {
+            mExecutor = Executors.newCachedThreadPool();
+        }
     }
 
 
@@ -1303,9 +1356,40 @@ public final class SyncService extends Service implements Handler.Callback {
         sendOrderedBroadcast(intent, null);
     }
 
+    private void doClose() {
+        mExecutor.shutdownNow();
+        mExecutor = null;
+        mCommandHandler.removeCallbacksAndMessages(null);
+        mCommandHandler.getLooper().quit();
+        mCommandHandler = null;
+        mNotificationManager.cancelAll();
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mNotificationManager.cancelAll();
+        debug("onDestroy()");
+        doClose();
     }
+
+    static class MyRunnable implements Runnable {
+        private Runnable runnable;
+        private AtomicInteger counter;
+
+        public MyRunnable(Runnable runnable, AtomicInteger counter) {
+            this.runnable = runnable;
+            this.counter = counter;
+
+        }
+
+        @Override
+        public void run() {
+            counter.incrementAndGet();
+            if (runnable != null) {
+                runnable.run();
+            }
+            counter.decrementAndGet();
+        }
+    }
+
 }

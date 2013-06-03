@@ -21,7 +21,7 @@ import java.util.List;
  * @author mcxiaoke
  * @version 2.9 2012.02.24
  */
-public class AutoCompleteService extends WakefulIntentService {
+public class AutoCompleteService extends BaseIntentService {
     private static final String TAG = AutoCompleteService.class.getSimpleName();
 
     public void log(String message) {
@@ -69,6 +69,10 @@ public class AutoCompleteService extends WakefulIntentService {
     }
 
     @Override
+    protected void onHandleIntent(Intent intent) {
+        doWakefulWork(intent);
+    }
+
     protected void doWakefulWork(Intent intent) {
         doFetchAutoComplete();
     }
