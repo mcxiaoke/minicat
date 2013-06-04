@@ -123,12 +123,12 @@
 
     <style name="Item.TextBoldStyle">
         <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/text_primary_selectable</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Item.MetaInfoStyle">
-        <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:textColor">@color/text_secondary_selectable</item>
         <item name="android:textSize">@dimen/text_size_tiny</item>
     </style>
 

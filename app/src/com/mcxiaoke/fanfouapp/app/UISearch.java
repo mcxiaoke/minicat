@@ -48,7 +48,7 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
 
         mListView = (ListView) findViewById(android.R.id.list);
         mListView.setOnItemClickListener(this);
-        int dividerHeight=getResources().getDimensionPixelSize(R.dimen.list_divider_height);
+        int dividerHeight = getResources().getDimensionPixelSize(R.dimen.list_divider_height);
         mListView.setDivider(getResources().getDrawable(R.drawable.divider));
         mListView.setDividerHeight(dividerHeight);
         mListView.setSelector(getResources().getDrawable(R.drawable.selector));
@@ -169,8 +169,7 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
 
     @Override
     protected int getMenuResourceId() {
-//        return R.menu.menu_search;
-        return -1;
+        return R.menu.menu_search;
     }
 
     @Override

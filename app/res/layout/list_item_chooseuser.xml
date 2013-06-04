@@ -5,7 +5,7 @@
     android:descendantFocusability="blocksDescendants"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="2dp" >
+    android:padding="8dp" >
 
     <ImageView
         android:id="@+id/head"

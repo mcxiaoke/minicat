@@ -135,6 +135,8 @@ public class ProfileView extends FrameLayout implements
     }
 
     private void setListeners() {
+        header.setClickable(false);
+//        header.setOnClickListener(this);
         headerImage.setOnClickListener(this);
         headerFollow.setOnClickListener(this);
 

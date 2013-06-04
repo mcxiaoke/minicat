@@ -23,11 +23,9 @@
                     android:orientation="vertical" android:showDividers="none"
                     android:divider="?android:dividerHorizontal">
 
-                <include
-                        android:id="@+id/header"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        layout="@layout/item_profile_header"/>
+                <include android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         layout="@layout/item_profile_header"/>
 
                 <View
                         android:layout_width="match_parent"

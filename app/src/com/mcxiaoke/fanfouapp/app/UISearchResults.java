@@ -27,6 +27,7 @@ import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.ui.UIHelper;
 import com.mcxiaoke.fanfouapp.util.NetworkHelper;
+import com.mcxiaoke.fanfouapp.util.StringHelper;
 
 import java.util.List;
 
@@ -88,8 +89,15 @@ public class UISearchResults extends UIBaseSupport implements
         parseIntent();
         maxId = null;
         mStatusAdapter.clear();
-        doSearch(true);
-        showProgressIndicator();
+
+
+        if (StringHelper.isEmpty(keyword)) {
+            onSearchRequested();
+
+        } else {
+            doSearch(true);
+            showProgressIndicator();
+        }
 
     }
 
@@ -108,7 +116,10 @@ public class UISearchResults extends UIBaseSupport implements
             }
         }
 
-        setTitle("搜索  \"" + keyword + "\"");
+        if (!StringHelper.isEmpty(keyword)) {
+            setTitle("搜索  \"" + keyword + "\"");
+        }
+
     }
 
     private void doSearch(boolean reset) {

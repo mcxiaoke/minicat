@@ -126,7 +126,12 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
     }
 
     protected void onMenuSearchClick() {
-        onSearchRequested();
+//        onSearchRequested();
+        startSearchUI();
+    }
+
+    private void startSearchUI() {
+        UIController.showSearchResults(this, null);
     }
 
     protected void onMenuLogoutClick() {

@@ -124,6 +124,7 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
         mListView = (ListView) findViewById(android.R.id.list);
         mListView.setOnItemClickListener(this);
         mListView.setItemsCanFocus(false);
+        mListView.setSelector(getResources().getDrawable(R.drawable.selector));
         mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
         mCursorAdapter = new UserChooseCursorAdapter(mContext, null);
