@@ -118,6 +118,8 @@ public class UISearchResults extends UIBaseSupport implements
 
         if (!StringHelper.isEmpty(keyword)) {
             setTitle("搜索  \"" + keyword + "\"");
+        } else {
+            setTitle("搜索");
         }
 
     }
