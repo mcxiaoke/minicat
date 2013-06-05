@@ -49,9 +49,9 @@
 
         <dependency>
             <groupId>com.jeremyfeinstein.slidingmenu</groupId>
-            <artifactId>SlidingMenu</artifactId>
-            <type>apklib</type>
+            <artifactId>slidingmenu</artifactId>
             <version>1.3-SNAPSHOT</version>
+            <type>apklib</type>
         </dependency>
 
         <dependency>
