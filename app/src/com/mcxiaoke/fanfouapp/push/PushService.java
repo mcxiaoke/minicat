@@ -19,7 +19,6 @@ import com.mcxiaoke.fanfouapp.service.BaseIntentService;
 import com.mcxiaoke.fanfouapp.util.DateTimeHelper;
 import com.mcxiaoke.fanfouapp.util.LogUtil;
 import com.mcxiaoke.fanfouapp.util.NetworkHelper;
-import com.mcxiaoke.fanfouapp.util.Utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -128,7 +127,7 @@ public class PushService extends BaseIntentService {
 
     private void checkMentions() {
         String sinceId = getSinceId();
-        debug("check mentions sinceId=" + sinceId);
+        debug("checkMentions() sinceId=" + sinceId);
         if (!TextUtils.isEmpty(sinceId)) {
             Api api = AppContext.getApi();
             Paging p = new Paging();
@@ -136,6 +135,7 @@ public class PushService extends BaseIntentService {
             try {
                 List<StatusModel> ss = api.getMentions(p);
                 if (ss != null && ss.size() > 0) {
+                    debug("checkMentions() result=" + ss);
                     DataController.store(this, ss);
                     StatusModel sm = ss.get(0);
                     showMentionNotification(sm);
@@ -149,7 +149,7 @@ public class PushService extends BaseIntentService {
 
     private void checkDirectMessages() {
         String sinceId = getDMSinceId();
-        debug("check dm sinceId=" + sinceId);
+        debug("checkDirectMessages() sinceId=" + sinceId);
         if (!TextUtils.isEmpty(sinceId)) {
             Api api = AppContext.getApi();
             Paging p = new Paging();
@@ -157,6 +157,7 @@ public class PushService extends BaseIntentService {
             try {
                 List<DirectMessageModel> dms = api.getDirectMessagesInbox(p);
                 if (dms != null && dms.size() > 0) {
+                    debug("checkDirectMessages() result=" + dms);
                     DataController.store(this, dms);
                     DirectMessageModel dm = dms.get(0);
                     showDMNotification(dm);
@@ -172,24 +173,38 @@ public class PushService extends BaseIntentService {
         Cursor cursor = null;
         try {
             cursor = DataController.getDirectMessageCursor(this);
-            return Utils.getDmSinceId(cursor);
+            if (cursor != null && cursor.moveToFirst()) {
+                DirectMessageModel dm = DirectMessageModel.from(cursor);
+                debug("getDMSinceId dm=" + dm);
+                if (dm != null) {
+                    return dm.getId();
+                }
+            }
         } finally {
             if (cursor != null) {
                 cursor.close();
             }
         }
+        return null;
     }
 
     private String getSinceId() {
         Cursor cursor = null;
         try {
             cursor = DataController.getHomeTimelineCursor(this);
-            return Utils.getSinceId(cursor);
+            if (cursor != null && cursor.moveToFirst()) {
+                StatusModel st = StatusModel.from(cursor);
+                debug("getSinceId st=" + st);
+                if (st != null) {
+                    return st.getId();
+                }
+            }
         } finally {
             if (cursor != null) {
                 cursor.close();
             }
         }
+        return null;
     }
 
     private void showMentionNotification(StatusModel st) {
