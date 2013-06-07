@@ -97,7 +97,8 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         StatusModel status = (StatusModel) parent.getItemAtPosition(position);
         if (status != null) {
-            UIController.showPhoto(getActivity(), status.getPhotoLargeUrl());
+//            UIController.showPhoto(getActivity(), status.getPhotoLargeUrl());
+            UIController.showGallery(getActivity(), mData, position);
         }
     }
 

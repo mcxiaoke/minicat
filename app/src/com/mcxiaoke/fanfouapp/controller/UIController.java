@@ -15,6 +15,7 @@ import com.mcxiaoke.fanfouapp.app.UIAbout;
 import com.mcxiaoke.fanfouapp.app.UIConversation;
 import com.mcxiaoke.fanfouapp.app.UIDebugMode;
 import com.mcxiaoke.fanfouapp.app.UIFavorites;
+import com.mcxiaoke.fanfouapp.app.UIGallery;
 import com.mcxiaoke.fanfouapp.app.UIHome;
 import com.mcxiaoke.fanfouapp.app.UILogin;
 import com.mcxiaoke.fanfouapp.app.UIOptions;
@@ -40,6 +41,7 @@ import com.mcxiaoke.fanfouapp.util.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author mcxiaoke
@@ -326,6 +328,20 @@ public class UIController {
         intent.setAction(Intent.ACTION_SEARCH);
         intent.putExtra(SearchManager.QUERY, query);
         context.startActivity(intent);
+    }
+
+    public static void showGallery(Activity context, List<StatusModel> statuses, int index) {
+        if (statuses != null && statuses.size() > 0) {
+            ArrayList<String> uris = new ArrayList<String>();
+            for (StatusModel st : statuses) {
+                uris.add(st.getPhotoLargeUrl());
+            }
+            Intent intent = new Intent(context, UIGallery.class);
+            intent.putStringArrayListExtra("data", uris);
+            intent.putExtra("index", index);
+            context.startActivity(intent);
+        }
+
     }
 
 }
