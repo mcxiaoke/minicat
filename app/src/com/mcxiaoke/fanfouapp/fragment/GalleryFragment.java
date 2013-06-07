@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.controller.EmptyViewController;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -27,7 +28,7 @@ import java.util.List;
  * Date: 13-6-5
  * Time: 下午9:56
  */
-public class GalleryFragment extends Fragment {
+public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeListener {
 
     public static GalleryFragment newInstance(ArrayList<String> data, int index) {
         GalleryFragment fragment = new GalleryFragment();
@@ -39,6 +40,7 @@ public class GalleryFragment extends Fragment {
     }
 
     private ViewPager mViewPager;
+    private TextView mTextView;
     private GalleryPagerAdapter mGalleryPagerAdapter;
     private List<String> mImageUris;
     private int mIndex;
@@ -61,6 +63,7 @@ public class GalleryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fm_gallery, null);
         mViewPager = (ViewPager) root.findViewById(R.id.gallery);
+        mTextView = (TextView) root.findViewById(R.id.text);
         return root;
     }
 
@@ -71,8 +74,26 @@ public class GalleryFragment extends Fragment {
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(mGalleryPagerAdapter);
         mViewPager.setCurrentItem(mIndex);
+        setPageText(mIndex);
+        mViewPager.setOnPageChangeListener(this);
     }
 
+    private void setPageText(int page) {
+        mTextView.setText("" + (page + 1) + " / " + mImageUris.size());
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        setPageText(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    }
 
     @Override
     public void onDestroy() {
@@ -115,9 +136,6 @@ public class GalleryFragment extends Fragment {
 
             ViewGroup view = (ViewGroup) mInflater.inflate(R.layout.gallery_item_photo, null);
             final PhotoView imageView = (PhotoView) view.findViewById(R.id.photo);
-            imageView.setMinScale(1.0f);
-            imageView.setMidScale(1.5f);
-            imageView.setMaxScale(2.0f);
             View vEmpty = view.findViewById(android.R.id.empty);
             final EmptyViewController emptyViewController = new EmptyViewController(vEmpty);
             ImageLoader.getInstance().displayImage(mResources.get(position), imageView, getDisplayImageOptions(), new ImageLoaderCallback(imageView, emptyViewController));
