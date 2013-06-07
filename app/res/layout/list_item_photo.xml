@@ -7,8 +7,9 @@
     <ImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:scaleType="fitXY"
-            android:minHeight="@dimen/photo_grid_min_width" android:minWidth="@dimen/photo_grid_min_width"/>
+            android:layout_height="wrap_content" android:scaleType="center"
+            android:minHeight="@dimen/photo_grid_min_width"
+            android:minWidth="@dimen/photo_grid_min_width"/>
 
     <TextView android:id="@+id/text" android:layout_width="match_parent" android:layout_height="wrap_content"
               android:text="text" android:visibility="gone"/>

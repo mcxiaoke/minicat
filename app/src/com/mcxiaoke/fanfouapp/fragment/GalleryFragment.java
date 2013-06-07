@@ -71,7 +71,7 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mGalleryPagerAdapter = new GalleryPagerAdapter(getActivity(), mImageUris);
-        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(mGalleryPagerAdapter);
         mViewPager.setCurrentItem(mIndex);
         setPageText(mIndex);
