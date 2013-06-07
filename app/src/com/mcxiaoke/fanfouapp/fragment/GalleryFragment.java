@@ -98,6 +98,7 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
     @Override
     public void onDestroy() {
         super.onDestroy();
+        ImageLoader.getInstance().clearMemoryCache();
     }
 
 
@@ -160,7 +161,7 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
         }
 
         private static DisplayImageOptions getDisplayImageOptions() {
-            return new DisplayImageOptions.Builder().cacheOnDisc().cacheInMemory().showStubImage(R.drawable.photo_loading)
+            return new DisplayImageOptions.Builder().cacheOnDisc().cacheInMemory().showStubImage(R.drawable.photo_loading).bitmapConfig(Bitmap.Config.RGB_565).showImageOnFail(R.drawable.photo_error)
                     .build();
         }
 
