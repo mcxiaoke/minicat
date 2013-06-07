@@ -47,7 +47,7 @@
     <dimen name="list_row_preferred_height">48dp</dimen>
     <dimen name="list_row_padding">10dp</dimen>
     <dimen name="standard_spacing">5dp</dimen>
-    <dimen name="write_image_preview_width">96dp</dimen>
-    <dimen name="photo_grid_min_width">96dp</dimen>
+    <dimen name="write_image_preview_width">92dp</dimen>
+    <dimen name="photo_grid_min_width">92dp</dimen>
 
 </resources>
