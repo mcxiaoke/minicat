@@ -400,8 +400,6 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
             }
             mFragment.mDataLoaded = true;
             mFragment.busy = false;
-            mFragment.onRefreshComplete();
-            mFragment.getBaseSupport().hideProgressIndicator();
             switch (msg.what) {
                 case Constants.RESULT_SUCCESS:
                     mFragment.onSuccess(data);
@@ -412,6 +410,8 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
                 default:
                     break;
             }
+            mFragment.getBaseSupport().hideProgressIndicator();
+            mFragment.onRefreshComplete();
         }
 
     }
