@@ -33,26 +33,9 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-        <!--        <repository>
-                    <id>maven-workpc</id>
-                    <name>maven-workpc</name>
-                    <url>file:///home/mcxiaoke/project/mavenrepo/repository</url>
-                </repository>
-                <repository>
-                    <id>maven-homepc</id>
-                    <name>maven-homepc</name>
-                    <url>file:///D:/github/mavenrepo/repository</url>
-                </repository>-->
     </repositories>
 
     <dependencies>
-
-        <dependency>
-            <groupId>com.jeremyfeinstein.slidingmenu</groupId>
-            <artifactId>slidingmenu</artifactId>
-            <version>1.3-SNAPSHOT</version>
-            <type>apklib</type>
-        </dependency>
 
         <dependency>
             <groupId>com.google.android</groupId>
@@ -99,11 +82,11 @@
             <version>1.8.4</version>
         </dependency>
 
-        <dependency>
+<!--        <dependency>
             <groupId>com.github.chrisbanes.photoview</groupId>
             <artifactId>library</artifactId>
             <version>1.2.1</version>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>com.github.manuelpeinado.fadingactionbar-native</groupId>

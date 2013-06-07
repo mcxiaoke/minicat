@@ -105,6 +105,10 @@
                     android:value=".UISearchResults"/>
         </activity>
         <activity
+                android:name=".app.UIGallery"
+                android:configChanges="keyboardHidden|orientation"
+                android:label="@string/app_name" android:screenOrientation="portrait"/>
+        <activity
                 android:name=".app.UIPhotos"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name" android:screenOrientation="portrait"/>
