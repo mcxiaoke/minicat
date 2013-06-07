@@ -28,20 +28,17 @@ public class UmengHelper {
         MobclickAgent.onEvent(contex, EVENT_LOGIN, params);
     }
 
-    public static void onStatusUpdateEvent(Context context, String userId, String text, String statusId) {
+    public static void onStatusUpdateEvent(Context context, String userId, String statusId) {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("userId", userId);
-        params.put("text", text);
         params.put("status_id", statusId);
         params.put("timestamp", String.valueOf(System.currentTimeMillis()));
         MobclickAgent.onEvent(context, EVENT_STATUS_UPDATE, params);
     }
 
-    public static void onPhotoUploadEvent(Context context, String userId, String text, String fileName, String statusId) {
+    public static void onPhotoUploadEvent(Context context, String userId, String statusId) {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("userId", userId);
-        params.put("text", text);
-        params.put("filename", fileName);
         params.put("status_id", statusId);
         params.put("timestamp", String.valueOf(System.currentTimeMillis()));
         MobclickAgent.onEvent(context, EVENT_PHOTO_UPLOAD, params);

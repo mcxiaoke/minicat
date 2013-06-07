@@ -774,10 +774,10 @@ public final class SyncService extends Service implements Handler.Callback {
             if (result != null) {
                 sendSuccessBroadcast(result);
                 if (photoUpload) {
-                    UmengHelper.onPhotoUploadEvent(this, AppContext.getAccount(), info.text, info.fileName, result.getId());
+                    UmengHelper.onPhotoUploadEvent(this, AppContext.getAccount(), result.getId());
                 } else {
 
-                    UmengHelper.onStatusUpdateEvent(this, AppContext.getAccount(), info.text, result.getId());
+                    UmengHelper.onStatusUpdateEvent(this, AppContext.getAccount(), result.getId());
                 }
                 res = true;
             }
