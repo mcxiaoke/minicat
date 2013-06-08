@@ -218,14 +218,14 @@ public class DataController {
     }
 
     public static Cursor getHomeTimelineCursor(Context context) {
-        String orderBy = DataProvider.ORDERBY_TIME_DESC;
+        String orderBy = DataProvider.ORDERBY_RAWID_DESC;
         String where = IBaseColumns.TYPE + " =? OR " + IBaseColumns.TYPE + " =? ";
         String[] whereArgs = new String[]{String.valueOf(StatusModel.TYPE_HOME), String.valueOf(StatusModel.TYPE_MENTIONS)};
         return context.getContentResolver().query(StatusColumns.CONTENT_URI, null, where, whereArgs, orderBy);
     }
 
     public static Cursor getDirectMessageCursor(Context context) {
-        String orderBy = DataProvider.ORDERBY_TIME_DESC;
+        String orderBy = DataProvider.ORDERBY_RAWID_DESC;
         return context.getContentResolver().query(DirectMessageColumns.CONTENT_URI, null, null, null, orderBy);
     }
 

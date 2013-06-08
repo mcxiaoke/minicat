@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Environment;
 import android.text.TextUtils;
 import com.mcxiaoke.fanfouapp.api.Api;
 import com.mcxiaoke.fanfouapp.api.Paging;
@@ -20,12 +19,7 @@ import com.mcxiaoke.fanfouapp.util.DateTimeHelper;
 import com.mcxiaoke.fanfouapp.util.LogUtil;
 import com.mcxiaoke.fanfouapp.util.NetworkHelper;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -83,10 +77,13 @@ public class PushService extends BaseIntentService {
         } else {
             calendar.add(Calendar.MINUTE, 5);
         }
+
+        long nextTime = calendar.getTimeInMillis();
+
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), getPendingIntent(context));
+        alarmManager.set(AlarmManager.RTC_WAKEUP, nextTime, getPendingIntent(context));
         if (DEBUG) {
-            debug("setAlarm() next time is " + DateTimeHelper.formatDate(calendar.getTime()));
+            debug("setAlarm() next time is " + DateTimeHelper.formatDate(nextTime));
         }
     }
 
@@ -114,12 +111,8 @@ public class PushService extends BaseIntentService {
     protected void doWakefulWork(Intent intent) {
         if (NetworkHelper.isConnected(this)) {
             debug("doWakefulWork()");
-            long now = System.currentTimeMillis();
-            saveDebugInfo("doWakefulWork check.");
             checkMentions();
             checkDirectMessages();
-            long ms = System.currentTimeMillis() - now;
-            saveDebugInfo("doWakefulWork end, time is " + ms + "ms.");
         }
         check(this);
     }
@@ -208,6 +201,11 @@ public class PushService extends BaseIntentService {
     }
 
     private void showMentionNotification(StatusModel st) {
+        String lastId = PreferenceHelper.getInstance(this).getLastPushStatusId();
+        if (st.getId().equals(lastId)) {
+            return;
+        }
+        PreferenceHelper.getInstance(this).setLastPushStatusId(st.getId());
         Intent intent = new Intent(ACTION_NOTIFY);
         intent.putExtra(EXTRA_TYPE, NOTIFICATION_TYPE_TIMELINE);
         intent.putExtra(EXTRA_DATA, st);
@@ -215,6 +213,11 @@ public class PushService extends BaseIntentService {
     }
 
     private void showDMNotification(DirectMessageModel dm) {
+        String lastId = PreferenceHelper.getInstance(this).getKeyLastPushDmId();
+        if (dm.getId().equals(lastId)) {
+            return;
+        }
+        PreferenceHelper.getInstance(this).setLastPushStatusId(dm.getId());
         Intent intent = new Intent(ACTION_NOTIFY);
         intent.putExtra(EXTRA_TYPE, NOTIFICATION_TYPE_DIRECTMESSAGE);
         intent.putExtra(EXTRA_DATA, dm);
@@ -239,20 +242,4 @@ public class PushService extends BaseIntentService {
         debug("onDestroy()");
     }
 
-    private void saveDebugInfo(String message) {
-        try {
-            File file = new File(Environment.getExternalStorageDirectory(), "circleapp.log");
-            FileWriter fw = new FileWriter(file, true);
-            fw.write("" + new Date() + " - " + message + "\n");
-            fw.flush();
-            fw.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-
-        }
-
-    }
 }
