@@ -13,6 +13,8 @@ import com.mcxiaoke.fanfouapp.R;
  * Time: 下午9:47
  */
 public class PreferenceHelper {
+    private static final String KEY_LAST_PUSH_STATUS_ID = "push_last_status_id";
+    private static final String KEY_LAST_PUSH_DM_ID = "push_last_dm_id";
     private static PreferenceHelper sPreferenceHelper;
 
 
@@ -65,4 +67,22 @@ public class PreferenceHelper {
         String key = mAppContext.getResources().getString(R.string.option_actionbar_refresh_button_key);
         mPreferences.edit().putBoolean(key, value).commit();
     }
+
+    public String getLastPushStatusId() {
+        return mPreferences.getString(KEY_LAST_PUSH_STATUS_ID, "");
+    }
+
+    public String getKeyLastPushDmId() {
+        return mPreferences.getString(KEY_LAST_PUSH_DM_ID, "");
+    }
+
+    public void setLastPushStatusId(String id) {
+        mPreferences.edit().putString(KEY_LAST_PUSH_STATUS_ID, id).commit();
+    }
+
+    public void setLastPushDmId(String id) {
+        mPreferences.edit().putString(KEY_LAST_PUSH_DM_ID, id).commit();
+    }
+
+
 }
