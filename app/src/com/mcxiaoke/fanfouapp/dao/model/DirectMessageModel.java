@@ -257,7 +257,7 @@ public class DirectMessageModel extends BaseModel {
     public void setSender(UserModel sender) {
         this.sender = sender;
         if (sender != null) {
-            this.senderProfileImageUrl = sender.getProfileImageUrl();
+            this.senderProfileImageUrl = sender.getProfileImageUrlLarge();
         }
     }
 
@@ -268,7 +268,7 @@ public class DirectMessageModel extends BaseModel {
     public void setRecipient(UserModel recipient) {
         this.recipient = recipient;
         if (recipient != null) {
-            this.recipientProfileImageUrl = recipient.getProfileImageUrl();
+            this.recipientProfileImageUrl = recipient.getProfileImageUrlLarge();
         }
     }
 

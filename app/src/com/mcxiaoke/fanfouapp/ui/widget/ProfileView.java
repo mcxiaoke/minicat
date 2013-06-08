@@ -135,8 +135,8 @@ public class ProfileView extends FrameLayout implements
     }
 
     private void setListeners() {
-        header.setClickable(false);
-//        header.setOnClickListener(this);
+//        header.setClickable(false);
+        header.setOnClickListener(this);
         headerImage.setOnClickListener(this);
         headerFollow.setOnClickListener(this);
 
@@ -151,7 +151,7 @@ public class ProfileView extends FrameLayout implements
         headerName.setText(user.getScreenName());
         headerId.setText("@" + user.getId());
         headerLock.setVisibility(user.isProtect() ? View.VISIBLE : View.INVISIBLE);
-        String headerImageUrl = user.getProfileImageUrl();
+        String headerImageUrl = user.getProfileImageUrlLarge();
         ImageLoader.getInstance().displayImage(headerImageUrl, headerImage);
     }
 
@@ -250,7 +250,7 @@ public class ProfileView extends FrameLayout implements
             onProfileItemClick(TYPE_TOP_STATUSES);
         } else if (v == vFavoritesItem) {
             onProfileItemClick(TYPE_TOP_FAVORATIES);
-        } else if (v == headerImage) {
+        } else if (v == header) {
             onProfileItemClick(TYPE_PHOTOS);
         }
     }

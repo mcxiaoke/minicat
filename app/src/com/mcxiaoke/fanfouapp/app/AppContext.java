@@ -145,7 +145,7 @@ public class AppContext extends Application {
 
         String account = u.getId();
         String screenName = u.getScreenName();
-        String profileImage = u.getProfileImageUrl();
+        String profileImage = u.getProfileImageUrlLarge();
 
         accountInfo.setAccount(account);
         accountInfo.setScreenName(screenName);

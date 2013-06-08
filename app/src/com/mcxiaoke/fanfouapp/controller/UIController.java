@@ -150,7 +150,7 @@ public class UIController {
         Intent intent = new Intent(context, UIConversation.class);
         intent.putExtra("id", user.getId());
         intent.putExtra("screen_name", user.getScreenName());
-        intent.putExtra("profile_image_url", user.getProfileImageUrl());
+        intent.putExtra("profile_image_url", user.getProfileImageUrlLarge());
         intent.putExtra("refresh", refresh);
         startUIByAnimation(context, intent);
     }

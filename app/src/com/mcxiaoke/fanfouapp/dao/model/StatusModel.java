@@ -503,7 +503,7 @@ public class StatusModel extends BaseModel {
 			this.userId=user.getId();
 			this.userScreenName=user.getScreenName();
 			this.userRawid=user.getRawid();
-			this.userProfileImageUrl=user.getProfileImageUrl();
+			this.userProfileImageUrl=user.getProfileImageUrlLarge();
 		}
 	}
 
