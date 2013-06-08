@@ -56,7 +56,7 @@ public abstract class UserArrayAdapter extends BaseAdapter implements
 
         holder.setUserContent(mContext.getResources(), u);
 
-        String headUrl = u.getProfileImageUrl();
+        String headUrl = u.getProfileImageUrlLarge();
         ImageLoader.getInstance().displayImage(headUrl, holder.head);
         return convertView;
     }

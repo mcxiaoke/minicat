@@ -36,7 +36,7 @@ public class UserCursorAdapter extends BaseCursorAdapter {
         UserViewHolder holder = (UserViewHolder) row.getTag();
         final UserModel u = UserModel.from(cursor);
         holder.setUserContent(mContext.getResources(), u);
-        String headUrl = u.getProfileImageUrl();
+        String headUrl = u.getProfileImageUrlLarge();
         mImageLoader.displayImage(headUrl, holder.head);
     }
 

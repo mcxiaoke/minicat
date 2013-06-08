@@ -78,7 +78,7 @@ public class UserChooseCursorAdapter extends BaseCursorAdapter {
 
 		final UserModel u = UserModel.from(cursor);
 
-		String headUrl = u.getProfileImageUrl();
+		String headUrl = u.getProfileImageUrlLarge();
 		mImageLoader.displayImage(headUrl, holder.headIcon);
 
 		holder.lockIcon.setVisibility(u.isProtect() ? View.VISIBLE : View.GONE);
