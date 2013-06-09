@@ -1,11 +1,20 @@
 package com.mcxiaoke.fanfouapp.app;
 
+import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
@@ -31,6 +40,9 @@ import com.mcxiaoke.fanfouapp.service.AutoCompleteService;
 import com.mcxiaoke.fanfouapp.util.LogUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.update.UmengUpdateAgent;
+import com.umeng.update.UmengUpdateListener;
+import com.umeng.update.UpdateResponse;
 import com.viewpagerindicator.PageIndicator;
 
 
@@ -57,6 +69,8 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     private CharSequence mTitle;
     private ViewGroup mDrawFrame;
 
+    private DownloadManager mDownloadManager;
+
     private int mCurrentIndex;
     private int mCurrentPage;
 
@@ -74,8 +88,105 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
             log("onCreate()");
         }
         setLayout();
+        setUmengUpdate();
         PushService.cancel(this);
     }
+
+    private static final int UCODE_HAS_UPDATE = 0;
+    private static final int UCODE_NO_UPDATE = 1;
+    private static final int UCODE_NO_WIFI = 2;
+    private static final int UCODE_IO_ERROR = 3;
+
+    private void setUmengUpdate() {
+        mDownloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        UmengUpdateAgent.update(this);
+        UmengUpdateAgent.setUpdateOnlyWifi(false);
+        UmengUpdateAgent.setUpdateAutoPopup(false);
+        UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
+            @Override
+            public void onUpdateReturned(int i, UpdateResponse updateResponse) {
+                if (updateResponse == null) {
+                    return;
+                }
+                switch (i) {
+                    case UCODE_HAS_UPDATE:
+                        break;
+                    case UCODE_NO_UPDATE:
+                        break;
+                    case UCODE_NO_WIFI:
+                        break;
+                    case UCODE_IO_ERROR:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    }
+
+    private void showUpdateDialog(final UpdateResponse response) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("圈圈有新版本了");
+        StringBuilder sb = new StringBuilder();
+        sb.append("当前版本：").append(AppContext.versionName);
+        sb.append(" (").append(AppContext.versionCode).append(") \n");
+        sb.append("最新版本：").append(response.version).append("\n");
+        sb.append("\n");
+        sb.append("更新日志：\n");
+        sb.append(response.updateLog);
+        builder.setMessage(sb.toString());
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startDownloadUpdateApk(response.version, response.path);
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+
+    }
+
+    private void startDownloadUpdateApk(String version, String path) {
+        String fileName = "圈圈_" + version + ".apk";
+        IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+        registerReceiver(mOnDownloadCompleteReceiver, filter);
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(path));
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
+        request.setVisibleInDownloadsUi(false);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+        request.setTitle("圈圈升级中");
+        request.setDescription("");
+    }
+
+    private void onDownloadComplete(Intent intent) {
+        long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+        DownloadManager.Query query = new DownloadManager.Query();
+        query.setFilterById(downloadId);
+        Cursor cursor = mDownloadManager.query(query);
+        if (cursor != null && cursor.moveToFirst()) {
+
+        }
+
+
+        mDownloadManager.remove(downloadId);
+
+    }
+
+    private BroadcastReceiver mOnDownloadCompleteReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(intent.getAction())) {
+
+            }
+        }
+    };
 
     protected void setLayout() {
         setContentView(R.layout.ui_home);
