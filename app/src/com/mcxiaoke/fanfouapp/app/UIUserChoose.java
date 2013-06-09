@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
+import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.adapter.UserChooseCursorAdapter;
 import com.mcxiaoke.fanfouapp.api.Paging;

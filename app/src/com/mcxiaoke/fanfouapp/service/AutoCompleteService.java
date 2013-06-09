@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import com.mcxiaoke.fanfouapp.api.Api;
 import com.mcxiaoke.fanfouapp.api.Paging;
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.dao.model.UserColumns;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;

@@ -23,7 +23,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.adapter.UserCursorAdapter;
 import com.mcxiaoke.fanfouapp.api.Paging;
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.fragment.ConversationFragment;
 import com.mcxiaoke.fanfouapp.service.PostMessageService;
 import com.mcxiaoke.fanfouapp.ui.widget.TextChangeListener;

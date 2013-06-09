@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import com.mcxiaoke.fanfouapp.adapter.BaseStatusArrayAdapter;
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 import com.mcxiaoke.fanfouapp.dialog.ConfirmDialog;
 import com.mcxiaoke.fanfouapp.quickaction.ActionItem;

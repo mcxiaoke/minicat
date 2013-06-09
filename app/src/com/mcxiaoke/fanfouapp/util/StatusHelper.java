@@ -12,7 +12,7 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 import com.mcxiaoke.fanfouapp.R;
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 
 import java.util.ArrayList;

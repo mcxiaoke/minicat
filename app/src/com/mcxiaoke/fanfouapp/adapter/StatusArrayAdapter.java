@@ -5,7 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import com.mcxiaoke.fanfouapp.R;
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 
 import java.util.List;
