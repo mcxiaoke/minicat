@@ -3,7 +3,7 @@ package com.mcxiaoke.fanfouapp.api;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.dao.model.*;
 import org.json.JSONArray;
 import org.json.JSONException;
