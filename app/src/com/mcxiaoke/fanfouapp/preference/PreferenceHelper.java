@@ -15,6 +15,7 @@ import com.mcxiaoke.fanfouapp.R;
 public class PreferenceHelper {
     private static final String KEY_LAST_PUSH_STATUS_ID = "push_last_status_id";
     private static final String KEY_LAST_PUSH_DM_ID = "push_last_dm_id";
+    private static final String KEY_LAST_UPDATE_TIME = "last_update_time";
     private static PreferenceHelper sPreferenceHelper;
 
 
@@ -68,6 +69,28 @@ public class PreferenceHelper {
         mPreferences.edit().putBoolean(key, value).commit();
     }
 
+    public boolean isEnableLocation() {
+        boolean defaultValue = mAppContext.getResources().getBoolean(R.bool.option_enable_location_default_value);
+        String key = mAppContext.getResources().getString(R.string.option_enable_location_key);
+        return mPreferences.getBoolean(key, defaultValue);
+    }
+
+    public void setEnableLocation(boolean value) {
+        String key = mAppContext.getResources().getString(R.string.option_enable_location_key);
+        mPreferences.edit().putBoolean(key, value).commit();
+    }
+
+    public boolean isAutoUpdate() {
+        boolean defaultValue = mAppContext.getResources().getBoolean(R.bool.option_auto_update_default_value);
+        String key = mAppContext.getResources().getString(R.string.option_auto_update_key);
+        return mPreferences.getBoolean(key, defaultValue);
+    }
+
+    public void setAutoUpdate(boolean value) {
+        String key = mAppContext.getResources().getString(R.string.option_auto_update_key);
+        mPreferences.edit().putBoolean(key, value).commit();
+    }
+
     public String getLastPushStatusId() {
         return mPreferences.getString(KEY_LAST_PUSH_STATUS_ID, "");
     }
@@ -82,6 +105,14 @@ public class PreferenceHelper {
 
     public void setLastPushDmId(String id) {
         mPreferences.edit().putString(KEY_LAST_PUSH_DM_ID, id).commit();
+    }
+
+    public long getLastUpdateTime() {
+        return mPreferences.getLong(KEY_LAST_UPDATE_TIME, 0);
+    }
+
+    public void setKeyLastUpdateTime(long time) {
+        mPreferences.edit().putLong(KEY_LAST_UPDATE_TIME, time).commit();
     }
 
 
