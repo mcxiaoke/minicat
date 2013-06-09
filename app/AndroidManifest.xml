@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.mcxiaoke.fanfouapp"
           android:sharedUserId="com.mcxiaoke.fanfouapp"
-          android:versionCode="2013060401"
-          android:versionName="1.0.5">
+          android:versionCode="2013060902"
+          android:versionName="1.1.0">
 
     <uses-sdk android:minSdkVersion="14"/>
 
@@ -37,7 +37,7 @@
                 android:value="GooglePlay"
                 android:name="UMENG_CHANNEL"/>
         <meta-data
-                android:value="true"
+                android:value="false"
                 android:name="DEBUG"/>
 
         <activity
@@ -232,6 +232,12 @@
                 android:name=".dao.DataProvider"
                 android:authorities="com.mcxiaoke.fanfouapp.provider"
                 android:exported="false"/>
+
+        <service
+                android:name="com.umeng.common.net.DownloadingService"
+                android:exported="true"
+                android:process=":DownloadingService">
+        </service>
 
         <service
                 android:name=".service.DownloadService"

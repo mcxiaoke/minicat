@@ -5,19 +5,12 @@ import android.text.TextUtils;
 import android.util.Log;
 import com.mcxiaoke.fanfouapp.AppContext;
 
-/**
- * 日志工具类，集中控制日志的打印 后期考虑打印入file或者上传到服务器等策略
- *
- * @author zhouhenglei
- * @version 1.0
- * @date 2011-12-19
- */
 // @SuppressWarnings("unused")
 public class LogUtil {
     /**
      * 默认的文库日志Tag标签
      */
-    public final static String DEFAULT_TAG = "BaiduMusic";
+    public final static String DEFAULT_TAG = "LogUtil";
 
     /**
      * 此常量用于控制是否打日志到Logcat中 release版本中本变量应置为false
