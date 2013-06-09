@@ -3,7 +3,7 @@ package com.mcxiaoke.fanfouapp.task;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.service.DownloadService;
 import com.mcxiaoke.fanfouapp.service.VersionInfo;
 import com.mcxiaoke.fanfouapp.util.Utils;

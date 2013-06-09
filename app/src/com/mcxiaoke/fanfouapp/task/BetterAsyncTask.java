@@ -2,7 +2,7 @@ package com.mcxiaoke.fanfouapp.task;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 
 
 /**

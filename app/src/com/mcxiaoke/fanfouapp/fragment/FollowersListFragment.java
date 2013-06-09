@@ -2,7 +2,7 @@ package com.mcxiaoke.fanfouapp.fragment;
 
 import android.os.Bundle;
 import android.util.Log;
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
 
 

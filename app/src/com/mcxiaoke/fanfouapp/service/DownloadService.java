@@ -11,7 +11,7 @@ import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.RemoteViews;
 import com.mcxiaoke.fanfouapp.R;
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.app.UIVersionUpdate;
 import com.mcxiaoke.fanfouapp.util.DateTimeHelper;
 import com.mcxiaoke.fanfouapp.util.IOHelper;

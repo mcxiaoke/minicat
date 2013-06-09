@@ -10,7 +10,7 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import com.mcxiaoke.fanfouapp.adapter.ConversationCursorAdapter;
 import com.mcxiaoke.fanfouapp.api.Paging;
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.dao.model.DirectMessageModel;
 import com.mcxiaoke.fanfouapp.service.SyncService;
