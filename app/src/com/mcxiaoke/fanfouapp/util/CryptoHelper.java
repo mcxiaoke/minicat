@@ -3,7 +3,7 @@ package com.mcxiaoke.fanfouapp.util;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 import org.apache.http.protocol.HTTP;
 
 import javax.crypto.*;

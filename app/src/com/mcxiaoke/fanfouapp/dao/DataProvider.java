@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.dao.model.*;
 import com.mcxiaoke.fanfouapp.util.StringHelper;
 

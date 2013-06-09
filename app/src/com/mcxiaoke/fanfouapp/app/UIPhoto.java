@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.controller.EmptyViewController;
 import com.mcxiaoke.fanfouapp.ui.imagezoom.ImageViewTouch;

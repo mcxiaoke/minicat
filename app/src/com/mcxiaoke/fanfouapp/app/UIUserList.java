@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;
 import com.mcxiaoke.fanfouapp.fragment.FollowersListFragment;

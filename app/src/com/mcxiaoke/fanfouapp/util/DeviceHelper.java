@@ -11,7 +11,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import com.mcxiaoke.fanfouapp.R;
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.app.UIHome;
 import com.mcxiaoke.fanfouapp.app.UIStatus;
 import com.mcxiaoke.fanfouapp.dao.model.DirectMessageModel;

@@ -4,7 +4,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 import com.mcxiaoke.fanfouapp.service.SyncService;

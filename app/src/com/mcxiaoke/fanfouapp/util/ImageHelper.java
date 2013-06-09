@@ -20,7 +20,7 @@ import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
 import android.view.OrientationEventListener;
 import android.view.View;
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 
 import java.io.*;
 

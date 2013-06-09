@@ -3,7 +3,7 @@ package com.mcxiaoke.fanfouapp.util;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 
 /**
  * 日志工具类，集中控制日志的打印 后期考虑打印入file或者上传到服务器等策略

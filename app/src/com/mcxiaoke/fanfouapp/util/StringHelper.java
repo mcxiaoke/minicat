@@ -3,7 +3,7 @@
  */
 package com.mcxiaoke.fanfouapp.util;
 
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;

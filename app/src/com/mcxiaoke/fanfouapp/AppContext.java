@@ -1,4 +1,4 @@
-package com.mcxiaoke.fanfouapp.app;
+package com.mcxiaoke.fanfouapp;
 
 import android.app.Activity;
 import android.app.Application;
@@ -7,8 +7,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
+import android.os.Bundle;
 import android.util.Log;
-import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.api.Api;
 import com.mcxiaoke.fanfouapp.api.ApiFactory;
 import com.mcxiaoke.fanfouapp.config.AccountInfo;
@@ -40,7 +40,7 @@ public class AppContext extends Application {
 
     private static final String TAG = "Application";
 
-    public static final boolean DEBUG = true;
+    public static boolean DEBUG = true;
     private static HashMap<String, WeakReference<Activity>> contexts = new HashMap<String, WeakReference<Activity>>();
 
     public static int versionCode;
@@ -91,10 +91,12 @@ public class AppContext extends Application {
     private void initAppInfo() {
         PackageManager pm = getPackageManager();
         try {
-            packageName = getPackageName();
-            info = pm.getPackageInfo(packageName, 0);
-            versionCode = info.versionCode;
-            versionName = info.versionName;
+            PackageInfo packageInfo = pm.getPackageInfo(getPackageName(), 0);
+            packageName = packageInfo.packageName;
+            versionCode = packageInfo.versionCode;
+            versionName = packageInfo.versionName;
+            Bundle bundle = pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA).metaData;
+            DEBUG = bundle.getBoolean("DEBUG");
             if (DEBUG) {
                 Log.v(TAG, "initAppInfo() versionCode: " + versionCode
                         + " versionName: " + versionName);

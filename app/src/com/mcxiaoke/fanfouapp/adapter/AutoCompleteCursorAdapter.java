@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.mcxiaoke.fanfouapp.app.AppContext;
+import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.dao.model.IBaseColumns;
 import com.mcxiaoke.fanfouapp.dao.model.UserColumns;
 import com.mcxiaoke.fanfouapp.dao.model.UserModel;

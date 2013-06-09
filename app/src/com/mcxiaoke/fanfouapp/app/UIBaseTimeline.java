@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.controller.CacheController;
 import com.mcxiaoke.fanfouapp.controller.EmptyViewController;
