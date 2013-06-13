@@ -24,15 +24,12 @@ import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.task.BetterAsyncTask;
-import com.mcxiaoke.fanfouapp.util.DateTimeHelper;
-import com.mcxiaoke.fanfouapp.util.IOHelper;
-import com.mcxiaoke.fanfouapp.util.ImageHelper;
-import com.mcxiaoke.fanfouapp.util.IntentHelper;
-import com.mcxiaoke.fanfouapp.util.StatusHelper;
-import com.mcxiaoke.fanfouapp.util.Utils;
+import com.mcxiaoke.fanfouapp.util.*;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 /**
  * @author mcxiaoke
@@ -275,7 +272,7 @@ public class UIStatus extends UIBaseSupport {
             @Override
             public void onLoadingComplete(String imageUri, View view,
                                           Bitmap loadedImage) {
-                contentPhoto.setImageBitmap(ImageHelper.getRoundedCornerBitmap(loadedImage, getResources().getDimensionPixelSize(R.dimen.image_round_corner)));
+                contentPhoto.setImageBitmap(loadedImage);
             }
 
             @Override
@@ -283,7 +280,13 @@ public class UIStatus extends UIBaseSupport {
                 contentPhoto.setImageResource(R.drawable.photo_error);
             }
         };
-        ImageLoader.getInstance().loadImage(url, listener);
+        loadBigImage(url, listener);
+    }
+
+    private void loadBigImage(String url, ImageLoadingListener listener) {
+        final DisplayImageOptions options = new DisplayImageOptions.Builder().cacheOnDisc().
+                imageScaleType(ImageScaleType.IN_SAMPLE_INT).bitmapConfig(Bitmap.Config.RGB_565).build();
+        ImageLoader.getInstance().loadImage(url, options, listener);
     }
 
     @Override
