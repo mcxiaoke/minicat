@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import com.mcxiaoke.fanfouapp.api.Api;
@@ -232,6 +233,7 @@ public class AppContext extends Application {
     private DisplayImageOptions getDefaultDisplayImageOptions() {
         DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder();
         builder.cacheInMemory().cacheOnDisc();
+        builder.bitmapConfig(Bitmap.Config.RGB_565);
         builder.showStubImage(R.drawable.ic_head);
         builder.showImageOnFail(R.drawable.ic_head);
         builder.displayer(new RoundedBitmapDisplayer(getResources().getDimensionPixelSize(R.dimen.image_round_corner)));
