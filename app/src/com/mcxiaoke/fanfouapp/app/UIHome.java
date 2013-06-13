@@ -176,7 +176,6 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mDownloadManager.remove(downloadId);
     }
 
     private BroadcastReceiver mOnDownloadCompleteReceiver = new BroadcastReceiver() {
