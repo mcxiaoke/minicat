@@ -37,7 +37,6 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        parseIntent();
         setLayout();
     }
 
@@ -60,10 +59,7 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
         emptyController = new EmptyViewController(vEmpty);
 
         startRefresh();
-        showProgress();
-    }
 
-    private void parseIntent() {
     }
 
     @Override
@@ -71,6 +67,7 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
         super.startRefresh();
         new TrendsTask().execute();
         showProgressIndicator();
+        showProgress();
     }
 
     private void showHotwords() {
@@ -152,7 +149,7 @@ public class UISearch extends UIBaseSupport implements OnItemClickListener {
                     return 0;
                 }
 
-            } catch (ApiException e) {
+            } catch (Exception e) {
                 return -1;
             }
         }
