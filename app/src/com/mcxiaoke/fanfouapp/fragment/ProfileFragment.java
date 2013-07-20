@@ -392,14 +392,16 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
     }
 
     private void updateFollowButton(boolean following) {
-        user.setFollowing(following);
-        following = user.isFollowing();
+        if (getBaseSupport() != null) {
+            user.setFollowing(following);
+            following = user.isFollowing();
 
-        LogUtil.v(TAG, "updateFollowButton following=" + following);
-        LogUtil.v(TAG, "updateFollowButton user.isFollowing()=" + user.isFollowing());
-        updatePermission();
-        vProfile.updateFollowState(following);
-        getBaseSupport().invalidateOptionsMenu();
+            LogUtil.v(TAG, "updateFollowButton following=" + following);
+            LogUtil.v(TAG, "updateFollowButton user.isFollowing()=" + user.isFollowing());
+            updatePermission();
+            vProfile.updateFollowState(following);
+            getBaseSupport().invalidateOptionsMenu();
+        }
     }
 
     private void doFollow() {
@@ -427,7 +429,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
                             Log.d(TAG, "follow success");
                         }
                         updateFollowButton(true);
-                        Utils.notify(getActivity(), "关注成功");
+                        Utils.notify(AppContext.getApp(), "关注成功");
                         break;
                     case SyncService.RESULT_ERROR:
                         if (AppContext.DEBUG) {
@@ -435,7 +437,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
                         }
                         String errorMessage = msg.getData().getString(
                                 "error_message");
-                        Utils.notify(getActivity(), errorMessage);
+                        Utils.notify(AppContext.getApp(), errorMessage);
                         break;
                     default:
                         break;
@@ -455,7 +457,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
                             Log.d(TAG, "unfollow success");
                         }
                         updateFollowButton(false);
-                        Utils.notify(getActivity(), "已取消关注");
+                        Utils.notify(AppContext.getApp(), "已取消关注");
                         break;
                     case SyncService.RESULT_ERROR:
                         if (AppContext.DEBUG) {
@@ -463,7 +465,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
                         }
                         String errorMessage = msg.getData().getString(
                                 "error_message");
-                        Utils.notify(getActivity(), errorMessage);
+                        Utils.notify(AppContext.getApp(), errorMessage);
                         break;
                     default:
                         break;
