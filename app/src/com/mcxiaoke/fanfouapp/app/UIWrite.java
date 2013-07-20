@@ -33,6 +33,7 @@ import com.mcxiaoke.fanfouapp.controller.DataController;
 import com.mcxiaoke.fanfouapp.controller.UIController;
 import com.mcxiaoke.fanfouapp.dao.model.StatusUpdateInfo;
 import com.mcxiaoke.fanfouapp.dao.model.StatusUpdateInfoColumns;
+import com.mcxiaoke.fanfouapp.preference.PreferenceHelper;
 import com.mcxiaoke.fanfouapp.service.Constants;
 import com.mcxiaoke.fanfouapp.service.SyncService;
 import com.mcxiaoke.fanfouapp.ui.widget.MyAutoCompleteTextView;
@@ -100,20 +101,22 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        enableLocation = OptionHelper.readBoolean(mContext,
-//                R.string.option_location_enable, true);
-        mLocationManager = (LocationManager) this
-                .getSystemService(LOCATION_SERVICE);
-        mLocationMonitor = new LocationMonitor();
         size = new Float(getResources().getDimension(R.dimen.write_image_preview_width))
                 .intValue();
         mNormalTextColor = getResources().getColorStateList(R.color.text_blue);
         mAlertTextColor = getResources().getColorStateList(R.color.text_red);
-        for (String provider : mLocationManager.getProviders(true)) {
-            if (LocationManager.NETWORK_PROVIDER.equals(provider)
-                    || LocationManager.GPS_PROVIDER.equals(provider)) {
-                mLocationProvider = provider;
-                break;
+        enableLocation = PreferenceHelper.getInstance(this).isEnableLocation();
+        if (enableLocation) {
+            mLocationManager = (LocationManager) this
+                    .getSystemService(LOCATION_SERVICE);
+            mLocationMonitor = new LocationMonitor();
+
+            for (String provider : mLocationManager.getProviders(true)) {
+                if (LocationManager.NETWORK_PROVIDER.equals(provider)
+                        || LocationManager.GPS_PROVIDER.equals(provider)) {
+                    mLocationProvider = provider;
+                    break;
+                }
             }
         }
         setLayout();
@@ -257,8 +260,6 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
                     inReplyToStatusId = intent.getStringExtra("id");
                     file = (File) intent.getSerializableExtra("data");
                 }
-
-                long draftId = intent.getIntExtra("record_id", -1);
                 parsePhoto(file);
                 updateUI();
 
@@ -393,8 +394,10 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
 
     @Override
     protected void onPause() {
-        mLocationManager.removeUpdates(mLocationMonitor);
         super.onPause();
+        if (mLocationManager != null) {
+            mLocationManager.removeUpdates(mLocationMonitor);
+        }
     }
 
     @Override
