@@ -38,7 +38,7 @@
 
     <color name="state_off_default">#33666666</color>
     <color name="state_off_pressed">#66666666</color>
-    <color name="state_on_default">#CC269926</color>
+    <color name="state_on_default">#FF33AA66</color>
     <color name="state_on_pressed">#FF269926</color>
 
 

@@ -150,25 +150,21 @@
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name"
                 android:screenOrientation="portrait"
-                android:parentActivityName="com.mcxiaoke.fanfouapp.app.UIHome">
+                android:parentActivityName="com.mcxiaoke.fanfouapp.app.UIPhotos">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.mcxiaoke.fanfouapp.app.UIHome"/>
+                    android:value="com.mcxiaoke.fanfouapp.app.UIPhotos"/>
         </activity>
-
-
         <activity
                 android:name=".app.UIPhotos"
                 android:configChanges="keyboardHidden|orientation"
                 android:label="@string/app_name"
                 android:screenOrientation="portrait"
-                android:parentActivityName="com.mcxiaoke.fanfouapp.app.UIHome">
+                android:parentActivityName="com.mcxiaoke.fanfouapp.app.UIProfile">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.mcxiaoke.fanfouapp.app.UIHome"/>
+                    android:value="com.mcxiaoke.fanfouapp.app.UIProfile"/>
         </activity>
-
-
         <activity
                 android:name=".app.UIOptions"
                 android:configChanges="keyboardHidden|orientation"

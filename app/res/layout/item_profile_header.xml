@@ -1,40 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:padding="@dimen/status_header_padding"
-                android:background="@drawable/selector_header_light" android:id="@+id/header">
+                android:layout_height="wrap_content"
+                android:padding="@dimen/status_header_padding"
+                android:background="@drawable/selector_header_light"
+                android:id="@+id/header">
 
     <ImageView
             android:id="@+id/header_image"
             android:layout_width="@dimen/head_width"
             android:layout_height="@dimen/head_height"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true" android:layout_margin="@dimen/image_frame_padding"/>
+            android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/image_frame_padding"/>
 
     <TextView
             android:id="@+id/header_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true" android:layout_marginLeft="@dimen/list_padding"
-            android:layout_toRightOf="@id/header_image" android:singleLine="true"
-            android:layout_marginTop="@dimen/profile_item_padding" android:textColor="@color/text_primary"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/list_padding"
+            android:layout_toRightOf="@id/header_image"
+            android:singleLine="true"
+            android:layout_marginTop="@dimen/profile_item_padding"
+            android:textColor="@color/text_primary"
             android:textSize="@dimen/text_size_medium"/>
 
-    <TextView android:id="@+id/header_id" android:textSize="@dimen/text_size_small"
-              android:textColor="@color/text_secondary"
-              android:gravity="center_vertical" android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:singleLine="true" android:layout_below="@id/header_name"
-              android:layout_alignLeft="@id/header_name"/>
+    <TextView
+            android:id="@+id/header_id"
+            android:textSize="@dimen/text_size_small"
+            android:textColor="@color/text_secondary"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:layout_below="@id/header_name"
+            android:layout_alignLeft="@id/header_name"/>
 
     <TextView
             android:id="@+id/header_state"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:layout_marginLeft="4dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
             android:layout_alignTop="@id/header_name"
             android:layout_toRightOf="@id/header_name"
-            android:padding="@dimen/profile_item_padding" android:singleLine="true"
-            android:textSize="@dimen/text_size_small" android:textColor="@color/text_secondary"
+            android:padding="@dimen/profile_item_padding"
+            android:singleLine="true"
+            android:textSize="@dimen/text_size_small"
+            android:textColor="@color/text_secondary"
             android:visibility="gone"/>
 
     <ImageView
@@ -44,16 +57,38 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@id/header_name"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_mini_protected" android:visibility="invisible"/>
+            android:src="@drawable/ic_mini_protected"
+            android:visibility="invisible"/>
+
+
+    <TextView
+            android:id="@+id/header_album"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/header_image"
+            android:layout_marginTop="@dimen/status_header_padding"
+            android:layout_alignParentLeft="true"
+            android:padding="@dimen/list_padding"
+            android:layout_marginRight="@dimen/list_padding"
+            android:singleLine="true"
+            android:textSize="@dimen/text_size_small"
+            android:textColor="@color/text_white"
+            android:background="@drawable/state_on"
+            android:text="查看相册"/>
 
     <TextView
             android:id="@+id/header_follow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/header_image" android:layout_marginTop="@dimen/status_header_padding"
-            android:layout_alignParentLeft="true"
-            android:padding="@dimen/list_padding" android:singleLine="true"
-            android:textSize="@dimen/text_size_small" android:textColor="@color/text_white"
-            android:background="@drawable/state_on"/>
+            android:layout_below="@id/header_image"
+            android:layout_marginTop="@dimen/status_header_padding"
+            android:layout_toRightOf="@id/header_album"
+            android:padding="@dimen/list_padding"
+            android:singleLine="true"
+            android:textSize="@dimen/text_size_small"
+            android:textColor="@color/text_white"
+            android:background="@drawable/state_on"
+            android:text="正在关注"/>
+
 
 </RelativeLayout>
