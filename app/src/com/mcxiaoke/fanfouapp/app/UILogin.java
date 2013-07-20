@@ -79,6 +79,10 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
         }
     }
 
+    @Override
+    protected void onMenuHomeClick() {
+    }
+
     protected void setLayout() {
         setContentView(R.layout.ui_login);
         setProgressBarIndeterminateVisibility(false);

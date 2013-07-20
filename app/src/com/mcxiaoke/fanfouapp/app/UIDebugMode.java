@@ -46,4 +46,8 @@ public class UIDebugMode extends Activity {
         super.onBackPressed();
     }
 
+    @Override
+    protected void onUserLeaveHint() {
+        onBackPressed();
+    }
 }

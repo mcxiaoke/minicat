@@ -76,6 +76,11 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
         setLayout();
     }
 
+    @Override
+    protected void onMenuHomeClick() {
+        onBackPressed();
+    }
+
     private void initCheckState() {
         if (mCursorAdapter.getCount() > 0) {
             showContent();

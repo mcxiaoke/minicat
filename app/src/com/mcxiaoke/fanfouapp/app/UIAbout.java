@@ -62,4 +62,8 @@ public class UIAbout extends UIBaseSupport {
         return 0;
     }
 
+    @Override
+    protected void onMenuHomeClick() {
+        onBackPressed();
+    }
 }

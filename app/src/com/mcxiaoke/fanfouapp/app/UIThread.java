@@ -123,6 +123,11 @@ public class UIThread extends UIBaseSupport implements
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onMenuHomeClick() {
+        onBackPressed();
+    }
+
     private class FetchTask extends AsyncTask<Void, Void, List<StatusModel>> {
 
         @Override
