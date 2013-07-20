@@ -7,8 +7,8 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.ViewConfiguration;
-import com.mcxiaoke.fanfouapp.ui.widget.ScaleGestureDetector;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

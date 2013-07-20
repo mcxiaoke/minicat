@@ -16,6 +16,7 @@ import android.widget.BaseAdapter;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.dao.model.StatusModel;
 import com.mcxiaoke.fanfouapp.ui.widget.ItemView;
+import com.mcxiaoke.fanfouapp.util.StringHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -50,9 +51,11 @@ public class SearchResultsArrayAdapter extends BaseAdapter implements
 
 
     public void updateDataAndUI(List<StatusModel> data, String keyword) {
-        mKeyword = keyword;
-        mPattern = Pattern.compile(mKeyword);
-        addData(data);
+        if (!StringHelper.isEmpty(keyword)) {
+            mKeyword = keyword;
+            mPattern = Pattern.compile(mKeyword);
+            addData(data);
+        }
     }
 
     private void initialize(Context context, List<StatusModel> data) {

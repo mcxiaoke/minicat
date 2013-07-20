@@ -9,36 +9,17 @@
 
     <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
-    <FrameLayout android:id="@+id/content_frame"
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent">
-        <RelativeLayout android:orientation="vertical"
-                        android:id="@+id/content_frame"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+    <FrameLayout
+            android:id="@+id/content_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <!--            <com.mcxiaoke.fanfouapp.ui.widget.PagerSlidingTabStrip
-                                android:background="@drawable/pager_sliding_background"
-                                android:id="@+id/indicator"
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/pager_sliding_tab_height" app:shouldExpand="true"
-                                app:indicatorColor="@color/theme_blue_light"
-                                app:underlineColor="@color/divider_color_light"
-                                app:dividerColor="@color/divider_color_light" android:textSize="@dimen/text_size_small"
-                                />-->
 
-            <com.viewpagerindicator.UnderlinePageIndicator android:id="@+id/indicator"
-                                                           android:layout_alignParentBottom="true"
-                                                           android:layout_width="match_parent"
-                                                           android:layout_height="2dp"/>
-
-            <android.support.v4.view.ViewPager
-                    android:id="@+id/viewpager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-            </android.support.v4.view.ViewPager>
-
-        </RelativeLayout>
+        <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+        </android.support.v4.view.ViewPager>
 
     </FrameLayout>
 
@@ -51,7 +32,8 @@
          with the content view. -->
 
     <FrameLayout
-            android:id="@+id/left_drawer" android:layout_gravity="start"
+            android:id="@+id/left_drawer"
+            android:layout_gravity="start"
             android:layout_width="260dp"
             android:layout_height="match_parent"/>
 

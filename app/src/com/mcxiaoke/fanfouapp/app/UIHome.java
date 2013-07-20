@@ -1,7 +1,15 @@
 package com.mcxiaoke.fanfouapp.app;
 
-import android.app.*;
-import android.content.*;
+import android.app.AlertDialog;
+import android.app.DownloadManager;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
@@ -12,7 +20,11 @@ import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
-import android.view.*;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import com.mcxiaoke.fanfouapp.AppContext;
 import com.mcxiaoke.fanfouapp.R;
 import com.mcxiaoke.fanfouapp.adapter.HomePagesAdapter;
@@ -33,7 +45,6 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
 import com.umeng.update.UpdateResponse;
-import com.viewpagerindicator.PageIndicator;
 import org.oauthsimple.utils.MimeUtils;
 
 
@@ -49,8 +60,6 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     private Fragment mMenuFragment;
 
     private ViewPager mViewPager;
-    private PageIndicator mPagerIndicator;
-    //    private PagerSlidingTabStrip mPagerIndicator;
     private PagerTabStrip mPagerTabStrip;
     private HomePagesAdapter mPagesAdapter;
 

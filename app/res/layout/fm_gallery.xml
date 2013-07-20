@@ -3,19 +3,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" android:id="@+id/root">
+                android:layout_height="match_parent"
+                android:id="@+id/root">
 
-    <android.support.v4.view.ViewPager
+    <com.mcxiaoke.fanfouapp.ui.widget.ViewPagerExtend
             android:id="@+id/gallery"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />
 
 
-    <TextView android:id="@+id/text" android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:padding="@dimen/list_padding" android:background="#33333333"
-              android:layout_centerHorizontal="true"
-              android:layout_alignParentBottom="true" android:textColor="#99999999"
-              android:textSize="@dimen/text_size_xlarge" android:gravity="center"/>
+    <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/list_padding"
+            android:background="#33333333"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:textColor="#99999999"
+            android:textSize="@dimen/text_size_xlarge"
+            android:gravity="center"/>
 
 </RelativeLayout>
