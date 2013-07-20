@@ -47,7 +47,6 @@ public class UIStatus extends UIBaseSupport {
     private ImageView headerImage;
     private TextView headerName;
     private TextView headerId;
-    private TextView headerFollow;
 
     private TextView contentText;
     private ImageView contentPhoto;
@@ -137,8 +136,8 @@ public class UIStatus extends UIBaseSupport {
         headerImage = (ImageView) findViewById(R.id.header_image);
         headerName = (TextView) findViewById(R.id.header_name);
         headerId = (TextView) findViewById(R.id.header_id);
-        headerFollow = (TextView) findViewById(R.id.header_follow);
-        headerFollow.setVisibility(View.GONE);
+        findViewById(R.id.header_follow).setVisibility(View.GONE);
+        findViewById(R.id.header_album).setVisibility(View.GONE);
 
         contentText = (TextView) findViewById(R.id.content_text);
         contentPhoto = (ImageView) findViewById(R.id.content_photo);
