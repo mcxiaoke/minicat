@@ -41,7 +41,7 @@ public class AppContext extends Application {
 
     private static final String TAG = "Application";
 
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
     private static HashMap<String, WeakReference<Activity>> contexts = new HashMap<String, WeakReference<Activity>>();
 
     public static int versionCode;
