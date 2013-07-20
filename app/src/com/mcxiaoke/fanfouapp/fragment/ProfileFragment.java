@@ -207,7 +207,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
             onTopStatusesClick();
         } else if (type == ProfileView.TYPE_FOLLOW_STATE) {
             onFollowStateClick();
-        } else if (type == ProfileView.TYPE_PHOTOS) {
+        } else if (type == ProfileView.TYPE_ALBUM) {
             onItemPhotosClick();
         } else if (type == ProfileView.TYPE_FOLLOWING) {
             onItemFollowingClick();

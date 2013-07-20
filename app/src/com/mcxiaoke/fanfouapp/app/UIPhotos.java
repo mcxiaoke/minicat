@@ -34,5 +34,9 @@ public class UIPhotos extends UIBaseSupport {
         System.gc();
     }
 
-
+    @Override
+    protected void onMenuHomeClick() {
+        finish();
+        overridePendingTransition(R.anim.fade_in, R.anim.slide_out_to_right);
+    }
 }

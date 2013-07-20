@@ -28,7 +28,7 @@ public class ProfileView extends FrameLayout implements
 
     public static final int TYPE_FOLLOW_STATE = 4;
 
-    public static final int TYPE_PHOTOS = 5;
+    public static final int TYPE_ALBUM = 5;
     public static final int TYPE_TOP_FAVORATIES = 6;
     public static final int TYPE_STATUSES = 7;
     public static final int TYPE_FOLLOWING = 8;
@@ -48,6 +48,7 @@ public class ProfileView extends FrameLayout implements
     private TextView headerId;
     private TextView headerState;
     private ImageView headerLock;
+    private TextView headerAlbum;
     private TextView headerFollow;
 
     private View vFollowingItem;
@@ -108,6 +109,7 @@ public class ProfileView extends FrameLayout implements
         headerId = (TextView) findViewById(R.id.header_id);
         headerState = (TextView) findViewById(R.id.header_state);
         headerLock = (ImageView) findViewById(R.id.header_lock);
+        headerAlbum= (TextView) findViewById(R.id.header_album);
         headerFollow = (TextView) findViewById(R.id.header_follow);
 
         vFollowingItem = findViewById(R.id.item1);
@@ -135,9 +137,9 @@ public class ProfileView extends FrameLayout implements
     }
 
     private void setListeners() {
-//        header.setClickable(false);
-        header.setOnClickListener(this);
+        header.setClickable(false);
         headerImage.setOnClickListener(this);
+        headerAlbum.setOnClickListener(this);
         headerFollow.setOnClickListener(this);
 
         vFollowingItem.setOnClickListener(this);
@@ -250,8 +252,8 @@ public class ProfileView extends FrameLayout implements
             onProfileItemClick(TYPE_TOP_STATUSES);
         } else if (v == vFavoritesItem) {
             onProfileItemClick(TYPE_TOP_FAVORATIES);
-        } else if (v == header) {
-            onProfileItemClick(TYPE_PHOTOS);
+        } else if (v == headerAlbum) {
+            onProfileItemClick(TYPE_ALBUM);
         }
     }
 
