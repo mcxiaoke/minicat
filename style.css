@@ -1,0 +1,30 @@
+#navigation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200px;
+}
+
+#content {
+    margin-left: 200px;
+}
+
+input[type=email]:valid { background: green }
+input[type=email]:invalid { background: red }
+
+body{
+    background: #666 url(fade.png) 0 0 repeat-y;
+    background: -webkit-linear-gradient(right, #000, #666); 
+    background: linear-gradient(to right, #000, #666);
+    box-shadow: inset 0 0 10px 15px 10px 5px #999;
+    border-radius: 10px;
+    text-shadow: -2px 2px 2px #999;
+}
+
+p{
+    background: linear-gradient(to right, orange, red);
+}
+
+canvas{
+    background-color: white;
+}
