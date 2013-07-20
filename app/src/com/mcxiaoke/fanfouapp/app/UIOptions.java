@@ -27,5 +27,8 @@ public class UIOptions extends UIBaseSupport {
         super.onDestroy();
     }
 
-
+    @Override
+    protected void onMenuHomeClick() {
+        onBackPressed();
+    }
 }

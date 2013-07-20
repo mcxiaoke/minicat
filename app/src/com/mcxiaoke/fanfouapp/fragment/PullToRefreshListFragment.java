@@ -112,6 +112,9 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
         mPullToRefreshView.setShowIndicator(false);
         mPullToRefreshView.setMode(Mode.BOTH);
         mListView = mPullToRefreshView.getRefreshableView();
+        mListView.setVerticalScrollBarEnabled(false);
+        mListView.setHorizontalScrollBarEnabled(false);
+        mListView.setFastScrollEnabled(true);
         mListView.setOnItemClickListener(this);
         mListView.setLongClickable(false);
         UIHelper.setListView(mListView);
