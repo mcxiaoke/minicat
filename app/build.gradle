@@ -45,10 +45,6 @@ android {
 
     signingConfigs {
         release {
-            //storeFile file(“mcxiaoke.keystore”)
-            //storePassword "hobbits"
-            //keyAlias "douban"
-            //keyPassword "hobbits"
         }
     }
 
@@ -80,6 +76,22 @@ def getDate() {
     def date = new Date()
     def formattedDate = date.format('yyyyMMdd')
     return formattedDate
+}
+
+allprojects {
+    afterEvaluate { project ->
+        def propsFile = rootProject.file('keystore.properties')
+        def configName = 'release'
+
+        if (propsFile.exists() && android.signingConfigs.hasProperty(configName)) {
+            def props = new Properties()
+            props.load(new FileInputStream(propsFile))
+            android.signingConfigs[configName].storeFile = file(props['storeFile'])
+            android.signingConfigs[configName].storePassword = props['storePassword']
+            android.signingConfigs[configName].keyAlias = props['keyAlias']
+            android.signingConfigs[configName].keyPassword = props['keyPassword']
+        }
+    }
 }
 
 
