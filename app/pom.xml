@@ -15,8 +15,8 @@
         <android.version>4.1.1.4</android.version>
         <android.support.version>r13</android.support.version>
         <android.platform>16</android.platform>
-        <android-maven.version>3.6.0</android-maven.version>
-        <android.actionbarsherlock.version>4.3.1</android.actionbarsherlock.version>
+        <android-maven.version>3.8.2</android-maven.version>
+        <android.actionbarsherlock.version>4.4.0</android.actionbarsherlock.version>
         <sign.keystore>mcxiaoke.keystore</sign.keystore>
         <sign.alias>mcxiaoke</sign.alias>
     </properties>
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>com.nostra13.universalimageloader</groupId>
             <artifactId>universal-image-loader</artifactId>
-            <version>1.8.4</version>
+            <version>1.8.6</version>
         </dependency>
 
         <dependency>
