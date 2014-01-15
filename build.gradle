@@ -1,0 +1,35 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        maven { url 'http://qaci.intra.douban.com/nexus/content/repositories/central' }
+        maven { url 'http://qaci.intra.douban.com/nexus/content/repositories/douban' }
+        maven { url 'http://qaci.intra.douban.com/nexus/content/repositories/douban-snapshot' }
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.7.+'
+    }
+}
+
+allprojects {
+    group = 'com.mcxiaoke.fanfouapp'
+
+    repositories {
+        maven { url 'http://qaci.intra.douban.com/nexus/content/repositories/central' }
+        maven { url 'http://qaci.intra.douban.com/nexus/content/repositories/douban' }
+        maven { url 'http://qaci.intra.douban.com/nexus/content/repositories/douban-snapshot' }
+        mavenCentral()
+        maven { url 'https://raw.github.com/mcxiaoke/mavenrepo/master/repository/' }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    }
+
+    tasks.withType(Compile) {
+        options.encoding = 'UTF-8'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.9'
+}
+
