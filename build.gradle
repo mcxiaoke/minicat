@@ -10,7 +10,7 @@ buildscript {
 }
 
 allprojects {
-    group = 'com.mcxiaoke.fanfouapp'
+    group = 'com.mcxiaoke.minicat'
 
     repositories {
         mavenCentral()

@@ -9,7 +9,8 @@
                 android:fillViewport="true"
                 android:scrollbars="none">
 
-        <com.mcxiaoke.fanfouapp.ui.widget.ProfileView android:id="@+id/profile" android:layout_width="match_parent"
+        <com.mcxiaoke.minicat.ui.widget.ProfileView
+            android:id="@+id/profile" android:layout_width="match_parent"
                                                       android:layout_height="wrap_content"/>
     </ScrollView>
 

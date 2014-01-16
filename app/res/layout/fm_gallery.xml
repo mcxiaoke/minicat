@@ -6,7 +6,7 @@
                 android:layout_height="match_parent"
                 android:id="@+id/root">
 
-    <com.mcxiaoke.fanfouapp.ui.widget.ViewPagerExtend
+    <com.mcxiaoke.minicat.ui.widget.ViewPagerExtend
             android:id="@+id/gallery"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
