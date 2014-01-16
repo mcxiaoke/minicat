@@ -15,10 +15,12 @@ dependencies {
     //compile('com.github.chrisbanes.actionbarpulltorefresh:extra-abs:0.9.+@aar')
     compile('com.actionbarsherlock:actionbarsherlock:4.4.+@aar')
 
-    compile 'com.mcxiaoke.oauthsimple:oauthsimple:2.0.2-SNAPSHOT'
+    compile 'com.mcxiaoke.oauthsimple:oauthsimple:2.0.+'
+//    compile 'com.github.chrisbanes.photoview:library:1.2.+'
 
     compile project(':ptr/library')
     compile files('libs/umeng_sdk.jar')
+    compile files('libs/photoview_snapshot.jar')
 }
 
 android {
