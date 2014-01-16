@@ -160,7 +160,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         request.setVisibleInDownloadsUi(true);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-        request.setTitle("圈圈");
+        request.setTitle(getString(R.string.app_name));
         request.setDescription("下载中");
         mDownloadManager.enqueue(request);
     }

@@ -62,7 +62,7 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(false);
-        getActionBar().setTitle("圈圈");
+        getActionBar().setTitle(R.string.app_name);
         setLayout();
     }
 

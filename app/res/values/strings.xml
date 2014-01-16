@@ -2,7 +2,7 @@
 <resources>
 
     <!-- common string -->
-    <string name="app_name">Circle Fanfou</string>
+    <string name="app_name">MiniCat</string>
     <string name="app_description">FanFou App for Android</string>
     <string name="app_version">Version:</string>
     <string name="app_support">Support:</string>
@@ -86,13 +86,6 @@
     <string name="page_title_modify">Edit Profile</string>
 
     <!-- messages text -->
-    <string name="msg_dm_content_has_been_copied"></string>
-    <string name="msg_dm_please_select_recipient"></string>
-    <string name="msg_dialog_choose_head"></string>
-    <string name="msg_dialog_profile_is_updating"></string>
-    <string name="msg_profile_update_failed"></string>
-    <string name="msg_profile_update_success"></string>
-    <string name="msg_dm_content_cannot_be_null"></string>
     <string name="expand">Click To Expand</string>
 
 
@@ -131,7 +124,7 @@
 
     <string name="option_project_page_key">option_project_page_key</string>
     <string name="option_project_page_title">项目地址</string>
-    <string name="option_project_page_summary">https://github.com/mcxiaoke/circle</string>
+    <string name="option_project_page_summary">https://github.com/mcxiaoke/minicat</string>
 
     <string name="button_update_now">下载更新</string>
     <string name="button_update_later">以后再说</string>
