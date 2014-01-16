@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:gravity="center" android:id="@+id/umeng_xp_scroll_view_item_id" android:layout_height="fill_parent" android:layout_weight="1" android:layout_width="wrap_content" android:orientation="horizontal">
+
+    <ImageView android:id="@+id/umeng_xp_icon" android:layout_centerVertical="true" android:layout_height="35dp" android:layout_width="35dp" android:scaleType="fitXY">
+    </ImageView>
+
+    <TextView android:ellipsize="marquee" android:id="@+id/umeng_xp_name" android:layout_height="wrap_content" android:layout_marginLeft="3dp" android:layout_width="50dp" android:marqueeRepeatLimit="marquee_forever" android:singleLine="true" android:textColor="#40A5DB" android:textSize="10sp" android:textStyle="bold">
+    </TextView>
+
+</LinearLayout>

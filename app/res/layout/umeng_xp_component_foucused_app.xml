@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/umeng_xp_detail0"
+    android:layout_width="fill_parent"
+    android:layout_height="270dp"
+    android:layout_margin="5dp"
+    android:background="#ECECEC" >
+
+    <Button
+        android:id="@+id/umeng_xp_download"
+        style="@style/umeng_xp_download_but"
+        android:layout_width="145dp"
+        android:layout_height="45dp"
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="马上下载"
+        android:textSize="20dp" >
+    </Button>
+
+    <TextView
+        android:id="@+id/umeng_xp_appname"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/umeng_xp_download"
+        android:gravity="left"
+        android:text="名称：漂流瓶"
+        android:textColor="#000000"
+        android:textSize="14dp" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/umeng_xp_dev"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_below="@+id/umeng_xp_appname"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/umeng_xp_download"
+        android:gravity="left"
+        android:text="开发：开卷有益"
+        android:textColor="#000000"
+        android:textSize="14dp" >
+    </TextView>
+
+    <ScrollView
+        android:id="@+id/umeng_xp_ScrollView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/umeng_xp_download"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+        android:scrollbars="none" >
+
+        <TextView
+            android:id="@+id/umeng_xp_des0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dlCon"
+            android:background="#ECECEC"
+            android:scrollbars="vertical"
+            android:text="安卓优化大师是一款功能强大的手机系统优化软件，它提供了全面有效且简便安全的手机体检、开机加速、批量卸载、文件管理四大功能模块及数个附加的工具软件。使用安卓优化大师。"
+            android:textColor="#777777"
+            android:textSize="16dp" >
+        </TextView>
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/umeng_xp_pb"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/umeng_xp_download"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="10dp"
+        android:visibility="gone" >
+    </ImageView>
+
+</RelativeLayout>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <com.umeng.newxp.view.widget.SwipeView
+        android:id="@+id/umeng_xp_gallery"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="10dp" />
+
+    <com.umeng.newxp.view.widget.SwipeViewPointer
+        android:id="@+id/umeng_xp_gallery_page_pointer"
+        android:layout_width="fill_parent"
+        android:layout_height="20dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" />
+
+</RelativeLayout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+   
+     
+     <item android:drawable="@drawable/umeng_xp_seek_bg" android:id="@android:id/background"/>  
+     <item android:drawable="@drawable/umeng_xp_seek" android:id="@+android:id/progress"/>
+ </layer-list>

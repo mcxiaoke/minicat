@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/umeng_xp_panelHeight"
+    android:layout_width="300dp"
+    android:layout_height="280dp"
+    android:background="@drawable/umeng_xp_download_dialog_bg" >
+
+    <!-- header app content -->
+
+    <RelativeLayout
+        android:id="@+id/umeng_xp_detail0"
+        android:layout_width="fill_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/umeng_xp_message"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="23dp"
+        android:layout_marginTop="15dp" >
+
+        <RelativeLayout
+            android:id="@+id/umeng_xp_dlCon"
+            android:layout_width="fill_parent"
+            android:layout_height="80dp" >
+
+            <ImageView
+                android:id="@+id/umeng_xp_photo"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/umeng_xp_zhanwei" >
+            </ImageView>
+
+            <TextView
+                android:id="@+id/umeng_xp_appname"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_toRightOf="@+id/umeng_xp_photo"
+                android:gravity="left"
+                android:singleLine="true"
+                android:text="名称：漂流瓶"
+                android:textColor="#000000"
+                android:textSize="14sp" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/umeng_xp_dev"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/umeng_xp_appname"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/umeng_xp_photo"
+                android:gravity="left"
+                android:singleLine="true"
+                android:text="开发：开卷有益"
+                android:textColor="#000000"
+                android:textSize="14sp" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/umeng_xp_size"
+                android:layout_width="200dp"
+                android:layout_height="18dp"
+                android:layout_below="@+id/umeng_xp_dev"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/umeng_xp_photo"
+                android:gravity="left"
+                android:text="大小：125KB"
+                android:textColor="#000000"
+                android:textSize="12sp" >
+            </TextView>
+        </RelativeLayout>
+
+        <ScrollView
+            android:id="@+id/umeng_xp_ScrollView"
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
+            android:layout_below="@+id/umeng_xp_dlCon"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/umeng_xp_shape_gradient_grey_7"
+            android:scrollbars="none" >
+
+            <TextView
+                android:id="@+id/umeng_xp_des0"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_below="@+id/umeng_xp_dlCon"
+                android:padding="5dp"
+                android:scrollbars="none"
+                android:text="安卓优化大师是一款功能强大的手机系统优化软件，它提供了全面有效且简便安全的手机体检、开机加速、批量卸载、文件管理四大功能模块及数个附加的工具软件。使用安卓优化大师，能够有效地帮助用户了解自己的手机软硬件信息。 "
+                android:textColor="#777777"
+                android:textSize="12sp" >
+            </TextView>
+        </ScrollView>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/umeng_xp_cancel"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="9dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/umeng_xp_download_dialog_close_selector"
+        android:gravity="center" />
+
+    <Button
+        android:id="@+id/umeng_xp_ok"
+        style="@style/umeng_xp_dialog_download"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="72.5dp"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:textSize="17dp" >
+    </Button>
+
+</RelativeLayout>

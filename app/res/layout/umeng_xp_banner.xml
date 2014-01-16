@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="55dp" >
+
+    <ViewSwitcher
+        android:id="@+id/umeng_xp_display_switch"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <RelativeLayout
+            android:id="@+id/umeng_xp_display_first"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <ImageView
+                android:id="@+id/umeng_xp_banner_bg"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/umeng_xp_standalone_bg"
+                android:visibility="visible" >
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/umeng_xp_appIcon0"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/umeng_xp_zhanwei" >
+            </ImageView>
+
+            <ViewFlipper
+                android:id="@+id/umeng_xp_flipper"
+                android:layout_width="260dp"
+                android:layout_height="45dp"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="3dp"
+                android:layout_toRightOf="@+id/umeng_xp_appIcon0"
+                android:flipInterval="10000"
+                android:inAnimation="@anim/umeng_xp_push_up_in"
+                android:outAnimation="@anim/umeng_xp_push_up_out" >
+
+                <include layout="@layout/umeng_xp_component_flipper_content" />
+            </ViewFlipper>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/umeng_xp_display_second"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <ImageView
+                android:id="@+id/umeng_xp_banner_bg"
+                android:layout_width="fill_parent"
+                android:layout_height="67dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/umeng_xp_standalone_bg"
+                android:visibility="visible" >
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/umeng_xp_appIcon0"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/umeng_xp_zhanwei" >
+            </ImageView>
+
+            <ViewFlipper
+                android:id="@+id/umeng_xp_flipper"
+                android:layout_width="260dp"
+                android:layout_height="45dp"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="3dp"
+                android:layout_toRightOf="@+id/umeng_xp_appIcon0"
+                android:flipInterval="10000"
+                android:inAnimation="@anim/umeng_xp_push_up_in"
+                android:outAnimation="@anim/umeng_xp_push_up_out" >
+
+                <include layout="@layout/umeng_xp_component_flipper_content" />
+            </ViewFlipper>
+        </RelativeLayout>
+    </ViewSwitcher>
+
+</RelativeLayout>

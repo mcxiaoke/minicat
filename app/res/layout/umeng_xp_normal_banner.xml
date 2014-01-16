@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:background="@drawable/umeng_xp_normal_banner_background_selector" android:gravity="center" android:id="@+id/umeng_xp_banner" android:layout_height="55dp" android:layout_width="fill_parent">
+	<ImageView android:id="@+id/umeng_xp_icon" android:layout_centerVertical="true" android:layout_height="35dp" android:layout_marginLeft="6dp" android:layout_width="35dp" android:src="@drawable/umeng_xp_zhanwei">
+	</ImageView>
+
+	<TextView android:id="@+id/umeng_xp_name" android:layout_height="wrap_content" android:layout_marginLeft="5dp" android:layout_marginRight="50dp" android:layout_marginTop="6dp" android:layout_toRightOf="@+id/umeng_xp_icon" android:layout_width="130dp" android:lines="1" android:text="开心听" android:textColor="#000000" android:textSize="14dp">
+	</TextView>
+	<TextView android:ellipsize="marquee" android:id="@+id/umeng_xp_des" android:layout_alignParentBottom="true" android:layout_height="wrap_content" android:layout_marginBottom="5dp" android:layout_marginLeft="5dp" android:layout_marginRight="50dp" android:layout_toRightOf="@+id/umeng_xp_icon" android:layout_width="wrap_content" android:lines="1" android:scrollHorizontally="true" android:text="android上最好的音乐软件" android:textColor="#777777" android:textSize="12dp">
+	</TextView>
+
+	<ImageView android:background="@drawable/umeng_xp_detail365" android:layout_alignParentRight="true" android:layout_centerVertical="true" android:layout_height="25dp" android:layout_marginRight="10dp" android:layout_width="22dp" android:visibility="gone">
+	</ImageView>
+
+	<TextView android:id="@+id/umeng_xp_open_type" android:layout_alignParentRight="true" android:layout_height="wrap_content" android:layout_marginRight="5dp" android:layout_marginTop="10dp" android:layout_width="40dp" android:lines="1" android:text="查看" android:textColor="#777777" android:textSize="12dp" android:visibility="visible">
+	</TextView>
+
+</RelativeLayout>

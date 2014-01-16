@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_height="@null" android:layout_width="fill_parent">
+
+    <ViewSwitcher android:id="@+id/umeng_xp_display_switch" android:layout_height="fill_parent" android:layout_width="fill_parent">
+
+        <RelativeLayout android:id="@+id/umeng_xp_display_first" android:layout_height="fill_parent" android:layout_width="fill_parent">
+            <GridView android:cacheColorHint="#00000000" android:divider="#00000000" android:dividerHeight="0dp" android:focusable="true" android:gravity="center" android:horizontalSpacing="10dp" android:id="@+id/umeng_xp_list" android:layout_height="fill_parent" android:layout_marginBottom="2dp" android:layout_marginTop="8dp" android:layout_width="fill_parent" android:numColumns="3" android:stretchMode="columnWidth" android:verticalSpacing="5dp">
+            </GridView>
+        </RelativeLayout>
+
+        <RelativeLayout android:id="@+id/umeng_xp_display_second" android:layout_height="fill_parent" android:layout_width="fill_parent">
+            <GridView android:cacheColorHint="#00000000" android:divider="#00000000" android:dividerHeight="0dp" android:focusable="true" android:gravity="center" android:horizontalSpacing="10dp" android:id="@+id/umeng_xp_list" android:layout_height="fill_parent" android:layout_marginBottom="2dp" android:layout_marginTop="8dp" android:layout_width="fill_parent" android:numColumns="3" android:stretchMode="columnWidth" android:verticalSpacing="5dp">
+            </GridView>
+        </RelativeLayout>
+    </ViewSwitcher>
+
+</RelativeLayout>

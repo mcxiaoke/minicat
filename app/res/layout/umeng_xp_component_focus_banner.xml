@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/umeng_xp_banner" android:layout_height="55dp" android:layout_width="fill_parent">
+
+	<RelativeLayout android:background="@drawable/umeng_xp_banner_grey" android:id="@+id/umeng_xp_banner_bg" android:layout_height="67dp" android:layout_width="fill_parent">
+	</RelativeLayout>
+
+	<ImageView android:background="@drawable/umeng_xp_zhanwei" android:id="@+id/umeng_xp_appIcon0" android:layout_centerVertical="true" android:layout_height="35dp" android:layout_marginLeft="5dp" android:layout_width="35dp">
+	</ImageView>
+
+	<TextView android:id="@+id/umeng_xp_name0" android:layout_height="wrap_content" android:layout_marginLeft="5dp" android:layout_marginTop="10dp" android:layout_toRightOf="@+id/umeng_xp_appIcon0" android:layout_width="120dp" android:text="开心听" android:textColor="#000000" android:textSize="14dp">
+	</TextView>
+
+	<TextView android:id="@+id/umeng_xp_content0" android:layout_alignParentBottom="true" android:layout_height="wrap_content" android:layout_marginBottom="10dp" android:layout_marginLeft="5dp" android:layout_toRightOf="@+id/umeng_xp_appIcon0" android:layout_width="wrap_content" android:text="android上最好的音乐软件" android:textColor="#777777" android:textSize="12dp">
+	</TextView>
+
+	<TextView android:gravity="center" android:id="@+id/umeng_xp_size0" android:layout_alignParentRight="true" android:layout_height="wrap_content" android:layout_marginRight="5dp" android:layout_marginTop="10dp" android:layout_width="wrap_content" android:text="(大小:1.6M)" android:textColor="#777777" android:textSize="12dp">
+	</TextView>
+
+</RelativeLayout>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/umeng_xp_rootId"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffff" >
+
+    <RelativeLayout
+        android:id="@+id/umeng_xp_message"
+        android:layout_width="fill_parent"
+        android:layout_height="51dp"
+        android:background="@drawable/umeng_xp_more_top"
+        android:visibility="gone" >
+
+        <Button
+            android:id="@+id/umeng_xp_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/umeng_xp_selector_back"
+            android:gravity="center_vertical"
+            android:paddingBottom="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="5dp"
+            android:text="收起" >
+        </Button>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:shadowColor="#ffeeeeee"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            android:text="精品推荐"
+            android:textColor="#4b4b4b"
+            android:textSize="20dp"
+            android:textStyle="bold" >
+        </TextView>
+    </RelativeLayout>
+
+    <WebView
+        android:id="@+id/umeng_xp_webview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/umeng_xp_message" />
+
+    <!--
+		<RelativeLayout android:layout_alignParentBottom="true"
+		android:id="@+id/exchange_footer" android:layout_width="fill_parent"
+		android:background="@drawable/exchange_more_bottom"
+		android:layout_height="60dp"> </RelativeLayout>
+    -->
+
+
+    <!--
+		<ImageButton android:src="@drawable/exchange_selector_back"
+		android:background="#00000000" android:layout_alignParentBottom="true"
+		android:gravity="center_vertical" android:layout_width="60dp"
+		android:layout_height="wrap_content" android:layout_marginLeft="10dp"
+		android:paddingLeft="15dp" android:paddingTop="10dp"
+		android:paddingBottom="14dp" android:paddingRight="15dp"
+		android:id="@+id/exchange_back"> </ImageButton>
+    -->
+
+    <ImageView
+        android:id="@+id/umeng_xp_pb"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/umeng_xp_loading"
+        android:visibility="gone" >
+    </ImageView>
+
+</RelativeLayout>

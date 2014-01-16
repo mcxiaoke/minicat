@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/umeng_xp_icon_area"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_centerHorizontal="true" >
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/umeng_xp_shadow_bg" />
+
+        <ImageView
+            android:id="@+id/umeng_xp_handler_grid_item_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="1dp"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:paddingTop="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/umeng_xp_zhanwei" />
+
+        <ImageView
+            android:id="@+id/umeng_xp_new_tip"
+            android:layout_width="28dp"
+            android:layout_height="18dp"
+            android:src="@drawable/umeng_xp_new_tip_button"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/umeng_xp_handler_grid_item_tv"
+        android:layout_width="fill_parent"
+        android:layout_height="18dp"
+        android:layout_below="@id/umeng_xp_icon_area"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:ellipsize="middle"
+        android:gravity="center_horizontal"
+        android:shadowColor="#FFF"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="1"
+        android:singleLine="true"
+        android:text="12345"
+        android:textColor="#818181"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

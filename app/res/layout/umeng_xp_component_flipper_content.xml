@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/umeng_xp_titleContainer"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_centerInParent="true"
+    android:layout_centerVertical="true"
+    android:layout_marginLeft="5dp"
+    android:layout_marginTop="3dp"
+    android:layout_toRightOf="@+id/umeng_xp_appIcon0" >
+
+    <TextView
+        android:id="@+id/umeng_xp_name0"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:maxLines="1"
+        android:text="开心听新年最新版"
+        android:textColor="#000000"
+        android:textSize="16dp" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/umeng_xp_size0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="2dp"
+        android:layout_toRightOf="@+id/umeng_xp_name0"
+        android:gravity="bottom"
+        android:text="(大小:1.6M)"
+        android:maxLines="1"
+        android:textColor="#777777"
+        android:textSize="12dp" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/umeng_xp_content0"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
+        android:layout_alignParentBottom="true"
+        android:text="android上最好的音乐软件"
+        android:lines="1"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="#777777"
+        android:textSize="12sp" >
+    </TextView>
+
+</RelativeLayout>

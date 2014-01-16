@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:background="#ffffff" android:layout_centerHorizontal="true" android:layout_centerInParent="true" android:layout_centerVertical="true" android:layout_height="wrap_content" android:layout_width="fill_parent">
+	<HorizontalScrollView android:id="@+id/HorizontalScrollView01" android:layout_height="wrap_content" android:layout_width="fill_parent" android:scrollbars="none">
+		<LinearLayout android:background="#ffffff" android:id="@+id/horizontalScrolView_list_id" android:layout_height="wrap_content" android:layout_width="fill_parent" android:orientation="horizontal" android:paddingBottom="5dp" android:paddingRight="5dp" android:paddingTop="5dp">
+		</LinearLayout>
+	</HorizontalScrollView>
+
+</RelativeLayout>

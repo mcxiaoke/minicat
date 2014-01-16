@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <ImageView
+        android:id="@+id/umeng_xp_large_gallery_item_imv"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/umeng_xp_large_gallery_item_bg"
+        android:scaleType="fitXY" />
+
+    <ProgressBar
+        android:id="@+id/umeng_xp_large_gallery_item_progressbar"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_centerInParent="true" />
+
+</RelativeLayout>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:gravity="center" android:id="@+id/umeng_xp_banner" android:layout_height="60dp" android:layout_width="fill_parent" android:orientation="vertical">
+
+    <View android:background="@drawable/umeng_xp_highlight_footview_dashed_line" android:layout_height="5dp" android:layout_width="fill_parent"/>
+
+    <LinearLayout android:gravity="center" android:layout_height="fill_parent" android:layout_width="fill_parent" android:orientation="horizontal">
+
+        <ImageView android:id="@+id/umeng_xp_pb" android:layout_centerVertical="true" android:layout_gravity="center_vertical" android:layout_height="15dp" android:layout_margin="10dp" android:layout_width="15dp" android:scaleType="fitXY" android:src="@drawable/umeng_xp_highlight_footview_loading" android:visibility="visible">
+        </ImageView>
+
+        <TextView android:gravity="center" android:id="@+id/umeng_xp_banner_more_txt" android:layout_height="50dp" android:layout_width="wrap_content" android:shadowColor="#ffeeeeee" android:shadowDx="1" android:shadowDy="1" android:shadowRadius="2" android:text="更多精彩推荐   " android:textColor="#BD7A69" android:textSize="12sp" android:textStyle="bold"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+
+    <string name="umeng_xp_size">大小</string>
+    <string name="umeng_xp_action_open">打开</string>
+    <string name="umeng_xp_action_browse">浏览</string>
+    <string name="umeng_xp_action_download">下载</string>
+    <string name="umeng_xp_action_callphone"></string>
+    <string name="umeng_xp_more">更多精彩推荐</string>
+    <string name="umeng_xp_back_to_top">回到顶部</string>
+    <string name="umeng_xp_back">返回</string>
+    <string name="umeng_xp_dowloadOrNot">是否下载推荐应用？</string>
+    <string name="umeng_xp_title_info">精彩推荐</string>
+    <string name="umeng_xp_dowload_dialog_dinfo">马上下载</string>
+    <string name="umeng_xp_dowload_dialog_cinfo">马上拨打</string>
+    <string name="umeng_xp_failed_loading">加载失败...</string>
+    <string name="umeng_xp_no_browser_tips">请先安装浏览器..</string>
+    <string name="umeng_xp_tip_download_pre">开始下载 </string>
+    <string name="umeng_xp_network_break_alert">请连接网络后再尝试！</string>
+    <string name="umeng_xp_info_banner_deprecated">当前SDK版本不支持Banner样式,请联系客服.</string>
+
+</resources>

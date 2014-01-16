@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?><resources>
+
+    <!-- stat layout -->
+
+    <style name="umeng_xp_grad_but">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@drawable/umeng_xp_btn_gradient_grey</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+    </style>
+
+    <style name="umeng_xp_download_but">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:textColor">#EEEEEE</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@drawable/umeng_xp_download_gradient_grey</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+    </style>
+
+    <style name="umeng_xp_more_but">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@drawable/umeng_xp_btn_gradient_dark_grey</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+    </style>
+
+    <style name="umeng_xp_dialog_but">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@drawable/umeng_xp_btn_gradient_grey</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <!--
+			<item name="android:background">@drawable/exchange_selector_download</item>
+		<item name="android:background">@drawable/exchange_selector_cancel</item>
+
+
+    -->
+    <style name="umeng_xp_dialog_download">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@drawable/umeng_xp_selector_download</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <style name="umeng_xp_dialog_cancel">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@drawable/umeng_xp_selector_cancel</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <style name="umeng_xp_dialog_download_window" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.6</item>
+        <item name="android:windowAnimationStyle">@style/umeng_xp_dialog_animations</item>
+    </style>
+
+    <style name="umeng_xp_dialog_animations">
+        <item name="android:windowEnterAnimation">@anim/umeng_xp_fade_in</item>
+        <item name="android:windowExitAnimation">@anim/umeng_xp_fade_out</item>
+    </style>
+
+</resources>

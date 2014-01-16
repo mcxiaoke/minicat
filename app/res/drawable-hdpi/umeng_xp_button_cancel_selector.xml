@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?><selector xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:drawable="@drawable/umeng_xp_button_cancel" android:state_pressed="false"/>
+	<item android:drawable="@drawable/umeng_xp_button_cancel_click" android:state_pressed="true"/>
+</selector>

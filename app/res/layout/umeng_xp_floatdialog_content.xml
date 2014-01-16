@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/umeng_xp_float_dialog_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@null" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="12dp"
+        android:background="@drawable/umeng_xp_shape_gradient_gray_stroke"
+        android:padding="5dp" >
+
+        <FrameLayout
+            android:id="@+id/umeng_xp_float_dialog_content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@android:color/white" >
+        </FrameLayout>
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/umeng_xp_float_dialog_close"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_alignParentRight="true"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/umeng_xp_x_button_selector" />
+
+</RelativeLayout>

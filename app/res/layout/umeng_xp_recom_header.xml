@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:background="#ECECEC" android:id="@+id/umeng_xp_recom" android:layout_height="wrap_content" android:layout_width="fill_parent">
+
+	<ImageView
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentTop="true"
+	    android:scaleType="fitXY"
+	    android:src="@drawable/umeng_xp_recoright" >
+
+	</ImageView>
+</RelativeLayout>

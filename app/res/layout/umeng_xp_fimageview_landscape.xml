@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <RelativeLayout
+        android:id="@+id/umeng_xp_banner"
+        android:layout_width="120dp"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:background="#000000"
+        android:paddingBottom="4dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="15dp" >
+
+        <Button
+            android:id="@+id/umeng_xp_button"
+            android:layout_width="80dp"
+            android:layout_height="25dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/umeng_xp_greenbg_selector"
+            android:gravity="center"
+            android:text="点此浏览"
+            android:textColor="#ffffff"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/umeng_xp_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Google"
+            android:textColor="#ffffff"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/umeng_xp_descript"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/umeng_xp_title"
+            android:layout_marginTop="25dp"
+            android:maxLines="5"
+            android:text="Google"
+            android:textColor="#ffffff"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/umeng_xp_imagev"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_toLeftOf="@id/umeng_xp_banner"
+        android:scaleType="fitXY"
+        android:src="@drawable/umeng_xp_zhanwei" />
+
+</RelativeLayout>

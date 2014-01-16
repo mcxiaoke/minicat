@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/umeng_xp_web_main"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffff"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/umeng_xp_actionBar"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/umeng_xp_detail_bg"
+        android:gravity="center_vertical" >
+
+        <Button
+            android:id="@+id/umeng_xp_cancel"
+            android:layout_width="50dp"
+            android:layout_height="32dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/umeng_xp_back_button"
+            android:paddingLeft="8dp"
+            android:text="@string/umeng_xp_back"
+            android:textColor="#ffffff"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/umeng_xp_title_info"
+            android:textColor="#ffffff"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/umeng_xp_actionBar" />
+
+    <RelativeLayout
+        android:id="@+id/umeng_xp_loading_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone"
+        android:layout_below="@id/umeng_xp_actionBar"
+        android:background="@android:color/darker_gray" >
+
+        <ProgressBar
+            android:id="@+id/umeng_xp_loading"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_centerInParent="true"
+            android:indeterminateDrawable="@drawable/umeng_xp_progressbar" />
+
+        <SeekBar
+            android:id="@+id/umeng_xp_loading_progress"
+            android:layout_width="186dp"
+            android:layout_height="10dp"
+            android:layout_below="@id/umeng_xp_loading"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:max="100"
+            android:progressDrawable="@drawable/umeng_xp_loading_seek"
+            android:thumb="@null"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</RelativeLayout>

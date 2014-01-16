@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="umeng_xp_size">Size</string>
+    <string name="umeng_xp_action_open">open</string>
+    <string name="umeng_xp_action_browse">browse</string>
+    <string name="umeng_xp_action_download">download</string>
+    <string name="umeng_xp_network_break_alert">Please make sure you are connected to internet, download failed</string>
+    <string name="umeng_xp_back_to_top">Top</string>
+    <string name="umeng_xp_more">more</string>
+    <string name="umeng_xp_back">Back</string>
+    <string name="umeng_xp_title_info">Featured</string>
+    <string name="umeng_xp_dowload_dialog_dinfo">Download</string> 
+    <string name="umeng_xp_dowload_dialog_cinfo">Call</string> 
+    <string name="umeng_xp_dowloadOrNot">Download the app?</string>        
+    <string name="umeng_xp_failed_loading">Failed loading...</string>        
+    <string name="umeng_xp_tip_download_pre">Start download </string>        
+    <string name="umeng_xp_info_banner_deprecated">Banner style is not supported for current version of SDK, please contact us for support.</string>        
+</resources>

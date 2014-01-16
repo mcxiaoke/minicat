@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/umeng_xp_banner"
+    android:layout_width="fill_parent"
+    android:layout_height="55dp"
+    android:background="@drawable/umeng_xp_container_banner_background_selector"
+    android:gravity="center" >
+
+    <RelativeLayout
+        android:id="@+id/umeng_xp_icon_area"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true" >
+
+        <ImageView
+            android:id="@+id/umeng_xp_icon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/umeng_xp_zhanwei" >
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/umeng_xp_new_tip"
+            android:layout_width="25dp"
+            android:layout_height="15dp"
+            android:visibility="gone"
+            android:src="@drawable/umeng_xp_new_tip_button" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/umeng_xp_name"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="6dp"
+        android:layout_toRightOf="@+id/umeng_xp_icon_area"
+        android:lines="1"
+        android:text="开心听"
+        android:textColor="#000000"
+        android:textSize="14dp" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/umeng_xp_des"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/umeng_xp_name"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="65dp"
+        android:layout_toRightOf="@+id/umeng_xp_icon_area"
+        android:ellipsize="marquee"
+        android:lines="1"
+        android:scrollHorizontally="true"
+        android:text="android上最好的音乐软件"
+        android:textColor="#777777"
+        android:textSize="12dp" >
+    </TextView>
+
+    <Button
+        android:id="@+id/umeng_xp_ad_action_btn"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/umeng_xp_ad_action_bg_selector"
+        android:shadowColor="#FFF"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="3"
+        android:text="下载"
+        android:visibility="visible" />
+
+</RelativeLayout>
