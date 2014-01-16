@@ -9,7 +9,7 @@ package com.mcxiaoke.minicat.service;
  */
 public final class Constants {
 	
-	public static final String PACKAGE_NAME="com.mcxiaoke.fanfouapp";
+	public static final String PACKAGE_NAME="com.mcxiaoke.minicat";
 
 	public static final String ACTION_PACKAGE = PACKAGE_NAME+".action.";
 	public static final String ACTION_SEND = ACTION_PACKAGE + "SEND";
