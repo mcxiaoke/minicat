@@ -4,13 +4,11 @@ dependencies {
     compile('com.android.support:support-v4:19.0.+')
     compile('com.google.code.gson:gson:2.2.+')
 
-
-    compile('com.mobclick.android:mobclick:4.6.+')
     compile('com.nostra13.universalimageloader:universal-image-loader:1.8.+')
     compile('com.nineoldandroids:library:2.4.0')
     compile('com.jakewharton:butterknife:4.0.+')
     compile('com.squareup.picasso:picasso:2.1.+')
-    compile('de.keyboardsurfer.android.widget:crouton-douban:1.8.0.1')
+//    compile('de.keyboardsurfer.android.widget:crouton-douban:1.8.0.1')
 
     //compile('com.github.castorflex.smoothprogressbar:library:0.2.+')
     //compile('com.github.chrisbanes.actionbarpulltorefresh:library:0.9.+@aar')
@@ -20,6 +18,7 @@ dependencies {
     compile 'com.mcxiaoke.oauthsimple:oauthsimple:2.0.2-SNAPSHOT'
 
     compile project(':ptr/library')
+    compile files('libs/umeng_sdk.jar')
 }
 
 android {
@@ -39,7 +38,6 @@ android {
             aidl.srcDirs = ['src']
             assets.srcDirs = ['assets']
             resources.srcDirs = ['src']
-            jni.srcDirs = ['libs']
         }
     }
 
