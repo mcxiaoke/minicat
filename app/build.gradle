@@ -50,6 +50,7 @@ android {
 
     buildTypes {
         release {
+            zipAlign true
             signingConfig signingConfigs.release
         }
 
@@ -78,20 +79,28 @@ def getDate() {
     return formattedDate
 }
 
-allprojects {
-    afterEvaluate { project ->
-        def propsFile = rootProject.file('keystore.properties')
-        def configName = 'release'
+def Properties props = new Properties()
+def propFile = new File('signing.properties')
+if (propFile.canRead()) {
+    props.load(new FileInputStream(propFile))
 
-        if (propsFile.exists() && android.signingConfigs.hasProperty(configName)) {
-            def props = new Properties()
-            props.load(new FileInputStream(propsFile))
-            android.signingConfigs[configName].storeFile = file(props['storeFile'])
-            android.signingConfigs[configName].storePassword = props['storePassword']
-            android.signingConfigs[configName].keyAlias = props['keyAlias']
-            android.signingConfigs[configName].keyPassword = props['keyPassword']
-        }
+    if (props != null
+            && props.containsKey('storeFile')
+            && props.containsKey('storePassword')
+            && props.containsKey('keyAlias')
+            && props.containsKey('keyPassword')) {
+        println 'signing.properties found and is valid.'
+        android.signingConfigs.release.storeFile = file(props['storeFile'])
+        android.signingConfigs.release.storePassword = props['storePassword']
+        android.signingConfigs.release.keyAlias = props['keyAlias']
+        android.signingConfigs.release.keyPassword = props['keyPassword']
+    } else {
+        println 'signing.properties found but some entries are missing'
+        android.buildTypes.release.signingConfig = null
     }
+} else {
+    println 'signing.properties not found'
+    android.buildTypes.release.signingConfig = null
 }
 
 
