@@ -119,7 +119,7 @@ public class UIPhoto extends Activity implements OnClickListener {
             @Override
             public void onLoadingFailed(String imageUri, View view,
                                         FailReason failReason) {
-                showEmptyText(failReason.getType().toString() + ":" + failReason.getCause().getMessage());
+                showEmptyText(failReason.getType() + ":" + failReason.getCause());
             }
 
             @Override

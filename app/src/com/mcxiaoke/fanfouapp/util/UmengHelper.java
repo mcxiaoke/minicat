@@ -21,11 +21,11 @@ public class UmengHelper {
     private static final String EVENT_SEND_DM = "event_send_dm";
     private static final String EVENT_STATUS_UPDATE_ERROR = "event_status_update_failed";
 
-    public static void onLoginEvent(Context contex, String userName) {
+    public static void onLoginEvent(Context context, String userName) {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("userName", userName);
         params.put("timestamp", String.valueOf(System.currentTimeMillis()));
-        MobclickAgent.onEvent(contex, EVENT_LOGIN, params);
+        MobclickAgent.onEvent(context, EVENT_LOGIN, params);
     }
 
     public static void onStatusUpdateEvent(Context context, String userId, String statusId) {

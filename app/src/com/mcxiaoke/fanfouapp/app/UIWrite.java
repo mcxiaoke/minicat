@@ -2,6 +2,7 @@ package com.mcxiaoke.fanfouapp.app;
 
 import android.app.AlertDialog;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
@@ -214,7 +215,8 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
                 log("from gallery uri=" + photoUri);
 
             String path;
-            if (uri.getScheme().equals("content")) {
+            String scheme = uri.getScheme();
+            if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
                 path = IOHelper.getRealPathFromURI(this, uri);
             } else {
                 path = uri.getPath();

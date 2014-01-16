@@ -7,7 +7,7 @@
 
     <uses-sdk
             android:minSdkVersion="14"
-            android:targetSdkVersion="17"/>
+            android:targetSdkVersion="19"/>
 
     <supports-screens
             android:anyDensity="true"
@@ -38,9 +38,6 @@
         <meta-data
                 android:value="GooglePlay"
                 android:name="UMENG_CHANNEL"/>
-        <meta-data
-                android:value="false"
-                android:name="DEBUG"/>
 
         <activity
                 android:name=".app.UIStart"

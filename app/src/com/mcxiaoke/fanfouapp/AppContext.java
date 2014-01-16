@@ -41,7 +41,7 @@ public class AppContext extends Application {
 
     private static final String TAG = "Application";
 
-    public static boolean DEBUG = false;
+    public final static boolean DEBUG = BuildConfig.DEBUG;
     private static HashMap<String, WeakReference<Activity>> contexts = new HashMap<String, WeakReference<Activity>>();
 
     public static int versionCode;
@@ -97,7 +97,6 @@ public class AppContext extends Application {
             versionCode = packageInfo.versionCode;
             versionName = packageInfo.versionName;
             Bundle bundle = pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA).metaData;
-            DEBUG = bundle.getBoolean("DEBUG");
             if (DEBUG) {
                 Log.v(TAG, "initAppInfo() versionCode: " + versionCode
                         + " versionName: " + versionName);

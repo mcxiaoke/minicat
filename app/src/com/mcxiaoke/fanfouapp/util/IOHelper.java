@@ -109,17 +109,22 @@ public final class IOHelper {
 
     public static String getRealPathFromURI(Context context, Uri contentUri) {
         // get path from uri like content://media//
-        Cursor cursor = context.getContentResolver().query(contentUri,
-                new String[]{MediaColumns.DATA}, null, null, null);
+        Cursor cursor = null;
         String path = null;
-        if (cursor != null) {
-            int column_index = cursor.getColumnIndexOrThrow(MediaColumns.DATA);
-            cursor.moveToFirst();
-            path = cursor.getString(column_index);
-        } else {
-            path = null;
+        try {
+            cursor = context.getContentResolver().query(contentUri,
+                    new String[]{MediaColumns.DATA}, null, null, null);
+            if (cursor != null) {
+                int column_index = cursor.getColumnIndexOrThrow(MediaColumns.DATA);
+                cursor.moveToFirst();
+                path = cursor.getString(column_index);
+            }
+        } catch (Exception ignored) {
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
-        cursor.close();
         if (path == null) {
             path = contentUri.getPath();
         }
@@ -128,7 +133,7 @@ public final class IOHelper {
 
     public static void ClearCache(Context context) {
         File target = getImageCacheDir(context);
-        if (target.exists() == false) {
+        if (!target.exists()) {
             return;
         }
         if (target.isFile()) {

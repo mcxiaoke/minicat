@@ -1026,6 +1026,13 @@ final class FanFouApi implements Api {
             }
             throw new ApiException(ApiException.IO_ERROR, e.toString(),
                     e);
+        } catch (Exception e) {
+            if (DEBUG) {
+                e.printStackTrace();
+                Log.e(TAG, e.toString());
+            }
+            throw new ApiException(ApiException.IO_ERROR, e.toString(),
+                    e);
         }
     }
 

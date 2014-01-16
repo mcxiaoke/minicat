@@ -256,7 +256,6 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
             } catch (Exception e) {
                 UmengHelper.onLoginError(mContext, username, 0, e.getMessage(), e.toString());
                 return new ResultInfo(LOGIN_IO_ERROR, e.toString());
-            } finally {
             }
         }
 

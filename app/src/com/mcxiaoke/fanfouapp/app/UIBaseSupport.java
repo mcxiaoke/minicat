@@ -113,20 +113,26 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
     }
 
     protected void onMenuHomeClick() {
-//        finish();
+        if (isFinishing()) {
+            return;
+        }
         Intent upIntent = NavUtils.getParentActivityIntent(this);
-        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-            // This activity is NOT part of this app's task, so create a new task
-            // when navigating up, with a synthesized back stack.
-            TaskStackBuilder.create(this)
-                    // Add all of this activity's parents to the back stack
-                    .addNextIntentWithParentStack(upIntent)
-                            // Navigate up to the closest parent
-                    .startActivities();
+        if (upIntent != null) {
+            if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                // This activity is NOT part of this app's task, so create a new task
+                // when navigating up, with a synthesized back stack.
+                TaskStackBuilder.create(this)
+                        // Add all of this activity's parents to the back stack
+                        .addNextIntentWithParentStack(upIntent)
+                                // Navigate up to the closest parent
+                        .startActivities();
+            } else {
+                // This activity is part of this app's task, so simply
+                // navigate up to the logical parent activity.
+                NavUtils.navigateUpTo(this, upIntent);
+            }
         } else {
-            // This activity is part of this app's task, so simply
-            // navigate up to the logical parent activity.
-            NavUtils.navigateUpTo(this, upIntent);
+            finish();
         }
         overridePendingTransition(R.anim.fade_in, R.anim.slide_out_to_right);
     }
