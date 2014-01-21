@@ -5,7 +5,6 @@ gen
 bin
 local.properties
 .gradle
-*.apk
 .*.swp
 /.classpath
 /.project
