@@ -12,14 +12,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.mcxiaoke.minicat.adapter.BaseCursorAdapter;
+import android.widget.CursorAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import com.mcxiaoke.commons.view.endless.EndlessListView;
 import com.mcxiaoke.minicat.AppContext;
+import com.mcxiaoke.minicat.R;
+import com.mcxiaoke.minicat.adapter.BaseCursorAdapter;
 import com.mcxiaoke.minicat.controller.PopupController;
 import com.mcxiaoke.minicat.dao.model.StatusModel;
 import com.mcxiaoke.minicat.preference.PreferenceHelper;
@@ -27,14 +28,16 @@ import com.mcxiaoke.minicat.service.Constants;
 import com.mcxiaoke.minicat.ui.UIHelper;
 import com.mcxiaoke.minicat.util.NetworkHelper;
 import com.mcxiaoke.minicat.util.Utils;
-import com.mcxiaoke.minicat.R;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * @author mcxiaoke
  * @version 1.8 2012.03.19
  */
 public abstract class PullToRefreshListFragment extends AbstractListFragment
-        implements OnRefreshListener2<ListView>, OnItemLongClickListener,
+        implements OnRefreshListener, EndlessListView.OnFooterRefreshListener, OnItemLongClickListener,
         LoaderCallbacks<Cursor> {
 
     protected static final int LOADER_ID = 1;
@@ -42,8 +45,8 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     private static final String TAG = PullToRefreshListFragment.class
             .getSimpleName();
 
-    private PullToRefreshListView mPullToRefreshView;
-    private ListView mListView;
+    private PullToRefreshLayout mPullToRefreshLayout;
+    private EndlessListView mListView;
 
     private Parcelable mParcelable;
 
@@ -106,18 +109,33 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     }
 
     private void setLayout(View root) {
-        mPullToRefreshView = (PullToRefreshListView) root.findViewById(R.id.pull_list);
-        mPullToRefreshView.setOnRefreshListener(this);
-        mPullToRefreshView.setPullToRefreshOverScrollEnabled(false);
-        mPullToRefreshView.setShowIndicator(false);
-        mPullToRefreshView.setMode(Mode.BOTH);
-        mListView = mPullToRefreshView.getRefreshableView();
+        mPullToRefreshLayout = (PullToRefreshLayout) root.findViewById(R.id.ptr_layout);
+        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
+        mListView = (EndlessListView) root.findViewById(R.id.list);
         mListView.setVerticalScrollBarEnabled(false);
         mListView.setHorizontalScrollBarEnabled(false);
         mListView.setFastScrollEnabled(true);
         mListView.setOnItemClickListener(this);
         mListView.setLongClickable(false);
+        mListView.setOnFooterRefreshListener(this);
         UIHelper.setListView(mListView);
+    }
+
+    @Override
+    public void onFooterRefresh(EndlessListView endlessListView) {
+        doFetch(true);
+        getBaseSupport().showProgressIndicator();
+    }
+
+    @Override
+    public void onFooterIdle(EndlessListView endlessListView) {
+
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+        doFetch(false);
+        getBaseSupport().showProgressIndicator();
     }
 
     @Override
@@ -155,25 +173,6 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     protected abstract void doFetch(boolean doGetMore);
 
     protected abstract int getType();
-
-    public void onPullDownToRefresh(
-            final PullToRefreshBase<ListView> refreshView) {
-        if (NetworkHelper.isNotConnected(getActivity())) {
-            mPullToRefreshView.onRefreshComplete();
-            return;
-        }
-        doFetch(false);
-        getBaseSupport().showProgressIndicator();
-    }
-
-    public void onPullUpToRefresh(final PullToRefreshBase<ListView> refreshView) {
-        if (NetworkHelper.isNotConnected(getActivity())) {
-            mPullToRefreshView.onRefreshComplete();
-            return;
-        }
-        doFetch(true);
-        getBaseSupport().showProgressIndicator();
-    }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view,
@@ -263,9 +262,8 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     }
 
     private void onRefreshComplete() {
-        if (mPullToRefreshView != null) {
-            mPullToRefreshView.onRefreshComplete();
-        }
+        mListView.showFooterEmpty();
+        mPullToRefreshLayout.setRefreshComplete();
     }
 
     protected static void showPopup(Activity context, final View view,

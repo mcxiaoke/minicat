@@ -12,11 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.mcxiaoke.commons.view.endless.EndlessListView;
 import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.adapter.SearchResultsArrayAdapter;
@@ -29,6 +25,9 @@ import com.mcxiaoke.minicat.service.SyncService;
 import com.mcxiaoke.minicat.ui.UIHelper;
 import com.mcxiaoke.minicat.util.NetworkHelper;
 import com.mcxiaoke.minicat.util.StringHelper;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 import java.util.List;
 
@@ -37,10 +36,11 @@ import java.util.List;
  * @version 2.3 2012.03.30
  */
 public class UISearchResults extends UIBaseSupport implements
-        OnRefreshListener2<ListView>, OnItemClickListener {
+        OnRefreshListener, EndlessListView.OnFooterRefreshListener, OnItemClickListener {
     private static final String TAG = UISearchResults.class.getSimpleName();
-    private PullToRefreshListView mPullToRefreshView;
-    private ListView mListView;
+
+    private PullToRefreshLayout mPullToRefreshLayout;
+    private EndlessListView mListView;
 
     private SearchResultsArrayAdapter mStatusAdapter;
 
@@ -73,17 +73,30 @@ public class UISearchResults extends UIBaseSupport implements
         setContentView(R.layout.list_pull);
         setProgressBarIndeterminateVisibility(false);
 
-        mPullToRefreshView = (PullToRefreshListView) findViewById(R.id.pull_list);
-        mPullToRefreshView.setPullToRefreshOverScrollEnabled(false);
-        mPullToRefreshView.setShowIndicator(false);
-        mPullToRefreshView.setMode(Mode.BOTH);
-        mPullToRefreshView.setOnRefreshListener(this);
-        mListView = mPullToRefreshView.getRefreshableView();
-        UIHelper.setListView(mListView);
+        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
+        ActionBarPullToRefresh.from(this).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
+        mListView = (EndlessListView) findViewById(R.id.list);
         mListView.setLongClickable(false);
         mListView.setOnItemClickListener(this);
         mListView.setAdapter(mStatusAdapter);
+        mListView.setOnFooterRefreshListener(this);
+        UIHelper.setListView(mListView);
         newSearch();
+    }
+
+    @Override
+    public void onFooterRefresh(EndlessListView endlessListView) {
+        doSearch(false);
+    }
+
+    @Override
+    public void onFooterIdle(EndlessListView endlessListView) {
+
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+        doSearch(true);
     }
 
     protected void newSearch() {
@@ -134,7 +147,7 @@ public class UISearchResults extends UIBaseSupport implements
                 maxId = null;
             }
             new SearchTask().execute();
-            mPullToRefreshView.setRefreshing();
+            mPullToRefreshLayout.setRefreshing(true);
         }
 
     }
@@ -205,7 +218,8 @@ public class UISearchResults extends UIBaseSupport implements
 
         @Override
         protected void onPostExecute(List<StatusModel> result) {
-            mPullToRefreshView.onRefreshComplete();
+            mPullToRefreshLayout.setRefreshComplete();
+            mListView.showFooterEmpty();
             hideProgressIndicator();
             if (result != null && result.size() > 0) {
 
@@ -256,16 +270,6 @@ public class UISearchResults extends UIBaseSupport implements
         if (s != null) {
             UIController.goStatusPage(mContext, s);
         }
-    }
-
-    @Override
-    public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-        doSearch(true);
-    }
-
-    @Override
-    public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-        doSearch(false);
     }
 
 }

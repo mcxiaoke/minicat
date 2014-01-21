@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:ptr="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
-             android:layout_height="match_parent" android:background="@color/background_primary">
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
-            android:id="@+id/pull_list"
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_primary">
+
+    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@id/ptr_layout">
+
+        <com.mcxiaoke.commons.view.endless.EndlessListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            ptr:ptrAnimationStyle="flip"/>
+            android:id="@id/list" />
+
+    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
 </FrameLayout>
 

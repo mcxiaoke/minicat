@@ -3,7 +3,7 @@
     android:id="@+id/root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <EditText
         android:id="@+id/input"
@@ -18,11 +18,16 @@
         android:textSize="@dimen/text_size_medium"
         android:visibility="gone" />
 
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
-        xmlns:ptr="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/list"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        ptr:ptrMode="both" />
+    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@id/ptr_layout">
+
+        <com.mcxiaoke.commons.view.endless.EndlessListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@id/list" />
+
+    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
 
 </LinearLayout>

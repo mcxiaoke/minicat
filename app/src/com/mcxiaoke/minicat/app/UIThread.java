@@ -10,11 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.mcxiaoke.commons.view.endless.EndlessListView;
 import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.adapter.StatusThreadAdapter;
@@ -22,6 +18,8 @@ import com.mcxiaoke.minicat.api.Api;
 import com.mcxiaoke.minicat.controller.UIController;
 import com.mcxiaoke.minicat.dao.model.StatusModel;
 import com.mcxiaoke.minicat.ui.UIHelper;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 import java.util.List;
 
@@ -32,10 +30,10 @@ import java.util.List;
  *          Statuses Conversation List Page
  */
 public class UIThread extends UIBaseSupport implements
-        OnRefreshListener<ListView>, OnItemClickListener {
+        OnRefreshListener, EndlessListView.OnFooterRefreshListener, OnItemClickListener {
 
-    private PullToRefreshListView mPullToRefreshView;
-    private ListView mListView;
+    private PullToRefreshLayout mPullToRefreshLayout;
+    private EndlessListView mListView;
 
     protected StatusThreadAdapter mStatusAdapter;
 
@@ -62,22 +60,34 @@ public class UIThread extends UIBaseSupport implements
 
         setTitle("对话");
 
-        mPullToRefreshView = (PullToRefreshListView) findViewById(R.id.pull_list);
-        mPullToRefreshView.setPullToRefreshOverScrollEnabled(false);
-        mPullToRefreshView.setShowIndicator(false);
-        mPullToRefreshView.setMode(Mode.PULL_FROM_START);
-        mPullToRefreshView.setOnRefreshListener(this);
-        mListView = mPullToRefreshView.getRefreshableView();
+        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
+//        ActionBarPullToRefresh.from(this).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
+        mListView = (EndlessListView) findViewById(R.id.list);
         mListView.setLongClickable(false);
         mListView.setOnItemClickListener(this);
         UIHelper.setListView(mListView);
         mListView.setAdapter(mStatusAdapter);
+        mListView.setOnFooterRefreshListener(this);
 
         if (!TextUtils.isEmpty(id)) {
             startRefresh();
         } else {
             finish();
         }
+    }
+
+    @Override
+    public void onFooterRefresh(EndlessListView endlessListView) {
+        startRefresh();
+    }
+
+    @Override
+    public void onFooterIdle(EndlessListView endlessListView) {
+
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
     }
 
     private void parseIntent() {
@@ -149,9 +159,11 @@ public class UIThread extends UIBaseSupport implements
         protected void onPostExecute(List<StatusModel> result) {
             if (result != null && result.size() > 0) {
                 mStatusAdapter.addData(result);
+            } else {
+                mListView.setRefreshMode(EndlessListView.RefreshMode.NONE);
             }
-            mPullToRefreshView.setMode(Mode.DISABLED);
-            mPullToRefreshView.onRefreshComplete();
+            mPullToRefreshLayout.setRefreshComplete();
+            mListView.showFooterEmpty();
             hideProgressIndicator();
             mStatusAdapter.notifyDataSetChanged();
         }
@@ -165,10 +177,6 @@ public class UIThread extends UIBaseSupport implements
         if (s != null) {
             UIController.goStatusPage(mContext, s);
         }
-    }
-
-    @Override
-    public void onRefresh(PullToRefreshBase<ListView> refreshView) {
     }
 
 }

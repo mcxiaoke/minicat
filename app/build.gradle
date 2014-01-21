@@ -8,20 +8,18 @@ dependencies {
     compile('com.nineoldandroids:library:2.4.0')
     compile('com.jakewharton:butterknife:4.0.+')
     compile('com.squareup.picasso:picasso:2.1.+')
-//    compile('de.keyboardsurfer.android.widget:crouton-douban:1.8.0.1')
 
-    //compile('com.github.castorflex.smoothprogressbar:library:0.2.+')
-    //compile('com.github.chrisbanes.actionbarpulltorefresh:library:0.9.+@aar')
-    //compile('com.github.chrisbanes.actionbarpulltorefresh:extra-abs:0.9.+@aar')
-    compile('com.actionbarsherlock:actionbarsherlock:4.4.+@aar')
+    compile('com.github.castorflex.smoothprogressbar:library:0.2.+')
+    compile('com.github.chrisbanes.actionbarpulltorefresh:library:0.9.+')
 
     compile 'com.mcxiaoke.oauthsimple:oauthsimple:2.0.+'
-//    compile 'com.github.chrisbanes.photoview:library:1.2.+'
+    compile 'com.mcxiaoke.commons:library:1.0.+'
+    compile 'com.mcxiaoke.photoview:library:1.2.+'
 
-    compile project(':ptr/library')
     compile files('libs/umeng_sdk.jar')
-    compile files('libs/photoview_snapshot.jar')
 }
+
+loadProperties("signing.properties")
 
 android {
     compileSdkVersion 19
@@ -45,6 +43,10 @@ android {
 
     signingConfigs {
         release {
+            storeFile file("mcxiaoke.keystore")
+            storePassword project.ext.get("storePassword")
+            keyAlias project.ext.get("keyAlias")
+            keyPassword project.ext.get("keyPassword")
         }
     }
 
@@ -79,28 +81,18 @@ def getDate() {
     return formattedDate
 }
 
-def Properties props = new Properties()
-def propFile = new File('signing.properties')
-if (propFile.canRead()) {
-    props.load(new FileInputStream(propFile))
 
-    if (props != null
-            && props.containsKey('storeFile')
-            && props.containsKey('storePassword')
-            && props.containsKey('keyAlias')
-            && props.containsKey('keyPassword')) {
-        println 'signing.properties found and is valid.'
-        android.signingConfigs.release.storeFile = file(props['storeFile'])
-        android.signingConfigs.release.storePassword = props['storePassword']
-        android.signingConfigs.release.keyAlias = props['keyAlias']
-        android.signingConfigs.release.keyPassword = props['keyPassword']
-    } else {
-        println 'signing.properties found but some entries are missing'
-        android.buildTypes.release.signingConfig = null
+def loadProperties(String fileName) {
+    def config = new Properties()
+    def propFile = file(fileName)
+    System.err.println("load property file: " + propFile.absolutePath)
+    if (propFile.canRead()) {
+        config.load(new FileInputStream(propFile))
+        for (Map.Entry property in config) {
+            System.out.println("property " + property.key + ":" + property.value)
+            project.ext[property.key] = property.value;
+        }
     }
-} else {
-    println 'signing.properties not found'
-    android.buildTypes.release.signingConfig = null
 }
 
 

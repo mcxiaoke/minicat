@@ -16,14 +16,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.mcxiaoke.commons.view.endless.EndlessListView;
+import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.adapter.UserCursorAdapter;
 import com.mcxiaoke.minicat.api.Paging;
-import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.controller.DataController;
 import com.mcxiaoke.minicat.controller.UIController;
 import com.mcxiaoke.minicat.dao.model.UserModel;
@@ -31,13 +28,16 @@ import com.mcxiaoke.minicat.service.Constants;
 import com.mcxiaoke.minicat.service.SyncService;
 import com.mcxiaoke.minicat.ui.UIHelper;
 import com.mcxiaoke.minicat.util.Utils;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * @author mcxiaoke
  * @version 1.8 2012.03.19
  */
 public abstract class UserListFragment extends AbstractListFragment
-        implements OnRefreshListener2<ListView>,
+        implements OnRefreshListener, EndlessListView.OnFooterRefreshListener,
         LoaderCallbacks<Cursor> {
 
     protected static final int LOADER_ID = 1;
@@ -45,8 +45,8 @@ public abstract class UserListFragment extends AbstractListFragment
     private static final String TAG = UserListFragment.class
             .getSimpleName();
 
-    private PullToRefreshListView mPullToRefreshView;
-    private ListView mListView;
+    private PullToRefreshLayout mPullToRefreshLayout;
+    private EndlessListView mListView;
 
     private Parcelable mParcelable;
 
@@ -135,15 +135,31 @@ public abstract class UserListFragment extends AbstractListFragment
     }
 
     private void setLayout(View root) {
-        mPullToRefreshView = (PullToRefreshListView) root.findViewById(R.id.pull_list);
-        mPullToRefreshView.setOnRefreshListener(this);
-        mPullToRefreshView.setPullToRefreshOverScrollEnabled(false);
-        mPullToRefreshView.setShowIndicator(false);
-        mPullToRefreshView.setMode(Mode.BOTH);
-        mListView = mPullToRefreshView.getRefreshableView();
+        mPullToRefreshLayout = (PullToRefreshLayout) root.findViewById(R.id.ptr_layout);
+        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
+        mListView = (EndlessListView) root.findViewById(R.id.list);
         mListView.setOnItemClickListener(this);
         mListView.setLongClickable(false);
+        mListView.setOnFooterRefreshListener(this);
         UIHelper.setListView(mListView);
+    }
+
+
+    @Override
+    public void onFooterRefresh(EndlessListView endlessListView) {
+        doFetch(true);
+        getBaseSupport().showProgressIndicator();
+    }
+
+    @Override
+    public void onFooterIdle(EndlessListView endlessListView) {
+
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+        doFetch(false);
+        getBaseSupport().showProgressIndicator();
     }
 
     @Override
@@ -220,17 +236,6 @@ public abstract class UserListFragment extends AbstractListFragment
         getAdapter().getFilter().filter(text);
     }
 
-    public void onPullDownToRefresh(
-            final PullToRefreshBase<ListView> refreshView) {
-        doFetch(false);
-        getBaseSupport().showProgressIndicator();
-    }
-
-    public void onPullUpToRefresh(final PullToRefreshBase<ListView> refreshView) {
-        doFetch(true);
-        getBaseSupport().showProgressIndicator();
-    }
-
     protected void doRefresh() {
         if (AppContext.DEBUG) {
             Log.d(TAG, "doRefresh()");
@@ -285,9 +290,8 @@ public abstract class UserListFragment extends AbstractListFragment
     }
 
     private void onRefreshComplete() {
-        if (mPullToRefreshView != null) {
-            mPullToRefreshView.onRefreshComplete();
-        }
+        mListView.showFooterEmpty();
+        mPullToRefreshLayout.setRefreshComplete();
     }
 
     @Override
