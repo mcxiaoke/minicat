@@ -2,7 +2,6 @@ package com.mcxiaoke.minicat.app;
 
 import android.app.AlertDialog;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
@@ -39,6 +38,7 @@ import com.mcxiaoke.minicat.service.Constants;
 import com.mcxiaoke.minicat.service.SyncService;
 import com.mcxiaoke.minicat.ui.widget.MyAutoCompleteTextView;
 import com.mcxiaoke.minicat.ui.widget.TextChangeListener;
+import com.mcxiaoke.minicat.util.CompatUtils;
 import com.mcxiaoke.minicat.util.IOHelper;
 import com.mcxiaoke.minicat.util.ImageHelper;
 import com.mcxiaoke.minicat.util.StringHelper;
@@ -212,15 +212,11 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
         if (uri != null) {
 
             if (AppContext.DEBUG)
-                log("from gallery uri=" + photoUri);
+                log("from gallery uri=" + uri);
 
-            String path;
-            String scheme = uri.getScheme();
-            if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
-                path = IOHelper.getRealPathFromURI(this, uri);
-            } else {
-                path = uri.getPath();
-            }
+            String path = CompatUtils.getPath(this, uri);
+            if (AppContext.DEBUG)
+                log("from gallery path=" + path);
             photo = new File(path);
             if (photo.exists()) {
                 photoUri = uri;
