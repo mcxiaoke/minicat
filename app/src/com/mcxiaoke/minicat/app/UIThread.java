@@ -18,9 +18,6 @@ import com.mcxiaoke.minicat.api.Api;
 import com.mcxiaoke.minicat.controller.UIController;
 import com.mcxiaoke.minicat.dao.model.StatusModel;
 import com.mcxiaoke.minicat.ui.UIHelper;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 import java.util.List;
 
@@ -30,10 +27,8 @@ import java.util.List;
  *          <p/>
  *          Statuses Conversation List Page
  */
-public class UIThread extends UIBaseSupport implements
-        OnRefreshListener, EndlessListView.OnFooterRefreshListener, OnItemClickListener {
+public class UIThread extends UIBaseSupport implements EndlessListView.OnFooterRefreshListener, OnItemClickListener {
 
-    private PullToRefreshLayout mPullToRefreshLayout;
     private EndlessListView mListView;
 
     protected StatusThreadAdapter mStatusAdapter;
@@ -56,13 +51,11 @@ public class UIThread extends UIBaseSupport implements
     }
 
     protected void setLayout() {
-        setContentView(R.layout.list_pull);
+        setContentView(R.layout.list);
         setProgressBarIndeterminateVisibility(false);
 
         setTitle("对话");
 
-        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
-        ActionBarPullToRefresh.from(this).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
         mListView = (EndlessListView) findViewById(R.id.list);
         mListView.setLongClickable(false);
         mListView.setOnItemClickListener(this);
@@ -93,10 +86,6 @@ public class UIThread extends UIBaseSupport implements
     @Override
     public void onFooterIdle(EndlessListView endlessListView) {
 
-    }
-
-    @Override
-    public void onRefreshStarted(View view) {
     }
 
     private void parseIntent() {
@@ -167,14 +156,12 @@ public class UIThread extends UIBaseSupport implements
         @Override
         protected void onPostExecute(List<StatusModel> result) {
             if (result != null && result.size() > 0) {
-                mStatusAdapter.addData(result);
+                mStatusAdapter.setData(result);
             } else {
                 mListView.setRefreshMode(EndlessListView.RefreshMode.NONE);
             }
-            mPullToRefreshLayout.setRefreshComplete();
-            showFooterText();
+            mListView.showFooterEmpty();
             hideProgressIndicator();
-            mStatusAdapter.notifyDataSetChanged();
         }
 
     }
