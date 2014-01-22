@@ -22,6 +22,8 @@ import com.mcxiaoke.minicat.util.LogUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.umeng.analytics.MobclickAgent;
 import org.oauthsimple.model.OAuthToken;
@@ -69,7 +71,7 @@ public class AppContext extends Application {
     private void initialize() {
         instance = this;
         MobclickAgent.setDebugMode(DEBUG);
-        ImageLoader.getInstance().init(getDefaultImageLoaderConfigureation());
+        ImageLoader.getInstance().init(getDefaultImageLoaderConfiguration());
         FANFOU_DATE_FORMAT.setTimeZone(
                 getTimeZone("GMT"));
     }
@@ -231,19 +233,24 @@ public class AppContext extends Application {
 
     private DisplayImageOptions getDefaultDisplayImageOptions() {
         DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder();
-        builder.cacheInMemory().cacheOnDisc();
+        builder.cacheInMemory(true).cacheOnDisc(true);
         builder.bitmapConfig(Bitmap.Config.RGB_565);
-        builder.showStubImage(R.drawable.ic_head);
+        builder.showImageForEmptyUri(R.drawable.ic_head);
         builder.showImageOnFail(R.drawable.ic_head);
+        builder.showImageOnLoading(R.drawable.ic_head);
+        builder.imageScaleType(ImageScaleType.IN_SAMPLE_INT);
         builder.displayer(new RoundedBitmapDisplayer(getResources().getDimensionPixelSize(R.dimen.image_round_corner)));
         return builder.build();
     }
 
-    private ImageLoaderConfiguration getDefaultImageLoaderConfigureation() {
+    private ImageLoaderConfiguration getDefaultImageLoaderConfiguration() {
         ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(
                 this);
         builder.defaultDisplayImageOptions(getDefaultDisplayImageOptions());
         builder.denyCacheImageMultipleSizesInMemory();
+        builder.discCacheSize(50 * 1024 * 1024);
+        builder.memoryCacheSizePercentage(25);
+        builder.tasksProcessingOrder(QueueProcessingType.FIFO);
         return builder.build();
     }
 
