@@ -107,6 +107,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         boolean needUpdate = now - lastUpdateTime > TIME_THREE_DAYS;
         if (autoUpdate || needUpdate) {
             PreferenceHelper.getInstance(this).setKeyLastUpdateTime(now);
+            UmengUpdateAgent.setUpdateCheckConfig(false);
             UmengUpdateAgent.update(this);
             UmengUpdateAgent.setUpdateOnlyWifi(false);
             UmengUpdateAgent.setUpdateAutoPopup(false);
