@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
+import com.mcxiaoke.commons.view.endless.EndlessListView;
 import com.mcxiaoke.minicat.adapter.StatusCursorAdapter;
 import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.controller.UIController;
@@ -55,6 +56,9 @@ public abstract class BaseTimlineFragment extends PullToRefreshListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (getType() == StatusModel.TYPE_PUBLIC) {
+            getListView().setRefreshMode(EndlessListView.RefreshMode.NONE);
+        }
     }
 
     @Override

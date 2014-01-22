@@ -100,6 +100,8 @@
     <string name="profile_state_on">(正在关注你)</string>
     <string name="profile_state_off">(没有关注你)</string>
 
+    <string name="footer_click_to_load_text">点击加载更多</string>
+
 
     <!-- Options -->
     <string name="option_push_notification_key">option_push_notification_key</string>

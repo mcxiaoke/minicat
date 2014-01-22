@@ -81,7 +81,15 @@ public class UISearchResults extends UIBaseSupport implements
         mListView.setAdapter(mStatusAdapter);
         mListView.setOnFooterRefreshListener(this);
         UIHelper.setListView(mListView);
+        mListView.setRefreshMode(EndlessListView.RefreshMode.CLICK);
+        mListView.showFooterEmpty();
         newSearch();
+    }
+
+    private void showFooterText() {
+        if (mListView != null) {
+            mListView.showFooterText(R.string.endless_footer_load_more);
+        }
     }
 
     @Override
@@ -147,7 +155,6 @@ public class UISearchResults extends UIBaseSupport implements
                 maxId = null;
             }
             new SearchTask().execute();
-            mPullToRefreshLayout.setRefreshing(true);
         }
 
     }
@@ -219,7 +226,7 @@ public class UISearchResults extends UIBaseSupport implements
         @Override
         protected void onPostExecute(List<StatusModel> result) {
             mPullToRefreshLayout.setRefreshComplete();
-            mListView.showFooterEmpty();
+            showFooterText();
             hideProgressIndicator();
             if (result != null && result.size() > 0) {
 

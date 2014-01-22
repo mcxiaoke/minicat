@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.CursorAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import com.mcxiaoke.commons.view.endless.EndlessListView;
 import com.mcxiaoke.minicat.AppContext;
@@ -154,7 +153,18 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
         mAdapter = (BaseCursorAdapter) onCreateAdapter();
         mListView.setAdapter(mAdapter);
         mListView.setOnScrollListener(mAdapter);
+
+        mListView.setRefreshMode(EndlessListView.RefreshMode.CLICK);
+        showFooterText();
+
         getLoaderManager().initLoader(LOADER_ID, null, this);
+    }
+
+
+    private void showFooterText() {
+        if (mListView != null) {
+            mListView.showFooterText(R.string.endless_footer_load_more);
+        }
     }
 
     @Override
@@ -207,7 +217,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     }
 
     @Override
-    public ListView getListView() {
+    public EndlessListView getListView() {
         return mListView;
     }
 
@@ -255,6 +265,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
         if (AppContext.DEBUG) {
             Log.v(TAG, "onSuccess()");
         }
+        showFooterText();
         String errorMessage = data.getString("error_message");
         int errorCode = data.getInt("error_code");
         Utils.notify(getActivity(), errorMessage);
@@ -262,7 +273,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     }
 
     private void onRefreshComplete() {
-        mListView.showFooterEmpty();
+        showFooterText();
         mPullToRefreshLayout.setRefreshComplete();
     }
 

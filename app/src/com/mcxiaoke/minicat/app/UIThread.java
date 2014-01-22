@@ -18,6 +18,7 @@ import com.mcxiaoke.minicat.api.Api;
 import com.mcxiaoke.minicat.controller.UIController;
 import com.mcxiaoke.minicat.dao.model.StatusModel;
 import com.mcxiaoke.minicat.ui.UIHelper;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
@@ -61,18 +62,26 @@ public class UIThread extends UIBaseSupport implements
         setTitle("对话");
 
         mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
-//        ActionBarPullToRefresh.from(this).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
+        ActionBarPullToRefresh.from(this).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
         mListView = (EndlessListView) findViewById(R.id.list);
         mListView.setLongClickable(false);
         mListView.setOnItemClickListener(this);
         UIHelper.setListView(mListView);
         mListView.setAdapter(mStatusAdapter);
         mListView.setOnFooterRefreshListener(this);
+        mListView.setRefreshMode(EndlessListView.RefreshMode.CLICK);
+        mListView.showFooterEmpty();
 
         if (!TextUtils.isEmpty(id)) {
             startRefresh();
         } else {
             finish();
+        }
+    }
+
+    private void showFooterText() {
+        if (mListView != null) {
+            mListView.showFooterText(R.string.endless_footer_load_more);
         }
     }
 
@@ -163,7 +172,7 @@ public class UIThread extends UIBaseSupport implements
                 mListView.setRefreshMode(EndlessListView.RefreshMode.NONE);
             }
             mPullToRefreshLayout.setRefreshComplete();
-            mListView.showFooterEmpty();
+            showFooterText();
             hideProgressIndicator();
             mStatusAdapter.notifyDataSetChanged();
         }

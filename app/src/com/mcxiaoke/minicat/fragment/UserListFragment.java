@@ -178,7 +178,15 @@ public abstract class UserListFragment extends AbstractListFragment
         mAdapter = (UserCursorAdapter) onCreateAdapter();
         mListView.setAdapter(mAdapter);
         mListView.setOnScrollListener(mAdapter);
+        mListView.setRefreshMode(EndlessListView.RefreshMode.CLICK);
+        showFooterText();
         getLoaderManager().initLoader(LOADER_ID, null, this);
+    }
+
+    private void showFooterText() {
+        if (mListView != null) {
+            mListView.showFooterText(R.string.endless_footer_load_more);
+        }
     }
 
     @Override
@@ -283,6 +291,7 @@ public abstract class UserListFragment extends AbstractListFragment
         if (AppContext.DEBUG) {
             Log.d(TAG, "onSuccess()");
         }
+        showFooterText();
         String errorMessage = data.getString("error_message");
         int errorCode = data.getInt("error_code");
         Utils.notify(getActivity(), errorMessage);
@@ -290,7 +299,7 @@ public abstract class UserListFragment extends AbstractListFragment
     }
 
     private void onRefreshComplete() {
-        mListView.showFooterEmpty();
+        showFooterText();
         mPullToRefreshLayout.setRefreshComplete();
     }
 
