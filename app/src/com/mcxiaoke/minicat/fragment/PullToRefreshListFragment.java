@@ -155,7 +155,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
         mListView.setOnScrollListener(mAdapter);
 
         mListView.setRefreshMode(EndlessListView.RefreshMode.CLICK);
-        showFooterText();
+        mListView.showFooterEmpty();
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
     }
@@ -163,7 +163,11 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
     private void showFooterText() {
         if (mListView != null) {
-            mListView.showFooterText(R.string.endless_footer_load_more);
+            if (getType() == StatusModel.TYPE_PUBLIC) {
+                mListView.showFooterEmpty();
+            } else {
+                mListView.showFooterText(R.string.endless_footer_load_more);
+            }
         }
     }
 
@@ -372,6 +376,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
         if (AppContext.DEBUG) {
             Log.v(TAG, "onLoadFinished() adapter=" + mAdapter.getCount());
         }
+        showFooterText();
         checkRefresh();
     }
 

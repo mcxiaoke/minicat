@@ -179,7 +179,7 @@ public abstract class UserListFragment extends AbstractListFragment
         mListView.setAdapter(mAdapter);
         mListView.setOnScrollListener(mAdapter);
         mListView.setRefreshMode(EndlessListView.RefreshMode.CLICK);
-        showFooterText();
+        mListView.showFooterEmpty();
         getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
@@ -388,6 +388,7 @@ public abstract class UserListFragment extends AbstractListFragment
         if (AppContext.DEBUG) {
             Log.d(TAG, "onLoadFinished() adapter=" + mAdapter.getCount());
         }
+        showFooterText();
         checkRefresh();
     }
 
