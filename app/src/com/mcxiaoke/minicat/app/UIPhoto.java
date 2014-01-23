@@ -16,12 +16,14 @@ import android.view.Window;
 import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.controller.EmptyViewController;
-import com.mcxiaoke.minicat.ui.imagezoom.ImageViewTouch;
 import com.mcxiaoke.minicat.util.IOHelper;
 import com.mcxiaoke.minicat.util.Utils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import uk.co.senab.photoview.PhotoView;
 
 import java.io.File;
 
@@ -34,7 +36,7 @@ public class UIPhoto extends Activity implements OnClickListener {
     private static final String TAG = UIPhoto.class.getSimpleName();
     private String url;
 
-    private ImageViewTouch mImageView;
+    private PhotoView mImageView;
 
     private View vEmpty;
     private EmptyViewController emptyViewController;
@@ -67,7 +69,7 @@ public class UIPhoto extends Activity implements OnClickListener {
     }
 
     private void findViews() {
-        mImageView = (ImageViewTouch) findViewById(R.id.photo);
+        mImageView = (PhotoView) findViewById(R.id.photo);
 //        mImageView.setOnClickListener(this);
         vEmpty = findViewById(android.R.id.empty);
         emptyViewController = new EmptyViewController(vEmpty);
@@ -103,7 +105,7 @@ public class UIPhoto extends Activity implements OnClickListener {
         emptyViewController.hideProgress();
         mImageView.setVisibility(View.VISIBLE);
         if (bitmap != null) {
-            mImageView.setImageBitmapReset(bitmap, true);
+            mImageView.setImageBitmap(bitmap);
         }
     }
 
@@ -133,7 +135,17 @@ public class UIPhoto extends Activity implements OnClickListener {
                 showEmptyText("Cancelled");
             }
         };
-        ImageLoader.getInstance().loadImage(imageUrl, listener);
+        ImageLoader.getInstance().loadImage(imageUrl, getDisplayImageOptions(), listener);
+    }
+
+    private DisplayImageOptions getDisplayImageOptions() {
+        DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder();
+        builder.cacheInMemory(true).cacheOnDisc(true);
+        builder.bitmapConfig(Bitmap.Config.RGB_565);
+        builder.showImageOnFail(R.drawable.photo_error);
+        builder.showImageOnLoading(R.drawable.photo_loading);
+        builder.imageScaleType(ImageScaleType.IN_SAMPLE_INT);
+        return builder.build();
     }
 
     private void parseIntent(Intent intent) {

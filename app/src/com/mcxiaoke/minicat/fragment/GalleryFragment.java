@@ -15,7 +15,9 @@ import com.mcxiaoke.minicat.controller.EmptyViewController;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import uk.co.senab.photoview.PhotoView;
 
 import java.util.ArrayList;
@@ -139,8 +141,9 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
             final PhotoView imageView = (PhotoView) view.findViewById(R.id.photo);
             View vEmpty = view.findViewById(android.R.id.empty);
             final EmptyViewController emptyViewController = new EmptyViewController(vEmpty);
-            ImageLoader.getInstance().displayImage(mResources.get(position), imageView, getDisplayImageOptions(), new ImageLoaderCallback(imageView, emptyViewController));
-
+            ImageViewAware aware = new ImageViewAware(imageView, false);
+            ImageLoader.getInstance().loadImage(mResources.get(position), getDisplayImageOptions(),
+                    new ImageLoaderCallback(imageView, emptyViewController));
             container.addView(view);
             return view;
         }
@@ -160,9 +163,14 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
             return view.equals(object);
         }
 
-        private static DisplayImageOptions getDisplayImageOptions() {
-            return new DisplayImageOptions.Builder().cacheOnDisc().cacheInMemory().showStubImage(R.drawable.photo_loading).bitmapConfig(Bitmap.Config.RGB_565).showImageOnFail(R.drawable.photo_error)
-                    .build();
+        private DisplayImageOptions getDisplayImageOptions() {
+            DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder();
+            builder.cacheInMemory(true).cacheOnDisc(true);
+            builder.bitmapConfig(Bitmap.Config.RGB_565);
+            builder.showImageOnFail(R.drawable.photo_error);
+            builder.showImageOnLoading(R.drawable.photo_loading);
+            builder.imageScaleType(ImageScaleType.IN_SAMPLE_INT);
+            return builder.build();
         }
 
         private class ImageLoaderCallback extends SimpleImageLoadingListener {
