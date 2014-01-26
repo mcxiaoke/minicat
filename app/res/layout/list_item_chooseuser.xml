@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:descendantFocusability="blocksDescendants"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="8dp" >
+    android:padding="8dp">
 
-    <ImageView
+    <com.makeramen.RoundedImageView
         android:id="@+id/head"
         android:layout_width="@dimen/head_width"
         android:layout_height="@dimen/head_height"
         android:layout_gravity="center"
-        android:layout_margin="2dp" />
+        android:layout_margin="2dp"
+        android:scaleType="center"
+        app:corner_radius="@dimen/image_round_corner"
+        app:is_oval="false" />
 
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:padding="4dp" >
+        android:padding="4dp">
 
         <TextView
             android:id="@+id/name"
