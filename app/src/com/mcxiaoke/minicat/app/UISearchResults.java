@@ -26,6 +26,7 @@ import com.mcxiaoke.minicat.ui.UIHelper;
 import com.mcxiaoke.minicat.util.NetworkHelper;
 import com.mcxiaoke.minicat.util.StringHelper;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
@@ -74,7 +75,8 @@ public class UISearchResults extends UIBaseSupport implements
         setProgressBarIndeterminateVisibility(false);
 
         mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
-        ActionBarPullToRefresh.from(this).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
+        Options options = new Options.Builder().refreshOnUp(true).scrollDistance(0.3f).build();
+        ActionBarPullToRefresh.from(this).options(options).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
         mListView = (EndlessListView) findViewById(R.id.list);
         mListView.setLongClickable(false);
         mListView.setOnItemClickListener(this);
@@ -152,6 +154,7 @@ public class UISearchResults extends UIBaseSupport implements
                 log("doSearch() keyword=" + keyword);
             }
             if (reset) {
+                mListView.showFooterEmpty();
                 maxId = null;
             }
             new SearchTask().execute();

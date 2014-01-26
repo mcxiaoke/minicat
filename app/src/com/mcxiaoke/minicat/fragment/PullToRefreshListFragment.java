@@ -28,6 +28,7 @@ import com.mcxiaoke.minicat.ui.UIHelper;
 import com.mcxiaoke.minicat.util.NetworkHelper;
 import com.mcxiaoke.minicat.util.Utils;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
@@ -109,7 +110,8 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
     private void setLayout(View root) {
         mPullToRefreshLayout = (PullToRefreshLayout) root.findViewById(R.id.ptr_layout);
-        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
+        Options options=new Options.Builder().refreshOnUp(true).scrollDistance(0.3f).build();
+        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).options(options).setup(mPullToRefreshLayout);
         mListView = (EndlessListView) root.findViewById(R.id.list);
         mListView.setVerticalScrollBarEnabled(false);
         mListView.setHorizontalScrollBarEnabled(false);
