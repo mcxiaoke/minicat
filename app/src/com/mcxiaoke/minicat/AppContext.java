@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,17 +13,14 @@ import com.mcxiaoke.minicat.api.Api;
 import com.mcxiaoke.minicat.api.ApiFactory;
 import com.mcxiaoke.minicat.config.AccountInfo;
 import com.mcxiaoke.minicat.config.AccountStore;
-import com.mcxiaoke.minicat.config.AppConfig;
 import com.mcxiaoke.minicat.controller.DataController;
 import com.mcxiaoke.minicat.controller.UIController;
 import com.mcxiaoke.minicat.dao.model.UserModel;
-import com.mcxiaoke.minicat.util.LogUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.umeng.analytics.MobclickAgent;
 import org.oauthsimple.model.OAuthToken;
 
@@ -216,21 +212,6 @@ public class AppContext extends Application {
         return context;
     }
 
-    private static boolean checkDebuggable(Context ctx) {
-        boolean debuggable = false;
-        try {
-            PackageInfo pinfo = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), PackageManager.GET_SIGNATURES);
-            Signature signatures[] = pinfo.signatures;
-            LogUtil.e(new String(signatures[0].toChars()));
-            if (!AppConfig.SIGNATURE.equals(signatures[0].toCharsString())) {
-                debuggable = false;
-            }
-        } catch (NameNotFoundException e) {
-        }
-
-        return debuggable;
-    }
-
     private DisplayImageOptions getDefaultDisplayImageOptions() {
         DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder();
         builder.cacheInMemory(true).cacheOnDisc(true);
@@ -239,7 +220,6 @@ public class AppContext extends Application {
         builder.showImageOnFail(R.drawable.ic_head);
         builder.showImageOnLoading(R.drawable.ic_head);
         builder.imageScaleType(ImageScaleType.IN_SAMPLE_INT);
-        builder.displayer(new RoundedBitmapDisplayer(getResources().getDimensionPixelSize(R.dimen.image_round_corner)));
         return builder.build();
     }
 
