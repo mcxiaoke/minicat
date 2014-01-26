@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mcxiaoke.minicat"
     android:sharedUserId="com.mcxiaoke.minicat"
-    android:versionCode="2014012302"
-    android:versionName="1.2.5">
+    android:versionCode="2014012601"
+    android:versionName="1.2.6">
 
     <supports-screens
         android:anyDensity="true"
