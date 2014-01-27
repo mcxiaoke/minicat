@@ -15,10 +15,14 @@
             android:layout_width="@dimen/head_width"
             android:layout_height="@dimen/head_height"
             android:src="@drawable/ic_head"
-            android:scaleType="center"
+            android:scaleType="centerInside"
             app:corner_radius="@dimen/image_round_corner"
             app:is_oval="false" />
     </RelativeLayout>
+
+    <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" android:scaleType="centerInside" />-->
 
 
     <TextView

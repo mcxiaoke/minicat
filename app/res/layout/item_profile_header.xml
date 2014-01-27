@@ -14,7 +14,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_margin="@dimen/image_frame_padding"
-        android:scaleType="center"
+        android:scaleType="centerInside"
         app:corner_radius="@dimen/image_round_corner"
         app:is_oval="false" />
 

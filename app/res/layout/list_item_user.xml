@@ -17,7 +17,7 @@
 
         android:layout_marginRight="@dimen/list_padding"
         android:src="@drawable/ic_head"
-        android:scaleType="center"
+        android:scaleType="centerInside"
         app:corner_radius="@dimen/image_round_corner"
         app:is_oval="false" />
 
@@ -32,8 +32,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_alignWithParentIfMissing="true"
-            android:layout_toRightOf="@id/image"
             android:textColor="@color/text_primary_selectable"
             android:textSize="@dimen/text_size_medium"
             android:text="title"
