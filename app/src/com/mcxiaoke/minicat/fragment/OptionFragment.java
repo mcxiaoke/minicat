@@ -1,8 +1,13 @@
 package com.mcxiaoke.minicat.fragment;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.push.PushService;
 
@@ -32,6 +37,20 @@ public class OptionFragment extends PreferenceFragment implements SharedPreferen
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        getPreferenceManager().getSharedPreferences().edit()
+                .remove(getString(R.string.option_actionbar_refresh_button_key)).apply();
+
+        PackageManager pm = AppContext.getApp().getPackageManager();
+        PackageInfo pi = null;
+        try {
+            pi = pm.getPackageInfo(AppContext.getApp().getPackageName(), 0);
+        } catch (NameNotFoundException ignored) {
+        }
+
+        final Preference about = findPreference(getString(R.string.option_about_key));
+        about.setSummary(getString(R.string.option_about_summary_format,
+                pi == null ? "1.0.0" : pi.versionName, pi == null ? 0 : pi.versionCode));
     }
 
     @Override

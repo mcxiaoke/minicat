@@ -124,9 +124,17 @@
     <string name="option_auto_update_title">自动更新</string>
     <string name="option_auto_update_summary">自动检查新版本并提示更新</string>
 
+    <string name="option_license_key">option_license_key</string>
+    <string name="option_license_title">开源许可</string>
+    <string name="option_license_summary">本应用使用的第三方开源库和文件</string>
+
     <string name="option_project_page_key">option_project_page_key</string>
     <string name="option_project_page_title">项目地址</string>
     <string name="option_project_page_summary">https://github.com/mcxiaoke/minicat</string>
+
+    <string name="option_about_key">option_about_key</string>
+    <string name="option_about_title">关于</string>
+    <string name="option_about_summary_format">%1$s [b%2$d]</string>
 
     <string name="button_update_now">下载更新</string>
     <string name="button_update_later">以后再说</string>

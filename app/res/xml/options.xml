@@ -2,34 +2,53 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <CheckBoxPreference android:key="@string/option_push_notification_key"
-                        android:title="@string/option_push_notification_title"
-                        android:summary="@string/option_push_notification_summary"
-                        android:defaultValue="@bool/option_push_notification_default_value"/>
+    <CheckBoxPreference
+        android:key="@string/option_push_notification_key"
+        android:title="@string/option_push_notification_title"
+        android:summary="@string/option_push_notification_summary"
+        android:defaultValue="@bool/option_push_notification_default_value" />
 
-    <CheckBoxPreference android:key="@string/option_enable_location_key"
-                        android:title="@string/option_enable_location_title"
-                        android:summary="@string/option_enable_location_summary"
-                        android:defaultValue="@bool/option_enable_location_default_value"/>
+    <CheckBoxPreference
+        android:key="@string/option_enable_location_key"
+        android:title="@string/option_enable_location_title"
+        android:summary="@string/option_enable_location_summary"
+        android:defaultValue="@bool/option_enable_location_default_value" />
 
-    <CheckBoxPreference android:key="@string/option_refresh_on_start_key"
-                        android:title="@string/option_refresh_on_start_title"
-                        android:summary="@string/option_refresh_on_start_summary"
-                        android:defaultValue="@bool/option_refresh_on_start_default_value"/>
+    <CheckBoxPreference
+        android:key="@string/option_refresh_on_start_key"
+        android:title="@string/option_refresh_on_start_title"
+        android:summary="@string/option_refresh_on_start_summary"
+        android:defaultValue="@bool/option_refresh_on_start_default_value" />
 
-    <CheckBoxPreference android:key="@string/option_actionbar_refresh_button_key"
-                        android:title="@string/option_actionbar_refresh_button_title"
-                        android:summary="@string/option_actionbar_refresh_button_summary"
-                        android:defaultValue="@bool/option_actionbar_refresh_button_default_value"/>
+    <!--<CheckBoxPreference-->
+        <!--android:key="@string/option_actionbar_refresh_button_key"-->
+        <!--android:title="@string/option_actionbar_refresh_button_title"-->
+        <!--android:summary="@string/option_actionbar_refresh_button_summary"-->
+        <!--android:defaultValue="@bool/option_actionbar_refresh_button_default_value" />-->
 
-    <CheckBoxPreference android:key="@string/option_auto_update_key"
-                        android:title="@string/option_auto_update_title"
-                        android:summary="@string/option_auto_update_summary"
-                        android:defaultValue="@bool/option_auto_update_default_value"/>
+    <CheckBoxPreference
+        android:key="@string/option_auto_update_key"
+        android:title="@string/option_auto_update_title"
+        android:summary="@string/option_auto_update_summary"
+        android:defaultValue="@bool/option_auto_update_default_value" />
 
-    <!--    <Preference android:key="@string/option_project_page_key" android:title="@string/option_project_page_title"
-                    android:summary="@string/option_project_page_summary">
-            <intent android:action="android.intent.action.VIEW" android:data="@string/option_project_page_summary"/>
-        </Preference>-->
+    <!--<Preference-->
+        <!--android:key="@string/option_license_key"-->
+        <!--android:title="@string/option_license_title"-->
+        <!--android:summary="@string/option_license_summary" />-->
+
+    <Preference
+        android:key="@string/option_project_page_key"
+        android:title="@string/option_project_page_title"
+        android:summary="@string/option_project_page_summary">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="@string/option_project_page_summary" />
+
+    </Preference>
+
+    <Preference
+        android:key="@string/option_about_key"
+        android:title="@string/option_about_title" />
 
 </PreferenceScreen>

@@ -1,7 +1,7 @@
 apply plugin: 'android'
 
 dependencies {
-    compile('com.android.support:support-v4:19.0.+')
+    compile('com.android.support:support-v4:+')
     compile('com.google.code.gson:gson:2.2.+')
 
     compile 'com.makeramen:roundedimageview:1.2.+'
@@ -25,7 +25,7 @@ loadProperties("signing.properties")
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19"
+    buildToolsVersion "19.0.3"
 
     defaultConfig {
         minSdkVersion 14
