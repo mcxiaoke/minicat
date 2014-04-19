@@ -61,7 +61,7 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fm_photos, null, false);
+        return inflater.inflate(R.layout.fm_photos, container, false);
     }
 
 
@@ -231,7 +231,7 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
 
             StatusModel status = getItem(position);
             holder.text.setText(status.getSimpleText());
-            picasso.load(status.getPhotoImageUrl()).placeholder(R.drawable.photo_placeholder).into(holder.image);
+            picasso.load(status.getPhotoLargeUrl()).placeholder(R.drawable.photo_placeholder).into(holder.image);
             return convertView;
         }
 
