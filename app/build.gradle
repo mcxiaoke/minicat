@@ -11,8 +11,9 @@ dependencies {
     compile('com.jakewharton:butterknife:4.0.+')
     compile('com.squareup.picasso:picasso:2.1.+')
 
-    compile('com.github.castorflex.smoothprogressbar:library:0.2.+')
-    compile('com.github.chrisbanes.actionbarpulltorefresh:library:0.9.+')
+    compile('com.github.castorflex.smoothprogressbar:library:0.4.+')
+    compile 'com.mcxiaoke.viewpagerindicator:library:2.4.+'
+    compile 'com.mcxiaoke.actionbarpulltorefresh:library:0.9.+'
 
     compile 'com.mcxiaoke.oauthsimple:oauthsimple:2.0.+'
     compile 'com.mcxiaoke.commons:library:1.0.+'

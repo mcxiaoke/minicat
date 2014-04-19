@@ -273,7 +273,10 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
 
         @Override
         protected void onPostExecute(ResultInfo result) {
-            dismissDialog(DIALOG_PROGRESS);
+            try {
+                dismissDialog(DIALOG_PROGRESS);
+            } catch (Exception ignored) {
+            }
             switch (result.code) {
                 case LOGIN_IO_ERROR:
                 case LOGIN_AUTH_FAILED:

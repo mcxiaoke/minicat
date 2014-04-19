@@ -91,7 +91,7 @@ public class CompatUtils {
             return uri.getPath();
         }
 
-        return null;
+        return uri.getPath();
     }
 
     /**

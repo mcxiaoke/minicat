@@ -127,9 +127,13 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
                                    String[] whereArgs, String orderBy) {
         String table = uri.getPathSegments().get(0);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(table, null, where, whereArgs, null, null,
-                orderBy);
-        return queryWithNotify(uri, cursor);
+        try {
+            Cursor cursor = db.query(table, null, where, whereArgs, null, null,
+                    orderBy);
+            return queryWithNotify(uri, cursor);
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
     private Cursor queryItemById(Uri uri) {

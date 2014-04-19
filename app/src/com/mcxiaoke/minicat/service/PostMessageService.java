@@ -90,9 +90,12 @@ public class PostMessageService extends BaseIntentService {
             if (AppContext.DEBUG) {
                 Log.e(TAG,
                         "error: code=" + e.statusCode + " msg="
-                                + e.getMessage());
+                                + e.getMessage()
+                );
             }
             sendErrorMessage(e);
+        } catch (Exception e) {
+            sendErrorMessage(new ApiException(ApiException.IO_ERROR, e));
         } finally {
             nm.cancel(12);
         }

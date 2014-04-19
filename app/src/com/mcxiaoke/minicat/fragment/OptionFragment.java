@@ -49,8 +49,7 @@ public class OptionFragment extends PreferenceFragment implements SharedPreferen
         }
 
         final Preference about = findPreference(getString(R.string.option_about_key));
-        about.setSummary(getString(R.string.option_about_summary_format,
-                pi == null ? "1.0.0" : pi.versionName, pi == null ? 0 : pi.versionCode));
+        about.setSummary(pi == null ? "1.0.0" : pi.versionName);
     }
 
     @Override
