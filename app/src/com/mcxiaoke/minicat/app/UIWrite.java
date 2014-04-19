@@ -102,8 +102,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        size = new Float(getResources().getDimension(R.dimen.write_image_preview_width))
-                .intValue();
+        size = getResources().getDimensionPixelSize(R.dimen.write_image_preview_width);
         mNormalTextColor = getResources().getColorStateList(R.color.text_blue);
         mAlertTextColor = getResources().getColorStateList(R.color.text_red);
         enableLocation = PreferenceHelper.getInstance(this).isEnableLocation();
