@@ -12,13 +12,15 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.mcxiaoke.minicat.R;
-import com.mcxiaoke.minicat.api.Paging;
 import com.mcxiaoke.minicat.AppContext;
+import com.mcxiaoke.minicat.R;
+import com.mcxiaoke.minicat.api.Api;
+import com.mcxiaoke.minicat.api.Paging;
 import com.mcxiaoke.minicat.controller.EmptyViewController;
 import com.mcxiaoke.minicat.controller.UIController;
 import com.mcxiaoke.minicat.dao.model.StatusModel;
 import com.mcxiaoke.minicat.dao.model.UserModel;
+import com.mcxiaoke.minicat.util.NetworkHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -167,11 +169,23 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
         @Override
         protected List<StatusModel> doInBackground(Void... params) {
             final String id = user.getId();
-            List<StatusModel> statusModels = null;
+            final Api api = AppContext.getApi();
+            List<StatusModel> statusModels = new ArrayList<StatusModel>();
             try {
+                // 分页获取，最多3页=180张照片
                 Paging paging = new Paging();
                 paging.count = 60;
-                statusModels = AppContext.getApi().getPhotosTimeline(id, paging);
+                final int max = NetworkHelper.isWifi(getActivity()) ? 3 : 1;
+                for (int i = 0; i < max; i++) {
+                    paging.page = i;
+                    List<StatusModel> models = api.getPhotosTimeline(id, paging);
+                    if (models != null) {
+                        statusModels.addAll(models);
+                    }
+                    if (models == null || models.size() < 60) {
+                        break;
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 mException = e;
