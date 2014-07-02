@@ -1,23 +1,29 @@
 apply plugin: 'android'
 
 dependencies {
-    compile('com.android.support:support-v4:+')
-    compile('com.google.code.gson:gson:2.2.+')
+    compile('com.android.support:support-v4:19.1.0')
+    compile('com.google.code.gson:gson:2.2.4')
 
-    compile 'com.makeramen:roundedimageview:1.2.+'
+    compile 'com.makeramen:roundedimageview:1.2.4'
 
-    compile('com.nostra13.universalimageloader:universal-image-loader:1.9.+')
+    compile('com.nostra13.universalimageloader:universal-image-loader:1.9.1')
     compile('com.nineoldandroids:library:2.4.0')
-    compile('com.jakewharton:butterknife:4.0.+')
+    compile('com.jakewharton:butterknife:5.1.1')
     compile('com.squareup.picasso:picasso:2.1.+')
 
-    compile('com.github.castorflex.smoothprogressbar:library:0.4.+')
-    compile 'com.mcxiaoke.viewpagerindicator:library:2.4.+'
-    compile 'com.mcxiaoke.actionbarpulltorefresh:library:0.9.+'
+    compile('com.github.castorflex.smoothprogressbar:library:0.5.2')
+    compile ('com.mcxiaoke.viewpagerindicator:library:2.4.1'){
+        exclude group: 'com.android.support', module: 'support-v4'
+    }
+    compile 'com.mcxiaoke.actionbarpulltorefresh:library:0.9.5'
 
-    compile 'com.mcxiaoke.oauthsimple:oauthsimple:2.0.+'
-    compile 'com.mcxiaoke.commons:library:1.0.+'
-    compile 'com.mcxiaoke.photoview:library:1.2.+'
+    compile ('com.mcxiaoke.oauthsimple:oauthsimple:2.0.+'){
+        exclude group: 'org.json', module: 'json'
+    }
+    compile ('com.mcxiaoke.commons:library:1.0.+'){
+        exclude group: 'com.android.support', module: 'support-v4'
+    }
+    compile 'com.mcxiaoke.photoview:library:1.2.3'
 
     compile files('libs/umeng_sdk.jar')
 }
@@ -26,7 +32,7 @@ loadProperties("signing.properties")
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+    buildToolsVersion "19.1.0"
 
     defaultConfig {
         minSdkVersion 14
@@ -66,7 +72,7 @@ android {
         }
 
         debug {
-            packageNameSuffix null
+            applicationIdSuffix null
             versionNameSuffix "-dev" + "-b" + getDate()
         }
     }
@@ -88,7 +94,7 @@ def getDate() {
 def loadProperties(String fileName) {
     def config = new Properties()
     def propFile = file(fileName)
-    System.err.println("load property file: " + propFile.absolutePath)
+    //System.err.println("load property file: " + propFile.absolutePath)
     if (propFile.canRead()) {
         config.load(new FileInputStream(propFile))
         for (Map.Entry property in config) {
