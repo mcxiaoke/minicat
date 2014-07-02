@@ -2,7 +2,6 @@ package com.mcxiaoke.minicat.adapter;
 
 import android.app.Activity;
 import android.widget.ImageView;
-import android.widget.TextView;
 import com.mcxiaoke.minicat.controller.UIController;
 import com.mcxiaoke.minicat.dao.model.StatusModel;
 import com.mcxiaoke.minicat.ui.widget.ItemView;
@@ -33,10 +32,7 @@ public class UIHelper {
     }
 
     public static void setContent(final ItemView view, final StatusModel s) {
-        TextView textView = view.getContentTextView();
-        String text = s.getSimpleText();
-        textView.setText(text, TextView.BufferType.SPANNABLE);
-//        StatusHelper.setItemStatus(textView,text);
+        view.setContent(s.getSimpleText());
     }
 
     public static void setMetaInfo(final ItemView view, final StatusModel s) {
