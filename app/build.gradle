@@ -25,7 +25,7 @@ dependencies {
     }
     compile 'com.mcxiaoke.photoview:library:1.2.3'
 
-    compile files('libs/umeng_sdk.jar')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 loadProperties("signing.properties")
