@@ -2,6 +2,8 @@ A Holo style fanfou android app.
 
 License
 
+[download](release/app-1.2.8.apk)
+
 
 Copyright 2013 fanfou.com, mcxiaoke
 
