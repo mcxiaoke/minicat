@@ -1,9 +1,13 @@
 蘑菇饭项目
 ===========================
+一个简洁的饭否App，支持Android 4.0以上版本
 
+##下载地址
 
-使用说明
-===========================
+[Google Play](https://play.google.com/store/apps/details?id=com.mcxiaoke.minicat)  
+[直接下载](release/app-1.2.8.apk)
+
+##使用说明
 
 ###API KEY
     在进行修改和编译之前，请找到main/app/res/values/api.xml文件，在里面填入你申请的饭否OAuth API KEY
@@ -17,11 +21,9 @@
 
 
 
-License
+##License
 
-[最新版下载](release/app-1.2.8.apk)
-
-
+```
 Copyright 2013 mcxiaoke support@mcxiaoke.com
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,3 +37,4 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+```
