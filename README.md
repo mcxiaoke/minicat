@@ -8,10 +8,6 @@
 [直接下载](release/app-1.2.8.apk)
 
 ##使用说明
-
-###API KEY
-    在进行修改和编译之前，请找到main/app/res/values/api.xml文件，在里面填入你申请的饭否OAuth API KEY
-    如果没有，可以去(<http://fanfou.com/apps>)申请
     
 ###使用Gradle+Android Studio
     目前只支持使用Gradle构建，直接项目目录运行./gradlew clean build即可，
