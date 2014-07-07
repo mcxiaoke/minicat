@@ -50,10 +50,10 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(project.ANDROID_KEY_STORE)
-            storePassword project.ANDROID_STORE_PASSWORD
-            keyAlias project.ANDROID_KEY_ALIAS
-            keyPassword project.ANDROID_KEY_PASSWORD
+//            storeFile file(project.ANDROID_KEY_STORE)
+//            storePassword project.ANDROID_STORE_PASSWORD
+//            keyAlias project.ANDROID_KEY_ALIAS
+//            keyPassword project.ANDROID_KEY_PASSWORD
         }
     }
 
@@ -84,10 +84,31 @@ android {
 
 }
 
+checkSigningConfig()
+
 def getDate() {
     def date = new Date()
     def formattedDate = date.format('yyyyMMdd')
     return formattedDate
+}
+
+def checkSigningConfig() {
+    if (project.hasProperty("ANDROID_KEY_STORE")
+            && project.hasProperty("ANDROID_STORE_PASSWORD")
+            && project.hasProperty("ANDROID_KEY_ALIAS")
+            && project.hasProperty("ANDROID_KEY_PASSWORD")) {
+        project.android.signingConfigs.release {
+            storeFile file(project.ANDROID_KEY_STORE)
+            storePassword project.ANDROID_STORE_PASSWORD
+            keyAlias project.ANDROID_KEY_ALIAS
+            keyPassword project.ANDROID_KEY_PASSWORD
+        }
+    } else {
+        println "release signingConfigs not found, remove all signingConfigs!"
+        project.android.buildTypes.each {
+            it.signingConfig = null
+        }
+    }
 }
 
 def loadProperties(String fileName) {
