@@ -21,7 +21,8 @@
 
 ####方法一
 ```
-在你的 ~/.gradle/gradle.properties中加入如下配置：
+在你的 ~/.gradle/gradle.properties中加入如下配置：  
+(在项目根目录的gradle.properties里添加也可以)
 
 ANDROID_KEY_STORE=your_keystore_file
 ANDROID_KEY_ALIAS=your_keystore_alias

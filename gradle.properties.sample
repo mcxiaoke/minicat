@@ -1,0 +1,6 @@
+// gradle.properties sample
+
+//ANDROID_KEY_STORE=your_keystore_file
+//ANDROID_KEY_ALIAS=your_keystore_alias
+//ANDROID_STORE_PASSWORD=your_store_password
+//ANDROID_KEY_PASSWORD=your_key_password
