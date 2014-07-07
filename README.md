@@ -15,7 +15,54 @@
     也可以直接使用Android Studio打开项目根目录的build.gradle  
     (需要Gradle 1.11以上，Android Studio 0.8.0以上)
 
+###签名注意事项
 
+默认打包的apk是没有签名的，如需签名，请按如下配置：
+
+####方法一
+```
+在你的 ~/.gradle/gradle.properties中加入如下配置：
+
+ANDROID_KEY_STORE=your_keystore_file
+ANDROID_KEY_ALIAS=your_keystore_alias
+ANDROID_STORE_PASSWORD=your_store_password
+ANDROID_KEY_PASSWORD=your_key_password
+
+等号后面的内容请替换为实际值
+
+```
+
+####方法二 
+```
+在项目的app/build.gradle里假如如下配置：
+
+project.ext.ANDROID_KEY_STORE = 'your_keystore_file'
+project.ext.ANDROID_KEY_ALIAS = 'your_keystore_alias'
+project.ext.ANDROID_STORE_PASSWORD = 'your_store_password'
+project.ext.ANDROID_KEY_PASSWORD = 'your_key_password'
+
+等号后面的内容请替换为实际值
+
+```   
+    
+####方法三
+```
+
+在项目的app/build.gradle里android.signingConfigs.release为：
+
+    signingConfigs {
+        release {
+            storeFile file("your_real.keystore")
+            storePassword "your_keystore_password"
+            keyAlias "your_keystore_alias"
+            keyPassword "your_key_password"
+        }
+    }
+    
+    后面的内容请替换为实际值
+    
+```
+   
 
 ##License
 

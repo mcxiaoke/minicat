@@ -1,4 +1,4 @@
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 dependencies {
     compile('com.android.support:support-v4:19.1.0')
@@ -12,23 +12,21 @@ dependencies {
     compile('com.squareup.picasso:picasso:2.1.+')
 
     compile('com.github.castorflex.smoothprogressbar:library:0.5.2')
-    compile ('com.mcxiaoke.viewpagerindicator:library:2.4.1'){
+    compile('com.mcxiaoke.viewpagerindicator:library:2.4.1') {
         exclude group: 'com.android.support', module: 'support-v4'
     }
     compile 'com.mcxiaoke.actionbarpulltorefresh:library:0.9.5'
 
-    compile ('com.mcxiaoke.oauthsimple:oauthsimple:2.0.+'){
+    compile('com.mcxiaoke.oauthsimple:oauthsimple:2.0.+') {
         exclude group: 'org.json', module: 'json'
     }
-    compile ('com.mcxiaoke.commons:library:1.0.+'){
+    compile('com.mcxiaoke.commons:library:1.0.+') {
         exclude group: 'com.android.support', module: 'support-v4'
     }
     compile 'com.mcxiaoke.photoview:library:1.2.3'
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
-
-loadProperties("signing.properties")
 
 android {
     compileSdkVersion 19
@@ -52,17 +50,17 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("mcxiaoke.keystore")
-            storePassword project.ext.get("storePassword")
-            keyAlias project.ext.get("keyAlias")
-            keyPassword project.ext.get("keyPassword")
+            storeFile file(project.ANDROID_KEY_STORE)
+            storePassword project.ANDROID_STORE_PASSWORD
+            keyAlias project.ANDROID_KEY_ALIAS
+            keyPassword project.ANDROID_KEY_PASSWORD
         }
     }
 
     buildTypes {
         release {
-            zipAlign true
             signingConfig signingConfigs.release
+            debuggable false
         }
 
         beta {
@@ -73,13 +71,15 @@ android {
 
         debug {
             applicationIdSuffix null
-            versionNameSuffix "-dev" + "-b" + getDate()
+            versionNameSuffix "-dev" + getDate()
+            debuggable true
         }
     }
 
     lintOptions {
         quiet true
         abortOnError false
+        disable 'MissingTranslation', 'ExtraTranslation'
     }
 
 }
@@ -90,15 +90,13 @@ def getDate() {
     return formattedDate
 }
 
-
 def loadProperties(String fileName) {
     def config = new Properties()
     def propFile = file(fileName)
-    //System.err.println("load property file: " + propFile.absolutePath)
+    println "loadProperties() file: " + propFile.absolutePath
     if (propFile.canRead()) {
         config.load(new FileInputStream(propFile))
         for (Map.Entry property in config) {
-            System.out.println("property " + property.key + ":" + property.value)
             project.ext[property.key] = property.value;
         }
     }
