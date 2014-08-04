@@ -10,19 +10,18 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/standard_spacing">
 
-        <com.makeramen.RoundedImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/image"
             android:layout_width="@dimen/head_width"
             android:layout_height="@dimen/head_height"
             android:src="@drawable/ic_head"
-            android:scaleType="centerInside"
-            app:corner_radius="@dimen/image_round_corner"
-            app:is_oval="false" />
+            app:border_width="2dp"
+            app:border_color="#ffffff" />
     </RelativeLayout>
 
     <!--<ImageView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content" android:scaleType="centerInside" />-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content" android:scaleType="centerInside" />-->
 
 
     <TextView

@@ -7,16 +7,15 @@
     android:background="@drawable/selector_header_light"
     android:id="@+id/header">
 
-    <com.makeramen.RoundedImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/header_image"
         android:layout_width="@dimen/head_width"
         android:layout_height="@dimen/head_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_margin="@dimen/image_frame_padding"
-        android:scaleType="centerInside"
-        app:corner_radius="@dimen/image_round_corner"
-        app:is_oval="false" />
+        app:border_width="2dp"
+        app:border_color="#ffffff" />
 
     <TextView
         android:id="@+id/header_name"

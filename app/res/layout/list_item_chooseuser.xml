@@ -8,15 +8,14 @@
     android:orientation="horizontal"
     android:padding="8dp">
 
-    <com.makeramen.RoundedImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/head"
         android:layout_width="@dimen/head_width"
         android:layout_height="@dimen/head_height"
         android:layout_gravity="center"
         android:layout_margin="2dp"
-        android:scaleType="centerInside"
-        app:corner_radius="@dimen/image_round_corner"
-        app:is_oval="false" />
+        app:border_width="2dp"
+        app:border_color="#ffffff" />
 
     <RelativeLayout
         android:layout_width="0dp"
