@@ -146,7 +146,7 @@ public class AccountStore {
 
 		editor.putString(KEY_ACCOUNT, account);
 		editor.putString(KEY_SCREEN_NAME, screenName);
-		editor.putString(KEY_PROFILE_IMAGE, screenName);
+		editor.putString(KEY_PROFILE_IMAGE, profileImage);
 
 		editor.commit();
 
