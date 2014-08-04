@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background_primary">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        </LinearLayout>
+        android:layout_height="wrap_content"
+        android:id="@+id/header"
+        android:padding="@dimen/head_margin"
+        android:gravity="center_vertical">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_gravity="center_vertical"
+            android:id="@+id/header_image"
+            android:layout_width="@dimen/head_width"
+            android:layout_height="@dimen/head_height"
+            android:layout_margin="@dimen/widget_margin"
+            android:src="@drawable/ic_head"
+            app:border_width="2dp"
+            app:border_color="#ffffff" />
+
+        <TextView
+            android:id="@+id/header_text"
+            android:padding="@dimen/widget_margin"
+            android:layout_width="wrap_content"
+            android:text="我的名字"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_large" />
+    </LinearLayout>
 
     <ListView
         android:id="@android:id/list"

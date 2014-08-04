@@ -176,6 +176,10 @@ public class AppContext extends Application {
         return accountInfo.getAccount();
     }
 
+    public static AccountInfo getAccountInfo() {
+        return accountInfo;
+    }
+
     public static String getScreenName() {
         return accountInfo.getScreenName();
     }

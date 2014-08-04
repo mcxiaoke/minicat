@@ -1,12 +1,15 @@
 package com.mcxiaoke.minicat.menu;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -15,10 +18,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.mcxiaoke.minicat.R;
+import butterknife.ButterKnife;
 import com.mcxiaoke.minicat.AppContext;
+import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.app.UIHome;
+import com.mcxiaoke.minicat.config.AccountInfo;
 import com.mcxiaoke.minicat.util.LogUtil;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +54,9 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
     public static final int MENU_ID_ABOUT = MENU_ID + 10;
     public static final int MENU_ID_DEBUG = MENU_ID + 99;
 
+    private ViewGroup mHeaderView;
+    private ImageView mHeaderImage;
+    private TextView mHeaderText;
     private ListView mListView;
     private TextView mFooterTextView1;
     private TextView mFooterTextView2;
@@ -85,6 +94,15 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        view.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+
+            }
+        });
+        mHeaderView = ButterKnife.findById(view, R.id.header);
+        mHeaderImage = ButterKnife.findById(view, R.id.header_image);
+        mHeaderText = ButterKnife.findById(view, R.id.header_text);
         mListView = (ListView) getView().findViewById(android.R.id.list);
         mFooterTextView1 = (TextView) getView().findViewById(android.R.id.text1);
         mFooterTextView2 = (TextView) getView().findViewById(android.R.id.text2);
@@ -93,6 +111,22 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        final AccountInfo account = AppContext.getAccountInfo();
+        if (account != null) {
+            mHeaderView.setVisibility(View.VISIBLE);
+            LogUtil.e(TAG, "profile image url:" + account.getProfileImage());
+            ImageLoader.getInstance().displayImage(account.getProfileImage(), mHeaderImage);
+            mHeaderText.setText(account.getScreenName());
+            mHeaderImage.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    onMenuLogoutClick();
+                }
+            });
+        } else {
+            mHeaderView.setVisibility(View.GONE);
+        }
+
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListView.setSelector(getResources().getDrawable(
                 R.drawable.selector_drawer_menu));
@@ -106,6 +140,27 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
         mListView.setItemChecked(0, true);
         mFooterTextView1.setText(AppContext.versionName + " Build " + AppContext.versionCode + (AppContext.DEBUG ? " Debug" : ""));
 
+    }
+
+    protected void onMenuLogoutClick() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("@" + AppContext.getScreenName());
+        builder.setMessage("确定注销当前登录帐号吗？");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                AppContext.doLogin(getActivity());
+                getActivity().finish();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 
     @Override
@@ -166,9 +221,9 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
 /*        MenuItemResource drafts = MenuItemResource.newBuilder()
                 .id(MENU_ID_RECORD).text("草稿箱")
                 .iconId(R.drawable.ic_item_record).highlight(false).build();*/
-        MenuItemResource logout = MenuItemResource.newBuilder()
-                .id(MENU_ID_LOGOUT).text("切换帐号")
-                .iconId(R.drawable.ic_item_logout).highlight(false).build();
+//        MenuItemResource logout = MenuItemResource.newBuilder()
+//                .id(MENU_ID_LOGOUT).text("切换帐号")
+//                .iconId(R.drawable.ic_item_logout).highlight(false).build();
 
         MenuItemResource option = MenuItemResource.newBuilder()
                 .id(MENU_ID_OPTION).text("设置")
@@ -192,7 +247,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
         mMenuItems.add(message);
         mMenuItems.add(topic);
 //        mMenuItems.add(drafts);
-        mMenuItems.add(logout);
+//        mMenuItems.add(logout);
         mMenuItems.add(option);
         // mMenuItems.add(theme);
 //        mMenuItems.add(blog);

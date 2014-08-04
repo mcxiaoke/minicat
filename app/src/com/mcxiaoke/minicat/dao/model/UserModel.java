@@ -69,11 +69,11 @@ public class UserModel extends BaseModel {
 		favouritesCount = in.readInt();
 		statusesCount = in.readInt();
 
-		following = in.readInt() == 0 ? false : true;
-		protect = in.readInt() == 0 ? false : true;
-		notifications = in.readInt() == 0 ? false : true;
-		verified = in.readInt() == 0 ? false : true;
-		followMe = in.readInt() == 0 ? false : true;
+		following = in.readInt() != 0;
+		protect = in.readInt() != 0;
+		notifications = in.readInt() != 0;
+		verified = in.readInt() != 0;
+		followMe = in.readInt() != 0;
 
 	}
 	
