@@ -1,5 +1,6 @@
 package com.mcxiaoke.minicat.app;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.Fragment;
@@ -21,6 +22,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +43,7 @@ import com.mcxiaoke.minicat.service.AutoCompleteService;
 import com.mcxiaoke.minicat.service.Constants;
 import com.mcxiaoke.minicat.util.LogUtil;
 import com.mcxiaoke.minicat.util.Utils;
+import com.mirko.tbv.TabBarView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
@@ -250,9 +253,17 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
 //        mViewPager.setOnPageChangeListener(this);
 
-        mPagesAdapter = new HomePagesAdapter(getFragmentManager());
+        mPagesAdapter = new HomePagesAdapter(getFragmentManager(), this);
         mViewPager.setAdapter(mPagesAdapter);
         mViewPager.setOnPageChangeListener(this);
+
+        final LayoutInflater inflater = LayoutInflater.from(this);
+        View v = inflater.inflate(R.layout.ab_home_tabs, null);
+        TabBarView tabBarView = (TabBarView) v.findViewById(R.id.ab_home_tabs);
+        final ActionBar actionBar = getActionBar();
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(v);
+        tabBarView.setViewPager(mViewPager);
 //        mPagerIndicator = (PageIndicator) findViewById(R.id.indicator);
 //        mPagerIndicator.setViewPager(mViewPager);
 
