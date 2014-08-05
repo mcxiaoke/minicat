@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -254,26 +255,11 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         mViewPager.setAdapter(mPagesAdapter);
         mViewPager.setOnPageChangeListener(this);
 
-//        final LayoutInflater inflater = LayoutInflater.from(this);
-//        View v = inflater.inflate(R.layout.ab_home_tabs, null);
-//        TabBarView tabBarView = (TabBarView) v.findViewById(R.id.ab_home_tabs);
-//        final ActionBar actionBar = getActionBar();
-//        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        actionBar.setCustomView(v);
-//        tabBarView.setViewPager(mViewPager);
-//        mPagerIndicator = (PageIndicator) findViewById(R.id.indicator);
-//        mPagerIndicator.setViewPager(mViewPager);
-
-//        mPagerTabStrip = (PagerTabStrip) findViewById(R.id.viewpager_strip);
-//        mPagerTabStrip.setBackgroundColor(getResources().getColor(R.color.ui_background_color_secondary));
-//        mPagerTabStrip.setDrawFullUnderline(false);
-//        mPagerTabStrip.setTabIndicatorColor(getResources().getColor(
-//                R.color.theme_blue_light));
-//        mPagerTabStrip.setTextColor(Color.BLACK);
-
-//        mPagerIndicator = (PagerSlidingTabStrip) findViewById(R.id.indicator);
-//        mPagerIndicator.setViewPager(mViewPager);
-//        mPagerIndicator.setOnPageChangeListener(this);
+        mPagerTabStrip = (PagerTabStrip) findViewById(R.id.viewpager_strip);
+        mPagerTabStrip.setBackgroundColor(getResources().getColor(R.color.background_secondary));
+        mPagerTabStrip.setDrawFullUnderline(false);
+        mPagerTabStrip.setTabIndicatorColorResource(R.color.holo_secondary);
+        mPagerTabStrip.setTextColor(Color.DKGRAY);
 
         setHomeTitle(mCurrentPage);
         mCurrentFragment = mPagesAdapter.getItem(mCurrentPage);

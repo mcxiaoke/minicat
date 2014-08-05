@@ -1,24 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!-- A DrawerLayout is intended to be used as the top-level content view using match_parent for both width and height to consume the full space available. -->
-<android.support.v4.widget.DrawerLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/drawer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
     <FrameLayout
-            android:id="@+id/content_frame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
 
         <android.support.v4.view.ViewPager
-                android:id="@+id/viewpager"
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v4.view.PagerTabStrip
+                android:id="@+id/viewpager_strip"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:fadingEdge="none"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp" />
         </android.support.v4.view.ViewPager>
 
     </FrameLayout>
@@ -32,9 +39,9 @@
          with the content view. -->
 
     <FrameLayout
-            android:id="@+id/left_drawer"
-            android:layout_gravity="start"
-            android:layout_width="260dp"
-            android:layout_height="match_parent"/>
+        android:id="@+id/left_drawer"
+        android:layout_gravity="start"
+        android:layout_width="260dp"
+        android:layout_height="match_parent" />
 
 </android.support.v4.widget.DrawerLayout>
