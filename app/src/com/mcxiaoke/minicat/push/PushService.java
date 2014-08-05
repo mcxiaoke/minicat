@@ -7,13 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.text.TextUtils;
+import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.api.Api;
 import com.mcxiaoke.minicat.api.Paging;
-import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.controller.DataController;
 import com.mcxiaoke.minicat.dao.model.DirectMessageModel;
 import com.mcxiaoke.minicat.dao.model.StatusModel;
 import com.mcxiaoke.minicat.preference.PreferenceHelper;
+import com.mcxiaoke.minicat.receiver.PushReceiver;
 import com.mcxiaoke.minicat.service.BaseIntentService;
 import com.mcxiaoke.minicat.util.DateTimeHelper;
 import com.mcxiaoke.minicat.util.LogUtil;
@@ -51,7 +52,7 @@ public class PushService extends BaseIntentService {
 
     public static void start(Context context) {
         Intent intent = new Intent(context, PushService.class);
-        context.startService(intent);
+        PushReceiver.startWakefulService(context, intent);
     }
 
     public static void check(Context context) {
@@ -69,11 +70,8 @@ public class PushService extends BaseIntentService {
             debug("setAlarm() now time is " + DateTimeHelper.formatDate(calendar.getTime()));
         }
         int hours = calendar.get(Calendar.HOUR_OF_DAY);
-        if (hours < 7) {
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
-            calendar.set(Calendar.HOUR_OF_DAY, 7);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
+        if (hours < 6) {
+            calendar.add(Calendar.MINUTE, 30);
         } else {
             calendar.add(Calendar.MINUTE, 5);
         }
@@ -106,6 +104,7 @@ public class PushService extends BaseIntentService {
     protected void onHandleIntent(Intent intent) {
         super.onHandleIntent(intent);
         doWakefulWork(intent);
+        PushReceiver.completeWakefulIntent(intent);
     }
 
     protected void doWakefulWork(Intent intent) {

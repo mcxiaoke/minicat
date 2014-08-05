@@ -3,13 +3,13 @@ package com.mcxiaoke.minicat.receiver;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
-import com.mcxiaoke.minicat.R;
+import android.support.v4.content.WakefulBroadcastReceiver;
 import com.mcxiaoke.minicat.AppContext;
+import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.app.UIHome;
 import com.mcxiaoke.minicat.app.UIStatus;
 import com.mcxiaoke.minicat.dao.model.DirectMessageModel;
@@ -25,7 +25,7 @@ import com.mcxiaoke.minicat.util.LogUtil;
  * Date: 13-6-2
  * Time: 下午5:42
  */
-public class PushReceiver extends BroadcastReceiver {
+public class PushReceiver extends WakefulBroadcastReceiver {
     private static final String TAG = PushReceiver.class.getSimpleName();
     private static boolean DEBUG = AppContext.DEBUG;
 
