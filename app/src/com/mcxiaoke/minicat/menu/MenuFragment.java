@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -267,6 +268,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
         private LayoutInflater inflater;
         private List<MenuItemResource> mItems;
         private int currentPosition;
+        private int mHighlightColor;
 
         public void setCurrentPosition(int position) {
             this.currentPosition = position;
@@ -279,6 +281,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
             if (data != null && data.size() > 0) {
                 this.mItems.addAll(data);
             }
+            this.mHighlightColor = context.getResources().getColor(R.color.holo_primary);
         }
 
         @Override
@@ -309,17 +312,13 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
 
             final MenuItemResource item = mItems.get(position);
             holder.icon.setImageResource(item.iconId);
-            holder.icon.setVisibility(View.GONE);
+//            holder.icon.setVisibility(View.GONE);
             holder.text.setText(item.text);
 
             if (position == currentPosition && item.highlight) {
-                convertView.setBackgroundResource(R.drawable.selector_drawer_menu_light_checked);
-//                holder.text.setTextColor(context.getResources()
-//                        .getColorStateList(R.color.light_blue_text_color));
+                holder.text.setTextColor(mHighlightColor);
             } else {
-                convertView.setBackgroundColor(0);
-//                holder.text.setTextColor(context.getResources()
-//                        .getColorStateList(R.color.text_white));
+                holder.text.setTextColor(Color.DKGRAY);
             }
             return convertView;
         }
