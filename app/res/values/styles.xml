@@ -168,4 +168,11 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <style name="ActivityAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/activity_open_enter_right_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/activity_open_exit_scale_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/activity_close_enter_scale_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/activity_close_exit_right_out</item>
+    </style>
+
 </resources>

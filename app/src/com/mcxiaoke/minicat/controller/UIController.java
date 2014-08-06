@@ -51,12 +51,12 @@ public class UIController {
 
     private static void startUIByAnimation(Activity activity, Intent intent) {
         activity.startActivity(intent);
-        activity.overridePendingTransition(R.anim.slide_in_from_right, android.R.anim.fade_out);
+//        activity.overridePendingTransition(R.anim.slide_in_from_right, android.R.anim.fade_out);
     }
 
     private static void startUIByAnimationBack(Activity activity, Intent intent) {
         activity.startActivity(intent);
-        activity.overridePendingTransition(android.R.anim.fade_in, R.anim.slide_out_to_right);
+//        activity.overridePendingTransition(android.R.anim.fade_in, R.anim.slide_out_to_right);
     }
 
     public static void showFanfouBlog(Context context) {

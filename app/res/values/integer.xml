@@ -3,4 +3,6 @@
 
     <integer name="activity_animation_duration">220</integer>
     <integer name="activity_animation_startoffset">150</integer>
+
+    <integer name="animation_duration">300</integer>
 </resources>

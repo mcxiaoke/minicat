@@ -289,8 +289,7 @@
             android:exported="false" />
 
         <service
-            android:name="com.umeng.common.net.DownloadingService"
-            android:exported="true"
+            android:name="com.umeng.update.net.DownloadingService"
             android:process=":DownloadingService" />
 
         <service
