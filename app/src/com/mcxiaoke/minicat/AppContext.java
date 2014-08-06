@@ -47,6 +47,7 @@ public class AppContext extends Application {
     public static String packageName;
     public static PackageInfo info;
     public static boolean active;
+    public static boolean refreshed;
     private static AccountInfo accountInfo;
 
     private static Api api;

@@ -22,7 +22,6 @@ import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.adapter.BaseCursorAdapter;
 import com.mcxiaoke.minicat.controller.PopupController;
 import com.mcxiaoke.minicat.dao.model.StatusModel;
-import com.mcxiaoke.minicat.preference.PreferenceHelper;
 import com.mcxiaoke.minicat.service.Constants;
 import com.mcxiaoke.minicat.ui.UIHelper;
 import com.mcxiaoke.minicat.util.NetworkHelper;
@@ -110,7 +109,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
     private void setLayout(View root) {
         mPullToRefreshLayout = (PullToRefreshLayout) root.findViewById(R.id.ptr_layout);
-        Options options=new Options.Builder().refreshOnUp(true).scrollDistance(0.3f).build();
+        Options options = new Options.Builder().refreshOnUp(true).scrollDistance(0.3f).build();
         ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).options(options).setup(mPullToRefreshLayout);
         mListView = (EndlessListView) root.findViewById(R.id.list);
         mListView.setVerticalScrollBarEnabled(false);
@@ -262,6 +261,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
     private void onSuccess(Bundle data) {
         int count = data.getInt("count");
+        AppContext.refreshed = true;
         if (AppContext.DEBUG) {
             Log.v(TAG, "onSuccess(data) count=" + count);
         }
@@ -383,12 +383,10 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
     }
 
     protected void checkRefresh() {
-        boolean refreshOnStart = PreferenceHelper.getInstance(getActivity()).isRefreshOnStart();
         if (AppContext.DEBUG) {
-            Log.v(TAG, "checkRefresh() mDataLoaded=" + mDataLoaded
-                    + " refreshOnStart=" + refreshOnStart + " adapter.count=" + mAdapter.getCount());
+            Log.v(TAG, "checkRefresh() mDataLoaded=" + mDataLoaded + " adapter.count=" + mAdapter.getCount());
         }
-        if (!mDataLoaded && (refreshOnStart || mAdapter.isEmpty())) {
+        if (!mDataLoaded && (!AppContext.refreshed || mAdapter.isEmpty())) {
             startRefresh();
         }
     }

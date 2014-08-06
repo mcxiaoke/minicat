@@ -44,40 +44,7 @@ public class PreferenceHelper {
 
     public void setPushNotificationEnabled(boolean value) {
         String key = mAppContext.getResources().getString(R.string.option_push_notification_key);
-        mPreferences.edit().putBoolean(key, value).commit();
-    }
-
-    public boolean isRefreshOnStart() {
-        boolean defaultValue = mAppContext.getResources().getBoolean(R.bool.option_refresh_on_start_default_value);
-        String key = mAppContext.getString(R.string.option_refresh_on_start_key);
-        return mPreferences.getBoolean(key, defaultValue);
-    }
-
-    public void setRefreshOnStart(boolean value) {
-        String key = mAppContext.getString(R.string.option_refresh_on_start_key);
-        mPreferences.edit().putBoolean(key, value).commit();
-    }
-
-    public boolean isActionBarRefreshButtonEnabled() {
-        boolean defaultValue = mAppContext.getResources().getBoolean(R.bool.option_actionbar_refresh_button_default_value);
-        String key = mAppContext.getResources().getString(R.string.option_actionbar_refresh_button_key);
-        return mPreferences.getBoolean(key, defaultValue);
-    }
-
-    public void setActionBarRefreshButtonEnabled(boolean value) {
-        String key = mAppContext.getResources().getString(R.string.option_actionbar_refresh_button_key);
-        mPreferences.edit().putBoolean(key, value).commit();
-    }
-
-    public boolean isEnableLocation() {
-        boolean defaultValue = mAppContext.getResources().getBoolean(R.bool.option_enable_location_default_value);
-        String key = mAppContext.getResources().getString(R.string.option_enable_location_key);
-        return mPreferences.getBoolean(key, defaultValue);
-    }
-
-    public void setEnableLocation(boolean value) {
-        String key = mAppContext.getResources().getString(R.string.option_enable_location_key);
-        mPreferences.edit().putBoolean(key, value).commit();
+        mPreferences.edit().putBoolean(key, value).apply();
     }
 
     public boolean isAutoUpdate() {
@@ -88,7 +55,7 @@ public class PreferenceHelper {
 
     public void setAutoUpdate(boolean value) {
         String key = mAppContext.getResources().getString(R.string.option_auto_update_key);
-        mPreferences.edit().putBoolean(key, value).commit();
+        mPreferences.edit().putBoolean(key, value).apply();
     }
 
     public String getLastPushStatusId() {
@@ -100,11 +67,11 @@ public class PreferenceHelper {
     }
 
     public void setLastPushStatusId(String id) {
-        mPreferences.edit().putString(KEY_LAST_PUSH_STATUS_ID, id).commit();
+        mPreferences.edit().putString(KEY_LAST_PUSH_STATUS_ID, id).apply();
     }
 
     public void setLastPushDmId(String id) {
-        mPreferences.edit().putString(KEY_LAST_PUSH_DM_ID, id).commit();
+        mPreferences.edit().putString(KEY_LAST_PUSH_DM_ID, id).apply();
     }
 
     public long getLastUpdateTime() {
@@ -112,7 +79,7 @@ public class PreferenceHelper {
     }
 
     public void setKeyLastUpdateTime(long time) {
-        mPreferences.edit().putLong(KEY_LAST_UPDATE_TIME, time).commit();
+        mPreferences.edit().putLong(KEY_LAST_UPDATE_TIME, time).apply();
     }
 
 

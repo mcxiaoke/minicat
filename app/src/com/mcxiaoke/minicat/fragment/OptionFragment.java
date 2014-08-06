@@ -18,7 +18,8 @@ import com.mcxiaoke.minicat.push.PushService;
  * Date: 13-5-26
  * Time: 下午8:04
  */
-public class OptionFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class OptionFragment extends PreferenceFragment implements
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static OptionFragment newInstance() {
         OptionFragment fragment = new OptionFragment();
@@ -37,9 +38,6 @@ public class OptionFragment extends PreferenceFragment implements SharedPreferen
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        getPreferenceManager().getSharedPreferences().edit()
-                .remove(getString(R.string.option_actionbar_refresh_button_key)).apply();
 
         PackageManager pm = AppContext.getApp().getPackageManager();
         PackageInfo pi = null;

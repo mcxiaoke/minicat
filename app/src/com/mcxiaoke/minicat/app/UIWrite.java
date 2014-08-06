@@ -33,7 +33,6 @@ import com.mcxiaoke.minicat.controller.DataController;
 import com.mcxiaoke.minicat.controller.UIController;
 import com.mcxiaoke.minicat.dao.model.StatusUpdateInfo;
 import com.mcxiaoke.minicat.dao.model.StatusUpdateInfoColumns;
-import com.mcxiaoke.minicat.preference.PreferenceHelper;
 import com.mcxiaoke.minicat.service.Constants;
 import com.mcxiaoke.minicat.service.SyncService;
 import com.mcxiaoke.minicat.ui.widget.MyAutoCompleteTextView;
@@ -88,8 +87,6 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
     private String mLocationProvider;
     private LocationMonitor mLocationMonitor;
 
-    private boolean enableLocation;
-
     private StatusUpdateInfo info;
     private String inReplyToStatusId;
     private String text;
@@ -105,20 +102,6 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
         size = getResources().getDimensionPixelSize(R.dimen.write_image_preview_width);
         mNormalTextColor = getResources().getColorStateList(R.color.text_blue);
         mAlertTextColor = getResources().getColorStateList(R.color.text_red);
-        enableLocation = PreferenceHelper.getInstance(this).isEnableLocation();
-        if (enableLocation) {
-            mLocationManager = (LocationManager) this
-                    .getSystemService(LOCATION_SERVICE);
-            mLocationMonitor = new LocationMonitor();
-
-            for (String provider : mLocationManager.getProviders(true)) {
-                if (LocationManager.NETWORK_PROVIDER.equals(provider)
-                        || LocationManager.GPS_PROVIDER.equals(provider)) {
-                    mLocationProvider = provider;
-                    break;
-                }
-            }
-        }
         setLayout();
 
     }

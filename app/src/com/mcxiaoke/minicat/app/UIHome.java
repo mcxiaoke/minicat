@@ -75,8 +75,6 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     private int mCurrentIndex;
     private int mCurrentPage;
 
-    private boolean useActionBarRefreshButton;
-
     private BroadcastReceiver mReceiver;
 
     private void log(String message) {
@@ -206,9 +204,6 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     protected void setLayout() {
         setContentView(R.layout.ui_home);
         setProgressBarIndeterminateVisibility(false);
-
-        useActionBarRefreshButton = PreferenceHelper.getInstance(this).isActionBarRefreshButtonEnabled();
-
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
         setTitle(R.string.page_title_home);
@@ -331,7 +326,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 //        }
 //        return super.onPrepareOptionsMenu(menu);
         if (mRefreshMenuItem != null) {
-            mRefreshMenuItem.setVisible(useActionBarRefreshButton && (!mRefreshing));
+            mRefreshMenuItem.setVisible(false);
         }
         return true;
     }
