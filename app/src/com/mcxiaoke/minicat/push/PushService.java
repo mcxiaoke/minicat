@@ -65,21 +65,17 @@ public class PushService extends BaseIntentService {
     }
 
     private static void set(Context context) {
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         if (DEBUG) {
             debug("setAlarm() now time is " + DateTimeHelper.formatDate(calendar.getTime()));
         }
-        int hours = calendar.get(Calendar.HOUR_OF_DAY);
-        if (hours < 6) {
-            calendar.add(Calendar.MINUTE, 30);
-        } else {
-            calendar.add(Calendar.MINUTE, 5);
-        }
+        calendar.add(Calendar.MINUTE, 10);
 
-        long nextTime = calendar.getTimeInMillis();
+        final long interval = 10 * 60 * 1000L;// 提醒间隔10分钟
+        final long nextTime = calendar.getTimeInMillis();
 
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, nextTime, getPendingIntent(context));
+        AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, nextTime, interval, getPendingIntent(context));
         if (DEBUG) {
             debug("setAlarm() next time is " + DateTimeHelper.formatDate(nextTime));
         }
@@ -96,8 +92,8 @@ public class PushService extends BaseIntentService {
 
     private static PendingIntent getPendingIntent(Context context) {
         Intent broadcast = new Intent(ACTION_CHECK);
-        PendingIntent pi = PendingIntent.getBroadcast(context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
-        return pi;
+        return PendingIntent.getBroadcast(context, 0, broadcast,
+                PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     @Override
@@ -108,12 +104,16 @@ public class PushService extends BaseIntentService {
     }
 
     protected void doWakefulWork(Intent intent) {
+        final Calendar calendar = Calendar.getInstance();
+        if (calendar.get(Calendar.HOUR_OF_DAY) < 6) {
+            // 6点不提醒
+            return;
+        }
         if (NetworkHelper.isConnected(this)) {
             debug("doWakefulWork()");
             checkMentions();
             checkDirectMessages();
         }
-        check(this);
     }
 
 
