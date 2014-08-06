@@ -123,28 +123,40 @@
     </LinearLayout>
 
 
-    <TextView
-        android:layout_marginTop="8dp"
-        android:id="@+id/text"
-        android:text="this is a status content."
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <LinearLayout
         android:layout_toRightOf="@id/avatar"
         android:layout_alignLeft="@id/user_name"
         android:layout_below="@id/user_id"
-        android:textColor="@color/text_primary_selectable"
-        android:textSize="@dimen/text_size_medium"
-        android:lineSpacingMultiplier="1.2" />
-
-    <TextView
-        android:id="@+id/meta"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/text"
-        android:text="test"
-        android:layout_below="@id/text"
-        android:textColor="@color/text_secondary_selectable"
-        android:textSize="@dimen/text_size_small"
-        android:singleLine="true" />
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_marginTop="8dp"
+            android:id="@+id/text"
+            android:text="this is a status content."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary_selectable"
+            android:textSize="@dimen/text_size_medium"
+            android:lineSpacingMultiplier="1.2" />
+
+        <ImageView
+            android:visibility="gone"
+            android:padding="4dp"
+            android:id="@+id/photo"
+            android:scaleType="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/meta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="test"
+            android:textColor="@color/text_secondary_selectable"
+            android:textSize="@dimen/text_size_small"
+            android:singleLine="true" />
+    </LinearLayout>
 
 </RelativeLayout>

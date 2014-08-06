@@ -14,6 +14,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.mcxiaoke.minicat.R;
+import com.mcxiaoke.minicat.controller.UIController;
+import com.mcxiaoke.minicat.util.StringHelper;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 /**
  * @author mcxiaoke
@@ -31,6 +36,7 @@ public class ItemView extends RelativeLayout {
     private TextView mContentTextView;
     private TextView mTimeTextView;
     private TextView mMetaTextView;
+    private ImageView mPhotoView;
 
     private LinearLayout mViewStub;
     private View mIconsView;
@@ -72,6 +78,7 @@ public class ItemView extends RelativeLayout {
         mContentTextView = (TextView) findViewById(R.id.text);
         mTimeTextView = (TextView) findViewById(R.id.time);
         mMetaTextView = (TextView) findViewById(R.id.meta);
+        mPhotoView = (ImageView) findViewById(R.id.photo);
 
         mViewStub = (LinearLayout) findViewById(R.id.stub);
         mIconsView = findViewById(R.id.icons);
@@ -115,8 +122,44 @@ public class ItemView extends RelativeLayout {
         mUserIdTextView.setText(text);
     }
 
+    private void updatePhoto(final String photoUrl) {
+        final boolean hasPhoto = !StringHelper.isEmpty(photoUrl);
+        mPhotoView.setVisibility(hasPhoto ? View.VISIBLE : View.GONE);
+        loadBigImage(photoUrl, mPhotoView);
+    }
+
+    public static final DisplayImageOptions DISPLAY_OPTIONS = new DisplayImageOptions.Builder()
+            .cacheOnDisc(true).cacheInMemory(true)
+            .showImageOnLoading(R.drawable.photo_placeholder_small)
+            .showImageOnFail(R.drawable.photo_placeholder_small)
+            .showImageForEmptyUri(R.drawable.photo_placeholder_small).
+                    imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+            .bitmapConfig(Bitmap.Config.RGB_565).build();
+
+    private void loadBigImage(final String imageUri, final ImageView imageView) {
+        ImageLoader.getInstance().displayImage(imageUri, imageView, DISPLAY_OPTIONS);
+    }
+
     public void setContent(CharSequence text) {
         mContentTextView.setText(text);
+    }
+
+    public void setPhoto(final String photoUrl) {
+        setPhoto(photoUrl, null);
+    }
+
+    public void setPhoto(final String photoUrl, final String largeUrl) {
+        updatePhoto(photoUrl);
+        if (!StringHelper.isEmpty(largeUrl)) {
+            mPhotoView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    UIController.showPhoto((android.app.Activity) getContext(), photoUrl);
+                }
+            });
+        } else {
+            mPhotoView.setOnClickListener(null);
+        }
     }
 
     public void setTime(CharSequence text) {

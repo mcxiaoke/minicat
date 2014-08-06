@@ -233,7 +233,7 @@ public class AppContext extends Application {
                 this);
         builder.defaultDisplayImageOptions(getDefaultDisplayImageOptions());
         builder.denyCacheImageMultipleSizesInMemory();
-        builder.discCacheSize(50 * 1024 * 1024);
+        builder.discCacheSize(100 * 1024 * 1024);
         builder.memoryCacheSizePercentage(25);
         builder.tasksProcessingOrder(QueueProcessingType.FIFO);
         return builder.build();

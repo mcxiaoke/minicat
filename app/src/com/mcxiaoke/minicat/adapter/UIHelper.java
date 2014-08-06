@@ -33,6 +33,7 @@ public class UIHelper {
 
     public static void setContent(final ItemView view, final StatusModel status) {
         view.setContent(status.getSimpleText());
+        view.setPhoto(status.getPhotoThumbUrl(), status.getPhotoLargeUrl());
     }
 
     public static void setMetaInfo(final ItemView view, final StatusModel s) {

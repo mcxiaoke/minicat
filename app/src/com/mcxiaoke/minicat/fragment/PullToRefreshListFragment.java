@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.CursorAdapter;
@@ -27,6 +29,7 @@ import com.mcxiaoke.minicat.service.Constants;
 import com.mcxiaoke.minicat.ui.UIHelper;
 import com.mcxiaoke.minicat.util.NetworkHelper;
 import com.mcxiaoke.minicat.util.Utils;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
@@ -120,6 +123,21 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
         mListView.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
         mListView.setLongClickable(false);
         mListView.setOnFooterRefreshListener(this);
+        mListView.setOnScrollListener(new OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(final AbsListView view, final int scrollState) {
+                if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
+                    ImageLoader.getInstance().resume();
+                } else {
+                    ImageLoader.getInstance().pause();
+                }
+            }
+
+            @Override
+            public void onScroll(final AbsListView view, final int firstVisibleItem, final int visibleItemCount, final int totalItemCount) {
+
+            }
+        });
         UIHelper.setListView(mListView);
     }
 

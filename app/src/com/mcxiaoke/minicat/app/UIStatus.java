@@ -24,11 +24,13 @@ import com.mcxiaoke.minicat.controller.UIController;
 import com.mcxiaoke.minicat.dao.model.StatusModel;
 import com.mcxiaoke.minicat.service.SyncService;
 import com.mcxiaoke.minicat.task.BetterAsyncTask;
-import com.mcxiaoke.minicat.util.*;
+import com.mcxiaoke.minicat.util.DateTimeHelper;
+import com.mcxiaoke.minicat.util.IOHelper;
+import com.mcxiaoke.minicat.util.IntentHelper;
+import com.mcxiaoke.minicat.util.StatusHelper;
+import com.mcxiaoke.minicat.util.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 /**
@@ -246,46 +248,23 @@ public class UIStatus extends UIBaseSupport {
 
         contentPhoto.setVisibility(View.VISIBLE);
         String photoUrl = status.getPhotoLargeUrl();
-        displayPhoto(photoUrl);
+        loadBigImage(photoUrl, contentPhoto);
     }
 
     private void updateThread() {
         imThread.setVisibility(status.isThread() ? View.VISIBLE : View.GONE);
     }
 
-    private void displayPhoto(String url) {
-        final ImageLoadingListener listener = new ImageLoadingListener() {
+    public static final DisplayImageOptions DISPLAY_OPTIONS = new DisplayImageOptions.Builder()
+            .cacheOnDisc(true).cacheInMemory(true)
+            .showImageOnLoading(R.drawable.photo_loading)
+            .showImageOnFail(R.drawable.photo_error)
+            .showImageForEmptyUri(R.drawable.photo_error).
+                    imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+            .bitmapConfig(Bitmap.Config.RGB_565).build();
 
-            @Override
-            public void onLoadingStarted(String imageUri, View view) {
-                contentPhoto.setImageResource(R.drawable.photo_loading);
-            }
-
-            @Override
-            public void onLoadingFailed(String imageUri, View view,
-                                        FailReason failReason) {
-                contentPhoto.setImageResource(R.drawable.photo_error);
-                contentPhoto.setClickable(false);
-            }
-
-            @Override
-            public void onLoadingComplete(String imageUri, View view,
-                                          Bitmap loadedImage) {
-                contentPhoto.setImageBitmap(loadedImage);
-            }
-
-            @Override
-            public void onLoadingCancelled(String imageUri, View view) {
-                contentPhoto.setImageResource(R.drawable.photo_error);
-            }
-        };
-        loadBigImage(url, listener);
-    }
-
-    private void loadBigImage(String url, ImageLoadingListener listener) {
-        final DisplayImageOptions options = new DisplayImageOptions.Builder().cacheOnDisc().
-                imageScaleType(ImageScaleType.IN_SAMPLE_INT).bitmapConfig(Bitmap.Config.RGB_565).build();
-        ImageLoader.getInstance().loadImage(url, options, listener);
+    private void loadBigImage(final String imageUri, final ImageView imageView) {
+        ImageLoader.getInstance().displayImage(imageUri, imageView, DISPLAY_OPTIONS);
     }
 
     @Override
