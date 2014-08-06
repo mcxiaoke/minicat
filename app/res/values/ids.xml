@@ -10,6 +10,8 @@
     <item name="list_footer" type="id" />
     <item name="list_footer_text" type="id" />
     <item name="list_footer_progress" type="id" />
+    <item type="id" name="menu_refresh" />
+
 
     <item name="list_item" type="id" />
 
