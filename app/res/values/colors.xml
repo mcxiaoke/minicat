@@ -43,7 +43,7 @@
 
 
     <color name="text_primary">#FF444444</color>
-    <color name="text_secondary">#FF888888</color>
+    <color name="text_secondary">#FFa4a4a4</color>
 
     <color name="background_primary">#FFFCFEFE</color>
     <color name="background_secondary">#FFEDEFEF</color>

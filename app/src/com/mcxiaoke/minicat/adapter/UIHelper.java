@@ -31,8 +31,8 @@ public class UIHelper {
         });
     }
 
-    public static void setContent(final ItemView view, final StatusModel s) {
-        view.setContent(s.getSimpleText());
+    public static void setContent(final ItemView view, final StatusModel status) {
+        view.setContent(status.getSimpleText());
     }
 
     public static void setMetaInfo(final ItemView view, final StatusModel s) {

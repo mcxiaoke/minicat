@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -61,6 +62,7 @@ public class ItemView extends RelativeLayout {
     }
 
     private void initialize(Context context, AttributeSet attrs, int defStyle) {
+        setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         mContext = context;
         mInflater = LayoutInflater.from(mContext);
         mInflater.inflate(R.layout.item_view, this, true);
