@@ -312,7 +312,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
 
             final MenuItemResource item = mItems.get(position);
             holder.icon.setImageResource(item.iconId);
-//            holder.icon.setVisibility(View.GONE);
+            holder.icon.setVisibility(View.GONE);
             holder.text.setText(item.text);
 
             if (position == currentPosition && item.highlight) {

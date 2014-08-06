@@ -15,6 +15,7 @@
         android:layout_marginRight="12dp" />
 
     <TextView
+        android:layout_marginLeft="@dimen/list_padding"
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

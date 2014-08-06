@@ -20,8 +20,8 @@
             android:layout_height="@dimen/head_height"
             android:layout_margin="@dimen/widget_margin"
             android:src="@drawable/ic_head"
-            app:border_width="2dp"
-            app:border_color="#ffffff" />
+            app:border_width="0dp"
+            app:border_color="@android:color/transparent" />
 
         <TextView
             android:id="@+id/header_text"
@@ -31,6 +31,11 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_medium" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:listDivider" />
 
     <ListView
         android:id="@android:id/list"

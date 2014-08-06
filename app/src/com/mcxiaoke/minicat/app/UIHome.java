@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -255,11 +254,12 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         mViewPager.setAdapter(mPagesAdapter);
         mViewPager.setOnPageChangeListener(this);
 
+        final int highlightColor = getResources().getColor(R.color.holo_secondary);
         mPagerTabStrip = (PagerTabStrip) findViewById(R.id.viewpager_strip);
-        mPagerTabStrip.setBackgroundColor(getResources().getColor(R.color.background_secondary));
-        mPagerTabStrip.setDrawFullUnderline(false);
-        mPagerTabStrip.setTabIndicatorColorResource(R.color.holo_secondary);
-        mPagerTabStrip.setTextColor(Color.DKGRAY);
+        mPagerTabStrip.setBackgroundColor(getResources().getColor(R.color.background_primary));
+        mPagerTabStrip.setDrawFullUnderline(true);
+        mPagerTabStrip.setTabIndicatorColor(highlightColor);
+        mPagerTabStrip.setTextColor(highlightColor);
 
         setHomeTitle(mCurrentPage);
         mCurrentFragment = mPagesAdapter.getItem(mCurrentPage);

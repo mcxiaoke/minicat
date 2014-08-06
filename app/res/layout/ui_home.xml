@@ -23,9 +23,7 @@
                 android:id="@+id/viewpager_strip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fadingEdge="none"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp" />
+                android:padding="4dp" />
         </android.support.v4.view.ViewPager>
 
     </FrameLayout>
