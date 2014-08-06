@@ -53,12 +53,12 @@
 
 
     <!-- Theme colors -->
-    <!--<color name="holo_primary">#ff33b5e5</color>-->
-    <color name="holo_primary">#03a9f4</color>
-    <color name="holo_primary_disabled">#8003a9f4</color>
-    <color name="holo_primary_transparent">#2003a9f4</color>
-    <color name="holo_secondary">#0288d1</color>
-    <!--<color name="holo_secondary">#ff28a5c0</color>-->
+    <color name="holo_primary">#ff33b5e5</color>
+    <!--<color name="holo_primary">#03a9f4</color>-->
+    <color name="holo_primary_disabled">#8033b5e5</color>
+    <color name="holo_primary_transparent">#2033b5e5</color>
+    <!--<color name="holo_secondary">#0288d1</color>-->
+    <color name="holo_secondary">#ff28a5c0</color>
     <!-- below from google play app -->
     <color name="apps_primary">#ffb2cb39</color>
     <color name="apps_primary_disabled">#80b2cb39</color>
