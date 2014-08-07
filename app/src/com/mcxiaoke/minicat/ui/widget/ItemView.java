@@ -154,7 +154,7 @@ public class ItemView extends RelativeLayout {
             mPhotoView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(final View v) {
-                    UIController.showPhoto((android.app.Activity) getContext(), photoUrl);
+                    UIController.showPhoto((android.app.Activity) getContext(), largeUrl);
                 }
             });
         } else {
