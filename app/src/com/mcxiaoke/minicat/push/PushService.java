@@ -69,6 +69,7 @@ public class PushService extends BaseIntentService {
         if (DEBUG) {
             debug("setAlarm() now time is " + DateTimeHelper.formatDate(calendar.getTime()));
         }
+        // 如果是6点前，推迟到6点，免打扰
         if (calendar.get(Calendar.HOUR_OF_DAY) < 6) {
             calendar.set(Calendar.HOUR_OF_DAY, 6);
         }
