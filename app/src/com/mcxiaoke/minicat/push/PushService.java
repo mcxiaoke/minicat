@@ -69,9 +69,12 @@ public class PushService extends BaseIntentService {
         if (DEBUG) {
             debug("setAlarm() now time is " + DateTimeHelper.formatDate(calendar.getTime()));
         }
-        calendar.add(Calendar.MINUTE, 10);
+        if (calendar.get(Calendar.HOUR_OF_DAY) < 6) {
+            calendar.set(Calendar.HOUR_OF_DAY, 6);
+        }
+        calendar.add(Calendar.MINUTE, 5);
 
-        final long interval = 10 * 60 * 1000L;// 提醒间隔10分钟
+        final long interval = 5 * 60 * 1000L;// 提醒间隔5分钟
         final long nextTime = calendar.getTimeInMillis();
 
         AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
