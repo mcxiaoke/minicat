@@ -90,7 +90,6 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         }
         setLayout();
         setUmengUpdate();
-        PushService.cancel(this);
         registerReceiver();
     }
 

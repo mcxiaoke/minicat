@@ -647,12 +647,14 @@ public final class SyncService extends Service implements Handler.Callback {
                     }
                 } catch (ApiException e) {
                     if (AppContext.DEBUG) {
-                        e.printStackTrace();
+                        Log.e(TAG, "deleteStatus() error:" + e);
                     }
                     if (e.statusCode == 404) {
                         DataController.delete(mService, s);
+                        sendSuccessMessage(cmd);
+                    } else {
+                        sendErrorMessage(cmd, e);
                     }
-                    sendErrorMessage(cmd, e);
                 }
                 mIdle = true;
             }

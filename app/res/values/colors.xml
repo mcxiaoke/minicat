@@ -22,17 +22,17 @@
 
     <!--Light Theme Colors-->
 
-    <color name="divider_color_light">#20999999</color>
+    <color name="divider_color_light">#30999999</color>
 
-    <color name="actionbar_item_pressed">#66CCCCCC</color>
+    <color name="actionbar_item_pressed">#33CCCCCC</color>
 
-    <color name="selector_list_color_light_pressed">#FF33B5E5</color>
+    <color name="selector_list_color_light_pressed">#3328a5c0</color>
 
     <color name="selector_header_color_light_default">#FFE0E0E0</color>
-    <color name="selector_header_color_light_pressed">#6633B5E5</color>
+    <color name="selector_header_color_light_pressed">#3328a5c0</color>
 
     <color name="selector_drawer_menu_color_checked">#FFE0E0E0</color>
-    <color name="selector_drawer_menu_color_pressed">#8033B5E5</color>
+    <color name="selector_drawer_menu_color_pressed">#3328a5c0</color>
 
     <color name="drawer_dim_background">#C0000000</color>
 

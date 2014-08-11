@@ -32,14 +32,14 @@
         android:gravity="center_vertical"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@id/avatar"
-        android:textColor="@color/text_highlight_selectable"
+        android:textColor="@color/holo_secondary"
         android:textSize="@dimen/text_size_medium"
         android:singleLine="true" />
 
     <TextView
         android:id="@+id/user_id"
         android:textSize="@dimen/text_size_small"
-        android:textColor="@color/text_secondary_selectable"
+        android:textColor="@color/text_secondary"
         android:gravity="center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -116,7 +116,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:textColor="@color/text_secondary_selectable"
+            android:textColor="@color/text_secondary"
             android:textSize="@dimen/text_size_tiny"
             android:singleLine="true" />
 
@@ -137,7 +137,7 @@
             android:text="this is a status content."
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_primary_selectable"
+            android:textColor="@color/text_primary"
             android:textSize="@dimen/text_size_medium"
             android:lineSpacingMultiplier="1.2" />
 
@@ -154,7 +154,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="test"
-            android:textColor="@color/text_secondary_selectable"
+            android:textColor="@color/text_secondary"
             android:textSize="@dimen/text_size_small"
             android:singleLine="true" />
     </LinearLayout>

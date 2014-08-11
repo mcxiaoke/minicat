@@ -3,12 +3,15 @@ package com.mcxiaoke.minicat.util;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.TextView.BufferType;
 import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.dao.model.StatusModel;
 
@@ -34,6 +37,7 @@ public class StatusHelper {
         public void updateDrawState(TextPaint tp) {
             super.updateDrawState(tp);
             tp.setUnderlineText(false);
+            tp.setColor(LINK_COLOR);
         }
     }
 
@@ -98,25 +102,43 @@ public class StatusHelper {
 
     public static void setStatus(final TextView textView, final String htmlText) {
         final HashMap<String, String> mentions = findMentions(htmlText);
-        final SpannableString spannable = new SpannableString(Html.fromHtml(htmlText).toString());
-        Linkify.addLinks(textView, Linkify.WEB_URLS);
+        final String plainText = Html.fromHtml(htmlText).toString();
+        final SpannableString spannable = new SpannableString(plainText);
+        linkifyLinks(spannable);
         linkifyUsers(spannable, mentions);
         linkifyTags(spannable);
-        removeUnderlines(spannable);
-        textView.setText(spannable);
+        textView.setText(spannable, BufferType.SPANNABLE);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    public static void removeUnderlines(final Spannable s) {
-        URLSpan[] spans = s.getSpans(0, s.length(), URLSpan.class);
-        for (URLSpan span : spans) {
-            int start = s.getSpanStart(span);
-            int end = s.getSpanEnd(span);
-            s.removeSpan(span);
-            span = new URLSpanNoUnderline(span.getURL());
-            s.setSpan(span, start, end, 0);
+    private static final int LINK_COLOR = 0xff28a5c0;
+
+    public static void setItemStatus(final TextView textView, final String htmlText) {
+        final String plainText = Html.fromHtml(htmlText).toString();
+        final SpannableString spannable = new SpannableString(plainText);
+        linkifyLinks(spannable);
+        final Matcher m = PATTERN_USER.matcher(spannable);
+        while (m.find()) {
+            int start = m.start();
+            int end = m.end();
+            spannable.setSpan(new ForegroundColorSpan(LINK_COLOR), start, end,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        linkifyTags(spannable);
+        textView.setText(spannable, BufferType.SPANNABLE);
+    }
+
+    public static void linkifyLinks(final SpannableString spannable) {
+        Linkify.addLinks(spannable, Linkify.WEB_URLS);
+        URLSpan[] spans = spannable.getSpans(0, spannable.length(), URLSpan.class);
+        for (final URLSpan span : spans) {
+            int start = spannable.getSpanStart(span);
+            int end = spannable.getSpanEnd(span);
+            spannable.removeSpan(span);
+            spannable.setSpan(new URLSpanNoUnderline(span.getURL()), start, end, 0);
         }
     }
+
 
     /**
      * 从消息中获取全部提到的人，将它们按先后顺序放入一个列表

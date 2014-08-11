@@ -6,6 +6,7 @@ import com.mcxiaoke.minicat.controller.UIController;
 import com.mcxiaoke.minicat.dao.model.StatusModel;
 import com.mcxiaoke.minicat.ui.widget.ItemView;
 import com.mcxiaoke.minicat.util.DateTimeHelper;
+import com.mcxiaoke.minicat.util.StatusHelper;
 
 /**
  * @author mcxiaoke
@@ -32,7 +33,7 @@ public class UIHelper {
     }
 
     public static void setContent(final ItemView view, final StatusModel status) {
-        view.setContent(status.getSimpleText());
+        StatusHelper.setItemStatus(view.getContentTextView(),status.getText());
         view.setPhoto(status.getPhotoThumbUrl(), status.getPhotoLargeUrl());
     }
 

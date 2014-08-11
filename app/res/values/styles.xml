@@ -29,7 +29,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:shadowColor">@color/solid_black</item>
-        <item name="android:textColor">@color/text_primary_selectable</item>
+        <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:singleLine">true</item>
         <item name="android:padding">@dimen/profile_item_padding</item>
@@ -42,7 +42,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/text_primary_selectable</item>
+        <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:singleLine">true</item>
         <item name="android:padding">@dimen/status_header_padding</item>
@@ -53,7 +53,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:textColor">@color/text_secondary_selectable</item>
+        <item name="android:textColor">@color/text_secondary</item>
         <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:singleLine">true</item>
         <item name="android:padding">1dp</item>
@@ -123,18 +123,18 @@
 
     <style name="Item.TextBoldStyle">
         <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:textColor">@color/text_primary_selectable</item>
+        <item name="android:textColor">@color/text_primary</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Item.MetaInfoStyle">
-        <item name="android:textColor">@color/text_secondary_selectable</item>
+        <item name="android:textColor">@color/text_secondary</item>
         <item name="android:textSize">@dimen/text_size_tiny</item>
     </style>
 
 
     <style name="ListRow">
-        <item name="android:textColor">@color/text_primary_selectable</item>
+        <item name="android:textColor">@color/text_primary</item>
         <item name="android:background">@null</item>
         <item name="android:padding">@dimen/list_row_padding</item>
         <item name="android:layout_width">match_parent</item>

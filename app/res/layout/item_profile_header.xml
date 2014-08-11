@@ -75,7 +75,7 @@
         android:layout_marginRight="@dimen/list_padding"
         android:singleLine="true"
         android:textSize="@dimen/text_size_small"
-        android:textColor="@color/text_white"
+        android:textColor="@color/white"
         android:background="@drawable/state_on"
         android:text="查看相册" />
 
@@ -89,7 +89,7 @@
         android:padding="@dimen/list_padding"
         android:singleLine="true"
         android:textSize="@dimen/text_size_small"
-        android:textColor="@color/text_white"
+        android:textColor="@color/white"
         android:background="@drawable/state_on"
         android:text="正在关注" />
 

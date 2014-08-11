@@ -1,15 +1,21 @@
 package com.mcxiaoke.minicat.push;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import com.mcxiaoke.minicat.AppContext;
+import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.api.Api;
 import com.mcxiaoke.minicat.api.Paging;
+import com.mcxiaoke.minicat.app.UIHome;
+import com.mcxiaoke.minicat.app.UIStatus;
 import com.mcxiaoke.minicat.controller.DataController;
 import com.mcxiaoke.minicat.dao.model.DirectMessageModel;
 import com.mcxiaoke.minicat.dao.model.StatusModel;
@@ -34,17 +40,13 @@ public class PushService extends BaseIntentService {
     private static final String TAG = PushService.class.getSimpleName();
     private static boolean DEBUG = AppContext.DEBUG;
 
-    public static final String ACTION_ALARM = "com.mcxiaoke.fanfouapp.PushService.ACTION_ALARM";
-    public static final String ACTION_CHECK = "com.mcxiaoke.fanfouapp.PushService.ACTION_CHECK";
-    public static final String ACTION_NOTIFY = "com.mcxiaoke.fanfouapp.PushService.ACTION_NOTIFY";
+    public static final String ACTION_START = "com.mcxiaoke.fanfouapp.PushService.ACTION_START";
 
     public static final int NOTIFICATION_TYPE_TIMELINE = -101;
     public static final int NOTIFICATION_TYPE_DIRECTMESSAGE = -102;
 
     public static final String EXTRA_TYPE = "com.mcxiaoke.fanfouapp.PushService.EXTRA_TYPE";
     public static final String EXTRA_DATA = "com.mcxiaoke.fanfouapp.PushService.EXTRA_DATA";
-
-    private NotificationManager mNotificationManager;
 
     private static void debug(String message) {
         LogUtil.v(TAG, message);
@@ -56,8 +58,12 @@ public class PushService extends BaseIntentService {
     }
 
     public static void check(Context context) {
-        boolean enablePushNotifications = PreferenceHelper.getInstance(context).isPushNotificationEnabled();
-        if (enablePushNotifications) {
+        boolean enabled = PreferenceHelper.getInstance(context).isPushNotificationEnabled();
+        if (DEBUG) {
+            debug("check() enabled=" + enabled);
+        }
+
+        if (enabled) {
             set(context);
         } else {
             cancel(context);
@@ -68,10 +74,6 @@ public class PushService extends BaseIntentService {
         final Calendar calendar = Calendar.getInstance();
         if (DEBUG) {
             debug("setAlarm() now time is " + DateTimeHelper.formatDate(calendar.getTime()));
-        }
-        // 如果是6点前，推迟到6点，免打扰
-        if (calendar.get(Calendar.HOUR_OF_DAY) < 6) {
-            calendar.set(Calendar.HOUR_OF_DAY, 6);
         }
         calendar.add(Calendar.MINUTE, 5);
 
@@ -95,7 +97,8 @@ public class PushService extends BaseIntentService {
 
 
     private static PendingIntent getPendingIntent(Context context) {
-        Intent broadcast = new Intent(ACTION_CHECK);
+        Intent broadcast = new Intent(context, PushReceiver.class);
+        broadcast.setAction(ACTION_START);
         return PendingIntent.getBroadcast(context, 0, broadcast,
                 PendingIntent.FLAG_UPDATE_CURRENT);
     }
@@ -134,7 +137,7 @@ public class PushService extends BaseIntentService {
                     debug("checkMentions() result=" + ss);
                     DataController.store(this, ss);
                     StatusModel sm = ss.get(0);
-                    showMentionNotification(sm);
+                    showMention(sm);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -156,7 +159,7 @@ public class PushService extends BaseIntentService {
                     debug("checkDirectMessages() result=" + dms);
                     DataController.store(this, dms);
                     DirectMessageModel dm = dms.get(0);
-                    showDMNotification(dm);
+                    showDM(dm);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -203,28 +206,21 @@ public class PushService extends BaseIntentService {
         return null;
     }
 
-    private void showMentionNotification(StatusModel st) {
+    private void showMention(StatusModel st) {
         String lastId = PreferenceHelper.getInstance(this).getLastPushStatusId();
         if (st.getId().equals(lastId)) {
             return;
         }
-        PreferenceHelper.getInstance(this).setLastPushStatusId(st.getId());
-        Intent intent = new Intent(ACTION_NOTIFY);
-        intent.putExtra(EXTRA_TYPE, NOTIFICATION_TYPE_TIMELINE);
-        intent.putExtra(EXTRA_DATA, st);
-        sendBroadcast(intent);
+        showMentionNotification(this, st);
     }
 
-    private void showDMNotification(DirectMessageModel dm) {
+    private void showDM(DirectMessageModel dm) {
         String lastId = PreferenceHelper.getInstance(this).getKeyLastPushDmId();
         if (dm.getId().equals(lastId)) {
             return;
         }
         PreferenceHelper.getInstance(this).setLastPushStatusId(dm.getId());
-        Intent intent = new Intent(ACTION_NOTIFY);
-        intent.putExtra(EXTRA_TYPE, NOTIFICATION_TYPE_DIRECTMESSAGE);
-        intent.putExtra(EXTRA_DATA, dm);
-        sendBroadcast(intent);
+        showDMNotification(this, dm);
     }
 
     public PushService() {
@@ -236,13 +232,57 @@ public class PushService extends BaseIntentService {
     public void onCreate() {
         super.onCreate();
         debug("onCreate()");
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         debug("onDestroy()");
+    }
+
+
+    private static final int NOTIFICATION_STATUS_ID = 1234;
+    private static final int NOTIFICATION_DM_ID = 2234;
+
+    private static void showMentionNotification(Context context, final StatusModel sm) {
+        debug("showMentionNotification() sm=" + sm);
+        Intent intent = new Intent(context, UIStatus.class);
+        intent.setAction("DUMMY_ACTION" + System.currentTimeMillis());
+        intent.putExtra("data", sm);
+        PendingIntent pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        String ticker = "来自@" + sm.getUserScreenName() + "的新消息";
+        String title = sm.getUserScreenName();
+        String text = sm.getSimpleText();
+        String subText = DateTimeHelper.getInterval(sm.getTime());
+        showNotification(context, NOTIFICATION_STATUS_ID, R.drawable.ic_stat_mention, pi, ticker, title, text, subText);
+    }
+
+    private static void showDMNotification(Context context, final DirectMessageModel dm) {
+        debug("showDMNotification() dm=" + dm);
+        Intent intent = new Intent(context, UIHome.class);
+        intent.setAction("DUMMY_ACTION" + System.currentTimeMillis());
+        intent.putExtra("data", dm);
+        PendingIntent pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        String ticker = "来自@" + dm.getSenderScreenName() + "的新私信";
+        String title = dm.getSenderScreenName();
+        String text = dm.getText();
+        String subText = DateTimeHelper.getInterval(dm.getTime());
+        showNotification(context, NOTIFICATION_DM_ID, R.drawable.ic_stat_dm, pi, ticker, title, text, subText);
+    }
+
+    private static void showNotification(Context context, int id, int iconId, PendingIntent pi, String ticker, String title, String text, String subText) {
+        debug("showNotification() id=" + id + " ticker=" + ticker);
+        NotificationCompat.Builder nb = new NotificationCompat.Builder(context);
+        nb.setWhen(System.currentTimeMillis());
+        nb.setSmallIcon(iconId);
+        nb.setTicker(ticker).setContentTitle(title).setContentText(text);
+        nb.setSubText(subText);
+        nb.setLights(Color.GREEN, 200, 200);
+        nb.setDefaults(Notification.DEFAULT_ALL);
+        nb.setAutoCancel(true).setOnlyAlertOnce(true);
+        nb.setContentIntent(pi);
+        NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.notify(id, nb.build());
     }
 
 }

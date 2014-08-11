@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="UnusedAttribute"
     package="com.mcxiaoke.minicat"
     android:sharedUserId="com.mcxiaoke.minicat"
-    android:versionCode="2014080801"
-    android:versionName="1.2.9">
+    android:versionCode="2014081101"
+    android:versionName="1.2.10">
 
     <supports-screens
         android:anyDensity="true"
@@ -320,15 +322,7 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.mcxiaoke.minicat.PushService.ACTION_CHECK" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.mcxiaoke.minicat.PushService.ACTION_ALARM" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.mcxiaoke.minicat.PushService.ACTION_NOTIFY" />
+                <action android:name="com.mcxiaoke.minicat.PushService.ACTION_START" />
             </intent-filter>
         </receiver>
 

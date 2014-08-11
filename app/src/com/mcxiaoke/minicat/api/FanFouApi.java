@@ -1014,21 +1014,12 @@ final class FanFouApi implements Api {
             throw new ApiException(statusCode, FanFouParser.error(body));
         } catch (UnknownHostException e) {
             if (DEBUG) {
-                e.printStackTrace();
                 Log.e(TAG, e.toString());
             }
             throw new ApiException(ApiException.IO_ERROR, e.getMessage(),
                     e);
         } catch (IOException e) {
             if (DEBUG) {
-                e.printStackTrace();
-                Log.e(TAG, e.toString());
-            }
-            throw new ApiException(ApiException.IO_ERROR, e.toString(),
-                    e);
-        } catch (Exception e) {
-            if (DEBUG) {
-                e.printStackTrace();
                 Log.e(TAG, e.toString());
             }
             throw new ApiException(ApiException.IO_ERROR, e.toString(),

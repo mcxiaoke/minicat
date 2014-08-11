@@ -33,6 +33,8 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
+import java.net.HttpURLConnection;
+
 /**
  * @author mcxiaoke
  * @version 5.0 2012.03.13
@@ -385,7 +387,11 @@ public class UIStatus extends UIBaseSupport {
                     case SyncService.RESULT_ERROR:
                         int code = msg.getData().getInt("error_code");
                         String message = msg.getData().getString("error_message");
-                        onDeleteError(message);
+                        if (code == HttpURLConnection.HTTP_NOT_FOUND) {
+                            onDeleteComplete();
+                        } else {
+                            onDeleteError(message);
+                        }
                         break;
                     default:
                         break;
