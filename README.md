@@ -5,8 +5,11 @@
 ##下载地址
 
 [Google Play](https://play.google.com/store/apps/details?id=com.mcxiaoke.minicat)  
-[蒲公英下载](http://www.pgyer.com/minicat)
+[蒲公英下载](http://www.pgyer.com/minicat)  
 [直接下载](release/minicat-1.2.11.apk)
+
+##最新版本
+    1.2.11 (2014.08.12)
 
 ##使用说明
     
