@@ -104,9 +104,10 @@ public class StatusHelper {
         final HashMap<String, String> mentions = findMentions(htmlText);
         final String plainText = Html.fromHtml(htmlText).toString();
         final SpannableString spannable = new SpannableString(plainText);
-        linkifyLinks(spannable);
+        Linkify.addLinks(spannable, Linkify.WEB_URLS);
         linkifyUsers(spannable, mentions);
         linkifyTags(spannable);
+        removeUnderLines(spannable);
         textView.setText(spannable, BufferType.SPANNABLE);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
@@ -116,7 +117,7 @@ public class StatusHelper {
     public static void setItemStatus(final TextView textView, final String htmlText) {
         final String plainText = Html.fromHtml(htmlText).toString();
         final SpannableString spannable = new SpannableString(plainText);
-        linkifyLinks(spannable);
+        Linkify.addLinks(spannable, Linkify.WEB_URLS);
         final Matcher m = PATTERN_USER.matcher(spannable);
         while (m.find()) {
             int start = m.start();
@@ -125,11 +126,12 @@ public class StatusHelper {
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         linkifyTags(spannable);
+        removeUnderLines(spannable);
         textView.setText(spannable, BufferType.SPANNABLE);
     }
 
-    public static void linkifyLinks(final SpannableString spannable) {
-        Linkify.addLinks(spannable, Linkify.WEB_URLS);
+    public static void removeUnderLines(final SpannableString spannable) {
+
         URLSpan[] spans = spannable.getSpans(0, spannable.length(), URLSpan.class);
         for (final URLSpan span : spans) {
             int start = spannable.getSpanStart(span);
