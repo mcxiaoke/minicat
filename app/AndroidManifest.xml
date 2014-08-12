@@ -4,8 +4,8 @@
     tools:ignore="UnusedAttribute"
     package="com.mcxiaoke.minicat"
     android:sharedUserId="com.mcxiaoke.minicat"
-    android:versionCode="2014081101"
-    android:versionName="1.2.10">
+    android:versionCode="2014081201"
+    android:versionName="1.2.11">
 
     <supports-screens
         android:anyDensity="true"
