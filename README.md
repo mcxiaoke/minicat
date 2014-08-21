@@ -8,6 +8,8 @@
 [直接下载](release/minicat-1.2.11.apk)
 
 ##特别说明
+
+饭否支持帐号： [蘑菇饭App](http://fanfou.com/androidsupport)  
 Google Play 地址已失效，又莫名其妙的被Google下架，不再有后续版本更新，将不再上架
 
 ##最新版本
