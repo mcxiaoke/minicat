@@ -5,7 +5,7 @@
 ##下载地址
 
 [蒲公英下载](http://www.pgyer.com/minicat)  
-[直接下载](release/minicat-1.2.11.apk)
+[直接下载](release/minicat-1.3.0.apk)
 
 ##特别说明
 
@@ -13,7 +13,7 @@
 Google Play 地址已失效，又莫名其妙的被Google下架，不再有后续版本更新，将不再上架
 
 ##最新版本
-    1.2.11 (2014.08.12)
+    1.0.0 (2014.12.01)
 
 ##使用说明
     
@@ -21,7 +21,7 @@ Google Play 地址已失效，又莫名其妙的被Google下架，不再有后�
     目前只支持使用Gradle构建，直接项目目录运行./gradlew clean build即可，
     (Windows用户使用 gradlew.bat clean build)
     也可以直接使用Android Studio打开项目根目录的build.gradle  
-    (需要Gradle 1.11以上，Android Studio 0.8.0以上)
+    (需要Gradle 2.0以上，Android Studio 0.9以上)
 
 ###签名注意事项
 
@@ -76,7 +76,7 @@ project.ext.ANDROID_KEY_PASSWORD = 'your_key_password'
 ##License
 
 ```
-Copyright 2013 mcxiaoke support@mcxiaoke.com
+Copyright 2012-2014 mcxiaoke support@mcxiaoke.com
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
