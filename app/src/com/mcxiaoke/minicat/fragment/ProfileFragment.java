@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,8 +15,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import com.mcxiaoke.minicat.R;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import com.mcxiaoke.minicat.AppContext;
+import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.controller.CacheController;
 import com.mcxiaoke.minicat.controller.UIController;
 import com.mcxiaoke.minicat.dao.model.UserModel;
@@ -43,12 +47,16 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
         return fragment;
     }
 
+    @InjectView(R.id.root)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    @InjectView(R.id.profile)
+    ProfileView mProfileView;
+
     private boolean useMenu;
     private String userId;
-    private UserModel user;
 
+    private UserModel user;
     private boolean noPermission;
-    private ProfileView vProfile;
 
     private MenuItem followMemu;
     private MenuItem unfollowMenu;
@@ -71,21 +79,33 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fm_profile, null, false);
+        final View view = inflater.inflate(R.layout.fm_profile, container, false);
+        ButterKnife.inject(this, view);
+        return view;
     }
 
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        vProfile = (ProfileView) getView().findViewById(R.id.profile);
-        vProfile.setProfileClickListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.color1,
+                R.color.color2,
+                R.color.color3, R.color.color4);
+//        mSwipeRefreshLayout.setColorScheme(R.color.blue, R.color.purple, R.color.green, R.color.orange);
+        mProfileView.setProfileClickListener(this);
     }
 
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                forceRefreshProfile();
+            }
+        });
         refreshProfile();
     }
 
@@ -282,12 +302,16 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
         }
     }
 
+    private void forceRefreshProfile() {
+        fetchUser();
+    }
+
     private void showEmptyView(String text) {
-        vProfile.setVisibility(View.GONE);
+        mProfileView.setVisibility(View.GONE);
     }
 
     private void hideProfileHeader() {
-        vProfile.setVisibility(View.GONE);
+        mProfileView.setVisibility(View.GONE);
     }
 
     private void showProfileHeader(UserModel user) {
@@ -302,14 +326,14 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
             Log.d(TAG, "updateUI() userid=" + userId);
             Log.d(TAG, "updateUI() user.following=" + user.isFollowing());
         }
-        vProfile.setContent(user);
-        vProfile.setVisibility(View.VISIBLE);
+        mProfileView.setContent(user);
+        mProfileView.setVisibility(View.VISIBLE);
         updateTitle(user);
 
         getBaseSupport().invalidateOptionsMenu();
 
         if (userId.equals(AppContext.getAccount())) {
-            vProfile.hideFollowState();
+            mProfileView.hideFollowState();
         } else {
             updatePermission();
             refreshFollowState();
@@ -338,7 +362,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
     }
 
     private void updateState(boolean follow) {
-        vProfile.setFollowState(follow);
+        mProfileView.setFollowState(follow);
     }
 
     private void fetchUser() {
@@ -347,6 +371,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case SyncService.RESULT_SUCCESS:
+                        mSwipeRefreshLayout.setRefreshing(false);
                         UserModel result = msg.getData().getParcelable("data");
                         if (AppContext.DEBUG) {
                             Log.d(TAG, "fetchUser result=" + result);
@@ -356,6 +381,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
                         }
                         break;
                     case SyncService.RESULT_ERROR:
+                        mSwipeRefreshLayout.setRefreshing(false);
                         String errorMessage = msg.getData().getString(
                                 "error_message");
                         showEmptyView(errorMessage);
@@ -399,7 +425,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
             LogUtil.v(TAG, "updateFollowButton following=" + following);
             LogUtil.v(TAG, "updateFollowButton user.isFollowing()=" + user.isFollowing());
             updatePermission();
-            vProfile.updateFollowState(following);
+            mProfileView.updateFollowState(following);
             getBaseSupport().invalidateOptionsMenu();
         }
     }

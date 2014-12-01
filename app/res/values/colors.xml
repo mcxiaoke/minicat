@@ -59,6 +59,7 @@
     <color name="holo_primary_transparent">#2033b5e5</color>
     <!--<color name="holo_secondary">#0288d1</color>-->
     <color name="holo_secondary">#ff28a5c0</color>
+    <color name="holo_highlight">#53933f</color>
     <!-- below from google play app -->
     <color name="apps_primary">#ffb2cb39</color>
     <color name="apps_primary_disabled">#80b2cb39</color>
@@ -89,5 +90,15 @@
     <color name="multi_primary_disabled">#80585858</color>
     <color name="multi_primary_transparent">#20585858</color>
     <color name="multi_secondary">#ff4d4d4d</color>
+
+    <color name="color1">#ff0f9d58</color>
+    <color name="color2">#ffdb4437</color>
+    <color name="color3">#ff4285f4</color>
+    <color name="color4">#fff4b400</color>
+
+    <color name="blue">#0099CC</color>
+    <color name="purple">#9933CC</color>
+    <color name="green">#669900</color>
+    <color name="orange">#FF8800</color>
 
 </resources>
