@@ -250,9 +250,10 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 
         final int highlightColor = getResources().getColor(R.color.holo_secondary);
         mPagerTabStrip = (PagerTabStrip) findViewById(R.id.viewpager_strip);
-        mPagerTabStrip.setBackgroundColor(getResources().getColor(R.color.background_primary));
-        mPagerTabStrip.setDrawFullUnderline(true);
-        mPagerTabStrip.setTabIndicatorColor(highlightColor);
+        mPagerTabStrip.setBackgroundResource(R.color.background_secondary);
+        mPagerTabStrip.setNonPrimaryAlpha(0.5f);
+        mPagerTabStrip.setDrawFullUnderline(false);
+        mPagerTabStrip.setTabIndicatorColorResource(R.color.holo_secondary);
         mPagerTabStrip.setTextColor(highlightColor);
 
         setHomeTitle(mCurrentPage);

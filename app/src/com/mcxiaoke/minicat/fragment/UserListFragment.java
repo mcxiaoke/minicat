@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
+import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.mcxiaoke.commons.view.endless.EndlessListView;
 import com.mcxiaoke.minicat.AppContext;
@@ -132,12 +133,13 @@ public abstract class UserListFragment extends AbstractListFragment
         if (AppContext.DEBUG) {
             Log.d(TAG, "onCreateView() isVisible=" + isVisible());
         }
-        View v = inflater.inflate(R.layout.fm_userlist_ptr, container, false);
-        setLayout(v);
-        return v;
+        final View view = inflater.inflate(R.layout.fm_userlist_ptr, container, false);
+        ButterKnife.inject(this, view);
+        setUp();
+        return view;
     }
 
-    private void setLayout(View root) {
+    private void setUp() {
         mSwipeRefreshLayout.setColorSchemeResources(
                 R.color.color1,
                 R.color.color2,
@@ -155,10 +157,15 @@ public abstract class UserListFragment extends AbstractListFragment
     }
 
 
+    protected void showRefreshIndicator(final boolean show) {
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setRefreshing(show);
+        }
+    }
+
     @Override
     public void onFooterRefresh(EndlessListView endlessListView) {
         doFetch(true);
-        getBaseSupport().showProgressIndicator();
     }
 
     @Override
@@ -168,7 +175,7 @@ public abstract class UserListFragment extends AbstractListFragment
 
     public void refreshData() {
         doFetch(false);
-        getBaseSupport().showProgressIndicator();
+        showRefreshIndicator(true);
     }
 
     @Override
@@ -285,7 +292,7 @@ public abstract class UserListFragment extends AbstractListFragment
         if (!busy) {
             busy = true;
             doRefresh();
-            getBaseSupport().showProgressIndicator();
+            showRefreshIndicator(true);
         }
     }
 
@@ -309,7 +316,7 @@ public abstract class UserListFragment extends AbstractListFragment
 
     private void onRefreshComplete() {
         showFooterText();
-        mSwipeRefreshLayout.setRefreshing(false);
+        showRefreshIndicator(false);
     }
 
     @Override

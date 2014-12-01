@@ -162,7 +162,6 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
     @Override
     public void onFooterRefresh(EndlessListView endlessListView) {
         doFetch(true);
-        getBaseSupport().showProgressIndicator();
     }
 
     @Override
@@ -172,7 +171,13 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
 
     private void refreshData() {
         doFetch(false);
-        getBaseSupport().showProgressIndicator();
+        showRefreshIndicator(true);
+    }
+
+    protected void showRefreshIndicator(final boolean show){
+        if(mSwipeRefreshLayout!=null){
+            mSwipeRefreshLayout.setRefreshing(show);
+        }
     }
 
     @Override
@@ -292,7 +297,7 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
         if (!busy) {
             busy = true;
             doRefresh();
-            getBaseSupport().showProgressIndicator();
+            showRefreshIndicator(true);
         }
     }
 
@@ -317,7 +322,7 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
 
     private void onRefreshComplete() {
         showFooterText();
-        mSwipeRefreshLayout.setRefreshing(false);
+        showRefreshIndicator(false);
     }
 
     protected static void showPopup(Activity context, final View view,
@@ -410,6 +415,8 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
         showFooterText();
         checkRefresh();
     }
+
+
 
     protected void checkRefresh() {
         if (AppContext.DEBUG) {

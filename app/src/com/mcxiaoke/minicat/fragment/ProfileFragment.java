@@ -365,13 +365,19 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
         mProfileView.setFollowState(follow);
     }
 
+    protected void showRefreshIndicator(final boolean show){
+        if(mSwipeRefreshLayout!=null){
+            mSwipeRefreshLayout.setRefreshing(show);
+        }
+    }
+
     private void fetchUser() {
         final Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case SyncService.RESULT_SUCCESS:
-                        mSwipeRefreshLayout.setRefreshing(false);
+                        showRefreshIndicator(false);
                         UserModel result = msg.getData().getParcelable("data");
                         if (AppContext.DEBUG) {
                             Log.d(TAG, "fetchUser result=" + result);
@@ -381,7 +387,7 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
                         }
                         break;
                     case SyncService.RESULT_ERROR:
-                        mSwipeRefreshLayout.setRefreshing(false);
+                        showRefreshIndicator(false);
                         String errorMessage = msg.getData().getString(
                                 "error_message");
                         showEmptyView(errorMessage);
