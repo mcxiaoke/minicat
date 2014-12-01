@@ -1134,8 +1134,12 @@ public final class SyncService extends Service implements Handler.Callback {
                                     + type);
                         return;
                     } else {
+                        if (type == StatusModel.TYPE_PUBLIC) {
+
+                        }
                         int size = statuses.size();
-                        if (size == p.count && p.maxId == null && p.page <= 1) {
+                        if (type == StatusModel.TYPE_PUBLIC
+                                || (size == p.count && p.maxId == null && p.page <= 1)) {
                             deleteOldStatuses(cmd.id, cmd.type);
                         }
                         int insertedCount = DataController.storeStatusesWithUsers(mService,
