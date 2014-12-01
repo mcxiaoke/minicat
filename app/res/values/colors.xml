@@ -57,8 +57,10 @@
     <!--<color name="holo_primary">#03a9f4</color>-->
     <color name="holo_primary_disabled">#8033b5e5</color>
     <color name="holo_primary_transparent">#2033b5e5</color>
+    <color name="holo_primary_translucent">#8033b5e5</color>
     <!--<color name="holo_secondary">#0288d1</color>-->
     <color name="holo_secondary">#ff28a5c0</color>
+    <color name="holo_secondary_translucent">#8028a5c0</color>
     <color name="holo_highlight">#53933f</color>
     <!-- below from google play app -->
     <color name="apps_primary">#ffb2cb39</color>
