@@ -4,7 +4,7 @@
     tools:ignore="UnusedAttribute"
     package="com.mcxiaoke.minicat"
     android:sharedUserId="com.mcxiaoke.minicat"
-    android:versionCode="2014081201"
+    android:versionCode="3000000001"
     android:versionName="1.3.0">
 
     <supports-screens
