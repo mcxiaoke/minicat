@@ -5,7 +5,7 @@
 ##下载地址
 
 [蒲公英下载](http://www.pgyer.com/minicat)  
-[直接下载](release/minicat-1.3.0.apk)
+[直接下载](release/minicat-1.3.0.apk?raw=true)
 
 ##特别说明
 
@@ -13,7 +13,11 @@
 Google Play 地址已失效，又莫名其妙的被Google下架，不再有后续版本更新，将不再上架
 
 ##最新版本
-    1.0.0 (2014.12.01)
+    1.3.0 (2014.12.01)
+    
+##扫码下载
+
+![qrcode](qrcode.png)
 
 ##使用说明
     
