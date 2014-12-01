@@ -19,7 +19,7 @@ dependencies {
     compile('com.mcxiaoke.viewpagerindicator:library:2.4.1') {
         exclude group: 'com.android.support', module: 'support-v4'
     }
-    compile 'com.mcxiaoke.actionbarpulltorefresh:library:0.9.5'
+//    compile 'com.mcxiaoke.actionbarpulltorefresh:library:0.9.5'
 
     compile('com.mcxiaoke.oauthsimple:oauthsimple:2.0.+') {
         exclude group: 'org.json', module: 'json'

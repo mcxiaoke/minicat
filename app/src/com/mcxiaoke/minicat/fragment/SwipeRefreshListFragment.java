@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,8 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import com.mcxiaoke.commons.view.endless.EndlessListView;
 import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.R;
@@ -30,26 +34,24 @@ import com.mcxiaoke.minicat.ui.UIHelper;
 import com.mcxiaoke.minicat.util.NetworkHelper;
 import com.mcxiaoke.minicat.util.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.Options;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * @author mcxiaoke
  * @version 1.8 2012.03.19
  */
-public abstract class PullToRefreshListFragment extends AbstractListFragment
-        implements OnRefreshListener, EndlessListView.OnFooterRefreshListener, OnItemLongClickListener,
+public abstract class SwipeRefreshListFragment extends AbstractListFragment
+        implements EndlessListView.OnFooterRefreshListener, OnItemLongClickListener,
         LoaderCallbacks<Cursor> {
 
     protected static final int LOADER_ID = 1;
 
-    private static final String TAG = PullToRefreshListFragment.class
+    private static final String TAG = SwipeRefreshListFragment.class
             .getSimpleName();
 
-    private PullToRefreshLayout mPullToRefreshLayout;
-    private EndlessListView mListView;
+    @InjectView(R.id.root)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    @InjectView(R.id.list)
+    EndlessListView mListView;
 
     private Parcelable mParcelable;
 
@@ -59,7 +61,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
     volatile boolean busy;
 
-    public PullToRefreshListFragment() {
+    public SwipeRefreshListFragment() {
         super();
         if (AppContext.DEBUG) {
             Log.v(TAG, "PullToRefreshListFragment() id=" + this);
@@ -106,16 +108,32 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
         if (AppContext.DEBUG) {
             Log.v(TAG, "onCreateView() isVisible=" + isVisible());
         }
-        View v = inflater.inflate(R.layout.fm_pull_list, container, false);
-        setLayout(v);
-        return v;
+        final View view = inflater.inflate(R.layout.fm_pull_list, container, false);
+        ButterKnife.inject(this, view);
+        return view;
     }
 
-    private void setLayout(View root) {
-        mPullToRefreshLayout = (PullToRefreshLayout) root.findViewById(R.id.ptr_layout);
-        Options options = new Options.Builder().refreshOnUp(true).scrollDistance(0.3f).build();
-        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).options(options).setup(mPullToRefreshLayout);
-        mListView = (EndlessListView) root.findViewById(R.id.list);
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (AppContext.DEBUG) {
+            Log.v(TAG, "onViewCreated() isVisible=" + isVisible());
+        }
+        setUp();
+    }
+
+    private void setUp() {
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.color1,
+                R.color.color2,
+                R.color.color3, R.color.color4);
+        mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshData();
+            }
+        });
         mListView.setVerticalScrollBarEnabled(true);
         mListView.setHorizontalScrollBarEnabled(false);
         mListView.setFastScrollEnabled(false);
@@ -152,8 +170,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
     }
 
-    @Override
-    public void onRefreshStarted(View view) {
+    private void refreshData() {
         doFetch(false);
         getBaseSupport().showProgressIndicator();
     }
@@ -300,7 +317,7 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
 
     private void onRefreshComplete() {
         showFooterText();
-        mPullToRefreshLayout.setRefreshComplete();
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     protected static void showPopup(Activity context, final View view,
@@ -310,14 +327,6 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
             if (s != null) {
                 PopupController.showPopup(view, s, c);
             }
-        }
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (AppContext.DEBUG) {
-            Log.v(TAG, "onViewCreated() isVisible=" + isVisible());
         }
     }
 
@@ -423,9 +432,9 @@ public abstract class PullToRefreshListFragment extends AbstractListFragment
      * FetchService返回数据处理 根据resultData里面的type信息分别处理
      */
     protected static class ResultHandler extends Handler {
-        private PullToRefreshListFragment mFragment;
+        private SwipeRefreshListFragment mFragment;
 
-        public ResultHandler(PullToRefreshListFragment fragment) {
+        public ResultHandler(SwipeRefreshListFragment fragment) {
             this.mFragment = fragment;
         }
 

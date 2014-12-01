@@ -16,7 +16,7 @@ import com.mcxiaoke.minicat.dao.model.StatusModel;
  * @author mcxiaoke
  * @version 1.3 2012.02.22
  */
-public abstract class BaseTimlineFragment extends PullToRefreshListFragment {
+public abstract class BaseTimlineFragment extends SwipeRefreshListFragment {
     private static final String TAG = BaseTimlineFragment.class.getSimpleName();
 
     @Override

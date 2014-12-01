@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import com.mcxiaoke.commons.view.endless.EndlessListView;
 import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.R;
@@ -25,10 +27,6 @@ import com.mcxiaoke.minicat.service.SyncService;
 import com.mcxiaoke.minicat.ui.UIHelper;
 import com.mcxiaoke.minicat.util.NetworkHelper;
 import com.mcxiaoke.minicat.util.StringHelper;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.Options;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 import java.util.List;
 
@@ -36,12 +34,11 @@ import java.util.List;
  * @author mcxiaoke
  * @version 2.3 2012.03.30
  */
-public class UISearchResults extends UIBaseSupport implements
-        OnRefreshListener, EndlessListView.OnFooterRefreshListener, OnItemClickListener {
+public class UISearchResults extends UIBaseSupport implements EndlessListView.OnFooterRefreshListener, OnItemClickListener {
     private static final String TAG = UISearchResults.class.getSimpleName();
 
-    private PullToRefreshLayout mPullToRefreshLayout;
-    private EndlessListView mListView;
+    @InjectView(R.id.list)
+    EndlessListView mListView;
 
     private SearchResultsArrayAdapter mStatusAdapter;
 
@@ -73,10 +70,7 @@ public class UISearchResults extends UIBaseSupport implements
     protected void setLayout() {
         setContentView(R.layout.list_pull);
         setProgressBarIndeterminateVisibility(false);
-
-        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
-        Options options = new Options.Builder().refreshOnUp(true).scrollDistance(0.3f).build();
-        ActionBarPullToRefresh.from(this).options(options).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
+        ButterKnife.inject(this);
         mListView = (EndlessListView) findViewById(R.id.list);
         mListView.setLongClickable(false);
         mListView.setOnItemClickListener(this);
@@ -102,11 +96,6 @@ public class UISearchResults extends UIBaseSupport implements
     @Override
     public void onFooterIdle(EndlessListView endlessListView) {
 
-    }
-
-    @Override
-    public void onRefreshStarted(View view) {
-        doSearch(true);
     }
 
     protected void newSearch() {
@@ -228,7 +217,6 @@ public class UISearchResults extends UIBaseSupport implements
 
         @Override
         protected void onPostExecute(List<StatusModel> result) {
-            mPullToRefreshLayout.setRefreshComplete();
             showFooterText();
             hideProgressIndicator();
             if (result != null && result.size() > 0) {

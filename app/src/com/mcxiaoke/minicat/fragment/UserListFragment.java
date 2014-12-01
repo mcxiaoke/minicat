@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
+import butterknife.InjectView;
 import com.mcxiaoke.commons.view.endless.EndlessListView;
 import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.R;
@@ -28,17 +31,13 @@ import com.mcxiaoke.minicat.service.Constants;
 import com.mcxiaoke.minicat.service.SyncService;
 import com.mcxiaoke.minicat.ui.UIHelper;
 import com.mcxiaoke.minicat.util.Utils;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.Options;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * @author mcxiaoke
  * @version 1.8 2012.03.19
  */
 public abstract class UserListFragment extends AbstractListFragment
-        implements OnRefreshListener, EndlessListView.OnFooterRefreshListener,
+        implements EndlessListView.OnFooterRefreshListener,
         LoaderCallbacks<Cursor> {
 
     protected static final int LOADER_ID = 1;
@@ -46,8 +45,11 @@ public abstract class UserListFragment extends AbstractListFragment
     private static final String TAG = UserListFragment.class
             .getSimpleName();
 
-    private PullToRefreshLayout mPullToRefreshLayout;
-    private EndlessListView mListView;
+
+    @InjectView(R.id.root)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    @InjectView(R.id.list)
+    EndlessListView mListView;
 
     private Parcelable mParcelable;
 
@@ -136,10 +138,16 @@ public abstract class UserListFragment extends AbstractListFragment
     }
 
     private void setLayout(View root) {
-        mPullToRefreshLayout = (PullToRefreshLayout) root.findViewById(R.id.ptr_layout);
-        Options options=new Options.Builder().refreshOnUp(true).scrollDistance(0.3f).build();
-        ActionBarPullToRefresh.from(getActivity()).options(options).allChildrenArePullable().listener(this).setup(mPullToRefreshLayout);
-        mListView = (EndlessListView) root.findViewById(R.id.list);
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.color1,
+                R.color.color2,
+                R.color.color3, R.color.color4);
+        mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshData();
+            }
+        });
         mListView.setOnItemClickListener(this);
         mListView.setLongClickable(false);
         mListView.setOnFooterRefreshListener(this);
@@ -158,8 +166,7 @@ public abstract class UserListFragment extends AbstractListFragment
 
     }
 
-    @Override
-    public void onRefreshStarted(View view) {
+    public void refreshData() {
         doFetch(false);
         getBaseSupport().showProgressIndicator();
     }
@@ -302,7 +309,7 @@ public abstract class UserListFragment extends AbstractListFragment
 
     private void onRefreshComplete() {
         showFooterText();
-        mPullToRefreshLayout.setRefreshComplete();
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

@@ -20,7 +20,7 @@ import com.mcxiaoke.minicat.util.Utils;
  * @author mcxiaoke
  * @version 1.5 2012.03.07
  */
-public class ConversationListFragment extends PullToRefreshListFragment {
+public class ConversationListFragment extends SwipeRefreshListFragment {
     private static final String TAG = ConversationListFragment.class
             .getSimpleName();
 

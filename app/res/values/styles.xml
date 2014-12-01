@@ -78,7 +78,7 @@
         <item name="android:textColor">@color/text_secondary</item>
     </style>
 
-    <style name="EditText"></style>
+    <style name="EditText" />
 
     <style name="EditText.Login">
         <item name="android:layout_width">match_parent</item>
@@ -90,7 +90,7 @@
         <item name="android:layout_marginBottom">16dp</item>
     </style>
 
-    <style name="Button"></style>
+    <style name="Button" />
 
     <style name="Button.Login">
         <item name="android:layout_width">match_parent</item>
@@ -147,25 +147,6 @@
     <style name="Animations.Move">
         <item name="@android:windowEnterAnimation">@anim/move_left_to_right</item>
         <item name="@android:windowExitAnimation">@anim/move_right_to_left</item>
-    </style>
-
-    <style name="Widget.Custom.PtrHeader" parent="android:Widget">
-        <!--<item name="ptrHeaderBackground">@color/white</item>-->
-
-        <!-- This is commented out as you should not set this unless you know what you're doing -->
-        <!--<item name="ptrHeaderHeight"></item>-->
-
-        <!--<item name="ptrHeaderTitleTextAppearance">@style/TextAppearance.Custom.PtrHeader.Title</item>-->
-        <!--<item name="ptrProgressBarStyle">inside</item>-->
-        <item name="ptrProgressBarColor">@color/apps_primary</item>
-
-        <!--<item name="ptrPullText">Keep going...</item>-->
-        <!--<item name="ptrRefreshingText">Pulling down the internet</item>-->
-        <!--<item name="ptrReleaseText">Let go if you want me to refresh!</item>-->
-    </style>
-
-    <style name="TextAppearance.Custom.PtrHeader.Title" parent="android:TextAppearance.Large.Inverse">
-        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="ActivityAnimation" parent="@android:style/Animation.Activity">
