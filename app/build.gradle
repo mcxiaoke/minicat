@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 dependencies {
-    compile('com.android.support:support-v4:19.1.0')
-    compile('com.google.code.gson:gson:2.2.4')
+    compile('com.android.support:support-v4:21.0.0')
+    compile('com.google.code.gson:gson:2.3')
 
     compile 'de.hdodenhof:circleimageview:1.1.1'
 
@@ -12,8 +12,8 @@ dependencies {
 
     compile('com.nostra13.universalimageloader:universal-image-loader:1.9.1')
     compile('com.nineoldandroids:library:2.4.0')
-    compile('com.jakewharton:butterknife:5.1.1')
-    compile('com.squareup.picasso:picasso:2.1.+')
+    compile('com.jakewharton:butterknife:6.0.0')
+    compile('com.squareup.picasso:picasso:2.4.0')
 
     compile('com.github.castorflex.smoothprogressbar:library:0.5.2')
     compile('com.mcxiaoke.viewpagerindicator:library:2.4.1') {
@@ -33,12 +33,12 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    compileSdkVersion 21
+    buildToolsVersion "21.1.1"
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 19
+        targetSdkVersion 21
     }
 
     sourceSets {
