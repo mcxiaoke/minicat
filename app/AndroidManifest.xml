@@ -132,14 +132,10 @@
             android:name="com.mcxiaoke.minicat.app.UISearch"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:parentActivityName="com.mcxiaoke.minicat.app.UIHome">
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".UISearchResults" />
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mcxiaoke.minicat.app.UIHome" />
         </activity>
         <activity
             android:name="com.mcxiaoke.minicat.app.UIGallery"
@@ -261,12 +257,7 @@
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:parentActivityName="com.mcxiaoke.minicat.app.UIHome">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mcxiaoke.minicat.app.UIHome" />
-
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
