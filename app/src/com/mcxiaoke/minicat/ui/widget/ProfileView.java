@@ -8,11 +8,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.dao.model.UserModel;
 import com.mcxiaoke.minicat.util.DateTimeHelper;
+import com.mcxiaoke.minicat.util.LogUtil;
 import com.mcxiaoke.minicat.util.StringHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -39,8 +39,6 @@ public class ProfileView extends FrameLayout implements
     }
 
     private static final String TAG = ProfileView.class.getSimpleName();
-
-    private ScrollView vContent;
 
     private ViewGroup header;
     private ImageView headerImage;
@@ -102,14 +100,13 @@ public class ProfileView extends FrameLayout implements
     }
 
     private void findViews() {
-        vContent = (ScrollView) findViewById(R.id.container);
         header = (ViewGroup) findViewById(R.id.header);
         headerImage = (ImageView) findViewById(R.id.header_image);
         headerName = (TextView) findViewById(R.id.header_name);
         headerId = (TextView) findViewById(R.id.header_id);
         headerState = (TextView) findViewById(R.id.header_state);
         headerLock = (ImageView) findViewById(R.id.header_lock);
-        headerAlbum= (TextView) findViewById(R.id.header_album);
+        headerAlbum = (TextView) findViewById(R.id.header_album);
         headerFollow = (TextView) findViewById(R.id.header_follow);
 
         vFollowingItem = findViewById(R.id.item1);
@@ -187,9 +184,6 @@ public class ProfileView extends FrameLayout implements
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("自述：").append("\n");
-        sb.append(StringHelper.isEmpty(description) ? "这家伙很懒，什么都没写" : description).append("\n\n");
-
         if (!StringHelper.isEmpty(gender)) {
             sb.append("性别：").append(gender).append("\n");
         }
@@ -207,9 +201,23 @@ public class ProfileView extends FrameLayout implements
         sb.append("注册时间：")
                 .append(time).append("\n");
 
-//        headerIntro.setText(simpleBuilder.toString());
+        sb.append("自述：").append("\n");
+        sb.append(buildDescription(description)).append("\n");
         tvInfo.setText(sb.toString());
 
+    }
+
+    private String buildDescription(final String desc) {
+        LogUtil.v(TAG, "buildDescription() " + desc);
+
+        final StringBuilder builder = new StringBuilder();
+        if (StringHelper.isEmpty(desc)) {
+            builder.append("这家伙很懒，什么都没写");
+        } else {
+            builder.append(desc);
+        }
+
+        return builder.toString();
     }
 
     public void setProfileClickListener(ProfileClickListener listener) {
