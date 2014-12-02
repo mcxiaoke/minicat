@@ -128,6 +128,11 @@
     <string name="option_license_title">开源许可</string>
     <string name="option_license_summary">本应用使用的第三方开源库和文件</string>
 
+    <string name="option_support_account_key">option_support_account_key</string>
+    <string name="option_support_account_title">蘑菇饭App</string>
+    <string name="option_support_account_summary">联系蘑菇饭技术支持帐号</string>
+    <string name="option_support_account_uri">fanfouapp://profile/androidsupport</string>
+
     <string name="option_project_page_key">option_project_page_key</string>
     <string name="option_project_page_title">项目地址</string>
     <string name="option_project_page_summary">https://github.com/mcxiaoke/minicat</string>

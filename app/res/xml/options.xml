@@ -15,6 +15,16 @@
         android:defaultValue="@bool/option_auto_update_default_value" />
 
     <Preference
+        android:key="@string/option_support_account_key"
+        android:title="@string/option_support_account_title"
+        android:summary="@string/option_support_account_summary">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="@string/option_support_account_uri" />
+
+    </Preference>
+
+    <Preference
         android:key="@string/option_project_page_key"
         android:title="@string/option_project_page_title"
         android:summary="@string/option_project_page_summary">
