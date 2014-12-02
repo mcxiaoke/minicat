@@ -48,11 +48,14 @@ public class StatusHelper {
     private static final String SCHEME_USER = "fanfouapp://profile/";
 
     public static void linkifyUsers(final Spannable spannable, final HashMap<String, String> mentions) {
+        LogUtil.v(TAG, "linkifyUsers:mentions:" + mentions.keySet());
         final Linkify.MatchFilter filter = new Linkify.MatchFilter() {
             @Override
             public final boolean acceptMatch(final CharSequence s, final int start,
                                              final int end) {
                 String name = s.subSequence(start + 1, end).toString().trim();
+                LogUtil.v(TAG, "linkifyUsers:acceptMatch:text:" + s);
+                LogUtil.v(TAG, "linkifyUsers:acceptMatch:name:" + name);
                 return mentions.containsKey(name);
             }
         };
@@ -61,7 +64,9 @@ public class StatusHelper {
             @Override
             public String transformUrl(Matcher match, String url) {
                 String name = url.subSequence(1, url.length()).toString().trim();
-                return mentions.get(name);
+                final String at = mentions.get(name);
+                LogUtil.v(TAG, "linkifyUsers:transformUrl,name:" + name + " at:" + at);
+                return at;
             }
         };
         Linkify.addLinks(spannable, PATTERN_USER, SCHEME_USER, filter,
@@ -91,23 +96,29 @@ public class StatusHelper {
         final HashMap<String, String> map = new HashMap<String, String>();
         final Matcher m = PATTERN_USERLINK.matcher(text);
         while (m.find()) {
-            map.put(m.group(2), m.group(1));
+            final String userId = m.group(1);
+            final String screenName = Html.fromHtml(m.group(2)).toString();
+            map.put(screenName, userId);
             if (AppContext.DEBUG) {
-                Log.d(TAG, "findMentions() screenName=" + m.group(2)
-                        + " userId=" + m.group(1));
+                LogUtil.v(TAG, "findMentions() add: " + screenName
+                        + " = " + userId);
             }
         }
         return map;
     }
 
     public static void setStatus(final TextView textView, final String htmlText) {
+        LogUtil.v(TAG, "setStatus:mentions:" + htmlText);
         final HashMap<String, String> mentions = findMentions(htmlText);
+        LogUtil.v(TAG, "setStatus:mentions:" + mentions);
         final String plainText = Html.fromHtml(htmlText).toString();
+        LogUtil.v(TAG, "setStatus:plainText:" + plainText);
         final SpannableString spannable = new SpannableString(plainText);
         Linkify.addLinks(spannable, Linkify.WEB_URLS);
         linkifyUsers(spannable, mentions);
         linkifyTags(spannable);
         removeUnderLines(spannable);
+        LogUtil.v(TAG, "setStatus:finalText:" + spannable);
         textView.setText(spannable, BufferType.SPANNABLE);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
     }

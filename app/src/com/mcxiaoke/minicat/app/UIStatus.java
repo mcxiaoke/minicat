@@ -27,6 +27,7 @@ import com.mcxiaoke.minicat.task.BetterAsyncTask;
 import com.mcxiaoke.minicat.util.DateTimeHelper;
 import com.mcxiaoke.minicat.util.IOHelper;
 import com.mcxiaoke.minicat.util.IntentHelper;
+import com.mcxiaoke.minicat.util.LogUtil;
 import com.mcxiaoke.minicat.util.StatusHelper;
 import com.mcxiaoke.minicat.util.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -40,6 +41,8 @@ import java.net.HttpURLConnection;
  * @version 5.0 2012.03.13
  */
 public class UIStatus extends UIBaseSupport {
+
+    public static final String MY_TAG = UIStatus.class.getSimpleName();
 
     private View vContainer;
 
@@ -116,6 +119,9 @@ public class UIStatus extends UIBaseSupport {
         } else {
             status = CacheController.getStatusAndCache(statusId, mContext);
         }
+
+        LogUtil.v(MY_TAG, "status:" + status);
+
 
     }
 
