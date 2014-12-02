@@ -1,15 +1,17 @@
 package com.mcxiaoke.minicat.util;
 
+import android.graphics.Typeface;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
-import android.util.Log;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 import com.mcxiaoke.minicat.AppContext;
@@ -17,6 +19,7 @@ import com.mcxiaoke.minicat.dao.model.StatusModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,6 +45,9 @@ public class StatusHelper {
     }
 
     private static final String TAG = "StatusHelper";
+    private static final int COLOR_HIGHLIGHT = 0xFFFF6666;
+
+    private static final Pattern PATTERN_HIGHLIGHT = Pattern.compile("<b>(\\w+?)</b>");
 
     private static final Pattern PATTERN_USER = Pattern.compile("@.+?\\s");
 
@@ -92,9 +98,21 @@ public class StatusHelper {
     private static Pattern PATTERN_USERLINK = Pattern
             .compile("<a href=\"http://fanfou\\.com/(.*?)\" class=\"former\">(.*?)</a>");
 
-    private static HashMap<String, String> findMentions(final String text) {
+    private static List<String> findHighlightWords(final String htmlText) {
+        LogUtil.v(TAG, "findHighlightWord() htmlText:" + htmlText);
+        final Matcher m = PATTERN_HIGHLIGHT.matcher(htmlText);
+        List<String> words = new ArrayList<>();
+        while (m.find()) {
+            final String word = m.group(1);
+            LogUtil.v(TAG, "findHighlightWord() add:" + word);
+            words.add(word);
+        }
+        return words;
+    }
+
+    private static HashMap<String, String> findMentions(final String htmlText) {
         final HashMap<String, String> map = new HashMap<String, String>();
-        final Matcher m = PATTERN_USERLINK.matcher(text);
+        final Matcher m = PATTERN_USERLINK.matcher(htmlText);
         while (m.find()) {
             final String userId = m.group(1);
             final String screenName = Html.fromHtml(m.group(2)).toString();
@@ -108,7 +126,7 @@ public class StatusHelper {
     }
 
     public static void setStatus(final TextView textView, final String htmlText) {
-        LogUtil.v(TAG, "setStatus:mentions:" + htmlText);
+        LogUtil.v(TAG, "setStatus:htmlText:" + htmlText);
         final HashMap<String, String> mentions = findMentions(htmlText);
         LogUtil.v(TAG, "setStatus:mentions:" + mentions);
         final String plainText = Html.fromHtml(htmlText).toString();
@@ -126,6 +144,9 @@ public class StatusHelper {
     private static final int LINK_COLOR = 0xff28a5c0;
 
     public static void setItemStatus(final TextView textView, final String htmlText) {
+        LogUtil.v(TAG, "setItemStatus() " + htmlText);
+        final List<String> highlightWords = findHighlightWords(htmlText);
+        LogUtil.v(TAG, "setItemStatus() highlightWords:" + highlightWords);
         final String plainText = Html.fromHtml(htmlText).toString();
         final SpannableString spannable = new SpannableString(plainText);
         Linkify.addLinks(spannable, Linkify.WEB_URLS);
@@ -138,6 +159,7 @@ public class StatusHelper {
         }
         linkifyTags(spannable);
         removeUnderLines(spannable);
+        applyHighlightSpan(spannable, highlightWords);
         textView.setText(spannable, BufferType.SPANNABLE);
     }
 
@@ -152,6 +174,28 @@ public class StatusHelper {
         }
     }
 
+    public static void applyHighlightSpan(final SpannableString span,
+                                          final List<String> keywords) {
+        if (keywords == null || keywords.isEmpty()) {
+            return;
+        }
+        LogUtil.v(TAG, "applyHighlightSpan() keywords:" + keywords);
+        for (final String keyword : keywords) {
+            if (!TextUtils.isEmpty(keyword)) {
+                final Pattern pattern = Pattern.compile(keyword);
+                Matcher m = pattern.matcher(span);
+                if (m.find()) {
+                    int start = m.start();
+                    int end = m.end();
+                    span.setSpan(new ForegroundColorSpan(COLOR_HIGHLIGHT), start,
+                            end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    span.setSpan(new StyleSpan(Typeface.BOLD), start, end,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
+        }
+
+    }
 
     /**
      * 从消息中获取全部提到的人，将它们按先后顺序放入一个列表

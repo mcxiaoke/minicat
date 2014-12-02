@@ -83,9 +83,9 @@ public class SearchResultsArrayAdapter extends BaseAdapter implements
         }
 
         final StatusModel s = getData().get(position);
-        holder.view.setContent(buildHighlightSpan(s.getSimpleText()));
-        holder.view.setPhoto(s.getPhotoThumbUrl(), s.getPhotoLargeUrl());
-//        UIHelper.setContent(holder.view, s);
+//        StatusHelper.setStatus(holder.view.getContentTextView(), s.getText());
+//        holder.view.setPhoto(s.getPhotoThumbUrl(), s.getPhotoLargeUrl());
+        UIHelper.setContent(holder.view, s);
         UIHelper.setMetaInfo(holder.view, s);
         UIHelper.setImageClick(holder.view, s.getUserId());
         String headUrl = s.getUserProfileImageUrl();
