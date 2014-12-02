@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.mcxiaoke.minicat.AppContext;
@@ -24,6 +25,8 @@ import com.mcxiaoke.minicat.controller.UIController;
 import com.mcxiaoke.minicat.dao.model.UserModel;
 import com.mcxiaoke.minicat.service.SyncService;
 import com.mcxiaoke.minicat.ui.widget.ProfileView;
+import com.mcxiaoke.minicat.ui.widget.SwipeRefreshLayoutEx;
+import com.mcxiaoke.minicat.ui.widget.SwipeRefreshLayoutEx.CanChildScrollUpCallback;
 import com.mcxiaoke.minicat.util.IntentHelper;
 import com.mcxiaoke.minicat.util.LogUtil;
 import com.mcxiaoke.minicat.util.Utils;
@@ -35,7 +38,8 @@ import com.mcxiaoke.minicat.util.Utils;
  * Date: 13-5-20
  * Time: 下午10:59
  */
-public class ProfileFragment extends AbstractFragment implements ProfileView.ProfileClickListener {
+public class ProfileFragment extends AbstractFragment
+        implements ProfileView.ProfileClickListener {
     private static final String TAG = ProfileFragment.class.getSimpleName();
 
     public static ProfileFragment newInstance(String userId, boolean useMenu) {
@@ -48,7 +52,9 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
     }
 
     @InjectView(R.id.root)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    SwipeRefreshLayoutEx mSwipeRefreshLayout;
+    @InjectView(R.id.container)
+    ScrollView mScrollView;
     @InjectView(R.id.profile)
     ProfileView mProfileView;
 
@@ -88,11 +94,17 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mSwipeRefreshLayout.setCanChildScrollUpCallback(new CanChildScrollUpCallback() {
+            @Override
+            public boolean canSwipeRefreshChildScrollUp() {
+                return ViewCompat.canScrollVertically(mScrollView, -1);
+            }
+        });
         mSwipeRefreshLayout.setColorSchemeResources(
                 R.color.color1,
                 R.color.color2,
-                R.color.color3, R.color.color4);
-//        mSwipeRefreshLayout.setColorScheme(R.color.blue, R.color.purple, R.color.green, R.color.orange);
+                R.color.color3,
+                R.color.color4);
         mProfileView.setProfileClickListener(this);
     }
 
@@ -365,8 +377,8 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
         mProfileView.setFollowState(follow);
     }
 
-    protected void showRefreshIndicator(final boolean show){
-        if(mSwipeRefreshLayout!=null){
+    protected void showRefreshIndicator(final boolean show) {
+        if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setRefreshing(show);
         }
     }
@@ -533,6 +545,5 @@ public class ProfileFragment extends AbstractFragment implements ProfileView.Pro
         }
         return true;
     }
-
 
 }

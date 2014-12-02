@@ -4,11 +4,14 @@ dependencies {
     compile('com.android.support:support-v4:20.0.0')
     compile('com.google.code.gson:gson:2.3')
 
-    compile 'de.hdodenhof:circleimageview:1.1.1'
+    compile 'de.hdodenhof:circleimageview:1.2.1'
+    compile('com.github.ksoichiro:android-observablescrollview:1.2.1') {
+        exclude group: 'com.android.support', module: 'support-v4'
+    }
 
 //    compile 'com.makeramen:roundedimageview:1.2.4'
 
-    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+//    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 
     compile('com.nostra13.universalimageloader:universal-image-loader:1.9.1')
     compile('com.nineoldandroids:library:2.4.0')
