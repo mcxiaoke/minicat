@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
-import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.app.UIAbout;
 import com.mcxiaoke.minicat.app.UIConversation;
 import com.mcxiaoke.minicat.app.UIDebugMode;
@@ -36,10 +35,8 @@ import com.mcxiaoke.minicat.dao.model.StatusUpdateInfo;
 import com.mcxiaoke.minicat.dao.model.UserModel;
 import com.mcxiaoke.minicat.service.SyncService;
 import com.mcxiaoke.minicat.util.StatusHelper;
-import com.mcxiaoke.minicat.util.StringHelper;
 import com.mcxiaoke.minicat.util.Utils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,12 +48,10 @@ public class UIController {
 
     private static void startUIByAnimation(Activity activity, Intent intent) {
         activity.startActivity(intent);
-//        activity.overridePendingTransition(R.anim.slide_in_from_right, android.R.anim.fade_out);
     }
 
     private static void startUIByAnimationBack(Activity activity, Intent intent) {
         activity.startActivity(intent);
-//        activity.overridePendingTransition(android.R.anim.fade_in, R.anim.slide_out_to_right);
     }
 
     public static void showFanfouBlog(Context context) {
@@ -65,23 +60,9 @@ public class UIController {
         context.startActivity(intent);
     }
 
-    public static void showAnnounce(Activity context) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("fanfouhd://user/androidsupport"));
-        startUIByAnimation(context, intent);
-    }
-
     public static void showOption(Activity context) {
         Intent intent = new Intent(context, UIOptions.class);
         startUIByAnimation(context, intent);
-    }
-
-    public static void goStatusPage(Activity context, String id) {
-        if (!StringHelper.isEmpty(id)) {
-            Intent intent = new Intent(context, UIStatus.class);
-            intent.putExtra("id", id);
-            startUIByAnimation(context, intent);
-        }
     }
 
     public static void goStatusPage(Activity context, StatusModel s) {
@@ -90,12 +71,6 @@ public class UIController {
             intent.putExtra("data", s);
             startUIByAnimation(context, intent);
         }
-    }
-
-    public static void goPhotoViewPage(Activity context, String photoUrl) {
-        Intent intent = new Intent(context, UIPhoto.class);
-        intent.putExtra("url", photoUrl);
-        startUIByAnimation(context, intent);
     }
 
     public static void showDebug(Activity context) {
@@ -120,13 +95,6 @@ public class UIController {
         Intent intent = new Intent(context, UIHome.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
-    }
-
-    public static void backHome(Activity context) {
-        Intent intent = new Intent(context, UIHome.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        // context.startActivity(intent);
-        startUIByAnimationBack(context, intent);
     }
 
     public static void showConversation(Activity context, DirectMessageModel dm) {
@@ -158,21 +126,12 @@ public class UIController {
     public static void showWrite(Activity activity) {
         Intent intent = new Intent(activity, UIWrite.class);
         startUIByAnimation(activity, intent);
-//        activity.startActivity(intent);
-//        activity.overridePendingTransition(R.anim.footer_appear, R.anim.keep);
     }
 
     public static void goBackToWrite(Activity activity, StatusUpdateInfo info) {
         Intent intent = new Intent(activity, UIWrite.class);
         intent.putExtra(StatusUpdateInfo.TAG, info);
         startUIByAnimationBack(activity, intent);
-    }
-
-    public static void showWrite(Activity context, String text, File file) {
-        Intent intent = new Intent(context, UIWrite.class);
-        intent.putExtra("text", text);
-        intent.putExtra("data", file);
-        startUIByAnimation(context, intent);
     }
 
     public static void showWrite(Activity context, String text) {
@@ -312,13 +271,11 @@ public class UIController {
         Intent intent = new Intent(context, UIPhoto.class);
         intent.putExtra("url", url);
         context.startActivity(intent);
-        context.overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_enter);
     }
 
     public static void showAlbum(Activity context, UserModel user) {
         Intent intent = new Intent(context, UIPhotos.class);
         intent.putExtra("user", user);
-//        context.startActivity(intent);
         startUIByAnimation(context, intent);
     }
 

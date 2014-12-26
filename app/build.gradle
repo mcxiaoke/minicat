@@ -9,10 +9,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-v4'
     }
 
-//    compile 'com.makeramen:roundedimageview:1.2.4'
-
-//    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
-
     compile('com.nostra13.universalimageloader:universal-image-loader:1.9.1')
     compile('com.nineoldandroids:library:2.4.0')
     compile('com.jakewharton:butterknife:6.0.0')
@@ -22,7 +18,6 @@ dependencies {
     compile('com.mcxiaoke.viewpagerindicator:library:2.4.1') {
         exclude group: 'com.android.support', module: 'support-v4'
     }
-//    compile 'com.mcxiaoke.actionbarpulltorefresh:library:0.9.5'
 
     compile('com.mcxiaoke.oauthsimple:oauthsimple:2.0.+') {
         exclude group: 'org.json', module: 'json'
@@ -37,7 +32,7 @@ dependencies {
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
         minSdkVersion 14

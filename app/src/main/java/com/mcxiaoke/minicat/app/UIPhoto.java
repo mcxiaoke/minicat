@@ -195,7 +195,8 @@ public class UIPhoto extends Activity implements OnClickListener {
 
     private void doSave() {
         File file = ImageLoader.getInstance().getDiscCache().get(url);
-        File dest = new File(IOHelper.getPictureDir(this), file.getName() + ".jpg");
+        final String fileName = "IMG_" + System.currentTimeMillis() + ".jpg";
+        File dest = new File(IOHelper.getPictureDir(this), fileName);
         if (dest.exists() || IOHelper.copyFile(file, dest)) {
             Utils.notify(this, "照片已保存到 " + dest.getAbsolutePath());
         }
