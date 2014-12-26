@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:drawable="@drawable/ic_favorite_0"
+        android:maxLevel="0" />
+    <item
+        android:drawable="@drawable/ic_favorite_1"
+        android:maxLevel="1" />
+
+</level-list>

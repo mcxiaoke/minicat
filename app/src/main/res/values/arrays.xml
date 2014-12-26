@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="font_size">
+        <item>12号</item>
+        <item>14号</item>
+        <item>16号</item>
+        <item>18号</item>
+        <item>20号</item>
+        <item>22号</item>
+    </string-array>
+    <string-array name="font_size_values">
+        <item>12</item>
+        <item>14</item>
+        <item>16</item>
+        <item>18</item>
+        <item>20</item>
+        <item>22</item>
+    </string-array>
+    <string-array name="notification_interval">
+        <item>3分钟</item>
+        <item>5分钟</item>
+        <item>10分钟</item>
+        <item>15分钟</item>
+        <item>30分钟</item>
+        <item>1小时</item>
+    </string-array>
+    <string-array name="notification_interval_values">
+        <item>3</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+    </string-array>
+
+</resources>

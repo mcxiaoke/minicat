@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="80dp"
+    android:id="@+id/list_gap"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="15dp">
+
+    <ProgressBar
+        android:id="@+id/list_gap_progress"
+        android:minWidth="20dp"
+        android:maxWidth="20dp"
+        android:minHeight="20dp"
+        android:maxHeight="20dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/list_gap_text"
+        android:gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="20dp"
+        android:text="消息断层"
+        android:textSize="16sp" />
+
+</LinearLayout>

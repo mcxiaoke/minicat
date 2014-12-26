@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="?android:attr/buttonBarStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/holo_primary"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/button_cancel"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/actionbar_item_selector"
+        android:padding="8dp"
+        android:text="@android:string/cancel"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/button_ok"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/actionbar_item_selector"
+        android:padding="8dp"
+        android:text="@android:string/ok"
+        android:textColor="@color/white" />
+
+</LinearLayout>

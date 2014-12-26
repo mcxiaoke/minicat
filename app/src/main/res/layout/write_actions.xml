@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/actions"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/holo_primary">
+
+    <ImageButton
+        android:id="@+id/action_mention"
+        style="@style/ActionItem"
+        android:src="@drawable/ic_mention" />
+
+    <ImageButton
+        android:id="@+id/action_record"
+        style="@style/ActionItem"
+        android:src="@drawable/ic_record" />
+
+    <ImageButton
+        android:id="@+id/action_gallery"
+        style="@style/ActionItem"
+        android:src="@drawable/ic_gallery" />
+
+    <ImageButton
+        android:id="@+id/action_camera"
+        style="@style/ActionItem"
+        android:src="@drawable/ic_camera" />
+
+</LinearLayout>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_write"
+        android:icon="@drawable/ic_edit"
+        android:orderInCategory="0"
+        android:showAsAction="ifRoom"
+        android:title="发消息"></item>
+
+    <item
+        android:id="@+id/menu_follow"
+        android:icon="@drawable/ic_follow_0"
+        android:orderInCategory="2"
+        android:showAsAction="ifRoom"
+        android:title="添加关注"></item>
+
+    <item
+        android:id="@+id/menu_unfollow"
+        android:icon="@drawable/ic_follow_1"
+        android:orderInCategory="3"
+        android:showAsAction="ifRoom"
+        android:title="取消关注"></item>
+
+    <item
+        android:id="@+id/menu_dm"
+        android:icon="@drawable/ic_dm"
+        android:orderInCategory="4"
+        android:showAsAction="never"
+        android:title="发私信"></item>
+
+    <item
+        android:id="@+id/menu_web"
+        android:icon="@drawable/ic_more"
+        android:orderInCategory="5"
+        android:showAsAction="never"
+        android:title="查看网页"></item>
+
+
+</menu>

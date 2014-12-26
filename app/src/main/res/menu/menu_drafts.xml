@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_sendall"
+        android:orderInCategory="0"
+        android:icon="@drawable/ic_sendall"
+        android:showAsAction="always"
+        android:title="发送全部"></item>
+
+    <item
+        android:id="@+id/menu_clearall"
+        android:orderInCategory="0"
+        android:icon="@drawable/ic_delete"
+        android:showAsAction="ifRoom"
+        android:title="清空草稿箱"></item>
+
+</menu>
