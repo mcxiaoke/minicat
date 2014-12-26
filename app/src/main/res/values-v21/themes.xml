@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ActionBarStyle" parent="android:Widget.Material.ActionBar.Solid">
+        <item name="android:logo">@drawable/ic_logo</item>
+        <item name="android:textColor">@color/solid_white</item>
+        <item name="android:background">@drawable/actionbar_background</item>
+        <item name="android:backgroundSplit">@drawable/actionbar_background</item>
+    </style>
+
+    <style name="ActionBarStyleDark" parent="android:Widget.Material.ActionBar.Solid">
+        <item name="android:logo">@drawable/ic_logo</item>
+        <item name="android:textColor">@color/solid_white</item>
+        <item name="android:background">@drawable/actionbar_background</item>
+        <item name="android:backgroundSplit">@drawable/actionbar_background</item>
+    </style>
+
+    <style name="AppTheme" parent="android:Theme.Material.Light.DarkActionBar">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:colorPrimary">@color/holo_primary</item>
+        <item name="android:colorPrimaryDark">@color/holo_primary_dark</item>
+        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
+    </style>
+
+    <style name="AppTheme.Dark" parent="android:Theme.Material">
+        <item name="android:windowBackground">@color/black</item>
+        <item name="android:actionBarStyle">@style/ActionBarStyleDark</item>
+    </style>
+
+    <style name="AppTheme.WhiteBg">
+        <item name="android:windowBackground">@drawable/ui_background</item>
+    </style>
+
+    <style name="AppTheme.Fullscreen" parent="android:Theme.Material.NoActionBar.Fullscreen" />
+
+</resources>

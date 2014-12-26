@@ -54,7 +54,7 @@
 
     <!-- Theme colors -->
     <color name="holo_primary">#ff33b5e5</color>
-    <!--<color name="holo_primary">#03a9f4</color>-->
+    <color name="holo_primary_dark">#ff1a9ccc</color>
     <color name="holo_primary_disabled">#8033b5e5</color>
     <color name="holo_primary_transparent">#2033b5e5</color>
     <color name="holo_primary_translucent">#8033b5e5</color>
