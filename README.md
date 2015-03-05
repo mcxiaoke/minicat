@@ -4,8 +4,9 @@
 
 ##下载地址
 
-[蒲公英下载](http://www.pgyer.com/minicat)  
-[直接下载](release/minicat-1.3.1.apk?raw=true)
+[蒲公英下载](http://www.pgyer.com/minicat)   
+[百度市场下载](http://shouji.baidu.com/software/item?docid=5606792)    
+[直接下载](release/minicat-1.3.1.apk?raw=true)    
 
 ##特别说明
 
@@ -13,7 +14,11 @@
 Google Play 地址已失效，又莫名其妙的被Google下架，不再有后续版本更新，将不再上架
 
 ##最新版本
-    1.3.1 (2014.12.02)
+
+####1.3.1 (2014.12.02)
+    1. 修复个人资料页不能滑动的问题
+    2. 修复搜索结果高亮和链接解析问题
+    3. 调整热门话题的界面
     
 ##扫码下载
 
@@ -80,7 +85,7 @@ project.ext.ANDROID_KEY_PASSWORD = 'your_key_password'
 ##License
 
 ```
-Copyright 2012-2014 mcxiaoke support@mcxiaoke.com
+Copyright 2012-2015 mcxiaoke minicat@mcxiaoke.com
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
