@@ -36,10 +36,9 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?android:listDivider"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <ListView
-        android:divider="@android:color/transparent"
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="0dp"

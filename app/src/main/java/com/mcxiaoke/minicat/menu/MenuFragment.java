@@ -87,7 +87,7 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fm_menu, null, false);
+        return inflater.inflate(R.layout.fm_menu, container, false);
     }
 
     @Override
@@ -102,9 +102,9 @@ public class MenuFragment extends Fragment implements AdapterView.OnItemClickLis
         mHeaderView = ButterKnife.findById(view, R.id.header);
         mHeaderImage = ButterKnife.findById(view, R.id.header_image);
         mHeaderText = ButterKnife.findById(view, R.id.header_text);
-        mListView = (ListView) getView().findViewById(android.R.id.list);
-        mFooterTextView1 = (TextView) getView().findViewById(android.R.id.text1);
-        mFooterTextView2 = (TextView) getView().findViewById(android.R.id.text2);
+        mListView = ButterKnife.findById(view, android.R.id.list);
+        mFooterTextView1 = ButterKnife.findById(view, android.R.id.text1);
+        mFooterTextView2 = ButterKnife.findById(view, android.R.id.text2);
     }
 
     @Override
