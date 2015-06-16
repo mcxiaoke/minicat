@@ -1,11 +1,11 @@
 package com.mcxiaoke.minicat.app;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -90,7 +90,7 @@ public class UIConversation extends UIBaseSupport {
     private void setFragment() {
         fragment = ConversationFragment.newInstance(userId, screenName, refresh);
 
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.add(R.id.container, fragment);
         ft.commit();

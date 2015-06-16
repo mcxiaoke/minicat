@@ -1,8 +1,8 @@
 package com.mcxiaoke.minicat.app;
 
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import com.mcxiaoke.minicat.AppContext;
@@ -90,7 +90,7 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
 
 //        mFragment.setOnInitCompleteListener(this);
 
-        FragmentTransaction transaction = getFragmentManager()
+        FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction();
         transaction.replace(R.id.container, mFragment);
         transaction.commit();

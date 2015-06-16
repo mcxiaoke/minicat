@@ -1,6 +1,5 @@
 package com.mcxiaoke.minicat.fragment;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -30,7 +29,7 @@ import java.util.List;
  * Date: 13-6-5
  * Time: 下午9:56
  */
-public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeListener {
+public class GalleryFragment extends AbstractFragment implements ViewPager.OnPageChangeListener {
 
     private ViewPager mViewPager;
     private TextView mTextView;
@@ -115,6 +114,16 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
 
     @Override
     public void onPageScrollStateChanged(int state) {
+    }
+
+    @Override
+    public String getTitle() {
+        return null;
+    }
+
+    @Override
+    public void startRefresh() {
+
     }
 
     static class GalleryPagerAdapter extends PagerAdapter {

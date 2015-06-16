@@ -3,6 +3,7 @@ package com.mcxiaoke.minicat.app;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -87,7 +88,7 @@ abstract class UIBaseTimeline extends UIBaseSupport {
         }
 
         mFragment = getFragment(userId);
-        android.app.FragmentTransaction transaction = getFragmentManager()
+        FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction();
         transaction.replace(R.id.container, mFragment);
         transaction.commit();

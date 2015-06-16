@@ -1,7 +1,7 @@
 package com.mcxiaoke.minicat.adapter;
 
-import android.app.FragmentManager;
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.fragment.AbstractListFragment;
 import com.mcxiaoke.minicat.fragment.HomeTimelineFragment;

@@ -1,10 +1,8 @@
 package com.mcxiaoke.minicat.app;
 
 import android.app.AlertDialog;
-import android.app.LoaderManager.LoaderCallbacks;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.location.Location;
@@ -13,6 +11,8 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.text.Editable;
 import android.text.Selection;
 import android.util.Log;
@@ -419,7 +419,7 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
         setAutoComplete();
         parseIntent();
 
-        getLoaderManager().initLoader(LOADER_ID, null, this);
+        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
 
     }
 

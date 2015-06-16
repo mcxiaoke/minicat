@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!--<item-->
     <!--android:id="@+id/menu_refresh"-->
@@ -13,8 +14,8 @@
         android:id="@+id/menu_write"
         android:icon="@drawable/ic_edit"
         android:orderInCategory="1"
-        android:showAsAction="always"
-        android:title="写消息"></item>
+        app:showAsAction="ifRoom"
+        android:title="@string/menu_write" />
 
     <!--<item-->
     <!--android:id="@+id/menu_search"-->

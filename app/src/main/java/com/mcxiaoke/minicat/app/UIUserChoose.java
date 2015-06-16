@@ -1,12 +1,12 @@
 package com.mcxiaoke.minicat.app;
 
-import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
@@ -154,7 +154,7 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
         mCursorAdapter = new UserChooseCursorAdapter(mContext, null);
         mCursorAdapter.setFilterQueryProvider(this);
         mListView.setAdapter(mCursorAdapter);
-        getLoaderManager().initLoader(LOADER_ID, null, this);
+        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     private void initViewStub() {

@@ -1,7 +1,5 @@
 package com.mcxiaoke.minicat.app;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +7,8 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,7 +26,7 @@ import com.umeng.analytics.MobclickAgent;
  * @author mcxiaoke
  * @version 4.0 2013.05.07
  */
-public abstract class UIBaseSupport extends Activity implements OnClickListener {
+public abstract class UIBaseSupport extends AppCompatActivity implements OnClickListener {
     public static final int STATE_INIT = 0;
     public static final int STATE_NORMAL = 1;
     public static final int STATE_EMPTY = 2;
@@ -46,16 +46,16 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
         debug("onCreate()");
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         // 这句话必须在setContentView调用之后才有效
         //setProgressBarIndeterminateVisibility(false);
         AppContext.setActiveContext(this);
         this.mContext = this;
         this.mInflater = LayoutInflater.from(this);
         this.mResources = getResources();
-        this.mActionBar = getActionBar();
+        this.mActionBar = getSupportActionBar();
         this.mActionBar.setDisplayHomeAsUpEnabled(true);
         this.mActionBar.setDisplayUseLogoEnabled(true);
         this.mDisplayMetrics = new DisplayMetrics();

@@ -1,7 +1,7 @@
 package com.mcxiaoke.minicat.fragment;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import com.mcxiaoke.minicat.app.UIBaseSupport;
 
 /**

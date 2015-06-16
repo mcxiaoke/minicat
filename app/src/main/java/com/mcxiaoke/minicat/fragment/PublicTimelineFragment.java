@@ -1,8 +1,8 @@
 package com.mcxiaoke.minicat.fragment;
 
-import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.controller.DataController;

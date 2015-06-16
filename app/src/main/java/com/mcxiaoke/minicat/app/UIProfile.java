@@ -1,9 +1,9 @@
 package com.mcxiaoke.minicat.app;
 
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.dao.model.UserModel;
@@ -36,7 +36,7 @@ public class UIProfile extends UIBaseSupport {
         setContentView(R.layout.ui_profile);
         setProgressBarIndeterminateVisibility(false);
 
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.container, ProfileFragment.newInstance(userId, true));
         ft.commit();
     }

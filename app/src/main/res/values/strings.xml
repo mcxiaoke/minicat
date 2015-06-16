@@ -142,5 +142,16 @@
 
     <string name="button_update_now">下载更新</string>
     <string name="button_update_later">以后再说</string>
+    <string name="menu_write">写消息</string>
+    <string name="menu_send_all">发送全部</string>
+    <string name="menu_clear_drafts">清空草稿箱</string>
+    <string name="menu_follow">添加关注</string>
+    <string name="menu_unfollow">取消关注</string>
+    <string name="menu_send_dm">发私信</string>
+    <string name="menu_open_url">查看网页</string>
+    <string name="menu_search_web">搜索饭否</string>
+    <string name="menu_copy">复制消息内容</string>
+    <string name="menu_web">打开网页</string>
+    <string name="menu_send">发送</string>
 
 </resources>

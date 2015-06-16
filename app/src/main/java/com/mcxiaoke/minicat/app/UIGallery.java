@@ -1,8 +1,8 @@
 package com.mcxiaoke.minicat.app;
 
-import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * Date: 13-6-5
  * Time: 下午9:55
  */
-public class UIGallery extends Activity {
+public class UIGallery extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +34,7 @@ public class UIGallery extends Activity {
         }
 
         setContentView(R.layout.ui_gallery);
-        getFragmentManager().beginTransaction().replace(R.id.content, GalleryFragment.newInstance(data, index)).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, GalleryFragment.newInstance(data, index)).commit();
 
     }
 

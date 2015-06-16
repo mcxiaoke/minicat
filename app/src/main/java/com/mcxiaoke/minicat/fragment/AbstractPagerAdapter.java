@@ -1,6 +1,6 @@
 package com.mcxiaoke.minicat.fragment;
 
-import android.app.FragmentManager;
+import android.support.v4.app.FragmentManager;
 import com.mcxiaoke.minicat.adapter.FragmentPagerAdapter;
 
 /**
