@@ -120,7 +120,7 @@ abstract class UIBaseTimeline extends UIBaseSupport {
         }
 
         if (user != null) {
-            getActionBar().setTitle(user.getScreenName() + "的" + getTitleSuffix());
+            getSupportActionBar().setTitle(user.getScreenName() + "的" + getTitleSuffix());
         }
 
         return false;

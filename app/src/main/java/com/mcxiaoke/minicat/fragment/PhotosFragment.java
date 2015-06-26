@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +79,8 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
         mArrayAdapter = new GridViewAdapter(getActivity(), R.id.text, mData);
         mGridView.setOnItemClickListener(this);
         mGridView.setAdapter(mArrayAdapter);
-        getActivity().getActionBar().setTitle(user.getScreenName() + "的相册");
+        final AppCompatActivity activity= (AppCompatActivity) getActivity();
+        activity.getSupportActionBar().setTitle(user.getScreenName() + "的相册");
         startRefresh();
     }
 

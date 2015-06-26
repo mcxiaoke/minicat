@@ -95,7 +95,7 @@ public class UIRecords extends UIBaseSupport implements OnItemClickListener {
     }
 
     protected void setLayout() {
-        getActionBar().setTitle("草稿箱");
+        getSupportActionBar().setTitle("草稿箱");
         setContentView(R.layout.list_drafts);
         setProgressBarIndeterminateVisibility(false);
 

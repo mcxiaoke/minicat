@@ -1,12 +1,12 @@
 package com.mcxiaoke.minicat.app;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,8 +21,8 @@ import com.mcxiaoke.minicat.util.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import uk.co.senab.photoview.PhotoView;
 
 import java.io.File;
@@ -31,7 +31,7 @@ import java.io.File;
  * @author mcxiaoke
  * @version 5.0 2012.03.27
  */
-public class UIPhoto extends Activity implements OnClickListener {
+public class UIPhoto extends AppCompatActivity implements OnClickListener {
 
     private static final String TAG = UIPhoto.class.getSimpleName();
     private String url;
@@ -45,9 +45,9 @@ public class UIPhoto extends Activity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState);
-        getActionBar().setBackgroundDrawable(new ColorDrawable(0x66333333));
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle("查看照片");
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0x66333333));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("查看照片");
         initialize();
         setLayout();
     }
@@ -106,7 +106,7 @@ public class UIPhoto extends Activity implements OnClickListener {
     }
 
     private void toggleActionBar() {
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar.isShowing()) {
             actionBar.hide();
         } else {

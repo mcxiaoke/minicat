@@ -18,7 +18,7 @@ public class UIOptions extends UIBaseSupport {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ui_container);
         setProgressBarIndeterminateVisibility(false);
-        getActionBar().setTitle("设置");
+        getSupportActionBar().setTitle("设置");
         getFragmentManager().beginTransaction().replace(R.id.content, OptionFragment.newInstance()).commit();
     }
 

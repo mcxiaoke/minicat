@@ -63,7 +63,7 @@ public class UIUserList extends UIBaseSupport implements OnInitCompleteListener 
                 builder.append(screenName);
                 builder.append("关注的人");
             }
-            getActionBar().setTitle(builder.toString());
+            getSupportActionBar().setTitle(builder.toString());
         }
     }
 

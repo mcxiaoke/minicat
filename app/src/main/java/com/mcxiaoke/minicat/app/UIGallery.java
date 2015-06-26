@@ -24,9 +24,9 @@ public class UIGallery extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState);
-        getActionBar().setBackgroundDrawable(new ColorDrawable(0x66333333));
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle("查看照片");
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0x66333333));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("查看照片");
         ArrayList<String> data = getIntent().getStringArrayListExtra("data");
         int index = getIntent().getIntExtra("index", 0);
         if (data == null || data.isEmpty()) {

@@ -1,6 +1,5 @@
 package com.mcxiaoke.minicat.fragment;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -8,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -352,9 +352,9 @@ public class ProfileFragment extends AbstractFragment
 
     private void updateTitle(UserModel user) {
         if (user != null && useMenu) {
-            Activity activity = getActivity();
+            final AppCompatActivity activity= (AppCompatActivity) getActivity();
             if (activity != null) {
-                activity.getActionBar().setTitle("@" + user.getScreenName());
+                activity.getSupportActionBar().setTitle("@" + user.getScreenName());
             }
         }
     }

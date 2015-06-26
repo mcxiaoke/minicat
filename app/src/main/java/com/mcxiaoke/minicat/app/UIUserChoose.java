@@ -134,7 +134,7 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
 
     protected void setLayout() {
         setProgressBarIndeterminateVisibility(false);
-        getActionBar().setTitle("选择发送对象");
+        getSupportActionBar().setTitle("选择发送对象");
         setContentView(R.layout.user_choose);
         mViewStub = (ViewStub) findViewById(R.id.stub);
         mEditText = (EditText) findViewById(R.id.input);
