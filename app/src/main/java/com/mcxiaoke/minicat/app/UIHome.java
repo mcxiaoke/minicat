@@ -384,7 +384,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     private void switchContent(AbstractFragment fragment) {
         log("switchContent fragment=" + fragment);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out);
+        ft.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
 //        ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.replace(R.id.content_frame, fragment);
         ft.commit();

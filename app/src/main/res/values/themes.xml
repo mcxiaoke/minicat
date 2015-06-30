@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="ProgressBarStyle" parent="Widget.AppCompat.ProgressBar">
-        <item name="android:minHeight">32dp</item>
-        <item name="android:maxHeight">32dp</item>
-        <item name="android:minWidth">48dp</item>
-        <item name="android:maxWidth">48dp</item>
-    </style>
-
     <style name="ActionBarStyle" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="android:logo">@drawable/ic_logo</item>
         <item name="android:textColor">@color/solid_white</item>
         <item name="android:background">@drawable/actionbar_background</item>
         <item name="android:backgroundSplit">@drawable/actionbar_background</item>
-        <item name="android:indeterminateProgressStyle">@style/ProgressBarStyle</item>
     </style>
 
     <style name="ActionBarStyleDark" parent="Widget.AppCompat.ActionBar.Solid">
@@ -21,16 +12,23 @@
         <item name="android:textColor">@color/solid_white</item>
         <item name="android:background">@drawable/actionbar_background</item>
         <item name="android:backgroundSplit">@drawable/actionbar_background</item>
-        <item name="android:indeterminateProgressStyle">@style/ProgressBarStyle</item>
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
-        <item name="actionBarStyle">@style/ActionBarStyle</item>
-        <item name="colorPrimary">@color/holo_primary</item>
-        <item name="colorPrimaryDark">@color/holo_primary_dark</item>
         <item name="actionBarItemBackground">@drawable/actionbar_item_selector</item>
+        <item name="actionBarStyle">@style/ActionBarStyle</item>
+        <!-- colorPrimary is used for the default action bar background -->
+        <item name="colorPrimary">@color/holo_primary</item>
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/holo_primary_dark</item>
+        <!-- colorAccent is used as the default value for colorControlActivated,
+             which is used to tint widgets -->
+        <item name="colorAccent">@color/holo_primary_translucent</item>
+        <!-- You can also set colorControlNormal, colorControlActivated
+             colorControlHighlight, and colorSwitchThumbNormal. -->
     </style>
+
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat">
         <item name="android:windowBackground">@color/black</item>
@@ -39,7 +37,7 @@
     </style>
 
     <style name="AppTheme.WhiteBg">
-        <item name="android:windowBackground">@drawable/ui_background</item>
+        <item name="android:windowBackground">@color/background_primary</item>
     </style>
 
     <style name="AppTheme.Fullscreen" parent="Theme.AppCompat.NoActionBar">
