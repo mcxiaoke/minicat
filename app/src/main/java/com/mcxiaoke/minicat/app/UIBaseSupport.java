@@ -58,7 +58,7 @@ public abstract class UIBaseSupport extends AppCompatActivity implements OnClick
         this.mDisplayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
         this.mActionBar = getSupportActionBar();
-        if (this.mActionBar != null) {
+        if(this.mActionBar!=null){
             this.mActionBar.setDisplayHomeAsUpEnabled(true);
             this.mActionBar.setDisplayUseLogoEnabled(true);
         }

@@ -40,7 +40,6 @@ import com.mcxiaoke.minicat.dao.model.UserColumns;
 import com.mcxiaoke.minicat.dao.model.UserModel;
 import com.mcxiaoke.minicat.util.Assert;
 import com.mcxiaoke.minicat.util.ImageHelper;
-import com.mcxiaoke.minicat.util.LogUtil;
 import com.mcxiaoke.minicat.util.NetworkHelper;
 import com.mcxiaoke.minicat.util.StringHelper;
 import com.mcxiaoke.minicat.util.UmengHelper;
@@ -103,7 +102,7 @@ public final class SyncService extends Service implements Handler.Callback {
     private volatile boolean isSending = false;
 
     private static void debug(String message) {
-        LogUtil.v(TAG, message);
+//        LogUtil.v(TAG, message);
     }
 
     public static void deleteDirectMessage(Context context, String id,

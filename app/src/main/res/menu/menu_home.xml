@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <item
-        android:id="@+id/menu_write"
-        android:icon="@drawable/ic_edit"
-        android:orderInCategory="1"
-        app:showAsAction="ifRoom"
-        android:title="@string/menu_write" />
-
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_home"
+            android:icon="@drawable/ic_menu_home"
+            android:title="@string/menu_home" />
+        <item
+            android:id="@+id/menu_profile"
+            android:icon="@drawable/ic_menu_profile"
+            android:title="@string/menu_profile" />
+        <item
+            android:id="@+id/menu_inbox"
+            android:icon="@drawable/ic_menu_info"
+            android:title="@string/menu_inbox" />
+        <item
+            android:id="@+id/menu_topics"
+            android:icon="@drawable/ic_item_topic"
+            android:title="@string/menu_topics" />
+        <item
+            android:id="@+id/menu_settings"
+            android:icon="@drawable/ic_menu_setting"
+            android:title="@string/menu_settings" />
+    </group>
 </menu>

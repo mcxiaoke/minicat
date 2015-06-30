@@ -153,5 +153,9 @@
     <string name="menu_copy">复制消息内容</string>
     <string name="menu_web">打开网页</string>
     <string name="menu_send">发送</string>
+    <string name="menu_profile">我的资料</string>
+    <string name="menu_inbox">收件箱</string>
+    <string name="menu_topics">热门话题</string>
+    <string name="menu_settings">设置</string>
 
 </resources>

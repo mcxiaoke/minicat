@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/list_header"
+        app:headerLayout="@layout/act_home_drawer_header"
         app:menu="@menu/menu_home" />
 
 </android.support.v4.widget.DrawerLayout>

@@ -150,10 +150,10 @@ final class FanFouApi implements Api {
 
     private StatusModel fetchStatus(String url, int type, Verb verb)
             throws ApiException {
-        if (DEBUG) {
-            Log.d(TAG, "fetchStatus url=" + url + " type=" + type + " verb="
-                    + verb.name());
-        }
+//        if (DEBUG) {
+//            Log.d(TAG, "fetchStatus url=" + url + " type=" + type + " verb="
+//                    + verb.name());
+//        }
 
         RequestBuilder builder = RequestBuilder.newBuilder();
         builder.url(makeUrl(url)).verb(verb).mode("lite").format("html");
@@ -1004,10 +1004,10 @@ final class FanFouApi implements Api {
             Response response = request.send();
             int statusCode = response.getCode();
             String body = response.getBody();
-            if (DEBUG) {
-                debug("fetch() statusCode=" + statusCode + " builder info="
-                        + builder + " builder=" + builder);
-            }
+//            if (DEBUG) {
+//                debug("fetch() statusCode=" + statusCode + " builder info="
+//                        + builder + " builder=" + builder);
+//            }
             if (statusCode == 200) {
                 return body;
             }

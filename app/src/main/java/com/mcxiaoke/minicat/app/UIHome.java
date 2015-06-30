@@ -18,11 +18,10 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import butterknife.ButterKnife;
@@ -34,9 +33,6 @@ import com.mcxiaoke.minicat.controller.UIController;
 import com.mcxiaoke.minicat.fragment.AbstractFragment;
 import com.mcxiaoke.minicat.fragment.ConversationListFragment;
 import com.mcxiaoke.minicat.fragment.ProfileFragment;
-import com.mcxiaoke.minicat.menu.MenuCallback;
-import com.mcxiaoke.minicat.menu.MenuFragment;
-import com.mcxiaoke.minicat.menu.MenuItemResource;
 import com.mcxiaoke.minicat.preference.PreferenceHelper;
 import com.mcxiaoke.minicat.push.PushService;
 import com.mcxiaoke.minicat.service.AutoCompleteService;
@@ -54,7 +50,7 @@ import org.oauthsimple.utils.MimeUtils;
 /**
  * @author mcxiaoke
  */
-public class UIHome extends UIBaseSupport implements MenuCallback{
+public class UIHome extends UIBaseSupport {
 
     public static final String TAG = UIHome.class.getSimpleName();
     private static final int UCODE_HAS_UPDATE = 0;
@@ -64,7 +60,6 @@ public class UIHome extends UIBaseSupport implements MenuCallback{
     private static final long TIME_THREE_DAYS = 1000 * 3600 * 24 * 5L;
     private HomePagesAdapter mPagesAdapter;
     private DownloadManager mDownloadManager;
-    private int mCurrentIndex;
     private int mCurrentPage;
     private BroadcastReceiver mReceiver;
     private AbstractFragment mCurrentFragment;
@@ -108,36 +103,12 @@ public class UIHome extends UIBaseSupport implements MenuCallback{
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-//        if (mDrawerLayout.isDrawerOpen(mDrawFrame)) {
-//            mDrawerLayout.closeDrawer(Gravity.LEFT);
-//        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver();
         PushService.check(this);
         AutoCompleteService.check(this);
         ImageLoader.getInstance().clearMemoryCache();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
-        // Get the SearchView and set the searchable configuration
-//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-        // Assumes current activity is the searchable activity
-//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-//        searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
     }
 
     private BroadcastReceiver mOnDownloadCompleteReceiver = new BroadcastReceiver() {
@@ -152,38 +123,8 @@ public class UIHome extends UIBaseSupport implements MenuCallback{
     };
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-//        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawFrame);
-//        menu.findItem(R.id.menu_refresh).setVisible(!drawerOpen);
-//        menu.findItem(R.id.menu_write).setVisible(!drawerOpen);
-//        if (drawerOpen) {
-//            return true;
-//        }
-//        return super.onPrepareOptionsMenu(menu);
-        if (mRefreshMenuItem != null) {
-            mRefreshMenuItem.setVisible(false);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_write) {
-            onMenuWriteClick();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    protected int getMenuResourceId() {
-        return R.menu.menu_home;
-//        return R.menu.menu;
-    }
-
-    @Override
     protected void onMenuHomeClick() {
         mDrawerLayout.openDrawer(GravityCompat.START);
-//        super.onMenuHomeClick();
     }
 
     @Override
@@ -233,13 +174,13 @@ public class UIHome extends UIBaseSupport implements MenuCallback{
     private void showUpdateDialog(final UpdateResponse response) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("发现新版本");
-        StringBuilder sb = new StringBuilder();
-        sb.append("当前版本：").append(AppContext.versionName).append("\n");
-        sb.append("最新版本：").append(response.version).append("\n");
-        sb.append("\n");
-        sb.append("更新日志：\n");
-        sb.append(response.updateLog).append("\n");
-        builder.setMessage(sb.toString());
+        StringBuilder sr = new StringBuilder();
+        sr.append("当前版本：").append(AppContext.versionName).append("\n");
+        sr.append("最新版本：").append(response.version).append("\n");
+        sr.append("\n");
+        sr.append("更新日志：\n");
+        sr.append(response.updateLog).append("\n");
+        builder.setMessage(sr.toString());
         builder.setPositiveButton(R.string.button_update_now, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -307,7 +248,9 @@ public class UIHome extends UIBaseSupport implements MenuCallback{
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        log("onNavigationItemSelected() " + menuItem);
                         menuItem.setChecked(true);
+                        onDrawerItemSelected(menuItem);
                         mDrawerLayout.closeDrawers();
                         return true;
                     }
@@ -317,9 +260,25 @@ public class UIHome extends UIBaseSupport implements MenuCallback{
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mPagesAdapter = new HomePagesAdapter(getSupportFragmentManager(), this);
         mViewPager.setAdapter(mPagesAdapter);
-        mTabLayout.setupWithViewPager(mViewPager);
+        mViewPager.addOnPageChangeListener(new OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(final int position, final float positionOffset,
+                                       final int positionOffsetPixels) {
 
-        setHomeTitle(mCurrentPage);
+            }
+
+            @Override
+            public void onPageSelected(final int position) {
+                mCurrentPage = position;
+                mCurrentFragment = mPagesAdapter.getItem(mCurrentPage);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(final int state) {
+
+            }
+        });
+        mTabLayout.setupWithViewPager(mViewPager);
         mCurrentFragment = mPagesAdapter.getItem(mCurrentPage);
     }
 
@@ -358,78 +317,26 @@ public class UIHome extends UIBaseSupport implements MenuCallback{
         setTitle("收件箱");
     }
 
-    @Override
-    public void onMenuItemSelected(int position, MenuItemResource menuItem) {
-        log("onMenuItemSelected: " + menuItem + " position=" + position
-                + " mCurrentIndex=" + mCurrentIndex);
-        if (position == mCurrentIndex) {
-            mDrawerLayout.closeDrawer(Gravity.LEFT);
-//            getSlidingMenu().toggle();
-            return;
-        }
-        int id = menuItem.id;
+    public void onDrawerItemSelected(MenuItem menuItem) {
+        log("onDrawerItemSelected: " + menuItem);
+        int id = menuItem.getItemId();
         switch (id) {
-            case MenuFragment.MENU_ID_HOME:
+            case R.id.menu_home:
                 getSupportFragmentManager().beginTransaction().remove(mCurrentFragment)
                         .commit();
-                mDrawerLayout.closeDrawer(Gravity.LEFT);
-//                getSlidingMenu().showContent();
-                setHomeTitle(mCurrentPage);
                 mCurrentFragment = mPagesAdapter.getItem(mCurrentPage);
-                mCurrentIndex = position;
                 break;
-            case MenuFragment.MENU_ID_PROFILE:
-                mCurrentIndex = position;
+            case R.id.menu_profile:
                 showProfileFragment();
                 break;
-            case MenuFragment.MENU_ID_MESSAGE:
-                mCurrentIndex = position;
+            case R.id.menu_inbox:
                 showMessageFragment();
                 break;
-            case MenuFragment.MENU_ID_TOPIC:
+            case R.id.menu_topics:
                 UIController.showTopic(this);
                 break;
-            case MenuFragment.MENU_ID_RECORD:
-                UIController.showRecords(this);
-                break;
-            case MenuFragment.MENU_ID_DIGEST:
-                UIController.showFanfouBlog(this);
-                break;
-            case MenuFragment.MENU_ID_THEME:
-                break;
-            case MenuFragment.MENU_ID_OPTION:
+            case R.id.menu_settings:
                 UIController.showOption(this);
-                break;
-            case MenuFragment.MENU_ID_LOGOUT:
-                onMenuLogoutClick();
-                break;
-            case MenuFragment.MENU_ID_ABOUT:
-                UIController.showAbout(this);
-                break;
-            case MenuFragment.MENU_ID_DEBUG:
-                UIController.showDebug(this);
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void onPageSelected(int position) {
-        mCurrentPage = position;
-        setHomeTitle(position);
-        mCurrentFragment = mPagesAdapter.getItem(mCurrentPage);
-    }
-
-    private void setHomeTitle(int page) {
-        switch (page) {
-            case 0:
-                setTitle("主页");
-                break;
-            case 1:
-                setTitle("提到我的");
-                break;
-            case 2:
-                setTitle("随便看看");
                 break;
             default:
                 break;
