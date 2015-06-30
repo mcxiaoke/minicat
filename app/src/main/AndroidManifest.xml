@@ -70,7 +70,7 @@
             android:name="com.mcxiaoke.minicat.app.UIHome"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.WhiteBg"
+            android:theme="@style/AppThemeHome"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <meta-data

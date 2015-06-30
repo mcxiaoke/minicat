@@ -55,11 +55,13 @@ public abstract class UIBaseSupport extends AppCompatActivity implements OnClick
         this.mContext = this;
         this.mInflater = LayoutInflater.from(this);
         this.mResources = getResources();
-        this.mActionBar = getSupportActionBar();
-        this.mActionBar.setDisplayHomeAsUpEnabled(true);
-        this.mActionBar.setDisplayUseLogoEnabled(true);
         this.mDisplayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
+        this.mActionBar = getSupportActionBar();
+        if (this.mActionBar != null) {
+            this.mActionBar.setDisplayHomeAsUpEnabled(true);
+            this.mActionBar.setDisplayUseLogoEnabled(true);
+        }
     }
 
     @Override

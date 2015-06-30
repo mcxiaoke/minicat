@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="ActionBarStyle" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="android:logo">@drawable/ic_logo</item>
         <item name="android:textColor">@color/solid_white</item>
@@ -18,6 +19,19 @@
         <item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
         <item name="actionBarItemBackground">@drawable/actionbar_item_selector</item>
         <item name="actionBarStyle">@style/ActionBarStyle</item>
+        <!-- colorPrimary is used for the default action bar background -->
+        <item name="colorPrimary">@color/holo_primary</item>
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/holo_primary_dark</item>
+        <!-- colorAccent is used as the default value for colorControlActivated,
+             which is used to tint widgets -->
+        <item name="colorAccent">@color/holo_primary_translucent</item>
+        <!-- You can also set colorControlNormal, colorControlActivated
+             colorControlHighlight, and colorSwitchThumbNormal. -->
+    </style>
+
+    <style name="AppThemeHome" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
         <!-- colorPrimary is used for the default action bar background -->
         <item name="colorPrimary">@color/holo_primary</item>
         <!-- colorPrimaryDark is used for the status bar -->

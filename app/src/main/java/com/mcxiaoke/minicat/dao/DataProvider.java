@@ -16,7 +16,6 @@ import com.mcxiaoke.minicat.dao.model.IBaseColumns;
 import com.mcxiaoke.minicat.dao.model.StatusColumns;
 import com.mcxiaoke.minicat.dao.model.StatusUpdateInfoColumns;
 import com.mcxiaoke.minicat.dao.model.UserColumns;
-import com.mcxiaoke.minicat.util.StringHelper;
 
 import java.util.List;
 
@@ -85,18 +84,18 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
     @Override
     public Cursor query(Uri uri, String[] columns, String where,
                         String[] whereArgs, String orderBy) {
-        if (AppContext.DEBUG) {
-            Log.d(TAG, "query() uri = " + uri + " where = (" + where
-                    + ") whereArgs = " + StringHelper.toString(whereArgs)
-                    + " orderBy = " + orderBy);
-
-            List<String> paths = uri.getPathSegments();
-            for (int i = 0; i < paths.size(); i++) {
-                Log.d(TAG,
-                        "getPathSegments() path[" + i + "] --> " + paths.get(i));
-            }
-
-        }
+//        if (AppContext.DEBUG) {
+//            Log.d(TAG, "query() uri = " + uri + " where = (" + where
+//                    + ") whereArgs = " + StringHelper.toString(whereArgs)
+//                    + " orderBy = " + orderBy);
+//
+//            List<String> paths = uri.getPathSegments();
+//            for (int i = 0; i < paths.size(); i++) {
+//                Log.d(TAG,
+//                        "getPathSegments() path[" + i + "] --> " + paths.get(i));
+//            }
+//
+//        }
         switch (sUriMatcher.match(uri)) {
             case USERS:
             case STATUSES:
@@ -142,14 +141,14 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
 
-        if (DEBUG) {
-            Log.d(TAG, "insert() uri: " + uri);
-            List<String> paths = uri.getPathSegments();
-            for (int i = 0; i < paths.size(); i++) {
-                Log.d(TAG,
-                        "getPathSegments() path[" + i + "] --> " + paths.get(i));
-            }
-        }
+//        if (DEBUG) {
+//            Log.d(TAG, "insert() uri: " + uri);
+//            List<String> paths = uri.getPathSegments();
+//            for (int i = 0; i < paths.size(); i++) {
+//                Log.d(TAG,
+//                        "getPathSegments() path[" + i + "] --> " + paths.get(i));
+//            }
+//        }
 
         switch (sUriMatcher.match(uri)) {
             case USERS:
@@ -176,9 +175,9 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
         db.beginTransaction();
         try {
             for (ContentValues value : values) {
-                if (AppContext.DEBUG) {
-                    Log.d(TAG, "bulkInsert() " + value);
-                }
+//                if (AppContext.DEBUG) {
+//                    Log.d(TAG, "bulkInsert() " + value);
+//                }
                 long id = db.insert(table, null, value);
                 if (id > 0) {
                     ++numInserted;
@@ -194,15 +193,15 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
 
     @Override
     public int delete(Uri uri, String where, String[] whereArgs) {
-        if (DEBUG) {
-            Log.d(TAG, "delete() uri: " + uri + " where: " + where
-                    + " whereArgs: " + whereArgs);
-            List<String> paths = uri.getPathSegments();
-            for (int i = 0; i < paths.size(); i++) {
-                Log.d(TAG,
-                        "getPathSegments() path[" + i + "] --> " + paths.get(i));
-            }
-        }
+//        if (DEBUG) {
+//            Log.d(TAG, "delete() uri: " + uri + " where: " + where
+//                    + " whereArgs: " + whereArgs);
+//            List<String> paths = uri.getPathSegments();
+//            for (int i = 0; i < paths.size(); i++) {
+//                Log.d(TAG,
+//                        "getPathSegments() path[" + i + "] --> " + paths.get(i));
+//            }
+//        }
         int count;
         switch (sUriMatcher.match(uri)) {
             case USERS:
@@ -230,15 +229,15 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
     public int update(Uri uri, ContentValues values, String where,
                       String[] whereArgs) {
 
-        if (DEBUG) {
-            Log.d(TAG, "update() uri: " + uri + " values: " + values
-                    + " where: " + where + " whereArgs: " + whereArgs);
-            List<String> paths = uri.getPathSegments();
-            for (int i = 0; i < paths.size(); i++) {
-                Log.d(TAG,
-                        "getPathSegments() path[" + i + "] --> " + paths.get(i));
-            }
-        }
+//        if (DEBUG) {
+//            Log.d(TAG, "update() uri: " + uri + " values: " + values
+//                    + " where: " + where + " whereArgs: " + whereArgs);
+//            List<String> paths = uri.getPathSegments();
+//            for (int i = 0; i < paths.size(); i++) {
+//                Log.d(TAG,
+//                        "getPathSegments() path[" + i + "] --> " + paths.get(i));
+//            }
+//        }
         int count;
         switch (sUriMatcher.match(uri)) {
             case USER_ID:
@@ -258,20 +257,20 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
             default:
                 throw new IllegalArgumentException("update() Unknown URI " + uri);
         }
-        if (AppContext.DEBUG) {
-            if (count > 0) {
-                log("update() result uri=" + uri + " count=" + count);
-            }
-        }
+//        if (AppContext.DEBUG) {
+//            if (count > 0) {
+//                log("update() result uri=" + uri + " count=" + count);
+//            }
+//        }
         getContext().getContentResolver().notifyChange(uri, null);
         return count;
     }
 
     private Cursor queryWithNotify(Uri uri, Cursor cursor) {
         if (cursor == null) {
-            if (AppContext.DEBUG) {
-                log("query() uri " + uri + " failed.");
-            }
+//            if (AppContext.DEBUG) {
+//                log("query() uri " + uri + " failed.");
+//            }
         } else {
             cursor.setNotificationUri(getContext().getContentResolver(), uri);
         }
@@ -315,10 +314,10 @@ public final class DataProvider extends ContentProvider implements IBaseColumns 
         if (rowId > 0) {
             // getContext().getContentResolver().notifyChange(uri, null);
             Uri resultUri = ContentUris.withAppendedId(uri, rowId);
-            if (AppContext.DEBUG) {
-                log("insert() resultUri=" + resultUri + " id="
-                        + values.getAsString(ID) + " rowId=" + rowId);
-            }
+//            if (AppContext.DEBUG) {
+//                log("insert() resultUri=" + resultUri + " id="
+//                        + values.getAsString(ID) + " rowId=" + rowId);
+//            }
         }
     }
 

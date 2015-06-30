@@ -7,24 +7,26 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.PagerTabStrip;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.adapter.HomePagesAdapter;
@@ -52,8 +54,7 @@ import org.oauthsimple.utils.MimeUtils;
 /**
  * @author mcxiaoke
  */
-public class UIHome extends UIBaseSupport implements MenuCallback,
-        OnPageChangeListener, DrawerLayout.DrawerListener {
+public class UIHome extends UIBaseSupport implements MenuCallback{
 
     public static final String TAG = UIHome.class.getSimpleName();
     private static final int UCODE_HAS_UPDATE = 0;
@@ -61,21 +62,34 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     private static final int UCODE_NO_WIFI = 2;
     private static final int UCODE_IO_ERROR = 3;
     private static final long TIME_THREE_DAYS = 1000 * 3600 * 24 * 5L;
-    private ViewGroup mContainer;
-    private Fragment mMenuFragment;
-    private ViewPager mViewPager;
-    private PagerTabStrip mPagerTabStrip;
     private HomePagesAdapter mPagesAdapter;
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
-    private ViewGroup mDrawFrame;
     private DownloadManager mDownloadManager;
     private int mCurrentIndex;
     private int mCurrentPage;
     private BroadcastReceiver mReceiver;
     private AbstractFragment mCurrentFragment;
+
+    @InjectView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+
+    @InjectView(R.id.nav_view)
+    NavigationView mNavigationView;
+
+    @InjectView(R.id.appbar)
+    AppBarLayout mAppBarLayout;
+
+
+    @InjectView(R.id.toolbar)
+    Toolbar mToolbar;
+
+    @InjectView(R.id.tabs)
+    TabLayout mTabLayout;
+
+    @InjectView(R.id.viewpager)
+    ViewPager mViewPager;
+
+    @InjectView(R.id.fab)
+    FloatingActionButton mActionButton;
 
     private void log(String message) {
         LogUtil.v(TAG, message);
@@ -124,7 +138,9 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         // Assumes current activity is the searchable activity
 //        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 //        searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
-    }    private BroadcastReceiver mOnDownloadCompleteReceiver = new BroadcastReceiver() {
+    }
+
+    private BroadcastReceiver mOnDownloadCompleteReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             LogUtil.v(TAG, "onReceive() intent " + intent.getExtras());
@@ -152,9 +168,6 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
         if (item.getItemId() == R.id.menu_write) {
             onMenuWriteClick();
             return true;
@@ -169,6 +182,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 
     @Override
     protected void onMenuHomeClick() {
+        mDrawerLayout.openDrawer(GravityCompat.START);
 //        super.onMenuHomeClick();
     }
 
@@ -282,103 +296,42 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     }
 
     protected void setLayout() {
-        setContentView(R.layout.ui_home);
+        setContentView(R.layout.act_home);
         setProgressBarIndeterminateVisibility(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        ButterKnife.inject(this);
+        setSupportActionBar(mToolbar);
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_drawer);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        mNavigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        menuItem.setChecked(true);
+                        mDrawerLayout.closeDrawers();
+                        return true;
+                    }
+                });
+
         setTitle(R.string.page_title_home);
-        mDrawerTitle = "@" + AppContext.getScreenName();
-        mTitle = getTitle();
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setScrimColor(getResources().getColor(R.color.drawer_dim_background));
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
-
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                super.onDrawerSlide(drawerView, slideOffset);
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                getSupportActionBar().setTitle(mDrawerTitle);
-                invalidateOptionsMenu();
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                getSupportActionBar().setTitle(mTitle);
-                invalidateOptionsMenu();
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-                super.onDrawerStateChanged(newState);
-            }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-
-        mContainer = (ViewGroup) findViewById(R.id.content_frame);
-        mDrawFrame = (ViewGroup) findViewById(R.id.left_drawer);
-
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-//        mViewPager.setOnPageChangeListener(this);
-
         mPagesAdapter = new HomePagesAdapter(getSupportFragmentManager(), this);
         mViewPager.setAdapter(mPagesAdapter);
-        mViewPager.setOnPageChangeListener(this);
-
-        final int highlightColor = getResources().getColor(R.color.holo_secondary);
-        mPagerTabStrip = (PagerTabStrip) findViewById(R.id.viewpager_strip);
-        mPagerTabStrip.setBackgroundResource(R.color.background_secondary);
-        mPagerTabStrip.setNonPrimaryAlpha(0.4f);
-        mPagerTabStrip.setDrawFullUnderline(false);
-        mPagerTabStrip.setTabIndicatorColor(highlightColor);
-        mPagerTabStrip.setTextColor(highlightColor);
+        mTabLayout.setupWithViewPager(mViewPager);
 
         setHomeTitle(mCurrentPage);
         mCurrentFragment = mPagesAdapter.getItem(mCurrentPage);
-//        setSlidingMenu(R.layout.menu_frame);
-        FragmentManager fm = getSupportFragmentManager();
-        mMenuFragment = MenuFragment.newInstance();
-        fm.beginTransaction().replace(R.id.left_drawer, mMenuFragment).commit();
     }
-
-    /**
-     * When using the ActionBarDrawerToggle, you must call it during
-     * onPostCreate() and onConfigurationChanged()...
-     */
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        mTitle = title;
-        getSupportActionBar().setTitle(mTitle);
     }
 
     private void switchContent(AbstractFragment fragment) {
@@ -392,7 +345,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         mCurrentFragment = fragment;
         // hide profile menus
         mCurrentFragment.setMenuVisibility(false);
-        mDrawerLayout.closeDrawer(Gravity.LEFT);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
     private void showProfileFragment() {
@@ -461,44 +414,10 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         }
     }
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    }
-
-    @Override
     public void onPageSelected(int position) {
         mCurrentPage = position;
         setHomeTitle(position);
         mCurrentFragment = mPagesAdapter.getItem(mCurrentPage);
-        if (position == 0) {
-//            setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-        } else {
-//            setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
-        }
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-    }
-
-    @Override
-    public void onDrawerSlide(View drawerView, float slideOffset) {
-    }
-
-    @Override
-    public void onDrawerOpened(View drawerView) {
-        getSupportActionBar().setTitle(mDrawerTitle);
-        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-    }
-
-    @Override
-    public void onDrawerClosed(View drawerView) {
-        getSupportActionBar().setTitle(mTitle);
-        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-    }
-
-    @Override
-    public void onDrawerStateChanged(int newState) {
     }
 
     private void setHomeTitle(int page) {
@@ -540,7 +459,6 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
             unregisterReceiver(mReceiver);
         }
     }
-
 
 
 }
