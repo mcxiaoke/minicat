@@ -8,9 +8,11 @@
 
 ##下载地址
 
-[蒲公英下载](http://www.pgyer.com/minicat)   
-[百度市场下载](http://shouji.baidu.com/software/item?docid=5606792)    
-[直接下载](release/minicat-1.3.2.apk?raw=true)    
+* [蒲公英下载](http://www.pgyer.com/minicat)   
+* [百度市场下载](http://shouji.baidu.com/software/item?docid=5606792)    
+* [直接下载](https://github.com/mcxiaoke/minicat/releases/latest)  
+* [Google Play](https://play.google.com/store/apps/details?id=com.mcxiaoke.minicat2)   
+* [历史版本](https://github.com/mcxiaoke/minicat/releases)   
 
 
 ##最新版本
