@@ -39,6 +39,7 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 22
+        applicationId "com.mcxiaoke.minicat2"
     }
 
     signingConfigs {

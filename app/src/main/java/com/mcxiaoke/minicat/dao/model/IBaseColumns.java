@@ -1,6 +1,7 @@
 package com.mcxiaoke.minicat.dao.model;
 
 import android.provider.BaseColumns;
+import com.mcxiaoke.minicat.BuildConfig;
 import com.mcxiaoke.minicat.service.Constants;
 
 
@@ -10,7 +11,7 @@ import com.mcxiaoke.minicat.service.Constants;
  */
 public interface IBaseColumns extends BaseColumns {
     public static final int TYPE_NONE = 0;
-    public static final String AUTHORITY = Constants.PACKAGE_NAME + ".provider";
+    public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".provider";
 
     public static final String RAWID = "rawid";// rawid in number format
     public static final String ACCOUNT = "account"; // related account id/userid

@@ -4,8 +4,8 @@
     tools:ignore="UnusedAttribute"
     package="com.mcxiaoke.minicat"
     android:sharedUserId="com.mcxiaoke.minicat"
-    android:versionCode="2014120201"
-    android:versionName="1.3.1">
+    android:versionCode="2015082001"
+    android:versionName="1.3.2">
 
     <supports-screens
         android:anyDensity="true"
@@ -278,7 +278,7 @@
 
         <provider
             android:name="com.mcxiaoke.minicat.dao.DataProvider"
-            android:authorities="com.mcxiaoke.minicat.provider"
+            android:authorities="${applicationId}.provider"
             android:exported="false" />
 
         <service
