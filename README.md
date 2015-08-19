@@ -4,16 +4,14 @@
 
 * **蘑菇饭以后不会更新了，请自行clone代码修改（2015.08.04）**
 
+[蘑菇饭App](http://fanfou.com/androidsupport)  
+
 ##下载地址
 
 [蒲公英下载](http://www.pgyer.com/minicat)   
 [百度市场下载](http://shouji.baidu.com/software/item?docid=5606792)    
-[直接下载](release/minicat-1.3.1.apk?raw=true)    
+[直接下载](release/minicat-1.3.2.apk?raw=true)    
 
-##特别说明
-
-饭否支持帐号： [蘑菇饭App](http://fanfou.com/androidsupport)  
-Google Play 地址已失效，又莫名其妙的被Google下架。
 
 ##最新版本
 
