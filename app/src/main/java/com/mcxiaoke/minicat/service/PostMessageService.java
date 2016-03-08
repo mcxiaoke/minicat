@@ -1,6 +1,5 @@
 package com.mcxiaoke.minicat.service;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -10,6 +9,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
 import android.util.Log;
 import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.R;
@@ -115,13 +116,16 @@ public class PostMessageService extends BaseIntentService {
 
     private int showSendingNotification() {
         int id = 10;
-        Notification notification = new Notification(R.drawable.ic_stat_app,
-                "饭否私信正在发送...", System.currentTimeMillis());
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(), 0);
-        notification.setLatestEventInfo(this, "饭否私信", "正在发送...", contentIntent);
-        notification.flags |= Notification.FLAG_ONGOING_EVENT;
-        nm.notify(id, notification);
+        final NotificationCompat.Builder builder = new Builder(this);
+        builder.setSmallIcon(R.drawable.ic_stat_app);
+        builder.setTicker("饭否私信正在发送...");
+        builder.setContentText("饭否私信");
+        builder.setSubText("正在发送...");
+        builder.setWhen(System.currentTimeMillis());
+        builder.setContentIntent(PendingIntent.getActivity(this, 0,
+                new Intent(), 0));
+        builder.setOngoing(true);
+        nm.notify(id, builder.build());
         return id;
     }
 

@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.RemoteViews;
@@ -118,15 +120,10 @@ public class DownloadService extends BaseIntentService {
                 }
                 return VersionInfo.parse(content);
             }
-        } catch (IOException e) {
-            if (AppContext.DEBUG) {
-                e.printStackTrace();
-            }
         } catch (Exception e) {
             if (AppContext.DEBUG) {
                 e.printStackTrace();
             }
-        } finally {
         }
         return null;
     }
@@ -135,15 +132,16 @@ public class DownloadService extends BaseIntentService {
         String versionInfo = info.versionName;
         NotificationManager nm = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification(R.drawable.ic_stat_app,
-                "饭否客户端有新版本：" + versionInfo, System.currentTimeMillis());
-
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-                getNewVersionIntent(context, info), 0);
-        notification.setLatestEventInfo(context, "饭否客户端有新版本：" + versionInfo,
-                "点击查看更新内容", contentIntent);
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-        nm.notify(2, notification);
+        final NotificationCompat.Builder builder = new Builder(context);
+        builder.setSmallIcon(R.drawable.ic_stat_app);
+        builder.setWhen(System.currentTimeMillis());
+        builder.setContentIntent(PendingIntent.getActivity(context, 0,
+                getNewVersionIntent(context, info), 0));
+        builder.setTicker("饭否客户端有新版本：" + versionInfo);
+        builder.setContentText("饭否客户端有新版本：" + versionInfo);
+        builder.setSubText("点击查看更新内容");
+        builder.setAutoCancel(true);
+        nm.notify(2, builder.build());
 
     }
 
