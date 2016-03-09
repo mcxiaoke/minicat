@@ -14,8 +14,8 @@
         android:layout_height="@dimen/head_height"
         android:layout_gravity="center"
         android:layout_margin="2dp"
-        app:border_width="2dp"
-        app:border_color="#ffffff" />
+        app:civ_border_width="1dp"
+        app:civ_border_color="#ffffff" />
 
     <RelativeLayout
         android:layout_width="0dp"

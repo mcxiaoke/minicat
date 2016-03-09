@@ -17,8 +17,8 @@
 
         android:layout_marginRight="@dimen/list_padding"
         android:src="@drawable/ic_head"
-        app:border_width="2dp"
-        app:border_color="#ffffff" />
+        app:civ_border_width="1dp"
+        app:civ_border_color="#ffffff" />
 
     <RelativeLayout
         android:layout_width="0dp"

@@ -25,7 +25,7 @@ public class UserCursorAdapter extends BaseCursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View convertView = LayoutInflater.from(context).inflate(getLayoutId(), null);
+        View convertView = LayoutInflater.from(context).inflate(getLayoutId(), parent, false);
         UserViewHolder holder = new UserViewHolder(convertView);
         convertView.setTag(holder);
         return convertView;

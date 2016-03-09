@@ -21,7 +21,6 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
     private static final int SELF = 2;
     private static final int[] TYPES = new int[]{NONE, MENTION, SELF,};
     private int mMentionedBgColor;// = 0x332266aa;
-    private int mSelfBgColor;// = 0x33999999;
     private boolean colored;
 
     public StatusCursorAdapter(Context context, boolean colored) {
@@ -37,7 +36,6 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
     public void initialize(Context context, boolean colored) {
         this.colored = colored;
         mMentionedBgColor = mContext.getResources().getColor(R.color.list_item_status_mention_highlight);
-        mSelfBgColor = mContext.getResources().getColor(R.color.list_item_status_self_highlight);
     }
 
     public void setColored(boolean colored) {
@@ -69,16 +67,13 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        ItemView view = new ItemView(mContext);
-        view.setId(R.id.list_item);
-        return view;
+        return mInflater.inflate(R.layout.list_item_status, parent, false);
     }
 
     @Override
     public void bindView(View row, Context context, final Cursor cursor) {
         final StatusModel s = StatusModel.from(cursor);
-        View root = row;
-        final ItemView view = (ItemView) root.findViewById(R.id.list_item);
+        final ItemView view = (ItemView) row;
 
         setColor(cursor, view);
         UIHelper.setContent(view, s);
@@ -97,11 +92,6 @@ public class StatusCursorAdapter extends BaseCursorAdapter {
         switch (itemType) {
             case MENTION:
                 row.setBackgroundColor(mMentionedBgColor);
-                break;
-            case SELF:
-                row.setBackgroundColor(mSelfBgColor);
-                break;
-            case NONE:
                 break;
             default:
                 break;

@@ -26,7 +26,6 @@ public class StatusArrayAdapter extends BaseStatusArrayAdapter {
     private boolean colored;
 
     private int mMentionedBgColor;// = 0x332266aa;
-    private int mSelfBgColor;// = 0x33999999;
 
     public StatusArrayAdapter(Context context, List<StatusModel> ss) {
         super(context, ss);
@@ -45,7 +44,6 @@ public class StatusArrayAdapter extends BaseStatusArrayAdapter {
     private void init(Context context, boolean colored) {
         this.colored = colored;
         mMentionedBgColor = mContext.getResources().getColor(R.color.list_item_status_mention_highlight);
-        mSelfBgColor = mContext.getResources().getColor(R.color.list_item_status_self_highlight);
     }
 
     @Override
@@ -82,11 +80,6 @@ public class StatusArrayAdapter extends BaseStatusArrayAdapter {
         switch (itemType) {
             case MENTION:
                 convertView.setBackgroundColor(mMentionedBgColor);
-                break;
-            case SELF:
-                convertView.setBackgroundColor(mSelfBgColor);
-                break;
-            case NONE:
                 break;
             default:
                 break;

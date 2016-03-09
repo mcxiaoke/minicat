@@ -61,7 +61,7 @@ public abstract class UserArrayAdapter extends BaseAdapter implements
     public View getView(int position, View convertView, ViewGroup parent) {
         UserViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(getLayoutId(), null);
+            convertView = LayoutInflater.from(mContext).inflate(getLayoutId(), parent, false);
             holder = new UserViewHolder(convertView);
             convertView.setTag(holder);
         } else {

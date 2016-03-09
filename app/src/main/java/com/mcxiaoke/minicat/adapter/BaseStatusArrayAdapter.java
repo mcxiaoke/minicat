@@ -69,8 +69,7 @@ public abstract class BaseStatusArrayAdapter extends BaseAdapter implements
 
         ViewHolder holder;
         if (convertView == null) {
-            convertView = new ItemView(mContext);
-            convertView.setId(R.id.list_item);
+            convertView = mInflater.inflate(R.layout.list_item_status, parent, false);
             holder = new ViewHolder();
             holder.view = (ItemView) convertView;
             convertView.setTag(holder);

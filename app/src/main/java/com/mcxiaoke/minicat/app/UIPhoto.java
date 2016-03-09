@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -54,10 +55,6 @@ public class UIPhoto extends Activity implements OnClickListener {
         getActionBar().setTitle("查看照片");
         initialize();
         setLayout();
-        Uri uri = Uri.parse(url);
-        if (AppContext.DEBUG) {
-            Log.d(TAG, "Uri: " + uri.getPath() + " " + uri.getLastPathSegment() + " " + uri.getQuery());
-        }
     }
 
     @Override
@@ -214,12 +211,19 @@ public class UIPhoto extends Activity implements OnClickListener {
                 url = uri.getPath();
             }
         }
+        if (!TextUtils.isEmpty(url)) {
+            url = url.split("@")[0];
+        }
+        if (AppContext.DEBUG) {
+            Log.d(TAG, "parseIntent() " + url);
+        }
+
 
     }
 
     private void doSave() {
         File file = ImageLoader.getInstance().getDiscCache().get(url);
-        if(file==null || !file.isFile()){
+        if (file == null || !file.isFile()) {
             return;
         }
         String ext = url.toLowerCase().endsWith(".gif") ? ".gif" : ".jpg";

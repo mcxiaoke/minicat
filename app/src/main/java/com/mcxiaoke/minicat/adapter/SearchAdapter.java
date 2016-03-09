@@ -43,7 +43,7 @@ public class SearchAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.list_item_trends, null);
+            convertView = mInflater.inflate(R.layout.list_item_trends, parent, false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         } else {

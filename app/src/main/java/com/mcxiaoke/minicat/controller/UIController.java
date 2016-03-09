@@ -291,7 +291,7 @@ public class UIController {
         if (statuses != null && statuses.size() > 0) {
             ArrayList<String> uris = new ArrayList<String>();
             for (StatusModel st : statuses) {
-                uris.add(st.getPhotoLargeUrl());
+                uris.add(st.getPhotoLargeUrl().split("@")[0]);
             }
             Intent intent = new Intent(context, UIGallery.class);
             intent.putStringArrayListExtra("data", uris);

@@ -14,8 +14,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_margin="@dimen/image_frame_padding"
-        app:border_width="2dp"
-        app:border_color="#ffffff" />
+        app:civ_border_width="1dp"
+        app:civ_border_color="#ffffff" />
 
     <TextView
         android:id="@+id/header_name"

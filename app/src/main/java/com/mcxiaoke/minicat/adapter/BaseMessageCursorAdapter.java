@@ -26,9 +26,7 @@ public abstract class BaseMessageCursorAdapter extends BaseCursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        ItemView view = new ItemView(mContext);
-        view.setId(R.id.list_item);
-        return view;
+        return mInflater.inflate(R.layout.list_item_status, parent, false);
     }
 
     @Override

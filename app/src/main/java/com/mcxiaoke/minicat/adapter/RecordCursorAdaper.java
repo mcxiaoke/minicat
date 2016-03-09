@@ -25,7 +25,7 @@ public class RecordCursorAdaper extends BaseCursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = mInflater.inflate(getLayoutId(), null);
+        View view = mInflater.inflate(getLayoutId(), parent, false);
         ViewHolder holder = new ViewHolder(view);
         view.setTag(holder);
         bindView(view, context, cursor);
