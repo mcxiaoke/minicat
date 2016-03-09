@@ -3,23 +3,33 @@ package com.mcxiaoke.minicat.fragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.controller.EmptyViewController;
+import com.mcxiaoke.minicat.util.IOHelper;
+import com.mcxiaoke.minicat.util.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 import uk.co.senab.photoview.PhotoView;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +60,7 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         mImageUris = new ArrayList<String>();
         Bundle args = getArguments();
         ArrayList<String> data = args.getStringArrayList("data");
@@ -81,17 +92,41 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
         mViewPager.setAdapter(mGalleryPagerAdapter);
         mViewPager.setCurrentItem(mIndex);
         setPageText(mIndex);
-        mViewPager.setOnPageChangeListener(this);
+        mViewPager.addOnPageChangeListener(this);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_photo, menu);
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == R.id.menu_save) {
+
+            doSave();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void doSave() {
+        final String url = mGalleryPagerAdapter.getUrlAt(mViewPager.getCurrentItem());
+        if (TextUtils.isEmpty(url)) {
+            return;
+        }
+        File file = ImageLoader.getInstance().getDiscCache().get(url);
+        if (file == null || !file.isFile()) {
+            return;
+        }
+        String ext = url.toLowerCase().endsWith(".gif") ? ".gif" : ".jpg";
+        final String fileName = "IMG_FANFOU_" + System.currentTimeMillis() + ext;
+        File dest = new File(IOHelper.getPictureDir(getActivity()), fileName);
+        if (dest.exists() || IOHelper.copyFile(file, dest)) {
+            Utils.mediaScan(getActivity(), Uri.fromFile(dest));
+            Utils.notifyLong(getActivity(), "图片已保存到存储卡的 Pictures 目录");
+        }
     }
 
     @Override
@@ -128,6 +163,13 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
             mResources = resources;
         }
 
+        public String getUrlAt(int position) {
+            if (position < 0 || position >= getCount()) {
+                return null;
+            }
+            return mResources.get(position);
+        }
+
         @Override
         public int getCount() {
             return mResources.size();
@@ -135,17 +177,13 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-//            PhotoView view = new PhotoView(container.getContext());
-//            container.addView(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//            ImageLoader.getInstance().displayImage(mResources.get(position), view);
-
-            ViewGroup view = (ViewGroup) mInflater.inflate(R.layout.gallery_item_photo, null);
+            ViewGroup view = (ViewGroup) mInflater.inflate(R.layout.gallery_item_photo, container, false);
             final PhotoView imageView = (PhotoView) view.findViewById(R.id.photo);
+            final GifImageView gifImageView = (GifImageView) view.findViewById(R.id.gif);
             View vEmpty = view.findViewById(android.R.id.empty);
             final EmptyViewController emptyViewController = new EmptyViewController(vEmpty);
-            ImageViewAware aware = new ImageViewAware(imageView, false);
             ImageLoader.getInstance().loadImage(mResources.get(position), getDisplayImageOptions(),
-                    new ImageLoaderCallback(imageView, emptyViewController));
+                    new ImageLoaderCallback(imageView, gifImageView, emptyViewController));
             container.addView(view);
             return view;
         }
@@ -172,28 +210,47 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
 
         private class ImageLoaderCallback extends SimpleImageLoadingListener {
             private PhotoView imageView;
+            private GifImageView gifImageView;
             private EmptyViewController emptyViewController;
 
-            public ImageLoaderCallback(PhotoView imageView, EmptyViewController emptyViewController) {
+            public ImageLoaderCallback(PhotoView imageView, GifImageView gifImageView,
+                                       EmptyViewController emptyViewController) {
                 this.imageView = imageView;
+                this.gifImageView = gifImageView;
                 this.emptyViewController = emptyViewController;
 
             }
 
             private void showProgress() {
                 imageView.setVisibility(View.GONE);
+                gifImageView.setVisibility(View.GONE);
                 emptyViewController.showProgress();
             }
 
             private void showEmptyText(String text) {
                 imageView.setVisibility(View.GONE);
+                gifImageView.setVisibility(View.GONE);
                 emptyViewController.showEmpty(text);
             }
 
-            private void showContent(Bitmap bitmap) {
+            private void showContent(String imageUri, Bitmap bitmap) {
                 emptyViewController.hideProgress();
-                imageView.setVisibility(View.VISIBLE);
-                if (bitmap != null) {
+                if (bitmap == null) {
+                    return;
+                }
+                if (imageUri.endsWith(".gif")) {
+                    imageView.setVisibility(View.GONE);
+                    gifImageView.setVisibility(View.VISIBLE);
+                    try {
+                        final File file = ImageLoader.getInstance().getDiscCache().get(imageUri);
+                        final GifDrawable drawable = new GifDrawable(file);
+                        gifImageView.setImageDrawable(drawable);
+                    } catch (IOException e) {
+                        showEmptyText("IOException");
+                    }
+                } else {
+                    gifImageView.setVisibility(View.GONE);
+                    imageView.setVisibility(View.VISIBLE);
                     imageView.setImageBitmap(bitmap);
                 }
             }
@@ -210,7 +267,7 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
 
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                showContent(loadedImage);
+                showContent(imageUri, loadedImage);
             }
         }
     }

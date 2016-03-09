@@ -23,9 +23,12 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 import uk.co.senab.photoview.PhotoView;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @author mcxiaoke
@@ -37,6 +40,7 @@ public class UIPhoto extends Activity implements OnClickListener {
     private String url;
 
     private PhotoView mImageView;
+    private GifImageView mGifImageView;
 
     private View vEmpty;
     private EmptyViewController emptyViewController;
@@ -50,6 +54,10 @@ public class UIPhoto extends Activity implements OnClickListener {
         getActionBar().setTitle("查看照片");
         initialize();
         setLayout();
+        Uri uri = Uri.parse(url);
+        if (AppContext.DEBUG) {
+            Log.d(TAG, "Uri: " + uri.getPath() + " " + uri.getLastPathSegment() + " " + uri.getQuery());
+        }
     }
 
     @Override
@@ -100,7 +108,7 @@ public class UIPhoto extends Activity implements OnClickListener {
 
     private void findViews() {
         mImageView = (PhotoView) findViewById(R.id.photo);
-//        mImageView.setOnClickListener(this);
+        mGifImageView = (GifImageView) findViewById(R.id.image);
         vEmpty = findViewById(android.R.id.empty);
         emptyViewController = new EmptyViewController(vEmpty);
     }
@@ -123,18 +131,34 @@ public class UIPhoto extends Activity implements OnClickListener {
 
     private void showProgress() {
         mImageView.setVisibility(View.GONE);
+        mGifImageView.setVisibility(View.GONE);
         emptyViewController.showProgress();
     }
 
     private void showEmptyText(String text) {
         mImageView.setVisibility(View.GONE);
+        mGifImageView.setVisibility(View.GONE);
         emptyViewController.showEmpty(text);
     }
 
-    private void showContent(Bitmap bitmap) {
+    private void showContent(String imageUri, Bitmap bitmap) {
         emptyViewController.hideProgress();
-        mImageView.setVisibility(View.VISIBLE);
-        if (bitmap != null) {
+        if (bitmap == null) {
+            return;
+        }
+        if (imageUri.endsWith(".gif")) {
+            mImageView.setVisibility(View.GONE);
+            mGifImageView.setVisibility(View.VISIBLE);
+            try {
+                final File file = ImageLoader.getInstance().getDiscCache().get(imageUri);
+                final GifDrawable drawable = new GifDrawable(file);
+                mGifImageView.setImageDrawable(drawable);
+            } catch (IOException e) {
+                showEmptyText("IOException");
+            }
+        } else {
+            mGifImageView.setVisibility(View.GONE);
+            mImageView.setVisibility(View.VISIBLE);
             mImageView.setImageBitmap(bitmap);
         }
     }
@@ -157,7 +181,7 @@ public class UIPhoto extends Activity implements OnClickListener {
             @Override
             public void onLoadingComplete(String imageUri, View view,
                                           Bitmap loadedImage) {
-                showContent(loadedImage);
+                showContent(imageUri, loadedImage);
             }
 
             @Override
@@ -195,10 +219,15 @@ public class UIPhoto extends Activity implements OnClickListener {
 
     private void doSave() {
         File file = ImageLoader.getInstance().getDiscCache().get(url);
-        final String fileName = "IMG_" + System.currentTimeMillis() + ".jpg";
+        if(file==null || !file.isFile()){
+            return;
+        }
+        String ext = url.toLowerCase().endsWith(".gif") ? ".gif" : ".jpg";
+        final String fileName = "IMG_FANFOU_" + System.currentTimeMillis() + ext;
         File dest = new File(IOHelper.getPictureDir(this), fileName);
         if (dest.exists() || IOHelper.copyFile(file, dest)) {
-            Utils.notify(this, "照片已保存到 " + dest.getAbsolutePath());
+            Utils.mediaScan(this, Uri.fromFile(dest));
+            Utils.notifyLong(this, "图片已保存到存储卡的 Pictures 目录");
         }
     }
 

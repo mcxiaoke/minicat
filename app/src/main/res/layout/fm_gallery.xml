@@ -21,7 +21,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:textColor="#99999999"
-        android:textSize="@dimen/text_size_xlarge"
+        android:textSize="@dimen/text_size_medium"
         android:gravity="center" />
 
 </RelativeLayout>

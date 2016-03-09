@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.text.TextPaint;
 import android.util.Log;
@@ -96,6 +97,10 @@ public final class Utils {
 
     public static void notify(Context context, CharSequence text) {
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void notifyLong(Context context, CharSequence text) {
+        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
     }
 
     public static void notify(Context context, int resId) {
@@ -205,6 +210,18 @@ public final class Utils {
             AppContext.doLogin(context);
             context.finish();
         }
+    }
+
+    public static void mediaScan(Context context, Uri uri) {
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        intent.setData(uri);
+        context.sendBroadcast(intent);
+    }
+
+    // another media scan way
+    public static void addToMediaStore(Context context, File file) {
+        String[] path = new String[]{file.getPath()};
+        MediaScannerConnection.scanFile(context, path, null, null);
     }
 
 }

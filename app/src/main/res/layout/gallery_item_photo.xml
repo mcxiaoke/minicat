@@ -12,6 +12,12 @@
         android:scaleType="fitCenter"
         android:visibility="gone" />
 
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gif"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone" />
+
     <include layout="@layout/empty_layout" />
 
 </RelativeLayout>

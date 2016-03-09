@@ -91,16 +91,7 @@ public final class IOHelper {
     }
 
     public static File getPictureDir(Context context) {
-        File photoDir;
-        if (Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
-            photoDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-            if (!photoDir.exists()) {
-                photoDir.mkdirs();
-            }
-        } else {
-            photoDir = context.getCacheDir();
-        }
+        File photoDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         if (!photoDir.exists()) {
             photoDir.mkdirs();
         }
