@@ -25,15 +25,11 @@
             <TextView
                 android:id="@+id/text_title1"
                 android:text="990"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
                 style="@style/ProfileItemTextStyle" />
 
             <TextView
                 android:id="@+id/text_value1"
-                android:layout_alignParentRight="true"
                 android:text="Statuses Count"
-                android:layout_alignParentTop="true"
                 style="@style/ProfileItemTextMetaStyle" />
         </LinearLayout>
 
@@ -49,12 +45,10 @@
             <TextView
                 android:id="@+id/text_title2"
                 android:text="1234"
-                android:layout_alignParentLeft="true"
                 style="@style/ProfileItemTextStyle" />
 
             <TextView
                 android:id="@+id/text_value2"
-                android:layout_alignParentRight="true"
                 android:text="Statuses Count"
                 style="@style/ProfileItemTextMetaStyle" />
         </LinearLayout>
@@ -79,15 +73,11 @@
             <TextView
                 android:id="@+id/text_title3"
                 android:text="990"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
                 style="@style/ProfileItemTextStyle" />
 
             <TextView
                 android:id="@+id/text_value3"
-                android:layout_alignParentRight="true"
                 android:text="Statuses Count"
-                android:layout_alignParentTop="true"
                 style="@style/ProfileItemTextMetaStyle" />
         </LinearLayout>
 
@@ -103,12 +93,10 @@
             <TextView
                 android:id="@+id/text_title4"
                 android:text="1234"
-                android:layout_alignParentLeft="true"
                 style="@style/ProfileItemTextStyle" />
 
             <TextView
                 android:id="@+id/text_value4"
-                android:layout_alignParentRight="true"
                 android:text="Statuses Count"
                 style="@style/ProfileItemTextMetaStyle" />
         </LinearLayout>
@@ -125,8 +113,6 @@
         android:id="@+id/info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/header_intro"
-        android:layout_below="@+id/header_intro"
         android:textColor="@color/text_primary"
         android:textSize="@dimen/text_size_medium"
         android:padding="@dimen/list_padding"

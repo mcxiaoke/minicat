@@ -2,8 +2,9 @@ package com.mcxiaoke.minicat.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,9 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
     private ArrayAdapter<StatusModel> mArrayAdapter;
     private List<StatusModel> mData;
     private UserModel user;
-    private LoadDataTask mLoadDataTask;
+    private Thread mThread;
+    private Handler mHandler;
+    private volatile boolean mCancelled;
 
     public static PhotosFragment newInstance(UserModel user) {
         PhotosFragment fragment = new PhotosFragment();
@@ -53,6 +56,7 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mHandler = new Handler();
         user = getArguments().getParcelable("user");
     }
 
@@ -121,14 +125,6 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
 
     private void showContent(int size) {
         mEmptyViewController.hideProgress();
-        if (size < 10) {
-//            mGridView.setNumColumns(1);
-//            mGridView.setPadding(mGridViewPaddingMax, mGridViewPaddingMax, mGridViewPaddingMax, mGridViewPaddingMax);
-        } else {
-//            mGridView.setVerticalSpacing(mGridViewPaddingMin);
-//            mGridView.setHorizontalSpacing(mGridViewPaddingMin);
-//            mGridView.setNumColumns(3);
-        }
         mGridView.setVisibility(View.VISIBLE);
     }
 
@@ -138,17 +134,83 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
     }
 
     private void stopTask() {
-        if (mLoadDataTask != null) {
-            mLoadDataTask.stop();
-            mLoadDataTask = null;
+        if (mThread != null) {
+            mCancelled = true;
+            mThread.interrupt();
+            mThread = null;
         }
     }
 
     private void startTask() {
         stopTask();
-        mLoadDataTask = new LoadDataTask();
-        mLoadDataTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        loadData();
     }
+
+    private void updateUI(final List<StatusModel> data) {
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                getBaseSupport().hideProgressIndicator();
+                if (data != null && data.size() > 0) {
+                    int size = data.size();
+                    showContent(size);
+                    mArrayAdapter.addAll(data);
+                    mArrayAdapter.notifyDataSetChanged();
+                } else {
+                    if (mArrayAdapter.isEmpty()) {
+                        showEmpty("无法获取数据");
+                    }
+                }
+            }
+        };
+        mHandler.post(runnable);
+
+    }
+
+    private void loadData() {
+
+        mThread = new Thread() {
+            @Override
+            public void run() {
+                final String id = user.getId();
+                final Api api = AppContext.getApi();
+                List<StatusModel> statusModels = new ArrayList<StatusModel>();
+                try {
+                    // 分页获取，最多3页=180张照片
+                    Paging paging = new Paging();
+                    paging.count = 60;
+                    final int max = NetworkHelper.isWifi(getActivity()) ? 10 : 1;
+                    for (int i = 0; i < max; i++) {
+                        paging.page = i;
+                        if (mCancelled) {
+                            break;
+                        }
+                        if (AppContext.DEBUG) {
+                            Log.d("PhotosFragment", "fetch next page photos " + i);
+                        }
+                        final List<StatusModel> models = api.getPhotosTimeline(id, paging);
+                        if (mCancelled) {
+                            break;
+                        }
+                        updateUI(models);
+                        if (models == null || models.size() < 60) {
+                            break;
+                        }
+                    }
+                    if (AppContext.DEBUG) {
+                        Log.d("PhotosFragment", "fetch photos finished");
+                    }
+                } catch (Exception ex) {
+                    if (AppContext.DEBUG) {
+                        Log.w("PhotosFragment", "fetch photos error:" + ex);
+                    }
+                    updateUI(null);
+                }
+            }
+        };
+        mThread.start();
+    }
+
 
     static class GridViewAdapter extends ArrayAdapter<StatusModel> {
         private Picasso picasso;
@@ -185,71 +247,6 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
         static class ViewHolder {
             public ImageView image;
             public TextView text;
-        }
-    }
-
-    private class LoadDataTask extends AsyncTask<Void, Void, List<StatusModel>> {
-
-        private volatile boolean mCancelled;
-        private Exception mException;
-
-        public LoadDataTask() {
-            mCancelled = false;
-        }
-
-        public void stop() {
-            mCancelled = true;
-            cancel(true);
-        }
-
-        @Override
-        protected List<StatusModel> doInBackground(Void... params) {
-            final String id = user.getId();
-            final Api api = AppContext.getApi();
-            List<StatusModel> statusModels = new ArrayList<StatusModel>();
-            try {
-                // 分页获取，最多3页=180张照片
-                Paging paging = new Paging();
-                paging.count = 60;
-                final int max = NetworkHelper.isWifi(getActivity()) ? 3 : 1;
-                for (int i = 0; i < max; i++) {
-                    paging.page = i;
-                    List<StatusModel> models = api.getPhotosTimeline(id, paging);
-                    if (models != null) {
-                        statusModels.addAll(models);
-                    }
-                    if (models == null || models.size() < 60) {
-                        break;
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                mException = e;
-            }
-            return statusModels;
-        }
-
-        @Override
-        protected void onPostExecute(List<StatusModel> statusModels) {
-            super.onPostExecute(statusModels);
-            getBaseSupport().hideProgressIndicator();
-            if (mCancelled) {
-                showEmpty("");
-            } else {
-                if (statusModels != null && statusModels.size() > 0) {
-                    int size = statusModels.size();
-                    showContent(size);
-                    mArrayAdapter.addAll(statusModels);
-                    mArrayAdapter.notifyDataSetChanged();
-                } else {
-                    if (mException != null) {
-                        showEmpty("无法获取数据");
-                    } else {
-                        showEmpty("没有数据");
-                    }
-                }
-            }
-
         }
     }
 

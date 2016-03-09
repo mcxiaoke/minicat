@@ -3,11 +3,10 @@ package com.mcxiaoke.minicat.app;
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.Window;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.fragment.GalleryFragment;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -36,6 +35,12 @@ public class UIGallery extends Activity {
         setContentView(R.layout.ui_gallery);
         getFragmentManager().beginTransaction().replace(R.id.content, GalleryFragment.newInstance(data, index)).commit();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ImageLoader.getInstance().clearMemoryCache();
     }
 
     @Override
