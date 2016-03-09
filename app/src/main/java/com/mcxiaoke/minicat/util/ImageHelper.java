@@ -44,11 +44,11 @@ import java.io.InputStream;
  * @version 3.2 2011.12.26
  */
 final public class ImageHelper {
-    public static final int IMAGE_QUALITY_HIGH = 90;
-    public static final int IMAGE_QUALITY_MEDIUM = 80;
+    public static final int IMAGE_QUALITY_HIGH = 95;
+    public static final int IMAGE_QUALITY_MEDIUM = 85;
     public static final int IMAGE_QUALITY_LOW = 70;
-    public static final int IMAGE_MAX_WIDTH = 596;// 640 596
-    //	public static final int IMAGE_MAX_HEIGHT = 1200;// 1320 1192
+    public static final int IMAGE_MAX_WIDTH = 1600;// 640 596
+    public static final int IMAGE_MAX_WIDTH_2 = 1000;// 640 596
     public static final int OUTPUT_BUFFER_SIZE = 8196;
     private static final String TAG = ImageHelper.class.getSimpleName();
 
@@ -420,11 +420,11 @@ final public class ImageHelper {
         return false;
     }
 
-    public static File prepareUploadFile(Context context, File file, int quality) {
+    public static File prepareUploadFile(Context context, File file, int quality, int maxWidth) {
         File destFile = new File(IOHelper.getImageCacheDir(context),
-                "fanfouupload.jpg");
+                System.currentTimeMillis() + "_fanfouupload.jpg");
         return compressForUpload(file.getPath(), destFile.getPath(),
-                IMAGE_MAX_WIDTH, quality);
+                maxWidth, quality);
     }
 
     public static File prepareProfileImage(Context context, File file) {

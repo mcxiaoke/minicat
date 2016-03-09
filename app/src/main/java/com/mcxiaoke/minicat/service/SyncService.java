@@ -39,6 +39,7 @@ import com.mcxiaoke.minicat.dao.model.StatusUpdateInfoColumns;
 import com.mcxiaoke.minicat.dao.model.UserColumns;
 import com.mcxiaoke.minicat.dao.model.UserModel;
 import com.mcxiaoke.minicat.util.Assert;
+import com.mcxiaoke.minicat.util.IOHelper;
 import com.mcxiaoke.minicat.util.ImageHelper;
 import com.mcxiaoke.minicat.util.LogUtil;
 import com.mcxiaoke.minicat.util.NetworkHelper;
@@ -799,6 +800,7 @@ public final class SyncService extends Service implements Handler.Callback {
 
         debug("doStatusUpdate() info=" + info);
         boolean photoUpload = false;
+        File photo = null;
         try {
             StatusModel result = null;
             if (StringHelper.isEmpty(info.fileName) || new File(info.fileName).length() == 0) {
@@ -809,14 +811,21 @@ public final class SyncService extends Service implements Handler.Callback {
                 }
             } else {
                 File file = new File(info.fileName);
-                int quality = NetworkHelper.isWifi(this) ? ImageHelper.IMAGE_QUALITY_HIGH : ImageHelper.IMAGE_QUALITY_MEDIUM;
-
-                File photo = ImageHelper.prepareUploadFile(this, file,
-                        quality);
+                boolean isWifi = NetworkHelper.isWifi(this);
+                int quality = isWifi ? ImageHelper.IMAGE_QUALITY_HIGH :
+                        ImageHelper.IMAGE_QUALITY_MEDIUM;
+                int maxWidth = isWifi ? ImageHelper.IMAGE_MAX_WIDTH : ImageHelper.IMAGE_MAX_WIDTH_2;
+                if (file.getName().toLowerCase().endsWith(".gif")) {
+                    photo = new File(IOHelper.getImageCacheDir(this),
+                            System.currentTimeMillis() + "_fanfouupload.gif");
+                    IOHelper.copyFile(file, photo);
+                } else {
+                    photo = ImageHelper.prepareUploadFile(this, file, quality, maxWidth);
+                }
                 if (photo != null && photo.length() > 0) {
                     if (DEBUG) {
                         debug("doStatusUpdate() photo file=" + file.getName() + " size="
-                                + photo.length() / 1024 + " quality=" + quality);
+                                + photo.length() / 1024 + "k quality=" + quality);
                     }
                     photoUpload = true;
                     result = mApi.uploadPhoto(photo, info.text, info.location);
@@ -857,7 +866,9 @@ public final class SyncService extends Service implements Handler.Callback {
                     getString(R.string.msg_unkonow_error));
             UmengHelper.onStatusUpdateError(this, AppContext.getAccount(), 0, e.getMessage(), e.getCause() + "");
         } finally {
-//            mNotificationManager.cancel(NOTIFICATION_STATUS_UPDATE_ONGOING);
+            if (photo != null) {
+                photo.delete();
+            }
         }
         isSending = false;
         return res;
