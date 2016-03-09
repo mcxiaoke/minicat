@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -192,7 +193,7 @@ public class UIPhoto extends Activity implements OnClickListener {
     private DisplayImageOptions getDisplayImageOptions() {
         DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder();
         builder.cacheInMemory(true).cacheOnDisc(true);
-        builder.bitmapConfig(Bitmap.Config.RGB_565);
+        builder.bitmapConfig(Config.ARGB_8888);
         builder.showImageOnFail(R.drawable.photo_error);
         builder.showImageOnLoading(R.drawable.photo_loading);
         builder.imageScaleType(ImageScaleType.IN_SAMPLE_INT);

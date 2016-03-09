@@ -37,13 +37,17 @@ public class PublicTimelineFragment extends BaseTimlineFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//		getActivity().setTitle("随便看看");
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return DataController.getTimelineCursorLoader(getActivity(),
                 StatusModel.TYPE_PUBLIC);
+    }
+
+    @Override
+    protected boolean shouldDelayRefresh() {
+        return true;
     }
 
     @Override

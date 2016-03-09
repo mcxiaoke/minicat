@@ -10,12 +10,24 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" />
 
-    <ImageView
-        android:id="@+id/content_photo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <FrameLayout
         android:layout_below="@id/content_text"
-        android:layout_centerHorizontal="true" />
+        android:id="@+id/content_photo"
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/gif"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/content_metainfo"

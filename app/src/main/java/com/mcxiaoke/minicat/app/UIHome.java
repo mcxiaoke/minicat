@@ -326,8 +326,9 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 //        mViewPager.setOnPageChangeListener(this);
 
         mPagesAdapter = new HomePagesAdapter(getFragmentManager(), this);
+        mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(mPagesAdapter);
-        mViewPager.setOnPageChangeListener(this);
+        mViewPager.addOnPageChangeListener(this);
 
         final int highlightColor = getResources().getColor(R.color.holo_secondary);
         mPagerTabStrip = (PagerTabStrip) findViewById(R.id.viewpager_strip);

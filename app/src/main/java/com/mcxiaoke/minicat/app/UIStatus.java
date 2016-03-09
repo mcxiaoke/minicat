@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,8 +33,14 @@ import com.mcxiaoke.minicat.util.StatusHelper;
 import com.mcxiaoke.minicat.util.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 
 /**
@@ -59,7 +66,9 @@ public class UIStatus extends UIBaseSupport {
     private TextView headerName;
     private TextView headerId;
     private TextView contentText;
-    private ImageView contentPhoto;
+    private ViewGroup contentPhoto;
+    private ImageView imageView;
+    private GifImageView gifView;
     private TextView contentMetaInfo;
     private ImageButton imThread;
     private ImageButton imReply;
@@ -206,7 +215,9 @@ public class UIStatus extends UIBaseSupport {
         findViewById(R.id.header_album).setVisibility(View.GONE);
 
         contentText = (TextView) findViewById(R.id.content_text);
-        contentPhoto = (ImageView) findViewById(R.id.content_photo);
+        contentPhoto = (ViewGroup) findViewById(R.id.content_photo);
+        imageView = (ImageView) findViewById(R.id.image);
+        gifView = (GifImageView) findViewById(R.id.gif);
         contentMetaInfo = (TextView) findViewById(R.id.content_metainfo);
 
         imThread = (ImageButton) findViewById(R.id.thread_title);
@@ -312,15 +323,51 @@ public class UIStatus extends UIBaseSupport {
 
         contentPhoto.setVisibility(View.VISIBLE);
         String photoUrl = status.getPhotoLargeUrl();
-        loadBigImage(photoUrl, contentPhoto);
+        loadBigImage(photoUrl);
     }
 
     private void updateThread() {
         imThread.setVisibility(status.isThread() ? View.VISIBLE : View.GONE);
     }
 
-    private void loadBigImage(final String imageUri, final ImageView imageView) {
-        ImageLoader.getInstance().displayImage(imageUri, imageView, DISPLAY_OPTIONS);
+    private void loadBigImage(final String imageUri) {
+        ImageLoader.getInstance().loadImage(imageUri, DISPLAY_OPTIONS, new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingComplete(final String imageUri,
+                                          final View view, final Bitmap loadedImage) {
+                showPhoto(imageUri, loadedImage);
+            }
+
+            @Override
+            public void onLoadingFailed(final String imageUri, final View view, final FailReason failReason) {
+                gifView.setVisibility(View.GONE);
+                imageView.setVisibility(View.VISIBLE);
+                imageView.setImageResource(R.drawable.photo_error);
+            }
+        });
+    }
+
+    private void showPhoto(String imageUri, Bitmap bitmap) {
+        if (bitmap == null) {
+            return;
+        }
+        if (imageUri.endsWith(".gif")) {
+            imageView.setVisibility(View.GONE);
+            gifView.setVisibility(View.VISIBLE);
+            try {
+                final File file = ImageLoader.getInstance().getDiscCache().get(imageUri);
+                final GifDrawable drawable = new GifDrawable(file);
+                gifView.setImageDrawable(drawable);
+            } catch (IOException e) {
+                gifView.setVisibility(View.GONE);
+                imageView.setVisibility(View.VISIBLE);
+                imageView.setImageResource(R.drawable.photo_error);
+            }
+        } else {
+            gifView.setVisibility(View.GONE);
+            imageView.setVisibility(View.VISIBLE);
+            imageView.setImageBitmap(bitmap);
+        }
     }
 
     private void goPhotoViewer() {

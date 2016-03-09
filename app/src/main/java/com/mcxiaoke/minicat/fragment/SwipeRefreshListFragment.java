@@ -56,12 +56,14 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
     volatile boolean busy;
     private Parcelable mParcelable;
     private BaseCursorAdapter mAdapter;
+    private Handler mHandler;
 
     public SwipeRefreshListFragment() {
         super();
         if (AppContext.DEBUG) {
             Log.v(TAG, "PullToRefreshListFragment() id=" + this);
         }
+        mHandler = new Handler();
     }
 
     protected static void showPopup(Activity context, final View view,
@@ -338,6 +340,10 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
     protected abstract void doFetch(boolean doGetMore);
 
     protected abstract int getType();
+
+    protected boolean shouldDelayRefresh() {
+        return false;
+    }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view,

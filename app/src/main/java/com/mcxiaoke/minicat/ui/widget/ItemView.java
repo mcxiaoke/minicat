@@ -28,10 +28,8 @@ public class ItemView extends RelativeLayout {
 
     public static final DisplayImageOptions DISPLAY_OPTIONS = new DisplayImageOptions.Builder()
             .cacheOnDisc(true).cacheInMemory(true)
-            .showImageOnLoading(R.drawable.photo_placeholder_small)
             .showImageOnFail(R.drawable.photo_placeholder_small)
-            .showImageForEmptyUri(R.drawable.photo_placeholder_small).
-                    imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+            .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
             .bitmapConfig(Bitmap.Config.RGB_565).build();
     private ImageView mImageView;
     private TextView mUserNameTextView;

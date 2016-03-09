@@ -201,7 +201,7 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
         private DisplayImageOptions getDisplayImageOptions() {
             DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder();
             builder.cacheInMemory(true).cacheOnDisc(true);
-            builder.bitmapConfig(Bitmap.Config.RGB_565);
+            builder.bitmapConfig(Bitmap.Config.ARGB_8888);
             builder.showImageOnFail(R.drawable.photo_error);
             builder.showImageOnLoading(R.drawable.photo_loading);
             builder.imageScaleType(ImageScaleType.IN_SAMPLE_INT);
