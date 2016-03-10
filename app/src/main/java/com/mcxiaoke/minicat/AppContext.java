@@ -44,7 +44,6 @@ public class AppContext extends Application {
     public static String packageName;
     public static PackageInfo info;
     public static boolean active;
-    public static boolean refreshed;
     private static HashMap<String, WeakReference<Activity>> contexts = new HashMap<String, WeakReference<Activity>>();
     private static AccountInfo accountInfo;
 

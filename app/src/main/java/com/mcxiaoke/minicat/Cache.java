@@ -12,6 +12,8 @@ import java.util.Map;
  */
 public final class Cache {
 
+    public static volatile long sLastHomeRefresh;
+
     private static Map<String, List<StatusModel>> sCache = new HashMap<String, List<StatusModel>>();
 
     public static void put(final String key, final List<StatusModel> value) {

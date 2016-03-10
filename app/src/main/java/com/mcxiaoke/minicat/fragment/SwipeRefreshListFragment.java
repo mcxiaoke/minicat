@@ -25,6 +25,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.mcxiaoke.commons.view.endless.EndlessListView;
 import com.mcxiaoke.minicat.AppContext;
+import com.mcxiaoke.minicat.Cache;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.adapter.BaseCursorAdapter;
 import com.mcxiaoke.minicat.controller.PopupController;
@@ -87,7 +88,7 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
     @Override
     public void startRefresh() {
         if (AppContext.DEBUG) {
-            Log.v(TAG, "startRefresh() busy=" + busy);
+            Log.v(TAG, "startRefresh() busy=" + busy + " " + this);
         }
         if (NetworkHelper.isNotConnected(getActivity())) {
             return;
@@ -214,9 +215,6 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
         if (args != null) {
             parseArguments(args);
         }
-
-        mDataLoaded = false;
-
     }
 
     @Override
@@ -319,7 +317,6 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mDataLoaded = false;
         if (AppContext.DEBUG) {
             Log.v(TAG, "onDestroy()");
         }
@@ -402,9 +399,11 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
 
     private void onSuccess(Bundle data) {
         int count = data.getInt("count");
-        AppContext.refreshed = true;
         if (AppContext.DEBUG) {
             Log.v(TAG, "onSuccess(data) count=" + count);
+        }
+        if (getType() == StatusModel.TYPE_HOME) {
+            Cache.sLastHomeRefresh = System.currentTimeMillis();
         }
     }
 
@@ -426,9 +425,14 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
 
     protected void checkRefresh() {
         if (AppContext.DEBUG) {
-            Log.v(TAG, "checkRefresh() mDataLoaded=" + mDataLoaded + " adapter.count=" + mAdapter.getCount());
+            Log.v(TAG, "checkRefresh()  adapter.count=" + mAdapter.getCount() + " " + this);
         }
-        if (!mDataLoaded && (!AppContext.refreshed || mAdapter.isEmpty())) {
+        if (mAdapter.isEmpty()) {
+            startRefresh();
+            return;
+        }
+        if (getType() == StatusModel.TYPE_HOME &&
+                System.currentTimeMillis() - Cache.sLastHomeRefresh > 30 * 60 * 1000L) {
             startRefresh();
         }
     }
@@ -449,7 +453,6 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
             if (AppContext.DEBUG) {
                 Log.v(TAG, "handleMessage() data=" + data + " msg=" + msg);
             }
-            mFragment.mDataLoaded = true;
             mFragment.busy = false;
             switch (msg.what) {
                 case Constants.RESULT_SUCCESS:

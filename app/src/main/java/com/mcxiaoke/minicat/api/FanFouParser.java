@@ -2,7 +2,6 @@ package com.mcxiaoke.minicat.api;
 
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.dao.model.BaseModel;
 import com.mcxiaoke.minicat.dao.model.DirectMessageModel;
@@ -79,9 +78,9 @@ final class FanFouParser implements ApiParser {
     }
 
     public static String error(String response) {
-        if (DEBUG) {
-            Log.e(TAG, "error() response:" + response);
-        }
+//        if (DEBUG) {
+//            Log.e(TAG, "error() response:" + response);
+//        }
         String result = response;
         try {
             JSONObject o = new JSONObject(response);
@@ -442,11 +441,11 @@ final class FanFouParser implements ApiParser {
         model.setFollowMe(false);
 
         if (DEBUG) {
-            Log.d(TAG,
-                    " user() id=" + model.getId() + "type=" + model.getType()
-                            + " owner=" + model.getOwner() + " account="
-                            + model.getAccount()
-            );
+//            Log.d(TAG,
+//                    " user() id=" + model.getId() + "type=" + model.getType()
+//                            + " owner=" + model.getOwner() + " account="
+//                            + model.getAccount()
+//            );
         }
         return model;
     }
@@ -515,12 +514,12 @@ final class FanFouParser implements ApiParser {
         model.setRead(false);
 
         if (DEBUG) {
-            Log.d(TAG,
-                    " status() id=" + model.getId() + " userId="
-                            + model.getUserId() + " type=" + model.getType()
-                            + " owner=" + model.getOwner() + " account="
-                            + model.getAccount()
-            );
+//            Log.d(TAG,
+//                    " status() id=" + model.getId() + " userId="
+//                            + model.getUserId() + " type=" + model.getType()
+//                            + " owner=" + model.getOwner() + " account="
+//                            + model.getAccount()
+//            );
         }
 
         return model;
