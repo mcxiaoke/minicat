@@ -112,7 +112,9 @@ public final class SyncService extends Service implements Handler.Callback {
         Intent intent = new Intent(context, SyncService.class);
         intent.putExtra("type", DM_DELETE);
         intent.putExtra("id", id);
-        intent.putExtra("messenger", new Messenger(handler));
+        if (handler != null) {
+            intent.putExtra("messenger", new Messenger(handler));
+        }
         context.startService(intent);
     }
 
@@ -121,7 +123,9 @@ public final class SyncService extends Service implements Handler.Callback {
         Intent intent = new Intent(context, SyncService.class);
         intent.putExtra("type", USER_FOLLOW);
         intent.putExtra("id", userId);
-        intent.putExtra("messenger", new Messenger(handler));
+        if (handler != null) {
+            intent.putExtra("messenger", new Messenger(handler));
+        }
         context.startService(intent);
 
     }
@@ -146,7 +150,9 @@ public final class SyncService extends Service implements Handler.Callback {
         Intent intent = new Intent(context, SyncService.class);
         intent.putExtra("type", type);
         intent.putExtra("id", id);
-        intent.putExtra("messenger", new Messenger(handler));
+        if (handler != null) {
+            intent.putExtra("messenger", new Messenger(handler));
+        }
         context.startService(intent);
     }
 
@@ -171,7 +177,9 @@ public final class SyncService extends Service implements Handler.Callback {
         Intent intent = new Intent(context, SyncService.class);
         intent.putExtra("type", STATUS_DELETE);
         intent.putExtra("id", id);
-        intent.putExtra("messenger", new Messenger(handler));
+        if (handler != null) {
+            intent.putExtra("messenger", new Messenger(handler));
+        }
         context.startService(intent);
     }
 
@@ -194,8 +202,15 @@ public final class SyncService extends Service implements Handler.Callback {
         intent.putExtra("type", FRIENDSHIPS_EXISTS);
         intent.putExtra("user_a", userA);
         intent.putExtra("user_b", userB);
-        intent.putExtra("messenger", new Messenger(handler));
+        if (handler != null) {
+            intent.putExtra("messenger", new Messenger(handler));
+        }
         context.startService(intent);
+    }
+
+    public static void getConversationList(Context context) {
+        getDirectMessages(context, null, new Paging(),
+                DirectMessageModel.TYPE_CONVERSATION_LIST);
     }
 
     public static void getConversationList(Context context,
@@ -208,7 +223,9 @@ public final class SyncService extends Service implements Handler.Callback {
                                        Paging paging, String userId) {
         Intent intent = new Intent(context, SyncService.class);
         intent.putExtra("type", DirectMessageModel.TYPE_CONVERSATION);
-        intent.putExtra("messenger", new Messenger(handler));
+        if (handler != null) {
+            intent.putExtra("messenger", new Messenger(handler));
+        }
         intent.putExtra("id", userId);
         intent.putExtra("paging", paging);
         context.startService(intent);
@@ -230,7 +247,9 @@ public final class SyncService extends Service implements Handler.Callback {
                                           final Handler handler, Paging paging, int type) {
         Intent intent = new Intent(context, SyncService.class);
         intent.putExtra("type", type);
-        intent.putExtra("messenger", new Messenger(handler));
+        if (handler != null) {
+            intent.putExtra("messenger", new Messenger(handler));
+        }
         intent.putExtra("paging", paging);
         context.startService(intent);
     }
@@ -250,7 +269,9 @@ public final class SyncService extends Service implements Handler.Callback {
         Intent intent = new Intent(context, SyncService.class);
         intent.putExtra("type", type);
         intent.putExtra("id", userId);
-        intent.putExtra("messenger", new Messenger(handler));
+        if (handler != null) {
+            intent.putExtra("messenger", new Messenger(handler));
+        }
         intent.putExtra("paging", paging);
         if (AppContext.DEBUG) {
             Log.d(TAG, "getTimeline() type=" + type + " paging=" + paging
@@ -272,7 +293,9 @@ public final class SyncService extends Service implements Handler.Callback {
                                 Paging paging, final Handler handler) {
         Intent intent = new Intent(context, SyncService.class);
         intent.putExtra("type", type);
-        intent.putExtra("messenger", new Messenger(handler));
+        if (handler != null) {
+            intent.putExtra("messenger", new Messenger(handler));
+        }
         intent.putExtra("paging", paging);
         intent.putExtra("id", userId);
         context.startService(intent);

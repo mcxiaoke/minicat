@@ -15,6 +15,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
@@ -25,11 +26,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import com.mcxiaoke.bus.Bus;
+import com.mcxiaoke.bus.annotation.BusReceiver;
 import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.Cache;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.adapter.HomePagesAdapter;
 import com.mcxiaoke.minicat.controller.UIController;
+import com.mcxiaoke.minicat.dao.model.DirectMessageModel;
+import com.mcxiaoke.minicat.dao.model.StatusModel;
 import com.mcxiaoke.minicat.fragment.AbstractFragment;
 import com.mcxiaoke.minicat.fragment.ConversationListFragment;
 import com.mcxiaoke.minicat.fragment.ProfileFragment;
@@ -37,7 +42,9 @@ import com.mcxiaoke.minicat.menu.MenuCallback;
 import com.mcxiaoke.minicat.menu.MenuFragment;
 import com.mcxiaoke.minicat.menu.MenuItemResource;
 import com.mcxiaoke.minicat.preference.PreferenceHelper;
+import com.mcxiaoke.minicat.push.PushMessageEvent;
 import com.mcxiaoke.minicat.push.PushService;
+import com.mcxiaoke.minicat.push.PushStatusEvent;
 import com.mcxiaoke.minicat.service.AutoCompleteService;
 import com.mcxiaoke.minicat.service.Constants;
 import com.mcxiaoke.minicat.util.LogUtil;
@@ -62,6 +69,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     private static final int UCODE_NO_WIFI = 2;
     private static final int UCODE_IO_ERROR = 3;
     private static final long TIME_THREE_DAYS = 1000 * 3600 * 24 * 5L;
+    private static final long ONE_DAY = 1000 * 3600 * 24L;
     private ViewGroup mContainer;
     private Fragment mMenuFragment;
     private ViewPager mViewPager;
@@ -77,6 +85,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     private int mCurrentPage;
     private BroadcastReceiver mReceiver;
     private AbstractFragment mCurrentFragment;
+    private Handler mHandler;
 
     private void log(String message) {
         LogUtil.v(TAG, message);
@@ -85,6 +94,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppContext.homeVisible = true;
         MobclickAgent.updateOnlineConfig(this);
         if (AppContext.DEBUG) {
             log("onCreate()");
@@ -92,6 +102,24 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         setLayout();
         setUmengUpdate();
         registerReceiver();
+        setUp();
+        Bus.getDefault().register(this);
+    }
+
+    private Runnable mCheckRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (AppContext.DEBUG) {
+                LogUtil.v(TAG, "mCheckRunnable check push");
+            }
+            PushService.checkAll(getApplication());
+            mHandler.postDelayed(mCheckRunnable, 30 * 1000L);
+        }
+    };
+
+    private void setUp() {
+        mHandler = new Handler();
+        mHandler.postDelayed(mCheckRunnable, 30 * 1000L);
     }
 
     @Override
@@ -110,6 +138,9 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        AppContext.homeVisible = false;
+        Bus.getDefault().unregister(this);
+        mHandler.removeCallbacks(mCheckRunnable);
         unregisterReceiver();
         PushService.check(this);
         AutoCompleteService.check(this);
@@ -202,7 +233,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         boolean autoUpdate = PreferenceHelper.getInstance(this).isAutoUpdate();
         long lastUpdateTime = PreferenceHelper.getInstance(this).getLastUpdateTime();
         long now = System.currentTimeMillis();
-        boolean needUpdate = now - lastUpdateTime > TIME_THREE_DAYS;
+        boolean needUpdate = now - lastUpdateTime > ONE_DAY;
         if (autoUpdate || needUpdate) {
             PreferenceHelper.getInstance(this).setKeyLastUpdateTime(now);
             UmengUpdateAgent.setUpdateCheckConfig(false);
@@ -545,6 +576,20 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
+    }
+
+    @BusReceiver
+    public void onEvent(final PushStatusEvent event) {
+        final StatusModel model = event.getStatus();
+        Utils.notifyLong(this, "[新消息] @" + model.getUserScreenName()
+                + "：" + model.getSimpleText());
+    }
+
+    @BusReceiver
+    public void onEvent(final PushMessageEvent event) {
+        final DirectMessageModel model = event.getMessage();
+        Utils.notifyLong(this, "[新私信] @" + model.getSenderScreenName()
+                + "：" + model.getText());
     }
 
 

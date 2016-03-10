@@ -28,7 +28,7 @@ public class PushReceiver extends WakefulBroadcastReceiver {
         if (Intent.ACTION_REBOOT.equals(action)) {
             PushService.check(context);
         } else if (PushService.ACTION_START.equals(action)) {
-            PushService.start(context);
+            PushService.checkAll(context);
         }
     }
 

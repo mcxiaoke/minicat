@@ -13,6 +13,7 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.text.TextPaint;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
@@ -96,16 +97,21 @@ public final class Utils {
     }
 
     public static void notify(Context context, CharSequence text) {
-        Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+        final Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 
     public static void notifyLong(Context context, CharSequence text) {
-        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+        final Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 
     public static void notify(Context context, int resId) {
-        Toast.makeText(context, context.getText(resId), Toast.LENGTH_SHORT)
-                .show();
+        final Toast toast = Toast.makeText(context, resId, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 
     public static void open(Context context, final String fileName) {

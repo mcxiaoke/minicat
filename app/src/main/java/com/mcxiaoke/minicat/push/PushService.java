@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
+import com.mcxiaoke.bus.Bus;
 import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.api.Api;
@@ -22,9 +23,9 @@ import com.mcxiaoke.minicat.dao.model.StatusModel;
 import com.mcxiaoke.minicat.preference.PreferenceHelper;
 import com.mcxiaoke.minicat.receiver.PushReceiver;
 import com.mcxiaoke.minicat.service.BaseIntentService;
+import com.mcxiaoke.minicat.service.SyncService;
 import com.mcxiaoke.minicat.util.DateTimeHelper;
 import com.mcxiaoke.minicat.util.LogUtil;
-import com.mcxiaoke.minicat.util.NetworkHelper;
 
 import java.util.Calendar;
 import java.util.List;
@@ -38,8 +39,9 @@ import java.util.List;
  */
 public class PushService extends BaseIntentService {
     public static final String ACTION_START = "com.mcxiaoke.fanfouapp.PushService.ACTION_START";
-    public static final int NOTIFICATION_TYPE_TIMELINE = -101;
-    public static final int NOTIFICATION_TYPE_DIRECTMESSAGE = -102;
+    public static final int TYPE_ALL = -100;
+    public static final int TYPE_MENTION = -101;
+    public static final int TYPE_MESSAGE = -102;
     public static final String EXTRA_TYPE = "com.mcxiaoke.fanfouapp.PushService.EXTRA_TYPE";
     public static final String EXTRA_DATA = "com.mcxiaoke.fanfouapp.PushService.EXTRA_DATA";
     private static final String TAG = PushService.class.getSimpleName();
@@ -56,8 +58,21 @@ public class PushService extends BaseIntentService {
         LogUtil.v(TAG, message);
     }
 
-    public static void start(Context context) {
+    public static void checkAll(Context context) {
         Intent intent = new Intent(context, PushService.class);
+        intent.putExtra("type", TYPE_ALL);
+        PushReceiver.startWakefulService(context, intent);
+    }
+
+    public static void checkMentions(Context context) {
+        Intent intent = new Intent(context, PushService.class);
+        intent.putExtra("type", TYPE_MENTION);
+        PushReceiver.startWakefulService(context, intent);
+    }
+
+    public static void checkMessages(Context context) {
+        Intent intent = new Intent(context, PushService.class);
+        intent.putExtra("type", TYPE_MESSAGE);
         PushReceiver.startWakefulService(context, intent);
     }
 
@@ -81,7 +96,7 @@ public class PushService extends BaseIntentService {
         }
         calendar.add(Calendar.MINUTE, 5);
 
-        final long interval = 5 * 60 * 1000L;// 提醒间隔5分钟
+        final long interval = 10 * 60 * 1000L;// 提醒间隔10分钟
         final long nextTime = calendar.getTimeInMillis();
 
         AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
@@ -160,10 +175,21 @@ public class PushService extends BaseIntentService {
             // 6点不提醒
             return;
         }
-        if (NetworkHelper.isConnected(this)) {
-            debug("doWakefulWork()");
-            checkMentions();
-            checkDirectMessages();
+        int type = intent.getIntExtra("type", TYPE_ALL);
+        debug("doWakefulWork() type=" + type);
+        switch (type) {
+            case TYPE_MENTION:
+                checkMentions();
+                break;
+            case TYPE_MESSAGE:
+                checkDirectMessages();
+                break;
+            case TYPE_ALL:
+                checkMentions();
+                checkDirectMessages();
+                break;
+            default:
+                break;
         }
     }
 
@@ -180,7 +206,11 @@ public class PushService extends BaseIntentService {
                     debug("checkMentions() result=" + ss);
                     DataController.store(this, ss);
                     StatusModel sm = ss.get(0);
-                    showMention(sm);
+                    if (AppContext.homeVisible) {
+                        Bus.getDefault().post(new PushStatusEvent(sm));
+                    } else {
+                        showMention(sm);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -202,12 +232,19 @@ public class PushService extends BaseIntentService {
                     debug("checkDirectMessages() result=" + dms);
                     DataController.store(this, dms);
                     DirectMessageModel dm = dms.get(0);
-                    showDM(dm);
+                    if (AppContext.homeVisible) {
+                        Bus.getDefault().post(new PushMessageEvent(dm));
+                    } else {
+                        showDM(dm);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
+        } else {
+            debug("checkDirectMessages() init fetch");
+            SyncService.getConversationList(getApplication());
         }
     }
 

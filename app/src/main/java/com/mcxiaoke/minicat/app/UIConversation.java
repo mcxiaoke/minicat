@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.fragment.ConversationFragment;
@@ -31,7 +30,7 @@ public class UIConversation extends UIBaseSupport {
     private String profileImageUrl;
     private boolean refresh;
     private EditText mEditText;
-    private ImageButton btnSend;
+    private View btnSend;
     private String text;
     private ConversationFragment fragment;
 
@@ -76,7 +75,7 @@ public class UIConversation extends UIBaseSupport {
             }
         });
 
-        btnSend = (ImageButton) findViewById(R.id.button_ok);
+        btnSend = findViewById(R.id.button_ok);
         btnSend.setOnClickListener(this);
 
         if (TextUtils.isEmpty(userId)) {
