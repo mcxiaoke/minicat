@@ -31,6 +31,7 @@ import com.mcxiaoke.minicat.adapter.BaseCursorAdapter;
 import com.mcxiaoke.minicat.controller.PopupController;
 import com.mcxiaoke.minicat.dao.model.StatusModel;
 import com.mcxiaoke.minicat.service.Constants;
+import com.mcxiaoke.minicat.service.SyncService;
 import com.mcxiaoke.minicat.ui.UIHelper;
 import com.mcxiaoke.minicat.util.NetworkHelper;
 import com.mcxiaoke.minicat.util.Utils;
@@ -403,6 +404,9 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
             Log.v(TAG, "onSuccess(data) count=" + count);
         }
         if (getType() == StatusModel.TYPE_HOME) {
+            if (AppContext.DEBUG) {
+                Log.v(TAG, "onSuccess(data) update sLastHomeRefresh");
+            }
             Cache.sLastHomeRefresh = System.currentTimeMillis();
         }
     }
@@ -455,10 +459,10 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
             }
             mFragment.busy = false;
             switch (msg.what) {
-                case Constants.RESULT_SUCCESS:
+                case SyncService.RESULT_SUCCESS:
                     mFragment.onSuccess(data);
                     break;
-                case Constants.RESULT_ERROR:
+                case SyncService.RESULT_ERROR:
                     mFragment.onError(data);
                     break;
                 default:

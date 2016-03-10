@@ -299,7 +299,7 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case Constants.RESULT_SUCCESS:
+                case SyncService.RESULT_SUCCESS:
                     if (!isInitialized) {
                         showContent();
                     }
@@ -308,7 +308,7 @@ public class UIUserChoose extends UIBaseSupport implements FilterQueryProvider,
                         updateUI();
                     }
                     break;
-                case Constants.RESULT_ERROR:
+                case SyncService.RESULT_ERROR:
                     int code = msg.getData().getInt("error_code");
                     String errorMessage = msg.getData().getString("error_message");
                     Utils.notify(mContext, errorMessage);

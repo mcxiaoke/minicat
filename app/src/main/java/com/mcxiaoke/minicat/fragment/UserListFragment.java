@@ -437,10 +437,10 @@ public abstract class UserListFragment extends AbstractListFragment
             mFragment.mDataLoaded = true;
             mFragment.busy = false;
             switch (msg.what) {
-                case Constants.RESULT_SUCCESS:
+                case SyncService.RESULT_SUCCESS:
                     mFragment.onSuccess(data);
                     break;
-                case Constants.RESULT_ERROR:
+                case SyncService.RESULT_ERROR:
                     mFragment.onError(data);
                     break;
                 default:
