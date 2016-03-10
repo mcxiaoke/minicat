@@ -30,7 +30,6 @@ import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.adapter.BaseCursorAdapter;
 import com.mcxiaoke.minicat.controller.PopupController;
 import com.mcxiaoke.minicat.dao.model.StatusModel;
-import com.mcxiaoke.minicat.service.Constants;
 import com.mcxiaoke.minicat.service.SyncService;
 import com.mcxiaoke.minicat.ui.UIHelper;
 import com.mcxiaoke.minicat.util.NetworkHelper;
@@ -130,10 +129,10 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
     }
 
     private void setUp() {
-        mSwipeRefreshLayout.setColorSchemeResources(
-                R.color.color1,
-                R.color.color2,
-                R.color.color3, R.color.color4);
+//        mSwipeRefreshLayout.setColorSchemeResources(
+//                R.color.color1,
+//                R.color.color2,
+//                R.color.color3, R.color.color4);
         mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -191,7 +190,11 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
             if (getType() == StatusModel.TYPE_PUBLIC) {
                 mListView.showFooterEmpty();
             } else {
-                mListView.showFooterText(R.string.endless_footer_load_more);
+                if (getAdapter().isEmpty()) {
+                    mListView.showFooterEmpty();
+                } else {
+                    mListView.showFooterText(R.string.endless_footer_load_more);
+                }
             }
         }
     }
