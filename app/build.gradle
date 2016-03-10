@@ -101,11 +101,6 @@ def checkSigningConfig() {
             keyAlias project.ANDROID_KEY_ALIAS
             keyPassword project.ANDROID_KEY_PASSWORD
         }
-    } else {
-        println "release signingConfigs not found, remove all signingConfigs!"
-        project.android.buildTypes.each {
-            it.signingConfig = null
-        }
     }
 }
 

@@ -18,11 +18,14 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:layout_gravity="center"
             android:id="@+id/image"
+            android:scaleType="fitCenter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <pl.droidsonroids.gif.GifImageView
+            android:layout_gravity="center"
             android:id="@+id/gif"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
