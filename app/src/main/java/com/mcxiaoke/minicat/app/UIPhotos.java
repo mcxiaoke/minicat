@@ -4,6 +4,7 @@ import android.os.Bundle;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.dao.model.UserModel;
 import com.mcxiaoke.minicat.fragment.PhotosFragment;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
  * Project: fanfouapp
@@ -31,6 +32,7 @@ public class UIPhotos extends UIBaseSupport {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ImageLoader.getInstance().clearMemoryCache();
         System.gc();
     }
 

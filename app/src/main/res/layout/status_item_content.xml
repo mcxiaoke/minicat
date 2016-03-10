@@ -11,6 +11,7 @@
         android:layout_alignParentTop="true" />
 
     <FrameLayout
+        android:visibility="gone"
         android:layout_below="@id/content_text"
         android:id="@+id/content_photo"
         android:layout_centerHorizontal="true"
@@ -18,6 +19,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:src="@drawable/photo_loading"
             android:layout_gravity="center"
             android:id="@+id/image"
             android:scaleType="fitCenter"
@@ -27,9 +29,10 @@
         <pl.droidsonroids.gif.GifImageView
             android:layout_gravity="center"
             android:id="@+id/gif"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:src="@drawable/photo_loading" />
     </FrameLayout>
 
     <TextView

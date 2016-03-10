@@ -38,7 +38,6 @@ import com.mcxiaoke.minicat.util.StatusHelper;
 import com.mcxiaoke.minicat.util.Utils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author mcxiaoke
@@ -287,18 +286,11 @@ public class UIController {
         context.startActivity(intent);
     }
 
-    public static void showGallery(Activity context, List<StatusModel> statuses, int index) {
-        if (statuses != null && statuses.size() > 0) {
-            ArrayList<String> uris = new ArrayList<String>();
-            for (StatusModel st : statuses) {
-                uris.add(st.getPhotoLargeUrl().split("@")[0]);
-            }
-            Intent intent = new Intent(context, UIGallery.class);
-            intent.putStringArrayListExtra("data", uris);
-            intent.putExtra("index", index);
-            context.startActivity(intent);
-        }
-
+    public static void showGallery(Activity context, String userId, int index) {
+        Intent intent = new Intent(context, UIGallery.class);
+        intent.putExtra("userId", userId);
+        intent.putExtra("index", index);
+        context.startActivity(intent);
     }
 
 }

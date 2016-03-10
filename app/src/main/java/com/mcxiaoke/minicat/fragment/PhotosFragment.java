@@ -14,6 +14,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mcxiaoke.minicat.AppContext;
+import com.mcxiaoke.minicat.Cache;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.api.Api;
 import com.mcxiaoke.minicat.api.Paging;
@@ -35,11 +36,12 @@ import java.util.List;
  * Time: 下午9:02
  */
 public class PhotosFragment extends AbstractFragment implements AdapterView.OnItemClickListener {
+
     private ViewGroup mEmptyView;
     private EmptyViewController mEmptyViewController;
     private GridView mGridView;
     private ArrayAdapter<StatusModel> mArrayAdapter;
-    private List<StatusModel> mData;
+    private ArrayList<StatusModel> mData;
     private UserModel user;
     private Thread mThread;
     private Handler mHandler;
@@ -58,6 +60,7 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
         super.onCreate(savedInstanceState);
         mHandler = new Handler();
         user = getArguments().getParcelable("user");
+        mData = new ArrayList<StatusModel>();
     }
 
     @Override
@@ -78,7 +81,6 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mData = new ArrayList<StatusModel>();
         mArrayAdapter = new GridViewAdapter(getActivity(), R.id.text, mData);
         mGridView.setOnItemClickListener(this);
         mGridView.setAdapter(mArrayAdapter);
@@ -90,6 +92,10 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
     public void onDestroy() {
         super.onDestroy();
         stopTask();
+        if (mData != null && mData.size() > 120) {
+            Cache.clear();
+            Cache.put(user.getId(), mData);
+        }
     }
 
     @Override
@@ -104,6 +110,11 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
 
     @Override
     public void startRefresh() {
+        final List<StatusModel> cache = Cache.get(user.getId());
+        if (cache != null) {
+            refreshUI(cache);
+            return;
+        }
         startTask();
         getBaseSupport().showProgressIndicator();
         showProgress();
@@ -113,8 +124,7 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         StatusModel status = (StatusModel) parent.getItemAtPosition(position);
         if (status != null) {
-//            UIController.showPhoto(getActivity(), status.getPhotoLargeUrl());
-            UIController.showGallery(getActivity(), mData, position);
+            UIController.showGallery(getActivity(), user.getId(), position);
         }
     }
 
@@ -150,21 +160,26 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                getBaseSupport().hideProgressIndicator();
-                if (data != null && data.size() > 0) {
-                    int size = data.size();
-                    showContent(size);
-                    mArrayAdapter.addAll(data);
-                    mArrayAdapter.notifyDataSetChanged();
-                } else {
-                    if (mArrayAdapter.isEmpty()) {
-                        showEmpty("无法获取数据");
-                    }
-                }
+                refreshUI(data);
             }
         };
         mHandler.post(runnable);
 
+    }
+
+    private synchronized void refreshUI(final List<StatusModel> data) {
+        getBaseSupport().hideProgressIndicator();
+        if (data != null && data.size() > 0) {
+            int size = data.size();
+            showContent(size);
+            mArrayAdapter.addAll(data);
+            mArrayAdapter.notifyDataSetChanged();
+            Cache.put(user.getId(), mData);
+        } else {
+            if (mArrayAdapter.isEmpty()) {
+                showEmpty("无法获取数据");
+            }
+        }
     }
 
     private void loadData() {
@@ -172,14 +187,15 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
         mThread = new Thread() {
             @Override
             public void run() {
+                final long start = System.currentTimeMillis();
                 final String id = user.getId();
                 final Api api = AppContext.getApi();
                 List<StatusModel> statusModels = new ArrayList<StatusModel>();
                 try {
-                    // 分页获取，最多3页=180张照片
+                    // 分页获取，最多30页=1800张照片
                     Paging paging = new Paging();
                     paging.count = 60;
-                    final int max = NetworkHelper.isWifi(getActivity()) ? 10 : 1;
+                    final int max = NetworkHelper.isWifi(getActivity()) ? 30 : 1;
                     for (int i = 0; i < max; i++) {
                         paging.page = i;
                         if (mCancelled) {
@@ -192,8 +208,17 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
                         if (mCancelled) {
                             break;
                         }
-                        updateUI(models);
-                        if (models == null || models.size() < 60) {
+                        if (models != null) {
+                            statusModels.addAll(models);
+                        }
+                        if (i % 3 == 0) {
+                            updateUI(new ArrayList<StatusModel>(statusModels));
+                            statusModels.clear();
+                        }
+                        if (models == null || models.size() < paging.count) {
+                            break;
+                        }
+                        if (System.currentTimeMillis() - start > 60 * 1000L) {
                             break;
                         }
                     }
@@ -204,8 +229,8 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
                     if (AppContext.DEBUG) {
                         Log.w("PhotosFragment", "fetch photos error:" + ex);
                     }
-                    updateUI(null);
                 }
+                updateUI(statusModels);
             }
         };
         mThread.start();

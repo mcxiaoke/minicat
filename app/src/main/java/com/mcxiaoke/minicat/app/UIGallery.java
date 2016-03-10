@@ -8,8 +8,6 @@ import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.fragment.GalleryFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.util.ArrayList;
-
 /**
  * Project: fanfouapp
  * Package: com.mcxiaoke.fanfouapp.app
@@ -26,14 +24,10 @@ public class UIGallery extends Activity {
         getActionBar().setBackgroundDrawable(new ColorDrawable(0x66333333));
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle("查看照片");
-        ArrayList<String> data = getIntent().getStringArrayListExtra("data");
         int index = getIntent().getIntExtra("index", 0);
-        if (data == null || data.isEmpty()) {
-            finish();
-        }
-
+        String userId = getIntent().getStringExtra("userId");
         setContentView(R.layout.ui_gallery);
-        getFragmentManager().beginTransaction().replace(R.id.content, GalleryFragment.newInstance(data, index)).commit();
+        getFragmentManager().beginTransaction().replace(R.id.content, GalleryFragment.newInstance(userId, index)).commit();
 
     }
 
@@ -41,6 +35,7 @@ public class UIGallery extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         ImageLoader.getInstance().clearMemoryCache();
+        System.gc();
     }
 
     @Override

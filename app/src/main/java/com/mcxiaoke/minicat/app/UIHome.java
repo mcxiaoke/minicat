@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import com.mcxiaoke.minicat.AppContext;
+import com.mcxiaoke.minicat.Cache;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.adapter.HomePagesAdapter;
 import com.mcxiaoke.minicat.controller.UIController;
@@ -112,7 +113,9 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         unregisterReceiver();
         PushService.check(this);
         AutoCompleteService.check(this);
+        Cache.clear();
         ImageLoader.getInstance().clearMemoryCache();
+        System.gc();
     }
 
     @Override
@@ -124,7 +127,9 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         // Assumes current activity is the searchable activity
 //        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 //        searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
-    }    private BroadcastReceiver mOnDownloadCompleteReceiver = new BroadcastReceiver() {
+    }
+
+    private BroadcastReceiver mOnDownloadCompleteReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             LogUtil.v(TAG, "onReceive() intent " + intent.getExtras());
@@ -541,7 +546,6 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
             unregisterReceiver(mReceiver);
         }
     }
-
 
 
 }

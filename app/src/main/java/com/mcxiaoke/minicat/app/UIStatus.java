@@ -322,7 +322,9 @@ public class UIStatus extends UIBaseSupport {
         }
 
         contentPhoto.setVisibility(View.VISIBLE);
-        String photoUrl = status.getPhotoLargeUrl();
+        imageView.setVisibility(View.VISIBLE);
+        gifView.setVisibility(View.GONE);
+        String photoUrl = status.getPhotoLargeUrl().split("@")[0];
         loadBigImage(photoUrl);
     }
 

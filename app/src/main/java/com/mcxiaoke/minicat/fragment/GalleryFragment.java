@@ -15,8 +15,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.mcxiaoke.minicat.Cache;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.controller.EmptyViewController;
+import com.mcxiaoke.minicat.dao.model.StatusModel;
 import com.mcxiaoke.minicat.util.IOHelper;
 import com.mcxiaoke.minicat.util.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -30,7 +32,6 @@ import uk.co.senab.photoview.PhotoView;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,15 +44,18 @@ import java.util.List;
 public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeListener {
 
     private ViewPager mViewPager;
+    private TextView mStatusView;
     private TextView mTextView;
     private GalleryPagerAdapter mGalleryPagerAdapter;
-    private List<String> mImageUris;
+    private List<StatusModel> mStatusModels;
     private int mIndex;
+    private String mUserId;
+    private int mCounter;
 
-    public static GalleryFragment newInstance(ArrayList<String> data, int index) {
+    public static GalleryFragment newInstance(String userId, int index) {
         GalleryFragment fragment = new GalleryFragment();
         Bundle args = new Bundle();
-        args.putStringArrayList("data", data);
+        args.putString("userId", userId);
         args.putInt("index", index);
         fragment.setArguments(args);
         return fragment;
@@ -61,12 +65,12 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mImageUris = new ArrayList<String>();
         Bundle args = getArguments();
-        ArrayList<String> data = args.getStringArrayList("data");
         mIndex = args.getInt("index");
-        if (data != null) {
-            mImageUris.addAll(data);
+        mUserId = args.getString("userId");
+        mStatusModels = Cache.get(mUserId);
+        if (mStatusModels == null || mStatusModels.isEmpty()) {
+            getActivity().finish();
         }
     }
 
@@ -75,6 +79,7 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fm_gallery, null);
         mViewPager = (ViewPager) root.findViewById(R.id.gallery);
+        mStatusView = (TextView) root.findViewById(R.id.status);
         mTextView = (TextView) root.findViewById(R.id.text);
         return root;
     }
@@ -87,7 +92,7 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mGalleryPagerAdapter = new GalleryPagerAdapter(getActivity(), mImageUris);
+        mGalleryPagerAdapter = new GalleryPagerAdapter(getActivity(), mStatusModels);
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(mGalleryPagerAdapter);
         mViewPager.setCurrentItem(mIndex);
@@ -112,15 +117,16 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
     }
 
     private void doSave() {
-        final String url = mGalleryPagerAdapter.getUrlAt(mViewPager.getCurrentItem());
-        if (TextUtils.isEmpty(url)) {
+        final StatusModel model = mGalleryPagerAdapter.getUrlAt(mViewPager.getCurrentItem());
+        final String imageUri = model.getPhotoLargeUrl().split("@")[0];
+        if (TextUtils.isEmpty(imageUri)) {
             return;
         }
-        File file = ImageLoader.getInstance().getDiscCache().get(url);
+        File file = ImageLoader.getInstance().getDiscCache().get(imageUri);
         if (file == null || !file.isFile()) {
             return;
         }
-        String ext = url.toLowerCase().endsWith(".gif") ? ".gif" : ".jpg";
+        String ext = imageUri.toLowerCase().endsWith(".gif") ? ".gif" : ".jpg";
         final String fileName = "IMG_FANFOU_" + System.currentTimeMillis() + ext;
         File dest = new File(IOHelper.getPictureDir(getActivity()), fileName);
         if (dest.exists() || IOHelper.copyFile(file, dest)) {
@@ -135,8 +141,10 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
         ImageLoader.getInstance().clearMemoryCache();
     }
 
-    private void setPageText(int page) {
-        mTextView.setText("" + (page + 1) + " / " + mImageUris.size());
+    private void setPageText(int position) {
+        final StatusModel model = mStatusModels.get(position);
+        mStatusView.setText(model.getSimpleText());
+        mTextView.setText("" + (position + 1) + " / " + mStatusModels.size());
     }
 
     @Override
@@ -146,6 +154,9 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
     @Override
     public void onPageSelected(int position) {
         setPageText(position);
+        if (++mCounter % 20 == 0) {
+            ImageLoader.getInstance().clearMemoryCache();
+        }
     }
 
     @Override
@@ -155,15 +166,15 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
     static class GalleryPagerAdapter extends PagerAdapter {
         private Context mContext;
         private LayoutInflater mInflater;
-        private List<String> mResources;
+        private List<StatusModel> mResources;
 
-        public GalleryPagerAdapter(Context context, List<String> resources) {
+        public GalleryPagerAdapter(Context context, List<StatusModel> resources) {
             mContext = context;
             mInflater = LayoutInflater.from(context);
             mResources = resources;
         }
 
-        public String getUrlAt(int position) {
+        public StatusModel getUrlAt(int position) {
             if (position < 0 || position >= getCount()) {
                 return null;
             }
@@ -182,7 +193,9 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
             final GifImageView gifImageView = (GifImageView) view.findViewById(R.id.gif);
             View vEmpty = view.findViewById(android.R.id.empty);
             final EmptyViewController emptyViewController = new EmptyViewController(vEmpty);
-            ImageLoader.getInstance().loadImage(mResources.get(position), getDisplayImageOptions(),
+            final StatusModel model = mResources.get(position);
+            final String imageUri = model.getPhotoLargeUrl().split("@")[0];
+            ImageLoader.getInstance().loadImage(imageUri, getDisplayImageOptions(),
                     new ImageLoaderCallback(imageView, gifImageView, emptyViewController));
             container.addView(view);
             return view;
