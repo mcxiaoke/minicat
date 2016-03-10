@@ -33,7 +33,7 @@ public class StatusHelper {
     private static final String TAG = "StatusHelper";
     private static final int COLOR_HIGHLIGHT = 0xFFFF6666;
     private static final Pattern PATTERN_HIGHLIGHT = Pattern.compile("<b>(\\w+?)</b>");
-    private static final Pattern PATTERN_USER = Pattern.compile("@.+?\\s");
+    private static final Pattern PATTERN_USER = Pattern.compile("(@.+?)\\s+", Pattern.MULTILINE);
     private static final String SCHEME_USER = "fanfouapp://profile/";
     private static final Pattern PATTERN_SEARCH = Pattern.compile("#\\w+#");
     private static final Linkify.TransformFilter TRANSFORM_SEARCH = new Linkify.TransformFilter() {
@@ -63,8 +63,6 @@ public class StatusHelper {
             public final boolean acceptMatch(final CharSequence s, final int start,
                                              final int end) {
                 String name = s.subSequence(start + 1, end).toString().trim();
-//                LogUtil.v(TAG, "linkifyUsers:acceptMatch:text:" + s);
-//                LogUtil.v(TAG, "linkifyUsers:acceptMatch:name:" + name);
                 return mentions.containsKey(name);
             }
         };
@@ -73,9 +71,7 @@ public class StatusHelper {
             @Override
             public String transformUrl(Matcher match, String url) {
                 String name = url.subSequence(1, url.length()).toString().trim();
-                final String at = mentions.get(name);
-//                LogUtil.v(TAG, "linkifyUsers:transformUrl,name:" + name + " at:" + at);
-                return at;
+                return mentions.get(name);
             }
         };
         Linkify.addLinks(spannable, PATTERN_USER, SCHEME_USER, filter,
@@ -88,12 +84,10 @@ public class StatusHelper {
     }
 
     private static List<String> findHighlightWords(final String htmlText) {
-//        LogUtil.v(TAG, "findHighlightWord() htmlText:" + htmlText);
         final Matcher m = PATTERN_HIGHLIGHT.matcher(htmlText);
         List<String> words = new ArrayList<>();
         while (m.find()) {
             final String word = m.group(1);
-//            LogUtil.v(TAG, "findHighlightWord() add:" + word);
             words.add(word);
         }
         return words;
@@ -106,15 +100,12 @@ public class StatusHelper {
             final String userId = m.group(1);
             final String screenName = Html.fromHtml(m.group(2)).toString();
             map.put(screenName, userId);
-//            if (AppContext.DEBUG) {
-//                LogUtil.v(TAG, "findMentions() add: " + screenName
-//                        + " = " + userId);
-//            }
         }
         return map;
     }
 
-    public static void setStatus(final TextView textView, final String htmlText) {
+    public static void setStatus(final TextView textView, final String text) {
+        final String htmlText = text + " ";
 //        LogUtil.v(TAG, "setStatus:htmlText:" + htmlText);
         final HashMap<String, String> mentions = findMentions(htmlText);
 //        LogUtil.v(TAG, "setStatus:mentions:" + mentions);
@@ -130,19 +121,20 @@ public class StatusHelper {
         textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    public static void setItemStatus(final TextView textView, final String htmlText) {
-//        LogUtil.v(TAG, "setItemStatus() " + htmlText);
+    public static void setItemStatus(final TextView textView, final String text) {
+        final String htmlText = text + " ";
         final List<String> highlightWords = findHighlightWords(htmlText);
-//        LogUtil.v(TAG, "setItemStatus() highlightWords:" + highlightWords);
         final String plainText = Html.fromHtml(htmlText).toString();
         final SpannableString spannable = new SpannableString(plainText);
         Linkify.addLinks(spannable, Linkify.WEB_URLS);
         final Matcher m = PATTERN_USER.matcher(spannable);
         while (m.find()) {
-            int start = m.start();
-            int end = m.end();
-            spannable.setSpan(new ForegroundColorSpan(LINK_COLOR), start, end,
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            int start = m.start(1);
+            int end = m.end(1);
+            if (start >= 0 && start < end) {
+                spannable.setSpan(new ForegroundColorSpan(LINK_COLOR), start, end,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
         }
         linkifyTags(spannable);
         removeUnderLines(spannable);
