@@ -57,14 +57,14 @@ public class StatusHelper {
             .compile("<a href=\"http://fanfou\\.com/(.*?)\" class=\"former\">(.*?)</a>");
 
     public static void linkifyUsers(final Spannable spannable, final HashMap<String, String> mentions) {
-        LogUtil.v(TAG, "linkifyUsers:mentions:" + mentions.keySet());
+//        LogUtil.v(TAG, "linkifyUsers:mentions:" + mentions.keySet());
         final Linkify.MatchFilter filter = new Linkify.MatchFilter() {
             @Override
             public final boolean acceptMatch(final CharSequence s, final int start,
                                              final int end) {
                 String name = s.subSequence(start + 1, end).toString().trim();
-                LogUtil.v(TAG, "linkifyUsers:acceptMatch:text:" + s);
-                LogUtil.v(TAG, "linkifyUsers:acceptMatch:name:" + name);
+//                LogUtil.v(TAG, "linkifyUsers:acceptMatch:text:" + s);
+//                LogUtil.v(TAG, "linkifyUsers:acceptMatch:name:" + name);
                 return mentions.containsKey(name);
             }
         };
@@ -74,7 +74,7 @@ public class StatusHelper {
             public String transformUrl(Matcher match, String url) {
                 String name = url.subSequence(1, url.length()).toString().trim();
                 final String at = mentions.get(name);
-                LogUtil.v(TAG, "linkifyUsers:transformUrl,name:" + name + " at:" + at);
+//                LogUtil.v(TAG, "linkifyUsers:transformUrl,name:" + name + " at:" + at);
                 return at;
             }
         };
@@ -88,12 +88,12 @@ public class StatusHelper {
     }
 
     private static List<String> findHighlightWords(final String htmlText) {
-        LogUtil.v(TAG, "findHighlightWord() htmlText:" + htmlText);
+//        LogUtil.v(TAG, "findHighlightWord() htmlText:" + htmlText);
         final Matcher m = PATTERN_HIGHLIGHT.matcher(htmlText);
         List<String> words = new ArrayList<>();
         while (m.find()) {
             final String word = m.group(1);
-            LogUtil.v(TAG, "findHighlightWord() add:" + word);
+//            LogUtil.v(TAG, "findHighlightWord() add:" + word);
             words.add(word);
         }
         return words;
@@ -106,34 +106,34 @@ public class StatusHelper {
             final String userId = m.group(1);
             final String screenName = Html.fromHtml(m.group(2)).toString();
             map.put(screenName, userId);
-            if (AppContext.DEBUG) {
-                LogUtil.v(TAG, "findMentions() add: " + screenName
-                        + " = " + userId);
-            }
+//            if (AppContext.DEBUG) {
+//                LogUtil.v(TAG, "findMentions() add: " + screenName
+//                        + " = " + userId);
+//            }
         }
         return map;
     }
 
     public static void setStatus(final TextView textView, final String htmlText) {
-        LogUtil.v(TAG, "setStatus:htmlText:" + htmlText);
+//        LogUtil.v(TAG, "setStatus:htmlText:" + htmlText);
         final HashMap<String, String> mentions = findMentions(htmlText);
-        LogUtil.v(TAG, "setStatus:mentions:" + mentions);
+//        LogUtil.v(TAG, "setStatus:mentions:" + mentions);
         final String plainText = Html.fromHtml(htmlText).toString();
-        LogUtil.v(TAG, "setStatus:plainText:" + plainText);
+//        LogUtil.v(TAG, "setStatus:plainText:" + plainText);
         final SpannableString spannable = new SpannableString(plainText);
         Linkify.addLinks(spannable, Linkify.WEB_URLS);
         linkifyUsers(spannable, mentions);
         linkifyTags(spannable);
         removeUnderLines(spannable);
-        LogUtil.v(TAG, "setStatus:finalText:" + spannable);
+//        LogUtil.v(TAG, "setStatus:finalText:" + spannable);
         textView.setText(spannable, BufferType.SPANNABLE);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     public static void setItemStatus(final TextView textView, final String htmlText) {
-        LogUtil.v(TAG, "setItemStatus() " + htmlText);
+//        LogUtil.v(TAG, "setItemStatus() " + htmlText);
         final List<String> highlightWords = findHighlightWords(htmlText);
-        LogUtil.v(TAG, "setItemStatus() highlightWords:" + highlightWords);
+//        LogUtil.v(TAG, "setItemStatus() highlightWords:" + highlightWords);
         final String plainText = Html.fromHtml(htmlText).toString();
         final SpannableString spannable = new SpannableString(plainText);
         Linkify.addLinks(spannable, Linkify.WEB_URLS);
@@ -166,7 +166,7 @@ public class StatusHelper {
         if (keywords == null || keywords.isEmpty()) {
             return;
         }
-        LogUtil.v(TAG, "applyHighlightSpan() keywords:" + keywords);
+//        LogUtil.v(TAG, "applyHighlightSpan() keywords:" + keywords);
         for (final String keyword : keywords) {
             if (!TextUtils.isEmpty(keyword)) {
                 final Pattern pattern = Pattern.compile(keyword);

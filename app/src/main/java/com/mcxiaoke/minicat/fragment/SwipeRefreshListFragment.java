@@ -62,9 +62,9 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
 
     public SwipeRefreshListFragment() {
         super();
-        if (AppContext.DEBUG) {
-            Log.v(TAG, "PullToRefreshListFragment() id=" + this);
-        }
+//        if (AppContext.DEBUG) {
+//            Log.v(TAG, "PullToRefreshListFragment() id=" + this);
+//        }
         mHandler = new Handler();
     }
 
@@ -81,9 +81,9 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (AppContext.DEBUG) {
-            Log.v(TAG, "onAttach() isVisible=" + isVisible());
-        }
+//        if (AppContext.DEBUG) {
+//            Log.v(TAG, "onAttach() isVisible=" + isVisible());
+//        }
     }
 
     @Override
@@ -199,18 +199,18 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (AppContext.DEBUG) {
-            Log.v(TAG, "onHiddenChanged() hidden=" + hidden + " isVisible="
-                    + isVisible());
-        }
+//        if (AppContext.DEBUG) {
+//            Log.v(TAG, "onHiddenChanged() hidden=" + hidden + " isVisible="
+//                    + isVisible());
+//        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (AppContext.DEBUG) {
-            Log.v(TAG, "onCreate() isVisible=" + isVisible());
-        }
+//        if (AppContext.DEBUG) {
+//            Log.v(TAG, "onCreate() isVisible=" + isVisible());
+//        }
 
         Bundle args = getArguments();
         if (args != null) {
@@ -221,9 +221,9 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (AppContext.DEBUG) {
-            Log.v(TAG, "onCreateView() isVisible=" + isVisible());
-        }
+//        if (AppContext.DEBUG) {
+//            Log.v(TAG, "onCreateView() isVisible=" + isVisible());
+//        }
         final View view = inflater.inflate(R.layout.fm_pull_list, container, false);
         ButterKnife.inject(this, view);
         return view;
@@ -232,18 +232,18 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (AppContext.DEBUG) {
-            Log.v(TAG, "onViewCreated() isVisible=" + isVisible());
-        }
+//        if (AppContext.DEBUG) {
+//            Log.v(TAG, "onViewCreated() isVisible=" + isVisible());
+//        }
         setUp();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (AppContext.DEBUG) {
-            Log.v(TAG, "onActivityCreated() isVisible=" + isVisible());
-        }
+//        if (AppContext.DEBUG) {
+//            Log.v(TAG, "onActivityCreated() isVisible=" + isVisible());
+//        }
 
         parseArguments(getArguments());
 
@@ -264,9 +264,9 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
     @Override
     public void onStart() {
         super.onStart();
-        if (AppContext.DEBUG) {
-            Log.v(TAG, "onStart() isVisible=" + isVisible());
-        }
+//        if (AppContext.DEBUG) {
+//            Log.v(TAG, "onStart() isVisible=" + isVisible());
+//        }
     }
 
     @Override
@@ -277,9 +277,9 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
             mListView.onRestoreInstanceState(mParcelable);
             mParcelable = null;
         }
-        if (AppContext.DEBUG) {
-            Log.v(TAG, "onResume() isVisible=" + isVisible());
-        }
+//        if (AppContext.DEBUG) {
+//            Log.v(TAG, "onResume() isVisible=" + isVisible());
+//        }
     }
 
     @Override
@@ -294,41 +294,41 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
     @Override
     public void onPause() {
         super.onPause();
-        if (AppContext.DEBUG) {
-            Log.v(TAG, "onPause() isVisible=" + isVisible());
-        }
+//        if (AppContext.DEBUG) {
+//            Log.v(TAG, "onPause() isVisible=" + isVisible());
+//        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (AppContext.DEBUG) {
-            Log.v(TAG, "onStop() isVisible=" + isVisible());
-        }
+//        if (AppContext.DEBUG) {
+//            Log.v(TAG, "onStop() isVisible=" + isVisible());
+//        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (AppContext.DEBUG) {
-            Log.v(TAG, "onDestroyView()");
-        }
+//        if (AppContext.DEBUG) {
+//            Log.v(TAG, "onDestroyView()");
+//        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (AppContext.DEBUG) {
-            Log.v(TAG, "onDestroy()");
-        }
+//        if (AppContext.DEBUG) {
+//            Log.v(TAG, "onDestroy()");
+//        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        if (AppContext.DEBUG) {
-            Log.v(TAG, "onDetach() isVisible=" + isVisible());
-        }
+//        if (AppContext.DEBUG) {
+//            Log.v(TAG, "onDetach() isVisible=" + isVisible());
+//        }
     }
 
     protected abstract void parseArguments(Bundle args);
@@ -404,9 +404,6 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
             Log.v(TAG, "onSuccess(data) count=" + count);
         }
         if (getType() == StatusModel.TYPE_HOME) {
-            if (AppContext.DEBUG) {
-                Log.v(TAG, "onSuccess(data) update sLastHomeRefresh");
-            }
             Cache.sLastHomeRefresh = System.currentTimeMillis();
         }
     }

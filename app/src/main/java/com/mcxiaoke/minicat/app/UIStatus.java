@@ -185,7 +185,7 @@ public class UIStatus extends UIBaseSupport {
             status = CacheController.getStatusAndCache(statusId, mContext);
         }
 
-        LogUtil.v(MY_TAG, "status:" + status);
+//        LogUtil.v(MY_TAG, "status:" + status);
 
 
     }
