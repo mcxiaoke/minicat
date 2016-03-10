@@ -698,6 +698,9 @@ public final class SyncService extends Service implements Handler.Callback {
     }
 
     private void favorite(final Commmand cmd, final boolean favorite) {
+        if (AppContext.DEBUG) {
+            LogUtil.v(TAG, "favorite() action=" + (favorite ? "favorite" : "unfavorite"));
+        }
         final String id = cmd.id;
         Assert.notEmpty(id);
         final Runnable runnable = new Runnable() {
@@ -706,15 +709,18 @@ public final class SyncService extends Service implements Handler.Callback {
                 StatusModel s = null;
                 try {
                     s = favorite ? mApi.favorite(id) : mApi.unfavorite(id);
+                    if (AppContext.DEBUG) {
+                        LogUtil.d(TAG, "favorite() result=" + s);
+                    }
                     if (s == null) {
-                        sendSuccessMessage(cmd);
+                        sendErrorMessage(cmd, new ApiException(ApiException.IO_ERROR));
                     } else {
                         ContentValues values = new ContentValues();
                         values.put(StatusColumns.FAVORITED, true);
                         DataController.update(mService, s, values);
                         Bundle bundle = new Bundle();
                         bundle.putInt("type", cmd.type);
-                        bundle.putBoolean("boolean", true);
+                        bundle.putBoolean("boolean", s.isFavorited());
                         sendSuccessMessage(cmd, bundle);
                     }
                 } catch (ApiException e) {

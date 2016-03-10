@@ -461,6 +461,9 @@ public class UIStatus extends UIBaseSupport {
     }
 
     private void onFavoriteComplete(boolean favorited) {
+        if (AppContext.DEBUG) {
+            LogUtil.v(TAG, "onFavoriteComplete() favorited=" + favorited);
+        }
         status.setFavorited(favorited);
         updateFavoriteAction(status.isFavorited());
         Utils.notify(mContext, favorited ? "收藏成功" : "取消收藏成功");
@@ -490,6 +493,9 @@ public class UIStatus extends UIBaseSupport {
             }
         };
         updateFavoriteAction(!status.isFavorited());
+        if (AppContext.DEBUG) {
+            LogUtil.v(TAG, "doFavorite() current=" + status.isFavorited());
+        }
         if (status.isFavorited()) {
             SyncService.unfavorite(mContext, status.getId(), handler);
         } else {
