@@ -90,6 +90,9 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
         if (AppContext.DEBUG) {
             Log.v(TAG, "startRefresh() busy=" + busy + " " + this);
         }
+        if (!AppContext.isVerified()) {
+            return;
+        }
         if (NetworkHelper.isNotConnected(getActivity())) {
             return;
         }
@@ -422,7 +425,6 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
             return;
         }
         Utils.notify(getActivity(), errorMessage);
-        Utils.checkAuthorization(getActivity(), errorCode);
     }
 
     private void onRefreshComplete() {

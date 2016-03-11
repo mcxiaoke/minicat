@@ -82,7 +82,7 @@ public class UIController {
 
     public static void showLogin(Context context) {
         Intent intent = new Intent(context, UILogin.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
     }
 

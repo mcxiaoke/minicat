@@ -13,7 +13,6 @@ import com.mcxiaoke.minicat.api.Api;
 import com.mcxiaoke.minicat.api.ApiFactory;
 import com.mcxiaoke.minicat.config.AccountInfo;
 import com.mcxiaoke.minicat.config.AccountStore;
-import com.mcxiaoke.minicat.controller.DataController;
 import com.mcxiaoke.minicat.controller.UIController;
 import com.mcxiaoke.minicat.dao.model.UserModel;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -52,12 +51,10 @@ public class AppContext extends Application {
     private static AppContext instance;
 
     public static void doLogin(Context context) {
-        clearAccountInfo(context);
-        DataController.clearDatabase(context);
-
         if (DEBUG) {
             Log.v(TAG, "doLogin()");
         }
+        AppContext.clearAccountInfo(context);
         UIController.showLogin(context);
     }
 
@@ -139,7 +136,7 @@ public class AppContext extends Application {
     }
 
     public static boolean isVerified() {
-        return accountInfo.isVerified();
+        return accountInfo != null && accountInfo.isVerified();
     }
 
     public static synchronized void setActiveContext(Activity context) {

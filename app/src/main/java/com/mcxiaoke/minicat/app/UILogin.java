@@ -20,6 +20,7 @@ import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.api.Api;
 import com.mcxiaoke.minicat.api.ApiException;
+import com.mcxiaoke.minicat.controller.DataController;
 import com.mcxiaoke.minicat.controller.UIController;
 import com.mcxiaoke.minicat.dao.model.UserModel;
 import com.mcxiaoke.minicat.ui.widget.TextChangeListener;
@@ -252,7 +253,7 @@ public final class UILogin extends UIBaseSupport implements OnClickListener {
                         if (AppContext.DEBUG) {
                             log("xauth successful! ");
                         }
-
+                        DataController.clearDatabase(getApplication());
                         UmengHelper.onLoginEvent(mContext, u.getId());
                         return new ResultInfo(LOGIN_AUTH_SUCCESS);
                     } else {

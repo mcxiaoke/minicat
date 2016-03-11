@@ -47,7 +47,7 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        debug("onCreate()");
+        debug("onCreate() "+this);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         // 这句话必须在setContentView调用之后才有效
         //setProgressBarIndeterminateVisibility(false);
@@ -80,6 +80,7 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        debug("onDestroy() " + this);
     }
 
     @Override
@@ -177,27 +178,6 @@ public abstract class UIBaseSupport extends Activity implements OnClickListener 
 
     private void startSearchUI() {
         UIController.showSearchResults(this, null);
-    }
-
-    protected void onMenuLogoutClick() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("@" + AppContext.getScreenName());
-        builder.setMessage("确定注销当前登录帐号吗？");
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                AppContext.doLogin(mContext);
-                finish();
-            }
-        });
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
     }
 
     protected void startRefresh() {

@@ -1003,10 +1003,9 @@ final class FanFouApi implements Api {
             Response response = request.send();
             int statusCode = response.getCode();
             String body = response.getBody();
-//            if (DEBUG) {
-//                debug("fetch() statusCode=" + statusCode + " builder info="
-//                        + builder + " builder=" + builder);
-//            }
+            if (DEBUG) {
+                debug("fetch() statusCode=" + statusCode + " builder=" + builder);
+            }
             if (statusCode >= 200 && statusCode < 300) {
                 return body;
             }

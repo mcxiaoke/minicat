@@ -122,8 +122,8 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     @Override
     protected void onResume() {
         super.onResume();
-//        if (mDrawerLayout.isDrawerOpen(mDrawFrame)) {
-//            mDrawerLayout.closeDrawer(Gravity.LEFT);
+//        if (AppContext.getAccountInfo() == null) {
+//            finish();
 //        }
     }
 
@@ -498,6 +498,28 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
             default:
                 break;
         }
+    }
+
+
+    private void onMenuLogoutClick() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("@" + AppContext.getScreenName());
+        builder.setMessage("确定注销当前登录帐号吗？");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                AppContext.doLogin(mContext);
+                finish();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 
     @Override
