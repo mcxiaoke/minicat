@@ -81,7 +81,6 @@ public class PushService extends BaseIntentService {
         if (DEBUG) {
             debug("check() enabled=" + enabled);
         }
-
         if (enabled) {
             set(context);
         } else {
@@ -170,6 +169,10 @@ public class PushService extends BaseIntentService {
     }
 
     protected void doWakefulWork(Intent intent) {
+        boolean enabled = PreferenceHelper.getInstance(this).isPushNotificationEnabled();
+        if (!enabled) {
+            return;
+        }
         final Calendar calendar = Calendar.getInstance();
         if (calendar.get(Calendar.HOUR_OF_DAY) < 6) {
             // 6点不提醒
