@@ -22,6 +22,7 @@ import com.mcxiaoke.minicat.controller.EmptyViewController;
 import com.mcxiaoke.minicat.controller.UIController;
 import com.mcxiaoke.minicat.dao.model.StatusModel;
 import com.mcxiaoke.minicat.dao.model.UserModel;
+import com.mcxiaoke.minicat.util.LogUtil;
 import com.mcxiaoke.minicat.util.NetworkHelper;
 import com.squareup.picasso.Picasso;
 
@@ -36,6 +37,7 @@ import java.util.List;
  * Time: 下午9:02
  */
 public class PhotosFragment extends AbstractFragment implements AdapterView.OnItemClickListener {
+    private static final String TAG = PhotosFragment.class.getSimpleName();
 
     private ViewGroup mEmptyView;
     private EmptyViewController mEmptyViewController;
@@ -123,6 +125,9 @@ public class PhotosFragment extends AbstractFragment implements AdapterView.OnIt
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         StatusModel status = (StatusModel) parent.getItemAtPosition(position);
+        if (AppContext.DEBUG) {
+            LogUtil.d(TAG, "onItemClick() " + status);
+        }
         if (status != null) {
             UIController.showGallery(getActivity(), user.getId(), position);
         }

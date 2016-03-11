@@ -15,11 +15,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.Cache;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.controller.EmptyViewController;
 import com.mcxiaoke.minicat.dao.model.StatusModel;
 import com.mcxiaoke.minicat.util.IOHelper;
+import com.mcxiaoke.minicat.util.LogUtil;
 import com.mcxiaoke.minicat.util.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -43,6 +45,7 @@ import java.util.List;
  * Time: 下午9:56
  */
 public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeListener {
+    public static final String TAG = GalleryFragment.class.getSimpleName();
 
     private ViewPager mViewPager;
     private TextView mStatusView;
@@ -70,8 +73,15 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
         mIndex = args.getInt("index");
         mUserId = args.getString("userId");
         List<StatusModel> models = Cache.get(mUserId);
-        if (mStatusModels == null || models.isEmpty()) {
+        if (AppContext.DEBUG) {
+            LogUtil.d(TAG, "onCreate() " + models);
+        }
+        if (models == null || models.isEmpty()) {
             getActivity().finish();
+            return;
+        }
+        if (mIndex < 0 || mIndex >= models.size()) {
+            mIndex = 0;
         }
         mStatusModels = new ArrayList<StatusModel>();
         mStatusModels.addAll(models);
