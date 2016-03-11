@@ -312,7 +312,7 @@ public final class SyncService extends Service implements Handler.Callback {
         mHandlerThread = new HandlerThread(TAG);
         mHandlerThread.start();
         mCommandHandler = new Handler(mHandlerThread.getLooper(), this);
-        ensureExecutor();
+        mExecutor = Executors.newCachedThreadPool();
         sendStopCheckMessage();
     }
 
@@ -1233,15 +1233,8 @@ public final class SyncService extends Service implements Handler.Callback {
     }
 
     private void execute(Runnable runnable) {
-        if (runnable != null) {
-            ensureExecutor();
+        if (mExecutor != null && runnable != null) {
             mExecutor.submit(new MyRunnable(runnable, mCounter));
-        }
-    }
-
-    private void ensureExecutor() {
-        if (mExecutor == null) {
-            mExecutor = Executors.newCachedThreadPool();
         }
     }
 

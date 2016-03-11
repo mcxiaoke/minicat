@@ -418,6 +418,9 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
         showFooterText();
         String errorMessage = data.getString("error_message");
         int errorCode = data.getInt("error_code");
+        if (!isAdded()) {
+            return;
+        }
         Utils.notify(getActivity(), errorMessage);
         Utils.checkAuthorization(getActivity(), errorCode);
     }

@@ -28,7 +28,6 @@ import com.mcxiaoke.minicat.api.Paging;
 import com.mcxiaoke.minicat.controller.DataController;
 import com.mcxiaoke.minicat.controller.UIController;
 import com.mcxiaoke.minicat.dao.model.UserModel;
-import com.mcxiaoke.minicat.service.Constants;
 import com.mcxiaoke.minicat.service.SyncService;
 import com.mcxiaoke.minicat.ui.UIHelper;
 import com.mcxiaoke.minicat.util.Utils;
@@ -399,6 +398,9 @@ public abstract class UserListFragment extends AbstractListFragment
         showFooterText();
         String errorMessage = data.getString("error_message");
         int errorCode = data.getInt("error_code");
+        if (!isAdded()) {
+            return;
+        }
         Utils.notify(getActivity(), errorMessage);
         Utils.checkAuthorization(getActivity(), errorCode);
     }

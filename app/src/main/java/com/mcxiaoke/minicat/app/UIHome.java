@@ -281,18 +281,24 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
 
     private void startDownloadUpdateApk(String version, String path) {
         LogUtil.v(TAG, "startDownloadUpdateApk() path " + path);
-        String fileName = AppContext.packageName + "_" + version + ".apk";
-        IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-        registerReceiver(mOnDownloadCompleteReceiver, filter);
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(path));
-        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
-        request.setMimeType(MimeUtils.getMimeTypeFromExtension(".apk"));
-        request.setVisibleInDownloadsUi(true);
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-        request.setTitle(getString(R.string.app_name));
-        request.setDescription("下载中");
-        mDownloadManager.enqueue(request);
+        try {
+            String fileName = AppContext.packageName + "_" + version + ".apk";
+            IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+            registerReceiver(mOnDownloadCompleteReceiver, filter);
+            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(path));
+            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE
+                    | DownloadManager.Request.NETWORK_WIFI);
+            request.setMimeType(MimeUtils.getMimeTypeFromExtension(".apk"));
+            request.setVisibleInDownloadsUi(true);
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+            request.setTitle(getString(R.string.app_name));
+            request.setDescription("下载中");
+            mDownloadManager.enqueue(request);
+        } catch (Exception ignored) {
+
+        }
+
     }
 
     private void onDownloadComplete(Intent intent) {

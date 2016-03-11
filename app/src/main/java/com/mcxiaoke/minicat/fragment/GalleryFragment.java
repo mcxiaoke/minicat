@@ -32,6 +32,7 @@ import uk.co.senab.photoview.PhotoView;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -68,10 +69,12 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
         Bundle args = getArguments();
         mIndex = args.getInt("index");
         mUserId = args.getString("userId");
-        mStatusModels = Cache.get(mUserId);
-        if (mStatusModels == null || mStatusModels.isEmpty()) {
+        List<StatusModel> models = Cache.get(mUserId);
+        if (mStatusModels == null || models.isEmpty()) {
             getActivity().finish();
         }
+        mStatusModels = new ArrayList<StatusModel>();
+        mStatusModels.addAll(models);
     }
 
 
@@ -139,6 +142,8 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
     public void onDestroy() {
         super.onDestroy();
         ImageLoader.getInstance().clearMemoryCache();
+        mStatusModels.clear();
+        mStatusModels = null;
     }
 
     private void setPageText(int position) {
