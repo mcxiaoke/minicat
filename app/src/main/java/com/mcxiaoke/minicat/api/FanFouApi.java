@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.net.UnknownHostException;
 import java.util.BitSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -993,8 +992,8 @@ final class FanFouApi implements Api {
      */
     private String fetch(final RequestBuilder builder) throws ApiException {
         OAuthRequest request = builder.build();
-        request.setConnectTimeout(5, TimeUnit.SECONDS);
-        request.setReadTimeout(10, TimeUnit.SECONDS);
+        request.setConnectTimeout(30, TimeUnit.SECONDS);
+        request.setReadTimeout(30, TimeUnit.SECONDS);
         try {
 
             if (mOAuthService != null && mAccessToken != null) {
@@ -1008,16 +1007,10 @@ final class FanFouApi implements Api {
 //                debug("fetch() statusCode=" + statusCode + " builder info="
 //                        + builder + " builder=" + builder);
 //            }
-            if (statusCode == 200) {
+            if (statusCode >= 200 && statusCode < 300) {
                 return body;
             }
             throw new ApiException(statusCode, FanFouParser.error(body));
-        } catch (UnknownHostException e) {
-            if (DEBUG) {
-                Log.e(TAG, e.toString());
-            }
-            throw new ApiException(ApiException.IO_ERROR, e.getMessage(),
-                    e);
         } catch (IOException e) {
             if (DEBUG) {
                 Log.e(TAG, e.toString());

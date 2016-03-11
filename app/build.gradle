@@ -45,7 +45,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 22
         versionName "1.5.1"
-        versionCode 2016031101
+        versionCode 2016031102
         applicationId "com.mcxiaoke.minicat2"
     }
 

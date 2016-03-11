@@ -46,7 +46,6 @@ import com.mcxiaoke.minicat.push.PushMessageEvent;
 import com.mcxiaoke.minicat.push.PushService;
 import com.mcxiaoke.minicat.push.PushStatusEvent;
 import com.mcxiaoke.minicat.service.AutoCompleteService;
-import com.mcxiaoke.minicat.service.Constants;
 import com.mcxiaoke.minicat.util.LogUtil;
 import com.mcxiaoke.minicat.util.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -83,7 +82,6 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     private DownloadManager mDownloadManager;
     private int mCurrentIndex;
     private int mCurrentPage;
-    private BroadcastReceiver mReceiver;
     private AbstractFragment mCurrentFragment;
     private Handler mHandler;
 
@@ -101,7 +99,6 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         }
         setLayout();
         setUmengUpdate();
-        registerReceiver();
         setUp();
         Bus.getDefault().register(this);
     }
@@ -141,7 +138,6 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
         AppContext.homeVisible = false;
         Bus.getDefault().unregister(this);
         mHandler.removeCallbacks(mCheckRunnable);
-        unregisterReceiver();
         PushService.check(this);
         AutoCompleteService.check(this);
         Cache.clear();
@@ -557,30 +553,6 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
                 break;
             default:
                 break;
-        }
-    }
-
-    private void registerReceiver() {
-        if (mReceiver == null) {
-            final IntentFilter filter = new IntentFilter();
-            filter.addAction(Constants.ACTION_STATUS_SENT);
-            mReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(final Context context, final Intent intent) {
-                    if (Constants.ACTION_STATUS_SENT.equals(intent.getAction())) {
-                        if (mCurrentFragment != null) {
-                            mCurrentFragment.startRefresh();
-                        }
-                    }
-                }
-            };
-            registerReceiver(mReceiver, filter);
-        }
-    }
-
-    private void unregisterReceiver() {
-        if (mReceiver != null) {
-            unregisterReceiver(mReceiver);
         }
     }
 

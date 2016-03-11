@@ -21,6 +21,7 @@ import android.os.Parcelable;
 import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import com.mcxiaoke.bus.Bus;
 import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.R;
 import com.mcxiaoke.minicat.api.Api;
@@ -45,6 +46,7 @@ import com.mcxiaoke.minicat.util.LogUtil;
 import com.mcxiaoke.minicat.util.NetworkHelper;
 import com.mcxiaoke.minicat.util.StringHelper;
 import com.mcxiaoke.minicat.util.UmengHelper;
+import com.mcxiaoke.minicat.util.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -878,6 +880,10 @@ public final class SyncService extends Service implements Handler.Callback {
                     UmengHelper.onStatusUpdateEvent(this, AppContext.getAccount(), result.getId());
                 }
                 res = true;
+            } else {
+                Utils.notify(this, "消息未发送成功，已保存到草稿箱");
+                showFailedNotification(info, "消息未发送，已保存到草稿箱",
+                        getString(R.string.msg_server_error));
             }
         } catch (ApiException e) {
             if (DEBUG) {
@@ -885,9 +891,11 @@ public final class SyncService extends Service implements Handler.Callback {
                 e.printStackTrace();
             }
             if (e.statusCode >= 500) {
+                Utils.notify(this, "消息未发送成功，已保存到草稿箱");
                 showFailedNotification(info, "消息未发送，已保存到草稿箱",
                         getString(R.string.msg_server_error));
             } else {
+                Utils.notify(this, "消息未发送成功，已保存到草稿箱");
                 showFailedNotification(info, "消息未发送，已保存到草稿箱", e.getMessage());
             }
 
@@ -895,6 +903,7 @@ public final class SyncService extends Service implements Handler.Callback {
 
         } catch (Exception e) {
             debug(e.toString());
+            Utils.notify(this, "消息未发送成功，已保存到草稿箱");
             showFailedNotification(info, "消息未发送，已保存到草稿箱",
                     getString(R.string.msg_unkonow_error));
             UmengHelper.onStatusUpdateError(this, AppContext.getAccount(), 0, e.getMessage(), e.getCause() + "");
@@ -1362,10 +1371,7 @@ public final class SyncService extends Service implements Handler.Callback {
     }
 
     private void sendSuccessBroadcast(StatusModel status) {
-        Intent intent = new Intent(Constants.ACTION_STATUS_SENT);
-        intent.putExtra("data", status);
-        intent.setPackage(getPackageName());
-        sendOrderedBroadcast(intent, null);
+        Bus.getDefault().post(new StatusUpdateEvent(status));
     }
 
     private void doClose() {

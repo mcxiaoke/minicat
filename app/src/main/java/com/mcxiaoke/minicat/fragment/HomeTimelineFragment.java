@@ -4,10 +4,13 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import com.mcxiaoke.bus.Bus;
+import com.mcxiaoke.bus.annotation.BusReceiver;
 import com.mcxiaoke.minicat.AppContext;
 import com.mcxiaoke.minicat.api.Paging;
 import com.mcxiaoke.minicat.controller.DataController;
 import com.mcxiaoke.minicat.dao.model.StatusModel;
+import com.mcxiaoke.minicat.service.StatusUpdateEvent;
 import com.mcxiaoke.minicat.service.SyncService;
 import com.mcxiaoke.minicat.util.Utils;
 
@@ -33,6 +36,18 @@ public class HomeTimelineFragment extends BaseTimlineFragment {
             Log.d(TAG, "newInstance() " + fragment);
         }
         return fragment;
+    }
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Bus.getDefault().unregister(this);
     }
 
     @Override
@@ -75,6 +90,15 @@ public class HomeTimelineFragment extends BaseTimlineFragment {
         return "主页";
     }
 
+    @BusReceiver
+    public void onEvent(StatusUpdateEvent event) {
+        if (AppContext.DEBUG) {
+            Log.d(TAG, "onEvent StatusUpdateEvent ");
+        }
+        Utils.notify(getActivity(), "消息发送成功");
+        startRefresh();
+
+    }
 
 
 }
