@@ -16,7 +16,7 @@ public class DateTimeHelper {
     private static final String FANFOU_DATE_FORMAT_STRING = "EEE MMM dd HH:mm:ss Z yyyy";
     public static final SimpleDateFormat FANFOU_DATE_FORMAT = new SimpleDateFormat(
             FANFOU_DATE_FORMAT_STRING, Locale.US);
-    private static final String SIMPLE_DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm";
+    private static final String SIMPLE_DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(
             SIMPLE_DATE_FORMAT_STRING, Locale.US);
     private static final String FILENAME_DATE_FORMAT_STRING = "yyyy_MM_dd_HH_mm_ss";
@@ -69,11 +69,10 @@ public class DateTimeHelper {
             return seconds / MIN + "分钟";
         } else if (seconds < DAY) {
             return seconds / HOUR + "小时";
-        } else if (seconds < YEAR) {
+        } else if (seconds < YEAR * 5) {
             return seconds / DAY + "天";
         } else {
-//            return formatDate(time);
-            return "很久以前";
+            return seconds / DAY + "天";
         }
     }
 
