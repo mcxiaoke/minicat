@@ -129,10 +129,10 @@ public abstract class SwipeRefreshListFragment extends AbstractListFragment
     }
 
     private void setUp() {
-//        mSwipeRefreshLayout.setColorSchemeResources(
-//                R.color.color1,
-//                R.color.color2,
-//                R.color.color3, R.color.color4);
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.color1,
+                R.color.color2,
+                R.color.color3, R.color.color4);
         mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() {
