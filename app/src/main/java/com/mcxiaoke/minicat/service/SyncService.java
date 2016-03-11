@@ -840,21 +840,25 @@ public final class SyncService extends Service implements Handler.Callback {
                 }
             } else {
                 File file = new File(info.fileName);
-                boolean isWifi = NetworkHelper.isWifi(this);
-                int quality = isWifi ? ImageHelper.IMAGE_QUALITY_HIGH :
-                        ImageHelper.IMAGE_QUALITY_MEDIUM;
-                int maxWidth = isWifi ? ImageHelper.IMAGE_MAX_WIDTH : ImageHelper.IMAGE_MAX_WIDTH_2;
-                if (file.getName().toLowerCase().endsWith(".gif")) {
+                if (file.length() < ImageHelper.IMAGE_MAX_SIZE) {
                     photo = new File(IOHelper.getImageCacheDir(this),
-                            System.currentTimeMillis() + "_fanfouupload.gif");
+                            System.currentTimeMillis() + "_upload.jpg");
+                    IOHelper.copyFile(file, photo);
+                } else if (file.getName().toLowerCase().endsWith(".gif")) {
+                    photo = new File(IOHelper.getImageCacheDir(this),
+                            System.currentTimeMillis() + "_upload.gif");
                     IOHelper.copyFile(file, photo);
                 } else {
+                    boolean isWifi = NetworkHelper.isWifi(this);
+                    int quality = isWifi ? ImageHelper.IMAGE_QUALITY_HIGH :
+                            ImageHelper.IMAGE_QUALITY_MEDIUM;
+                    int maxWidth = isWifi ? ImageHelper.IMAGE_MAX_WIDTH : ImageHelper.IMAGE_MAX_WIDTH_2;
                     photo = ImageHelper.prepareUploadFile(this, file, quality, maxWidth);
                 }
                 if (photo != null && photo.length() > 0) {
                     if (DEBUG) {
                         debug("doStatusUpdate() photo file=" + file.getName() + " size="
-                                + photo.length() / 1024 + "k quality=" + quality);
+                                + photo.length() / 1024 + "k");
                     }
                     photoUpload = true;
                     result = mApi.uploadPhoto(photo, info.text, info.location);

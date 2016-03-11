@@ -49,6 +49,7 @@ final public class ImageHelper {
     public static final int IMAGE_QUALITY_LOW = 70;
     public static final int IMAGE_MAX_WIDTH = 1600;// 640 596
     public static final int IMAGE_MAX_WIDTH_2 = 1000;// 640 596
+    public static final int IMAGE_MAX_SIZE = 1024 * 1024 * 2;
     public static final int OUTPUT_BUFFER_SIZE = 8196;
     private static final String TAG = ImageHelper.class.getSimpleName();
 
