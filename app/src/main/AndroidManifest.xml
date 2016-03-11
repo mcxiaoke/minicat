@@ -3,9 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="UnusedAttribute"
     package="com.mcxiaoke.minicat"
-    android:sharedUserId="com.mcxiaoke.minicat"
-    android:versionCode="2016031002"
-    android:versionName="1.5.0">
+    android:sharedUserId="com.mcxiaoke.minicat">
 
     <supports-screens
         android:anyDensity="true"
