@@ -164,6 +164,7 @@ public class PushService extends BaseIntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         super.onHandleIntent(intent);
+        debug("onHandleIntent()");
         doWakefulWork(intent);
         PushReceiver.completeWakefulIntent(intent);
     }
@@ -171,6 +172,7 @@ public class PushService extends BaseIntentService {
     protected void doWakefulWork(Intent intent) {
         boolean enabled = PreferenceHelper.getInstance(this).isPushNotificationEnabled();
         if (!enabled) {
+            debug("doWakefulWork() push disabled, ignore");
             return;
         }
         final Calendar calendar = Calendar.getInstance();
@@ -209,10 +211,9 @@ public class PushService extends BaseIntentService {
                     debug("checkMentions() result=" + ss);
                     DataController.store(this, ss);
                     StatusModel sm = ss.get(0);
+                    showMention(sm);
                     if (AppContext.homeVisible) {
                         Bus.getDefault().post(new PushStatusEvent(sm));
-                    } else {
-                        showMention(sm);
                     }
                 }
             } catch (Exception e) {
@@ -235,10 +236,9 @@ public class PushService extends BaseIntentService {
                     debug("checkDirectMessages() result=" + dms);
                     DataController.store(this, dms);
                     DirectMessageModel dm = dms.get(0);
+                    showDM(dm);
                     if (AppContext.homeVisible) {
                         Bus.getDefault().post(new PushMessageEvent(dm));
-                    } else {
-                        showDM(dm);
                     }
                 }
             } catch (Exception e) {

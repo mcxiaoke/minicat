@@ -144,7 +144,7 @@ public class GalleryFragment extends Fragment implements ViewPager.OnPageChangeL
         File dest = new File(IOHelper.getPictureDir(getActivity()), fileName);
         if (dest.exists() || IOHelper.copyFile(file, dest)) {
             Utils.mediaScan(getActivity(), Uri.fromFile(dest));
-            Utils.notifyLong(getActivity(), "图片已保存到存储卡的 Pictures 目录");
+            Utils.notify(getActivity(), "图片已保存到存储卡的 Pictures 目录");
         }
     }
 

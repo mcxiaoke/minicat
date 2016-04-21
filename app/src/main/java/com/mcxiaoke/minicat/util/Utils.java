@@ -98,7 +98,6 @@ public final class Utils {
 
     public static void notify(Context context, CharSequence text) {
         final Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }
 

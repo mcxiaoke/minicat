@@ -96,7 +96,7 @@ public class HomeTimelineFragment extends BaseTimlineFragment {
             Log.d(TAG, "onEvent StatusUpdateEvent ");
         }
         Utils.notify(getActivity(), "消息发送成功");
-        startRefresh();
+        doRefresh();
 
     }
 

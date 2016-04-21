@@ -1372,7 +1372,6 @@ public final class SyncService extends Service implements Handler.Callback {
         mCommandHandler.removeCallbacksAndMessages(null);
         mCommandHandler.getLooper().quit();
         mCommandHandler = null;
-        mNotificationManager.cancelAll();
     }
 
     static class Command {

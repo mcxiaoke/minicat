@@ -232,7 +232,7 @@ public class UIPhoto extends Activity implements OnClickListener {
         File dest = new File(IOHelper.getPictureDir(this), fileName);
         if (dest.exists() || IOHelper.copyFile(file, dest)) {
             Utils.mediaScan(this, Uri.fromFile(dest));
-            Utils.notifyLong(this, "图片已保存到存储卡的 Pictures 目录");
+            Utils.notify(this, "图片已保存到存储卡的 Pictures 目录");
         }
     }
 
