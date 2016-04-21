@@ -92,7 +92,6 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppContext.homeVisible = true;
         MobclickAgent.updateOnlineConfig(this);
         if (AppContext.DEBUG) {
             log("onCreate()");
@@ -122,6 +121,7 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     @Override
     protected void onResume() {
         super.onResume();
+        AppContext.homeVisible = true;
 //        if (AppContext.getAccountInfo() == null) {
 //            finish();
 //        }
@@ -130,12 +130,12 @@ public class UIHome extends UIBaseSupport implements MenuCallback,
     @Override
     protected void onPause() {
         super.onPause();
+        AppContext.homeVisible = false;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        AppContext.homeVisible = false;
         Bus.getDefault().unregister(this);
         mHandler.removeCallbacks(mCheckRunnable);
         PushService.check(this);
