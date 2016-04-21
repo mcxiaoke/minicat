@@ -39,13 +39,13 @@ android {
     useLibrary 'org.apache.http.legacy'
 
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 22
-        versionName "1.5.3"
-        versionCode 2016031104
+        versionName "1.5.4"
+        versionCode 2016042101
         applicationId "com.mcxiaoke.minicat2"
     }
 
@@ -103,18 +103,6 @@ def checkSigningConfig() {
             storePassword project.ANDROID_STORE_PASSWORD
             keyAlias project.ANDROID_KEY_ALIAS
             keyPassword project.ANDROID_KEY_PASSWORD
-        }
-    }
-}
-
-def loadProperties(String fileName) {
-    def config = new Properties()
-    def propFile = file(fileName)
-    println "loadProperties() file: " + propFile.absolutePath
-    if (propFile.canRead()) {
-        config.load(new FileInputStream(propFile))
-        for (Map.Entry property in config) {
-            project.ext[property.key] = property.value;
         }
     }
 }
