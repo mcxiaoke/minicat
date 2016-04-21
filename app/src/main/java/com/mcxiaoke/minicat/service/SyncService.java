@@ -446,7 +446,7 @@ public final class SyncService extends Service implements Handler.Callback {
     }
 
     private void handleSyncDataCommands(Intent intent) {
-        Commmand cmd = new Commmand();
+        Command cmd = new Command();
         cmd.messenger = intent.getParcelableExtra("messenger");
         cmd.id = intent.getStringExtra("id");
         cmd.type = intent.getIntExtra("type", BaseModel.TYPE_NONE);
@@ -506,7 +506,7 @@ public final class SyncService extends Service implements Handler.Callback {
     }
 
     private void handleExecOpCommands(Intent intent) {
-        Commmand cmd = new Commmand();
+        Command cmd = new Command();
         cmd.messenger = intent.getParcelableExtra("messenger");
         cmd.id = intent.getStringExtra("id");
         cmd.type = intent.getIntExtra("type", BaseModel.TYPE_NONE);
@@ -548,7 +548,7 @@ public final class SyncService extends Service implements Handler.Callback {
     }
 
     private void handleOthersCommands(Intent intent) {
-        Commmand cmd = new Commmand();
+        Command cmd = new Command();
         cmd.messenger = intent.getParcelableExtra("messenger");
         cmd.id = intent.getStringExtra("id");
         cmd.type = intent.getIntExtra("type", BaseModel.TYPE_NONE);
@@ -587,7 +587,7 @@ public final class SyncService extends Service implements Handler.Callback {
         }
     }
 
-    private void deleteDirectMessage(final Commmand cmd) {
+    private void deleteDirectMessage(final Command cmd) {
         final String id = cmd.id;
         final Runnable runnable = new Runnable() {
             @Override
@@ -619,7 +619,7 @@ public final class SyncService extends Service implements Handler.Callback {
 
     }
 
-    private void block(final Commmand cmd, final boolean block) {
+    private void block(final Command cmd, final boolean block) {
         final String id = cmd.id;
         Assert.notEmpty(id);
         final Runnable runnable = new Runnable() {
@@ -647,7 +647,7 @@ public final class SyncService extends Service implements Handler.Callback {
 
     }
 
-    private void follow(final Commmand cmd, final boolean follow) {
+    private void follow(final Command cmd, final boolean follow) {
         final String id = cmd.id;
         Assert.notEmpty(id);
         final Runnable runnable = new Runnable() {
@@ -673,7 +673,7 @@ public final class SyncService extends Service implements Handler.Callback {
 
     }
 
-    private void showUser(final Commmand cmd) {
+    private void showUser(final Command cmd) {
         final String id = cmd.id;
         final Runnable runnable = new Runnable() {
             @Override
@@ -699,7 +699,7 @@ public final class SyncService extends Service implements Handler.Callback {
 
     }
 
-    private void favorite(final Commmand cmd, final boolean favorite) {
+    private void favorite(final Command cmd, final boolean favorite) {
         if (AppContext.DEBUG) {
             LogUtil.v(TAG, "favorite() action=" + (favorite ? "favorite" : "unfavorite"));
         }
@@ -741,7 +741,7 @@ public final class SyncService extends Service implements Handler.Callback {
 
     }
 
-    private void deleteStatus(final Commmand cmd) {
+    private void deleteStatus(final Command cmd) {
         final String id = cmd.id;
         final Runnable runnable = new Runnable() {
             @Override
@@ -773,7 +773,7 @@ public final class SyncService extends Service implements Handler.Callback {
 
     }
 
-    private void showStatus(final Commmand cmd) {
+    private void showStatus(final Command cmd) {
         final String id = cmd.id;
         final Runnable runnable = new Runnable() {
             @Override
@@ -870,42 +870,23 @@ public final class SyncService extends Service implements Handler.Callback {
             if (needDeleteDraft) {
                 DataController.deleteRecord(this, info.id);
             }
-//            mNotificationManager.cancel(NOTIFICATION_STATUS_UPDATE_ONGOING);
             if (result != null) {
-                sendSuccessBroadcast(result);
                 if (photoUpload) {
                     UmengHelper.onPhotoUploadEvent(this, AppContext.getAccount(), result.getId());
                 } else {
-
                     UmengHelper.onStatusUpdateEvent(this, AppContext.getAccount(), result.getId());
                 }
                 res = true;
+                sendSuccessBroadcast(result);
             } else {
-                Utils.notify(this, "消息未发送成功，已保存到草稿箱");
-                showFailedNotification(info, "消息未发送，已保存到草稿箱",
-                        getString(R.string.msg_server_error));
+                onStatusUpdateFailed(info);
             }
-        } catch (ApiException e) {
+        } catch (Exception e) {
             if (DEBUG) {
                 debug(e.toString());
                 e.printStackTrace();
             }
-            if (e.statusCode >= 500) {
-                Utils.notify(this, "消息未发送成功，已保存到草稿箱");
-                showFailedNotification(info, "消息未发送，已保存到草稿箱",
-                        getString(R.string.msg_server_error));
-            } else {
-                Utils.notify(this, "消息未发送成功，已保存到草稿箱");
-                showFailedNotification(info, "消息未发送，已保存到草稿箱", e.getMessage());
-            }
-
-            UmengHelper.onStatusUpdateError(this, AppContext.getAccount(), e.statusCode, e.errorMessage, e.getCause() + "");
-
-        } catch (Exception e) {
-            debug(e.toString());
-            Utils.notify(this, "消息未发送成功，已保存到草稿箱");
-            showFailedNotification(info, "消息未发送，已保存到草稿箱",
-                    getString(R.string.msg_unkonow_error));
+            onStatusUpdateFailed(info);
             UmengHelper.onStatusUpdateError(this, AppContext.getAccount(), 0, e.getMessage(), e.getCause() + "");
         } finally {
             if (photo != null) {
@@ -914,6 +895,25 @@ public final class SyncService extends Service implements Handler.Callback {
         }
         isSending = false;
         return res;
+    }
+
+    private void onStatusUpdateFailed(final StatusUpdateInfo info) {
+        if (DEBUG) {
+            debug("onStatusUpdateFailed() info=" + info);
+        }
+        mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                cancelNotification(NOTIFICATION_ID);
+                doSaveRecords(info);
+                if (AppContext.homeVisible) {
+                    Utils.notify(SyncService.this, "消息未发送成功，已保存到草稿箱");
+                }
+                showFailedNotification("消息未发送成功，已保存到草稿箱",
+                        getString(R.string.msg_server_error));
+            }
+        });
+
     }
 
     private void doSendAllDrafts() {
@@ -945,7 +945,7 @@ public final class SyncService extends Service implements Handler.Callback {
 
     }
 
-    private void isFriends(final Commmand cmd, Intent intent) {
+    private void isFriends(final Command cmd, Intent intent) {
         final String userA = intent.getStringExtra("user_a");
         final String userB = intent.getStringExtra("user_b");
         final Runnable runnable = new Runnable() {
@@ -969,7 +969,7 @@ public final class SyncService extends Service implements Handler.Callback {
 
     }
 
-    private void getUsers(final Commmand cmd) {
+    private void getUsers(final Command cmd) {
         final String id = cmd.id;
         final Paging p = cmd.paging == null ? new Paging() : cmd.paging;
 
@@ -1026,7 +1026,7 @@ public final class SyncService extends Service implements Handler.Callback {
 
     }
 
-    private void getConversation(final Commmand cmd) {
+    private void getConversation(final Command cmd) {
         final String id = cmd.id;
         final Paging p = cmd.paging == null ? new Paging() : cmd.paging;
         if (NetworkHelper.isWifi(this)) {
@@ -1063,7 +1063,7 @@ public final class SyncService extends Service implements Handler.Callback {
 
     }
 
-    private void getConversationList(final Commmand cmd) {
+    private void getConversationList(final Command cmd) {
 
         final Paging p = cmd.paging == null ? new Paging() : cmd.paging;
         if (NetworkHelper.isWifi(this)) {
@@ -1094,7 +1094,7 @@ public final class SyncService extends Service implements Handler.Callback {
 
     }
 
-    private void getDirectMessages(final Commmand cmd, final boolean in) {
+    private void getDirectMessages(final Command cmd, final boolean in) {
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -1130,15 +1130,15 @@ public final class SyncService extends Service implements Handler.Callback {
 
     }
 
-    private void getInBox(Commmand cmd) {
+    private void getInBox(Command cmd) {
         getDirectMessages(cmd, true);
     }
 
-    private void getOutBox(Commmand cmd) {
+    private void getOutBox(Command cmd) {
         getDirectMessages(cmd, false);
     }
 
-    private void getTimeline(final Commmand cmd) {
+    private void getTimeline(final Command cmd) {
         final int type = cmd.type;
         final Paging p = cmd.paging == null ? new Paging() : cmd.paging;
         final Runnable runnable = new Runnable() {
@@ -1247,7 +1247,7 @@ public final class SyncService extends Service implements Handler.Callback {
         }
     }
 
-    private void sendErrorMessage(Commmand cmd, ApiException e) {
+    private void sendErrorMessage(Command cmd, ApiException e) {
         String message = e.getMessage();
         if (e.statusCode == ApiException.IO_ERROR) {
             message = getString(R.string.msg_connection_error);
@@ -1260,27 +1260,27 @@ public final class SyncService extends Service implements Handler.Callback {
         sendMessage(cmd, RESULT_ERROR, bundle);
     }
 
-    private void sendIntMessage(Commmand cmd, int size) {
+    private void sendIntMessage(Command cmd, int size) {
         Bundle bundle = new Bundle();
         bundle.putInt("count", size);
         sendMessage(cmd, RESULT_SUCCESS, bundle);
     }
 
-    private void sendParcelableMessage(Commmand cmd, Parcelable parcel) {
+    private void sendParcelableMessage(Command cmd, Parcelable parcel) {
         Bundle bundle = new Bundle();
         bundle.putParcelable("data", parcel);
         sendMessage(cmd, RESULT_SUCCESS, bundle);
     }
 
-    private void sendSuccessMessage(Commmand cmd, Bundle bundle) {
+    private void sendSuccessMessage(Command cmd, Bundle bundle) {
         sendMessage(cmd, RESULT_SUCCESS, bundle);
     }
 
-    private void sendSuccessMessage(Commmand cmd) {
+    private void sendSuccessMessage(Command cmd) {
         sendMessage(cmd, RESULT_SUCCESS, null);
     }
 
-    private void sendMessage(Commmand cmd, int what, final Bundle bundle) {
+    private void sendMessage(Command cmd, int what, final Bundle bundle) {
         if (cmd.messenger == null) {
             return;
         }
@@ -1317,7 +1317,8 @@ public final class SyncService extends Service implements Handler.Callback {
     }
 
     private int showSuccessNotification() {
-        int id = NOTIFICATION_ID;
+        cancelNotification(NOTIFICATION_ID);
+        int id = NOTIFICATION_ID + 1;
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(), 0);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
@@ -1331,13 +1332,11 @@ public final class SyncService extends Service implements Handler.Callback {
         builder.setOnlyAlertOnce(true);
         Notification notification = builder.build();
         mNotificationManager.notify(id, notification);
-        cancelNotificationDeply(id);
         return id;
     }
 
-    private int showFailedNotification(StatusUpdateInfo info, String title, String message) {
-        doSaveRecords(info);
-        int id = NOTIFICATION_ID;
+    private int showFailedNotification(String title, String message) {
+        int id = NOTIFICATION_ID + 2;
         Intent intent = new Intent(this, UIRecords.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -1355,15 +1354,8 @@ public final class SyncService extends Service implements Handler.Callback {
         return id;
     }
 
-    private void cancelNotificationDeply(final int notificationId) {
+    private void cancelNotification(final int notificationId) {
         mNotificationManager.cancel(notificationId);
-//        final Runnable cancelRunnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                mNotificationManager.cancel(notificationId);
-//            }
-//        };
-//        mUiHandler.postDelayed(cancelRunnable, CANCEL_DEPLAY_TIME);
     }
 
     private void doSaveRecords(StatusUpdateInfo info) {
@@ -1383,7 +1375,7 @@ public final class SyncService extends Service implements Handler.Callback {
         mNotificationManager.cancelAll();
     }
 
-    static class Commmand {
+    static class Command {
         public Messenger messenger;
         public String id;
         public int type;

@@ -992,8 +992,8 @@ final class FanFouApi implements Api {
      */
     private String fetch(final RequestBuilder builder) throws ApiException {
         OAuthRequest request = builder.build();
-        request.setConnectTimeout(30, TimeUnit.SECONDS);
-        request.setReadTimeout(30, TimeUnit.SECONDS);
+        request.setConnectTimeout(5, TimeUnit.SECONDS);
+        request.setReadTimeout(10, TimeUnit.SECONDS);
         try {
 
             if (mOAuthService != null && mAccessToken != null) {
