@@ -809,16 +809,14 @@ public final class SyncService extends Service implements Handler.Callback {
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                boolean success = doStatusUpdate(info, false);
-                if (success) {
-                    mUiHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            showSuccessNotification();
-                        }
-                    }, 500);
-                }
+                doStatusUpdate(info, false);
                 mIdle = true;
+                mUiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mNotificationManager.cancel(NOTIFICATION_ID);
+                    }
+                });
             }
         };
         execute(runnable);
@@ -1311,25 +1309,6 @@ public final class SyncService extends Service implements Handler.Callback {
         builder.setContentText("正在发送...");
         builder.setOngoing(true);
         builder.setContentIntent(contentIntent);
-        Notification notification = builder.build();
-        mNotificationManager.notify(id, notification);
-        return id;
-    }
-
-    private int showSuccessNotification() {
-        cancelNotification(NOTIFICATION_ID);
-        int id = NOTIFICATION_ID + 1;
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(), 0);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setSmallIcon(R.drawable.ic_stat_app);
-        builder.setTicker("消息已成功发送");
-        builder.setWhen(System.currentTimeMillis());
-        builder.setContentTitle("饭否消息");
-        builder.setContentText("消息已成功发送");
-        builder.setContentIntent(contentIntent);
-        builder.setAutoCancel(true);
-        builder.setOnlyAlertOnce(true);
         Notification notification = builder.build();
         mNotificationManager.notify(id, notification);
         return id;

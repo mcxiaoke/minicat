@@ -555,7 +555,6 @@ public class UIWrite extends UIBaseSupport implements LoaderCallbacks<Cursor> {
             log("intent=" + i);
         }
         startService(i);
-        Utils.notify(this,"消息正在后台发送中...");
     }
 
     private void updateLocationString(Location loc) {
