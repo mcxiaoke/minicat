@@ -10,7 +10,6 @@
 
 * [Google Play](https://play.google.com/store/apps/details?id=com.mcxiaoke.minicat2)  
 * [直接下载](https://github.com/mcxiaoke/minicat/releases/latest)  
-* [蒲公英下载](https://www.pgyer.com/78Zi)    
 * [历史版本](https://github.com/mcxiaoke/minicat/releases)   
     
 ### 扫码下载
