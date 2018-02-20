@@ -39,7 +39,7 @@ android {
     useLibrary 'org.apache.http.legacy'
 
     compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         minSdkVersion 15
@@ -47,6 +47,7 @@ android {
         versionName "1.5.5"
         versionCode 2016042201
         applicationId "com.mcxiaoke.minicat2"
+        javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
     }
 
     signingConfigs {
